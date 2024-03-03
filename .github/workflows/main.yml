@@ -44,9 +44,11 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npx prisma migrate deploy
-          npm run test --if-present
-          npm run build --if-present
+          npm run install:shared
+          npm run install:server
+          npm run migrate:prisma
+          npm run test:server --if-present
+          npm run build:server --if-present
 
   lint:
     runs-on: ubuntu-latest

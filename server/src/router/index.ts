@@ -1,3 +1,4 @@
+import { ENDPOINT_CONFIGS, Endpoints } from '@resala/shared';
 import { RequestHandler, Router } from 'express';
 
 import {
@@ -21,7 +22,6 @@ import { authenticateToken, authorizeUser } from '../middleware/auth-middleware'
 import { errHandler } from '../middleware/error-middleware';
 import { loggerMiddleware } from '../middleware/logger-middleware';
 import { uploadMultiple } from '../middleware/upload-middleware';
-import { ENDPOINT_CONFIGS, Endpoints } from '@resala/shared';
 
 const router = Router();
 

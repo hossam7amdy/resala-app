@@ -5,10 +5,12 @@ FROM node:alpine AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY server/package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN npm install:shared
+RUN npm install:server
 
 # Install TypeScript globally
 RUN npm install -g typescript
@@ -20,7 +22,7 @@ RUN npm install -g prisma
 COPY . .
 
 # Generate Prisma client
-RUN npx prisma generate
+RUN npm run migrate:prisma
 
 # Build TypeScript
 RUN npm run build
@@ -35,10 +37,10 @@ FROM node:alpine
 WORKDIR /app
 
 # Copy built files from previous stage
-COPY --from=dist /app/build ./build
-COPY --from=dist /app/node_modules ./node_modules
-COPY --from=dist /app/package.json .
-COPY --from=dist /app/public ./public
+COPY --from=server/build /app/build ./build
+COPY --from=server/build /app/node_modules ./node_modules
+COPY --from=server/build /app/package.json .
+COPY --from=server/build /app/public ./public
 
 # Create a uploads directory
 RUN mkdir -p /app/uploads
