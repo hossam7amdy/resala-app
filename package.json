@@ -6,10 +6,10 @@
     "lint:check": "prettier . --check",
     "build:server": "cd server && npm i && npm run build",
     "build:shared": "cd shared && npm i && npm run build",
-    "build": "npm i && npm-run-all --parallel build:shared build:server",
+    "build": "npm i && npm-run-all build:shared build:server",
     "test:server": "cd server && npm run test",
-    "start:server": "cd server && npm run dev",
-    "migrate:prisma": "cd server && npx prisma migrate deploy"
+    "test": "npm-run-all test:server",
+    "start:server": "cd server && npm run dev"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

@@ -4,7 +4,7 @@
   "description": "Resala server",
   "main": "src/index.js",
   "scripts": {
-    "build": "npm i && tsc",
+    "build": "npm i && npx prisma migrate deploy",
     "start": "npx ts-node --transpile-only src/index.ts",
     "dev": "nodemon  --exec ts-node src/index.ts",
     "test": "jest --detectOpenHandles"
