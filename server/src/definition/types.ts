@@ -1,20 +1,13 @@
 import { $Enums } from '@prisma/client';
+import { Request, Response } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-// Create generic type and append error prop to the Type T
-type WithError<T> = T & { message: string };
-
-export type ExpressHandler<Req, Res> = RequestHandler<
-  string,
-  Partial<WithError<Res>>,
-  Partial<Req>,
-  any
->;
+export type ExpressHandler<Req, Res> = RequestHandler<string, Response<Res>, Request<Req>, any>;
 
 export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
   Partial<Params>,
-  Partial<WithError<Res>>,
-  Partial<Req>,
+  Response<Res>,
+  Request<Req>,
   any
 >;
 

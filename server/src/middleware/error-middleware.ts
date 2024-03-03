@@ -8,10 +8,9 @@ import { logger } from '../lib/logger';
  * @param {RequestHandler} fn - async function
  * @returns {RequestHandler} - function that catches errors
  */
-export function errHandler(fn: RequestHandler): RequestHandler {
-  return (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
-}
+export const errHandler = (fn: RequestHandler): RequestHandler => {
+  return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+};
 
 /**
  * @description error middleware

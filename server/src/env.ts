@@ -1,7 +1,5 @@
 import env from 'dotenv';
 
-import { logger } from './lib/logger';
-
 env.config();
 
 const ENV = {
@@ -25,7 +23,8 @@ const ENV = {
   });
 
   if (missedEnv.length > 0) {
-    logger.warning(`Missed environment variables: [${missedEnv.join(', ')}]`);
+    console.error(`Missed environment variables: [${missedEnv.join(', ')}]`);
+    process.exit(1);
   }
 })();
 

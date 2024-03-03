@@ -1,10 +1,29 @@
-export type Request = { [key: string]: any } | FormData;
+export type Request<T> = T;
+export type Response<T> =
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      message: string;
+      errors?: any;
+    };
 
-export interface Response {
-  success: boolean;
-  data?: { [key: string]: any };
-  error?: {
-    message: string;
-    [key: string]: any;
-  };
-}
+export type LoginRequest = {
+  email: string;
+  password: string;
+};
+export type LoginResponse = {
+  accessToken: string;
+};
+
+export type RegisterRequest = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+export type RegisterResponse = {
+  accessToken: string;
+};
