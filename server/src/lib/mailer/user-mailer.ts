@@ -1,0 +1,20 @@
+import ENV from '../../env';
+import mailer from './mailer';
+
+export const sendVerificationEmail = async (email: string, token: string) => {
+  const href = `${ENV.SERVER_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
+
+  return mailer.send({
+    to: email,
+    subject: 'Email Verification',
+    html: `<p>Click <a href="${href}">here</a> to verify your email</p>`,
+  });
+};
+
+export const sendResetPasswordEmail = async (email: string, resetCode: string) => {
+  return mailer.send({
+    to: email,
+    subject: 'Reset your password',
+    text: `Your reset code is: ${resetCode}`,
+  });
+};

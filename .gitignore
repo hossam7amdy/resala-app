@@ -1,0 +1,15 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+# Ignore the build directory
+build
+
+# Ignore uploads
+uploads
+
+# Ignore logs
+logs
+
+# Ignore the build directory
+dest
