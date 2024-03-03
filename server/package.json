@@ -2,10 +2,10 @@
   "name": "@resala/server",
   "version": "1.0.0",
   "description": "Resala server",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "npm i && tsc",
-    "start": "node build/index.js",
+    "start": "npx ts-node --transpile-only src/index.ts",
     "dev": "nodemon  --exec ts-node src/index.ts",
     "test": "jest --detectOpenHandles"
   },

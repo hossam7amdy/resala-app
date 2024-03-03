@@ -1,9 +1,0 @@
-# Ignore the node_modules directory
-node_modules
-
-# Ignore the build directory
-dist
-build
-
-# Ignore files in the public/uploads directory
-uploads/*
