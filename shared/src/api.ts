@@ -1,22 +1,19 @@
-export type Request<T> = T;
-export type Response<T> =
+export type Request = FormData;
+export type Response =
   | {
       success: true;
       message?: string;
-      data: T;
     }
   | {
       success: false;
       message: string;
-      errors?: any;
     };
 
-export type LoginRequest = {
-  email: string;
-  password: string;
-};
-export type LoginResponse = {
-  accessToken: string;
+export type LoginRequest = {};
+export type LoginResponse = Response & {
+  data: {
+    accessToken: string;
+  };
 };
 
 export type RegisterRequest = {
@@ -25,6 +22,8 @@ export type RegisterRequest = {
   firstName: string;
   lastName: string;
 };
-export type RegisterResponse = {
-  accessToken: string;
+export type RegisterResponse = Response & {
+  data: {
+    accessToken: string;
+  };
 };

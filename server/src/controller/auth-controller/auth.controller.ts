@@ -1,6 +1,6 @@
 import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@resala/shared';
+import { RequestHandler } from 'express';
 
-import { ExpressHandler } from '../../definition/types';
 import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
 import { signJwt, verifyJwt } from '../../lib/jwt-token';
 import { logger } from '../../lib/logger';
@@ -15,7 +15,7 @@ import {
   validateResetPasswordData,
 } from './auth.validator';
 
-export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
+export const login: RequestHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
   const error = validateLoginData(req.body);
   if (error) {
     return next(new BadRequestError(error));
@@ -51,7 +51,7 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, re
   });
 };
 
-export const register: ExpressHandler<RegisterRequest, RegisterResponse> = async (
+export const register: RequestHandler<RegisterRequest, RegisterResponse> = async (
   req,
   res,
   next
@@ -90,7 +90,7 @@ export const register: ExpressHandler<RegisterRequest, RegisterResponse> = async
   });
 };
 
-export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
+export const verifyEmail: RequestHandler<any, any> = async (req, res, next) => {
   const token = req.query.token as string;
   if (!token) {
     return next(new BadRequestError('Token is required'));
@@ -128,7 +128,7 @@ export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
   });
 };
 
-export const forgotPassword: ExpressHandler<any, any> = async (req, res, next) => {
+export const forgotPassword: RequestHandler<any, any> = async (req, res, next) => {
   const error = validateForgotPasswordData(req.body);
   if (error) {
     return next(new BadRequestError(error));
@@ -156,7 +156,7 @@ export const forgotPassword: ExpressHandler<any, any> = async (req, res, next) =
   });
 };
 
-export const resetPassword: ExpressHandler<any, any> = async (req, res, next) => {
+export const resetPassword: RequestHandler<any, any> = async (req, res, next) => {
   const error = validateResetPasswordData(req.body);
   if (error) {
     return next(new BadRequestError(error));

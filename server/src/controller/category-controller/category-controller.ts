@@ -10,8 +10,23 @@ export const getCategory: RequestHandler = async (req, res, next) => {
   const deleted = req.query.deleted;
 
   const category = await prisma.category.findUnique({
-    include: {
-      subCategories: true,
+    select: {
+      id: true,
+      arName: true,
+      enName: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+      subCategories: {
+        select: {
+          id: true,
+          arName: true,
+          enName: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
+        },
+      },
     },
     where: {
       id: categoryId,

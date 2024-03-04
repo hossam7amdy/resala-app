@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 
-import { ROLES } from '../definition/types';
 import { UnauthorizedError } from '../lib/error';
 import { JwtObject, verifyJwt } from '../lib/jwt-token';
 import { prisma } from '../model';
@@ -41,7 +40,7 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
   return next();
 };
 
-export const authorizeUser = (roles: ROLES[]): RequestHandler => {
+export const authorizeUser = (roles: string[]): RequestHandler => {
   return (_req, res, next) => {
     const user = res.locals.user;
 
