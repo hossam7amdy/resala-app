@@ -14,6 +14,7 @@ export const UserSchema = zod.object({
   firstName: zod.string().min(2).max(50),
   lastName: zod.string().min(2).max(50),
   role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.MODERATOR]),
+  isVerified: zod.boolean(),
   phone: zod
     .string()
     .length(11)
@@ -23,9 +24,19 @@ export const UserSchema = zod.object({
     ),
   password: zod
     .string()
+    .min(8)
+    .max(50)
     .regex(
       validationPatterns.passwordContainsLowerCaseCharacter.pattern,
       validationPatterns.passwordContainsLowerCaseCharacter.message
+    )
+    .regex(
+      validationPatterns.passwordContainsNumericCharacters.pattern,
+      validationPatterns.passwordContainsNumericCharacters.message
+    )
+    .regex(
+      validationPatterns.passwordContainsUpperCaseCharacter.pattern,
+      validationPatterns.passwordContainsUpperCaseCharacter.message
     ),
 });
 

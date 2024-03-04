@@ -2,6 +2,7 @@ export type Request<T> = T;
 export type Response<T> =
   | {
       success: true;
+      message?: string;
       data: T;
     }
   | {

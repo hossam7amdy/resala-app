@@ -9,7 +9,8 @@
     "build": "npm i && npm-run-all build:shared build:server",
     "test:server": "cd server && npm run test",
     "test": "npm-run-all test:server",
-    "start:server": "cd server && npm run dev"
+    "start:server": "cd server && npm run dev",
+    "dev": "npm-run-all --parallel start:server"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

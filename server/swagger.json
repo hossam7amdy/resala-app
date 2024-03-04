@@ -1,0 +1,333 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Resala Backend APIs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://resala-app.onrender.com",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Local server"
+    }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/v1/healthz": {
+      "get": {
+        "summary": "Health check",
+        "description": "Health check",
+        "operationId": "health",
+        "produces": ["application/json"],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Login",
+        "tags": ["Auth"],
+        "description": "Login",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "$ref": "#/components/schemas/User/properties/email"
+                  },
+                  "password": {
+                    "$ref": "#/components/schemas/User/properties/password"
+                  }
+                }
+              },
+              "example": {
+                "email": "resala@mail.com",
+                "password": "123abc@ABC"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful and returns JWT access token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Register",
+        "tags": ["Auth"],
+        "description": "Register",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password", "firstName", "lastName"],
+                "properties": {
+                  "email": {
+                    "$ref": "#/components/schemas/User/properties/email"
+                  },
+                  "password": {
+                    "$ref": "#/components/schemas/User/properties/password"
+                  },
+                  "firstName": {
+                    "$ref": "#/components/schemas/User/properties/firstName"
+                  },
+                  "lastName": {
+                    "$ref": "#/components/schemas/User/properties/lastName"
+                  }
+                }
+              },
+              "example": {
+                "email": "resala@mail.com",
+                "password": "123abc@ABC",
+                "firstName": "Resala",
+                "lastName": "App"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Register successful and returns JWT access token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "success": { "type": "boolean" },
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "accessToken": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "summary": "Forgot password",
+        "tags": ["Auth"],
+        "description": "Forgot password",
+        "operationId": "forgotPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {
+                    "$ref": "#/components/schemas/User/properties/email"
+                  }
+                }
+              },
+              "example": {
+                "email": "resala@mail.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Forgot password successful and returns success message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "summary": "Reset password",
+        "tags": ["Auth"],
+        "description": "Reset password",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "code", "password"],
+                "properties": {
+                  "email": {
+                    "$ref": "#/components/schemas/User/properties/email"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "$ref": "#/components/schemas/User/properties/password"
+                  }
+                }
+              },
+              "example": {
+                "email": "resala@mail.com",
+                "password": "123abc@ABC",
+                "code": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset password successful and returns success message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/self": {
+      "get": {
+        "summary": "Get self",
+        "tags": ["User"],
+        "description": "Get self",
+        "operationId": "getSelf",
+        "responses": {
+          "200": {
+            "description": "Get self successful and returns user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "scheme": "bearer",
+        "bearer format": "JWT",
+        "in": "header",
+        "name": "Authorization",
+        "description": "JWT authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 5,
+            "maxLength": 128
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 50
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 50
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 50
+          },
+          "role": {
+            "type": "string",
+            "enum": ["USER", "ADMIN", "MODERATOR"]
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 11,
+            "maxLength": 11
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "lastLogin": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

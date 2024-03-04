@@ -1,5 +1,5 @@
 import { ENDPOINT_CONFIGS, Endpoints } from '@resala/shared';
-import { RequestHandler, Router } from 'express';
+import { Request, RequestHandler, Response, Router } from 'express';
 
 import {
   addressCtrl,
@@ -26,8 +26,8 @@ import { uploadMultiple } from '../middleware/upload-middleware';
 const router = Router();
 
 /** Define the handlers for each endpoint */
-const HANDLER: { [key in Endpoints]: RequestHandler[] } = {
-  [Endpoints.healthz]: [(_, res) => res.send('OK 🤞')],
+const HANDLER: { [key in Endpoints]: (RequestHandler | any)[] } = {
+  [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
   [Endpoints.login]: [authCtrl.login],
   [Endpoints.register]: [authCtrl.register],

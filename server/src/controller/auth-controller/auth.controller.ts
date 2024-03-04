@@ -96,8 +96,12 @@ export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
     return next(new BadRequestError('Token is required'));
   }
 
-  const { email } = verifyJwt(token);
-  if (!email) {
+  let email = '';
+  try {
+    email = verifyJwt(token).email;
+    if (!email) throw new Error();
+  } catch (e) {
+    logger.warn(e);
     return next(new BadRequestError('Invalid token'));
   }
 
@@ -119,9 +123,8 @@ export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
 
   return res.json({
     success: true,
-    data: {
-      message: 'Email verified successfully',
-    },
+    message: 'Email verified successfully',
+    data: {},
   });
 };
 
@@ -148,9 +151,8 @@ export const forgotPassword: ExpressHandler<any, any> = async (req, res, next) =
 
   return res.json({
     success: true,
-    data: {
-      message: 'Reset code is sent to your email',
-    },
+    message: 'Reset code is sent to your email',
+    data: {},
   });
 };
 
@@ -190,8 +192,7 @@ export const resetPassword: ExpressHandler<any, any> = async (req, res, next) =>
 
   return res.json({
     success: true,
-    data: {
-      message: 'Password updated successfully',
-    },
+    message: 'Password updated successfully',
+    data: {},
   });
 };
