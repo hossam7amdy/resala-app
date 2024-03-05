@@ -16,7 +16,7 @@ datasource db {
 model User {
   id            String         @id @default(uuid())
   email         String         @unique @db.VarChar(125)
-  phone         String?        @unique @db.Char(15)
+  phone         String?        @unique @db.Char(11)
   firstName     String         @db.VarChar(50)
   lastName      String         @db.VarChar(50)
   isVerified    Boolean        @default(false)
@@ -182,7 +182,7 @@ model Shipping {
   orderId   String         @unique @db.Char(36)
   addressId Int            @unique
   cost      Decimal        @db.Decimal(9, 2)
-  phone     String         @db.Char(15)
+  phone     String         @db.Char(11)
   status    ShippingStatus @default(PICKED_UP)
   note      String?        @db.VarChar(250)
   createdAt DateTime       @default(now())
