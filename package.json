@@ -17,7 +17,7 @@
     "build:server": "cd server && npm i && npm run build",
     "build:shared": "cd shared && npm i && npm run build",
     "build:dashboard": "cd dashboard && npm i && npm run build",
-    "build": "npm i && npm-run-all build:shared build:server build:dashboard",
+    "build": "npm i && npm-run-all build:server build:dashboard",
     "test:server": "cd server && npm run test",
     "test:dashboard": "cd dashboard && npm run test",
     "test": "npm-run-all test:server test:dashboard",
