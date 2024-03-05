@@ -5,7 +5,7 @@
   "private": true,
   "main": "index.ts",
   "scripts": {
-    "build": "npm i && npx prisma migrate deploy",
+    "build": "npm i && npx prisma migrate deploy && npx prisma generate",
     "start": "npx ts-node --transpile-only src/index.ts",
     "dev": "nodemon  --exec ts-node src/index.ts",
     "test": "jest --detectOpenHandles"
