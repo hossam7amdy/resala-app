@@ -1,27 +1,50 @@
-import { AddressSchema } from '@resala/shared';
+import {
+  AddressSchema,
+  CreateAddressRequest,
+  CreateAddressResponse,
+  UpdateAddressRequest,
+  UpdateAddressResponse,
+} from '@resala/shared';
 
-const NoIdAddressSchema = AddressSchema.omit({ id: true });
+import { BadRequestError } from '../../lib/error';
+import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
 
-export const validateCreateAddress = (address: any) => {
-  const { userId, state, city, street } = address;
-  if (!userId || !state || !city || !street) {
-    return 'userId, state, city, and street are required fields';
+export const validateCreateAddress: ExpressHandler<CreateAddressRequest, CreateAddressResponse> = (
+  req,
+  res,
+  next
+) => {
+  const userId = res.locals.user.id as string;
+  const { state, city, street } = req.body;
+  if (!state || !city || !street) {
+    return next(new BadRequestError('userId, state, city, and street are required fields'));
   }
 
-  const validatedFields = NoIdAddressSchema.safeParse(address);
+  const CreateAddressSchema = AddressSchema.omit({ id: true });
+  const validatedFields = CreateAddressSchema.safeParse({ ...req.body, userId });
+
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateUpdateAddress = (address: any) => {
-  const { id, userId, state, city, street } = address;
-  if (!id || !userId || !state || !city || !street) {
-    return 'id, userId, state, city, and street are required fields';
+export const validateUpdateAddress: ExpressHandlerWithParams<
+  { addressId: string },
+  UpdateAddressRequest,
+  UpdateAddressResponse
+> = (req, _, next) => {
+  const id = req.params.addressId;
+  const { state, city, street } = req.body;
+  if (!state || !city || !street) {
+    return next(new BadRequestError('state, city, and street are required fields'));
   }
 
-  const validatedFields = AddressSchema.safeParse(address);
+  const validatedFields = AddressSchema.safeParse({ ...req.body, id });
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };

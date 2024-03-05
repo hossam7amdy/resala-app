@@ -3,7 +3,9 @@ import { Request, RequestHandler, Response, Router } from 'express';
 
 import {
   addressCtrl,
+  addressValidator,
   authCtrl,
+  authValidator,
   categoryCtrl,
   categoryValidator,
   colorCtrl,
@@ -17,27 +19,30 @@ import {
   stockCtrl,
   stockValidator,
   userCtrl,
+  userValidator,
 } from '../controller';
 import { authenticateToken, authorizeUser } from '../middleware/auth-middleware';
 import { errHandler } from '../middleware/error-middleware';
 import { loggerMiddleware } from '../middleware/logger-middleware';
 import { uploadMultiple } from '../middleware/upload-middleware';
+import { ExpressHandler } from '../types';
 
 const router = Router();
 
 /** Define the handlers for each endpoint */
-const HANDLER: { [key in Endpoints]: (RequestHandler | any)[] } = {
+const HANDLER: { [key in Endpoints]: (RequestHandler | ExpressHandler<any, any>)[] } = {
   [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
-  [Endpoints.login]: [authCtrl.login],
-  [Endpoints.register]: [authCtrl.register],
-  [Endpoints.forgotPassword]: [authCtrl.forgotPassword],
-  [Endpoints.resetPassword]: [authCtrl.resetPassword],
+  [Endpoints.login]: [authValidator.validateLogin, authCtrl.login],
+  [Endpoints.register]: [authValidator.validateRegistration, authCtrl.register],
+  [Endpoints.forgotPassword]: [authValidator.validateForgotPassword, authCtrl.forgotPassword],
+  [Endpoints.resetPassword]: [authValidator.validateResetPassword, authCtrl.resetPassword],
   [Endpoints.verifyEmail]: [authCtrl.verifyEmail],
-  [Endpoints.changePassword]: [userCtrl.changePassword],
-  [Endpoints.resendEmailVerification]: [userCtrl.resendVerificationEmail],
+  [Endpoints.changePassword]: [authValidator.validateChangePassword, authCtrl.changePassword],
+  [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
+
   [Endpoints.getCurrentUser]: [userCtrl.getProfile],
-  [Endpoints.updateCurrentUser]: [userCtrl.updateProfile],
+  [Endpoints.updateCurrentUser]: [userValidator.validateUpdateProfile, userCtrl.updateProfile],
 
   [Endpoints.getUserCart]: [shoppingCtrl.getUserCart],
   [Endpoints.addItemToCart]: [shoppingValidator.validateCart, shoppingCtrl.addItemToCart],
@@ -49,14 +54,22 @@ const HANDLER: { [key in Endpoints]: (RequestHandler | any)[] } = {
   ],
   [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
 
-  [Endpoints.adminAddUser]: [authorizeUser(['ADMIN']), userCtrl.adminCreateUser],
-  [Endpoints.adminUpdateUser]: [authorizeUser(['ADMIN']), userCtrl.adminUpdateUser],
+  [Endpoints.adminAddUser]: [
+    userValidator.validateAdminCreateUser,
+    authorizeUser(['ADMIN']),
+    userCtrl.adminCreateUser,
+  ],
+  [Endpoints.adminUpdateUser]: [
+    userValidator.validateAdminUpdateUser,
+    authorizeUser(['ADMIN']),
+    userCtrl.adminUpdateUser,
+  ],
   [Endpoints.adminGetUser]: [authorizeUser(['ADMIN']), userCtrl.adminGetUser],
   [Endpoints.adminGetUsersList]: [authorizeUser(['ADMIN']), userCtrl.adminGetUsersList],
   [Endpoints.adminDeleteUser]: [authorizeUser(['ADMIN']), userCtrl.adminDeleteUser],
 
-  [Endpoints.createAddress]: [addressCtrl.createAddress],
-  [Endpoints.updateAddress]: [addressCtrl.updateAddress],
+  [Endpoints.createAddress]: [addressValidator.validateCreateAddress, addressCtrl.createAddress],
+  [Endpoints.updateAddress]: [addressValidator.validateUpdateAddress, addressCtrl.updateAddress],
   [Endpoints.deleteAddress]: [addressCtrl.deleteAddress],
   [Endpoints.getAddressList]: [addressCtrl.getAddressList],
 
@@ -155,7 +168,7 @@ Object.entries(HANDLER).forEach(([endpoint, handlers]) => {
     handlers = [authenticateToken, ...handlers];
   }
 
-  const withErrorHandler = handlers.map(handler => errHandler(handler));
+  const withErrorHandler = handlers.map(handler => errHandler(handler as any));
   router[method](url, ...withErrorHandler);
 });
 

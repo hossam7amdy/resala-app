@@ -1,32 +1,24 @@
-import { QueryParamsSchema, UserSchema } from '@resala/shared';
+import {
+  AdminCreateUserRequest,
+  AdminCreateUserResponse,
+  AdminUpdateUserRequest,
+  AdminUpdateUserResponse,
+  UpdateSelfRequest,
+  UpdateSelfResponse,
+  UserSchema,
+} from '@resala/shared';
 
-const CreateUserSchema = UserSchema.omit({ id: true });
+import { BadRequestError } from '../../lib/error';
+import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
 
-export const validateChangePasswordData = (payload: any) => {
-  const { oldPassword, newPassword } = payload;
-  if (!oldPassword || !newPassword) {
-    return 'Old password and new password are required';
-  }
-};
-
-export const validateForgotPasswordData = (payload: any) => {
-  const { email } = payload;
-  if (!email) {
-    return 'Email is required';
-  }
-
-  const ForgotPasswordSchema = UserSchema.pick({ email: true });
-
-  const validatedFields = ForgotPasswordSchema.safeParse(payload);
-  if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
-  }
-};
-
-export const validateUpdateProfileData = (payload: any) => {
-  const { phone, firstName, lastName } = payload;
+export const validateUpdateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelfResponse> = (
+  req,
+  _,
+  next
+) => {
+  const { phone, firstName, lastName } = req.body;
   if (!phone || !firstName || !lastName) {
-    return 'Phone, first name and last name are required';
+    return next(new BadRequestError('Phone, first name and last name are required'));
   }
 
   const UpdateProfileSchema = UserSchema.pick({
@@ -35,46 +27,56 @@ export const validateUpdateProfileData = (payload: any) => {
     lastName: true,
   });
 
-  const validatedFields = UpdateProfileSchema.safeParse(payload);
+  const validatedFields = UpdateProfileSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateQueryParams = (queryParams: any) => {
-  const validatedFields = QueryParamsSchema.safeParse(queryParams);
-  if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
-  }
-};
-
-export const validateUserCreationData = (payload: any) => {
-  const { email, password, firstName, lastName, role } = payload;
+export const validateAdminCreateUser: ExpressHandler<
+  AdminCreateUserRequest,
+  AdminCreateUserResponse
+> = (req, _, next) => {
+  const { email, password, firstName, lastName, role } = req.body;
   if (!email || !password || !firstName || !lastName || !role) {
-    return 'Email, password, first name, last name and role are required fields';
+    return next(
+      new BadRequestError('Email, password, first name, last name and role are required fields')
+    );
   }
 
-  const validatedFields = CreateUserSchema.safeParse(payload);
+  const CreateUserSchema = UserSchema.omit({ id: true });
+  const validatedFields = CreateUserSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateUserUpdateData = (payload: any) => {
-  const { phone, firstName, lastName, role } = payload;
-  if (!phone || !firstName || !lastName || !role) {
-    return 'Phone, first name, last name and role are required fields';
+export const validateAdminUpdateUser: ExpressHandlerWithParams<
+  { userId: string },
+  AdminUpdateUserRequest,
+  AdminUpdateUserResponse
+> = (req, _, next) => {
+  const { firstName, lastName, role } = req.body;
+  if (!firstName || !lastName || !role) {
+    return next(new BadRequestError('First name, last name and role are required fields'));
   }
 
   const UpdateUserSchema = UserSchema.pick({
+    id: true,
     phone: true,
     firstName: true,
     lastName: true,
     role: true,
   });
 
-  const validatedFields = UpdateUserSchema.safeParse(payload);
+  const validatedFields = UpdateUserSchema.safeParse({ ...req.body, id: req.params.userId });
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };

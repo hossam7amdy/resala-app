@@ -1,10 +1,10 @@
 import crypto from 'crypto';
 
 import { hash } from './hash';
-import random from './random';
+import { generateRandomNumber } from './random';
 
 export const genHashedPassword = async (password: string) => {
-  const iterations = random.generateRandomNumber(1000, 15000);
+  const iterations = generateRandomNumber(1000, 15000);
   const salt = crypto.randomBytes(80).toString('base64');
 
   const hashedPassword = await hash(password, salt, iterations);

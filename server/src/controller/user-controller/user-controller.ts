@@ -1,24 +1,29 @@
 import { Prisma } from '@prisma/client';
-import { RequestHandler } from 'express';
-
-import { BadRequestError, NotFoundError } from '../../lib/error';
-import { signJwt } from '../../lib/jwt-token';
-import { sendVerificationEmail } from '../../lib/mailer';
-import { prisma } from '../../model';
-import { genHashedPassword, verifyHashedPassword } from '../../utils/password';
 import {
-  validateChangePasswordData,
-  validateQueryParams,
-  validateUpdateProfileData,
-  validateUserCreationData,
-  validateUserUpdateData,
-} from './user-validator';
+  AdminCreateUserRequest,
+  AdminCreateUserResponse,
+  AdminDeleteUserRequest,
+  AdminDeleteUserResponse,
+  AdminGetUserRequest,
+  AdminGetUserResponse,
+  AdminGetUsersListRequest,
+  AdminGetUsersListResponse,
+  AdminUpdateUserRequest,
+  AdminUpdateUserResponse,
+  GetSelfRequest,
+  GetSelfResponse,
+  UpdateSelfRequest,
+  UpdateSelfResponse,
+} from '@resala/shared';
 
-const PAGE_SIZE = 10;
+import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
+import { prisma } from '../../model';
+import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
+import { genHashedPassword } from '../../utils/password';
 
-const getUserById = async (id: string) => {
-  return prisma.user.findUnique({
-    where: { id },
+export const getProfile: ExpressHandler<GetSelfRequest, GetSelfResponse> = async (_, res, next) => {
+  const userId = res.locals.user.id as string;
+  const user = await prisma.user.findUnique({
     select: {
       id: true,
       role: true,
@@ -30,13 +35,14 @@ const getUserById = async (id: string) => {
       lastLogin: true,
       createdAt: true,
       updatedAt: true,
+      deletedAt: true,
     },
+    where: { id: userId },
   });
-};
 
-export const getProfile: RequestHandler = async (_req, res) => {
-  const userId = res.locals.user.id as string;
-  const user = await getUserById(userId);
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
 
   return res.json({
     success: true,
@@ -44,70 +50,11 @@ export const getProfile: RequestHandler = async (_req, res) => {
   });
 };
 
-export const changePassword: RequestHandler = async (req, res) => {
-  const error = validateChangePasswordData(req.body);
-  if (error) {
-    throw new BadRequestError(error);
-  }
-
-  const userId = res.locals.user.id as string;
-  const { oldPassword, newPassword } = req.body;
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) {
-    throw new NotFoundError('User not found');
-  }
-
-  const verified = await verifyHashedPassword({
-    password: oldPassword,
-    salt: user.salt,
-    iterations: user.iterations,
-    hashedPassword: user.password,
-  });
-  if (!verified) {
-    throw new BadRequestError('Old password is incorrect');
-  }
-
-  const { hashedPassword, salt, iterations } = await genHashedPassword(newPassword);
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { password: hashedPassword, salt, iterations },
-  });
-
-  return res.json({
-    success: true,
-    message: 'Password changed successfully',
-  });
-};
-
-export const resendVerificationEmail: RequestHandler = async (_req, res) => {
-  const email = res.locals.user.email as string;
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: { isVerified: true },
-  });
-  if (!user) {
-    throw new NotFoundError('User not found');
-  }
-
-  if (user.isVerified) {
-    throw new BadRequestError('User is already verified');
-  }
-
-  const token = signJwt({ id: '', email });
-  await sendVerificationEmail(email, token);
-
-  return res.json({
-    success: true,
-    message: 'Verification email sent successfully',
-  });
-};
-
-export const updateProfile: RequestHandler = async (req, res) => {
-  const error = validateUpdateProfileData(req.body);
-  if (error) {
-    throw new BadRequestError(error);
-  }
-
+export const updateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelfResponse> = async (
+  req,
+  res,
+  next
+) => {
   const userId = res.locals.user.id as string;
   const { firstName, lastName, phone } = req.body;
   try {
@@ -116,21 +63,41 @@ export const updateProfile: RequestHandler = async (req, res) => {
       data: { firstName, lastName, phone },
     });
   } catch (error) {
-    throw new BadRequestError('This phone number is already used by another user!');
+    return next(new BadRequestError('This phone number is already used by another user!'));
   }
 
   return res.json({
     success: true,
     message: 'Profile updated successfully',
+    data: {},
   });
 };
 
-export const adminGetUser: RequestHandler = async (req, res) => {
-  const userId = req.params.userId as string;
-  const user = await getUserById(userId);
+export const adminGetUser: ExpressHandlerWithParams<
+  { userId: string },
+  AdminGetUserRequest,
+  AdminGetUserResponse
+> = async (req, res, next) => {
+  const userId = req.params.userId;
+  const user = await prisma.user.findUnique({
+    select: {
+      id: true,
+      role: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      isVerified: true,
+      lastLogin: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
+    where: { id: userId },
+  });
 
   if (!user) {
-    throw new NotFoundError('User not found');
+    return next(new NotFoundError('User not found'));
   }
 
   return res.json({
@@ -139,14 +106,14 @@ export const adminGetUser: RequestHandler = async (req, res) => {
   });
 };
 
-export const adminGetUsersList: RequestHandler = async (req, res) => {
-  const error = validateQueryParams(req.query);
-  if (error) {
-    throw new BadRequestError(error);
-  }
+export const adminGetUsersList: ExpressHandler<
+  AdminGetUsersListRequest,
+  AdminGetUsersListResponse
+> = async (req, res) => {
+  const PAGE_SIZE = 10;
+  const page = parseInt(req.query.page || '1');
+  const query = req.query.query || '';
 
-  const page = parseInt(req.query.page as string);
-  const query = (req.query.query as string) || '';
   const [total, users] = await prisma.$transaction([
     prisma.user.count({
       where: {
@@ -195,36 +162,39 @@ export const adminGetUsersList: RequestHandler = async (req, res) => {
   });
 };
 
-export const adminDeleteUser: RequestHandler = async (req, res) => {
-  const userId = req.params.userId as string;
+export const adminDeleteUser: ExpressHandlerWithParams<
+  { userId: string },
+  AdminDeleteUserRequest,
+  AdminDeleteUserResponse
+> = async (req, res, next) => {
+  const userId = req.params.userId;
   try {
     await prisma.user.delete({ where: { id: userId } });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      throw new BadRequestError('User is already deleted');
+      return next(new NotFoundError('User not found'));
     }
-    throw error;
+    return next(error);
   }
 
   return res.json({
     success: true,
     message: 'User deleted successfully',
+    data: {},
   });
 };
 
-export const adminCreateUser: RequestHandler = async (req, res) => {
-  const error = validateUserCreationData(req.body);
-  if (error) {
-    throw new BadRequestError(error);
-  }
-
+export const adminCreateUser: ExpressHandler<
+  AdminCreateUserRequest,
+  AdminCreateUserResponse
+> = async (req, res, next) => {
   const userExist = await prisma.user.findFirst({
     where: {
       OR: [{ email: req.body.email }, { phone: req.body.phone }],
     },
   });
   if (userExist) {
-    throw new BadRequestError('User with this email or phone already exists!');
+    return next(new BadRequestError('User with this email or phone already exists!'));
   }
 
   const { hashedPassword, salt, iterations } = await genHashedPassword(req.body.password);
@@ -259,16 +229,16 @@ export const adminCreateUser: RequestHandler = async (req, res) => {
   });
 };
 
-export const adminUpdateUser: RequestHandler = async (req, res) => {
+export const adminUpdateUser: ExpressHandlerWithParams<
+  { userId: string },
+  AdminUpdateUserRequest,
+  AdminUpdateUserResponse
+> = async (req, res, next) => {
   const userId = req.params.userId as string;
-  const error = validateUserUpdateData(req.body);
-  if (error) {
-    throw new BadRequestError(error);
-  }
 
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
   if (!user) {
-    throw new NotFoundError('User not found');
+    return next(new NotFoundError('User not found'));
   }
 
   const userExist = await prisma.user.findFirst({
@@ -277,7 +247,7 @@ export const adminUpdateUser: RequestHandler = async (req, res) => {
     },
   });
   if (userExist) {
-    throw new BadRequestError('User with this phone already exists!');
+    return next(new ConflictError('User with this phone already exists!'));
   }
 
   await prisma.user.update({
@@ -293,5 +263,6 @@ export const adminUpdateUser: RequestHandler = async (req, res) => {
   return res.json({
     success: true,
     message: 'User updated successfully',
+    data: {},
   });
 };

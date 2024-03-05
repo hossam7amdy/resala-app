@@ -1,26 +1,26 @@
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '@resala/shared';
-import { RequestHandler } from 'express';
+import {
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+} from '@resala/shared';
 
 import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
 import { signJwt, verifyJwt } from '../../lib/jwt-token';
 import { logger } from '../../lib/logger';
 import { sendResetPasswordEmail, sendVerificationEmail } from '../../lib/mailer';
 import { prisma } from '../../model';
+import { ExpressHandler } from '../../types';
 import { genHashedPassword, verifyHashedPassword } from '../../utils/password';
-import random from '../../utils/random';
-import {
-  validateForgotPasswordData,
-  validateLoginData,
-  validateRegistrationData,
-  validateResetPasswordData,
-} from './auth.validator';
+import { generateRandomString } from '../../utils/random';
 
-export const login: RequestHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
-  const error = validateLoginData(req.body);
-  if (error) {
-    return next(new BadRequestError(error));
-  }
-
+export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
   const { email, password } = req.body;
   const userExist = await prisma.user.findUnique({ where: { email } });
   if (!userExist) {
@@ -28,7 +28,7 @@ export const login: RequestHandler<LoginRequest, LoginResponse> = async (req, re
   }
 
   const verified = await verifyHashedPassword({
-    password: password,
+    password: password!,
     salt: userExist.salt,
     iterations: userExist.iterations,
     hashedPassword: userExist.password,
@@ -51,16 +51,11 @@ export const login: RequestHandler<LoginRequest, LoginResponse> = async (req, re
   });
 };
 
-export const register: RequestHandler<RegisterRequest, RegisterResponse> = async (
+export const register: ExpressHandler<RegisterRequest, RegisterResponse> = async (
   req,
   res,
   next
 ) => {
-  const error = validateRegistrationData(req.body);
-  if (error) {
-    return next(new BadRequestError(error));
-  }
-
   const userExist = await prisma.user.findUnique({ where: { email: req.body.email } });
   if (userExist) {
     return next(new ConflictError('Email already registered'));
@@ -90,7 +85,7 @@ export const register: RequestHandler<RegisterRequest, RegisterResponse> = async
   });
 };
 
-export const verifyEmail: RequestHandler<any, any> = async (req, res, next) => {
+export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
   const token = req.query.token as string;
   if (!token) {
     return next(new BadRequestError('Token is required'));
@@ -124,18 +119,16 @@ export const verifyEmail: RequestHandler<any, any> = async (req, res, next) => {
   return res.json({
     success: true,
     message: 'Email verified successfully',
-    data: {},
   });
 };
 
-export const forgotPassword: RequestHandler<any, any> = async (req, res, next) => {
-  const error = validateForgotPasswordData(req.body);
-  if (error) {
-    return next(new BadRequestError(error));
-  }
-
+export const forgotPassword: ExpressHandler<ForgotPasswordRequest, ForgotPasswordResponse> = async (
+  req,
+  res,
+  next
+) => {
   const { email } = req.body;
-  const resetCode = random.generateRandomString(6).slice(0, 6).toUpperCase();
+  const resetCode = generateRandomString(6).slice(0, 6).toUpperCase();
   const token = signJwt({ id: '', email, resetCode }, { expiresIn: '10m' });
 
   try {
@@ -156,12 +149,11 @@ export const forgotPassword: RequestHandler<any, any> = async (req, res, next) =
   });
 };
 
-export const resetPassword: RequestHandler<any, any> = async (req, res, next) => {
-  const error = validateResetPasswordData(req.body);
-  if (error) {
-    return next(new BadRequestError(error));
-  }
-
+export const resetPassword: ExpressHandler<ResetPasswordRequest, ResetPasswordResponse> = async (
+  req,
+  res,
+  next
+) => {
   const { email, code, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
@@ -170,10 +162,9 @@ export const resetPassword: RequestHandler<any, any> = async (req, res, next) =>
 
   try {
     const { resetCode } = verifyJwt(user.token || '');
-    if (code !== resetCode) {
-      return next(new Error());
-    }
+    if (code !== resetCode) throw 'Invalid code';
   } catch (err) {
+    logger.warn(err);
     return next(new BadRequestError('Invalid code'));
   }
 
@@ -194,5 +185,63 @@ export const resetPassword: RequestHandler<any, any> = async (req, res, next) =>
     success: true,
     message: 'Password updated successfully',
     data: {},
+  });
+};
+
+export const changePassword: ExpressHandler<ChangePasswordRequest, ChangePasswordResponse> = async (
+  req,
+  res,
+  next
+) => {
+  const userId = res.locals.user.id as string;
+  const { oldPassword, newPassword } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
+
+  const verified = await verifyHashedPassword({
+    password: oldPassword,
+    salt: user.salt,
+    iterations: user.iterations,
+    hashedPassword: user.password,
+  });
+  if (!verified) {
+    return next(new BadRequestError('Old password is incorrect'));
+  }
+
+  const { hashedPassword, salt, iterations } = await genHashedPassword(newPassword);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { password: hashedPassword, salt, iterations },
+  });
+
+  return res.json({
+    success: true,
+    message: 'Password changed successfully',
+    data: {},
+  });
+};
+
+export const resendVerificationEmail: ExpressHandler<any, any> = async (_, res, next) => {
+  const email = res.locals.user.email as string;
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { isVerified: true },
+  });
+  if (!user) {
+    return next(new NotFoundError('User not found'));
+  }
+
+  if (user.isVerified) {
+    return next(new BadRequestError('User is already verified'));
+  }
+
+  const token = signJwt({ id: '', email });
+  await sendVerificationEmail(email, token);
+
+  return res.json({
+    success: true,
+    message: 'Verification email sent successfully',
   });
 };

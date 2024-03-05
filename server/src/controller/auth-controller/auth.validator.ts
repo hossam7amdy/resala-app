@@ -1,9 +1,29 @@
-import { UserSchema } from '@resala/shared';
+import {
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  UserSchema,
+} from '@resala/shared';
+import zod from 'zod';
 
-export const validateRegistrationData = (payload: any) => {
-  const { email, password, firstName, lastName } = payload;
+import { BadRequestError } from '../../lib/error';
+import { ExpressHandler } from '../../types';
+
+export const validateRegistration: ExpressHandler<RegisterRequest, RegisterResponse> = (
+  req,
+  _,
+  next
+) => {
+  const { email, password, firstName, lastName } = req.body;
   if (!email || !password || !firstName || !lastName) {
-    return 'Email, password, first name and last name are required';
+    return next(new BadRequestError('Email, password, first name and last name are required'));
   }
 
   const RegisterSchema = UserSchema.pick({
@@ -13,62 +33,92 @@ export const validateRegistrationData = (payload: any) => {
     lastName: true,
   });
 
-  const validatedFields = RegisterSchema.safeParse(payload);
+  const validatedFields = RegisterSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateLoginData = (payload: any) => {
-  const { email, password } = payload;
+export const validateLogin: ExpressHandler<LoginRequest, LoginResponse> = (req, _, next) => {
+  const { email, password } = req.body;
   if (!email || !password) {
-    return 'Email and password are required';
+    return next(new BadRequestError('Email and password are required'));
   }
 
   const LoginSchema = UserSchema.pick({
     email: true,
     password: true,
   });
-  const validatedFields = LoginSchema.safeParse(payload);
+  const validatedFields = LoginSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateChangePasswordData = (payload: any) => {
-  const { email, oldPassword, newPassword } = payload;
-  if (!email || !oldPassword || !newPassword) {
-    return 'Email, old password and new password are required';
-  }
-};
-
-export const validateForgotPasswordData = (payload: any) => {
-  const { email } = payload;
+export const validateForgotPassword: ExpressHandler<
+  ForgotPasswordRequest,
+  ForgotPasswordResponse
+> = (req, _, next) => {
+  const { email } = req.body;
   if (!email) {
-    return 'Email is required';
+    return next(new BadRequestError('Email is required'));
   }
 
   const ForgotPasswordSchema = UserSchema.pick({
     email: true,
   });
-  const validatedFields = ForgotPasswordSchema.safeParse(payload);
+  const validatedFields = ForgotPasswordSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
 };
 
-export const validateResetPasswordData = (payload: any) => {
-  const { code, email, password } = payload;
+export const validateResetPassword: ExpressHandler<ResetPasswordRequest, ResetPasswordResponse> = (
+  req,
+  _,
+  next
+) => {
+  const { code, email, password } = req.body;
   if (!code || !email || !password) {
-    return 'Code, email and password are required';
+    return next(new BadRequestError('Code, email and password are required'));
   }
 
-  const ResetPasswordSchema = UserSchema.pick({
-    email: true,
-    password: true,
+  const ResetPasswordSchema = zod.object({
+    code: zod.string().length(6),
+    email: UserSchema.shape.email,
+    password: UserSchema.shape.password,
   });
-  const validatedFields = ResetPasswordSchema.safeParse(payload);
+  const validatedFields = ResetPasswordSchema.safeParse(req.body);
   if (!validatedFields.success) {
-    return validatedFields.error.issues[0].message;
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
+
+  next();
+};
+
+export const validateChangePassword: ExpressHandler<
+  ChangePasswordRequest,
+  ChangePasswordResponse
+> = (req, _, next) => {
+  const { oldPassword, newPassword } = req.body;
+  if (!oldPassword || !newPassword) {
+    return next(new BadRequestError('old password and new password are required'));
+  }
+
+  const ChangePasswordSchema = zod.object({
+    oldPassword: UserSchema.shape.password,
+    newPassword: UserSchema.shape.password,
+  });
+  const validatedFields = ChangePasswordSchema.safeParse(req.body);
+  if (!validatedFields.success) {
+    return next(new BadRequestError(validatedFields.error.issues[0].message));
+  }
+
+  next();
 };

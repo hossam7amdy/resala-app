@@ -1,4 +1,4 @@
-const validationPatterns = {
+export const validationPatterns = {
   validatePasswordLength: {
     pattern: /(?=.{8,})/,
     message: 'Password must have at least 8 characters',
@@ -97,5 +97,3 @@ const validationPatterns = {
     message: 'Invalid latitude/longitude point',
   },
 };
-
-export default validationPatterns;

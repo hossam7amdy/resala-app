@@ -1,20 +1,22 @@
+import {
+  DeleteAddressRequest,
+  DeleteAddressResponse,
+  UpdateAddressRequest,
+  UpdateAddressResponse,
+} from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError, NotFoundError } from '../../lib/error';
+import { NotFoundError } from '../../lib/error';
 import { prisma } from '../../model';
-import { validateCreateAddress, validateUpdateAddress } from './address-validator';
+import { ExpressHandlerWithParams } from '../../types';
 
 export const createAddress: RequestHandler = async (req, res) => {
   const userId = res.locals.user.id as string;
-  const error = validateCreateAddress({ ...req.body, userId });
-  if (error) {
-    throw new BadRequestError(error);
-  }
 
   const address = await prisma.address.create({
     data: req.body,
   });
-  const userAddress = await prisma.userAddress.create({
+  await prisma.userAddress.create({
     data: {
       userId,
       addressId: address.id,
@@ -24,22 +26,17 @@ export const createAddress: RequestHandler = async (req, res) => {
   return res.status(201).json({
     success: true,
     message: 'Address created successfully',
-    data: userAddress,
+    data: address,
   });
 };
 
-export const updateAddress: RequestHandler = async (req, res, next) => {
+export const updateAddress: ExpressHandlerWithParams<
+  { addressId: string },
+  UpdateAddressRequest,
+  UpdateAddressResponse
+> = async (req, res, next) => {
   const userId = res.locals.user.id as string;
   const addressId = parseInt(req.params.addressId + '');
-
-  if (isNaN(addressId)) {
-    return next(new BadRequestError('Invalid address ID'));
-  }
-
-  const error = validateUpdateAddress({ ...req.body, id: addressId, userId });
-  if (error) {
-    throw new BadRequestError(error);
-  }
 
   const exist = await prisma.userAddress.findUnique({
     where: {
@@ -65,13 +62,13 @@ export const updateAddress: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const deleteAddress: RequestHandler = async (req, res, next) => {
+export const deleteAddress: ExpressHandlerWithParams<
+  { addressId: string },
+  DeleteAddressRequest,
+  DeleteAddressResponse
+> = async (req, res, next) => {
   const userId = res.locals.user.id as string;
   const addressId = parseInt(req.params.addressId + '');
-
-  if (isNaN(addressId)) {
-    return next(new BadRequestError('Invalid address ID'));
-  }
 
   const exist = await prisma.userAddress.findUnique({
     where: {
@@ -92,6 +89,7 @@ export const deleteAddress: RequestHandler = async (req, res, next) => {
   return res.json({
     success: true,
     message: 'Address deleted successfully',
+    data: { id: addressId },
   });
 };
 

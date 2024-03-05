@@ -2,7 +2,8 @@
   "name": "@resala/server",
   "version": "1.0.0",
   "description": "Resala server",
-  "main": "src/index.js",
+  "private": true,
+  "main": "index.ts",
   "scripts": {
     "build": "npm i && npx prisma migrate deploy",
     "start": "npx ts-node --transpile-only src/index.ts",
@@ -16,7 +17,6 @@
     "@azure/identity": "^4.0.1",
     "@azure/storage-blob": "^12.17.0",
     "@prisma/client": "^5.10.2",
-    "@resala/shared": "file:../shared",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
@@ -42,17 +42,10 @@
     "prisma": "^5.10.2",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "ts-node": "^10.9.2"
   },
   "prisma": {
     "schema": "src/model/schema.prisma",
     "seed": "ts-node src/model/seed.ts"
-  },
-  "nodemonConfig": {
-    "watch": [
-      ".",
-      "../shared"
-    ]
   }
 }

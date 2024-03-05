@@ -1,7 +1,7 @@
 import zod from 'zod';
 
 import { ROLE } from './enums';
-import validationPatterns from './validation-patterns';
+import { validationPatterns } from './validation-patterns';
 
 export const QueryParamsSchema = zod.object({
   page: zod.coerce.number().positive().max(100).optional(),
@@ -13,15 +13,9 @@ export const UserSchema = zod.object({
   email: zod.string().min(5).max(128).email(),
   firstName: zod.string().min(2).max(50),
   lastName: zod.string().min(2).max(50),
-  role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.MODERATOR]),
-  isVerified: zod.boolean(),
-  phone: zod
-    .string()
-    .length(11)
-    .regex(
-      validationPatterns.validatePhoneNumber.pattern,
-      validationPatterns.validatePhoneNumber.message
-    ),
+  role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]),
+  phone: zod.string().length(11).startsWith('01').optional(),
+  isVerified: zod.boolean().optional(),
   password: zod
     .string()
     .min(8)
@@ -42,7 +36,6 @@ export const UserSchema = zod.object({
 
 export const AddressSchema = zod.object({
   id: zod.coerce.number().positive(),
-  userId: zod.string().uuid(),
   state: zod.string().max(100),
   city: zod.string().max(100),
   street: zod.string().max(100),
