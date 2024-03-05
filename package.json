@@ -19,8 +19,8 @@
     "build:dashboard": "cd dashboard && npm i && npm run build",
     "build": "npm i && npm-run-all build:server build:dashboard",
     "test:server": "cd server && npm run test",
-    "test:dashboard": "cd dashboard && npm run test",
-    "test": "npm-run-all test:server test:dashboard",
+    "test:dashboard": "cd dashboard && npm run test --if-present",
+    "test": "npm-run-all --parallel test:server test:dashboard",
     "start:server": "cd server && npm run dev",
     "start:dashboard": "cd dashboard && npm run dev",
     "dev": "npm-run-all --parallel start:server start:dashboard"
