@@ -1,21 +1,9 @@
-import {
-  AdminCreateUserRequest,
-  AdminCreateUserResponse,
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse,
-  UpdateSelfRequest,
-  UpdateSelfResponse,
-  UserSchema,
-} from '@resala/shared';
+import { UserSchema } from '@resala/shared';
 
 import { BadRequestError } from '../../lib/error';
-import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
+import { AdminCreateUser, AdminUpdateUser, UpdateProfile } from './user-types';
 
-export const validateUpdateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelfResponse> = (
-  req,
-  _,
-  next
-) => {
+export const validateUpdateProfile: UpdateProfile = (req, _, next) => {
   const { phone, firstName, lastName } = req.body;
   if (!phone || !firstName || !lastName) {
     return next(new BadRequestError('Phone, first name and last name are required'));
@@ -35,10 +23,7 @@ export const validateUpdateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelf
   next();
 };
 
-export const validateAdminCreateUser: ExpressHandler<
-  AdminCreateUserRequest,
-  AdminCreateUserResponse
-> = (req, _, next) => {
+export const validateAdminCreateUser: AdminCreateUser = (req, _, next) => {
   const { email, password, firstName, lastName, role } = req.body;
   if (!email || !password || !firstName || !lastName || !role) {
     return next(
@@ -55,11 +40,7 @@ export const validateAdminCreateUser: ExpressHandler<
   next();
 };
 
-export const validateAdminUpdateUser: ExpressHandlerWithParams<
-  { userId: string },
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse
-> = (req, _, next) => {
+export const validateAdminUpdateUser: AdminUpdateUser = (req, _, next) => {
   const { firstName, lastName, role } = req.body;
   if (!firstName || !lastName || !role) {
     return next(new BadRequestError('First name, last name and role are required fields'));

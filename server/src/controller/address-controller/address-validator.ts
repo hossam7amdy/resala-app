@@ -1,19 +1,9 @@
-import {
-  AddressSchema,
-  CreateAddressRequest,
-  CreateAddressResponse,
-  UpdateAddressRequest,
-  UpdateAddressResponse,
-} from '@resala/shared';
+import { AddressSchema } from '@resala/shared';
 
 import { BadRequestError } from '../../lib/error';
-import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
+import { CreateAddress, UpdateAddress } from './address-types';
 
-export const validateCreateAddress: ExpressHandler<CreateAddressRequest, CreateAddressResponse> = (
-  req,
-  res,
-  next
-) => {
+export const validateCreateAddress: CreateAddress = (req, res, next) => {
   const userId = res.locals.user.id as string;
   const { state, city, street } = req.body;
   if (!state || !city || !street) {
@@ -30,11 +20,7 @@ export const validateCreateAddress: ExpressHandler<CreateAddressRequest, CreateA
   next();
 };
 
-export const validateUpdateAddress: ExpressHandlerWithParams<
-  { addressId: string },
-  UpdateAddressRequest,
-  UpdateAddressResponse
-> = (req, _, next) => {
+export const validateUpdateAddress: UpdateAddress = (req, _, next) => {
   const id = req.params.addressId;
   const { state, city, street } = req.body;
   if (!state || !city || !street) {

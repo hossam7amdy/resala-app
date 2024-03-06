@@ -25,12 +25,11 @@ import { authenticateToken, authorizeUser } from '../middleware/auth-middleware'
 import { errHandler } from '../middleware/error-middleware';
 import { loggerMiddleware } from '../middleware/logger-middleware';
 import { uploadMultiple } from '../middleware/upload-middleware';
-import { ExpressHandler } from '../types';
 
 const router = Router();
 
 /** Define the handlers for each endpoint */
-const HANDLER: { [key in Endpoints]: (RequestHandler | ExpressHandler<any, any>)[] } = {
+const HANDLER: { [key in Endpoints]: RequestHandler<any, any, any, any, any>[] } = {
   [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
   [Endpoints.login]: [authValidator.validateLogin, authCtrl.login],
@@ -168,7 +167,7 @@ Object.entries(HANDLER).forEach(([endpoint, handlers]) => {
     handlers = [authenticateToken, ...handlers];
   }
 
-  const withErrorHandler = handlers.map(handler => errHandler(handler as any));
+  const withErrorHandler = handlers.map(handler => errHandler(handler));
   router[method](url, ...withErrorHandler);
 });
 

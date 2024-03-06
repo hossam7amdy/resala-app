@@ -1,26 +1,21 @@
-import {
-  ChangePasswordRequest,
-  ChangePasswordResponse,
-  ForgotPasswordRequest,
-  ForgotPasswordResponse,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-  ResetPasswordRequest,
-  ResetPasswordResponse,
-} from '@resala/shared';
-
 import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
 import { signJwt, verifyJwt } from '../../lib/jwt-token';
 import { logger } from '../../lib/logger';
 import { sendResetPasswordEmail, sendVerificationEmail } from '../../lib/mailer';
 import { prisma } from '../../model';
-import { ExpressHandler } from '../../types';
 import { genHashedPassword, verifyHashedPassword } from '../../utils/password';
 import { generateRandomString } from '../../utils/random';
+import {
+  ChangePassword,
+  ForgotPassword,
+  Login,
+  Register,
+  ResendVerificationEmail,
+  ResetPassword,
+  VerifyEmail,
+} from './auth-types';
 
-export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
+export const login: Login = async (req, res, next) => {
   const { email, password } = req.body;
   const userExist = await prisma.user.findUnique({ where: { email } });
   if (!userExist) {
@@ -51,11 +46,7 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, re
   });
 };
 
-export const register: ExpressHandler<RegisterRequest, RegisterResponse> = async (
-  req,
-  res,
-  next
-) => {
+export const register: Register = async (req, res, next) => {
   const userExist = await prisma.user.findUnique({ where: { email: req.body.email } });
   if (userExist) {
     return next(new ConflictError('Email already registered'));
@@ -85,8 +76,8 @@ export const register: ExpressHandler<RegisterRequest, RegisterResponse> = async
   });
 };
 
-export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
-  const token = req.query.token as string;
+export const verifyEmail: VerifyEmail = async (req, res, next) => {
+  const token = req.query.token;
   if (!token) {
     return next(new BadRequestError('Token is required'));
   }
@@ -119,14 +110,11 @@ export const verifyEmail: ExpressHandler<any, any> = async (req, res, next) => {
   return res.json({
     success: true,
     message: 'Email verified successfully',
+    data: undefined,
   });
 };
 
-export const forgotPassword: ExpressHandler<ForgotPasswordRequest, ForgotPasswordResponse> = async (
-  req,
-  res,
-  next
-) => {
+export const forgotPassword: ForgotPassword = async (req, res, next) => {
   const { email } = req.body;
   const resetCode = generateRandomString(6).slice(0, 6).toUpperCase();
   const token = signJwt({ id: '', email, resetCode }, { expiresIn: '10m' });
@@ -145,15 +133,11 @@ export const forgotPassword: ExpressHandler<ForgotPasswordRequest, ForgotPasswor
   return res.json({
     success: true,
     message: 'Reset code is sent to your email',
-    data: {},
+    data: undefined,
   });
 };
 
-export const resetPassword: ExpressHandler<ResetPasswordRequest, ResetPasswordResponse> = async (
-  req,
-  res,
-  next
-) => {
+export const resetPassword: ResetPassword = async (req, res, next) => {
   const { email, code, password } = req.body;
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
@@ -184,16 +168,12 @@ export const resetPassword: ExpressHandler<ResetPasswordRequest, ResetPasswordRe
   return res.json({
     success: true,
     message: 'Password updated successfully',
-    data: {},
+    data: undefined,
   });
 };
 
-export const changePassword: ExpressHandler<ChangePasswordRequest, ChangePasswordResponse> = async (
-  req,
-  res,
-  next
-) => {
-  const userId = res.locals.user.id as string;
+export const changePassword: ChangePassword = async (req, res, next) => {
+  const userId = res.locals.id;
   const { oldPassword, newPassword } = req.body;
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
@@ -219,12 +199,12 @@ export const changePassword: ExpressHandler<ChangePasswordRequest, ChangePasswor
   return res.json({
     success: true,
     message: 'Password changed successfully',
-    data: {},
+    data: undefined,
   });
 };
 
-export const resendVerificationEmail: ExpressHandler<any, any> = async (_, res, next) => {
-  const email = res.locals.user.email as string;
+export const resendVerificationEmail: ResendVerificationEmail = async (_, res, next) => {
+  const email = res.locals.email;
   const user = await prisma.user.findUnique({
     where: { email },
     select: { isVerified: true },
@@ -243,5 +223,6 @@ export const resendVerificationEmail: ExpressHandler<any, any> = async (_, res, 
   return res.json({
     success: true,
     message: 'Verification email sent successfully',
+    data: undefined,
   });
 };

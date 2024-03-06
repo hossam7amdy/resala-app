@@ -1,10 +1,16 @@
-import { RequestHandler } from 'express';
+import { User } from '@prisma/client';
 
-export type ExpressHandler<Req, Res> = RequestHandler<string, Res, Req, any>;
-
-export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
-  Partial<Params>,
-  Res,
-  Req,
-  any
->;
+export interface LocalUser extends Record<string, any> {
+  user: Pick<
+    User,
+    | 'id'
+    | 'email'
+    | 'firstName'
+    | 'lastName'
+    | 'isVerified'
+    | 'phone'
+    | 'role'
+    | 'createdAt'
+    | 'updatedAt'
+  >;
+}

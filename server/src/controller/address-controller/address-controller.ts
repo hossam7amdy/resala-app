@@ -1,17 +1,9 @@
-import {
-  DeleteAddressRequest,
-  DeleteAddressResponse,
-  UpdateAddressRequest,
-  UpdateAddressResponse,
-} from '@resala/shared';
-import { RequestHandler } from 'express';
-
 import { NotFoundError } from '../../lib/error';
 import { prisma } from '../../model';
-import { ExpressHandlerWithParams } from '../../types';
+import { CreateAddress, DeleteAddress, GetAddressList, UpdateAddress } from './address-types';
 
-export const createAddress: RequestHandler = async (req, res) => {
-  const userId = res.locals.user.id as string;
+export const createAddress: CreateAddress = async (req, res) => {
+  const userId = res.locals.id;
 
   const address = await prisma.address.create({
     data: req.body,
@@ -30,12 +22,8 @@ export const createAddress: RequestHandler = async (req, res) => {
   });
 };
 
-export const updateAddress: ExpressHandlerWithParams<
-  { addressId: string },
-  UpdateAddressRequest,
-  UpdateAddressResponse
-> = async (req, res, next) => {
-  const userId = res.locals.user.id as string;
+export const updateAddress: UpdateAddress = async (req, res, next) => {
+  const userId = res.locals.id;
   const addressId = parseInt(req.params.addressId + '');
 
   const exist = await prisma.userAddress.findUnique({
@@ -62,12 +50,8 @@ export const updateAddress: ExpressHandlerWithParams<
   });
 };
 
-export const deleteAddress: ExpressHandlerWithParams<
-  { addressId: string },
-  DeleteAddressRequest,
-  DeleteAddressResponse
-> = async (req, res, next) => {
-  const userId = res.locals.user.id as string;
+export const deleteAddress: DeleteAddress = async (req, res, next) => {
+  const userId = res.locals.id;
   const addressId = parseInt(req.params.addressId + '');
 
   const exist = await prisma.userAddress.findUnique({
@@ -89,14 +73,14 @@ export const deleteAddress: ExpressHandlerWithParams<
   return res.json({
     success: true,
     message: 'Address deleted successfully',
-    data: { id: addressId },
+    data: undefined,
   });
 };
 
-export const getAddressList: RequestHandler = async (_, res) => {
-  const userId = res.locals.user.id as string;
-  const addresses = await prisma.userAddress.findMany({
-    include: {
+export const getAddressList: GetAddressList = async (_, res) => {
+  const userId = res.locals.id;
+  const addressList = await prisma.userAddress.findMany({
+    select: {
       address: true,
     },
     where: {
@@ -106,6 +90,6 @@ export const getAddressList: RequestHandler = async (_, res) => {
 
   return res.json({
     success: true,
-    data: addresses,
+    data: addressList.map(add => add.address),
   });
 };

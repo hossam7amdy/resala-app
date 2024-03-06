@@ -1,28 +1,20 @@
 import { Prisma } from '@prisma/client';
-import {
-  AdminCreateUserRequest,
-  AdminCreateUserResponse,
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse,
-  AdminGetUserRequest,
-  AdminGetUserResponse,
-  AdminGetUsersListRequest,
-  AdminGetUsersListResponse,
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse,
-  GetSelfRequest,
-  GetSelfResponse,
-  UpdateSelfRequest,
-  UpdateSelfResponse,
-} from '@resala/shared';
 
 import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
 import { prisma } from '../../model';
-import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
 import { genHashedPassword } from '../../utils/password';
+import {
+  AdminCreateUser,
+  AdminDeleteUser,
+  AdminGetUser,
+  AdminGetUsersList,
+  AdminUpdateUser,
+  GetProfile,
+  UpdateProfile,
+} from './user-types';
 
-export const getProfile: ExpressHandler<GetSelfRequest, GetSelfResponse> = async (_, res, next) => {
-  const userId = res.locals.user.id as string;
+export const getProfile: GetProfile = async (_, res, next) => {
+  const userId = res.locals.id;
   const user = await prisma.user.findUnique({
     select: {
       id: true,
@@ -50,12 +42,8 @@ export const getProfile: ExpressHandler<GetSelfRequest, GetSelfResponse> = async
   });
 };
 
-export const updateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelfResponse> = async (
-  req,
-  res,
-  next
-) => {
-  const userId = res.locals.user.id as string;
+export const updateProfile: UpdateProfile = async (req, res, next) => {
+  const userId = res.locals.user.id;
   const { firstName, lastName, phone } = req.body;
   try {
     await prisma.user.update({
@@ -69,15 +57,11 @@ export const updateProfile: ExpressHandler<UpdateSelfRequest, UpdateSelfResponse
   return res.json({
     success: true,
     message: 'Profile updated successfully',
-    data: {},
+    data: undefined,
   });
 };
 
-export const adminGetUser: ExpressHandlerWithParams<
-  { userId: string },
-  AdminGetUserRequest,
-  AdminGetUserResponse
-> = async (req, res, next) => {
+export const adminGetUser: AdminGetUser = async (req, res, next) => {
   const userId = req.params.userId;
   const user = await prisma.user.findUnique({
     select: {
@@ -106,10 +90,7 @@ export const adminGetUser: ExpressHandlerWithParams<
   });
 };
 
-export const adminGetUsersList: ExpressHandler<
-  AdminGetUsersListRequest,
-  AdminGetUsersListResponse
-> = async (req, res) => {
+export const adminGetUsersList: AdminGetUsersList = async (req, res) => {
   const PAGE_SIZE = 10;
   const page = parseInt(req.query.page || '1');
   const query = req.query.query || '';
@@ -162,11 +143,7 @@ export const adminGetUsersList: ExpressHandler<
   });
 };
 
-export const adminDeleteUser: ExpressHandlerWithParams<
-  { userId: string },
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse
-> = async (req, res, next) => {
+export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
   const userId = req.params.userId;
   try {
     await prisma.user.delete({ where: { id: userId } });
@@ -180,14 +157,11 @@ export const adminDeleteUser: ExpressHandlerWithParams<
   return res.json({
     success: true,
     message: 'User deleted successfully',
-    data: {},
+    data: undefined,
   });
 };
 
-export const adminCreateUser: ExpressHandler<
-  AdminCreateUserRequest,
-  AdminCreateUserResponse
-> = async (req, res, next) => {
+export const adminCreateUser: AdminCreateUser = async (req, res, next) => {
   const userExist = await prisma.user.findFirst({
     where: {
       OR: [{ email: req.body.email }, { phone: req.body.phone }],
@@ -220,6 +194,7 @@ export const adminCreateUser: ExpressHandler<
       lastLogin: true,
       createdAt: true,
       updatedAt: true,
+      deletedAt: true,
     },
   });
 
@@ -229,11 +204,7 @@ export const adminCreateUser: ExpressHandler<
   });
 };
 
-export const adminUpdateUser: ExpressHandlerWithParams<
-  { userId: string },
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse
-> = async (req, res, next) => {
+export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
   const userId = req.params.userId as string;
 
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
@@ -263,6 +234,6 @@ export const adminUpdateUser: ExpressHandlerWithParams<
   return res.json({
     success: true,
     message: 'User updated successfully',
-    data: {},
+    data: undefined,
   });
 };

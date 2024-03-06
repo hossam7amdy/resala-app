@@ -1,26 +1,10 @@
-import {
-  ChangePasswordRequest,
-  ChangePasswordResponse,
-  ForgotPasswordRequest,
-  ForgotPasswordResponse,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-  ResetPasswordRequest,
-  ResetPasswordResponse,
-  UserSchema,
-} from '@resala/shared';
+import { UserSchema } from '@resala/shared';
 import zod from 'zod';
 
 import { BadRequestError } from '../../lib/error';
-import { ExpressHandler } from '../../types';
+import { ChangePassword, ForgotPassword, Login, Register, ResetPassword } from './auth-types';
 
-export const validateRegistration: ExpressHandler<RegisterRequest, RegisterResponse> = (
-  req,
-  _,
-  next
-) => {
+export const validateRegistration: Register = (req, _, next) => {
   const { email, password, firstName, lastName } = req.body;
   if (!email || !password || !firstName || !lastName) {
     return next(new BadRequestError('Email, password, first name and last name are required'));
@@ -41,7 +25,7 @@ export const validateRegistration: ExpressHandler<RegisterRequest, RegisterRespo
   next();
 };
 
-export const validateLogin: ExpressHandler<LoginRequest, LoginResponse> = (req, _, next) => {
+export const validateLogin: Login = (req, _, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return next(new BadRequestError('Email and password are required'));
@@ -59,10 +43,7 @@ export const validateLogin: ExpressHandler<LoginRequest, LoginResponse> = (req, 
   next();
 };
 
-export const validateForgotPassword: ExpressHandler<
-  ForgotPasswordRequest,
-  ForgotPasswordResponse
-> = (req, _, next) => {
+export const validateForgotPassword: ForgotPassword = (req, _, next) => {
   const { email } = req.body;
   if (!email) {
     return next(new BadRequestError('Email is required'));
@@ -79,11 +60,7 @@ export const validateForgotPassword: ExpressHandler<
   next();
 };
 
-export const validateResetPassword: ExpressHandler<ResetPasswordRequest, ResetPasswordResponse> = (
-  req,
-  _,
-  next
-) => {
+export const validateResetPassword: ResetPassword = (req, _, next) => {
   const { code, email, password } = req.body;
   if (!code || !email || !password) {
     return next(new BadRequestError('Code, email and password are required'));
@@ -102,10 +79,7 @@ export const validateResetPassword: ExpressHandler<ResetPasswordRequest, ResetPa
   next();
 };
 
-export const validateChangePassword: ExpressHandler<
-  ChangePasswordRequest,
-  ChangePasswordResponse
-> = (req, _, next) => {
+export const validateChangePassword: ChangePassword = (req, _, next) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
     return next(new BadRequestError('old password and new password are required'));
