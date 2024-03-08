@@ -8,7 +8,7 @@ export type EndpointConfig = {
 export enum Endpoints {
   healthz = 'healthz',
 
-  // user endpoints
+  // auth endpoints
   login = 'login',
   register = 'register',
   forgotPassword = 'forgotPassword',
@@ -16,6 +16,8 @@ export enum Endpoints {
   changePassword = 'changePassword',
   verifyEmail = 'verifyEmail',
   resendEmailVerification = 'resendEmailVerification',
+
+  // user endpoints
   getCurrentUser = 'getCurrentUser',
   updateCurrentUser = 'updateCurrentUser',
   adminGetUser = 'adminGetUser',
@@ -24,7 +26,7 @@ export enum Endpoints {
   adminUpdateUser = 'adminUpdateUser',
   adminDeleteUser = 'adminDeleteUser',
 
-  // user address endpoints
+  // address endpoints
   createAddress = 'createAddress',
   getAddressList = 'getAddressList',
   updateAddress = 'updateAddress',
@@ -116,7 +118,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     sensitive: true,
   },
   [Endpoints.verifyEmail]: {
-    method: 'get',
+    method: 'post',
     url: '/api/v1/auth/verify-email',
   },
   [Endpoints.changePassword]: {

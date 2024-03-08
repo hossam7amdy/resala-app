@@ -1,71 +1,81 @@
 import { Address, User } from '@prisma/client';
 
-interface Response<T = undefined> {
+// unified response body for all requests
+interface ResBody<T = undefined> {
   success: boolean;
   message?: string;
-  data: T;
+  data?: T;
 }
+
 export interface ReqQuery {
   page?: string;
   query?: string;
 }
 
-export interface LoginRequest extends Pick<User, 'email' | 'password'> {}
+export interface LoginRequest {
+  sign: string;
+  password: string;
+}
 export interface LoginResponse
-  extends Response<{
+  extends ResBody<{
+    expiresIn: number; // in seconds (e.g. 86400 for 1 day)
     accessToken: string;
+    refreshToken: string;
   }> {}
 
 export interface RegisterRequest
   extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName'> {}
-export interface RegisterResponse
-  extends Response<{
-    accessToken: string;
-  }> {}
+export interface RegisterResponse extends LoginResponse {}
 
-export interface VerifyEmailRequest {} // Only path params
-export interface VerifyEmailResponse extends Response {}
+export interface VerifyEmailRequest extends Pick<User, 'email'> {
+  token: string;
+}
+export interface VerifyEmailResponse extends ResBody {}
 
-export interface ResendVerificationEmailRequest extends Pick<User, 'email'> {}
-export interface ResendVerificationEmailResponse extends Response {}
+export interface ResendVerificationEmailRequest {}
+export interface ResendVerificationEmailResponse extends ResBody {}
 
 export interface ForgotPasswordRequest extends Pick<User, 'email'> {}
-export interface ForgotPasswordResponse extends Response {}
+export interface ForgotPasswordResponse
+  extends ResBody<{
+    resetToken: string;
+    expiresIn: number; // in seconds (e.g. 600 for 10 minutes)
+  }> {}
 
 export interface ResetPasswordRequest extends Pick<User, 'email' | 'password'> {
   code: string;
 }
-export interface ResetPasswordResponse extends Response {}
+export interface ResetPasswordResponse extends ResBody {}
 
 export interface GetProfileRequest {} // No data needed
 export interface GetProfileResponse
-  extends Response<Omit<User, 'password' | 'iterations' | 'salt' | 'token'>> {}
+  extends ResBody<Omit<User, 'password' | 'iterations' | 'salt' | 'token'>> {}
 
 export interface UpdateProfileRequest extends Pick<User, 'phone' | 'firstName' | 'lastName'> {}
-export interface UpdateProfileResponse extends Response {}
+export interface UpdateProfileResponse extends ResBody {}
 
 export interface GetUserAddressListRequest {}
-export interface GetUserAddressListResponse extends Response<Address[]> {}
+export interface GetUserAddressListResponse extends ResBody<Address[]> {}
 
 export interface ChangePasswordRequest {
   oldPassword: string;
   newPassword: string;
 }
-export interface ChangePasswordResponse extends Response {}
+export interface ChangePasswordResponse extends ResBody<Pick<User, 'updatedAt'>> {}
 
 export interface AdminCreateUserRequest
   extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName' | 'role'>,
     Partial<Pick<User, 'phone'>> {}
 export interface AdminCreateUserResponse
-  extends Response<Omit<User, 'password' | 'salt' | 'iterations' | 'token'>> {}
+  extends ResBody<Omit<User, 'password' | 'salt' | 'iterations' | 'token'>> {}
 
 export interface AdminGetUserRequest {} // Only path params
 export interface AdminGetUserResponse
-  extends Response<Omit<User, 'password' | 'iterations' | 'salt' | 'token'>> {}
+  extends ResBody<Omit<User, 'password' | 'iterations' | 'salt' | 'token'>> {}
 
 export interface AdminGetUsersListRequest {} // No data needed
 export interface AdminGetUsersListResponse
-  extends Response<{
+  extends ResBody<{
     total: number;
     users: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>[];
   }> {}
@@ -73,16 +83,16 @@ export interface AdminGetUsersListResponse
 export interface AdminUpdateUserRequest
   extends Pick<User, 'firstName' | 'lastName' | 'role'>,
     Partial<Pick<User, 'phone'>> {}
-export interface AdminUpdateUserResponse extends Response {}
+export interface AdminUpdateUserResponse extends ResBody {}
 
 export interface AdminDeleteUserRequest {} // Only path params
-export interface AdminDeleteUserResponse extends Response {}
+export interface AdminDeleteUserResponse extends ResBody {}
 
 export interface CreateAddressRequest extends Omit<Address, 'id'> {}
-export interface CreateAddressResponse extends Response<Address> {}
+export interface CreateAddressResponse extends ResBody<Address> {}
 
 export interface UpdateAddressRequest extends Address {}
-export interface UpdateAddressResponse extends Response<Address> {}
+export interface UpdateAddressResponse extends ResBody<Address> {}
 
 export interface DeleteAddressRequest {} // Only path params
-export interface DeleteAddressResponse extends Response {}
+export interface DeleteAddressResponse extends ResBody {}
