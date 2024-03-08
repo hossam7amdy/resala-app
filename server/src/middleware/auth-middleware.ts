@@ -1,14 +1,14 @@
 import { RequestHandler } from 'express';
 import { TokenExpiredError } from 'jsonwebtoken';
 
-import { UnauthorizedError } from '../lib/error';
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from '../lib/error';
 import { JwtObject, verifyJwt } from '../lib/jwt-token';
 import { prisma } from '../model';
 
 export const authenticateToken: RequestHandler = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
-    return next(new UnauthorizedError('Token required'));
+    return next(new BadRequestError('Token required'));
   }
 
   let payload: JwtObject;
@@ -33,10 +33,10 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new UnauthorizedError('User not found'));
+    return next(new NotFoundError('User not found'));
   }
 
-  res.locals.user = user;
+  res.locals = user;
   return next();
 };
 
@@ -45,7 +45,7 @@ export const authorizeUser = (roles: string[]): RequestHandler => {
     const user = res.locals.user;
 
     if (!roles.includes(user?.role)) {
-      return next(new UnauthorizedError("You don't have permission to access this resource"));
+      return next(new ForbiddenError("You don't have permission to access this resource"));
     }
 
     return next();

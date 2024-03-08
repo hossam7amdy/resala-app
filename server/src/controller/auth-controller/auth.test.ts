@@ -12,7 +12,7 @@ const completeRegisterData = {
 };
 
 const completeLoginData = {
-  email: completeRegisterData.email,
+  sign: completeRegisterData.email,
   password: completeRegisterData.password,
 };
 
@@ -23,7 +23,7 @@ const incompleteRegisterData = {
 };
 
 const incompleteLoginData = {
-  email: completeRegisterData.email,
+  sign: completeRegisterData.email,
   password: '',
 };
 

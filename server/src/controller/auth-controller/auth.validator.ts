@@ -4,6 +4,15 @@ import zod from 'zod';
 import { BadRequestError } from '../../lib/error';
 import { ChangePassword, ForgotPassword, Login, Register, ResetPassword } from './auth-types';
 
+export const validateLogin: Login = (req, _, next) => {
+  const { sign, password } = req.body;
+  if (!sign || !password) {
+    return next(new BadRequestError('Email and password are required'));
+  }
+
+  next();
+};
+
 export const validateRegistration: Register = (req, _, next) => {
   const { email, password, firstName, lastName } = req.body;
   if (!email || !password || !firstName || !lastName) {
@@ -18,24 +27,6 @@ export const validateRegistration: Register = (req, _, next) => {
   });
 
   const validatedFields = RegisterSchema.safeParse(req.body);
-  if (!validatedFields.success) {
-    return next(new BadRequestError(validatedFields.error.issues[0].message));
-  }
-
-  next();
-};
-
-export const validateLogin: Login = (req, _, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return next(new BadRequestError('Email and password are required'));
-  }
-
-  const LoginSchema = UserSchema.pick({
-    email: true,
-    password: true,
-  });
-  const validatedFields = LoginSchema.safeParse(req.body);
   if (!validatedFields.success) {
     return next(new BadRequestError(validatedFields.error.issues[0].message));
   }
@@ -62,8 +53,10 @@ export const validateForgotPassword: ForgotPassword = (req, _, next) => {
 
 export const validateResetPassword: ResetPassword = (req, _, next) => {
   const { code, email, password } = req.body;
-  if (!code || !email || !password) {
-    return next(new BadRequestError('Code, email and password are required'));
+  const resetToken = req.headers.authorization?.split(' ')[1];
+
+  if (!resetToken || !code || !email || !password) {
+    return next(new BadRequestError('code, token, email and password are required'));
   }
 
   const ResetPasswordSchema = zod.object({

@@ -6,6 +6,9 @@ const ENV = {
   PORT: process.env.PORT,
   SERVER_URL: process.env.SERVER_URL,
   JWT_SECRET: process.env.JWT_SECRET,
+  JWT_REFRESH: process.env.JWT_REFRESH,
+  JWT_RESET: process.env.JWT_RESET,
+  JWT_VERIFY: process.env.JWT_VERIFY,
   DATABASE_URL: process.env.DATABASE_URL,
   MAIL_USER: process.env.MAIL_USER,
   MAIL_PASS: process.env.MAIL_PASS,
@@ -24,7 +27,6 @@ const ENV = {
 
   if (missedEnv.length > 0) {
     console.error(`Missed environment variables: [${missedEnv.join(', ')}]`);
-    process.exit(1);
   }
 })();
 

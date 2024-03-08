@@ -2,7 +2,7 @@ import ENV from '../../env';
 import mailer from './mailer';
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const href = `${ENV.SERVER_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
+  const href = `${ENV.SERVER_URL}/verify-email.html?token=${token}&email=${email}`;
 
   return mailer.send({
     to: email,

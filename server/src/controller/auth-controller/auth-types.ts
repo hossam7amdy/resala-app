@@ -26,7 +26,7 @@ export type VerifyEmail = RequestHandler<
   undefined,
   VerifyEmailResponse,
   VerifyEmailRequest,
-  { token: string },
+  undefined,
   {}
 >;
 
@@ -58,6 +58,6 @@ export type ResendVerificationEmail = RequestHandler<
   undefined,
   ResendVerificationEmailResponse,
   ResendVerificationEmailRequest,
-  { email: string },
+  undefined,
   LocalUser
 >;
