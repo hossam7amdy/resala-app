@@ -52,6 +52,7 @@ paths:
     get:
       summary: returns OK 🤞
       description: Makes sure server is up and running
+      security: []
       tags:
         - healthz
       responses:
@@ -64,6 +65,7 @@ paths:
     post:
       summary: login to the system
       description: login to the system with `email`/`phone` and `password`
+      security: []
       requestBody:
         required: true
         content:
@@ -98,6 +100,7 @@ paths:
   /api/v1/auth/register:
     post:
       summary: register a new customer
+      security: []
       requestBody:
         required: true
         content:
@@ -136,6 +139,7 @@ paths:
   /api/v1/auth/forgot-password:
     post:
       summary: send reset code to the user mailbox
+      security: []
       requestBody:
         required: true
         content:
@@ -168,6 +172,9 @@ paths:
   /api/v1/auth/reset-password:
     post:
       summary: reset user password
+      description: You must provide Auth token provided on `forgotPassword` call
+      security:
+        - bearerReset: []
       requestBody:
         required: true
         content:
@@ -206,6 +213,7 @@ paths:
   /verify-email.html:
     get:
       summary: verifies user's email
+      security: []
       parameters:
         - in: query
           name: email
@@ -233,6 +241,7 @@ paths:
   /api/v1/auth/verify-email:
     post:
       summary: verify user's email
+      security: []
       requestBody:
         required: true
         content:
@@ -894,6 +903,11 @@ components:
             $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+      description: JWT authorization header using the Bearer scheme. Example Bearer {token}.
+    bearerReset: # arbitrary name for the security scheme
       type: http
       scheme: bearer
       bearerFormat: JWT # optional, arbitrary value for documentation purposes

@@ -74,6 +74,7 @@
       "get": {
         "summary": "returns OK 🤞",
         "description": "Makes sure server is up and running",
+        "security": [],
         "tags": ["healthz"],
         "responses": {
           "200": {
@@ -89,6 +90,7 @@
       "post": {
         "summary": "login to the system",
         "description": "login to the system with `email`/`phone` and `password`",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -142,6 +144,7 @@
     "/api/v1/auth/register": {
       "post": {
         "summary": "register a new customer",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -194,6 +197,7 @@
     "/api/v1/auth/forgot-password": {
       "post": {
         "summary": "send reset code to the user mailbox",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -240,6 +244,12 @@
     "/api/v1/auth/reset-password": {
       "post": {
         "summary": "reset user password",
+        "description": "You must provide Auth token provided on `forgotPassword` call",
+        "security": [
+          {
+            "bearerReset": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -292,6 +302,7 @@
     "/verify-email.html": {
       "get": {
         "summary": "verifies user's email",
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -331,6 +342,7 @@
     "/api/v1/auth/verify-email": {
       "post": {
         "summary": "verify user's email",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -1144,6 +1156,12 @@
     },
     "securitySchemes": {
       "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT authorization header using the Bearer scheme. Example Bearer {token}."
+      },
+      "bearerReset": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
