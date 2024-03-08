@@ -10,6 +10,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # services:
+    #   postgres:
+    #     image: postgres
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
+    #     env:
+    #       POSTGRES_PASSWORD: postgress
+
     env:
       PORT: ${{secrets.PORT}}
       ENV: ${{secrets.ENV}}
@@ -34,6 +48,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+
+      - name: Use .env variables
+        run: |
+          echo "PORT=$PORT" >> .env
+          echo "ENV=$ENV" >> .env
+          echo "SERVER_URL=$SERVER_URL" >> .env
+          echo "JWT_SECRET=$JWT_SECRET" >> .env
+          echo "JWT_REFRESH=$JWT_REFRESH" >> .env
+          echo "JWT_RESET=$JWT_RESET" >> .env
+          echo "JWT_VERIFY=$JWT_VERIFY" >> .env
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+          echo "MAIL_USER=$MAIL_USER" >> .env
+          echo "MAIL_PASS=$MAIL_PASS" >> .env
+          echo "AZURE_STORAGE_NAME=$AZURE_STORAGE_NAME" >> .env
+          echo "AZURE_TENANT_ID=$AZURE_TENANT_ID" >> .env
+          echo "AZURE_CLIENT_ID=$AZURE_CLIENT_ID" >> .env
+          echo "AZURE_CLIENT_SECRET=$AZURE_CLIENT_SECRET" >> .env
+          echo "AZURE_CDN_ENDPOINT=$AZURE_CDN_ENDPOINT" >> .env
 
       - name: npm install, build, and test
         run: |
