@@ -17,7 +17,6 @@ export const createAddress: CreateAddress = async (req, res) => {
 
   return res.status(201).json({
     success: true,
-    message: 'Address created successfully',
     data: address,
   });
 };
@@ -45,7 +44,6 @@ export const updateAddress: UpdateAddress = async (req, res, next) => {
 
   return res.json({
     success: true,
-    message: 'Address updated successfully',
     data: address,
   });
 };
@@ -72,8 +70,9 @@ export const deleteAddress: DeleteAddress = async (req, res, next) => {
 
   return res.json({
     success: true,
-    message: 'Address deleted successfully',
-    data: undefined,
+    data: {
+      id: addressId,
+    },
   });
 };
 
