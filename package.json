@@ -6,7 +6,8 @@
   "workspaces": [
     "server",
     "shared",
-    "dashboard"
+    "dashboard",
+    "web"
   ],
   "directories": {
     "doc": "docs"
