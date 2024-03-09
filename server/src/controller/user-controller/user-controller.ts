@@ -57,7 +57,6 @@ export const updateProfile: UpdateProfile = async (req, res, next) => {
   return res.json({
     success: true,
     message: 'Profile updated successfully',
-    data: undefined,
   });
 };
 
@@ -157,7 +156,6 @@ export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
   return res.json({
     success: true,
     message: 'User deleted successfully',
-    data: undefined,
   });
 };
 
@@ -207,7 +205,10 @@ export const adminCreateUser: AdminCreateUser = async (req, res, next) => {
 export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
   const userId = req.params.userId as string;
 
-  const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
+  const user = await prisma.user.findUnique({
+    select: { id: true },
+    where: { id: userId },
+  });
   if (!user) {
     return next(new NotFoundError('User not found'));
   }
@@ -221,7 +222,7 @@ export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
     return next(new ConflictError('User with this phone already exists!'));
   }
 
-  await prisma.user.update({
+  const updated = await prisma.user.update({
     where: { id: userId },
     data: {
       firstName: req.body.firstName,
@@ -229,11 +230,23 @@ export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
       phone: req.body.phone,
       role: req.body.role,
     },
+    select: {
+      id: true,
+      role: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      isVerified: true,
+      lastLogin: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
+    },
   });
 
   return res.json({
     success: true,
-    message: 'User updated successfully',
-    data: undefined,
+    data: updated,
   });
 };
