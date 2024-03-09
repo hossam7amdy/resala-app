@@ -47,7 +47,9 @@ export interface ForgotPasswordResponse extends ResBody {
   };
 }
 
-export interface ResetPasswordRequest extends Pick<User, 'email' | 'password'> {
+export interface ResetPasswordRequest {
+  email: User['email'];
+  password: User['password'];
   code: string;
 }
 export interface ResetPasswordResponse extends ResBody {}
