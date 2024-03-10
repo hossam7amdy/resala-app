@@ -116,7 +116,7 @@ export const verifyEmail: VerifyEmail = async (req, res, next) => {
       throw new Error();
     }
 
-    if (email !== verifyJwt(token).email) {
+    if (email !== verifyJwt(token, 'VERIFY').email) {
       throw new Error();
     }
 
@@ -162,7 +162,7 @@ export const resetPassword: ResetPassword = async (req, res, next) => {
   }
 
   try {
-    const { resetCode } = verifyJwt(resetToken || '');
+    const { resetCode } = verifyJwt(resetToken || '', 'RESET');
     if (code !== resetCode) throw new Error();
   } catch (err) {
     logger.warn(err);

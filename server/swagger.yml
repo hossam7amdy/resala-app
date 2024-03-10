@@ -1,25 +1,9 @@
 openapi: 3.0.3
 info:
-  title: Swagger Resala - OpenAPI 3.0
+  title: Resala - OpenAPI
   description: |-
-    This is a sample Resala Store Server based on the OpenAPI 3.0 specification. You can find out more about
-    Swagger at [swagger.io](https://swagger.io).
-
-    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
-    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
-
-    Some useful links:
-    - [Resala App repository](https://github.com/hossam7amdy/resala-app)
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: apiteam@swagger.io
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    This is a sample Resala Store Server based on the OpenAPI 3.0 specification.
   version: 1.0.0
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
 servers:
   - url: https://resala-app.onrender.com
     description: Live Server
@@ -321,9 +305,9 @@ components:
         - password
       properties:
         id:
-          type: string
-          format: uuid
-          example: '00b6c41c-766a-45af-8349-d9018141644f'
+          type: integer
+          format: int32
+          example: 1
         email:
           type: string
           format: email
@@ -386,6 +370,10 @@ components:
         - city
         - street
       properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
         country:
           type: string
           maxLength: 50
@@ -433,11 +421,11 @@ components:
         - enName
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         categoryId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
           description: 'Uses to create subcategories (hierarchical structure)'
         arName:
           type: string
@@ -465,11 +453,11 @@ components:
         - price
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         categoryId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         arName:
           type: string
           maxLength: 100
@@ -505,8 +493,8 @@ components:
           type: integer
           format: int32
         productId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         imageUrl:
           type: string
         createdAt:
@@ -526,8 +514,8 @@ components:
           type: integer
           format: int32
         productId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         colorId:
           type: integer
           format: int32
@@ -606,8 +594,8 @@ components:
         - quantity
       properties:
         userId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         stockId:
           type: integer
           format: int32
@@ -627,11 +615,11 @@ components:
         - productId
       properties:
         userId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         productId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -644,11 +632,11 @@ components:
         - userId
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         userId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         subtotal:
           type: number
           format: double
@@ -686,8 +674,8 @@ components:
         - price
       properties:
         orderId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         name:
           type: string
           example: 'عباية مصرى'
@@ -720,8 +708,8 @@ components:
         - status
       properties:
         orderId:
-          type: string
-          format: uuid
+          type: integer
+          format: int
         addressId:
           type: integer
           format: int32
@@ -761,8 +749,8 @@ components:
           type: integer
           format: int32
         orderId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         method:
           type: string
           maxLength: 15
@@ -796,11 +784,11 @@ components:
           type: integer
           format: int32
         userId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         productId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         rating:
           type: integer
           format: int32
@@ -822,8 +810,8 @@ components:
           type: integer
           format: int32
         userId:
-          type: string
-          format: uuid
+          type: integer
+          format: int32
         title:
           type: string
           maxLength: 25
