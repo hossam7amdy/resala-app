@@ -33,7 +33,7 @@ export interface UpdateProfile
 
 export interface AdminGetUser
   extends RequestHandler<
-    { userId: number },
+    { userId: string },
     AdminGetUserResponse,
     AdminGetUserRequest,
     undefined,
@@ -51,7 +51,7 @@ export interface AdminGetUsersList
 
 export interface AdminDeleteUser
   extends RequestHandler<
-    { userId: number },
+    { userId: string },
     AdminDeleteUserResponse,
     AdminDeleteUserRequest,
     undefined,
@@ -69,7 +69,7 @@ export interface AdminCreateUser
 
 export interface AdminUpdateUser
   extends RequestHandler<
-    { userId: number },
+    { userId: string },
     AdminUpdateUserResponse,
     AdminUpdateUserRequest,
     undefined,
