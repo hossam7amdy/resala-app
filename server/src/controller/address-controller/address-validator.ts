@@ -4,7 +4,7 @@ import { BadRequestError } from '../../lib/error';
 import { CreateAddress, UpdateAddress } from './address-types';
 
 export const validateCreateAddress: CreateAddress = (req, res, next) => {
-  const userId = res.locals.user.id as string;
+  const userId = res.locals.user.id;
   const { state, city, street } = req.body;
   if (!state || !city || !street) {
     return next(new BadRequestError('userId, state, city, and street are required fields'));

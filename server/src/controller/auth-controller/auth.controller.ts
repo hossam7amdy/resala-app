@@ -81,7 +81,7 @@ export const register: Register = async (req, res, next) => {
   });
 
   const token = signJwt(
-    { id: '', email },
+    { id: -1, email },
     {
       type: 'VERIFY',
       expiresIn: '30d',
@@ -139,7 +139,7 @@ export const forgotPassword: ForgotPassword = async (req, res) => {
   const resetCode = generateRandomString(6).slice(0, 6).toUpperCase();
 
   const expiresIn = 60 * 10; // 10 minutes
-  const resetToken = signJwt({ id: '', email, resetCode }, { type: 'RESET', expiresIn: '10m' });
+  const resetToken = signJwt({ id: -1, email, resetCode }, { type: 'RESET', expiresIn: '10m' });
 
   await sendResetPasswordEmail(email, resetCode);
 
@@ -188,7 +188,7 @@ export const resetPassword: ResetPassword = async (req, res, next) => {
 };
 
 export const changePassword: ChangePassword = async (req, res, next) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
   const { oldPassword, newPassword } = req.body;
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
@@ -217,7 +217,7 @@ export const changePassword: ChangePassword = async (req, res, next) => {
 };
 
 export const resendVerificationEmail: ResendVerificationEmail = async (_, res, next) => {
-  const email = res.locals.email;
+  const email = res.locals.user.email;
   const user = await prisma.user.findUnique({
     where: { email },
     select: { isVerified: true },
@@ -231,7 +231,7 @@ export const resendVerificationEmail: ResendVerificationEmail = async (_, res, n
   }
 
   const token = signJwt(
-    { id: '', email },
+    { id: -1, email },
     {
       type: 'VERIFY',
       expiresIn: '30d',

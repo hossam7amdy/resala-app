@@ -9,7 +9,7 @@ export const QueryParamsSchema = zod.object({
 });
 
 export const UserSchema = zod.object({
-  id: zod.string().uuid(),
+  id: zod.number().positive().optional(),
   email: zod.string().min(5).max(128).email(),
   firstName: zod.string().min(2).max(50),
   lastName: zod.string().min(2).max(50),
@@ -41,7 +41,7 @@ export const AddressSchema = zod.object({
   street: zod.string().max(100),
   country: zod.string().max(100).optional(),
   building: zod.string().optional(),
-  floor: zod.string().optional(),
+  floor: zod.number().positive().optional(),
   note: zod.string().max(500).optional(),
 });
 

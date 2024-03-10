@@ -8,7 +8,7 @@ import { deleteBlob, uploadBlob } from '../../lib/remote-storage';
 import { prisma } from '../../model';
 
 export const getProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const deleted = req.query.deleted;
 
   const product = await prisma.product.findUnique({
@@ -104,7 +104,7 @@ export const createProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const updateProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const { categoryId, arName, enName, arDescription, enDescription, price } = req.body;
 
   const category = await prisma.category.findFirst({
@@ -144,7 +144,7 @@ export const updateProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
 
   try {
     await prisma.product.update({
@@ -188,7 +188,7 @@ export const restoreProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const addProductImages: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const files = req.files as Express.Multer.File[];
 
   if (!files || !files.length) {
@@ -224,7 +224,7 @@ export const addProductImages: RequestHandler = async (req, res, next) => {
 
 export const deleteProductImage: RequestHandler = async (req, res, next) => {
   const imageId = parseInt(req.params.imageId);
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
 
   const image = await prisma.productImage.findFirst({
     where: { id: imageId, productId },
