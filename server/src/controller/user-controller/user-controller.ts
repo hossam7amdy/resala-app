@@ -61,7 +61,7 @@ export const updateProfile: UpdateProfile = async (req, res, next) => {
 };
 
 export const adminGetUser: AdminGetUser = async (req, res, next) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   const user = await prisma.user.findUnique({
     select: {
       id: true,
@@ -143,7 +143,7 @@ export const adminGetUsersList: AdminGetUsersList = async (req, res) => {
 };
 
 export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   try {
     await prisma.user.delete({ where: { id: userId } });
   } catch (error) {
@@ -203,7 +203,9 @@ export const adminCreateUser: AdminCreateUser = async (req, res, next) => {
 };
 
 export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
+
+  console.log(userId, req.body);
 
   const user = await prisma.user.findUnique({
     select: { id: true },

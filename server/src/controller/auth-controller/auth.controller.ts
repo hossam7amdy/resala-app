@@ -1,7 +1,11 @@
 import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
 import { signJwt, verifyJwt } from '../../lib/jwt-token';
 import { logger } from '../../lib/logger';
-import { sendResetPasswordEmail, sendVerificationEmail } from '../../lib/mailer';
+import {
+  sendResetConfirmationEmail,
+  sendResetPasswordEmail,
+  sendVerificationEmail,
+} from '../../lib/mailer';
 import { prisma } from '../../model';
 import { genHashedPassword, verifyHashedPassword } from '../../utils/password';
 import { generateRandomString } from '../../utils/random';
@@ -162,8 +166,10 @@ export const resetPassword: ResetPassword = async (req, res, next) => {
   }
 
   try {
-    const { resetCode } = verifyJwt(resetToken || '', 'RESET');
-    if (code !== resetCode) throw new Error();
+    const tokenData = verifyJwt(resetToken!, 'RESET');
+    if (code !== tokenData.resetCode || email !== tokenData.email) {
+      throw new Error();
+    }
   } catch (err) {
     logger.warn(err);
     return next(new BadRequestError('Invalid code'));
@@ -182,6 +188,7 @@ export const resetPassword: ResetPassword = async (req, res, next) => {
     },
   });
 
+  sendResetConfirmationEmail(email).catch(logger.warn);
   return res.json({
     success: true,
   });
