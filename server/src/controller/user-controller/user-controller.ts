@@ -14,7 +14,7 @@ import {
 } from './user-types';
 
 export const getProfile: GetProfile = async (_, res, next) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
   const user = await prisma.user.findUnique({
     select: {
       id: true,
@@ -203,7 +203,7 @@ export const adminCreateUser: AdminCreateUser = async (req, res, next) => {
 };
 
 export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
-  const userId = req.params.userId as string;
+  const userId = req.params.userId;
 
   const user = await prisma.user.findUnique({
     select: { id: true },

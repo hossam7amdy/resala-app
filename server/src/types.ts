@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 
-export interface LocalUser extends Record<string, any> {
+export interface LocalUser {
   user: Pick<
     User,
     | 'id'
@@ -12,5 +12,6 @@ export interface LocalUser extends Record<string, any> {
     | 'role'
     | 'createdAt'
     | 'updatedAt'
+    | 'deletedAt'
   >;
 }

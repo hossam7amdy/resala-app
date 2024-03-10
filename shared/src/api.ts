@@ -4,6 +4,8 @@
 import { Address, User } from '@prisma/client';
 
 // Utility types
+interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
+
 interface ResBody {
   success: boolean;
   message?: string;
@@ -56,7 +58,7 @@ export interface ResetPasswordResponse extends ResBody {}
 
 export interface GetProfileRequest {} // No data needed
 export interface GetProfileResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
+  data: SafeUser;
 }
 
 export interface ChangePasswordRequest {
@@ -84,14 +86,14 @@ export interface AdminCreateUserResponse extends ResBody {
 
 export interface AdminGetUserRequest {} // Only path params
 export interface AdminGetUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
+  data: SafeUser;
 }
 
 export interface AdminGetUsersListRequest {} // No data needed
 export interface AdminGetUsersListResponse extends ResBody {
   data: {
     total: number; // Total number of users in the database (for pagination)
-    users: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>[];
+    users: SafeUser[];
   };
 }
 
@@ -99,7 +101,7 @@ export interface AdminUpdateUserRequest extends Pick<User, 'firstName' | 'lastNa
   phone?: User['phone'];
 }
 export interface AdminUpdateUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
+  data: SafeUser;
 }
 
 export interface AdminDeleteUserRequest {} // Only path params

@@ -6,7 +6,7 @@ import { logger } from '../../lib/logger';
 import { prisma } from '../../model';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const category = await prisma.category.findUnique({
@@ -64,7 +64,7 @@ export const getCategoryList: RequestHandler = async (req, res) => {
 };
 
 export const getCategoryProducts: RequestHandler = async (req, res) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const products = await prisma.product.findMany({
@@ -81,7 +81,7 @@ export const getCategoryProducts: RequestHandler = async (req, res) => {
 };
 
 export const getSubCategories: RequestHandler = async (req, res) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const subCategories = await prisma.category.findMany({
@@ -135,7 +135,7 @@ export const createCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const updateCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const { arName, enName } = req.body;
 
   let category = await prisma.category.findUnique({
@@ -172,7 +172,7 @@ export const updateCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
 
   try {
     await prisma.category.update({

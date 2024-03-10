@@ -3,7 +3,7 @@ import { prisma } from '../../model';
 import { CreateAddress, DeleteAddress, GetAddressList, UpdateAddress } from './address-types';
 
 export const createAddress: CreateAddress = async (req, res) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
 
   const address = await prisma.address.create({
     data: req.body,
@@ -22,7 +22,7 @@ export const createAddress: CreateAddress = async (req, res) => {
 };
 
 export const updateAddress: UpdateAddress = async (req, res, next) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
   const addressId = parseInt(req.params.addressId + '');
 
   const exist = await prisma.userAddress.findUnique({
@@ -49,7 +49,7 @@ export const updateAddress: UpdateAddress = async (req, res, next) => {
 };
 
 export const deleteAddress: DeleteAddress = async (req, res, next) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
   const addressId = parseInt(req.params.addressId + '');
 
   const exist = await prisma.userAddress.findUnique({
@@ -77,7 +77,7 @@ export const deleteAddress: DeleteAddress = async (req, res, next) => {
 };
 
 export const getAddressList: GetAddressList = async (_, res) => {
-  const userId = res.locals.id;
+  const userId = res.locals.user.id;
   const addressList = await prisma.userAddress.findMany({
     select: {
       address: true,

@@ -3,7 +3,7 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import ENV from '../../env';
 
 export interface JwtObject {
-  id: string;
+  id: number;
   email: string;
   [key: string]: any;
 }

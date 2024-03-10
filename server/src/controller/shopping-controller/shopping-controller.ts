@@ -116,7 +116,7 @@ export const addProductToWishlist: RequestHandler = async (req, res, next) => {
 
 export const removeProductFromWishlist: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
 
   try {
     await prisma.wishlist.delete({

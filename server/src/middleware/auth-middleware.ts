@@ -29,6 +29,14 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
       id: true,
       email: true,
       role: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      isVerified: true,
+      lastLogin: true,
+      createdAt: true,
+      updatedAt: true,
+      deletedAt: true,
     },
   });
 
@@ -36,7 +44,7 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
     return next(new NotFoundError('User not found'));
   }
 
-  res.locals = user;
+  res.locals.user = user;
   return next();
 };
 
