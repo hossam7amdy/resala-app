@@ -9,17 +9,49 @@ export const QueryParamsSchema = zod.object({
 });
 
 export const UserSchema = zod.object({
-  id: zod.number().positive().optional(),
-  email: zod.string().min(5).max(128).email(),
-  firstName: zod.string().min(2).max(50),
-  lastName: zod.string().min(2).max(50),
+  id: zod.coerce.number().positive(),
+  email: zod
+    .string()
+    .min(5, {
+      message: 'Email must be at least 5 characters long',
+    })
+    .max(128, {
+      message: 'Email must be at most 128 characters long',
+    })
+    .email(),
+  firstName: zod
+    .string()
+    .min(2, {
+      message: 'First name must be at least 2 characters long',
+    })
+    .max(50, {
+      message: 'First name must be at most 50 characters long',
+    }),
+  lastName: zod
+    .string()
+    .min(2, {
+      message: 'Last name must be at least 2 characters long',
+    })
+    .max(50, {
+      message: 'Last name must be at most 50 characters long',
+    }),
   role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]),
-  phone: zod.string().length(11).startsWith('01').optional(),
-  isVerified: zod.boolean().optional(),
+  phone: zod
+    .string()
+    .length(11, {
+      message: 'Phone number must be 11 characters long',
+    })
+    .startsWith('01')
+    .optional(),
+  isVerified: zod.coerce.boolean().optional(),
   password: zod
     .string()
-    .min(8)
-    .max(50)
+    .min(8, {
+      message: 'Password must be at least 8 characters long',
+    })
+    .max(50, {
+      message: 'Password must be at most 50 characters long',
+    })
     .regex(
       validationPatterns.passwordContainsLowerCaseCharacter.pattern,
       validationPatterns.passwordContainsLowerCaseCharacter.message
@@ -36,13 +68,34 @@ export const UserSchema = zod.object({
 
 export const AddressSchema = zod.object({
   id: zod.coerce.number().positive(),
-  state: zod.string().max(100),
-  city: zod.string().max(100),
-  street: zod.string().max(100),
-  country: zod.string().max(100).optional(),
-  building: zod.string().optional(),
+  state: zod.string().max(100, {
+    message: 'State must be at most 100 characters long',
+  }),
+  city: zod.string().max(100, {
+    message: 'City must be at most 100 characters long',
+  }),
+  street: zod.string().max(100, {
+    message: 'Street must be at most 100 characters long',
+  }),
+  country: zod
+    .string()
+    .max(100, {
+      message: 'Country must be at most 100 characters long',
+    })
+    .optional(),
+  building: zod
+    .string()
+    .max(50, {
+      message: 'Building must be at most 50 characters long',
+    })
+    .optional(),
   floor: zod.number().positive().optional(),
-  note: zod.string().max(500).optional(),
+  note: zod
+    .string()
+    .max(500, {
+      message: 'Note must be at most 500 characters long',
+    })
+    .optional(),
 });
 
 export const CategorySchema = zod.object({
