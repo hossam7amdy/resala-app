@@ -18,3 +18,11 @@ export const sendResetPasswordEmail = async (email: string, resetCode: string) =
     text: `Your reset code is: ${resetCode}`,
   });
 };
+
+export const sendResetConfirmationEmail = async (email: string) => {
+  return mailer.send({
+    to: email,
+    subject: 'Password reset successful',
+    text: 'Your password has been reset successfully',
+  });
+};
