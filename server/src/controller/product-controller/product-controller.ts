@@ -13,12 +13,40 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 
   const product = await prisma.product.findUnique({
     select: {
-      images: true,
-      category: true,
+      id: true,
+      arName: true,
+      enName: true,
+      price: true,
+      deletedAt: !!deleted,
+      images: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
+      category: {
+        select: {
+          id: true,
+          arName: true,
+          enName: true,
+        },
+      },
       stocks: {
         select: {
-          size: true,
-          color: true,
+          size: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          color: {
+            select: {
+              id: true,
+              enName: true,
+              arName: true,
+              code: true,
+            },
+          },
           quantity: true,
         },
       },
@@ -48,16 +76,27 @@ export const getProductsList: RequestHandler = async (req, res) => {
       arName: true,
       enName: true,
       price: true,
-      deletedAt: true,
-      category: true,
+      deletedAt: !!deleted,
+      category: {
+        select: {
+          id: true,
+          arName: true,
+          enName: true,
+        },
+      },
       images: {
         select: {
+          id: true,
           imageUrl: true,
         },
+        take: 1,
       },
     },
     where: {
       deletedAt: deleted ? undefined : null,
+    },
+    orderBy: {
+      id: 'desc',
     },
   });
 
