@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-import { HTTPError } from '../lib/error';
 import { logger } from '../lib/logger';
+import { APIError } from '../utils/api-errors';
 
 /**
  * @description catch errors from async functions
@@ -16,7 +16,7 @@ export const errHandler = (fn: RequestHandler): RequestHandler => {
  * @description error middleware
  */
 export function errMiddleware(error: Error, _req: Request, res: Response, _next: NextFunction) {
-  if (error instanceof HTTPError) {
+  if (error instanceof APIError) {
     return res.status(error.statusCode).json({
       success: false,
       message: error.message,

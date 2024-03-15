@@ -10,7 +10,7 @@ import {
 } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { LocalUser } from '../../types';
+import { LocalUser } from '../../types/jwt';
 
 export type CreateAddress = RequestHandler<
   null,

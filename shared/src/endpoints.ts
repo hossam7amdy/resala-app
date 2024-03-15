@@ -22,7 +22,6 @@ export enum Endpoints {
   updateCurrentUser = 'updateCurrentUser',
   adminGetUser = 'adminGetUser',
   adminGetUsersList = 'adminGetUsersList',
-  adminAddUser = 'adminAddUser',
   adminUpdateUser = 'adminUpdateUser',
   adminDeleteUser = 'adminDeleteUser',
 
@@ -140,11 +139,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.updateCurrentUser]: {
     method: 'put',
     url: '/api/v1/users/self',
-    auth: true,
-  },
-  [Endpoints.adminAddUser]: {
-    method: 'post',
-    url: '/api/v1/users',
     auth: true,
   },
   [Endpoints.adminUpdateUser]: {

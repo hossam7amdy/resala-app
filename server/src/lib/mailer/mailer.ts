@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import ENV from '../../env';
+import { ENV } from '../../config/env';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -11,8 +11,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const send = (mailOptions: nodemailer.SendMailOptions) => {
+export const sendEmail = (mailOptions: nodemailer.SendMailOptions) => {
   return transporter.sendMail(mailOptions);
 };
-
-export default { send };

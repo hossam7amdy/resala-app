@@ -1,7 +1,7 @@
 import { StockSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
+import { BadRequestError } from '../../utils/api-errors';
 
 const CreateStockSchema = StockSchema.omit({ id: true });
 

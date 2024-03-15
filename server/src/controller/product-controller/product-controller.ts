@@ -2,10 +2,10 @@ import { Prisma } from '@prisma/client';
 import { RequestHandler } from 'express';
 import { unlink } from 'fs/promises';
 
-import { ConflictError, NotFoundError } from '../../lib/error';
+import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
 import { logger } from '../../lib/logger';
-import { deleteBlob, uploadBlob } from '../../lib/remote-storage';
 import { prisma } from '../../model';
+import { ConflictError, NotFoundError } from '../../utils/api-errors';
 
 export const getProduct: RequestHandler = async (req, res, next) => {
   const productId = parseInt(req.params.productId);

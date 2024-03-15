@@ -53,11 +53,6 @@ const HANDLER: { [key in Endpoints]: RequestHandler<any, any, any, any, any>[] }
   ],
   [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
 
-  [Endpoints.adminAddUser]: [
-    userValidator.validateAdminCreateUser,
-    authorizeUser(['ADMIN']),
-    userCtrl.adminCreateUser,
-  ],
   [Endpoints.adminUpdateUser]: [
     userValidator.validateAdminUpdateUser,
     authorizeUser(['ADMIN']),

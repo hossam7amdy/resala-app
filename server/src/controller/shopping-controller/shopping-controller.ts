@@ -1,8 +1,8 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RequestHandler } from 'express';
 
-import { BadRequestError, NotFoundError } from '../../lib/error';
 import { prisma } from '../../model';
+import { BadRequestError, NotFoundError } from '../../utils/api-errors';
 
 export const getUserCart: RequestHandler = async (_, res) => {
   const userId = res.locals.user.id;

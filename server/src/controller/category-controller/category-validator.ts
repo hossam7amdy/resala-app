@@ -1,7 +1,7 @@
 import { CategorySchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
+import { BadRequestError } from '../../utils/api-errors';
 
 const CreateCategorySchema = CategorySchema.omit({
   id: true,
