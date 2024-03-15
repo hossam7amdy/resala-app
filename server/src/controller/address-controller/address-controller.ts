@@ -1,6 +1,6 @@
-import { NotFoundError } from '../../lib/error';
+import { CreateAddress, DeleteAddress, GetAddressList, UpdateAddress } from '.';
 import { prisma } from '../../model';
-import { CreateAddress, DeleteAddress, GetAddressList, UpdateAddress } from './address-types';
+import { NotFoundError } from '../../utils/api-errors';
 
 export const createAddress: CreateAddress = async (req, res) => {
   const userId = res.locals.user.id;

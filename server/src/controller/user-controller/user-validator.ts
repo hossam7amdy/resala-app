@@ -1,7 +1,7 @@
 import { UserSchema } from '@resala/shared';
 
-import { BadRequestError } from '../../lib/error';
-import { AdminCreateUser, AdminUpdateUser, UpdateProfile } from './user-types';
+import { AdminCreateUser, AdminUpdateUser, UpdateProfile } from '.';
+import { BadRequestError } from '../../utils/api-errors';
 
 export const validateUpdateProfile: UpdateProfile = (req, _, next) => {
   const { phone, firstName, lastName } = req.body;

@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import {
   AdminCreateUserRequest,
   AdminCreateUserResponse,
@@ -17,10 +18,12 @@ import {
 } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { LocalUser } from '../../types';
+export interface Locals {
+  user: Omit<User, 'password' | 'salt' | 'iterations'>;
+}
 
 export interface GetProfile
-  extends RequestHandler<undefined, GetProfileResponse, GetProfileRequest, undefined, LocalUser> {}
+  extends RequestHandler<undefined, GetProfileResponse, GetProfileRequest, undefined, Locals> {}
 
 export interface UpdateProfile
   extends RequestHandler<
@@ -28,7 +31,7 @@ export interface UpdateProfile
     UpdateProfileResponse,
     UpdateProfileRequest,
     undefined,
-    LocalUser
+    Locals
   > {}
 
 export interface AdminGetUser
@@ -37,7 +40,7 @@ export interface AdminGetUser
     AdminGetUserResponse,
     AdminGetUserRequest,
     undefined,
-    LocalUser
+    Locals
   > {}
 
 export interface AdminGetUsersList
@@ -55,7 +58,7 @@ export interface AdminDeleteUser
     AdminDeleteUserResponse,
     AdminDeleteUserRequest,
     undefined,
-    LocalUser
+    Locals
   > {}
 
 export interface AdminCreateUser
@@ -64,7 +67,7 @@ export interface AdminCreateUser
     AdminCreateUserResponse,
     AdminCreateUserRequest,
     undefined,
-    LocalUser
+    Locals
   > {}
 
 export interface AdminUpdateUser
@@ -73,5 +76,5 @@ export interface AdminUpdateUser
     AdminUpdateUserResponse,
     AdminUpdateUserRequest,
     undefined,
-    LocalUser
+    Locals
   > {}

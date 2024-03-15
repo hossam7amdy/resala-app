@@ -1,7 +1,7 @@
 import { AddressSchema } from '@resala/shared';
 
-import { BadRequestError } from '../../lib/error';
-import { CreateAddress, UpdateAddress } from './address-types';
+import { CreateAddress, UpdateAddress } from '.';
+import { BadRequestError } from '../../utils/api-errors';
 
 export const validateCreateAddress: CreateAddress = (req, res, next) => {
   const userId = res.locals.user.id;

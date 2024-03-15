@@ -1,5 +1,5 @@
-export * as authCtrl from './auth-controller/auth.controller';
-export * as authValidator from './auth-controller/auth.validator';
+export * as authCtrl from './auth-controller/auth-controller';
+export * as authValidator from './auth-controller/auth-validator';
 
 export * as userCtrl from './user-controller/user-controller';
 export * as userValidator from './user-controller/user-validator';

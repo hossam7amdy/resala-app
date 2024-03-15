@@ -1,7 +1,7 @@
 import { CartSchema, WishlistSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
+import { BadRequestError } from '../../utils/api-errors';
 
 export const validateCart: RequestHandler = (req, res, next) => {
   const userId = res.locals.user.id;

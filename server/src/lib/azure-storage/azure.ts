@@ -14,12 +14,30 @@
  **/
 import { DefaultAzureCredential } from '@azure/identity';
 import { BlobServiceClient } from '@azure/storage-blob';
+import fs from 'fs/promises';
 
-import ENV from '../../env';
+import { ENV } from '../../config/env';
 
+const publicContainer = 'public';
 const account = ENV.AZURE_STORAGE_NAME;
+const cdnEndpoint = ENV.AZURE_CDN_ENDPOINT;
 
-export const storage = new BlobServiceClient(
+const storage = new BlobServiceClient(
   `https://${account}.blob.core.windows.net`,
   new DefaultAzureCredential()
 );
+
+export const uploadBlob = async (file: Express.Multer.File) => {
+  const container = storage.getContainerClient(publicContainer);
+
+  const buffer = await fs.readFile(file.path);
+  await container.uploadBlockBlob(file.filename, buffer, file.size);
+
+  return `${cdnEndpoint}/${publicContainer}/${file.filename}`;
+};
+
+export const deleteBlob = async (url: string) => {
+  const container = storage.getContainerClient(publicContainer);
+  const filename = url.replace(`${cdnEndpoint}/${publicContainer}/`, '');
+  return container.deleteBlob(filename);
+};

@@ -2,7 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-import { BadRequestError } from '../error/http-errors';
+import { BadRequestError } from '../../utils/api-errors';
 
 const uploadDir = path.join(__dirname, '..', '..', '..', 'uploads');
 

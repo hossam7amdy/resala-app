@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 
 import app from './app';
-import ENV from './env';
+import { ENV } from './config/env';
 
 const server = createServer(app);
 

@@ -1,7 +1,7 @@
 import { ProductSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
+import { BadRequestError } from '../../utils/api-errors';
 
 const CreateProductSchema = ProductSchema.omit({
   id: true,

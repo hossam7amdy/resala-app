@@ -30,7 +30,7 @@ export interface LoginResponse extends ResBody {
 
 export interface RegisterRequest
   extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName'> {}
-export interface RegisterResponse extends LoginResponse {}
+export interface RegisterResponse extends ResBody {}
 
 export interface VerifyEmailRequest {
   email: User['email'];
@@ -56,11 +56,6 @@ export interface ResetPasswordRequest {
 }
 export interface ResetPasswordResponse extends ResBody {}
 
-export interface GetProfileRequest {} // No data needed
-export interface GetProfileResponse extends ResBody {
-  data: SafeUser;
-}
-
 export interface ChangePasswordRequest {
   oldPassword: string;
   newPassword: string;
@@ -68,8 +63,15 @@ export interface ChangePasswordRequest {
 export interface ChangePasswordResponse extends ResBody {}
 
 // User types
+export interface GetProfileRequest {} // No data needed
+export interface GetProfileResponse extends ResBody {
+  data: SafeUser;
+}
+
 export interface UpdateProfileRequest extends Pick<User, 'phone' | 'firstName' | 'lastName'> {}
-export interface UpdateProfileResponse extends ResBody {}
+export interface UpdateProfileResponse extends ResBody {
+  data: SafeUser;
+}
 
 export interface GetUserAddressListRequest {}
 export interface GetUserAddressListResponse extends ResBody {
@@ -81,7 +83,7 @@ export interface AdminCreateUserRequest
   phone?: User['phone'];
 }
 export interface AdminCreateUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'salt' | 'iterations' | 'token'>;
+  data: SafeUser;
 }
 
 export interface AdminGetUserRequest {} // Only path params
@@ -92,7 +94,11 @@ export interface AdminGetUserResponse extends ResBody {
 export interface AdminGetUsersListRequest {} // No data needed
 export interface AdminGetUsersListResponse extends ResBody {
   data: {
-    total: number; // Total number of users in the database (for pagination)
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of users in the database (for pagination)
+    };
     users: SafeUser[];
   };
 }
@@ -113,7 +119,7 @@ export interface CreateAddressResponse extends ResBody {
   data: Address;
 }
 
-export interface UpdateAddressRequest extends Address {}
+export interface UpdateAddressRequest extends Partial<Address> {}
 export interface UpdateAddressResponse extends ResBody {
   data: Address;
 }
