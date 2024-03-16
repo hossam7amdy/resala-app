@@ -1,12 +1,15 @@
+import { userService } from '../../service';
 import {
   AdminDeleteUser,
   AdminGetUser,
   AdminGetUsersList,
   AdminUpdateUser,
+  CreateUserAddress,
   GetProfile,
+  GetUserAddressList,
   UpdateProfile,
-} from '.';
-import { userService } from '../../service';
+  UpdateUserAddress,
+} from '../../types';
 
 export const getProfile: GetProfile = async (_, res, next) => {
   const userId = res.locals.user.id;
@@ -63,7 +66,7 @@ export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
 
   try {
     const { users, pagination } = await userService.listUsersPaginated({
-      page: parseInt(page || ''),
+      page: parseInt(page || '1'),
       query: query || '',
       limit: PAGE_SIZE,
     });
@@ -98,11 +101,91 @@ export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
   const userId = parseInt(req.params.userId);
 
   try {
-    const user = await userService.updateUser(userId, req.body);
+    const user = await userService.updateUser(userId, {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      role: req.body.role,
+      phone: req.body.phone,
+    });
 
     return res.json({
       success: true,
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserAddressList: GetUserAddressList = async (_, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    const addresses = await userService.getUserAddressList(userId);
+
+    return res.json({
+      success: true,
+      data: addresses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createUserAddress: CreateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    const address = await userService.createUserAddress(userId, {
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      building: req.body.building,
+      floor: req.body.floor,
+      note: req.body.note,
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+  const addressId = parseInt(req.params.addressId);
+
+  try {
+    const address = await userService.updateUserAddress(userId, addressId, {
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      building: req.body.building,
+      floor: req.body.floor,
+      note: req.body.note,
+    });
+
+    return res.json({
+      success: true,
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUserAddress: UpdateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+  const addressId = parseInt(req.params.addressId);
+
+  try {
+    await userService.deleteUserAddress(userId, addressId);
+
+    return res.json({
+      success: true,
     });
   } catch (error) {
     next(error);

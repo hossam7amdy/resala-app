@@ -4,9 +4,6 @@ export * as authValidator from './auth-controller/auth-validator';
 export * as userCtrl from './user-controller/user-controller';
 export * as userValidator from './user-controller/user-validator';
 
-export * as addressCtrl from './address-controller/address-controller';
-export * as addressValidator from './address-controller/address-validator';
-
 export * as categoryCtrl from './category-controller/category-controller';
 export * as categoryValidator from './category-controller/category-validator';
 
