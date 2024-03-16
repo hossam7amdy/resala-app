@@ -38,15 +38,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Use Envs
-        run: |
-          echo "MAIL_USER=$MAIL_USER" >> .env
-          echo "MAIL_PASS=$MAIL_PASS" >> .env
 
       - name: Use Node.js version
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+
+      - name: Use Envs
+        run: |
+          echo "MAIL_USER=$MAIL_USER" >> .env
+          echo "MAIL_PASS=$MAIL_PASS" >> .env
 
       - name: npm install, build, and test
         run: |
