@@ -1,12 +1,6 @@
 import env from 'dotenv';
-import path from 'path';
 
-if (process.env.NODE_ENV !== 'prod') {
-  const configFile = path.join(__dirname, '..', '..', '.env.local');
-  env.config({ path: configFile });
-} else {
-  env.config();
-}
+env.config();
 
 const ENV = {
   PORT: process.env.PORT,
