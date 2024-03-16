@@ -29,7 +29,7 @@ jobs:
       JWT_VERIFY: verify_secret
       SERVER_URL: http://localhost:5000
       DATABASE_URL: mysql://root:root@localhost:3306/root
-      TWILIO_ACCOUNT_SID: account_sid
+      TWILIO_ACCOUNT_SID: AC_account_sid
       TWILIO_AUTH_TOKEN: twilio_auth_token
       TWILIO_PHONE_NUMBER: +phone_number
       MAIL_USER: ${{ secrets.MAIL_USER }}
