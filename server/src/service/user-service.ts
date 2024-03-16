@@ -128,7 +128,7 @@ export const updateUserAddress = async (
   addressId: number,
   payload: Prisma.AddressCreateInput
 ) => {
-  const exist = prisma.userAddress.findFirst({
+  const exist = await prisma.userAddress.findFirst({
     where: { userId, addressId },
   });
   if (!exist) {
