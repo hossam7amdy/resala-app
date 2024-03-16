@@ -22,7 +22,6 @@ export enum Endpoints {
   updateCurrentUser = 'updateCurrentUser',
   adminGetUser = 'adminGetUser',
   adminGetUsersList = 'adminGetUsersList',
-  adminAddUser = 'adminAddUser',
   adminUpdateUser = 'adminUpdateUser',
   adminDeleteUser = 'adminDeleteUser',
 
@@ -142,11 +141,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/users/self',
     auth: true,
   },
-  [Endpoints.adminAddUser]: {
-    method: 'post',
-    url: '/api/v1/users',
-    auth: true,
-  },
   [Endpoints.adminUpdateUser]: {
     method: 'put',
     url: '/api/v1/users/:userId',
@@ -169,22 +163,22 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   [Endpoints.createAddress]: {
-    url: '/api/v1/address',
+    url: '/api/v1/users/self/addresses',
     method: 'post',
     auth: true,
   },
   [Endpoints.getAddressList]: {
-    url: '/api/v1/address',
+    url: '/api/v1/users/self/addresses',
     method: 'get',
     auth: true,
   },
   [Endpoints.updateAddress]: {
-    url: '/api/v1/address/:addressId',
+    url: '/api/v1/users/self/addresses/:addressId',
     method: 'put',
     auth: true,
   },
   [Endpoints.deleteAddress]: {
-    url: '/api/v1/address/:addressId',
+    url: '/api/v1/users/self/addresses/:addressId',
     method: 'delete',
     auth: true,
   },

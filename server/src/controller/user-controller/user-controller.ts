@@ -1,252 +1,193 @@
-import { Prisma } from '@prisma/client';
-
-import { BadRequestError, ConflictError, NotFoundError } from '../../lib/error';
-import { prisma } from '../../model';
-import { genHashedPassword } from '../../utils/password';
+import { userService } from '../../service';
 import {
-  AdminCreateUser,
   AdminDeleteUser,
   AdminGetUser,
   AdminGetUsersList,
   AdminUpdateUser,
+  CreateUserAddress,
   GetProfile,
+  GetUserAddressList,
   UpdateProfile,
-} from './user-types';
+  UpdateUserAddress,
+} from '../../types';
 
 export const getProfile: GetProfile = async (_, res, next) => {
-  const userId = res.locals.id;
-  const user = await prisma.user.findUnique({
-    select: {
-      id: true,
-      role: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phone: true,
-      isVerified: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    where: { id: userId },
-  });
+  const userId = res.locals.user.id;
+  try {
+    const user = await userService.findUserById(userId);
 
-  if (!user) {
-    return next(new NotFoundError('User not found'));
+    return res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    data: user,
-  });
 };
 
 export const updateProfile: UpdateProfile = async (req, res, next) => {
   const userId = res.locals.user.id;
   const { firstName, lastName, phone } = req.body;
+
   try {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { firstName, lastName, phone },
+    const user = await userService.updateUser(userId, {
+      firstName,
+      lastName,
+      phone,
+    });
+
+    return res.json({
+      success: true,
+      data: user,
     });
   } catch (error) {
-    return next(new BadRequestError('This phone number is already used by another user!'));
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    message: 'Profile updated successfully',
-  });
 };
 
 export const adminGetUser: AdminGetUser = async (req, res, next) => {
-  const userId = req.params.userId;
-  const user = await prisma.user.findUnique({
-    select: {
-      id: true,
-      role: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phone: true,
-      isVerified: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-    where: { id: userId },
-  });
+  const userId = parseInt(req.params.userId);
 
-  if (!user) {
-    return next(new NotFoundError('User not found'));
+  try {
+    const user = await userService.findUserById(userId);
+
+    return res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    data: user,
-  });
 };
 
-export const adminGetUsersList: AdminGetUsersList = async (req, res) => {
+export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
   const PAGE_SIZE = 10;
-  const page = parseInt(req.query.page || '1');
-  const query = req.query.query || '';
+  const { page, query } = req.query;
 
-  const [total, users] = await prisma.$transaction([
-    prisma.user.count({
-      where: {
-        OR: [
-          { firstName: { contains: query } },
-          { lastName: { contains: query } },
-          { email: { contains: query } },
-          { phone: { contains: query } },
-        ],
-      },
-    }),
-    prisma.user.findMany({
-      select: {
-        id: true,
-        role: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        phone: true,
-        isVerified: true,
-        lastLogin: true,
-        createdAt: true,
-        updatedAt: true,
-        deletedAt: true,
-      },
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-      where: {
-        OR: [
-          { firstName: { contains: query } },
-          { lastName: { contains: query } },
-          { email: { contains: query } },
-          { phone: { contains: query } },
-        ],
-      },
-      orderBy: { createdAt: 'desc' },
-    }),
-  ]);
+  try {
+    const { users, pagination } = await userService.listUsersPaginated({
+      page: parseInt(page || '1'),
+      query: query || '',
+      limit: PAGE_SIZE,
+    });
 
-  return res.json({
-    success: true,
-    data: {
-      total,
-      users,
-    },
-  });
+    return res.json({
+      success: true,
+      data: {
+        users,
+        pagination,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   try {
-    await prisma.user.delete({ where: { id: userId } });
+    await userService.deleteUser(userId);
+
+    return res.json({
+      success: true,
+      message: 'User deleted successfully',
+    });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      return next(new NotFoundError('User not found'));
-    }
-    return next(error);
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    message: 'User deleted successfully',
-  });
-};
-
-export const adminCreateUser: AdminCreateUser = async (req, res, next) => {
-  const userExist = await prisma.user.findFirst({
-    where: {
-      OR: [{ email: req.body.email }, { phone: req.body.phone }],
-    },
-  });
-  if (userExist) {
-    return next(new BadRequestError('User with this email or phone already exists!'));
-  }
-
-  const { hashedPassword, salt, iterations } = await genHashedPassword(req.body.password);
-  const user = await prisma.user.create({
-    data: {
-      email: req.body.email,
-      phone: req.body.phone,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      role: req.body.role,
-      password: hashedPassword,
-      salt,
-      iterations,
-    },
-    select: {
-      id: true,
-      role: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phone: true,
-      isVerified: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-  });
-
-  return res.json({
-    success: true,
-    data: user,
-  });
 };
 
 export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
-  const userId = req.params.userId as string;
+  const userId = parseInt(req.params.userId);
 
-  const user = await prisma.user.findUnique({
-    select: { id: true },
-    where: { id: userId },
-  });
-  if (!user) {
-    return next(new NotFoundError('User not found'));
-  }
-
-  const userExist = await prisma.user.findFirst({
-    where: {
-      AND: [{ id: { not: userId } }, { phone: req.body.phone }],
-    },
-  });
-  if (userExist) {
-    return next(new ConflictError('User with this phone already exists!'));
-  }
-
-  const updated = await prisma.user.update({
-    where: { id: userId },
-    data: {
+  try {
+    const user = await userService.updateUser(userId, {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
-      phone: req.body.phone,
       role: req.body.role,
-    },
-    select: {
-      id: true,
-      role: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      phone: true,
-      isVerified: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-  });
+      phone: req.body.phone,
+    });
 
-  return res.json({
-    success: true,
-    data: updated,
-  });
+    return res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserAddressList: GetUserAddressList = async (_, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    const addresses = await userService.getUserAddressList(userId);
+
+    return res.json({
+      success: true,
+      data: addresses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createUserAddress: CreateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    const address = await userService.createUserAddress(userId, {
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      building: req.body.building,
+      floor: req.body.floor,
+      note: req.body.note,
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+  const addressId = parseInt(req.params.addressId);
+
+  try {
+    const address = await userService.updateUserAddress(userId, addressId, {
+      state: req.body.state,
+      city: req.body.city,
+      street: req.body.street,
+      building: req.body.building,
+      floor: req.body.floor,
+      note: req.body.note,
+    });
+
+    return res.json({
+      success: true,
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUserAddress: UpdateUserAddress = async (req, res, next) => {
+  const userId = res.locals.user.id;
+  const addressId = parseInt(req.params.addressId);
+
+  try {
+    await userService.deleteUserAddress(userId, addressId);
+
+    return res.json({
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

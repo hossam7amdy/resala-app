@@ -1,12 +1,10 @@
-import { Prisma } from '@prisma/client';
 import { RequestHandler } from 'express';
 
-import { BadRequestError, NotFoundError } from '../../lib/error';
-import { logger } from '../../lib/logger';
 import { prisma } from '../../model';
+import { BadRequestError, NotFoundError } from '../../utils/api-errors';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const category = await prisma.category.findUnique({
@@ -64,7 +62,7 @@ export const getCategoryList: RequestHandler = async (req, res) => {
 };
 
 export const getCategoryProducts: RequestHandler = async (req, res) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const products = await prisma.product.findMany({
@@ -81,7 +79,7 @@ export const getCategoryProducts: RequestHandler = async (req, res) => {
 };
 
 export const getSubCategories: RequestHandler = async (req, res) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const deleted = req.query.deleted;
 
   const subCategories = await prisma.category.findMany({
@@ -111,22 +109,22 @@ export const createCategory: RequestHandler = async (req, res, next) => {
     }
   }
 
-  let category;
-  try {
-    category = await prisma.category.create({
-      data: {
-        arName,
-        enName,
-        categoryId,
-      },
-    });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      logger.warn(error);
-      return next(new BadRequestError('Category creation failed'));
-    }
-    return next(error);
+  const exist = await prisma.category.findFirst({
+    where: {
+      OR: [{ arName }, { enName }],
+    },
+  });
+  if (exist) {
+    return next(new BadRequestError('Category already exists'));
   }
+
+  const category = await prisma.category.create({
+    data: {
+      arName,
+      enName,
+      categoryId,
+    },
+  });
 
   return res.json({
     success: true,
@@ -135,35 +133,38 @@ export const createCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const updateCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
   const { arName, enName } = req.body;
 
-  let category = await prisma.category.findUnique({
+  const found = await prisma.category.findUnique({
+    select: { id: true },
     where: {
       id: categoryId,
     },
   });
-
-  if (!category) {
+  if (!found) {
     return next(new NotFoundError('Category not found'));
   }
 
-  try {
-    category = await prisma.category.update({
-      where: {
-        id: categoryId,
-      },
-      data: {
-        arName,
-        enName,
-      },
-    });
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      next(new BadRequestError('Category update failed'));
-    }
-    return next(error);
+  const exist = await prisma.category.findFirst({
+    select: { id: true },
+    where: {
+      OR: [{ arName }, { enName }],
+    },
+  });
+  if (exist) {
+    return next(new BadRequestError('Category already exists'));
   }
+
+  const category = await prisma.category.update({
+    where: {
+      id: categoryId,
+    },
+    data: {
+      arName,
+      enName,
+    },
+  });
 
   return res.json({
     success: true,
@@ -172,7 +173,7 @@ export const updateCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.params.categoryId;
+  const categoryId = parseInt(req.params.categoryId);
 
   try {
     await prisma.category.update({

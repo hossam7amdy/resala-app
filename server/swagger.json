@@ -1,21 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Swagger Resala - OpenAPI 3.0",
-    "description": "This is a sample Resala Store Server based on the OpenAPI 3.0 specification. You can find out more about\nSwagger at [swagger.io](https://swagger.io).\n\nYou can now help us improve the API whether it's by making changes to the definition itself or to the code.\nThat way, with time, we can improve the API in general, and expose some of the new features in OAS3.\n\nSome useful links:\n- [Resala App repository](https://github.com/hossam7amdy/resala-app)",
-    "termsOfService": "http://swagger.io/terms/",
-    "contact": {
-      "email": "apiteam@swagger.io"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    },
+    "title": "Resala - OpenAPI",
+    "description": "This is a sample Resala Store Server based on the OpenAPI 3.0 specification.",
     "version": "1.0.0"
-  },
-  "externalDocs": {
-    "description": "Find out more about Swagger",
-    "url": "http://swagger.io"
   },
   "servers": [
     {
@@ -445,9 +433,9 @@
         "required": ["firstName", "lastName", "email", "password"],
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "00b6c41c-766a-45af-8349-d9018141644f"
+            "type": "integer",
+            "format": "int32",
+            "example": 1
           },
           "email": {
             "type": "string",
@@ -519,6 +507,11 @@
         "type": "object",
         "required": ["state", "city", "street"],
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
           "country": {
             "type": "string",
             "maxLength": 50,
@@ -576,12 +569,12 @@
         "required": ["arName", "enName"],
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "categoryId": {
-            "type": "string",
-            "format": "uuid",
+            "type": "integer",
+            "format": "int32",
             "description": "Uses to create subcategories (hierarchical structure)"
           },
           "arName": {
@@ -613,12 +606,12 @@
         "required": ["arName", "enName", "arDescription", "enDescription", "price"],
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "categoryId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "arName": {
             "type": "string",
@@ -667,8 +660,8 @@
             "format": "int32"
           },
           "productId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "imageUrl": {
             "type": "string"
@@ -691,8 +684,8 @@
             "format": "int32"
           },
           "productId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "colorId": {
             "type": "integer",
@@ -789,8 +782,8 @@
         "required": ["userId", "stockId", "quantity"],
         "properties": {
           "userId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "stockId": {
             "type": "integer",
@@ -815,12 +808,12 @@
         "required": ["userId", "productId"],
         "properties": {
           "userId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "productId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "createdAt": {
             "type": "string",
@@ -837,12 +830,12 @@
         "required": ["userId"],
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "userId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "subtotal": {
             "type": "number",
@@ -882,8 +875,8 @@
         "required": ["orderId", "name", "color", "size", "quantity", "price"],
         "properties": {
           "orderId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",
@@ -921,8 +914,8 @@
         "required": ["orderId", "addressId", "cost", "phone", "status"],
         "properties": {
           "orderId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int"
           },
           "addressId": {
             "type": "integer",
@@ -964,8 +957,8 @@
             "format": "int32"
           },
           "orderId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "method": {
             "type": "string",
@@ -1002,12 +995,12 @@
             "format": "int32"
           },
           "userId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "productId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "rating": {
             "type": "integer",
@@ -1037,8 +1030,8 @@
             "format": "int32"
           },
           "userId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "title": {
             "type": "string",

@@ -1,53 +1,38 @@
 import { RequestHandler } from 'express';
-import { TokenExpiredError } from 'jsonwebtoken';
 
-import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from '../lib/error';
-import { JwtObject, verifyJwt } from '../lib/jwt-token';
-import { prisma } from '../model';
+import { authService, userService } from '../service';
+import { BadRequestError, ForbiddenError } from '../utils/api-errors';
 
 export const authenticateToken: RequestHandler = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return next(new BadRequestError('Token required'));
-  }
-
-  let payload: JwtObject;
   try {
-    payload = verifyJwt(token);
-  } catch (e) {
-    if (e instanceof TokenExpiredError) {
-      return next(new UnauthorizedError('Token expired'));
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      throw new BadRequestError('Token required');
     }
-    return next(new UnauthorizedError('Invalid token'));
+
+    const jwtPayload = await authService.verifyAccessToken(token);
+
+    const user = await userService.findUserById(jwtPayload.id);
+
+    res.locals.user = user;
+    next();
+  } catch (error) {
+    next(error);
   }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: payload.id,
-    },
-    select: {
-      id: true,
-      email: true,
-      role: true,
-    },
-  });
-
-  if (!user) {
-    return next(new NotFoundError('User not found'));
-  }
-
-  res.locals = user;
-  return next();
 };
 
 export const authorizeUser = (roles: string[]): RequestHandler => {
   return (_req, res, next) => {
-    const user = res.locals.user;
+    try {
+      const user = res.locals.user;
 
-    if (!roles.includes(user?.role)) {
-      return next(new ForbiddenError("You don't have permission to access this resource"));
+      if (!roles.includes(user?.role)) {
+        throw new ForbiddenError("You don't have permission to access this resource");
+      }
+
+      next();
+    } catch (error) {
+      next(error);
     }
-
-    return next();
   };
 };

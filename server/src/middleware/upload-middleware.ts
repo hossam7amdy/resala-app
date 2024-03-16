@@ -1,4 +1,4 @@
-import { upload } from '../lib/local-storage';
+import { upload } from '../lib/multer';
 
 /**
  * Returns middleware that processes a single file associated with the

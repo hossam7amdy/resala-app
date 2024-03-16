@@ -161,6 +161,7 @@
         const searchParam = new URLSearchParams(window.location.search);
         const token = searchParam.get('token');
         const email = searchParam.get('email');
+        window.history.replaceState({}, document.title, window.location.pathname);
 
         try {
           const data = await fetch('/api/v1/auth/verify-email', {
@@ -175,17 +176,14 @@
             throw new Error(data.message || 'An error occurred');
           }
 
+          successEl.style.display = 'block';
           successEl.textContent = 'Email verified successfully';
-          loaderEl.style.display = 'none';
         } catch (e) {
           console.error(e);
           errorEl.style.display = 'block';
           errorEl.textContent = e.message;
         } finally {
           loaderEl.style.display = 'none';
-
-          // remove search params from url
-          window.history.replaceState({}, document.title, window.location.pathname);
         }
       })();
     </script>
