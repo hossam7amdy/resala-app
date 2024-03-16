@@ -2,23 +2,51 @@ import { Prisma } from '@prisma/client';
 import { RequestHandler } from 'express';
 import { unlink } from 'fs/promises';
 
-import { ConflictError, NotFoundError } from '../../lib/error';
+import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
 import { logger } from '../../lib/logger';
-import { deleteBlob, uploadBlob } from '../../lib/remote-storage';
 import { prisma } from '../../model';
+import { ConflictError, NotFoundError } from '../../utils/api-errors';
 
 export const getProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const deleted = req.query.deleted;
 
   const product = await prisma.product.findUnique({
     select: {
-      images: true,
-      category: true,
+      id: true,
+      arName: true,
+      enName: true,
+      price: true,
+      deletedAt: !!deleted,
+      images: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
+      category: {
+        select: {
+          id: true,
+          arName: true,
+          enName: true,
+        },
+      },
       stocks: {
         select: {
-          size: true,
-          color: true,
+          size: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          color: {
+            select: {
+              id: true,
+              enName: true,
+              arName: true,
+              code: true,
+            },
+          },
           quantity: true,
         },
       },
@@ -48,16 +76,27 @@ export const getProductsList: RequestHandler = async (req, res) => {
       arName: true,
       enName: true,
       price: true,
-      deletedAt: true,
-      category: true,
+      deletedAt: !!deleted,
+      category: {
+        select: {
+          id: true,
+          arName: true,
+          enName: true,
+        },
+      },
       images: {
         select: {
+          id: true,
           imageUrl: true,
         },
+        take: 1,
       },
     },
     where: {
       deletedAt: deleted ? undefined : null,
+    },
+    orderBy: {
+      id: 'desc',
     },
   });
 
@@ -104,7 +143,7 @@ export const createProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const updateProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const { categoryId, arName, enName, arDescription, enDescription, price } = req.body;
 
   const category = await prisma.category.findFirst({
@@ -144,7 +183,7 @@ export const updateProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
 
   try {
     await prisma.product.update({
@@ -188,7 +227,7 @@ export const restoreProduct: RequestHandler = async (req, res, next) => {
 };
 
 export const addProductImages: RequestHandler = async (req, res, next) => {
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
   const files = req.files as Express.Multer.File[];
 
   if (!files || !files.length) {
@@ -224,7 +263,7 @@ export const addProductImages: RequestHandler = async (req, res, next) => {
 
 export const deleteProductImage: RequestHandler = async (req, res, next) => {
   const imageId = parseInt(req.params.imageId);
-  const productId = req.params.productId;
+  const productId = parseInt(req.params.productId);
 
   const image = await prisma.productImage.findFirst({
     where: { id: imageId, productId },

@@ -4,7 +4,9 @@
 import { Address, User } from '@prisma/client';
 
 // Utility types
-interface ResBody {
+interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
+
+export interface ResBody {
   success: boolean;
   message?: string;
 }
@@ -28,7 +30,7 @@ export interface LoginResponse extends ResBody {
 
 export interface RegisterRequest
   extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName'> {}
-export interface RegisterResponse extends LoginResponse {}
+export interface RegisterResponse extends ResBody {}
 
 export interface VerifyEmailRequest {
   email: User['email'];
@@ -54,11 +56,6 @@ export interface ResetPasswordRequest {
 }
 export interface ResetPasswordResponse extends ResBody {}
 
-export interface GetProfileRequest {} // No data needed
-export interface GetProfileResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
-}
-
 export interface ChangePasswordRequest {
   oldPassword: string;
   newPassword: string;
@@ -66,32 +63,35 @@ export interface ChangePasswordRequest {
 export interface ChangePasswordResponse extends ResBody {}
 
 // User types
+export interface GetProfileRequest {} // No data needed
+export interface GetProfileResponse extends ResBody {
+  data: SafeUser;
+}
+
 export interface UpdateProfileRequest extends Pick<User, 'phone' | 'firstName' | 'lastName'> {}
-export interface UpdateProfileResponse extends ResBody {}
+export interface UpdateProfileResponse extends ResBody {
+  data: SafeUser;
+}
 
 export interface GetUserAddressListRequest {}
 export interface GetUserAddressListResponse extends ResBody {
   data: Address[];
 }
 
-export interface AdminCreateUserRequest
-  extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName' | 'role'> {
-  phone?: User['phone'];
-}
-export interface AdminCreateUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'salt' | 'iterations' | 'token'>;
-}
-
 export interface AdminGetUserRequest {} // Only path params
 export interface AdminGetUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
+  data: SafeUser;
 }
 
 export interface AdminGetUsersListRequest {} // No data needed
 export interface AdminGetUsersListResponse extends ResBody {
   data: {
-    total: number; // Total number of users in the database (for pagination)
-    users: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>[];
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of users in the database (for pagination)
+    };
+    users: SafeUser[];
   };
 }
 
@@ -99,7 +99,7 @@ export interface AdminUpdateUserRequest extends Pick<User, 'firstName' | 'lastNa
   phone?: User['phone'];
 }
 export interface AdminUpdateUserResponse extends ResBody {
-  data: Omit<User, 'password' | 'iterations' | 'salt' | 'token'>;
+  data: SafeUser;
 }
 
 export interface AdminDeleteUserRequest {} // Only path params
@@ -111,7 +111,11 @@ export interface CreateAddressResponse extends ResBody {
   data: Address;
 }
 
-export interface UpdateAddressRequest extends Address {}
+export interface UpdateAddressRequest extends Partial<Address> {
+  state: Address['state'];
+  city: Address['city'];
+  street: Address['street'];
+}
 export interface UpdateAddressResponse extends ResBody {
   data: Address;
 }

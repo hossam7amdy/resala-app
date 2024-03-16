@@ -1,8 +1,8 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
 import { prisma } from '../../model';
+import { BadRequestError } from '../../utils/api-errors';
 
 export const getColor: RequestHandler = async (req, res, next) => {
   const id = parseInt(req.params.colorId + '');

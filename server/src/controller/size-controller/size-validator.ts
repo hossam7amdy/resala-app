@@ -1,7 +1,7 @@
 import { SizeSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { BadRequestError } from '../../lib/error';
+import { BadRequestError } from '../../utils/api-errors';
 
 const CreateSizeSchema = SizeSchema.omit({ id: true });
 
