@@ -6,7 +6,7 @@ import { Address, User } from '@prisma/client';
 // Utility types
 interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
 
-interface ResBody {
+export interface ResBody {
   success: boolean;
   message?: string;
 }
@@ -78,14 +78,6 @@ export interface GetUserAddressListResponse extends ResBody {
   data: Address[];
 }
 
-export interface AdminCreateUserRequest
-  extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName' | 'role'> {
-  phone?: User['phone'];
-}
-export interface AdminCreateUserResponse extends ResBody {
-  data: SafeUser;
-}
-
 export interface AdminGetUserRequest {} // Only path params
 export interface AdminGetUserResponse extends ResBody {
   data: SafeUser;
@@ -119,7 +111,11 @@ export interface CreateAddressResponse extends ResBody {
   data: Address;
 }
 
-export interface UpdateAddressRequest extends Partial<Address> {}
+export interface UpdateAddressRequest extends Partial<Address> {
+  state: Address['state'];
+  city: Address['city'];
+  street: Address['street'];
+}
 export interface UpdateAddressResponse extends ResBody {
   data: Address;
 }

@@ -9,7 +9,7 @@ export const QueryParamsSchema = zod.object({
 });
 
 export const UserSchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   email: zod
     .string()
     .min(5, {
@@ -67,7 +67,7 @@ export const UserSchema = zod.object({
 });
 
 export const AddressSchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   state: zod.string().max(100, {
     message: 'State must be at most 100 characters long',
   }),
@@ -99,7 +99,7 @@ export const AddressSchema = zod.object({
 });
 
 export const CategorySchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   categoryId: zod.number().positive().optional(),
   arName: zod
     .string()
@@ -120,7 +120,7 @@ export const CategorySchema = zod.object({
 });
 
 export const ProductSchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   categoryId: zod.number().positive(),
   arName: zod
     .string()
@@ -148,7 +148,7 @@ export const ProductSchema = zod.object({
 });
 
 export const StockSchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   productId: zod.number().positive(),
   colorId: zod.number().positive(),
   sizeId: zod.number().positive(),
@@ -186,7 +186,7 @@ export const ColorSchema = zod.object({
 });
 
 export const SizeSchema = zod.object({
-  id: zod.number().positive(),
+  id: zod.coerce.number().positive(),
   name: zod
     .string()
     .min(1, {
@@ -198,14 +198,14 @@ export const SizeSchema = zod.object({
 });
 
 export const CartSchema = zod.object({
-  userId: zod.number().positive(),
-  stockId: zod.number().positive(),
+  userId: zod.coerce.number().positive(),
+  stockId: zod.coerce.number().positive(),
   quantity: zod.number().positive({
     message: 'Quantity must be a positive number',
   }),
 });
 
 export const WishlistSchema = zod.object({
-  userId: zod.number().positive(),
-  productId: zod.number().positive(),
+  userId: zod.coerce.number().positive(),
+  productId: zod.coerce.number().positive(),
 });

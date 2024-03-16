@@ -5,33 +5,40 @@ import swaggerUI from 'swagger-ui-express';
 
 import swaggerDocument from '../swagger.json';
 import { errMiddleware } from './middleware/error-middleware';
-import api from './router';
+import { createExpressRouter } from './router';
 
-const app = express();
+/** creates an instance of express application. */
+export function createExpressApp(logRequests: boolean = true) {
+  const app = express();
 
-const corsConfig: CorsOptions = {
-  origin: '*',
-};
+  const corsConfig: CorsOptions = {
+    origin: '*',
+  };
 
-app.use(cors(corsConfig));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '..', 'public')));
+  // Middlewares
+  app.use(cors(corsConfig));
+  app.use(express.json());
+  app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.use(
-  '/api-docs',
-  swaggerUI.serve,
-  swaggerUI.setup(swaggerDocument, {
-    customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'API Documentation',
-  })
-);
-app.use('/', api);
+  // Swagger UI
+  app.use(
+    '/api-docs',
+    swaggerUI.serve,
+    swaggerUI.setup(swaggerDocument, {
+      customCss: '.swagger-ui .topbar { display: none }',
+      customSiteTitle: 'API Documentation',
+    })
+  );
 
-app.get('*', (_, res) => {
-  return res.sendFile(path.join(__dirname, '..', 'public/index.html'));
-});
+  // Routes
+  app.use('/', createExpressRouter(logRequests));
 
-app.use(errMiddleware);
+  // Catch all routes
+  app.get('*', (_, res) => {
+    return res.sendFile(path.join(__dirname, '..', 'public/index.html'));
+  });
 
-export default app;
+  app.use(errMiddleware);
+
+  return app;
+}

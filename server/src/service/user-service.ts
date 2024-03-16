@@ -23,8 +23,10 @@ export const updateUser = async (id: number, payload: Prisma.UserUpdateInput) =>
     throw new NotFoundError('User not found');
   }
 
-  const duplicate = payload.phone && (await findUserByPhone(payload.phone as string));
-  if (duplicate) {
+  const duplicate = await prisma.user.findFirst({
+    where: { phone: payload.phone + '' },
+  });
+  if (duplicate && duplicate.id !== id) {
     throw new ConflictError('User with this phone already exists!');
   }
 
@@ -49,29 +51,8 @@ export const deleteUser = async (id: number) => {
 
 export const findUserById = async (id: number) => {
   const user = await prisma.user.findUnique({
+    select: SELECT,
     where: { id },
-  });
-  if (!user) {
-    throw new NotFoundError('User not found');
-  }
-
-  return user;
-};
-
-export const findUserByEmail = async (email: string) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
-  if (!user) {
-    throw new NotFoundError('User not found');
-  }
-
-  return user;
-};
-
-export const findUserByPhone = async (phone: string) => {
-  const user = await prisma.user.findFirst({
-    where: { phone },
   });
   if (!user) {
     throw new NotFoundError('User not found');
@@ -86,11 +67,12 @@ export const listUsersPaginated = async (pagination: {
   query: string;
 }) => {
   const { page, limit, query } = pagination;
+
   const filters = {
     firstName: { contains: query },
     lastName: { contains: query },
     email: { contains: query },
-    phone: { contains: query },
+    phone: query ? { contains: query } : null,
   };
 
   const [total, users] = await prisma.$transaction([
@@ -100,6 +82,7 @@ export const listUsersPaginated = async (pagination: {
       },
     }),
     prisma.user.findMany({
+      select: SELECT,
       where: {
         OR: [filters],
       },
@@ -143,7 +126,7 @@ export const createUserAddress = async (userId: number, payload: Prisma.AddressC
 export const updateUserAddress = async (
   userId: number,
   addressId: number,
-  payload: Prisma.AddressUpdateInput
+  payload: Prisma.AddressCreateInput
 ) => {
   const exist = prisma.userAddress.findFirst({
     where: { userId, addressId },
@@ -152,10 +135,37 @@ export const updateUserAddress = async (
     throw new NotFoundError('Address not found');
   }
 
-  const address = await prisma.address.update({
+  const address = await prisma.address.upsert({
+    create: payload,
+    update: payload,
     where: { id: addressId },
-    data: payload,
   });
 
   return address;
+};
+
+export const deleteUserAddress = async (userId: number, addressId: number) => {
+  const exist = await prisma.userAddress.findFirst({
+    where: { userId, addressId },
+  });
+  if (!exist) {
+    throw new NotFoundError('Address not found');
+  }
+
+  await prisma.address.delete({
+    where: { id: addressId },
+  });
+
+  return true;
+};
+
+export const listUserAddresses = async (userId: number) => {
+  const addresses = await prisma.userAddress.findMany({
+    select: {
+      address: true,
+    },
+    where: { userId },
+  });
+
+  return addresses.map(address => address.address);
 };
