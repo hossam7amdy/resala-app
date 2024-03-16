@@ -8,7 +8,8 @@
     "build": "npm i && npx prisma migrate deploy && npx prisma generate",
     "start": "SET NODE_ENV=prod && npx ts-node --transpile-only src/index.ts",
     "dev": "SET NODE_ENV=dev &nodemon  --exec ts-node src/index.ts",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
