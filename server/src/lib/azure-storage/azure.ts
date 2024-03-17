@@ -27,13 +27,14 @@ const storage = new BlobServiceClient(
   new DefaultAzureCredential()
 );
 
-export const uploadBlob = async (file: Express.Multer.File) => {
+export const uploadBlob = async (path: string) => {
   const container = storage.getContainerClient(publicContainer);
 
-  const buffer = await fs.readFile(file.path);
-  await container.uploadBlockBlob(file.filename, buffer, file.size);
+  const filename = path.split('/').pop();
+  const buffer = await fs.readFile(path);
+  await container.uploadBlockBlob(filename!, buffer, buffer.length);
 
-  return `${cdnEndpoint}/${publicContainer}/${file.filename}`;
+  return `${cdnEndpoint}/${publicContainer}/${filename}`;
 };
 
 export const deleteBlob = async (url: string) => {
