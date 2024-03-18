@@ -29,8 +29,10 @@ export function createExpressRouter(legRequests: boolean) {
 
   /** Define the handlers for each endpoint */
   const HANDLER: { [key in Endpoints]: RequestHandler<any, any, any, any, any>[] } = {
+    // health check
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
+    // auth endpoints
     [Endpoints.login]: [authValidator.validateLogin, authCtrl.login],
     [Endpoints.register]: [authValidator.validateRegistration, authCtrl.register],
     [Endpoints.forgotPassword]: [authValidator.validateForgotPassword, authCtrl.forgotPassword],
@@ -39,9 +41,11 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.changePassword]: [authValidator.validateChangePassword, authCtrl.changePassword],
     [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
 
+    // user endpoints
     [Endpoints.getCurrentUser]: [userCtrl.getProfile],
     [Endpoints.updateCurrentUser]: [userValidator.validateUpdateProfile, userCtrl.updateProfile],
 
+    // shopping endpoints
     [Endpoints.getUserCart]: [shoppingCtrl.getUserCart],
     [Endpoints.addItemToCart]: [shoppingValidator.validateCart, shoppingCtrl.addItemToCart],
     [Endpoints.removeItemFromCart]: [shoppingCtrl.removeItemFromCart],
@@ -52,6 +56,7 @@ export function createExpressRouter(legRequests: boolean) {
     ],
     [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
 
+    // admin user endpoints
     [Endpoints.adminUpdateUser]: [
       userValidator.validateAdminUpdateUser,
       authorizeUser(['ADMIN']),
@@ -61,19 +66,26 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.adminGetUsersList]: [authorizeUser(['ADMIN']), userCtrl.adminGetUsersList],
     [Endpoints.adminDeleteUser]: [authorizeUser(['ADMIN']), userCtrl.adminDeleteUser],
 
+    // user address endpoints
     [Endpoints.createAddress]: [userValidator.validateCreateAddress, userCtrl.createUserAddress],
     [Endpoints.updateAddress]: [userValidator.validateUpdateAddress, userCtrl.updateUserAddress],
     [Endpoints.deleteAddress]: [userCtrl.deleteUserAddress],
     [Endpoints.getAddressList]: [userCtrl.getUserAddressList],
 
+    // category endpoints
     [Endpoints.getCategory]: [categoryCtrl.getCategory],
-    [Endpoints.getCategoryList]: [categoryCtrl.getCategoryList],
-    [Endpoints.getCategoryProducts]: [categoryCtrl.getCategoryProducts],
-    [Endpoints.getSubCategories]: [categoryCtrl.getSubCategories],
+    [Endpoints.listCategories]: [categoryCtrl.listCategories],
+    [Endpoints.listSubcategories]: [categoryCtrl.listSubCategories],
+    [Endpoints.listCategoryProducts]: [categoryCtrl.listCategoryProducts],
     [Endpoints.createCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
       categoryValidator.validateCreateCategory,
       categoryCtrl.createCategory,
+    ],
+    [Endpoints.createSubcategory]: [
+      authorizeUser(['ADMIN', 'MODERATOR']),
+      categoryValidator.validateCreateCategory,
+      categoryCtrl.createSubcategory,
     ],
     [Endpoints.updateCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
@@ -84,11 +96,8 @@ export function createExpressRouter(legRequests: boolean) {
       authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.deleteCategory,
     ],
-    [Endpoints.restoreCategory]: [
-      authorizeUser(['ADMIN', 'MODERATOR']),
-      categoryCtrl.restoreCategory,
-    ],
 
+    // product endpoints
     [Endpoints.getProduct]: [productCtrl.getProduct],
     [Endpoints.getProductsList]: [productCtrl.getProductsList],
     [Endpoints.createProduct]: [
@@ -102,7 +111,7 @@ export function createExpressRouter(legRequests: boolean) {
       productCtrl.updateProduct,
     ],
     [Endpoints.deleteProduct]: [authorizeUser(['ADMIN', 'MODERATOR']), productCtrl.deleteProduct],
-    [Endpoints.restoreProduct]: [authorizeUser(['ADMIN', 'MODERATOR']), productCtrl.restoreProduct],
+    [Endpoints.listProductImages]: [productCtrl.listProductImages],
     [Endpoints.addProductImages]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMultiple('images'),
@@ -113,6 +122,7 @@ export function createExpressRouter(legRequests: boolean) {
       productCtrl.deleteProductImage,
     ],
 
+    // stock endpoints
     [Endpoints.getStock]: [stockCtrl.getStock],
     [Endpoints.getStocksList]: [stockCtrl.getStocksList],
     [Endpoints.createStock]: [
@@ -126,6 +136,7 @@ export function createExpressRouter(legRequests: boolean) {
       stockCtrl.updateStock,
     ],
 
+    // color endpoints
     [Endpoints.getColor]: [colorCtrl.getColor],
     [Endpoints.getColorsList]: [colorCtrl.getColorsList],
     [Endpoints.createColor]: [
@@ -139,6 +150,7 @@ export function createExpressRouter(legRequests: boolean) {
       colorCtrl.updateColor,
     ],
 
+    // size endpoints
     [Endpoints.getSize]: [sizeCtrl.getSize],
     [Endpoints.getSizesList]: [sizeCtrl.getSizesList],
     [Endpoints.createSize]: [

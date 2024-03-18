@@ -1,201 +1,97 @@
-import { Prisma } from '@prisma/client';
 import { RequestHandler } from 'express';
 import { unlink } from 'fs/promises';
 
 import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
 import { logger } from '../../lib/logger';
-import { prisma } from '../../model';
-import { ConflictError, NotFoundError } from '../../utils/api-errors';
+import { inventoryService } from '../../service';
+import { BadRequestError, NotFoundError } from '../../utils/api-errors';
 
 export const getProduct: RequestHandler = async (req, res, next) => {
-  const productId = parseInt(req.params.productId);
-  const deleted = req.query.deleted;
+  const deleted = Boolean(req.query.deleted);
+  const productId = Number(req.params.productId);
 
-  const product = await prisma.product.findUnique({
-    select: {
-      id: true,
-      arName: true,
-      enName: true,
-      price: true,
-      deletedAt: !!deleted,
-      images: {
-        select: {
-          id: true,
-          imageUrl: true,
-        },
-      },
-      category: {
-        select: {
-          id: true,
-          arName: true,
-          enName: true,
-        },
-      },
-      stocks: {
-        select: {
-          size: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          color: {
-            select: {
-              id: true,
-              enName: true,
-              arName: true,
-              code: true,
-            },
-          },
-          quantity: true,
-        },
-      },
-    },
-    where: {
-      id: productId,
-      deletedAt: deleted ? undefined : null,
-    },
-  });
+  try {
+    if (isNaN(productId)) {
+      throw new BadRequestError('Invalid Product ID');
+    }
 
-  if (!product) {
-    return next(new NotFoundError('Product not found'));
+    const product = await inventoryService.findProductById(productId, !!deleted);
+
+    return res.json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    data: product,
-  });
 };
 
-export const getProductsList: RequestHandler = async (req, res) => {
-  const deleted = req.query.deleted;
+export const getProductsList: RequestHandler = async (req, res, next) => {
+  const deleted = Boolean(req.query.deleted);
+  const query = String(req.query.query || '');
+  const page = Math.max(Number(req.query.page || 1), 1);
+  const limit = Math.min(Number(req.query.limit || 10), 50);
 
-  const products = await prisma.product.findMany({
-    select: {
-      id: true,
-      arName: true,
-      enName: true,
-      price: true,
-      deletedAt: !!deleted,
-      category: {
-        select: {
-          id: true,
-          arName: true,
-          enName: true,
-        },
-      },
-      images: {
-        select: {
-          id: true,
-          imageUrl: true,
-        },
-        take: 1,
-      },
-    },
-    where: {
-      deletedAt: deleted ? undefined : null,
-    },
-    orderBy: {
-      id: 'desc',
-    },
-  });
+  try {
+    const { products, total } = await inventoryService.listProductsPaginated(
+      { page, limit, query },
+      deleted
+    );
 
-  return res.json({
-    success: true,
-    data: products,
-  });
+    return res.json({
+      success: true,
+      data: {
+        pagination: { page, limit, total },
+        products,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createProduct: RequestHandler = async (req, res, next) => {
-  const { categoryId, arName, enName, arDescription, enDescription, price } = req.body;
-
-  const category = await prisma.category.findFirst({
-    where: { categoryId },
-  });
-  if (!category) {
-    return next(new NotFoundError('Category not found'));
-  }
-
-  let product;
   try {
-    product = await prisma.product.create({
-      data: {
-        categoryId,
-        arName,
-        enName,
-        arDescription,
-        enDescription,
-        price,
-      },
+    const product = await inventoryService.createProduct(req.body);
+
+    return res.json({
+      success: true,
+      data: product,
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      logger.warn(error);
-      return next(new ConflictError('Product with same name already exists'));
-    }
     return next(error);
   }
-
-  return res.json({
-    success: true,
-    data: product,
-  });
 };
 
 export const updateProduct: RequestHandler = async (req, res, next) => {
-  const productId = parseInt(req.params.productId);
-  const { categoryId, arName, enName, arDescription, enDescription, price } = req.body;
+  const productId = Number(req.params.productId);
 
-  const category = await prisma.category.findFirst({
-    where: { categoryId },
-  });
-  if (!category) {
-    return next(new NotFoundError('Category not found'));
-  }
-
-  let product;
   try {
-    product = await prisma.product.update({
-      where: {
-        id: productId,
-      },
-      data: {
-        categoryId,
-        arName,
-        enName,
-        arDescription,
-        enDescription,
-        price,
-      },
+    if (isNaN(productId)) {
+      throw new BadRequestError('Invalid Product ID');
+    }
+
+    const product = await inventoryService.updateProduct(productId, req.body);
+    return res.json({
+      success: true,
+      data: product,
     });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      logger.warn(error);
-      return next(new ConflictError('Product with same name already exists'));
-    }
     return next(error);
   }
-
-  return res.json({
-    success: true,
-    data: product,
-  });
 };
 
 export const deleteProduct: RequestHandler = async (req, res, next) => {
   const productId = parseInt(req.params.productId);
 
   try {
-    await prisma.product.update({
-      data: {
-        deletedAt: new Date(),
-      },
-      where: {
-        id: productId,
-      },
-    });
+    if (isNaN(productId)) {
+      throw new BadRequestError('Invalid Product ID');
+    }
+
+    await inventoryService.deleteProduct(productId);
   } catch (error) {
-    return next(new NotFoundError('Product not found'));
+    return next(error);
   }
 
   return res.json({
@@ -204,81 +100,69 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
   });
 };
 
-export const restoreProduct: RequestHandler = async (req, res, next) => {
-  const productId = req.body.productId;
-
-  try {
-    await prisma.product.update({
-      data: {
-        deletedAt: null,
-      },
-      where: {
-        id: productId,
-      },
-    });
-  } catch (error) {
-    return next(new NotFoundError('Product not found'));
-  }
-
-  return res.json({
-    success: true,
-    message: 'Product restored',
-  });
-};
-
 export const addProductImages: RequestHandler = async (req, res, next) => {
-  const productId = parseInt(req.params.productId);
+  const productId = Number(req.params.productId);
   const files = req.files as Express.Multer.File[];
 
-  if (!files || !files.length) {
-    return next(new NotFoundError('No files uploaded'));
-  }
+  try {
+    if (isNaN(productId)) {
+      throw new BadRequestError('Invalid Product ID');
+    }
 
-  const product = await prisma.product.findUnique({
-    where: {
-      id: productId,
-    },
-  });
-  if (!product) {
+    if (!files || !files.length) {
+      throw new NotFoundError('No files uploaded');
+    }
+
+    const urls = await Promise.all(files.map(file => uploadBlob(file.path)));
+    await inventoryService.addProductImages(productId, urls);
+
+    return res.json({
+      success: true,
+      message: 'Files uploaded',
+    });
+  } catch (error) {
+    next(error);
+  } finally {
     files.forEach(file => unlink(file.path).catch(logger.error));
-    return next(new NotFoundError('Product not found'));
   }
+};
 
-  const urls = await Promise.all(files.map(file => uploadBlob(file))).finally(() => {
-    files.forEach(file => unlink(file.path).catch(logger.error));
-  });
+export const listProductImages: RequestHandler = async (req, res, next) => {
+  const productId = Number(req.params.productId);
 
-  await prisma.productImage.createMany({
-    data: urls.map(url => ({
-      productId,
-      imageUrl: url,
-    })),
-  });
+  try {
+    if (isNaN(productId)) {
+      throw new BadRequestError('Invalid Product ID');
+    }
 
-  return res.json({
-    success: true,
-    message: 'Files uploaded',
-  });
+    const images = await inventoryService.listProductImages(productId);
+
+    return res.json({
+      success: true,
+      data: images,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const deleteProductImage: RequestHandler = async (req, res, next) => {
-  const imageId = parseInt(req.params.imageId);
-  const productId = parseInt(req.params.productId);
+  const imageId = Number(req.params.imageId);
+  const productId = Number(req.params.productId);
 
-  const image = await prisma.productImage.findFirst({
-    where: { id: imageId, productId },
-  });
-  if (!image) {
-    return next(new NotFoundError('Image not found'));
+  try {
+    if (isNaN(imageId) || isNaN(productId)) {
+      throw new BadRequestError('Invalid Image ID or Product ID');
+    }
+
+    const image = await inventoryService.deleteProductImage(imageId, productId);
+    await deleteBlob(image.imageUrl);
+
+    return res.json({
+      success: true,
+      message: 'File deleted',
+    });
+  } catch (error) {
+    next(error);
   }
-
-  await Promise.all([
-    deleteBlob(image.imageUrl),
-    prisma.productImage.delete({ where: { id: imageId } }),
-  ]);
-
-  return res.json({
-    success: true,
-    message: 'File deleted',
-  });
 };

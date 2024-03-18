@@ -3,15 +3,13 @@ import { RequestHandler } from 'express';
 
 import { BadRequestError } from '../../utils/api-errors';
 
-const CreateSizeSchema = SizeSchema.omit({ id: true });
-
 export const validateCreateSize: RequestHandler = (req, _, next) => {
   const { name } = req.body;
   if (!name) {
     return next(new BadRequestError('name are required'));
   }
 
-  const sizeValidation = CreateSizeSchema.safeParse({ name });
+  const sizeValidation = SizeSchema.safeParse({ name });
   if (!sizeValidation.success) {
     return next(new BadRequestError(sizeValidation.error.issues[0].message));
   }
