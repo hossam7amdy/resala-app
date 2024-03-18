@@ -26,7 +26,7 @@ application will have a web client and a server that provides a RESTful API.
 The system will consist of a web client and a server (client-server architecture) that provides a RESTful API.  
 The web client will be a single-page application (SPA) that uses Angular. The server will be a Node.js application that uses Express.
 
-<img src="./images/architecture.png" width="500" style="background-color: #fff"/>
+<img src="./images/architecture.png" width="500" style="background-color: #fff" />
 
 ## Functional Requirements
 
@@ -53,7 +53,7 @@ The system will have the following non-functional requirements:
 
 ## System Architecture
 
-System architecture will follow the monolithic architecture pattern as shown in the following high-level diagram:
+The system architecture will follow the monolithic architecture pattern as shown in the following high-level diagram:
 
 <img src="./images//HLD.png" width="800" />
 
@@ -93,11 +93,11 @@ be a cloud storage service that uses Azure Blob Storage.
 
 ### Entity Relationship Diagram (ERD)
 
-<img src="./images/ERD.png" width="1000">
+<img src="./images/ERD.png" width="1000" />
 
 ## Server
 
-A simple HTTP server is responsible for authentication, serving stored data.
+A simple HTTP server is responsible for authentication, and serving stored data.
 
 - Node.js is selected for implementing the server for speed of development.
 - Express.js is the web server framework.
@@ -119,13 +119,13 @@ The Admin Dashboard will be a single-page application (SPA) that uses React.
 
 ## Hosting
 
-The code will be hosted on Github.
+The code will be hosted on GitHub.
 
-The web client will be hosted using any free web hosting platform such as vercel  
-or netlify. A domain will be purchased for the site, and configured to point to the  
+The web client will be hosted using any free web hosting platform such as Vercel  
+or Netlify. A domain will be purchased for the site, and configured to point to the  
 web host's server public IP.
 
-We'll deploy the server to heroku or similar free hosting platform. A domain will be  
+We'll deploy the server to Heroku or a similar free hosting platform. A domain will be  
 purchased for the site, and configured to point to the web host's server public IP.
 
 ## Activity Diagrams
