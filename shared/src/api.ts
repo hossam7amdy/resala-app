@@ -13,6 +13,7 @@ export interface ResBody {
 export interface ReqQuery {
   page?: string;
   query?: string;
+  limit?: string;
 }
 
 // Auth types

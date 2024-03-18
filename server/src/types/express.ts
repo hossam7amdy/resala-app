@@ -39,6 +39,12 @@ import {
 } from '@resala/shared';
 import { RequestHandler } from 'express';
 
+export interface Pagination {
+  page: number;
+  limit: number;
+  query: string;
+}
+
 export interface LocalUser {
   user: Pick<
     User,
