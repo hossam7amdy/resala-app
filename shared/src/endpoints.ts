@@ -33,13 +33,13 @@ export enum Endpoints {
 
   // category endpoints
   getCategory = 'getCategory',
-  getCategoryList = 'getCategoryList',
-  getCategoryProducts = 'getCategoryProducts',
-  getSubCategories = 'getSubCategories',
+  listCategories = 'listCategories',
+  listSubcategories = 'listSubcategories',
+  listCategoryProducts = 'listCategoryProducts',
   createCategory = 'createCategory',
+  createSubcategory = 'createSubcategory',
   updateCategory = 'updateCategory',
   deleteCategory = 'deleteCategory',
-  restoreCategory = 'restoreCategory',
 
   // product endpoints
   getProduct = 'getProduct',
@@ -47,8 +47,8 @@ export enum Endpoints {
   createProduct = 'createProduct',
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
-  restoreProduct = 'restoreProduct',
   addProductImages = 'addProductImages',
+  listProductImages = 'listProductImages',
   deleteProductImage = 'deleteProductImage',
 
   // stock endpoints
@@ -95,8 +95,10 @@ export function withParams(endpoint: EndpointConfig, ...params: string[]): Endpo
 }
 
 export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
+  // health check
   [Endpoints.healthz]: { method: 'get', url: '/api/v1/healthz' },
 
+  // auth endpoints
   [Endpoints.login]: {
     method: 'post',
     url: '/api/v1/auth/login',
@@ -131,6 +133,8 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/auth/resend-email-verification',
     auth: true,
   },
+
+  // user endpoints
   [Endpoints.getCurrentUser]: {
     method: 'get',
     url: '/api/v1/users/self',
@@ -141,6 +145,8 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/users/self',
     auth: true,
   },
+
+  // admin user endpoints
   [Endpoints.adminUpdateUser]: {
     method: 'put',
     url: '/api/v1/users/:userId',
@@ -162,6 +168,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
 
+  // address endpoints
   [Endpoints.createAddress]: {
     url: '/api/v1/users/self/addresses',
     method: 'post',
@@ -183,26 +190,19 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
 
-  [Endpoints.getCategory]: {
-    url: '/api/v1/categories/:categoryId',
-    method: 'get',
-  },
-  [Endpoints.getCategoryList]: {
+  // category endpoints
+  [Endpoints.listCategories]: {
     url: '/api/v1/categories',
-    method: 'get',
-  },
-  [Endpoints.getSubCategories]: {
-    url: '/api/v1/categories/:categoryId/sub-categories',
-    method: 'get',
-  },
-  [Endpoints.getCategoryProducts]: {
-    url: '/api/v1/categories/:categoryId/products',
     method: 'get',
   },
   [Endpoints.createCategory]: {
     url: '/api/v1/categories',
     method: 'post',
     auth: true,
+  },
+  [Endpoints.getCategory]: {
+    url: '/api/v1/categories/:categoryId',
+    method: 'get',
   },
   [Endpoints.updateCategory]: {
     url: '/api/v1/categories/:categoryId',
@@ -214,11 +214,20 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.restoreCategory]: {
-    url: '/api/v1/categories',
-    method: 'patch',
+  [Endpoints.listCategoryProducts]: {
+    url: '/api/v1/categories/:categoryId/products',
+    method: 'get',
+  },
+  [Endpoints.listSubcategories]: {
+    url: '/api/v1/categories/:categoryId/subcategories',
+    method: 'get',
+  },
+  [Endpoints.createSubcategory]: {
+    url: '/api/v1/categories/:categoryId/subcategories',
+    method: 'post',
     auth: true,
   },
+
   [Endpoints.getProduct]: {
     url: '/api/v1/products/:productId',
     method: 'get',
@@ -242,14 +251,14 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.restoreProduct]: {
-    url: '/api/v1/products',
-    method: 'patch',
-    auth: true,
-  },
   [Endpoints.addProductImages]: {
     url: '/api/v1/products/:productId/images',
     method: 'post',
+    auth: true,
+  },
+  [Endpoints.listProductImages]: {
+    url: '/api/v1/products/:productId/images',
+    method: 'get',
     auth: true,
   },
   [Endpoints.deleteProductImage]: {

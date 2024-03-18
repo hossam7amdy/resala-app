@@ -1,217 +1,145 @@
 import { RequestHandler } from 'express';
 
-import { prisma } from '../../model';
-import { BadRequestError, NotFoundError } from '../../utils/api-errors';
+import { inventoryService } from '../../service';
+import { BadRequestError } from '../../utils/api-errors';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
   const categoryId = parseInt(req.params.categoryId);
-  const deleted = req.query.deleted;
 
-  const category = await prisma.category.findUnique({
-    select: {
-      id: true,
-      arName: true,
-      enName: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-      subCategories: {
-        select: {
-          id: true,
-          arName: true,
-          enName: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-        },
-      },
-    },
-    where: {
-      id: categoryId,
-      deletedAt: deleted ? undefined : null,
-    },
-  });
+  try {
+    if (isNaN(categoryId)) {
+      throw new BadRequestError('Category id must be a number');
+    }
 
-  if (!category) {
-    return next(new NotFoundError('Category not found'));
+    const category = await inventoryService.findCategoryById(categoryId);
+
+    return res.json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    return next(error);
   }
-
-  return res.json({
-    success: true,
-    data: category,
-  });
 };
 
-export const getCategoryList: RequestHandler = async (req, res) => {
+export const listCategories: RequestHandler = async (req, res, next) => {
   const deleted = req.query.deleted;
 
-  const categories = await prisma.category.findMany({
-    include: {
-      subCategories: true,
-    },
-    where: {
-      categoryId: null,
-      deletedAt: deleted ? undefined : null,
-    },
-  });
+  try {
+    const categories = await inventoryService.listRootCategories(Boolean(deleted));
 
-  return res.json({
-    success: true,
-    data: categories,
-  });
+    return res.json({
+      success: true,
+      data: categories,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getCategoryProducts: RequestHandler = async (req, res) => {
+export const listSubCategories: RequestHandler = async (req, res, next) => {
   const categoryId = parseInt(req.params.categoryId);
-  const deleted = req.query.deleted;
 
-  const products = await prisma.product.findMany({
-    where: {
-      categoryId,
-      deletedAt: deleted ? undefined : null,
-    },
-  });
+  try {
+    if (isNaN(categoryId)) {
+      throw new BadRequestError('Category id must be a number');
+    }
 
-  return res.json({
-    success: true,
-    data: products,
-  });
+    const subCategories = await inventoryService.listSubcategories(categoryId);
+
+    return res.json({
+      success: true,
+      data: subCategories,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const getSubCategories: RequestHandler = async (req, res) => {
+export const listCategoryProducts: RequestHandler = async (req, res, next) => {
   const categoryId = parseInt(req.params.categoryId);
-  const deleted = req.query.deleted;
 
-  const subCategories = await prisma.category.findMany({
-    where: {
-      categoryId,
-      deletedAt: deleted ? undefined : null,
-    },
-  });
+  try {
+    const products = await inventoryService.listCategoryProducts(categoryId);
 
-  return res.json({
-    success: true,
-    data: subCategories,
-  });
+    return res.json({
+      success: true,
+      data: products,
+    });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export const createCategory: RequestHandler = async (req, res, next) => {
-  const { arName, enName, categoryId } = req.body;
-
-  if (categoryId) {
-    const parentCategory = await prisma.category.findUnique({
-      where: {
-        id: categoryId,
-      },
+  try {
+    const category = await inventoryService.createRootCategory({
+      arName: req.body.arName,
+      enName: req.body.enName,
     });
-    if (!parentCategory) {
-      return next(new NotFoundError('Main Category not found'));
+
+    return res.status(201).json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createSubcategory: RequestHandler = async (req, res, next) => {
+  const categoryId = parseInt(req.params.categoryId);
+  const { arName, enName } = req.body;
+
+  try {
+    if (isNaN(categoryId)) {
+      throw new BadRequestError('Category id must be a number');
     }
-  }
 
-  const exist = await prisma.category.findFirst({
-    where: {
-      OR: [{ arName }, { enName }],
-    },
-  });
-  if (exist) {
-    return next(new BadRequestError('Category already exists'));
-  }
-
-  const category = await prisma.category.create({
-    data: {
+    const subCategory = await inventoryService.createSubcategory(categoryId, {
       arName,
       enName,
-      categoryId,
-    },
-  });
+    });
 
-  return res.json({
-    success: true,
-    data: category,
-  });
+    return res.status(201).json({
+      success: true,
+      data: subCategory,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateCategory: RequestHandler = async (req, res, next) => {
   const categoryId = parseInt(req.params.categoryId);
-  const { arName, enName } = req.body;
 
-  const found = await prisma.category.findUnique({
-    select: { id: true },
-    where: {
-      id: categoryId,
-    },
-  });
-  if (!found) {
-    return next(new NotFoundError('Category not found'));
+  try {
+    if (isNaN(categoryId)) {
+      throw new BadRequestError('Category id must be a number');
+    }
+
+    const category = await inventoryService.updateCategory(categoryId, req.body);
+
+    return res.json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  const exist = await prisma.category.findFirst({
-    select: { id: true },
-    where: {
-      OR: [{ arName }, { enName }],
-    },
-  });
-  if (exist) {
-    return next(new BadRequestError('Category already exists'));
-  }
-
-  const category = await prisma.category.update({
-    where: {
-      id: categoryId,
-    },
-    data: {
-      arName,
-      enName,
-    },
-  });
-
-  return res.json({
-    success: true,
-    data: category,
-  });
 };
 
 export const deleteCategory: RequestHandler = async (req, res, next) => {
   const categoryId = parseInt(req.params.categoryId);
 
   try {
-    await prisma.category.update({
-      data: {
-        deletedAt: new Date(),
-      },
-      where: {
-        id: categoryId,
-      },
+    await inventoryService.deleteCategory(categoryId);
+
+    return res.json({
+      success: true,
+      data: 'Category deleted',
     });
   } catch (error) {
-    return next(new NotFoundError('Category not found'));
+    return next(error);
   }
-
-  return res.json({
-    success: true,
-    data: 'Category deleted',
-  });
-};
-
-export const restoreCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = req.body.categoryId;
-
-  try {
-    await prisma.category.update({
-      data: {
-        deletedAt: null,
-      },
-      where: {
-        id: categoryId,
-      },
-    });
-  } catch (error) {
-    return next(new NotFoundError('Category not found'));
-  }
-
-  return res.json({
-    success: true,
-    data: 'Category restored',
-  });
 };

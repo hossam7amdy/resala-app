@@ -45,15 +45,13 @@ export const validateAdminUpdateUser: AdminUpdateUser = (req, _, next) => {
   next();
 };
 
-export const validateCreateAddress: CreateUserAddress = (req, res, next) => {
-  const userId = res.locals.user.id;
+export const validateCreateAddress: CreateUserAddress = (req, _, next) => {
   const { state, city, street } = req.body;
   if (!state || !city || !street) {
     return next(new BadRequestError('userId, state, city, and street are required fields'));
   }
 
-  const CreateAddressSchema = AddressSchema.omit({ id: true });
-  const validatedFields = CreateAddressSchema.safeParse({ ...req.body, userId });
+  const validatedFields = AddressSchema.safeParse({ ...req.body });
 
   if (!validatedFields.success) {
     return next(new BadRequestError(validatedFields.error.issues[0].message));
