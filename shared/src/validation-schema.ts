@@ -4,12 +4,36 @@ import { ROLE } from './enums';
 import { validationPatterns } from './validation-patterns';
 
 export const QueryParamsSchema = zod.object({
-  page: zod.number().positive().max(100).optional(),
-  query: zod.string().min(0).max(50).optional(),
+  page: zod.coerce
+    .number({
+      invalid_type_error: 'Page number must be a number',
+    })
+    .positive({
+      message: 'Page number must be a positive number',
+    })
+    .max(100)
+    .optional(),
+  limit: zod.coerce
+    .number({
+      invalid_type_error: 'Limit must be a number',
+    })
+    .positive({
+      message: 'Limit must be a positive number',
+    })
+    .max(100)
+    .optional(),
+  query: zod
+    .string()
+    .min(0, {
+      message: 'Query must be at least 0 characters long',
+    })
+    .max(50, {
+      message: 'Query must be at most 50 characters long',
+    })
+    .optional(),
 });
 
 export const UserSchema = zod.object({
-  id: zod.coerce.number().positive(),
   email: zod
     .string()
     .min(5, {
@@ -66,8 +90,20 @@ export const UserSchema = zod.object({
     ),
 });
 
+export const ResetPasswordSchema = zod.object({
+  code: zod.string().length(6, {
+    message: 'Code must be 6 characters long',
+  }),
+  email: zod.string().email(),
+  password: UserSchema.shape.password,
+});
+
+export const ChangePasswordSchema = zod.object({
+  oldPassword: UserSchema.shape.password,
+  newPassword: UserSchema.shape.password,
+});
+
 export const AddressSchema = zod.object({
-  id: zod.coerce.number().positive(),
   state: zod.string().max(100, {
     message: 'State must be at most 100 characters long',
   }),
@@ -99,8 +135,14 @@ export const AddressSchema = zod.object({
 });
 
 export const CategorySchema = zod.object({
-  id: zod.coerce.number().positive(),
-  categoryId: zod.number().positive().optional(),
+  categoryId: zod.coerce
+    .number({
+      invalid_type_error: 'Category ID must be a number',
+    })
+    .positive({
+      message: 'Category ID must be a positive number',
+    })
+    .optional(),
   arName: zod
     .string()
     .min(2, {
@@ -120,10 +162,25 @@ export const CategorySchema = zod.object({
 });
 
 export const ProductSchema = zod.object({
-  id: zod.coerce.number().positive(),
-  categoryId: zod.number().positive(),
+  id: zod.coerce
+    .number({
+      invalid_type_error: 'Product ID must be a number',
+    })
+    .positive({
+      message: 'Product ID must be a positive number',
+    })
+    .optional(),
+  categoryId: zod.coerce
+    .number({
+      invalid_type_error: 'Category ID must be a number',
+    })
+    .positive({
+      message: 'Category ID must be a positive number',
+    }),
   arName: zod
-    .string()
+    .string({
+      invalid_type_error: 'arName is required',
+    })
     .min(2, {
       message: 'Arabic name must be at least 2 characters long',
     })
@@ -131,34 +188,62 @@ export const ProductSchema = zod.object({
       message: 'Arabic name must be at most 100 characters long',
     }),
   enName: zod
-    .string()
+    .string({
+      invalid_type_error: 'enName is required',
+    })
     .min(2, {
       message: 'English name must be at least 2 characters long',
     })
     .max(100, {
       message: 'English name must be at most 100 characters long',
     }),
-  arDescription: zod.string().max(500, {
-    message: 'Arabic description must be at most 500 characters long',
-  }),
-  enDescription: zod.string().max(500, {
-    message: 'English description must be at most 500 characters long',
-  }),
-  price: zod.number().positive(),
+  arDescription: zod
+    .string({
+      invalid_type_error: 'arDescription is required',
+    })
+    .max(500, {
+      message: 'Arabic description must be at most 500 characters long',
+    }),
+  enDescription: zod
+    .string({
+      invalid_type_error: 'enDescription is required',
+    })
+    .max(500, {
+      message: 'English description must be at most 500 characters long',
+    }),
+  price: zod.coerce
+    .number({
+      invalid_type_error: 'Price must be a number',
+    })
+    .positive(),
 });
 
 export const StockSchema = zod.object({
-  id: zod.coerce.number().positive(),
-  productId: zod.number().positive(),
-  colorId: zod.number().positive(),
-  sizeId: zod.number().positive(),
-  quantity: zod.number().nonnegative({
-    message: 'Quantity must be a non-negative number',
-  }),
+  productId: zod.coerce
+    .number({
+      invalid_type_error: 'Product ID must be a number',
+    })
+    .positive(),
+  colorId: zod.coerce
+    .number({
+      invalid_type_error: 'Color ID must be a number',
+    })
+    .positive(),
+  sizeId: zod.coerce
+    .number({
+      invalid_type_error: 'Size ID must be a number',
+    })
+    .positive(),
+  quantity: zod.coerce
+    .number({
+      invalid_type_error: 'Quantity must be a number',
+    })
+    .nonnegative({
+      message: 'Quantity must be a non-negative number',
+    }),
 });
 
 export const ColorSchema = zod.object({
-  id: zod.number().positive(),
   arName: zod
     .string()
     .min(2, {
@@ -186,7 +271,6 @@ export const ColorSchema = zod.object({
 });
 
 export const SizeSchema = zod.object({
-  id: zod.coerce.number().positive(),
   name: zod
     .string()
     .min(1, {
@@ -198,14 +282,30 @@ export const SizeSchema = zod.object({
 });
 
 export const CartSchema = zod.object({
-  userId: zod.coerce.number().positive(),
-  stockId: zod.coerce.number().positive(),
+  userId: zod.coerce
+    .number({
+      invalid_type_error: 'User ID must be a number',
+    })
+    .positive(),
+  stockId: zod.coerce
+    .number({
+      invalid_type_error: 'Stock ID must be a number',
+    })
+    .positive(),
   quantity: zod.number().positive({
     message: 'Quantity must be a positive number',
   }),
 });
 
 export const WishlistSchema = zod.object({
-  userId: zod.coerce.number().positive(),
-  productId: zod.coerce.number().positive(),
+  userId: zod.coerce
+    .number({
+      invalid_type_error: 'User ID must be a number',
+    })
+    .positive(),
+  productId: zod.coerce
+    .number({
+      invalid_type_error: 'Product ID must be a number',
+    })
+    .positive(),
 });

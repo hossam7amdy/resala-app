@@ -1,5 +1,4 @@
-import { UserSchema } from '@resala/shared';
-import zod from 'zod';
+import { ChangePasswordSchema, ResetPasswordSchema, UserSchema } from '@resala/shared';
 
 import { ChangePassword, ForgotPassword, Login, Register, ResetPassword } from '../../types';
 import { BadRequestError } from '../../utils/api-errors';
@@ -72,11 +71,6 @@ export const validateResetPassword: ResetPassword = (req, _, next) => {
       throw new BadRequestError('code, token, email and password are required');
     }
 
-    const ResetPasswordSchema = zod.object({
-      code: zod.string().length(6),
-      email: UserSchema.shape.email,
-      password: UserSchema.shape.password,
-    });
     const validatedFields = ResetPasswordSchema.safeParse(req.body);
     if (!validatedFields.success) {
       throw new BadRequestError(validatedFields.error.issues[0].message);
@@ -95,10 +89,6 @@ export const validateChangePassword: ChangePassword = (req, _, next) => {
       throw new BadRequestError('old password and new password are required');
     }
 
-    const ChangePasswordSchema = zod.object({
-      oldPassword: UserSchema.shape.password,
-      newPassword: UserSchema.shape.password,
-    });
     const validatedFields = ChangePasswordSchema.safeParse(req.body);
     if (!validatedFields.success) {
       throw new BadRequestError(validatedFields.error.issues[0].message);
