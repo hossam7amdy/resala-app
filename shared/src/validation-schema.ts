@@ -292,7 +292,7 @@ export const CartSchema = zod.object({
       invalid_type_error: 'Stock ID must be a number',
     })
     .positive(),
-  quantity: zod.number().positive({
+  quantity: zod.coerce.number().positive({
     message: 'Quantity must be a positive number',
   }),
 });
