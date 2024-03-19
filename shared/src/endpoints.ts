@@ -73,9 +73,11 @@ export enum Endpoints {
   // shopping endpoints
   getUserCart = 'getUserCart',
   addItemToCart = 'addItemToCart',
+  removeUserCart = 'removeUserCart',
   removeItemFromCart = 'removeItemFromCart',
   getUserWishlist = 'getUserWishlist',
   addProductToWishlist = 'addProductToWishlist',
+  removeUserWishlist = 'removeUserWishlist',
   removeProductFromWishlist = 'removeProductFromWishlist',
 }
 
@@ -338,34 +340,45 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // shopping endpoints
-  [Endpoints.getUserCart]: {
-    url: '/api/v1/users/cart',
-    method: 'get',
-    auth: true,
-  },
   [Endpoints.addItemToCart]: {
-    url: '/api/v1/users/cart',
+    url: '/api/v1/cart/items',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeItemFromCart]: {
-    url: '/api/v1/users/cart/:stockId',
+    url: '/api/v1/cart/items/:stockId',
     method: 'delete',
     auth: true,
   },
-  [Endpoints.getUserWishlist]: {
-    url: '/api/v1/users/wishlist',
+  [Endpoints.getUserCart]: {
+    url: '/api/v1/cart',
     method: 'get',
     auth: true,
   },
+  [Endpoints.removeUserCart]: {
+    url: '/api/v1/cart',
+    method: 'delete',
+    auth: true,
+  },
+
   [Endpoints.addProductToWishlist]: {
-    url: '/api/v1/users/wishlist',
+    url: '/api/v1/wishlist/items',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeProductFromWishlist]: {
-    url: '/api/v1/users/wishlist/:productId',
+    url: '/api/v1/wishlist/items/:productId',
     method: 'delete',
+    auth: true,
+  },
+  [Endpoints.removeUserWishlist]: {
+    url: '/api/v1/wishlist',
+    method: 'delete',
+    auth: true,
+  },
+  [Endpoints.getUserWishlist]: {
+    url: '/api/v1/wishlist',
+    method: 'get',
     auth: true,
   },
 };
