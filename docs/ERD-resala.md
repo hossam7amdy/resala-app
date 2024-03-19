@@ -26,7 +26,7 @@ application will have a web client and a server that provides a RESTful API.
 The system will consist of a web client and a server (client-server architecture) that provides a RESTful API.  
 The web client will be a single-page application (SPA) that uses Angular. The server will be a Node.js application that uses Express.
 
-<img src="./images/architecture.png" width="500" style="background-color: #fff" />
+<img src="images/architecture.png" width="350" />
 
 ## Functional Requirements
 
@@ -55,7 +55,7 @@ The system will have the following non-functional requirements:
 
 The system architecture will follow the monolithic architecture pattern as shown in the following high-level diagram:
 
-<img src="./images//HLD.png" width="800" />
+<img src="images/HLD.png" width="800" />
 
 The system will have the following architecture:
 
@@ -93,7 +93,7 @@ be a cloud storage service that uses Azure Blob Storage.
 
 ### Entity Relationship Diagram (ERD)
 
-<img src="./images/ERD.png" width="1000" />
+<img src="images/ERD.png" width="1000" />
 
 ## Server
 
@@ -132,4 +132,4 @@ purchased for the site, and configured to point to the web host's server public 
 
 ### Order Fulfillment Process
 
-<img src="./images//order-fulfillment-flow.png" width="500">
+<img src="images/order-fulfillment-flow.png" width="500">
