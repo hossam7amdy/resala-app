@@ -123,17 +123,15 @@ export function createExpressRouter(legRequests: boolean) {
     ],
 
     // stock endpoints
-    [Endpoints.getStock]: [stockCtrl.getStock],
-    [Endpoints.getStocksList]: [stockCtrl.getStocksList],
-    [Endpoints.createStock]: [
+    [Endpoints.getProductStocks]: [stockCtrl.getProductStocks],
+    [Endpoints.updateProductStock]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
-      stockValidator.validateCreateStock,
-      stockCtrl.createStock,
+      stockValidator.validateStockBody,
+      stockCtrl.updateProductStock,
     ],
-    [Endpoints.updateStock]: [
+    [Endpoints.deleteProductStock]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
-      stockValidator.validateUpdateStock,
-      stockCtrl.updateStock,
+      stockCtrl.deleteProductStock,
     ],
 
     // color endpoints
@@ -149,6 +147,7 @@ export function createExpressRouter(legRequests: boolean) {
       colorValidator.validateUpdateColor,
       colorCtrl.updateColor,
     ],
+    [Endpoints.deleteColor]: [authorizeUser(['ADMIN', 'MODERATOR']), colorCtrl.deleteColor],
 
     // size endpoints
     [Endpoints.getSize]: [sizeCtrl.getSize],
@@ -163,6 +162,7 @@ export function createExpressRouter(legRequests: boolean) {
       sizeValidator.validateUpdateSize,
       sizeCtrl.updateSize,
     ],
+    [Endpoints.deleteSize]: [authorizeUser(['ADMIN', 'MODERATOR']), sizeCtrl.deleteSize],
   };
 
   // Register all the routes and their handlers

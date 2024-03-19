@@ -3,31 +3,35 @@ import { RequestHandler } from 'express';
 
 import { BadRequestError } from '../../utils/api-errors';
 
-export const validateCreateSize: RequestHandler = (req, _, next) => {
-  const { name } = req.body;
-  if (!name) {
-    return next(new BadRequestError('name are required'));
-  }
-
-  const sizeValidation = SizeSchema.safeParse({ name });
+function validateSizeBody(body: typeof SizeSchema) {
+  const sizeValidation = SizeSchema.safeParse(body);
   if (!sizeValidation.success) {
-    return next(new BadRequestError(sizeValidation.error.issues[0].message));
+    throw new BadRequestError(sizeValidation.error.issues[0].message);
   }
 
-  next();
+  return sizeValidation.data;
+}
+
+export const validateCreateSize: RequestHandler = (req, _, next) => {
+  try {
+    req.body = validateSizeBody(req.body);
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const validateUpdateSize: RequestHandler = (req, _, next) => {
-  const id = req.params.sizeId;
-  const { name } = req.body;
-  if (!name) {
-    return next(new BadRequestError('name are required'));
-  }
+  const sizeId = Number(req.params.sizeId);
 
-  const sizeValidation = SizeSchema.safeParse({ id, name });
-  if (!sizeValidation.success) {
-    return next(new BadRequestError(sizeValidation.error.issues[0].message));
-  }
+  try {
+    if (isNaN(sizeId)) {
+      throw new BadRequestError('Size id must be a number');
+    }
 
-  next();
+    req.body = validateSizeBody(req.body);
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
