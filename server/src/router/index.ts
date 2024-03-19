@@ -45,17 +45,6 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.getCurrentUser]: [userCtrl.getProfile],
     [Endpoints.updateCurrentUser]: [userValidator.validateUpdateProfile, userCtrl.updateProfile],
 
-    // shopping endpoints
-    [Endpoints.getUserCart]: [shoppingCtrl.getUserCart],
-    [Endpoints.addItemToCart]: [shoppingValidator.validateCart, shoppingCtrl.addItemToCart],
-    [Endpoints.removeItemFromCart]: [shoppingCtrl.removeItemFromCart],
-    [Endpoints.getUserWishlist]: [shoppingCtrl.getUserWishlist],
-    [Endpoints.addProductToWishlist]: [
-      shoppingValidator.validateWishlist,
-      shoppingCtrl.addProductToWishlist,
-    ],
-    [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
-
     // admin user endpoints
     [Endpoints.adminUpdateUser]: [
       userValidator.validateAdminUpdateUser,
@@ -163,6 +152,20 @@ export function createExpressRouter(legRequests: boolean) {
       sizeCtrl.updateSize,
     ],
     [Endpoints.deleteSize]: [authorizeUser(['ADMIN', 'MODERATOR']), sizeCtrl.deleteSize],
+
+    // shopping endpoints
+    [Endpoints.addItemToCart]: [shoppingValidator.validateCart, shoppingCtrl.addItemToCart],
+    [Endpoints.removeItemFromCart]: [shoppingCtrl.removeItemFromCart],
+    [Endpoints.getUserCart]: [shoppingCtrl.getUserCart],
+    [Endpoints.removeUserCart]: [shoppingCtrl.removeUserCart],
+
+    [Endpoints.addProductToWishlist]: [
+      shoppingValidator.validateWishlist,
+      shoppingCtrl.addProductToWishlist,
+    ],
+    [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
+    [Endpoints.getUserWishlist]: [shoppingCtrl.getUserWishlist],
+    [Endpoints.removeUserWishlist]: [shoppingCtrl.removeUserWishlist],
   };
 
   // Register all the routes and their handlers
