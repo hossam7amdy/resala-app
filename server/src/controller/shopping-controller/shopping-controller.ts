@@ -1,55 +1,34 @@
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RequestHandler } from 'express';
 
-import { prisma } from '../../model';
-import { BadRequestError, NotFoundError } from '../../utils/api-errors';
+import { shoppingService } from '../../service';
 
-export const getUserCart: RequestHandler = async (_, res) => {
+export const getUserCart: RequestHandler = async (_, res, next) => {
   const userId = res.locals.user.id;
 
-  const cart = await prisma.cart.findMany({
-    select: {
-      stock: {
-        select: {
-          product: true,
-          color: true,
-          size: true,
-        },
-      },
-    },
-    where: { userId },
-  });
-
-  return res.json({
-    success: true,
-    data: cart,
-  });
+  try {
+    const cart = await shoppingService.getUserCart(userId);
+    return res.json({
+      success: true,
+      data: cart,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const addItemToCart: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const stockId = parseInt(req.body.stockId);
-  const quantity = parseInt(req.body.quantity);
 
-  const stock = await prisma.stock.findUnique({ where: { id: stockId } });
-  if (!stock) {
-    return next(new NotFoundError('Stock not found'));
+  try {
+    const cart = await shoppingService.addToCart(userId, req.body);
+
+    return res.json({
+      success: true,
+      data: cart,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  if (stock.quantity < quantity) {
-    return next(new BadRequestError('Stock not available'));
-  }
-
-  const cart = await prisma.cart.upsert({
-    create: { userId, stockId, quantity },
-    update: { userId, stockId, quantity },
-    where: { userId_stockId: { userId, stockId } },
-  });
-
-  return res.json({
-    success: true,
-    data: cart,
-  });
 };
 
 export const removeItemFromCart: RequestHandler = async (req, res, next) => {
@@ -57,80 +36,88 @@ export const removeItemFromCart: RequestHandler = async (req, res, next) => {
   const stockId = parseInt(req.params.stockId + '');
 
   try {
-    await prisma.cart.delete({
-      where: { userId_stockId: { userId, stockId } },
+    const cart = await shoppingService.removeFromCart(userId, stockId);
+
+    return res.json({
+      success: true,
+      data: cart,
     });
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      return next(new NotFoundError('Item not found in cart'));
-    }
-    return next(error);
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    data: 'Item removed from cart',
-  });
 };
 
-export const getUserWishlist: RequestHandler = async (_, res) => {
+export const removeUserCart: RequestHandler = async (_, res, next) => {
   const userId = res.locals.user.id;
 
-  const wishlist = await prisma.wishlist.findMany({
-    select: {
-      product: true,
-    },
-    where: { userId },
-  });
+  try {
+    await shoppingService.removeUserCart(userId);
 
-  return res.json({
-    success: true,
-    data: wishlist,
-  });
+    return res.json({
+      success: true,
+      message: 'Cart removed',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserWishlist: RequestHandler = async (_, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    const wishlist = await shoppingService.getUserWishlist(userId);
+    return res.json({
+      success: true,
+      data: wishlist,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const addProductToWishlist: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const { productId } = req.body;
 
-  let wishlist;
   try {
-    wishlist = await prisma.wishlist.upsert({
-      create: { userId, productId },
-      update: { userId, productId },
-      where: { userId_productId: { userId, productId } },
+    const wishlist = await shoppingService.addProductToWishlist(userId, req.body.productId);
+
+    return res.json({
+      success: true,
+      data: wishlist,
     });
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      return next(new NotFoundError('Product not found'));
-    }
-
     return next(error);
   }
-
-  return res.json({
-    success: true,
-    data: wishlist,
-  });
 };
 
 export const removeProductFromWishlist: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const productId = parseInt(req.params.productId);
+  const productId = Number(req.params.productId);
 
   try {
-    await prisma.wishlist.delete({
-      where: { userId_productId: { userId, productId } },
+    const wishlist = await shoppingService.removeProductFromWishlist(userId, productId);
+
+    return res.json({
+      success: true,
+      data: wishlist,
     });
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      return next(new NotFoundError('Product not found in wishlist'));
-    }
-    return next(error);
+    next(error);
   }
+};
 
-  return res.json({
-    success: true,
-    data: 'Product removed from wishlist',
-  });
+export const removeUserWishlist: RequestHandler = async (_, res, next) => {
+  const userId = res.locals.user.id;
+
+  try {
+    await shoppingService.removeUserWishlist(userId);
+
+    return res.json({
+      success: true,
+      message: 'Wishlist removed',
+    });
+  } catch (error) {
+    next(error);
+  }
 };
