@@ -1,70 +1,63 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RequestHandler } from 'express';
 
-import { prisma } from '../../model';
+import { inventoryService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
 
 export const getSize: RequestHandler = async (req, res, next) => {
-  const id = parseInt(req.params.sizeId);
+  const sizeId = Number(req.params.sizeId);
 
-  const size = await prisma.size.findUnique({
-    include: {
-      stocks: true,
-    },
-    where: { id },
-  });
+  try {
+    if (isNaN(sizeId)) {
+      throw new BadRequestError('Size id must be a number');
+    }
 
-  if (!size) {
-    return next(new BadRequestError('Size not found'));
+    const size = await inventoryService.findSizeById(sizeId);
+
+    return res.json({
+      success: true,
+      data: size,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  return res.json({
-    success: true,
-    data: size,
-  });
 };
 
-export const getSizesList: RequestHandler = async (_req, res, _next) => {
-  const sizes = await prisma.size.findMany();
-  return res.json({
-    success: true,
-    data: sizes,
-  });
+export const getSizesList: RequestHandler = async (_, res, next) => {
+  try {
+    const sizes = await inventoryService.listSizes();
+
+    return res.json({
+      success: true,
+      data: sizes,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createSize: RequestHandler = async (req, res, next) => {
-  const { name } = req.body;
-
-  let size;
   try {
-    size = await prisma.size.create({
-      data: {
-        name,
-      },
+    const size = await inventoryService.createSize(req.body.name);
+
+    return res.status(201).json({
+      success: true,
+      data: size,
     });
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      return next(new BadRequestError('Size already exists'));
-    }
     next(error);
   }
-
-  return res.status(201).json({
-    success: true,
-    data: size,
-  });
 };
 
 export const updateSize: RequestHandler = async (req, res, next) => {
-  const id = parseInt(req.params.sizeId);
+  const sizeId = Number(req.params.sizeId);
 
-  let size;
   try {
-    size = await prisma.size.update({
-      where: { id },
-      data: {
-        name: req.body.name,
-      },
+    const size = await inventoryService.updateSize(sizeId, req.body.name);
+
+    return res.json({
+      success: true,
+      data: size,
     });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
@@ -72,9 +65,23 @@ export const updateSize: RequestHandler = async (req, res, next) => {
     }
     next(error);
   }
+};
 
-  return res.json({
-    success: true,
-    data: size,
-  });
+export const deleteSize: RequestHandler = async (req, res, next) => {
+  const sizeId = Number(req.params.sizeId);
+
+  try {
+    if (isNaN(sizeId)) {
+      throw new BadRequestError('Size id must be a number');
+    }
+
+    await inventoryService.deleteSize(sizeId);
+
+    return res.json({
+      success: true,
+      message: 'Size deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
 };
