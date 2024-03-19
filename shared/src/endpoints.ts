@@ -52,22 +52,23 @@ export enum Endpoints {
   deleteProductImage = 'deleteProductImage',
 
   // stock endpoints
-  getStock = 'getStock',
-  getStocksList = 'getStocksList',
-  createStock = 'createStock',
-  updateStock = 'updateStock',
+  deleteProductStock = 'deleteProductStock',
+  getProductStocks = 'getProductStocks',
+  updateProductStock = 'updateProductStock',
 
   // color endpoints
   getColor = 'getColor',
   getColorsList = 'getColorsList',
   createColor = 'createColor',
   updateColor = 'updateColor',
+  deleteColor = 'deleteColor',
 
   // size endpoints
   getSize = 'getSize',
   getSizesList = 'getSizesList',
   createSize = 'createSize',
   updateSize = 'updateSize',
+  deleteSize = 'deleteSize',
 
   // shopping endpoints
   getUserCart = 'getUserCart',
@@ -228,6 +229,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
 
+  // product endpoints
   [Endpoints.getProduct]: {
     url: '/api/v1/products/:productId',
     method: 'get',
@@ -251,6 +253,8 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
+
+  // product images endpoints
   [Endpoints.addProductImages]: {
     url: '/api/v1/products/:productId/images',
     method: 'post',
@@ -266,24 +270,24 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.getStock]: {
-    url: '/api/v1/stocks/:stockId',
+
+  // stock endpoints
+  [Endpoints.getProductStocks]: {
+    url: '/api/v1/products/:productId/stocks',
     method: 'get',
   },
-  [Endpoints.getStocksList]: {
-    url: '/api/v1/stocks',
-    method: 'get',
-  },
-  [Endpoints.createStock]: {
-    url: '/api/v1/stocks',
-    method: 'post',
-    auth: true,
-  },
-  [Endpoints.updateStock]: {
-    url: '/api/v1/stocks/:stockId',
+  [Endpoints.updateProductStock]: {
+    url: '/api/v1/products/:productId/stocks',
     method: 'put',
     auth: true,
   },
+  [Endpoints.deleteProductStock]: {
+    url: '/api/v1/products/:productId/stocks/:stockId',
+    method: 'delete',
+    auth: true,
+  },
+
+  // color endpoints
   [Endpoints.getColor]: {
     url: '/api/v1/colors/:colorId',
     method: 'get',
@@ -302,6 +306,13 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'put',
     auth: true,
   },
+  [Endpoints.deleteColor]: {
+    url: '/api/v1/colors/:colorId',
+    method: 'delete',
+    auth: true,
+  },
+
+  // size endpoints
   [Endpoints.getSize]: {
     url: '/api/v1/sizes/:sizeId',
     method: 'get',
@@ -320,7 +331,13 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'put',
     auth: true,
   },
+  [Endpoints.deleteSize]: {
+    url: '/api/v1/sizes/:sizeId',
+    method: 'delete',
+    auth: true,
+  },
 
+  // shopping endpoints
   [Endpoints.getUserCart]: {
     url: '/api/v1/users/cart',
     method: 'get',

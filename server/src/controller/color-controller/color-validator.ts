@@ -3,31 +3,34 @@ import { RequestHandler } from 'express';
 
 import { BadRequestError } from '../../utils/api-errors';
 
-export const validateCreateColor: RequestHandler = (req, _, next) => {
-  const { arName, enName, code } = req.body;
-  if (!arName || !enName || !code) {
-    return next(new BadRequestError('name, and code are required'));
-  }
-
-  const colorValidation = ColorSchema.safeParse({ arName, enName, code });
+function validateColorBody(body: typeof ColorSchema) {
+  const colorValidation = ColorSchema.safeParse(body);
   if (!colorValidation.success) {
-    return next(new BadRequestError(colorValidation.error.issues[0].message));
+    throw new BadRequestError(colorValidation.error.issues[0].message);
   }
+  return colorValidation.data;
+}
 
-  next();
+export const validateCreateColor: RequestHandler = (req, _, next) => {
+  try {
+    req.body = validateColorBody(req.body);
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const validateUpdateColor: RequestHandler = (req, _, next) => {
-  const id = req.params.colorId;
-  const { arName, enName, code } = req.body;
-  if (!arName || !enName || !code) {
-    return next(new BadRequestError('name, and code are required'));
-  }
+  const colorId = Number(req.params.colorId);
 
-  const colorValidation = ColorSchema.safeParse({ id, arName, enName, code });
-  if (!colorValidation.success) {
-    return next(new BadRequestError(colorValidation.error.issues[0].message));
-  }
+  try {
+    if (isNaN(colorId)) {
+      throw new BadRequestError('Color ID must be a number');
+    }
 
-  next();
+    req.body = validateColorBody(req.body);
+    next();
+  } catch (error) {
+    next(error);
+  }
 };
