@@ -93,7 +93,7 @@ be a cloud storage service that uses Azure Blob Storage.
 
 ### Entity Relationship Diagram (ERD)
 
-<img src="images/ERD.png" width="1000" />
+<img src="images/erd.png" width="1000" />
 
 ## Server
 
