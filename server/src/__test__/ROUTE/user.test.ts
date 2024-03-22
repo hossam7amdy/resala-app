@@ -3,7 +3,7 @@ import { ENDPOINT_CONFIGS } from '@resala/shared';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 
-import { userService } from '../service';
+import { userService } from '../../service';
 import { getTestServer } from './testserver';
 
 describe('TEST /users endpoint', () => {
