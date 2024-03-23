@@ -218,7 +218,7 @@ model Shipping {
 model Payment {
   id                 Int      @id @default(autoincrement()) @db.UnsignedInt
   orderId            Int      @unique @map("order_id") @db.UnsignedInt
-  transactionId      Int      @unique @map("transaction_id") @db.UnsignedInt
+  transactionId      Int      @map("transaction_id") @db.UnsignedInt
   transactionOrderId Int      @map("transaction_order_id") @db.UnsignedInt
   pending            Boolean
   success            Boolean
