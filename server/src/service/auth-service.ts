@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { RegisterRequest } from '@resala/shared';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import { ENV } from '../config';
@@ -62,9 +62,7 @@ export const authenticate = async (sign: string, password: string) => {
   };
 };
 
-export const register = async (
-  payload: Pick<User, 'firstName' | 'lastName' | 'email' | 'password'>
-) => {
+export const register = async (payload: RegisterRequest) => {
   const duplicate = await prisma.user.findUnique({
     where: {
       email: payload.email,
@@ -74,15 +72,12 @@ export const register = async (
     throw new ConflictError('Email already registered');
   }
 
-  const { email, password, firstName, lastName } = payload;
-  const { hashedPassword, salt, iterations } = await genHashedPassword(password);
+  const { hashedPassword, salt, iterations } = await genHashedPassword(payload.password);
 
   const user = await prisma.user.create({
     select: SELECT,
     data: {
-      email,
-      firstName,
-      lastName,
+      ...payload,
       password: hashedPassword,
       salt: salt,
       iterations,
