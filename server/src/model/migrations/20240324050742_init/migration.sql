@@ -70,7 +70,7 @@ CREATE TABLE `product_image` (
     `image_url` VARCHAR(500) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`, `product_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -140,8 +140,10 @@ CREATE TABLE `order` (
     `user_id` INTEGER UNSIGNED NULL,
     `subtotal` DECIMAL(9, 2) NOT NULL,
     `discount` DECIMAL(9, 2) NOT NULL DEFAULT 0,
-    `total` DECIMAL(9, 2) NULL,
-    `status` ENUM('PENDING', 'CONFIRMED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+    `total` DECIMAL(9, 2) NOT NULL,
+    `fulfilment_status` ENUM('PENDING', 'FULFILLED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+    `payment_method` ENUM('CASH', 'CARD') NOT NULL,
+    `payment_status` ENUM('PENDING', 'PAID', 'REFUNDED') NOT NULL DEFAULT 'PENDING',
     `note` VARCHAR(250) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -151,6 +153,7 @@ CREATE TABLE `order` (
 
 -- CreateTable
 CREATE TABLE `order_item` (
+    `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `order_id` INTEGER UNSIGNED NOT NULL,
     `name` VARCHAR(50) NOT NULL,
     `color` VARCHAR(15) NOT NULL,
@@ -160,33 +163,38 @@ CREATE TABLE `order_item` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
-    PRIMARY KEY (`order_id`)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `shipping` (
+    `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `order_id` INTEGER UNSIGNED NOT NULL,
     `address_id` INTEGER UNSIGNED NOT NULL,
-    `cost` DECIMAL(9, 2) NOT NULL,
-    `phone` CHAR(11) NOT NULL,
-    `status` ENUM('PICKED_UP', 'PROCESSING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PICKED_UP',
-    `note` VARCHAR(250) NULL,
+    `cost` DECIMAL(9, 2) NOT NULL DEFAULT 0,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `shipping_order_id_key`(`order_id`),
     UNIQUE INDEX `shipping_address_id_key`(`address_id`),
-    PRIMARY KEY (`order_id`, `address_id`)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `payment` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `order_id` INTEGER UNSIGNED NOT NULL,
-    `method` VARCHAR(15) NOT NULL,
-    `amount` DECIMAL(9, 2) NOT NULL,
-    `status` ENUM('PENDING', 'PAID', 'REFUNDED') NOT NULL DEFAULT 'PENDING',
-    `note` VARCHAR(250) NULL,
+    `transaction_id` INTEGER UNSIGNED NOT NULL,
+    `transaction_order_id` INTEGER UNSIGNED NOT NULL,
+    `pending` BOOLEAN NOT NULL,
+    `success` BOOLEAN NOT NULL,
+    `is_auth` BOOLEAN NOT NULL,
+    `is_capture` BOOLEAN NOT NULL,
+    `is_3d_secure` BOOLEAN NOT NULL,
+    `integration_id` INTEGER UNSIGNED NOT NULL,
+    `delivery_needed` BOOLEAN NOT NULL,
+    `amount_cents` DECIMAL(9, 2) NOT NULL,
+    `currency` CHAR(3) NOT NULL DEFAULT 'EGP',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -229,7 +237,10 @@ CREATE TABLE `address` (
     `street` VARCHAR(100) NOT NULL,
     `building` VARCHAR(50) NULL,
     `floor` SMALLINT NULL,
-    `note` VARCHAR(200) NULL,
+    `address` VARCHAR(250) NULL,
+    `phone` CHAR(11) NOT NULL,
+    `first_name` VARCHAR(50) NOT NULL,
+    `last_name` VARCHAR(50) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -252,7 +263,7 @@ ALTER TABLE `product` ADD CONSTRAINT `product_category_id_fkey` FOREIGN KEY (`ca
 ALTER TABLE `product_image` ADD CONSTRAINT `product_image_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `product`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `stock` ADD CONSTRAINT `stock_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `stock` ADD CONSTRAINT `stock_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `product`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `stock` ADD CONSTRAINT `stock_color_id_fkey` FOREIGN KEY (`color_id`) REFERENCES `color`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
