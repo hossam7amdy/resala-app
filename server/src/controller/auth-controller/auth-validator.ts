@@ -18,13 +18,9 @@ export const validateLogin: Login = (req, _, next) => {
 
 export const validateRegistration: Register = (req, _, next) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
-    if (!email || !password || !firstName || !lastName) {
-      throw new BadRequestError('Email, password, first name and last name are required');
-    }
-
     const RegisterSchema = UserSchema.pick({
       email: true,
+      phone: true,
       password: true,
       firstName: true,
       lastName: true,

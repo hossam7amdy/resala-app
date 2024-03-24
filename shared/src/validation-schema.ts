@@ -65,8 +65,7 @@ export const UserSchema = zod.object({
     .length(11, {
       message: 'Phone number must be 11 characters long',
     })
-    .startsWith('01')
-    .optional(),
+    .startsWith('01'),
   isVerified: zod.boolean().optional(),
   password: zod
     .string()
