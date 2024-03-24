@@ -223,10 +223,12 @@ model Payment {
   success            Boolean
   isAuth             Boolean  @map("is_auth")
   isCapture          Boolean  @map("is_capture")
+  amountCents        Decimal  @map("amount_cents") @db.Decimal(9, 2)
+  isVoided           Boolean  @map("is_voided")
+  isRefunded         Boolean  @map("is_refunded")
   is3DSecure         Boolean  @map("is_3d_secure")
   integrationId      Int      @map("integration_id") @db.UnsignedInt
   deliveryNeeded     Boolean  @map("delivery_needed")
-  amountCents        Decimal  @map("amount_cents") @db.Decimal(9, 2)
   currency           String   @default("EGP") @db.Char(3)
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
@@ -308,6 +310,8 @@ enum OrderStatus {
 enum PaymentStatus {
   PENDING
   PAID
+  FAILED
+  VOIDED
   REFUNDED
 
   @@map("payment_status")
