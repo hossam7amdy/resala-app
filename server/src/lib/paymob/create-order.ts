@@ -8,7 +8,7 @@ interface CreateOrderRequest {
   auth_token: string;
   delivery_needed: boolean;
   amount_cents: number;
-  merchant_order_id?: number;
+  merchant_order_id: number;
   items: any[];
   shipping_data?: any;
   shipping_details?: any;
@@ -38,7 +38,6 @@ export async function createOrder(order: CreateOrderRequest): Promise<CreateOrde
 
     return response as CreateOrderResponse;
   } catch (error) {
-    console.log('Failed to create order with Paymob API', error);
     throw new Error('Failed to create order with Paymob API');
   }
 }

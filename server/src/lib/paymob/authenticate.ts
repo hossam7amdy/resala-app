@@ -22,7 +22,6 @@ export async function authenticate(): Promise<AuthenticateResponse> {
 
     return response as AuthenticateResponse;
   } catch (error) {
-    console.log('Failed to authenticate with Paymob API', error);
     throw new Error('Failed to authenticate with Paymob API');
   }
 }

@@ -58,7 +58,6 @@ export async function retrieveTransactionByOrderDetails(orderInfo: {
 
     return response as TransactionResponse;
   } catch (error) {
-    console.log('Failed to retrieve transaction with Paymob API', error);
     throw new Error('Failed to retrieve transaction with Paymob API');
   }
 }

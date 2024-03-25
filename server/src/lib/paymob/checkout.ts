@@ -5,7 +5,7 @@ const CURRENCY = 'EGP';
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 const PAYMOB_INTEGRATION_ID = ENV.PAYMOB_INTEGRATION_ID;
 
-interface BillingData {
+export interface BillingData {
   first_name: string;
   last_name: string;
   email: string;
@@ -59,7 +59,6 @@ export async function checkout(payload: CheckoutRequest): Promise<CheckoutRespon
       iframeUrl,
     };
   } catch (error) {
-    console.log('Failed to checkout with Paymob API', error);
     throw new Error('Failed to checkout with Paymob API');
   }
 }
