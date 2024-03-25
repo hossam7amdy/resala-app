@@ -1,4 +1,5 @@
 import { ENV } from '../../config';
+import { fetchCall } from '../../utils/fetch';
 
 const CURRENCY = 'EGP';
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
@@ -43,27 +44,22 @@ interface CheckoutResponse {
  * @see https://docs.paymob.com/docs/accept-standard-redirect#3-payment-key-request
  */
 export async function checkout(payload: CheckoutRequest): Promise<CheckoutResponse> {
-  const response = await fetch(`${PAYMOB_API_URL}/acceptance/payment_keys`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  try {
+    const response = await fetchCall.post(`${PAYMOB_API_URL}/acceptance/payment_keys`, {
       ...payload,
       currency: CURRENCY,
       integration_id: PAYMOB_INTEGRATION_ID,
-    }),
-  });
+    });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    const { token } = response as CheckoutResponse;
+    const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/726054?payment_token=${token}`;
+
+    return {
+      token,
+      iframeUrl,
+    };
+  } catch (error) {
+    console.log('Failed to checkout with Paymob API', error);
+    throw new Error('Failed to checkout with Paymob API');
   }
-
-  const { token } = (await response.json()) as { token: string };
-  const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/726054?payment_token=${token}`;
-
-  return {
-    token,
-    iframeUrl,
-  };
 }

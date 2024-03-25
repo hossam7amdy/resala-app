@@ -1,10 +1,11 @@
 import { ENV } from '../../config';
+import { fetchCall } from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
 interface VoidTransactionRequest {
   access_token: string;
-  transaction_id: string;
+  transaction_id: number;
 }
 
 interface VoidTransactionResponse {
@@ -26,22 +27,15 @@ interface VoidTransactionResponse {
 export async function voidTransaction(
   payload: VoidTransactionRequest
 ): Promise<VoidTransactionResponse> {
-  const response = await fetch(
-    `${PAYMOB_API_URL}/acceptance/void_refund/void?token=${payload.access_token}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        transaction_id: payload.transaction_id,
-      }),
-    }
-  );
+  try {
+    const response = await fetchCall.post(
+      `${PAYMOB_API_URL}/acceptance/void_refund/void?token=${payload.access_token}`,
+      { transaction_id: payload.transaction_id }
+    );
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    return response as Promise<VoidTransactionResponse>;
+  } catch (error) {
+    console.log('Failed to void transaction with Paymob API', error);
+    throw new Error('Failed to void transaction with Paymob API');
   }
-
-  return response.json() as Promise<VoidTransactionResponse>;
 }
