@@ -1,11 +1,10 @@
 import { Address } from '@prisma/client';
 
-import { orderService } from '.';
 import { paymob } from '../lib/paymob';
 import callback from '../lib/paymob/callback.json';
 import { prisma } from '../model';
 
-export async function createPayment(payload: {
+export async function createPaymentRequest(payload: {
   email: string;
   orderId: number;
   amount: number;
@@ -74,46 +73,42 @@ export async function refundPayment(transactionId: number, amount: number) {
   });
 }
 
-export async function authenticatePaymentCallback(hmac: string, body: typeof callback) {
-  const authenticated = await paymob.authenticateCallback(hmac, body.obj);
+export async function createPayment(hmac: string, payload: (typeof callback)['obj']) {
+  const authenticated = await paymob.authenticateCallback(hmac, payload);
 
-  console.log('Authenticating payment callback', hmac, body, authenticated);
+  console.log('Authenticating payment callback', hmac, payload, authenticated);
 
   await prisma.payment.create({
     data: {
-      orderId: body.obj.order.merchant.id,
-      transactionId: body.obj.id,
-      transactionOrderId: body.obj.order.id,
-      pending: body.obj.pending,
-      success: body.obj.success,
-      isAuth: body.obj.is_auth,
-      isVoided: body.obj.is_voided,
-      isCapture: body.obj.is_capture,
-      isRefunded: body.obj.is_refunded,
-      is3DSecure: body.obj.is_3d_secure,
-      integrationId: body.obj.integration_id,
-      deliveryNeeded: body.obj.order.delivery_needed,
-      amountCents: body.obj.amount_cents,
-      currency: body.obj.currency,
-      createdAt: new Date(body.obj.created_at),
+      orderId: payload.order.merchant.id,
+      transactionId: payload.id,
+      transactionOrderId: payload.order.id,
+      pending: payload.pending,
+      success: payload.success,
+      isAuth: payload.is_auth,
+      isVoided: payload.is_voided,
+      isCapture: payload.is_capture,
+      isRefunded: payload.is_refunded,
+      is3DSecure: payload.is_3d_secure,
+      integrationId: payload.integration_id,
+      deliveryNeeded: payload.order.delivery_needed,
+      amountCents: payload.amount_cents,
+      currency: payload.currency,
+      createdAt: new Date(payload.created_at),
     },
   });
 
-  await orderService.updateOrder(body.obj.order.merchant.id, {
-    paymentStatus: getPaymentStatus(body.obj),
-  });
-
-  return true;
+  return authenticated ? getPaymentStatus(payload) : undefined;
 }
 
-function getPaymentStatus(obj: (typeof callback)['obj']) {
-  if (obj.success) {
+function getPaymentStatus(payment: (typeof callback)['obj']) {
+  if (payment.success) {
     return 'PAID';
-  } else if (obj.pending) {
+  } else if (payment.pending) {
     return 'PENDING';
-  } else if (obj.is_voided) {
+  } else if (payment.is_voided) {
     return 'VOIDED';
-  } else if (obj.is_refunded) {
+  } else if (payment.is_refunded) {
     return 'REFUNDED';
   } else {
     return 'FAILED';

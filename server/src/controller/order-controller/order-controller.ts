@@ -37,7 +37,7 @@ export const createOrder: RequestHandler = async (req, res, next) => {
     let payment = null;
     if (paymentMethod === 'CARD') {
       // create payment
-      payment = await paymentService.createPayment({
+      payment = await paymentService.createPaymentRequest({
         orderId: order.id,
         email: user.email,
         amount: Number(order.total),
