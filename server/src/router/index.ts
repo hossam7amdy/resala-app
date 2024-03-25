@@ -8,6 +8,7 @@ import {
   categoryValidator,
   colorCtrl,
   colorValidator,
+  orderCtrl,
   productCtrl,
   productValidator,
   shoppingCtrl,
@@ -166,6 +167,14 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.removeProductFromWishlist]: [shoppingCtrl.removeProductFromWishlist],
     [Endpoints.getUserWishlist]: [shoppingCtrl.getUserWishlist],
     [Endpoints.removeUserWishlist]: [shoppingCtrl.removeUserWishlist],
+
+    // order endpoints
+    [Endpoints.createOrder]: [orderCtrl.createOrder],
+    [Endpoints.getOrder]: [orderCtrl.getOrder],
+    [Endpoints.getOrdersList]: [orderCtrl.getOrdersList],
+
+    // payment endpoints
+    [Endpoints.transactionCallbacks]: [],
   };
 
   // Register all the routes and their handlers
