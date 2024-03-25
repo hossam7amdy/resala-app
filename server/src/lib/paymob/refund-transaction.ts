@@ -35,7 +35,6 @@ export async function refundTransaction(
 
     return response as RefundTransactionResponse;
   } catch (error) {
-    console.log('Failed to refund transaction with Paymob API', error);
     throw new Error('Failed to refund transaction with Paymob API');
   }
 }

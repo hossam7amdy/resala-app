@@ -26,7 +26,7 @@ describe('Test Paymob Integration', () => {
   test('Test Payment API Flow', async () => {
     const order = {
       amount_cents: 120 * 100,
-      merchant_order_id: Math.floor(Math.random() * 1000000),
+      // merchant_order_id: Math.floor(Math.random() * 1000000),
       items: [
         {
           name: 'Product 1',

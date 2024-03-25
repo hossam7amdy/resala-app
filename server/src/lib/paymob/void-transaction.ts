@@ -35,7 +35,6 @@ export async function voidTransaction(
 
     return response as Promise<VoidTransactionResponse>;
   } catch (error) {
-    console.log('Failed to void transaction with Paymob API', error);
     throw new Error('Failed to void transaction with Paymob API');
   }
 }
