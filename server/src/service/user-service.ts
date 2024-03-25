@@ -69,10 +69,10 @@ export const listUsersPaginated = async (pagination: {
   const { page, limit, query } = pagination;
 
   const filters = {
-    firstName: { contains: query },
-    lastName: { contains: query },
-    email: { contains: query },
-    phone: query ? { contains: query } : null,
+    firstName: { startsWith: query },
+    lastName: { startsWith: query },
+    email: { startsWith: query },
+    phone: { startsWith: query },
   };
 
   const [total, users] = await prisma.$transaction([
@@ -121,6 +121,21 @@ export const createUserAddress = async (userId: number, payload: Prisma.AddressC
   });
 
   return address;
+};
+
+export const findUserAddress = async (userId: number, addressId: number) => {
+  const userAddr = await prisma.userAddress.findFirst({
+    select: {
+      address: true,
+    },
+    where: { userId, addressId },
+  });
+
+  if (!userAddr) {
+    throw new NotFoundError('Address not found');
+  }
+
+  return userAddr.address;
 };
 
 export const updateUserAddress = async (

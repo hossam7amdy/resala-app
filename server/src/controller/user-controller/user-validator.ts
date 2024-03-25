@@ -1,76 +1,82 @@
 import { AddressSchema, UserSchema } from '@resala/shared';
+import { ZodError } from 'zod';
 
 import { AdminUpdateUser, CreateUserAddress, UpdateProfile, UpdateUserAddress } from '../../types';
 import { BadRequestError } from '../../utils/api-errors';
+import { formatZodError } from '../../utils/zod-errors';
 
 export const validateUpdateProfile: UpdateProfile = (req, _, next) => {
-  const { firstName, lastName } = req.body;
-  if (!firstName || !lastName) {
-    return next(new BadRequestError('Phone, first name and last name are required'));
+  try {
+    const UpdateProfileSchema = UserSchema.pick({
+      phone: true,
+      firstName: true,
+      lastName: true,
+    });
+
+    req.body = UpdateProfileSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    next(new BadRequestError(formatZodError(err as ZodError)));
   }
-
-  const UpdateProfileSchema = UserSchema.pick({
-    phone: true,
-    firstName: true,
-    lastName: true,
-  });
-
-  const validatedFields = UpdateProfileSchema.safeParse(req.body);
-  if (!validatedFields.success) {
-    return next(new BadRequestError(validatedFields.error.issues[0].message));
-  }
-
-  next();
 };
 
 export const validateAdminUpdateUser: AdminUpdateUser = (req, _, next) => {
-  const { firstName, lastName, role } = req.body;
-  if (!firstName || !lastName || !role) {
-    return next(new BadRequestError('First name, last name and role are required fields'));
+  const userId = Number(req.params.userId);
+
+  try {
+    if (isNaN(userId)) {
+      throw new BadRequestError('userId is required');
+    }
+
+    const UpdateUserSchema = UserSchema.pick({
+      phone: true,
+      firstName: true,
+      lastName: true,
+      role: true,
+    });
+
+    req.body = UpdateUserSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      next(new BadRequestError(formatZodError(err)));
+    }
+    next(err);
   }
-
-  const UpdateUserSchema = UserSchema.pick({
-    id: true,
-    phone: true,
-    firstName: true,
-    lastName: true,
-    role: true,
-  });
-
-  const validatedFields = UpdateUserSchema.safeParse({ ...req.body, id: req.params.userId });
-  if (!validatedFields.success) {
-    return next(new BadRequestError(validatedFields.error.issues[0].message));
-  }
-
-  next();
 };
 
 export const validateCreateAddress: CreateUserAddress = (req, _, next) => {
-  const { state, city, street } = req.body;
-  if (!state || !city || !street) {
-    return next(new BadRequestError('userId, state, city, and street are required fields'));
+  try {
+    req.body = validateAddress(req.body);
+
+    next();
+  } catch (err) {
+    next(err);
   }
-
-  const validatedFields = AddressSchema.safeParse({ ...req.body });
-
-  if (!validatedFields.success) {
-    return next(new BadRequestError(validatedFields.error.issues[0].message));
-  }
-
-  next();
 };
 
 export const validateUpdateAddress: UpdateUserAddress = (req, _, next) => {
-  const id = req.params.addressId;
-  const { state, city, street } = req.body;
-  if (!state || !city || !street) {
-    return next(new BadRequestError('state, city, and street are required fields'));
-  }
+  const addressId = Number(req.params.addressId);
 
-  const validatedFields = AddressSchema.safeParse({ ...req.body, id });
-  if (!validatedFields.success) {
-    return next(new BadRequestError(validatedFields.error.issues[0].message));
-  }
+  try {
+    if (isNaN(addressId)) {
+      throw new BadRequestError('addressId is required');
+    }
 
-  next();
+    req.body = validateAddress(req.body);
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+const validateAddress = (address: any) => {
+  try {
+    return AddressSchema.parse(address);
+  } catch (error) {
+    throw new BadRequestError(formatZodError(error as ZodError));
+  }
 };

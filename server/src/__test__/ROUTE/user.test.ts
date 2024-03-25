@@ -1,4 +1,4 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent';
@@ -9,15 +9,25 @@ import { getTestServer } from './testserver';
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
 
-  let token = '';
+  const firstName = 'test';
+  const lastName = 'test';
   const email = `test_${Date.now()}@test.com`;
   const password = 'abcABC@123';
+  const phone = `01${`${Date.now()}`.slice(-9)}`;
 
   beforeAll(async () => {
     client = await getTestServer();
-    await registerNewUser(email, password);
+
+    await registerNewUser({
+      email,
+      password,
+      phone,
+      firstName,
+      lastName,
+    });
+
     await makeUserAdmin();
-  }, 10000);
+  });
 
   it('should get current logged in user', async () => {
     const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
@@ -30,36 +40,56 @@ describe('TEST /users endpoint', () => {
   it('should update current logged in user', async () => {
     const { method, url } = ENDPOINT_CONFIGS.updateCurrentUser;
 
-    await client[method](url)
+    const res = await client[method](url)
       .set(await getAuthToken())
-      .send({ firstName: 'test1', lastName: 'test1' })
-      .expect(200);
+      .send({ firstName, lastName, phone });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Object) });
   });
 
   it('should create user address', async () => {
     const { method, url } = ENDPOINT_CONFIGS.createAddress;
 
-    await client[method](url)
+    const res = await client[method](url)
       .set(await getAuthToken())
-      .send({ state: 'test address', city: 'test city', street: 'test street' })
-      .expect(201);
+      .send({
+        firstName,
+        lastName,
+        phone,
+        state: 'الجيزة',
+        city: 'السادس من أكتوبر',
+        street: 'المنطقة الصناعية الثالثة',
+      });
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Object) });
   });
 
   it('should update user address', async () => {
     const address = await getLastAddress();
 
     const { url, method } = ENDPOINT_CONFIGS.updateAddress;
-    await client[method](url.replace(':addressId', address.id))
+    const res = await client[method](url.replace(':addressId', address.id))
       .set(await getAuthToken())
-      .send({ state: 'test address1', city: 'test city1', street: 'test street1' })
-      .expect(200);
+      .send({
+        firstName,
+        lastName,
+        phone,
+        state: 'test address1',
+        city: 'test city1',
+        street: 'test street1',
+      });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Object) });
   });
 
   it('should get user address list', async () => {
-    await client
-      .get(ENDPOINT_CONFIGS.getAddressList.url)
-      .set(await getAuthToken())
-      .expect(200);
+    const res = await client.get(ENDPOINT_CONFIGS.getAddressList.url).set(await getAuthToken());
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Array) });
   });
 
   it('should delete user address', async () => {
@@ -67,18 +97,22 @@ describe('TEST /users endpoint', () => {
 
     const address = await getLastAddress();
 
-    await client[method](url.replace(':addressId', address.id))
-      .set(await getAuthToken())
-      .expect(200);
+    const res = await client[method](url.replace(':addressId', address.id)).set(
+      await getAuthToken()
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true });
   });
 
   it("it should get a user by it's id", async () => {
     const user = await getLastUser();
     const { method, url } = ENDPOINT_CONFIGS.adminGetUser;
 
-    await client[method](url.replace(':userId', user.id))
-      .set(await getAuthToken())
-      .expect(200);
+    const res = await client[method](url.replace(':userId', user.id)).set(await getAuthToken());
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Object) });
   });
 
   it('it should get users list', async () => {
@@ -93,10 +127,12 @@ describe('TEST /users endpoint', () => {
     const user = await getLastUser();
     const { method, url } = ENDPOINT_CONFIGS.adminUpdateUser;
 
-    await client[method](url.replace(':userId', user.id))
+    const res = await client[method](url.replace(':userId', user.id))
       .set(await getAuthToken())
-      .send({ firstName: 'test1', lastName: 'test1', role: 'CUSTOMER' })
-      .expect(200);
+      .send({ firstName: 'test1', lastName: 'test1', role: 'CUSTOMER', phone: '01000000000' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({ success: true, data: expect.any(Object) });
   });
 
   it("it should delete a user by it's id", async () => {
@@ -108,22 +144,25 @@ describe('TEST /users endpoint', () => {
       .expect(200);
   });
 
-  const registerNewUser = async (email: string, password: string) => {
+  const registerNewUser = async (payload: {
+    email: string;
+    password: string;
+    phone: string;
+    firstName: string;
+    lastName: string;
+  }) => {
     const { method, url } = ENDPOINT_CONFIGS.register;
 
-    await client[method](url)
-      .send({ firstName: 'test', lastName: 'test', email, password })
-      .expect(201);
+    const res = await client[method](url).send(payload);
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toMatchObject({ success: true });
   };
 
   const getAuthToken = async () => {
-    if (token) return { Authorization: 'Bearer ' + token };
+    const res = await loginUser(email, password);
 
-    const { method, url } = ENDPOINT_CONFIGS.login;
-    const result = await client[method](url).send({ sign: email, password }).expect(200);
-
-    token = result.body.data.accessToken;
-    return { Authorization: 'Bearer ' + result.body.data.accessToken };
+    return { Authorization: 'Bearer ' + res.data.accessToken };
   };
 
   const makeUserAdmin = async () => {
@@ -134,21 +173,41 @@ describe('TEST /users endpoint', () => {
     return userService.updateUser(res.body.data.id, { role: 'ADMIN' });
   };
 
+  const loginUser = async (sign: string, password: string) => {
+    const { method, url } = ENDPOINT_CONFIGS.login;
+    const result = await client[method](url).send({ sign, password });
+
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toMatchObject({
+      success: true,
+      data: {
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
+        expiresIn: expect.any(Number),
+      },
+    });
+
+    return result.body;
+  };
+
   const getLastAddress = async () => {
     const { method, url } = ENDPOINT_CONFIGS.getAddressList;
 
-    return client[method](url)
-      .set(await getAuthToken())
-      .expect(200)
-      .then(res => res.body.data.pop());
+    const res = await client[method](url).set(await getAuthToken());
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBeGreaterThan(0);
+
+    return res.body.data.pop();
   };
 
   const getLastUser = async () => {
     const { method, url } = ENDPOINT_CONFIGS.adminGetUsersList;
 
-    const res = await client[method](url)
-      .set(await getAuthToken())
-      .expect(200);
+    const res = await client[method](url).set(await getAuthToken());
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.users.length).toBeGreaterThan(0);
 
     return res.body.data.users.pop();
   };

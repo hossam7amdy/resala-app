@@ -12,6 +12,7 @@ describe('TEST /auth endpoints', () => {
   const password = 'abcABC@123';
   const firstName = 'test';
   const lastName = 'test';
+  const phone = `01${`${Date.now()}`.slice(-9)}`;
 
   beforeAll(async () => {
     client = await getTestServer();
@@ -31,6 +32,7 @@ describe('TEST /auth endpoints', () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
         email,
+        phone,
         password,
         firstName,
         lastName,
@@ -38,16 +40,30 @@ describe('TEST /auth endpoints', () => {
       expect(res.statusCode).toBe(201);
     });
 
-    it('should fail to register user exist', async () => {
+    it('should fail to register an already exist email', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
         email,
+        phone: `01${`${Date.now()}`.slice(-9)}`,
         password,
         firstName,
         lastName,
       });
       expect(res.statusCode).toBe(409);
     });
+
+    it('should fail to register an already exist phone', async () => {
+      const { method, url } = ENDPOINT_CONFIGS.register;
+      const res = await client[method](url).send({
+        email: `test_${Date.now()}@mail.com`,
+        phone,
+        password,
+        firstName,
+        lastName,
+      });
+      expect(res.statusCode).toBe(409);
+    });
+
     it('should fail to register with wrong data (short password)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
@@ -58,6 +74,7 @@ describe('TEST /auth endpoints', () => {
       });
       expect(res.statusCode).toBe(400);
     });
+
     it('should fail to register with wrong data (no capital character)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
@@ -68,6 +85,7 @@ describe('TEST /auth endpoints', () => {
       });
       expect(res.statusCode).toBe(400);
     });
+
     it('should fail to register with wrong data (invalid email)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
