@@ -1,4 +1,5 @@
 import { ENV } from '../../config';
+import { fetchCall } from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
@@ -26,17 +27,15 @@ interface RefundTransactionResponse {
 export async function refundTransaction(
   payload: RefundTransactionRequest
 ): Promise<RefundTransactionResponse> {
-  const response = await fetch(`${PAYMOB_API_URL}/acceptance/void_refund/refund`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetchCall.post(
+      `${PAYMOB_API_URL}/acceptance/void_refund/refund`,
+      payload
+    );
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    return response as RefundTransactionResponse;
+  } catch (error) {
+    console.log('Failed to refund transaction with Paymob API', error);
+    throw new Error('Failed to refund transaction with Paymob API');
   }
-
-  return response.json() as Promise<RefundTransactionResponse>;
 }

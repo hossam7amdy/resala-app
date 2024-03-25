@@ -1,4 +1,5 @@
 import { ENV } from '../../config';
+import { fetchCall } from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
@@ -49,17 +50,15 @@ export async function retrieveTransactionByOrderDetails(orderInfo: {
   merchant_order_id: number;
   order_id: number;
 }): Promise<TransactionResponse> {
-  const response = await fetch(`${PAYMOB_API_URL}/ecommerce/orders/transaction_inquiry`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(orderInfo),
-  });
+  try {
+    const response = await fetchCall.post(
+      `${PAYMOB_API_URL}/ecommerce/orders/transaction_inquiry`,
+      orderInfo
+    );
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    return response as TransactionResponse;
+  } catch (error) {
+    console.log('Failed to retrieve transaction with Paymob API', error);
+    throw new Error('Failed to retrieve transaction with Paymob API');
   }
-
-  return response.json() as Promise<TransactionResponse>;
 }

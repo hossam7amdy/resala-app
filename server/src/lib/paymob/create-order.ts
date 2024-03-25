@@ -1,4 +1,5 @@
 import { ENV } from '../../config';
+import { fetchCall } from '../../utils/fetch';
 
 const CURRENCY = 'EGP';
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
@@ -29,20 +30,15 @@ interface CreateOrderResponse extends Record<string, any> {
  * @see https://docs.paymob.com/docs/accept-standard-redirect#2-order-registration-api
  */
 export async function createOrder(order: CreateOrderRequest): Promise<CreateOrderResponse> {
-  const response = await fetch(`${PAYMOB_API_URL}/ecommerce/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      currency: CURRENCY,
+  try {
+    const response = await fetchCall.post(`${PAYMOB_API_URL}/ecommerce/orders`, {
       ...order,
-    }),
-  });
+      currency: CURRENCY,
+    });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    return response as CreateOrderResponse;
+  } catch (error) {
+    console.log('Failed to create order with Paymob API', error);
+    throw new Error('Failed to create order with Paymob API');
   }
-
-  return response.json() as Promise<CreateOrderResponse>;
 }
