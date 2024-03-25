@@ -136,14 +136,7 @@ export const createUserAddress: CreateUserAddress = async (req, res, next) => {
   const userId = res.locals.user.id;
 
   try {
-    const address = await userService.createUserAddress(userId, {
-      state: req.body.state,
-      city: req.body.city,
-      street: req.body.street,
-      building: req.body.building,
-      floor: req.body.floor,
-      note: req.body.note,
-    });
+    const address = await userService.createUserAddress(userId, req.body);
 
     return res.status(201).json({
       success: true,
@@ -159,14 +152,7 @@ export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
   const addressId = parseInt(req.params.addressId);
 
   try {
-    const address = await userService.updateUserAddress(userId, addressId, {
-      state: req.body.state,
-      city: req.body.city,
-      street: req.body.street,
-      building: req.body.building,
-      floor: req.body.floor,
-      note: req.body.note,
-    });
+    const address = await userService.updateUserAddress(userId, addressId, req.body);
 
     return res.json({
       success: true,

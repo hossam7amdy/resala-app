@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `order` MODIFY `payment_status` ENUM('PENDING', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED') NOT NULL DEFAULT 'PENDING';

@@ -79,6 +79,14 @@ export enum Endpoints {
   addProductToWishlist = 'addProductToWishlist',
   removeUserWishlist = 'removeUserWishlist',
   removeProductFromWishlist = 'removeProductFromWishlist',
+
+  // order endpoints
+  createOrder = 'createOrder',
+  getOrder = 'getOrder',
+  getOrdersList = 'getOrdersList',
+
+  // payment endpoints
+  transactionCallbacks = 'transactionCallbacks',
 }
 
 export function withParams(endpoint: EndpointConfig, ...params: string[]): EndpointConfig {
@@ -380,5 +388,28 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/wishlist',
     method: 'get',
     auth: true,
+  },
+
+  // order endpoints
+  [Endpoints.createOrder]: {
+    url: '/api/v1/orders',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.getOrder]: {
+    url: '/api/v1/orders/:orderId',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getOrdersList]: {
+    url: '/api/v1/orders',
+    method: 'get',
+    auth: true,
+  },
+
+  // payment endpoints
+  [Endpoints.transactionCallbacks]: {
+    url: '/api/v1/payments/callbacks',
+    method: 'post',
   },
 };

@@ -21,3 +21,5 @@ export * as colorValidator from './color-controller/color-validator';
 
 export * as shoppingCtrl from './shopping-controller/shopping-controller';
 export * as shoppingValidator from './shopping-controller/shopping-validator';
+
+export * as orderCtrl from './order-controller/order-controller';
