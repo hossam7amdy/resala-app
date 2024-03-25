@@ -5,18 +5,14 @@ import { validationPatterns } from './validation-patterns';
 
 export const QueryParamsSchema = zod.object({
   page: zod.coerce
-    .number({
-      invalid_type_error: 'Page number must be a number',
-    })
+    .number()
     .positive({
       message: 'Page number must be a positive number',
     })
     .max(100)
     .optional(),
   limit: zod.coerce
-    .number({
-      invalid_type_error: 'Limit must be a number',
-    })
+    .number()
     .positive({
       message: 'Limit must be a positive number',
     })
@@ -34,48 +30,16 @@ export const QueryParamsSchema = zod.object({
 });
 
 export const UserSchema = zod.object({
-  email: zod
-    .string()
-    .min(5, {
-      message: 'Email must be at least 5 characters long',
-    })
-    .max(128, {
-      message: 'Email must be at most 128 characters long',
-    })
-    .email(),
-  firstName: zod
-    .string()
-    .min(2, {
-      message: 'First name must be at least 2 characters long',
-    })
-    .max(50, {
-      message: 'First name must be at most 50 characters long',
-    }),
-  lastName: zod
-    .string()
-    .min(2, {
-      message: 'Last name must be at least 2 characters long',
-    })
-    .max(50, {
-      message: 'Last name must be at most 50 characters long',
-    }),
-  role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]),
-  phone: zod
-    .string()
-    .length(11, {
-      message: 'Phone number must be 11 characters long',
-    })
-    .startsWith('01')
-    .optional(),
+  email: zod.string().min(5).max(128).email(),
   isVerified: zod.boolean().optional(),
+  phone: zod.string().length(11).startsWith('01'),
+  firstName: zod.string().min(2).max(50),
+  lastName: zod.string().min(2).max(50),
+  role: zod.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]),
   password: zod
     .string()
-    .min(8, {
-      message: 'Password must be at least 8 characters long',
-    })
-    .max(50, {
-      message: 'Password must be at most 50 characters long',
-    })
+    .min(8)
+    .max(50)
     .regex(
       validationPatterns.passwordContainsLowerCaseCharacter.pattern,
       validationPatterns.passwordContainsLowerCaseCharacter.message
@@ -90,11 +54,17 @@ export const UserSchema = zod.object({
     ),
 });
 
+export const RegisterSchema = zod.object({
+  firstName: UserSchema.shape.firstName,
+  lastName: UserSchema.shape.lastName,
+  phone: UserSchema.shape.phone,
+  email: UserSchema.shape.email,
+  password: UserSchema.shape.password,
+});
+
 export const ResetPasswordSchema = zod.object({
-  code: zod.string().length(6, {
-    message: 'Code must be 6 characters long',
-  }),
-  email: zod.string().email(),
+  code: zod.string().length(6),
+  email: UserSchema.shape.email,
   password: UserSchema.shape.password,
 });
 
@@ -104,41 +74,21 @@ export const ChangePasswordSchema = zod.object({
 });
 
 export const AddressSchema = zod.object({
-  state: zod.string().max(100, {
-    message: 'State must be at most 100 characters long',
-  }),
-  city: zod.string().max(100, {
-    message: 'City must be at most 100 characters long',
-  }),
-  street: zod.string().max(100, {
-    message: 'Street must be at most 100 characters long',
-  }),
-  country: zod
-    .string()
-    .max(100, {
-      message: 'Country must be at most 100 characters long',
-    })
-    .optional(),
-  building: zod
-    .string()
-    .max(50, {
-      message: 'Building must be at most 50 characters long',
-    })
-    .optional(),
-  floor: zod.number().positive().optional(),
-  note: zod
-    .string()
-    .max(500, {
-      message: 'Note must be at most 500 characters long',
-    })
-    .optional(),
+  firstName: UserSchema.shape.firstName,
+  lastName: UserSchema.shape.lastName,
+  phone: UserSchema.shape.phone,
+  state: zod.string().max(100),
+  city: zod.string().max(100),
+  street: zod.string().max(100),
+  country: zod.string().max(100).optional(),
+  building: zod.string().max(50).optional(),
+  floor: zod.coerce.number().positive().optional(),
+  address: zod.string().max(500).optional(),
 });
 
 export const CategorySchema = zod.object({
   categoryId: zod.coerce
-    .number({
-      invalid_type_error: 'Category ID must be a number',
-    })
+    .number()
     .positive({
       message: 'Category ID must be a positive number',
     })
@@ -163,24 +113,16 @@ export const CategorySchema = zod.object({
 
 export const ProductSchema = zod.object({
   id: zod.coerce
-    .number({
-      invalid_type_error: 'Product ID must be a number',
-    })
+    .number()
     .positive({
       message: 'Product ID must be a positive number',
     })
     .optional(),
-  categoryId: zod.coerce
-    .number({
-      invalid_type_error: 'Category ID must be a number',
-    })
-    .positive({
-      message: 'Category ID must be a positive number',
-    }),
+  categoryId: zod.coerce.number().positive({
+    message: 'Category ID must be a positive number',
+  }),
   arName: zod
-    .string({
-      invalid_type_error: 'arName is required',
-    })
+    .string()
     .min(2, {
       message: 'Arabic name must be at least 2 characters long',
     })
@@ -188,59 +130,29 @@ export const ProductSchema = zod.object({
       message: 'Arabic name must be at most 100 characters long',
     }),
   enName: zod
-    .string({
-      invalid_type_error: 'enName is required',
-    })
+    .string()
     .min(2, {
       message: 'English name must be at least 2 characters long',
     })
     .max(100, {
       message: 'English name must be at most 100 characters long',
     }),
-  arDescription: zod
-    .string({
-      invalid_type_error: 'arDescription is required',
-    })
-    .max(500, {
-      message: 'Arabic description must be at most 500 characters long',
-    }),
-  enDescription: zod
-    .string({
-      invalid_type_error: 'enDescription is required',
-    })
-    .max(500, {
-      message: 'English description must be at most 500 characters long',
-    }),
-  price: zod.coerce
-    .number({
-      invalid_type_error: 'Price must be a number',
-    })
-    .positive(),
+  arDescription: zod.string().max(500, {
+    message: 'Arabic description must be at most 500 characters long',
+  }),
+  enDescription: zod.string().max(500, {
+    message: 'English description must be at most 500 characters long',
+  }),
+  price: zod.coerce.number().positive(),
 });
 
 export const StockSchema = zod.object({
-  productId: zod.coerce
-    .number({
-      invalid_type_error: 'Product ID must be a number',
-    })
-    .positive(),
-  colorId: zod.coerce
-    .number({
-      invalid_type_error: 'Color ID must be a number',
-    })
-    .positive(),
-  sizeId: zod.coerce
-    .number({
-      invalid_type_error: 'Size ID must be a number',
-    })
-    .positive(),
-  quantity: zod.coerce
-    .number({
-      invalid_type_error: 'Quantity must be a number',
-    })
-    .nonnegative({
-      message: 'Quantity must be a non-negative number',
-    }),
+  productId: zod.coerce.number().positive(),
+  colorId: zod.coerce.number().positive(),
+  sizeId: zod.coerce.number().positive(),
+  quantity: zod.coerce.number().nonnegative({
+    message: 'Quantity must be a non-negative number',
+  }),
 });
 
 export const ColorSchema = zod.object({
@@ -282,30 +194,14 @@ export const SizeSchema = zod.object({
 });
 
 export const CartSchema = zod.object({
-  userId: zod.coerce
-    .number({
-      invalid_type_error: 'User ID must be a number',
-    })
-    .positive(),
-  stockId: zod.coerce
-    .number({
-      invalid_type_error: 'Stock ID must be a number',
-    })
-    .positive(),
+  userId: zod.coerce.number().positive(),
+  stockId: zod.coerce.number().positive(),
   quantity: zod.coerce.number().positive({
     message: 'Quantity must be a positive number',
   }),
 });
 
 export const WishlistSchema = zod.object({
-  userId: zod.coerce
-    .number({
-      invalid_type_error: 'User ID must be a number',
-    })
-    .positive(),
-  productId: zod.coerce
-    .number({
-      invalid_type_error: 'Product ID must be a number',
-    })
-    .positive(),
+  userId: zod.coerce.number().positive(),
+  productId: zod.coerce.number().positive(),
 });

@@ -1,7 +1,7 @@
 /**
  * @file This file contains all the types for the API requests and responses.
  */
-import { Address, User } from '@prisma/client';
+import { Address, Prisma, User } from '@prisma/client';
 
 // Utility types
 interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
@@ -30,7 +30,7 @@ export interface LoginResponse extends ResBody {
 }
 
 export interface RegisterRequest
-  extends Pick<User, 'email' | 'password' | 'firstName' | 'lastName'> {}
+  extends Pick<User, 'email' | 'phone' | 'password' | 'firstName' | 'lastName'> {}
 export interface RegisterResponse extends ResBody {}
 
 export interface VerifyEmailRequest {
@@ -107,19 +107,13 @@ export interface AdminDeleteUserRequest {} // Only path params
 export interface AdminDeleteUserResponse extends ResBody {}
 
 // Address types
-export interface CreateAddressRequest extends Omit<Address, 'id'> {}
+export interface CreateAddressRequest extends Prisma.AddressCreateInput {}
 export interface CreateAddressResponse extends ResBody {
   data: Address;
 }
 
-export interface UpdateAddressRequest extends Partial<Address> {
-  state: Address['state'];
-  city: Address['city'];
-  street: Address['street'];
-}
-export interface UpdateAddressResponse extends ResBody {
-  data: Address;
-}
+export interface UpdateAddressRequest extends CreateAddressRequest {}
+export interface UpdateAddressResponse extends CreateAddressResponse {}
 
 export interface DeleteAddressRequest {} // Only path params
 export interface DeleteAddressResponse extends ResBody {

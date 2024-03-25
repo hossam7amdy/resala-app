@@ -1,0 +1,114 @@
+import { Address, Order, OrderItem, Prisma } from '@prisma/client';
+
+import { prisma } from '../model';
+import { Pagination } from '../types';
+import { NotFoundError } from '../utils/api-errors';
+
+const SHIPPING = 60;
+
+interface CreateOrderInput {
+  userId: number;
+  address: Omit<Address, 'id' | 'createdAt' | 'updatedAt'>;
+  paymentMethod: Order['paymentMethod'];
+  items: Pick<OrderItem, 'name' | 'price' | 'quantity' | 'color' | 'size'>[];
+  note?: string;
+}
+
+export async function createOrder(order: CreateOrderInput) {
+  const subtotal = order.items.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
+
+  const orderId = await prisma.$transaction(async tx => {
+    const { id: orderId } = await tx.order.create({
+      data: {
+        userId: order.userId,
+        subtotal,
+        total: subtotal + SHIPPING,
+        note: order.note,
+        paymentMethod: order.paymentMethod,
+      },
+    });
+    await tx.orderItem.createMany({
+      data: order.items.map(item => ({
+        orderId: orderId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        color: item.color,
+        size: item.size,
+      })),
+    });
+    const { id: addressId } = await tx.address.create({
+      data: order.address,
+    });
+    await tx.shipping.create({
+      data: {
+        orderId: orderId,
+        addressId: addressId,
+        cost: SHIPPING,
+      },
+    });
+
+    return orderId;
+  });
+
+  return await findOrderById(orderId, order.userId);
+}
+
+export async function listOrdersPaginated(pagination: Pagination) {
+  const orders = await prisma.order.findMany({
+    take: pagination.limit,
+    skip: pagination.page * pagination.limit,
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return orders;
+}
+
+export async function findOrderById(id: number, userId: number) {
+  const order = await prisma.order.findUnique({
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      orderItems: true,
+      paymentDetails: true,
+      shippingDetails: true,
+    },
+    where: { id, userId },
+  });
+
+  if (!order) {
+    throw new NotFoundError('Order not found');
+  }
+
+  return order;
+}
+
+export async function getUserOrders(userId: number, pagination: Pagination) {
+  const orders = await prisma.order.findMany({
+    take: pagination.limit,
+    skip: pagination.page * pagination.limit,
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return orders;
+}
+
+export async function updateOrder(id: number, order: Prisma.OrderUpdateInput) {
+  const updatedOrder = await prisma.order.update({
+    data: order,
+    where: { id },
+  });
+
+  return updatedOrder;
+}
