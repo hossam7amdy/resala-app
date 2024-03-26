@@ -9,11 +9,8 @@ export const createOrder: RequestHandler = async (req, res, next) => {
   const addressId = Number(req.body.addressId);
 
   try {
-    if (!paymentMethod || !addressId) {
-      throw new BadRequestError('Payment method, note and address id are required');
-    }
     if (isNaN(addressId)) {
-      throw new BadRequestError('Invalid address id');
+      throw new BadRequestError('addressId must be a number');
     }
     if (!['CARD', 'CASH'].includes(paymentMethod)) {
       throw new BadRequestError('Invalid payment method, [CARD, CASH] are allowed');
