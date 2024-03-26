@@ -3,30 +3,10 @@ import zod from 'zod';
 import { ROLE } from './enums';
 import { validationPatterns } from './validation-patterns';
 
-export const QueryParamsSchema = zod.object({
-  page: zod.coerce
-    .number()
-    .positive({
-      message: 'Page number must be a positive number',
-    })
-    .max(100)
-    .optional(),
-  limit: zod.coerce
-    .number()
-    .positive({
-      message: 'Limit must be a positive number',
-    })
-    .max(100)
-    .optional(),
-  query: zod
-    .string()
-    .min(0, {
-      message: 'Query must be at least 0 characters long',
-    })
-    .max(50, {
-      message: 'Query must be at most 50 characters long',
-    })
-    .optional(),
+export const PaginationSchema = zod.object({
+  page: zod.coerce.number().positive().max(100).optional(),
+  limit: zod.coerce.number().positive().max(100).optional(),
+  query: zod.string().min(0).max(50).optional(),
 });
 
 export const UserSchema = zod.object({
