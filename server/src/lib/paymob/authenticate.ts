@@ -1,5 +1,5 @@
 import { ENV } from '../../config';
-import { fetchCall } from '../../utils/fetch';
+import { fetch } from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 const PAYMOB_API_TOKEN = ENV.PAYMOB_API_TOKEN;
@@ -16,7 +16,7 @@ export interface AuthenticateResponse {
  */
 export async function authenticate(): Promise<AuthenticateResponse> {
   try {
-    const response = await fetchCall.post(`${PAYMOB_API_URL}/auth/tokens`, {
+    const response = await fetch.post(`${PAYMOB_API_URL}/auth/tokens`, {
       api_key: PAYMOB_API_TOKEN,
     });
 

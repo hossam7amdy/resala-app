@@ -9,6 +9,7 @@ import {
   colorCtrl,
   colorValidator,
   orderCtrl,
+  paymentCtrl,
   productCtrl,
   productValidator,
   shoppingCtrl,
@@ -172,12 +173,22 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.createOrder]: [orderCtrl.createOrder],
     [Endpoints.getOrder]: [orderCtrl.getOrder],
     [Endpoints.getOrdersList]: [orderCtrl.getOrdersList],
+    [Endpoints.deleteOrder]: [orderCtrl.deleteOrder],
+    [Endpoints.adminDeleteOrder]: [
+      authorizeUser(['ADMIN', 'MODERATOR']),
+      orderCtrl.adminDeleteOrder,
+    ],
 
     // payment endpoints
-    [Endpoints.transactionCallbacks]: [],
+    [Endpoints.createPayment]: [paymentCtrl.createPayment],
+    [Endpoints.getPayment]: [authorizeUser(['ADMIN', 'MODERATOR']), paymentCtrl.getPayment],
+    [Endpoints.getPaymentsList]: [
+      authorizeUser(['ADMIN', 'MODERATOR']),
+      paymentCtrl.getPaymentList,
+    ],
   };
 
-  // Register all the routes and their handlers
+  /** Register all the routes and their handlers */
   Object.entries(HANDLER).forEach(([endpoint, handlers]) => {
     const { url, method, sensitive, auth } = ENDPOINT_CONFIGS[endpoint as Endpoints];
 

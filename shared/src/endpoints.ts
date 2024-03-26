@@ -84,9 +84,13 @@ export enum Endpoints {
   createOrder = 'createOrder',
   getOrder = 'getOrder',
   getOrdersList = 'getOrdersList',
+  deleteOrder = 'deleteOrder',
+  adminDeleteOrder = 'adminDeleteOrder',
 
   // payment endpoints
-  transactionCallbacks = 'transactionCallbacks',
+  createPayment = 'createPayment',
+  getPayment = 'getPayment',
+  getPaymentsList = 'getPaymentsList',
 }
 
 export function withParams(endpoint: EndpointConfig, ...params: string[]): EndpointConfig {
@@ -406,10 +410,30 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'get',
     auth: true,
   },
+  [Endpoints.deleteOrder]: {
+    url: '/api/v1/orders/:orderId',
+    method: 'delete',
+    auth: true,
+  },
+  [Endpoints.adminDeleteOrder]: {
+    url: '/api/v1/admin/orders/:orderId',
+    method: 'delete',
+    auth: true,
+  },
 
   // payment endpoints
-  [Endpoints.transactionCallbacks]: {
-    url: '/api/v1/payments/callbacks',
+  [Endpoints.createPayment]: {
+    url: '/api/v1/payments',
     method: 'post',
+  },
+  [Endpoints.getPayment]: {
+    url: '/api/v1/payments/:paymentId',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getPaymentsList]: {
+    url: '/api/v1/payments',
+    method: 'get',
+    auth: true,
   },
 };
