@@ -2,7 +2,7 @@ import { Address, Order, OrderItem, Prisma } from '@prisma/client';
 
 import { prisma } from '../model';
 import { Pagination } from '../types';
-import { NotFoundError } from '../utils/api-errors';
+import { BadRequestError, NotFoundError } from '../utils/api-errors';
 
 const SHIPPING = 60;
 
@@ -51,7 +51,7 @@ export async function createOrder(order: CreateOrderInput) {
     return orderId;
   });
 
-  return await findOrderById(orderId, order.userId);
+  return await findUserOrderById(orderId, order.userId);
 }
 
 export async function listOrdersPaginated(pagination: Pagination) {
@@ -64,7 +64,7 @@ export async function listOrdersPaginated(pagination: Pagination) {
   return orders;
 }
 
-export async function findOrderById(id: number, userId: number) {
+export async function findUserOrderById(id: number, userId: number) {
   const order = await prisma.order.findUnique({
     include: {
       user: {
@@ -93,6 +93,35 @@ export async function findOrderById(id: number, userId: number) {
   return order;
 }
 
+export async function findOrderById(id: number) {
+  const order = await prisma.order.findUnique({
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      orderItems: true,
+      paymentDetails: true,
+      shippingDetails: true,
+    },
+    where: { id },
+  });
+
+  if (!order) {
+    throw new NotFoundError('Order not found');
+  }
+
+  return order;
+}
+
 export async function getUserOrders(userId: number, pagination: Pagination) {
   const orders = await prisma.order.findMany({
     take: pagination.limit,
@@ -111,4 +140,29 @@ export async function updateOrder(id: number, order: Prisma.OrderUpdateInput) {
   });
 
   return updatedOrder;
+}
+
+export async function cancelOrder(id: number, userId: number) {
+  const order = await findUserOrderById(id, userId);
+
+  const isToday = new Date(order.createdAt).toDateString() === new Date().toDateString();
+  if (!isToday) {
+    throw new BadRequestError("You can't cancel this order. Please contact support");
+  }
+
+  return prisma.order.update({
+    data: { orderStatus: 'CANCELLED' },
+    where: { id },
+    include: { paymentDetails: true },
+  });
+}
+
+export async function adminCancelOrder(id: number) {
+  await findOrderById(id);
+
+  return prisma.order.update({
+    data: { orderStatus: 'CANCELLED' },
+    where: { id },
+    include: { paymentDetails: true },
+  });
 }

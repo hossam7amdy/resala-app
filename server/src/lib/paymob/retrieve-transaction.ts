@@ -1,5 +1,5 @@
 import { ENV } from '../../config';
-import { fetchCall } from '../../utils/fetch';
+import { fetch } from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
@@ -22,19 +22,15 @@ export async function retrieveTransactionById({
   token: string;
   transaction_id: number;
 }): Promise<TransactionResponse> {
-  const response = await fetch(`${PAYMOB_API_URL}/acceptance/payments/${transaction_id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+  try {
+    const response = await fetch.get(`${PAYMOB_API_URL}/acceptance/payments/${transaction_id}`, {
       Authorization: `Bearer ${token}`,
-    },
-  });
+    });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    return response as TransactionResponse;
+  } catch (error) {
+    throw new Error('Failed to retrieve transaction with Paymob API');
   }
-
-  return response.json() as Promise<TransactionResponse>;
 }
 
 /**
@@ -51,7 +47,7 @@ export async function retrieveTransactionByOrderDetails(orderInfo: {
   order_id: number;
 }): Promise<TransactionResponse> {
   try {
-    const response = await fetchCall.post(
+    const response = await fetch.post(
       `${PAYMOB_API_URL}/ecommerce/orders/transaction_inquiry`,
       orderInfo
     );
