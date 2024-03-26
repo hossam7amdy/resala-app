@@ -117,14 +117,14 @@ export async function getPaymentsList(pagination: Pagination) {
 }
 
 function getPaymentStatus(payment: (typeof callback)['obj']) {
-  if (payment.success) {
-    return 'PAID';
-  } else if (payment.pending) {
+  if (payment.pending) {
     return 'PENDING';
   } else if (payment.is_voided) {
     return 'VOIDED';
   } else if (payment.is_refunded) {
     return 'REFUNDED';
+  } else if (payment.success) {
+    return 'PAID';
   } else {
     return 'FAILED';
   }
