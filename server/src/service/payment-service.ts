@@ -69,24 +69,28 @@ export async function refundPayment(transactionId: number, amount: number) {
 export async function createPayment(hmac: string, payload: (typeof callback)['obj']) {
   const authenticated = await paymob.authenticateCallback(hmac, payload);
 
-  await prisma.payment.create({
-    data: {
-      orderId: Number(payload.order.merchant_order_id),
-      transactionId: payload.id,
-      transactionOrderId: payload.order.id,
-      pending: payload.pending,
-      success: payload.success,
-      isAuth: payload.is_auth,
-      isVoided: payload.is_voided,
-      isCapture: payload.is_capture,
-      isRefunded: payload.is_refunded,
-      is3DSecure: payload.is_3d_secure,
-      integrationId: payload.integration_id,
-      deliveryNeeded: payload.order.delivery_needed,
-      amountCents: payload.amount_cents,
-      currency: payload.currency,
-      createdAt: new Date(payload.created_at),
-    },
+  const payment = {
+    orderId: Number(payload.order.merchant_order_id),
+    transactionId: payload.id,
+    transactionOrderId: payload.order.id,
+    pending: payload.pending,
+    success: payload.success,
+    isAuth: payload.is_auth,
+    isVoided: payload.is_voided,
+    isCapture: payload.is_capture,
+    isRefunded: payload.is_refunded,
+    is3DSecure: payload.is_3d_secure,
+    integrationId: payload.integration_id,
+    deliveryNeeded: payload.order.delivery_needed,
+    amountCents: payload.amount_cents,
+    currency: payload.currency,
+    createdAt: new Date(payload.created_at),
+  };
+
+  await prisma.payment.upsert({
+    create: payment,
+    update: payment,
+    where: { orderId: payment.orderId },
   });
 
   return authenticated ? getPaymentStatus(payload) : undefined;
