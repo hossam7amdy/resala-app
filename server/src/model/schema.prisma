@@ -167,21 +167,21 @@ model Wishlist {
 // ------------------------------------------------ //
 //*             Order Data                *//
 model Order {
-  id               Int           @id @default(autoincrement()) @db.UnsignedInt
-  userId           Int?          @map("user_id") @db.UnsignedInt
-  subtotal         Decimal       @db.Decimal(9, 2)
-  discount         Decimal       @default(0) @db.Decimal(9, 2)
-  total            Decimal       @db.Decimal(9, 2)
-  fulfilmentStatus OrderStatus   @default(PENDING) @map("fulfilment_status")
-  paymentMethod    PaymentMethod @map("payment_method")
-  paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
-  note             String?       @db.VarChar(250)
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @updatedAt @map("updated_at")
-  orderItems       OrderItem[]
-  user             User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
-  paymentDetails   Payment?
-  shippingDetails  Shipping?
+  id              Int           @id @default(autoincrement()) @db.UnsignedInt
+  userId          Int?          @map("user_id") @db.UnsignedInt
+  subtotal        Decimal       @db.Decimal(9, 2)
+  discount        Decimal       @default(0) @db.Decimal(9, 2)
+  total           Decimal       @db.Decimal(9, 2)
+  orderStatus     OrderStatus   @default(PENDING) @map("order_status")
+  paymentMethod   PaymentMethod @map("payment_method")
+  paymentStatus   PaymentStatus @default(PENDING) @map("payment_status")
+  note            String?       @db.VarChar(250)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  orderItems      OrderItem[]
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  paymentDetails  Payment?
+  shippingDetails Shipping?
 
   @@map("order")
 }
