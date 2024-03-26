@@ -40,7 +40,7 @@ export const createOrder: RequestHandler = async (req, res, next) => {
       payment = await paymentService.createPaymentRequest({
         orderId: order.id,
         email: user.email,
-        amount: Number(order.total),
+        amount: Number(order.total) * 100,
         shipping: { id, ...address },
         items: orderItems.map(item => ({
           ...item,
@@ -70,7 +70,7 @@ export const getOrder: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('Invalid order id');
     }
 
-    const order = await orderService.findOrderById(orderId, user.id);
+    const order = await orderService.findUserOrderById(orderId, user.id);
 
     return res.status(200).json({
       success: true,
@@ -94,6 +94,60 @@ export const getOrdersList: RequestHandler = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       data: orders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteOrder: RequestHandler = async (req, res, next) => {
+  const user = res.locals.user;
+  const orderId = Number(req.params.orderId);
+
+  try {
+    if (isNaN(orderId)) {
+      throw new BadRequestError('Invalid order id');
+    }
+
+    // cancel order
+    const order = await orderService.cancelOrder(orderId, user.id);
+
+    // void payment
+    if (order.paymentMethod === 'CARD' && order.paymentDetails) {
+      await paymentService.voidPayment(order.paymentDetails.transactionId);
+    }
+
+    return res.json({
+      success: true,
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const adminDeleteOrder: RequestHandler = async (req, res, next) => {
+  const orderId = Number(req.params.orderId);
+
+  try {
+    if (isNaN(orderId)) {
+      throw new BadRequestError('Invalid order id');
+    }
+
+    // cancel order
+    const order = await orderService.adminCancelOrder(orderId);
+
+    // void payment
+    if (order.paymentMethod === 'CARD' && order.paymentDetails) {
+      await paymentService.refundPayment(
+        order.paymentDetails.transactionId,
+        Number(order.total) * 100
+      );
+    }
+
+    return res.json({
+      success: true,
+      data: order,
     });
   } catch (error) {
     next(error);

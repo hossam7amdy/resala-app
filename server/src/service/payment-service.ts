@@ -3,6 +3,8 @@ import { Address } from '@prisma/client';
 import { paymob } from '../lib/paymob';
 import callback from '../lib/paymob/callback.json';
 import { prisma } from '../model';
+import { Pagination } from '../types';
+import { NotFoundError } from '../utils/api-errors';
 
 export async function createPaymentRequest(payload: {
   email: string;
@@ -42,15 +44,6 @@ export async function createPaymentRequest(payload: {
     expiration: 3600,
     amount_cents: payload.amount,
     lock_order_when_paid: true,
-  });
-}
-
-export async function retrievePayment(transactionId: number) {
-  const { token } = await paymob.authenticate();
-
-  return await paymob.retrieveTransactionById({
-    transaction_id: transactionId,
-    token,
   });
 }
 
@@ -99,6 +92,26 @@ export async function createPayment(hmac: string, payload: (typeof callback)['ob
   });
 
   return authenticated ? getPaymentStatus(payload) : undefined;
+}
+
+export async function getPayment(paymentId: number) {
+  const payment = await prisma.payment.findUnique({
+    where: { id: paymentId },
+  });
+
+  if (!payment) {
+    throw new NotFoundError('Payment not found');
+  }
+
+  return payment;
+}
+
+export async function getPaymentsList(pagination: Pagination) {
+  return await prisma.payment.findMany({
+    take: pagination.limit,
+    skip: pagination.page * pagination.limit,
+    orderBy: { createdAt: 'desc' },
+  });
 }
 
 function getPaymentStatus(payment: (typeof callback)['obj']) {

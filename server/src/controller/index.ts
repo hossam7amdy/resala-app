@@ -23,3 +23,5 @@ export * as shoppingCtrl from './shopping-controller/shopping-controller';
 export * as shoppingValidator from './shopping-controller/shopping-validator';
 
 export * as orderCtrl from './order-controller/order-controller';
+
+export * as paymentCtrl from './payment-controller/payment-controller';
