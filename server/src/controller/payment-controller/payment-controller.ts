@@ -11,9 +11,11 @@ export const createPayment: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('HMAC is required');
     }
 
-    const status = await paymentService.createPayment(hmac, req.body['obj']);
+    const bodyObj = req.body['obj'];
 
-    await orderService.updateOrder(req.body.order.merchant.id, {
+    const status = await paymentService.createPayment(hmac, bodyObj);
+
+    await orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
       paymentStatus: status,
     });
 
