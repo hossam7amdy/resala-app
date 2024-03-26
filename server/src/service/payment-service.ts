@@ -69,11 +69,9 @@ export async function refundPayment(transactionId: number, amount: number) {
 export async function createPayment(hmac: string, payload: (typeof callback)['obj']) {
   const authenticated = await paymob.authenticateCallback(hmac, payload);
 
-  console.log('Authenticating payment callback', hmac, payload, authenticated);
-
   await prisma.payment.create({
     data: {
-      orderId: payload.order.merchant.id,
+      orderId: Number(payload.order.merchant_order_id),
       transactionId: payload.id,
       transactionOrderId: payload.order.id,
       pending: payload.pending,
