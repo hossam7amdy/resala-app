@@ -5,9 +5,20 @@ import { BadRequestError } from '../../utils/api-errors';
 
 export const createOrder: RequestHandler = async (req, res, next) => {
   const user = res.locals.user;
-  const { addressId, paymentMethod, note } = req.body;
+  const { paymentMethod, note } = req.body;
+  const addressId = Number(req.body.addressId);
 
   try {
+    if (!paymentMethod || !addressId) {
+      throw new BadRequestError('Payment method, note and address id are required');
+    }
+    if (isNaN(addressId)) {
+      throw new BadRequestError('Invalid address id');
+    }
+    if (!['CARD', 'CASH'].includes(paymentMethod)) {
+      throw new BadRequestError('Invalid payment method, [CARD, CASH] are allowed');
+    }
+
     // order items
     const cart = await shoppingService.getUserCart(user.id);
     if (cart.length === 0) {
