@@ -1,0 +1,68 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Main colors 
+
+#016373
+rgb(21,93,106)
+dark blue
+
+#14adc6
+rgb(20,173,198)
+blue
+
+#fbb935
+rgb(251,171,49)
+yello 
+
+
+#fff
+rgb(255,236,235)
+white
+
+*/
+
+/* Globel */
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: #fbb935;
+}
+
+::-webkit-scrollbar-track{
+  background-color: #14adc6;
+}
+
+* {
+  border: 0;
+  outline: 0;
+}
+
+*:hover {
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -ms-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
+*{
+    font-family: "Quicksand", sans-serif;
+  
+  font-weight: 400;
+  
+}
+.body{
+  margin-top: 110px;
+}
+
+body{
+  overflow-x: hidden;
+}
+.h1{
+  color: #016373;
+  font-weight: bold;
+  margin-top: 20px;
+}
