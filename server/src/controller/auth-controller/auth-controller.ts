@@ -1,4 +1,4 @@
-import { authService, communicationService } from '../../service';
+import { authService, communicationService } from '../../services';
 import {
   ChangePassword,
   ForgotPassword,

@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RequestHandler } from 'express';
 
-import { inventoryService } from '../../service';
+import { inventoryService } from '../../services';
 import { BadRequestError } from '../../utils/api-errors';
 
 export const getSize: RequestHandler = async (req, res, next) => {
