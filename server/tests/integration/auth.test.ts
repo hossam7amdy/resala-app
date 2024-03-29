@@ -1,9 +1,17 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 
 import { getTestServer } from './testserver';
+
+jest.mock('nodemailer', () => {
+  return {
+    createTransport: jest.fn().mockReturnValue({
+      sendMail: jest.fn().mockResolvedValue(Promise.resolve(true) as never),
+    }),
+  };
+});
 
 describe('TEST /auth endpoints', () => {
   let client: TestAgent<superset.Test>;
