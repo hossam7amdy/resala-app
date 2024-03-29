@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { orderService, paymentService } from '../../service';
+import { orderService, paymentService } from '../../services';
 import { BadRequestError } from '../../utils/api-errors';
 import { paginationValidator } from '../../utils/pagination-validator';
 

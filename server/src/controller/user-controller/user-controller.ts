@@ -1,4 +1,4 @@
-import { userService } from '../../service';
+import { userService } from '../../services';
 import {
   AdminDeleteUser,
   AdminGetUser,
