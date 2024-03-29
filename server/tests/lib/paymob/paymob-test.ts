@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { paymob } from '.';
+import { paymob } from '../../../src/lib/paymob';
 
 describe('Test Paymob Integration', () => {
   const getAuthToken = async () => {
