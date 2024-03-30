@@ -1,1 +1,6 @@
+# Build the project
 dist
+build
+
+# Angular Cache Busting
+web/.angular
