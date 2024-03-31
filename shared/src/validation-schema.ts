@@ -67,28 +67,10 @@ export const AddressSchema = zod.object({
 });
 
 export const CategorySchema = zod.object({
-  categoryId: zod.coerce
-    .number()
-    .positive({
-      message: 'Category ID must be a positive number',
-    })
-    .optional(),
-  arName: zod
-    .string()
-    .min(2, {
-      message: 'Arabic name must be at least 2 characters long',
-    })
-    .max(100, {
-      message: 'Arabic name must be at most 100 characters long',
-    }),
-  enName: zod
-    .string()
-    .min(2, {
-      message: 'English name must be at least 2 characters long',
-    })
-    .max(100, {
-      message: 'English name must be at most 100 characters long',
-    }),
+  id: zod.coerce.number().positive().optional(),
+  categoryId: zod.coerce.number().positive().optional(),
+  arName: zod.string().min(2).max(100),
+  enName: zod.string().min(2).max(100),
 });
 
 export const ProductSchema = zod.object({

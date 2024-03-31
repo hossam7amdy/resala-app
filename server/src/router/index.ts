@@ -5,7 +5,6 @@ import {
   authCtrl,
   authValidator,
   categoryCtrl,
-  categoryValidator,
   colorCtrl,
   colorValidator,
   orderCtrl,
@@ -70,17 +69,14 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.listCategoryProducts]: [categoryCtrl.listCategoryProducts],
     [Endpoints.createCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
-      categoryValidator.validateCreateCategory,
       categoryCtrl.createCategory,
     ],
     [Endpoints.createSubcategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
-      categoryValidator.validateCreateCategory,
       categoryCtrl.createSubcategory,
     ],
     [Endpoints.updateCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
-      categoryValidator.validateUpdateCategory,
       categoryCtrl.updateCategory,
     ],
     [Endpoints.deleteCategory]: [
