@@ -1,0 +1,10 @@
+pipeline {
+  agent any
+  stateg {
+    stage('Build'){
+      steps {
+        sh 'npm install'
+      }
+    }
+  }
+}

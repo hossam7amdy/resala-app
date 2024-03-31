@@ -1,6 +1,20 @@
 import { prisma } from '.';
 
 async function main() {
+  // create users
+  await prisma.user.createMany({
+    data: new Array(10).fill(0).map((_, i) => ({
+      email: `test_${i}@test.com`,
+      password: 'abcABC@123',
+      phone: `01${`${Date.now()}`.slice(-9)}`,
+      firstName: 'test',
+      lastName: 'test',
+      iterations: i + 1,
+      role: i % 2 === 0 ? 'CUSTOMER' : 'ADMIN',
+      salt: 'salt',
+    })),
+  });
+
   // create main categories
   await prisma.category.createMany({
     data: [
