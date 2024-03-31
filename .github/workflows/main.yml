@@ -11,29 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: root
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     env:
-      PORT: 5000
-      JWT_SECRET: access_secret
-      JWT_REFRESH: refresh_secret
-      JWT_RESET: reset_secret
-      JWT_VERIFY: verify_secret
-      SERVER_URL: http://localhost:5000
-      DATABASE_URL: mysql://root:root@localhost:3306/root
-      TWILIO_ACCOUNT_SID: AC_account_sid
-      TWILIO_AUTH_TOKEN: twilio_auth_token
-      TWILIO_PHONE_NUMBER: +phone_number
-      MAIL_USER: ${{ secrets.MAIL_USER }}
-      MAIL_PASS: ${{ secrets.MAIL_PASS }}
+      env_file: .env.test
+      DATABASE_URL: mysql://root:root@localhost/tests
 
     steps:
       - name: Checkout repository
@@ -43,11 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-
-      - name: Use Envs
-        run: |
-          echo "MAIL_USER=$MAIL_USER" >> .env
-          echo "MAIL_PASS=$MAIL_PASS" >> .env
 
       - name: npm install, build, and test
         run: |
