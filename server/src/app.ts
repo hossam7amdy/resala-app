@@ -3,9 +3,9 @@ import express from 'express';
 import path from 'path';
 import swaggerUI from 'swagger-ui-express';
 
-import swaggerDocument from '../swagger.json';
 import { errMiddleware } from './middleware/error-middleware';
 import { createExpressRouter } from './router';
+import swaggerDocument from './swagger.json';
 
 /** creates an instance of express application. */
 export function createExpressApp(logRequests: boolean = true) {
