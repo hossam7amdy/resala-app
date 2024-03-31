@@ -1,32 +1,31 @@
+import { CategorySchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
 import { inventoryService } from '../../services';
-import { BadRequestError } from '../../utils/api-errors';
+import schemaValidator from '../../utils/schema-validator';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-
   try {
-    if (isNaN(categoryId)) {
-      throw new BadRequestError('Category id must be a number');
-    }
+    const params = schemaValidator(CategorySchema.pick({ id: true }), {
+      id: req.params.categoryId,
+    });
 
-    const category = await inventoryService.findCategoryById(categoryId);
+    const category = await inventoryService.findCategoryById(params.id);
 
     return res.json({
       success: true,
       data: category,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };
 
 export const listCategories: RequestHandler = async (req, res, next) => {
-  const deleted = req.query.deleted;
+  const deleted = Boolean(req.query.deleted);
 
   try {
-    const categories = await inventoryService.listRootCategories(Boolean(deleted));
+    const categories = await inventoryService.listRootCategories(deleted);
 
     return res.json({
       success: true,
@@ -38,14 +37,12 @@ export const listCategories: RequestHandler = async (req, res, next) => {
 };
 
 export const listSubCategories: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-
   try {
-    if (isNaN(categoryId)) {
-      throw new BadRequestError('Category id must be a number');
-    }
+    const params = schemaValidator(CategorySchema.pick({ id: true }), {
+      id: req.params.categoryId,
+    });
 
-    const subCategories = await inventoryService.listSubcategories(categoryId);
+    const subCategories = await inventoryService.listSubcategories(params.id);
 
     return res.json({
       success: true,
@@ -57,26 +54,27 @@ export const listSubCategories: RequestHandler = async (req, res, next) => {
 };
 
 export const listCategoryProducts: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-
   try {
-    const products = await inventoryService.listCategoryProducts(categoryId);
+    const params = schemaValidator(CategorySchema.pick({ id: true }), {
+      id: req.params.categoryId,
+    });
+
+    const products = await inventoryService.listCategoryProducts(params.id);
 
     return res.json({
       success: true,
       data: products,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };
 
 export const createCategory: RequestHandler = async (req, res, next) => {
   try {
-    const category = await inventoryService.createRootCategory({
-      arName: req.body.arName,
-      enName: req.body.enName,
-    });
+    const payload = schemaValidator(CategorySchema, req.body);
+
+    const category = await inventoryService.createRootCategory(payload);
 
     return res.status(201).json({
       success: true,
@@ -88,18 +86,10 @@ export const createCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const createSubcategory: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-  const { arName, enName } = req.body;
-
   try {
-    if (isNaN(categoryId)) {
-      throw new BadRequestError('Category id must be a number');
-    }
+    const payload = schemaValidator(CategorySchema, { ...req.body, ...req.params });
 
-    const subCategory = await inventoryService.createSubcategory(categoryId, {
-      arName,
-      enName,
-    });
+    const subCategory = await inventoryService.createSubcategory(payload.categoryId, payload);
 
     return res.status(201).json({
       success: true,
@@ -111,14 +101,10 @@ export const createSubcategory: RequestHandler = async (req, res, next) => {
 };
 
 export const updateCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-
   try {
-    if (isNaN(categoryId)) {
-      throw new BadRequestError('Category id must be a number');
-    }
+    const payload = schemaValidator(CategorySchema, { ...req.body, ...req.params });
 
-    const category = await inventoryService.updateCategory(categoryId, req.body);
+    const category = await inventoryService.updateCategory(payload.categoryId, payload);
 
     return res.json({
       success: true,
@@ -130,16 +116,17 @@ export const updateCategory: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteCategory: RequestHandler = async (req, res, next) => {
-  const categoryId = parseInt(req.params.categoryId);
-
   try {
-    await inventoryService.deleteCategory(categoryId);
+    const params = schemaValidator(CategorySchema.pick({ id: true }), {
+      id: req.params.categoryId,
+    });
+
+    await inventoryService.deleteCategory(params.id);
 
     return res.json({
       success: true,
-      data: 'Category deleted',
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };

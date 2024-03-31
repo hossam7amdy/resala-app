@@ -1,8 +1,9 @@
+import { PaginationSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
 import { orderService, paymentService } from '../../services';
 import { BadRequestError } from '../../utils/api-errors';
-import { paginationValidator } from '../../utils/pagination-validator';
+import schemaValidator from '../../utils/schema-validator';
 
 export const createPayment: RequestHandler = async (req, res, next) => {
   const hmac = String(req.query.hmac);
@@ -30,7 +31,7 @@ export const getPayment: RequestHandler = async (req, res, next) => {
   const paymentId = Number(req.params.paymentId);
 
   try {
-    if (isNaN(paymentId)) {
+    if (!paymentId) {
       throw new BadRequestError('Invalid payment id');
     }
 
@@ -50,11 +51,11 @@ export const getPaymentList: RequestHandler = async (req, res, next) => {
   const page = Number(req.query.page) || 1;
 
   try {
-    paginationValidator(req.query as any);
+    const query = schemaValidator(PaginationSchema, req.query);
 
     const payments = await paymentService.getPaymentsList({
-      limit: limit,
-      page: page - 1,
+      limit: query.limit,
+      page: query.page - 1,
       query: '',
     });
 
