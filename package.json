@@ -15,16 +15,15 @@
   "scripts": {
     "lint": "prettier . --write",
     "lint:check": "prettier . --check",
-    "build:server": "cd server && npm i && npm run build",
-    "build:shared": "cd shared && npm i && npm run build",
-    "build:dashboard": "cd dashboard && npm i && npm run build",
-    "build": "npm i && npm-run-all build:server build:dashboard",
+    "build:server": "cd server && npm run build",
+    "build:shared": "cd shared && npm run build",
+    "build:dashboard": "cd dashboard && npm run build",
+    "build": "npm i && npm-run-all build:server",
     "test:server": "cd server && npm run test",
     "test:dashboard": "cd dashboard && npm run test --if-present",
-    "test": "npm-run-all --parallel test:server test:dashboard",
+    "test": "npm-run-all --parallel test:server",
     "start:dashboard": "cd dashboard && npm run dev",
-    "start:server": "cd server && npm run dev",
-    "start:server:prod": "cd server && npm run start"
+    "start:server": "cd server && npm run dev"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
