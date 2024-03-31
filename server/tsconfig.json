@@ -15,9 +15,8 @@
     "lib": ["ESNext"],
     "moduleResolution": "Node",
     "target": "ESNext",
-    "outDir": "./dist",
-    "module": "CommonJS"
+    "noEmit": true,
+    "outDir": "./dist"
   },
-  "include": ["src/**/*"],
-  "references": [{ "path": "../shared" }]
+  "include": ["src/**/*"]
 }
