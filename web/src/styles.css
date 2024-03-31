@@ -23,15 +23,15 @@ white
 
 /* Globel */
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 10px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background-color: #fbb935;
 }
 
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   background-color: #14adc6;
 }
 
@@ -41,27 +41,26 @@ white
 }
 
 *:hover {
-  -webkit-transition: all .3s ease-in-out;
-  -moz-transition: all .3s ease-in-out;
-  -ms-transition: all .3s ease-in-out;
-  -o-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
-*{
-    font-family: "Quicksand", sans-serif;
-  
+* {
+  font-family: 'Quicksand', sans-serif;
+
   font-weight: 400;
-  
 }
-.body{
+.body {
   margin-top: 110px;
 }
 
-body{
+body {
   overflow-x: hidden;
 }
-.h1{
+.h1 {
   color: #016373;
   font-weight: bold;
   margin-top: 20px;

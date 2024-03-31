@@ -1,6 +1,5 @@
 import { ENV } from '../config';
 import { sendEmail } from '../lib/mailer';
-import { sendSms } from '../lib/twilio';
 
 export const sendVerificationEmail = async (email: string, token: string) => {
   const href = `${ENV.SERVER_URL}/verify-email.html?token=${token}&email=${email}`;
@@ -28,6 +27,3 @@ export const sendResetConfirmationEmail = async (email: string) => {
   });
 };
 
-export const sendWelcomeSms = async (phone: string) => {
-  return sendSms(`+2${phone}`, 'Welcome to our service');
-};
