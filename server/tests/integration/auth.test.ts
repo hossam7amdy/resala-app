@@ -13,6 +13,16 @@ jest.mock('nodemailer', () => {
   };
 });
 
+/**
+ * Mocking the azure storage module
+ * @see https://remarkablemark.org/blog/2018/06/28/jest-mock-default-named-export/
+ */
+jest.mock('../../src/lib/azure-storage/azure', () => ({
+  __esModule: true, // this property makes it work
+  uploadBlob: jest.fn(),
+  deleteBlob: jest.fn(),
+}));
+
 describe('TEST /auth endpoints', () => {
   let client: TestAgent<superset.Test>;
   let token = '';
@@ -24,7 +34,7 @@ describe('TEST /auth endpoints', () => {
 
   beforeAll(async () => {
     client = await getTestServer();
-  });
+  }, 10000);
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
     it('should not be able to register a new user, missing (firstName, lastName)', async () => {

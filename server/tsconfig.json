@@ -11,11 +11,13 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
-    "noEmit": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["ES2022"],
-    "moduleResolution": "node",
-    "target": "ES2022"
+    "lib": ["ESNext"],
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "outDir": "./dist",
+    "module": "CommonJS"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [{ "path": "../shared" }]
 }

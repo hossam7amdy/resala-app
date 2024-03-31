@@ -1,6 +1,8 @@
 import env from 'dotenv';
 
-env.config();
+const NODE_ENV = process.env.NODE_ENV || 'dev';
+
+env.config({path: `./.env.${NODE_ENV}`.trim()});
 
 const ENV = {
   PORT: process.env.PORT,

@@ -1,10 +1,28 @@
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { beforeAll, describe, expect, it, jest } from '@jest/globals';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 
 import { userService } from '../../src/services';
 import { getTestServer } from './testserver';
+
+jest.mock('nodemailer', () => {
+  return {
+    createTransport: jest.fn().mockReturnValue({
+      sendMail: jest.fn().mockResolvedValue(Promise.resolve(true) as never),
+    }),
+  };
+});
+
+/**
+ * Mocking the azure storage module
+ * @see https://remarkablemark.org/blog/2018/06/28/jest-mock-default-named-export/
+ */
+jest.mock('../../src/lib/azure-storage/azure', () => ({
+  __esModule: true, // this property makes it work
+  uploadBlob: jest.fn(),
+  deleteBlob: jest.fn(),
+}));
 
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
@@ -27,7 +45,7 @@ describe('TEST /users endpoint', () => {
     });
 
     await makeUserAdmin();
-  });
+  }, 10000);
 
   it('should get current logged in user', async () => {
     const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;

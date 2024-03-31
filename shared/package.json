@@ -2,9 +2,12 @@
   "name": "@resala/shared",
   "version": "1.0.0",
   "description": "Shared types and functions",
-  "main": "index.ts",
+  "main": "./dist",
   "private": true,
   "scripts": {
     "build": "npm i && tsc"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
   }
 }
