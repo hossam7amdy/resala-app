@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Resala server",
   "private": true,
-  "main": "./dist",
+  "main": "src/index.ts",
   "scripts": {
     "build": "npm i && tsc -b",
-    "start": "set NODE_ENV=prod& node dist/index.js",
+    "start": "set NODE_ENV=prod& ts-node --transpile-only src/index.ts",
     "dev": "set NODE_ENV=dev& nodemon  --exec ts-node src/index.ts",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
