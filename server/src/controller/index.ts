@@ -5,7 +5,6 @@ export * as userCtrl from './user-controller/user-controller';
 export * as userValidator from './user-controller/user-validator';
 
 export * as categoryCtrl from './category-controller/category-controller';
-export * as categoryValidator from './category-controller/category-validator';
 
 export * as productCtrl from './product-controller/product-controller';
 export * as productValidator from './product-controller/product-validator';
