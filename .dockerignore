@@ -1,0 +1,13 @@
+**/dist
+**/node_modules
+**README.md
+
+# Server files
+server/uploads
+server/.env*
+server/.gitignore
+server/docker-compose.yml
+server/tests
+server/jest.config.js
+
+# Client files
