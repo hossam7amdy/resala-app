@@ -4,6 +4,7 @@ env.config();
 
 const ENV = {
   PORT: process.env.PORT,
+  NODE_ENV: process.env.NODE_ENV,
   SERVER_URL: process.env.SERVER_URL,
 
   JWT_SECRET: process.env.JWT_SECRET,
@@ -40,6 +41,7 @@ const ENV = {
 
   if (missedEnv.length > 0) {
     console.error(`Missed environment variables: [${missedEnv.join(', ')}]`);
+    process.exit(1);
   }
 })();
 
