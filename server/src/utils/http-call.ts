@@ -1,3 +1,9 @@
+/**
+ * Generic function to make HTTP calls
+ *
+ * @param params - URL, method, body and headers for the request
+ * @returns Response from the API
+ */
 export async function httpCall<Request, Response>({
   url,
   method,
