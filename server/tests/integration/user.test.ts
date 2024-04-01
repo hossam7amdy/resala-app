@@ -4,6 +4,7 @@ import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent';
 
 import { userService } from '../../src/services';
+import '../__mocks__/azure-storage';
 import { getTestServer } from './testserver';
 
 jest.mock('nodemailer', () => {
@@ -13,16 +14,6 @@ jest.mock('nodemailer', () => {
     }),
   };
 });
-
-/**
- * Mocking the azure storage module
- * @see https://remarkablemark.org/blog/2018/06/28/jest-mock-default-named-export/
- */
-jest.mock('../../src/lib/azure-storage/azure', () => ({
-  __esModule: true, // this property makes it work
-  uploadBlob: jest.fn(),
-  deleteBlob: jest.fn(),
-}));
 
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
