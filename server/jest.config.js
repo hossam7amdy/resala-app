@@ -3,6 +3,11 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
-  globalSetup: './tests/jest.setup.ts',
-  globalTeardown: './tests/jest.teardown.ts',
+  clearMocks: true,
+  forceExit: true,
+  detectOpenHandles: true,
+  collectCoverage: true,
+  coverageDirectory: './tests/coverage',
+  globalSetup: './tests/setup/jest.setup.ts',
+  globalTeardown: './tests/setup/jest.teardown.ts',
 };
