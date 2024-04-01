@@ -11,12 +11,10 @@ import { formatZodError } from './zod-errors';
  * @returns validated data
  * @throws { BadRequestError }
  */
-function schemaValidator(schema: zod.ZodSchema, payload: any) {
+export async function schemaValidator(schema: zod.ZodSchema, payload: any) {
   try {
-    return schema.parse(payload);
+    return schema.parseAsync(payload);
   } catch (error) {
     throw new BadRequestError(formatZodError(error as zod.ZodError));
   }
 }
-
-export default schemaValidator;
