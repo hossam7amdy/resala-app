@@ -1,5 +1,5 @@
 import { PaginationSchema } from '@resala/shared';
-import { ZodError } from 'zod';
+import type { ZodError } from 'zod';
 
 import { Pagination } from '../types';
 import { BadRequestError } from './api-errors';

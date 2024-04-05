@@ -1,6 +1,3 @@
-
-
-
 /* Navbar */
 /* .navbar{
      width: 99.1%; 
@@ -8,78 +5,77 @@
 } 
 */
 
-.fixed-top{
-    top: 30px;
+.fixed-top {
+  top: 30px;
 }
-nav .logo{
-    width: 118.13px;
-    height: 53.53px;
+nav .logo {
+  width: 118.13px;
+  height: 53.53px;
 }
 
-.active-link{
-    color: #fff;
-    background-color: #fbb935;
-    /* padding-bottom: 20px;   
+.active-link {
+  color: #fff;
+  background-color: #fbb935;
+  /* padding-bottom: 20px;   
     border-bottom: 1px;
     border-color: #fbb935;
     border-style: solid; */
-    border-radius: 5px;
+  border-radius: 5px;
 }
-form{
-    position:relative;
+form {
+  position: relative;
 }
-form .icon-search{
-    position:absolute;
-    top: 12px;
-    left: 25px;
-    color: #ffffff3d;
+form .icon-search {
+  position: absolute;
+  top: 12px;
+  left: 25px;
+  color: #ffffff3d;
 }
-.search{
-    background-color: transparent;
-    border: 1px solid #ffffff3d;
-    color: #fff;
-    width: 285px;
-    border-radius: 5px ;
-    outline: none;
+.search {
+  background-color: transparent;
+  border: 1px solid #ffffff3d;
+  color: #fff;
+  width: 285px;
+  border-radius: 5px;
+  outline: none;
 }
-.search:active,.search:focus{
-    outline: none;
-    box-shadow: none;
+.search:active,
+.search:focus {
+  outline: none;
+  box-shadow: none;
 }
 .nav-link {
-    
-    position: relative;
+  position: relative;
 }
-.nav-link .mini-basket-count{
-    
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    border-radius: 9px;
-    background-color: #fbb935;
-    top: 0;
-    left: 25px;
-    z-index: 9999;
-    text-align: center;
-    line-height: 1.9;
-    font-weight: bolder;
-    font-size: 12px;
-    display: flex;
-    text-align: center;
-    justify-content: center;
+.nav-link .mini-basket-count {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #fbb935;
+  top: 0;
+  left: 25px;
+  z-index: 9999;
+  text-align: center;
+  line-height: 1.9;
+  font-weight: bolder;
+  font-size: 12px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
 }
-.nav-link .mini-basket-count>span{
-    font-weight: bolder;
-    font-size: 10px;
+.nav-link .mini-basket-count > span {
+  font-weight: bolder;
+  font-size: 10px;
 }
 
 /*
 edit on bootstrap classes
 */
-.navbar{
-    background-color:#016373 ;
+.navbar {
+  background-color: #016373;
 }
 
-.nav-link{
-    color: #fff;
+.nav-link {
+  color: #fff;
 }

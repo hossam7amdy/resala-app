@@ -1,4 +1,4 @@
-export class APIError extends Error {
+export class APPError extends Error {
   constructor(
     public statusCode: 400 | 401 | 403 | 404 | 409 | 500,
     message: string
@@ -9,38 +9,38 @@ export class APIError extends Error {
   }
 }
 
-export class BadRequestError extends APIError {
-  constructor(message = 'Bad request') {
+export class BadRequestError extends APPError {
+  constructor(message = 'Bad request. Please check your request and try again.') {
     super(400, message);
   }
 }
 
-export class NotFoundError extends APIError {
+export class NotFoundError extends APPError {
   constructor(message = 'Resource not found') {
     super(404, message);
   }
 }
 
-export class UnauthorizedError extends APIError {
-  constructor(message = 'Unauthorized') {
+export class UnauthorizedError extends APPError {
+  constructor(message = 'Unauthorized. Please login.') {
     super(401, message);
   }
 }
 
-export class ForbiddenError extends APIError {
-  constructor(message = 'Forbidden') {
+export class ForbiddenError extends APPError {
+  constructor(message = 'Forbidden. You do not have permission to access this resource.') {
     super(403, message);
   }
 }
 
-export class ConflictError extends APIError {
-  constructor(message = 'Conflict') {
+export class ConflictError extends APPError {
+  constructor(message = 'Conflict. Resource already exists.') {
     super(409, message);
   }
 }
 
-export class InternalServerError extends APIError {
-  constructor(message = 'Internal server error') {
+export class InternalServerError extends APPError {
+  constructor(message = 'Internal server error. Please try again later.') {
     super(500, message);
   }
 }
