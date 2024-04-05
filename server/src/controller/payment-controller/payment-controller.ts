@@ -1,7 +1,7 @@
 import { PaginationSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { orderService, paymentService } from '../../services';
+import { orderService, paymentService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
 import schemaValidator from '../../utils/schema-validator';
 

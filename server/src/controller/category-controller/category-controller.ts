@@ -1,7 +1,7 @@
 import { CategorySchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { inventoryService } from '../../services';
+import { inventoryService } from '../../service';
 import schemaValidator from '../../utils/schema-validator';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
@@ -25,28 +25,11 @@ export const listCategories: RequestHandler = async (req, res, next) => {
   const deleted = Boolean(req.query.deleted);
 
   try {
-    const categories = await inventoryService.listRootCategories(deleted);
+    const categories = await inventoryService.listCategories(deleted);
 
     return res.json({
       success: true,
       data: categories,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const listSubCategories: RequestHandler = async (req, res, next) => {
-  try {
-    const params = schemaValidator(CategorySchema.pick({ id: true }), {
-      id: req.params.categoryId,
-    });
-
-    const subCategories = await inventoryService.listSubcategories(params.id);
-
-    return res.json({
-      success: true,
-      data: subCategories,
     });
   } catch (error) {
     next(error);
@@ -74,26 +57,11 @@ export const createCategory: RequestHandler = async (req, res, next) => {
   try {
     const payload = schemaValidator(CategorySchema, req.body);
 
-    const category = await inventoryService.createRootCategory(payload);
+    const category = await inventoryService.createCategory(payload);
 
     return res.status(201).json({
       success: true,
       data: category,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const createSubcategory: RequestHandler = async (req, res, next) => {
-  try {
-    const payload = schemaValidator(CategorySchema, { ...req.body, ...req.params });
-
-    const subCategory = await inventoryService.createSubcategory(payload.categoryId, payload);
-
-    return res.status(201).json({
-      success: true,
-      data: subCategory,
     });
   } catch (error) {
     next(error);

@@ -1,5 +1,5 @@
 import { ENV } from '../../config';
-import { fetch } from '../../utils/fetch';
+import Fetch from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
@@ -28,7 +28,7 @@ export async function refundTransaction(
   payload: RefundTransactionRequest
 ): Promise<RefundTransactionResponse> {
   try {
-    const response = await fetch.post(`${PAYMOB_API_URL}/acceptance/void_refund/refund`, payload);
+    const response = await Fetch.post(`${PAYMOB_API_URL}/acceptance/void_refund/refund`, payload);
 
     return response as RefundTransactionResponse;
   } catch (error) {
