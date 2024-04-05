@@ -2,7 +2,7 @@ import { CategorySchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
 import { inventoryService } from '../../service';
-import schemaValidator from '../../utils/schema-validator';
+import { schemaValidator } from '../../utils/schema-validator';
 
 export const getCategory: RequestHandler = async (req, res, next) => {
   try {
