@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { authService, userService } from '../services';
+import { authService, userService } from '../service';
 import { BadRequestError, ForbiddenError } from '../utils/api-errors';
 
 export const authenticateToken: RequestHandler = async (req, res, next) => {

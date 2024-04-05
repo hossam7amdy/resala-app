@@ -1,19 +1,14 @@
 export interface Product {
-
-    enName:string;
-    price:string;
-    category: CategoryProduct;
-    images: Image[];
-
+  enName: string;
+  price: string;
+  category: CategoryProduct;
+  images: Image[];
 }
-
 
 export interface CategoryProduct {
-
-    enName:string;
+  enName: string;
 }
 
-export interface Image{
-    imageUrl: string;
+export interface Image {
+  imageUrl: string;
 }
-
