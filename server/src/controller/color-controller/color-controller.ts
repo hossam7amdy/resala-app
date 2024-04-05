@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { inventoryService } from '../../services';
+import { inventoryService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
 
 export const getColor: RequestHandler = async (req, res, next) => {

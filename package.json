@@ -13,8 +13,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "lint": "prettier . --write",
-    "lint:check": "prettier . --check",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "checks": "npm run format:check && npm run lint:check",
+    "checks:fix": "npm run format && npm run lint",
     "build:server": "npm run build --prefix server",
     "build:shared": "npm run build --prefix shared",
     "build:dashboard": "npm run build --prefix dashboard",
@@ -27,6 +31,11 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3"

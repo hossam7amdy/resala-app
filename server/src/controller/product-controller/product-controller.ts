@@ -3,7 +3,7 @@ import { unlink } from 'fs/promises';
 
 import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
 import { logger } from '../../lib/logger';
-import { inventoryService } from '../../services';
+import { inventoryService } from '../../service';
 import { BadRequestError, NotFoundError } from '../../utils/api-errors';
 
 export const getProduct: RequestHandler = async (req, res, next) => {

@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { orderService, paymentService, shoppingService, userService } from '../../services';
+import { orderService, paymentService, shoppingService, userService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
 
 export const createOrder: RequestHandler = async (req, res, next) => {

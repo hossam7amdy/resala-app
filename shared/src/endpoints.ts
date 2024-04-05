@@ -34,10 +34,8 @@ export enum Endpoints {
   // category endpoints
   getCategory = 'getCategory',
   listCategories = 'listCategories',
-  listSubcategories = 'listSubcategories',
   listCategoryProducts = 'listCategoryProducts',
   createCategory = 'createCategory',
-  createSubcategory = 'createSubcategory',
   updateCategory = 'updateCategory',
   deleteCategory = 'deleteCategory',
 
@@ -232,15 +230,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.listCategoryProducts]: {
     url: '/api/v1/categories/:categoryId/products',
     method: 'get',
-  },
-  [Endpoints.listSubcategories]: {
-    url: '/api/v1/categories/:categoryId/subcategories',
-    method: 'get',
-  },
-  [Endpoints.createSubcategory]: {
-    url: '/api/v1/categories/:categoryId/subcategories',
-    method: 'post',
-    auth: true,
   },
 
   // product endpoints
