@@ -23,7 +23,7 @@
     "build:shared": "npm run build --prefix shared",
     "build:dashboard": "npm run build --prefix dashboard",
     "build": "npm i && npm-run-all build:server",
-    "test:server": "npm run test --prefix server",
+    "test:server": "npm run test:unit --prefix server",
     "test:dashboard": "npm run test --prefix dashboard",
     "test": "npm-run-all --parallel test:server",
     "start:dashboard": "npm run dev --prefix dashboard",
