@@ -1,5 +1,5 @@
 import { ENV } from '../../config';
-import { fetch } from '../../utils/fetch';
+import Fetch from '../../utils/fetch';
 
 const CURRENCY = 'EGP';
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
@@ -31,7 +31,7 @@ interface CreateOrderResponse extends Record<string, any> {
  */
 export async function createOrder(order: CreateOrderRequest): Promise<CreateOrderResponse> {
   try {
-    const response = await fetch.post(`${PAYMOB_API_URL}/ecommerce/orders`, {
+    const response = await Fetch.post(`${PAYMOB_API_URL}/ecommerce/orders`, {
       ...order,
       currency: CURRENCY,
     });

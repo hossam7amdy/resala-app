@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { shoppingService } from '../../services';
+import { shoppingService } from '../../service';
 
 export const getUserCart: RequestHandler = async (_, res, next) => {
   const userId = res.locals.user.id;

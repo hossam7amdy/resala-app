@@ -8,7 +8,7 @@ const app = createExpressApp();
 const server = createServer(app);
 
 server.listen(ENV.PORT, () => {
-  console.log(`Server running on port ${ENV.PORT}`);
+  console.log(`Server is running on ${ENV.NODE_ENV} mode on port ${ENV.PORT} 🚀`);
 });
 
 process.on('unhandledRejection', reason => {

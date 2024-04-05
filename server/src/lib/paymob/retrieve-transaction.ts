@@ -1,5 +1,5 @@
 import { ENV } from '../../config';
-import { fetch } from '../../utils/fetch';
+import Fetch from '../../utils/fetch';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 
@@ -23,7 +23,7 @@ export async function retrieveTransactionById({
   transaction_id: number;
 }): Promise<TransactionResponse> {
   try {
-    const response = await fetch.get(`${PAYMOB_API_URL}/acceptance/payments/${transaction_id}`, {
+    const response = await Fetch.get(`${PAYMOB_API_URL}/acceptance/payments/${transaction_id}`, {
       Authorization: `Bearer ${token}`,
     });
 
@@ -47,7 +47,7 @@ export async function retrieveTransactionByOrderDetails(orderInfo: {
   order_id: number;
 }): Promise<TransactionResponse> {
   try {
-    const response = await fetch.post(
+    const response = await Fetch.post(
       `${PAYMOB_API_URL}/ecommerce/orders/transaction_inquiry`,
       orderInfo
     );

@@ -1,7 +1,7 @@
 /**
  * @file This file contains all the types for the API requests and responses.
  */
-import { Address, Prisma, User } from '@prisma/client';
+import type { Address, Prisma, User } from '@prisma/client';
 
 // Utility types
 interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
