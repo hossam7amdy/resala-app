@@ -1,9 +1,9 @@
 import { PaginationSchema } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-import { orderService, paymentService } from '../../services';
+import { orderService, paymentService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
-import schemaValidator from '../../utils/schema-validator';
+import { schemaValidator } from '../../utils/schema-validator';
 
 export const createPayment: RequestHandler = async (req, res, next) => {
   const hmac = String(req.query.hmac);
@@ -51,7 +51,7 @@ export const getPaymentList: RequestHandler = async (req, res, next) => {
   const page = Number(req.query.page) || 1;
 
   try {
-    const query = schemaValidator(PaginationSchema, req.query);
+    const query = await schemaValidator(PaginationSchema, req.query);
 
     const payments = await paymentService.getPaymentsList({
       limit: query.limit,

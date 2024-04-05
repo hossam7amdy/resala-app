@@ -65,15 +65,10 @@ export function createExpressRouter(legRequests: boolean) {
     // category endpoints
     [Endpoints.getCategory]: [categoryCtrl.getCategory],
     [Endpoints.listCategories]: [categoryCtrl.listCategories],
-    [Endpoints.listSubcategories]: [categoryCtrl.listSubCategories],
     [Endpoints.listCategoryProducts]: [categoryCtrl.listCategoryProducts],
     [Endpoints.createCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.createCategory,
-    ],
-    [Endpoints.createSubcategory]: [
-      authorizeUser(['ADMIN', 'MODERATOR']),
-      categoryCtrl.createSubcategory,
     ],
     [Endpoints.updateCategory]: [
       authorizeUser(['ADMIN', 'MODERATOR']),

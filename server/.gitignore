@@ -13,3 +13,6 @@ uploads
 
 # Ignore logs
 logs
+
+# Ignore test coverage
+coverage

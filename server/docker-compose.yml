@@ -6,7 +6,7 @@ services:
   db:
     image: mysql
     restart: always
-    container_name: integration-tests-db
+    container_name: integration-test-db
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
