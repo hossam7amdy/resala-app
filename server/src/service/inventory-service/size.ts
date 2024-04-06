@@ -1,5 +1,5 @@
 import prisma from '../../lib/prisma';
-import { BadRequestError, NotFoundError } from '../../utils/api-errors';
+import { ConflictError, NotFoundError } from '../../utils/api-errors';
 
 export async function findSizeById(sizeId: number) {
   const size = await prisma.size.findUnique({
@@ -22,7 +22,7 @@ export async function listSizes() {
 export async function createSize(name: string) {
   const size = await findSize(name);
   if (size) {
-    throw new BadRequestError('Size already exists');
+    throw new ConflictError('Size already exists');
   }
 
   return await prisma.size.create({
@@ -37,7 +37,7 @@ export async function updateSize(id: number, name: string) {
 
   const size = await findSize(name);
   if (size && size.id !== id) {
-    throw new BadRequestError('Size already exists');
+    throw new ConflictError('Size already exists');
   }
 
   return await prisma.size.update({
@@ -59,7 +59,7 @@ export async function deleteSize(id: number) {
     },
   });
   if (stock) {
-    throw new BadRequestError('Size is in use and cannot be deleted');
+    throw new ConflictError('Size is in use and cannot be deleted');
   }
 
   return await prisma.size.delete({
