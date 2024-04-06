@@ -72,7 +72,7 @@ export const createProduct = async (product: Product) => {
     throw new ConflictError('Product already exists');
   }
 
-  return prisma.product.create({
+  return await prisma.product.create({
     data: {
       categoryId: product.categoryId,
       arName: product.arName,
@@ -115,43 +115,42 @@ export const updateProduct = async (id: number, product: Product) => {
 };
 
 export const deleteProduct = async (id: number) => {
-  await findProductById(id);
-
-  return prisma.product.delete({
-    where: { id },
-  });
+  try {
+    return await prisma.product.delete({
+      where: { id },
+    });
+  } catch (error) {
+    throw new NotFoundError('Product not found');
+  }
 };
 
 export const addProductImages = async (productId: number, urls: string[]) => {
-  await findProductById(productId);
-
-  return prisma.productImage.createMany({
-    data: urls.map(url => ({
-      productId,
-      imageUrl: url,
-    })),
-  });
+  try {
+    return await prisma.productImage.createMany({
+      data: urls.map(url => ({
+        productId,
+        imageUrl: url,
+      })),
+    });
+  } catch (error) {
+    throw new NotFoundError('Product not found');
+  }
 };
 
 export const listProductImages = async (productId: number) => {
-  return prisma.productImage.findMany({
+  return await prisma.productImage.findMany({
     where: { productId },
   });
 };
 
 export const deleteProductImage = async (imageId: number, productId: number) => {
-  const image = await prisma.productImage.findUnique({
-    where: { id_productId: { id: imageId, productId } },
-  });
-  if (!image) {
+  try {
+    return await prisma.productImage.delete({
+      where: { id_productId: { id: imageId, productId } },
+    });
+  } catch (error) {
     throw new NotFoundError('Image not found');
   }
-
-  await prisma.productImage.delete({
-    where: { id_productId: { id: imageId, productId } },
-  });
-
-  return image;
 };
 
 const findProductByName = async (enName: string, arName: string) => {
