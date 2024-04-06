@@ -1,6 +1,6 @@
+import { inventoryService } from '..';
 import prismaMock from '../../lib/__mocks__/prisma';
 import { ConflictError, NotFoundError } from '../../utils/api-errors';
-import * as InventoryService from './category';
 
 jest.mock('../../lib/prisma');
 
@@ -24,7 +24,7 @@ const COMPLETE_SUB_CATEGORY = {
   deletedAt: null,
 };
 
-describe('Inventory Service - [ Category ]', () => {
+describe('InventoryService - [ Category ]', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -44,7 +44,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should create root category', async () => {
       prismaMock.category.create.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(InventoryService.createCategory(category)).resolves.toEqual(COMPLETE_CATEGORY);
+      await expect(inventoryService.createCategory(category)).resolves.toEqual(COMPLETE_CATEGORY);
       expect(prismaMock.category.create).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.findFirst).toHaveBeenCalledTimes(1);
     });
@@ -52,7 +52,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should only create root category if it does not exist', async () => {
       prismaMock.category.findFirst.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(InventoryService.createCategory(category)).rejects.toThrow(ConflictError);
+      await expect(inventoryService.createCategory(category)).rejects.toThrow(ConflictError);
       expect(prismaMock.category.findFirst).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.create).toHaveBeenCalledTimes(0);
     });
@@ -61,7 +61,7 @@ describe('Inventory Service - [ Category ]', () => {
       prismaMock.category.findUnique.mockImplementation(() => ({}) as any);
       prismaMock.category.create.mockResolvedValue(COMPLETE_SUB_CATEGORY);
 
-      await expect(InventoryService.createCategory(subCategory)).resolves.toEqual(
+      await expect(inventoryService.createCategory(subCategory)).resolves.toEqual(
         COMPLETE_SUB_CATEGORY
       );
       expect(prismaMock.category.create).toHaveBeenCalledTimes(1);
@@ -72,7 +72,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should create new sub-category only if parent category exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.createCategory(subCategory)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.createCategory(subCategory)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findFirst).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.create).toHaveBeenCalledTimes(0);
@@ -89,7 +89,7 @@ describe('Inventory Service - [ Category ]', () => {
       prismaMock.category.update.mockResolvedValue(COMPLETE_CATEGORY);
       prismaMock.category.findUnique.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(InventoryService.updateCategory(1, category)).resolves.toEqual(
+      await expect(inventoryService.updateCategory(1, category)).resolves.toEqual(
         COMPLETE_CATEGORY
       );
       expect(prismaMock.category.update).toHaveBeenCalledTimes(1);
@@ -99,7 +99,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should only update category if it exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.updateCategory(1, category)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.updateCategory(1, category)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.update).toHaveBeenCalledTimes(0);
     });
@@ -108,7 +108,7 @@ describe('Inventory Service - [ Category ]', () => {
       prismaMock.category.findUnique.mockResolvedValue(COMPLETE_CATEGORY);
       prismaMock.category.findFirst.mockResolvedValue(COMPLETE_SUB_CATEGORY);
 
-      await expect(InventoryService.updateCategory(1, category)).rejects.toThrow(ConflictError);
+      await expect(inventoryService.updateCategory(1, category)).rejects.toThrow(ConflictError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.update).toHaveBeenCalledTimes(0);
     });
@@ -117,7 +117,7 @@ describe('Inventory Service - [ Category ]', () => {
       prismaMock.category.update.mockResolvedValue(COMPLETE_SUB_CATEGORY);
       prismaMock.category.findUnique.mockResolvedValue(COMPLETE_SUB_CATEGORY);
 
-      await expect(InventoryService.updateCategory(2, category)).resolves.toEqual(
+      await expect(inventoryService.updateCategory(2, category)).resolves.toEqual(
         COMPLETE_SUB_CATEGORY
       );
       expect(prismaMock.category.update).toHaveBeenCalledTimes(1);
@@ -127,7 +127,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should only update sub-category if it exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.updateCategory(2, category)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.updateCategory(2, category)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.update).toHaveBeenCalledTimes(0);
     });
@@ -141,7 +141,7 @@ describe('Inventory Service - [ Category ]', () => {
       } as any);
       prismaMock.category.delete.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(InventoryService.deleteCategory(1)).resolves.toEqual(COMPLETE_CATEGORY);
+      await expect(inventoryService.deleteCategory(1)).resolves.toEqual(COMPLETE_CATEGORY);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(1);
     });
@@ -149,7 +149,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should only delete category if it exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.deleteCategory(1)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.deleteCategory(1)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(0);
     });
@@ -160,7 +160,7 @@ describe('Inventory Service - [ Category ]', () => {
         subCategories: [COMPLETE_CATEGORY],
       } as any);
 
-      await expect(InventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
+      await expect(inventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(0);
     });
@@ -171,7 +171,7 @@ describe('Inventory Service - [ Category ]', () => {
         subCategories: [],
       } as any);
 
-      await expect(InventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
+      await expect(inventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(0);
     });
@@ -182,7 +182,7 @@ describe('Inventory Service - [ Category ]', () => {
         subCategories: [COMPLETE_CATEGORY],
       } as any);
 
-      await expect(InventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
+      await expect(inventoryService.deleteCategory(1)).rejects.toThrow(ConflictError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(0);
     });
@@ -192,14 +192,14 @@ describe('Inventory Service - [ Category ]', () => {
     it('should get category', async () => {
       prismaMock.category.findUnique.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(InventoryService.findCategoryById(1)).resolves.toEqual(COMPLETE_CATEGORY);
+      await expect(inventoryService.findCategoryById(1)).resolves.toEqual(COMPLETE_CATEGORY);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
     });
 
     it('should only get category if it exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.findCategoryById(1)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.findCategoryById(1)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
     });
   });
@@ -208,7 +208,7 @@ describe('Inventory Service - [ Category ]', () => {
     it('should get categories', async () => {
       prismaMock.category.findMany.mockResolvedValue([COMPLETE_CATEGORY]);
 
-      await expect(InventoryService.listCategories()).resolves.toEqual([COMPLETE_CATEGORY]);
+      await expect(inventoryService.listCategories()).resolves.toEqual([COMPLETE_CATEGORY]);
       expect(prismaMock.category.findMany).toHaveBeenCalledTimes(1);
     });
   });
@@ -220,14 +220,14 @@ describe('Inventory Service - [ Category ]', () => {
         subCategories: [],
       } as any);
 
-      await expect(InventoryService.listCategoryProducts(1)).resolves.toEqual([]);
+      await expect(inventoryService.listCategoryProducts(1)).resolves.toEqual([]);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
     });
 
     it('should only get category products if category exists', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(InventoryService.listCategoryProducts(1)).rejects.toThrow(NotFoundError);
+      await expect(inventoryService.listCategoryProducts(1)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
     });
   });

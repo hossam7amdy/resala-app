@@ -8,11 +8,7 @@ import { findSizeById } from './size';
 
 export async function getProductStocks(productId: number) {
   return await prisma.stock.findMany({
-    select: {
-      id: true,
-      quantity: true,
-      createdAt: true,
-      updatedAt: true,
+    include: {
       color: true,
       size: true,
     },
@@ -45,14 +41,6 @@ export async function updateProductStock(stock: Prisma.StockUncheckedCreateInput
         colorId: stock.colorId,
         sizeId: stock.sizeId,
       },
-    },
-    select: {
-      id: true,
-      quantity: true,
-      createdAt: true,
-      updatedAt: true,
-      color: true,
-      size: true,
     },
   });
 }
