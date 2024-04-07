@@ -9,7 +9,7 @@
     "build": "npm run prisma:generate && tsc -b",
     "start": "set NODE_ENV=prod& ts-node --transpile-only src/index.ts",
     "dev": "set NODE_ENV=dev& nodemon --exec ts-node src/index.ts",
-    "test:unit": "dotenv -e .env.test -- jest --config jest.config.unit.ts",
+    "test:unit": "dotenv -e .env.test -- jest --coverage --config jest.config.unit.ts",
     "test:unit:watch": "dotenv -e .env.test -- jest --watch --config jest.config.unit.ts",
     "test:int": "./scripts/run-integration.sh"
   },
