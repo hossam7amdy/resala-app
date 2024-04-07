@@ -26,11 +26,11 @@ export const createOrder: RequestHandler = async (req, res, next) => {
     const { id, ...address } = await userService.findUserAddress(user.id, addressId);
 
     const orderItems = cart.map(item => ({
-      name: item.product.enName,
-      price: item.product.price,
+      name: item.stock.product.enName,
+      price: item.stock.product.price,
       quantity: item.quantity,
-      color: item.color.enName,
-      size: item.size.name,
+      color: item.stock.color.enName,
+      size: item.stock.size.name,
     }));
 
     // create order

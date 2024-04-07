@@ -20,7 +20,7 @@ export const addItemToCart: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
 
   try {
-    const cart = await shoppingService.addToCart(userId, req.body);
+    const cart = await shoppingService.addItemToCart({ userId, ...req.body });
 
     return res.json({
       success: true,
@@ -33,10 +33,10 @@ export const addItemToCart: RequestHandler = async (req, res, next) => {
 
 export const removeItemFromCart: RequestHandler = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const stockId = parseInt(req.params.stockId + '');
+  const stockId = Number(req.params.stockId);
 
   try {
-    const cart = await shoppingService.removeFromCart(userId, stockId);
+    const cart = await shoppingService.removeItemFromCart(userId, stockId);
 
     return res.json({
       success: true,
@@ -51,7 +51,7 @@ export const removeUserCart: RequestHandler = async (_, res, next) => {
   const userId = res.locals.user.id;
 
   try {
-    await shoppingService.removeUserCart(userId);
+    await shoppingService.clearUserCart(userId);
 
     return res.json({
       success: true,

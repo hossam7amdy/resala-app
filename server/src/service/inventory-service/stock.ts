@@ -6,6 +6,18 @@ import { findColorById } from './color';
 import { findProductById } from './product';
 import { findSizeById } from './size';
 
+export async function findStockById(stockId: number) {
+  const stock = await prisma.stock.findUnique({
+    where: { id: stockId },
+  });
+
+  if (!stock) {
+    throw new NotFoundError('Stock not found');
+  }
+
+  return stock;
+}
+
 export async function getProductStocks(productId: number) {
   return await prisma.stock.findMany({
     include: {
