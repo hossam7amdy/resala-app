@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { Pagination } from '@resala/shared';
 
 import prisma from '../lib/prisma';
 import { ConflictError, NotFoundError } from '../utils/api-errors';
@@ -45,8 +46,7 @@ export const deleteUser = async (id: number) => {
     throw new NotFoundError('User not found');
   }
 
-  await prisma.user.delete({ where: { id } });
-  return true;
+  return !!(await prisma.user.delete({ where: { id } }));
 };
 
 export const findUserById = async (id: number) => {
@@ -61,12 +61,10 @@ export const findUserById = async (id: number) => {
   return user;
 };
 
-export const listUsersPaginated = async (pagination: {
-  page: number;
-  limit: number;
-  query: string;
-}) => {
-  const { page, limit, query } = pagination;
+export const listUsersPaginated = async (pagination: Pagination) => {
+  const page = pagination.page || 1;
+  const limit = pagination.limit || 10;
+  const query = pagination.query || '';
 
   const filters = {
     firstName: { startsWith: query },
