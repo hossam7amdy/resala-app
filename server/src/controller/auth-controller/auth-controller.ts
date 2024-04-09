@@ -1,3 +1,5 @@
+import { ENV } from '../../config';
+import { signJwt } from '../../lib/jwt-token';
 import { authService, communicationService } from '../../service';
 import {
   ChangePassword,
@@ -31,7 +33,7 @@ export const register: Register = async (req, res, next) => {
     const { user, verifyToken } = await authService.register(req.body);
 
     // Send verification email
-    await communicationService.sendVerificationEmail(user.email, verifyToken.token);
+    await communicationService.sendVerificationEmail(user.email, verifyToken);
 
     return res.status(201).json({
       success: true,
@@ -57,8 +59,8 @@ export const resendVerificationEmail: ResendVerificationEmail = async (_, res, n
   try {
     const { id, email } = res.locals.user;
 
-    const verifyToken = await authService.generateVerifyToken(id, email);
-    await communicationService.sendVerificationEmail(email, verifyToken.token);
+    const verifyToken = signJwt({ id, email }, ENV.JWT_VERIFY!, { expiresIn: '30d' });
+    await communicationService.sendVerificationEmail(email, verifyToken);
 
     return res.json({
       success: true,
