@@ -134,6 +134,8 @@ export async function getUserOrders(userId: number, pagination: Pagination) {
 }
 
 export async function updateOrder(id: number, order: Prisma.OrderUpdateInput) {
+  await findOrderById(id);
+
   const updatedOrder = await prisma.order.update({
     data: order,
     where: { id },
