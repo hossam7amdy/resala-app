@@ -66,7 +66,7 @@ export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
 
   try {
     const { users, pagination } = await userService.listUsersPaginated({
-      page: parseInt(page || '1'),
+      page: Number(page || '1'),
       query: query || '',
       limit: PAGE_SIZE,
     });
