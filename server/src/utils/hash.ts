@@ -1,7 +1,8 @@
 import crypto from 'crypto';
 
 /**
- * Hash a string using pbkdf2 algorithm with sha512 and base64 encoding and return the hashed string as a promise
+ * Hash a string using pbkdf2 algorithm with sha512 and base64
+ * encoding and return the hashed string as a promise
  *
  * @param str string to hash
  * @param salt salt to use
