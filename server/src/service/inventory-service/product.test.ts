@@ -34,7 +34,7 @@ const PRODUCT_OUTPUT = {
   ],
 };
 
-describe('InventoryService - [ Product ]', () => {
+describe('inventoryService - [ Product ]', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
