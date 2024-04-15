@@ -1,17 +1,15 @@
-import { RequestHandler } from 'express';
-
 import { inventoryService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
+import {
+  CreateColor,
+  DeleteColor,
+  GetColor,
+  GetColorsList,
+  UpdateColor,
+} from './color-controller.interface';
 
-export const getColor: RequestHandler = async (req, res, next) => {
-  const colorId = Number(req.params.colorId);
-
+export const getColor: GetColor = async (req, res, next) => {
   try {
-    if (isNaN(colorId)) {
-      throw new BadRequestError('Invalid color id');
-    }
-
-    const color = await inventoryService.findColorById(colorId);
+    const color = await inventoryService.findColorById(req.params.colorId);
 
     return res.json({
       success: true,
@@ -22,9 +20,10 @@ export const getColor: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getColorsList: RequestHandler = async (_, res, next) => {
+export const getColorsList: GetColorsList = async (_, res, next) => {
   try {
     const colors = await inventoryService.getColors();
+
     return res.json({
       success: true,
       data: colors,
@@ -34,7 +33,7 @@ export const getColorsList: RequestHandler = async (_, res, next) => {
   }
 };
 
-export const createColor: RequestHandler = async (req, res, next) => {
+export const createColor: CreateColor = async (req, res, next) => {
   try {
     const color = await inventoryService.createColor(req.body);
 
@@ -47,7 +46,7 @@ export const createColor: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateColor: RequestHandler = async (req, res, next) => {
+export const updateColor: UpdateColor = async (req, res, next) => {
   const colorId = Number(req.params.colorId);
   try {
     const color = await inventoryService.updateColor(colorId, req.body);
@@ -61,14 +60,14 @@ export const updateColor: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteColor: RequestHandler = async (req, res, next) => {
+export const deleteColor: DeleteColor = async (req, res, next) => {
   const colorId = Number(req.params.colorId);
   try {
-    await inventoryService.deleteColor(colorId);
+    const color = await inventoryService.deleteColor(colorId);
 
     return res.json({
       success: true,
-      message: 'Color deleted successfully',
+      data: color,
     });
   } catch (error) {
     next(error);

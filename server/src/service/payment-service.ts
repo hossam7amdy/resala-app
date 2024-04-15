@@ -3,7 +3,6 @@ import { Address } from '@prisma/client';
 import { paymob } from '../lib/paymob';
 import callback from '../lib/paymob/callback.json';
 import prisma from '../lib/prisma';
-import { Pagination } from '../types';
 import { NotFoundError } from '../utils/api-errors';
 
 export async function createPaymentRequest(payload: {
@@ -108,10 +107,10 @@ export async function getPayment(paymentId: number) {
   return payment;
 }
 
-export async function getPaymentsList(pagination: Pagination) {
+export async function getPaymentsList(pagination: { limit: number; page: number }) {
   return await prisma.payment.findMany({
     take: pagination.limit,
-    skip: pagination.page * pagination.limit,
+    skip: pagination.page! * pagination.limit!,
     orderBy: { createdAt: 'desc' },
   });
 }

@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-import { Pagination } from '@resala/shared';
 
 import prisma from '../lib/prisma';
 import { ConflictError, NotFoundError } from '../utils/api-errors';
@@ -61,28 +60,33 @@ export const findUserById = async (id: number) => {
   return user;
 };
 
-export const listUsersPaginated = async (pagination: Pagination) => {
-  const page = pagination.page || 1;
-  const limit = pagination.limit || 10;
-  const query = pagination.query || '';
+export const listUsersPaginated = async (filters: {
+  page: number;
+  limit: number;
+  query: string;
+  deleted: boolean;
+}) => {
+  const { page, limit, query, deleted } = filters;
 
-  const filters = {
-    firstName: { startsWith: query },
-    lastName: { startsWith: query },
-    email: { startsWith: query },
-    phone: { startsWith: query },
-  };
+  const _filters = [
+    { firstName: { startsWith: query } },
+    { lastName: { startsWith: query } },
+    { email: { startsWith: query } },
+    { phone: { startsWith: query } },
+  ];
 
   const [total, users] = await prisma.$transaction([
     prisma.user.count({
       where: {
-        OR: [filters],
+        OR: _filters,
+        deletedAt: deleted ? { not: null } : null,
       },
     }),
     prisma.user.findMany({
       select: SELECT,
       where: {
-        OR: [filters],
+        OR: _filters,
+        deletedAt: deleted ? { not: null } : null,
       },
       take: limit,
       skip: (page - 1) * limit,
@@ -165,11 +169,9 @@ export const deleteUserAddress = async (userId: number, addressId: number) => {
     throw new NotFoundError('Address not found');
   }
 
-  await prisma.address.delete({
+  return await prisma.address.delete({
     where: { id: addressId },
   });
-
-  return true;
 };
 
 export const listUserAddresses = async (userId: number) => {

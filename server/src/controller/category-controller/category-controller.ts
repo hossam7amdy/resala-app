@@ -1,16 +1,16 @@
-import { CategorySchema } from '@resala/shared';
-import { RequestHandler } from 'express';
-
 import { inventoryService } from '../../service';
-import { schemaValidator } from '../../utils/schema-validator';
+import {
+  CreateCategory,
+  DeleteCategory,
+  GetCategory,
+  GetCategoryProducts,
+  ListCategories,
+  UpdateCategory,
+} from './category-controller.interface';
 
-export const getCategory: RequestHandler = async (req, res, next) => {
+export const getCategory: GetCategory = async (req, res, next) => {
   try {
-    const params = await schemaValidator(CategorySchema.pick({ id: true }), {
-      id: req.params.categoryId,
-    });
-
-    const category = await inventoryService.findCategoryById(params.id);
+    const category = await inventoryService.findCategoryById(req.params.categoryId);
 
     return res.json({
       success: true,
@@ -21,11 +21,9 @@ export const getCategory: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const listCategories: RequestHandler = async (req, res, next) => {
-  const deleted = Boolean(req.query.deleted);
-
+export const listCategories: ListCategories = async (req, res, next) => {
   try {
-    const categories = await inventoryService.listCategories(deleted);
+    const categories = await inventoryService.listCategories(req.query.deleted);
 
     return res.json({
       success: true,
@@ -36,13 +34,9 @@ export const listCategories: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const listCategoryProducts: RequestHandler = async (req, res, next) => {
+export const listCategoryProducts: GetCategoryProducts = async (req, res, next) => {
   try {
-    const params = await schemaValidator(CategorySchema.pick({ id: true }), {
-      id: req.params.categoryId,
-    });
-
-    const products = await inventoryService.listCategoryProducts(params.id);
+    const products = await inventoryService.listCategoryProducts(req.params.categoryId);
 
     return res.json({
       success: true,
@@ -53,11 +47,9 @@ export const listCategoryProducts: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const createCategory: RequestHandler = async (req, res, next) => {
+export const createCategory: CreateCategory = async (req, res, next) => {
   try {
-    const payload = await schemaValidator(CategorySchema, req.body);
-
-    const category = await inventoryService.createCategory(payload);
+    const category = await inventoryService.createCategory(req.body);
 
     return res.status(201).json({
       success: true,
@@ -68,11 +60,9 @@ export const createCategory: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateCategory: RequestHandler = async (req, res, next) => {
+export const updateCategory: UpdateCategory = async (req, res, next) => {
   try {
-    const payload = await schemaValidator(CategorySchema, { ...req.body, ...req.params });
-
-    const category = await inventoryService.updateCategory(payload.categoryId, payload);
+    const category = await inventoryService.updateCategory(req.params.categoryId, req.body);
 
     return res.json({
       success: true,
@@ -83,16 +73,13 @@ export const updateCategory: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteCategory: RequestHandler = async (req, res, next) => {
+export const deleteCategory: DeleteCategory = async (req, res, next) => {
   try {
-    const params = await schemaValidator(CategorySchema.pick({ id: true }), {
-      id: req.params.categoryId,
-    });
-
-    await inventoryService.deleteCategory(params.id);
+    const category = await inventoryService.deleteCategory(req.params.categoryId);
 
     return res.json({
       success: true,
+      data: category,
     });
   } catch (error) {
     next(error);

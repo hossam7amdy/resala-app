@@ -1,7 +1,6 @@
 import { Product } from '@prisma/client';
 
 import prisma from '../../lib/prisma';
-import { Pagination } from '../../types';
 import { ConflictError, NotFoundError } from '../../utils/api-errors';
 
 export const findProductById = async (id: number, deleted: boolean = false) => {
@@ -23,18 +22,22 @@ export const findProductById = async (id: number, deleted: boolean = false) => {
   return product;
 };
 
-export const listProductsPaginated = async (pagination: Pagination, deleted: boolean = false) => {
-  const filters = [
-    { enName: { startsWith: pagination.query } },
-    { arName: { startsWith: pagination.query } },
-  ];
+export const listProductsPaginated = async (filters: {
+  page: number;
+  limit: number;
+  query: string;
+  deleted: boolean;
+}) => {
+  const { page, limit, query, deleted } = filters;
+
+  const _filters = {
+    OR: [{ enName: { contains: query } }, { arName: { contains: query } }],
+    deletedAt: deleted ? { not: null } : null,
+  };
 
   const [total, products] = await prisma.$transaction([
     prisma.product.count({
-      where: {
-        OR: filters,
-        deletedAt: deleted ? undefined : null,
-      },
+      where: _filters,
     }),
     prisma.product.findMany({
       include: {
@@ -44,15 +47,10 @@ export const listProductsPaginated = async (pagination: Pagination, deleted: boo
           orderBy: { createdAt: 'asc' },
         },
       },
-      skip: (pagination.page - 1) * pagination.limit,
-      take: pagination.limit,
-      where: {
-        OR: filters,
-        deletedAt: deleted ? undefined : null,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      skip: (page - 1) * limit,
+      take: limit,
+      where: _filters,
+      orderBy: { createdAt: 'desc' },
     }),
   ]);
 
