@@ -1,11 +1,9 @@
 import { Address, Order, OrderItem, Prisma } from '@prisma/client';
 
 import prisma from '../lib/prisma';
-import { Pagination } from '../types';
 import { BadRequestError, NotFoundError } from '../utils/api-errors';
 
 const SHIPPING = 60;
-
 interface CreateOrderInput {
   userId: number;
   address: Omit<Address, 'id' | 'createdAt' | 'updatedAt'>;
@@ -17,8 +15,8 @@ interface CreateOrderInput {
 export async function createOrder(order: CreateOrderInput) {
   const subtotal = order.items.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
 
-  const orderId = await prisma.$transaction(async tx => {
-    const { id: orderId } = await tx.order.create({
+  return await prisma.$transaction(async tx => {
+    const newOrder = await tx.order.create({
       data: {
         userId: order.userId,
         subtotal,
@@ -29,7 +27,7 @@ export async function createOrder(order: CreateOrderInput) {
     });
     await tx.orderItem.createMany({
       data: order.items.map(item => ({
-        orderId: orderId,
+        orderId: newOrder.id,
         name: item.name,
         price: item.price,
         quantity: item.quantity,
@@ -42,47 +40,34 @@ export async function createOrder(order: CreateOrderInput) {
     });
     await tx.shipping.create({
       data: {
-        orderId: orderId,
+        orderId: newOrder.id,
         addressId: addressId,
         cost: SHIPPING,
       },
     });
 
-    return orderId;
+    return newOrder;
   });
-
-  return await findUserOrderById(orderId, order.userId);
 }
 
-export async function listOrdersPaginated(pagination: Pagination) {
-  const orders = await prisma.order.findMany({
-    take: pagination.limit,
-    skip: pagination.page * pagination.limit,
-    orderBy: { createdAt: 'desc' },
-  });
+export async function listOrders(pagination: { limit: number; page: number }) {
+  const { limit, page } = pagination;
 
-  return orders;
+  const [total, orders] = await prisma.$transaction([
+    prisma.order.count(),
+    prisma.order.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  return { total, orders };
 }
 
 export async function findUserOrderById(id: number, userId: number) {
   const order = await prisma.order.findUnique({
-    include: {
-      user: {
-        select: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-          phone: true,
-          role: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-      orderItems: true,
-      paymentDetails: true,
-      shippingDetails: true,
-    },
+    select: { id: true },
     where: { id, userId },
   });
 
@@ -90,7 +75,7 @@ export async function findUserOrderById(id: number, userId: number) {
     throw new NotFoundError('Order not found');
   }
 
-  return order;
+  return await findOrderById(id);
 }
 
 export async function findOrderById(id: number) {
@@ -100,17 +85,28 @@ export async function findOrderById(id: number) {
         select: {
           id: true,
           email: true,
+          isVerified: true,
+          phone: true,
           firstName: true,
           lastName: true,
-          phone: true,
           role: true,
+          lastLogin: true,
           createdAt: true,
           updatedAt: true,
+          deletedAt: true,
         },
       },
       orderItems: true,
       paymentDetails: true,
-      shippingDetails: true,
+      shippingDetails: {
+        select: {
+          id: true,
+          cost: true,
+          createdAt: true,
+          updatedAt: true,
+          address: true,
+        },
+      },
     },
     where: { id },
   });
@@ -122,27 +118,38 @@ export async function findOrderById(id: number) {
   return order;
 }
 
-export async function getUserOrders(userId: number, pagination: Pagination) {
-  const orders = await prisma.order.findMany({
-    take: pagination.limit,
-    skip: pagination.page * pagination.limit,
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-  });
+export async function getUserOrders(
+  userId: number,
+  pagination: {
+    limit: number;
+    page: number;
+  }
+) {
+  const { limit, page } = pagination;
 
-  return orders;
+  const [total, orders] = await prisma.$transaction([
+    prisma.order.count({ where: { userId } }),
+    prisma.order.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  return { total, orders };
 }
 
 export async function updateOrder(id: number, order: Prisma.OrderUpdateInput) {
-  const updatedOrder = await prisma.order.update({
+  await findOrderById(id);
+
+  return await prisma.order.update({
     data: order,
     where: { id },
   });
-
-  return updatedOrder;
 }
 
-export async function cancelOrder(id: number, userId: number) {
+export async function cancelUserOrder(id: number, userId: number) {
   const order = await findUserOrderById(id, userId);
 
   const isToday = new Date(order.createdAt).toDateString() === new Date().toDateString();
@@ -150,16 +157,16 @@ export async function cancelOrder(id: number, userId: number) {
     throw new BadRequestError("You can't cancel this order. Please contact support");
   }
 
-  return prisma.order.update({
-    data: { orderStatus: 'CANCELLED' },
-    where: { id },
-    include: { paymentDetails: true },
-  });
+  return await cancelOrder(id);
 }
 
 export async function adminCancelOrder(id: number) {
   await findOrderById(id);
 
+  return await cancelOrder(id);
+}
+
+async function cancelOrder(id: number) {
   return prisma.order.update({
     data: { orderStatus: 'CANCELLED' },
     where: { id },

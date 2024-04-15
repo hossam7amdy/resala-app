@@ -46,13 +46,16 @@ export enum Endpoints {
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
   addProductImages = 'addProductImages',
+  getProductStocks = 'getProductStocks',
   listProductImages = 'listProductImages',
   deleteProductImage = 'deleteProductImage',
 
   // stock endpoints
-  deleteProductStock = 'deleteProductStock',
-  getProductStocks = 'getProductStocks',
-  updateProductStock = 'updateProductStock',
+  addStock = 'addStock',
+  getStock = 'getStock',
+  getStocksList = 'getStocksList',
+  updateStock = 'updateStock',
+  deleteStock = 'deleteStock',
 
   // color endpoints
   getColor = 'getColor',
@@ -83,6 +86,8 @@ export enum Endpoints {
   getOrder = 'getOrder',
   getOrdersList = 'getOrdersList',
   deleteOrder = 'deleteOrder',
+  adminGetOrder = 'adminGetOrder',
+  adminGetOrdersList = 'adminGetOrdersList',
   adminDeleteOrder = 'adminDeleteOrder',
 
   // payment endpoints
@@ -273,19 +278,32 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-
-  // stock endpoints
   [Endpoints.getProductStocks]: {
     url: '/api/v1/products/:productId/stocks',
     method: 'get',
   },
-  [Endpoints.updateProductStock]: {
-    url: '/api/v1/products/:productId/stocks',
+
+  // stock endpoints
+  [Endpoints.addStock]: {
+    url: '/api/v1/stocks',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.getStock]: {
+    url: '/api/v1/stocks/:stockId',
+    method: 'get',
+  },
+  [Endpoints.getStocksList]: {
+    url: '/api/v1/stocks',
+    method: 'get',
+  },
+  [Endpoints.updateStock]: {
+    url: '/api/v1/stocks/:stockId',
     method: 'put',
     auth: true,
   },
-  [Endpoints.deleteProductStock]: {
-    url: '/api/v1/products/:productId/stocks/:stockId',
+  [Endpoints.deleteStock]: {
+    url: '/api/v1/stocks/:stockId',
     method: 'delete',
     auth: true,
   },
@@ -402,6 +420,16 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.deleteOrder]: {
     url: '/api/v1/orders/:orderId',
     method: 'delete',
+    auth: true,
+  },
+  [Endpoints.adminGetOrder]: {
+    url: '/api/v1/admin/orders/:orderId',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.adminGetOrdersList]: {
+    url: '/api/v1/admin/orders',
+    method: 'get',
     auth: true,
   },
   [Endpoints.adminDeleteOrder]: {

@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 
 import prismaMock from '../../lib/__mocks__/prisma';
 import { NotFoundError } from '../../utils/api-errors';
-import { deleteProductStock, getProductStocks, updateProductStock } from './stock';
+import { deleteStock, getProductStocks, updateStock } from './stock';
 
 jest.mock('../../lib/prisma');
 jest.mock('./color');
@@ -65,7 +65,7 @@ describe('stock module', () => {
     });
   });
 
-  describe('updateProductStock', () => {
+  describe('updateStock', () => {
     it('should update the stock of a product', async () => {
       // Mock data
       const stock: Prisma.StockUncheckedCreateInput = {
@@ -80,7 +80,7 @@ describe('stock module', () => {
       prismaMock.stock.upsert.mockResolvedValue(MOCK_STOCK);
 
       // Call the function
-      const result = await updateProductStock(stock);
+      const result = await updateStock(stock);
 
       // Assertions
       expect(result).toEqual(MOCK_STOCK);
@@ -105,35 +105,33 @@ describe('stock module', () => {
     });
   });
 
-  describe('deleteProductStock', () => {
+  describe('deleteStock', () => {
     it('should delete the stock of a product', async () => {
       // Mock data
-      const productId = 1;
       const stockId = 1;
 
       // Mock Prisma query
       prismaMock.stock.delete.mockResolvedValue(MOCK_STOCK);
 
       // Call the function
-      const result = await deleteProductStock(productId, stockId);
+      const result = await deleteStock(stockId);
 
       // Assertions
       expect(result).toEqual(MOCK_STOCK);
       expect(prismaMock.stock.delete).toHaveBeenCalledWith({
-        where: { id: stockId, productId },
+        where: { id: stockId },
       });
     });
 
     it('should throw NotFoundError if the stock does not exist', async () => {
       // Mock data
       const productId = 1;
-      const stockId = 1;
 
       // Mock Prisma query
       prismaMock.stock.delete.mockRejectedValue(Prisma.PrismaClientUnknownRequestError);
 
       // Call the function
-      await expect(deleteProductStock(productId, stockId)).rejects.toThrow(NotFoundError);
+      await expect(deleteStock(productId)).rejects.toThrow(NotFoundError);
     });
   });
 });

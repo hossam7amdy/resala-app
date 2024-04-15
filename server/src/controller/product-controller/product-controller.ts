@@ -1,21 +1,24 @@
-import { RequestHandler } from 'express';
 import { unlink } from 'fs/promises';
 
 import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
 import { logger } from '../../lib/logger';
 import { inventoryService } from '../../service';
-import { BadRequestError, NotFoundError } from '../../utils/api-errors';
+import { BadRequestError } from '../../utils/api-errors';
+import {
+  CreateProduct,
+  CreateProductImage,
+  DeleteProduct,
+  DeleteProductImage,
+  GetProduct,
+  GetProductsList,
+  ListProductImages,
+  ListProductStocks,
+  UpdateProduct,
+} from './product-controller.interface';
 
-export const getProduct: RequestHandler = async (req, res, next) => {
-  const deleted = Boolean(req.query.deleted);
-  const productId = Number(req.params.productId);
-
+export const getProduct: GetProduct = async (req, res, next) => {
   try {
-    if (isNaN(productId)) {
-      throw new BadRequestError('Invalid Product ID');
-    }
-
-    const product = await inventoryService.findProductById(productId, !!deleted);
+    const product = await inventoryService.findProductById(req.params.productId);
 
     return res.json({
       success: true,
@@ -26,17 +29,15 @@ export const getProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getProductsList: RequestHandler = async (req, res, next) => {
-  const deleted = Boolean(req.query.deleted);
-  const query = String(req.query.query || '');
-  const page = Math.max(Number(req.query.page || 1), 1);
-  const limit = Math.min(Number(req.query.limit || 10), 50);
-
+export const getProductsList: GetProductsList = async (req, res, next) => {
   try {
-    const { products, total } = await inventoryService.listProductsPaginated(
-      { page, limit, query },
-      deleted
-    );
+    const { page, limit, query, deleted } = req.query;
+    const { products, total } = await inventoryService.listProductsPaginated({
+      page,
+      limit,
+      query,
+      deleted,
+    });
 
     return res.json({
       success: true,
@@ -50,8 +51,9 @@ export const getProductsList: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const createProduct: RequestHandler = async (req, res, next) => {
+export const createProduct: CreateProduct = async (req, res, next) => {
   try {
+    // @ts-ignore - Incompatible types Decimal not assignable to number
     const product = await inventoryService.createProduct(req.body);
 
     return res.json({
@@ -63,15 +65,10 @@ export const createProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateProduct: RequestHandler = async (req, res, next) => {
-  const productId = Number(req.params.productId);
-
+export const updateProduct: UpdateProduct = async (req, res, next) => {
   try {
-    if (isNaN(productId)) {
-      throw new BadRequestError('Invalid Product ID');
-    }
-
-    const product = await inventoryService.updateProduct(productId, req.body);
+    // @ts-ignore - Incompatible types Decimal not assignable to number
+    const product = await inventoryService.updateProduct(req.params.productId, req.body);
     return res.json({
       success: true,
       data: product,
@@ -81,40 +78,29 @@ export const updateProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteProduct: RequestHandler = async (req, res, next) => {
-  const productId = parseInt(req.params.productId);
-
+export const deleteProduct: DeleteProduct = async (req, res, next) => {
   try {
-    if (isNaN(productId)) {
-      throw new BadRequestError('Invalid Product ID');
-    }
+    const product = await inventoryService.deleteProduct(req.params.productId);
 
-    await inventoryService.deleteProduct(productId);
+    return res.json({
+      success: true,
+      data: product,
+    });
   } catch (error) {
     return next(error);
   }
-
-  return res.json({
-    success: true,
-    message: 'Product deleted',
-  });
 };
 
-export const addProductImages: RequestHandler = async (req, res, next) => {
-  const productId = Number(req.params.productId);
+export const addProductImages: CreateProductImage = async (req, res, next) => {
   const files = req.files as Express.Multer.File[];
 
   try {
-    if (isNaN(productId)) {
-      throw new BadRequestError('Invalid Product ID');
-    }
-
     if (!files || !files.length) {
-      throw new NotFoundError('No files uploaded');
+      throw new BadRequestError('No files uploaded');
     }
 
     const urls = await Promise.all(files.map(file => uploadBlob(file.path)));
-    await inventoryService.addProductImages(productId, urls);
+    await inventoryService.addProductImages(req.body.productId, urls);
 
     return res.json({
       success: true,
@@ -127,15 +113,9 @@ export const addProductImages: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const listProductImages: RequestHandler = async (req, res, next) => {
-  const productId = Number(req.params.productId);
-
+export const listProductImages: ListProductImages = async (req, res, next) => {
   try {
-    if (isNaN(productId)) {
-      throw new BadRequestError('Invalid Product ID');
-    }
-
-    const images = await inventoryService.listProductImages(productId);
+    const images = await inventoryService.listProductImages(req.params.productId);
 
     return res.json({
       success: true,
@@ -146,14 +126,22 @@ export const listProductImages: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deleteProductImage: RequestHandler = async (req, res, next) => {
-  const imageId = Number(req.params.imageId);
-  const productId = Number(req.params.productId);
-
+export const listProductStocks: ListProductStocks = async (req, res, next) => {
   try {
-    if (isNaN(imageId) || isNaN(productId)) {
-      throw new BadRequestError('Invalid Image ID or Product ID');
-    }
+    const stocks = await inventoryService.getProductStocks(req.params.productId);
+
+    return res.json({
+      success: true,
+      data: stocks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProductImage: DeleteProductImage = async (req, res, next) => {
+  try {
+    const { imageId, productId } = req.params;
 
     const image = await inventoryService.deleteProductImage(imageId, productId);
     await deleteBlob(image.imageUrl);

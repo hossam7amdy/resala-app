@@ -1,20 +1,11 @@
-import { RequestHandler } from 'express';
-
 import { orderService, paymentService, shoppingService, userService } from '../../service';
 import { BadRequestError } from '../../utils/api-errors';
+import { CreateOrder, DeleteOrder, GetOrder, GetOrdersList } from './order-controller.interface';
 
-export const createOrder: RequestHandler = async (req, res, next) => {
-  const user = res.locals.user;
-  const { paymentMethod, note } = req.body;
-  const addressId = Number(req.body.addressId);
-
+export const createOrder: CreateOrder = async (req, res, next) => {
   try {
-    if (isNaN(addressId)) {
-      throw new BadRequestError('addressId must be a number');
-    }
-    if (!['CARD', 'CASH'].includes(paymentMethod)) {
-      throw new BadRequestError('Invalid payment method, [CARD, CASH] are allowed');
-    }
+    const user = res.locals.user;
+    const { addressId, paymentMethod, note } = req.body;
 
     // order items
     const cart = await shoppingService.getUserCart(user.id);
@@ -26,11 +17,11 @@ export const createOrder: RequestHandler = async (req, res, next) => {
     const { id, ...address } = await userService.findUserAddress(user.id, addressId);
 
     const orderItems = cart.map(item => ({
-      name: item.product.enName,
-      price: item.product.price,
+      name: item.stock.product.enName,
+      price: item.stock.product.price,
       quantity: item.quantity,
-      color: item.color.enName,
-      size: item.size.name,
+      color: item.stock.color.enName,
+      size: item.stock.size.name,
     }));
 
     // create order
@@ -69,14 +60,10 @@ export const createOrder: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getOrder: RequestHandler = async (req, res, next) => {
-  const user = res.locals.user;
-  const orderId = Number(req.params.orderId);
-
+export const getOrder: GetOrder = async (req, res, next) => {
   try {
-    if (isNaN(orderId)) {
-      throw new BadRequestError('Invalid order id');
-    }
+    const user = res.locals.user;
+    const orderId = req.params.orderId;
 
     const order = await orderService.findUserOrderById(orderId, user.id);
 
@@ -89,36 +76,36 @@ export const getOrder: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getOrdersList: RequestHandler = async (req, res, next) => {
-  const user = res.locals.user;
-
+export const getOrdersList: GetOrdersList = async (req, res, next) => {
   try {
-    const orders = await orderService.getUserOrders(user.id, {
-      query: '',
-      page: Number(req.query.page) || 0,
-      limit: Number(req.query.limit) || 10,
-    });
+    const user = res.locals.user;
+    const { page, limit } = req.query;
+
+    const { orders, total } = await orderService.getUserOrders(user.id, { page, limit });
 
     return res.status(200).json({
       success: true,
-      data: orders,
+      data: {
+        pagination: {
+          page,
+          limit,
+          total,
+        },
+        orders,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteOrder: RequestHandler = async (req, res, next) => {
-  const user = res.locals.user;
-  const orderId = Number(req.params.orderId);
-
+export const deleteOrder: DeleteOrder = async (req, res, next) => {
   try {
-    if (isNaN(orderId)) {
-      throw new BadRequestError('Invalid order id');
-    }
+    const user = res.locals.user;
+    const orderId = req.params.orderId;
 
     // cancel order
-    const order = await orderService.cancelOrder(orderId, user.id);
+    const order = await orderService.cancelUserOrder(orderId, user.id);
 
     // void payment
     if (order.paymentMethod === 'CARD' && order.paymentDetails) {
@@ -134,16 +121,45 @@ export const deleteOrder: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const adminDeleteOrder: RequestHandler = async (req, res, next) => {
-  const orderId = Number(req.params.orderId);
-
+export const adminGetOrder: GetOrder = async (req, res, next) => {
   try {
-    if (isNaN(orderId)) {
-      throw new BadRequestError('Invalid order id');
-    }
+    const order = await orderService.findOrderById(req.params.orderId);
 
+    return res.json({
+      success: true,
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const adminGetOrdersList: GetOrdersList = async (req, res, next) => {
+  try {
+    const { page, limit } = req.query;
+
+    const { orders, total } = await orderService.listOrders({ page, limit });
+
+    return res.json({
+      success: true,
+      data: {
+        pagination: {
+          page,
+          limit,
+          total,
+        },
+        orders,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const adminDeleteOrder: DeleteOrder = async (req, res, next) => {
+  try {
     // cancel order
-    const order = await orderService.adminCancelOrder(orderId);
+    const order = await orderService.adminCancelOrder(req.params.orderId);
 
     // void payment
     if (order.paymentMethod === 'CARD' && order.paymentDetails) {

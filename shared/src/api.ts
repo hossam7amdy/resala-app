@@ -1,146 +1,486 @@
 /**
  * @file This file contains all the types for the API requests and responses.
+ *
+ * It is used by the API service to validate the request and response data.
+ * It is also used by the API service to generate the API client.
  */
-import type { Address, Prisma, User } from '@prisma/client';
+import * as zod from 'zod';
 
-// Utility types
-interface SafeUser extends Omit<User, 'password' | 'iterations' | 'salt'> {}
+import {
+  AdminDeleteUserSchema,
+  AdminGetUserSchema,
+  AdminUpdateUserSchema,
+  ChangePasswordSchema,
+  CreateAddressSchema,
+  CreateCartSchema,
+  CreateCategorySchema,
+  CreateColorSchema,
+  CreateOrderSchema,
+  CreateProductImageSchema,
+  CreateProductSchema,
+  CreateSizeSchema,
+  CreateStockSchema,
+  CreateWishlistSchema,
+  DefaultQuerySchema,
+  DeleteAddressSchema,
+  DeleteCartSchema,
+  DeleteCategorySchema,
+  DeleteColorSchema,
+  DeleteProductImageSchema,
+  DeleteProductSchema,
+  DeleteSizeSchema,
+  DeleteStockSchema,
+  DeleteWishlistSchema,
+  ForgotPasswordSchema,
+  GetCategorySchema,
+  GetOrderSchema,
+  GetProductImages,
+  LoginSchema,
+  RegisterSchema,
+  ResetPasswordSchema,
+  UpdateAddressSchema,
+  UpdateCategorySchema,
+  UpdateColorSchema,
+  UpdateProductSchema,
+  UpdateProfileSchema,
+  UpdateSizeSchema,
+  UpdateStockSchema,
+  VerifyEmailSchema,
+} from './validation-schema';
 
-export interface ResBody {
+export type DefaultRequestQuery = zod.infer<typeof DefaultQuerySchema>;
+export type DefaultResponseBody = {
   success: boolean;
   message?: string;
-}
-export interface ReqQuery {
-  page?: string;
-  query?: string;
-  limit?: string;
-}
+};
 
 // Auth types
-export interface LoginRequest {
-  sign: string;
-  password: string;
-}
-export interface LoginResponse extends ResBody {
+export type LoginRequest = zod.infer<typeof LoginSchema>;
+export type LoginResponse = DefaultResponseBody & {
   data: {
-    expiresIn: number; // in seconds (e.g. 86400 for 1 day)
+    expiresAt: number; // timestamp in milliseconds
     accessToken: string;
     refreshToken: string;
   };
-}
+};
 
-export interface RegisterRequest
-  extends Pick<User, 'email' | 'phone' | 'password' | 'firstName' | 'lastName'> {}
-export interface RegisterResponse extends ResBody {}
+export type RegisterRequest = zod.infer<typeof RegisterSchema>;
+export type RegisterResponse = DefaultResponseBody;
 
-export interface VerifyEmailRequest {
-  email: User['email'];
-  token: string;
-}
-export interface VerifyEmailResponse extends ResBody {}
+export type VerifyEmailRequest = zod.infer<typeof VerifyEmailSchema>;
+export type VerifyEmailResponse = DefaultResponseBody;
 
-export interface ResendVerificationEmailRequest {}
-export interface ResendVerificationEmailResponse extends ResBody {}
+export type ResendVerificationEmailRequest = undefined; // No data needed
+export type ResendVerificationEmailResponse = DefaultResponseBody;
 
-export interface ForgotPasswordRequest extends Pick<User, 'email'> {}
-export interface ForgotPasswordResponse extends ResBody {
+export type ForgotPasswordRequest = zod.infer<typeof ForgotPasswordSchema>;
+export type ForgotPasswordResponse = DefaultResponseBody & {
   data: {
     resetToken: string;
-    expiresIn: number; // in seconds (e.g. 600 for 10 minutes)
+    expiresAt: number; // timestamp in milliseconds
   };
-}
+};
 
-export interface ResetPasswordRequest {
-  email: User['email'];
-  password: User['password'];
-  code: string;
-}
-export interface ResetPasswordResponse extends ResBody {}
+export type ResetPasswordRequest = zod.infer<typeof ResetPasswordSchema>;
+export type ResetPasswordResponse = DefaultResponseBody;
 
-export interface ChangePasswordRequest {
-  oldPassword: string;
-  newPassword: string;
-}
-export interface ChangePasswordResponse extends ResBody {}
+export type ChangePasswordRequest = zod.infer<typeof ChangePasswordSchema>;
+export type ChangePasswordResponse = DefaultResponseBody;
 
 // User types
-export interface GetProfileRequest {} // No data needed
-export interface GetProfileResponse extends ResBody {
-  data: SafeUser;
-}
+export type GetProfileRequest = undefined;
+export type GetProfileResponse = DefaultResponseBody & {
+  data: Omit<RegisterRequest['body'], 'password'> & {
+    id: number;
+    isVerified: boolean;
+    lastLogin: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+  };
+};
 
-export interface UpdateProfileRequest extends Pick<User, 'phone' | 'firstName' | 'lastName'> {}
-export interface UpdateProfileResponse extends ResBody {
-  data: SafeUser;
-}
+export type UpdateProfileRequest = zod.infer<typeof UpdateProfileSchema>;
+export type UpdateProfileResponse = DefaultResponseBody & {
+  data: GetProfileResponse['data'];
+};
 
-export interface GetUserAddressListRequest {}
-export interface GetUserAddressListResponse extends ResBody {
-  data: Address[];
-}
+export type AdminGetUserRequest = zod.infer<typeof AdminGetUserSchema>;
+export type AdminGetUserResponse = DefaultResponseBody & {
+  data: GetProfileResponse['data'];
+};
 
-export interface AdminGetUserRequest {} // Only path params
-export interface AdminGetUserResponse extends ResBody {
-  data: SafeUser;
-}
-
-export interface AdminGetUsersListRequest {} // No data needed
-export interface AdminGetUsersListResponse extends ResBody {
+export type AdminGetUsersListRequest = zod.infer<typeof DefaultQuerySchema>;
+export type AdminGetUsersListResponse = DefaultResponseBody & {
   data: {
     pagination: {
       page: number;
       limit: number;
       total: number; // Total number of users in the database (for pagination)
     };
-    users: SafeUser[];
+    users: GetProfileResponse['data'][];
   };
-}
+};
 
-export interface AdminUpdateUserRequest extends Pick<User, 'firstName' | 'lastName' | 'role'> {
-  phone?: User['phone'];
-}
-export interface AdminUpdateUserResponse extends ResBody {
-  data: SafeUser;
-}
+export type AdminUpdateUserRequest = zod.infer<typeof AdminUpdateUserSchema>;
+export type AdminUpdateUserResponse = DefaultResponseBody & {
+  data: GetProfileResponse['data'];
+};
 
-export interface AdminDeleteUserRequest {} // Only path params
-export interface AdminDeleteUserResponse extends ResBody {}
+export type AdminDeleteUserRequest = zod.infer<typeof AdminDeleteUserSchema>;
+export type AdminDeleteUserResponse = DefaultResponseBody;
 
 // Address types
-export interface CreateAddressRequest extends Prisma.AddressCreateInput {}
-export interface CreateAddressResponse extends ResBody {
-  data: Address;
-}
-
-export interface UpdateAddressRequest extends CreateAddressRequest {}
-export interface UpdateAddressResponse extends CreateAddressResponse {}
-
-export interface DeleteAddressRequest {} // Only path params
-export interface DeleteAddressResponse extends ResBody {
+export type CreateAddressRequest = zod.infer<typeof CreateAddressSchema>;
+export type CreateAddressResponse = DefaultResponseBody & {
   data: {
-    id: Address['id'];
+    id: number;
+    country: string;
+    state: string;
+    city: string;
+    street: string;
+    building: string | null;
+    floor: number | null;
+    address: string | null;
+    phone: string;
+    firstName: string;
+    lastName: string;
+    createdAt: Date;
+    updatedAt: Date;
   };
-}
+};
+
+export type UpdateAddressRequest = zod.infer<typeof UpdateAddressSchema>;
+export type UpdateAddressResponse = CreateAddressResponse;
+
+export type GetUserAddressListRequest = undefined; // No data needed
+export type GetUserAddressListResponse = DefaultResponseBody & {
+  data: CreateAddressResponse['data'][];
+};
+
+export type DeleteAddressRequest = zod.infer<typeof DeleteAddressSchema>;
+export type DeleteAddressResponse = DefaultResponseBody & {
+  data: CreateAddressResponse['data'];
+};
 
 // Category types
+export type CreateCategoryRequest = zod.infer<typeof CreateCategorySchema>;
+export type CreateCategoryResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    categoryId: number | null;
+    arName: string;
+    enName: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+  };
+};
+
+export type UpdateCategoryRequest = zod.infer<typeof UpdateCategorySchema>;
+export type UpdateCategoryResponse = CreateCategoryResponse;
+
+export type DeleteCategoryRequest = zod.infer<typeof DeleteCategorySchema>;
+export type DeleteCategoryResponse = CreateCategoryResponse;
+
+export type GetCategoryRequest = DeleteCategoryRequest;
+export type GetCategoryResponse = DefaultResponseBody & {
+  data: CreateCategoryResponse['data'] & {
+    subCategories: CreateCategoryResponse['data'][];
+  };
+};
+
+export type GetCategoriesListRequest = DefaultRequestQuery;
+export type GetCategoriesListResponse = DefaultResponseBody & {
+  data: GetCategoryResponse['data'][];
+};
+
+export type GetCategoryProductsRequest = zod.infer<typeof GetCategorySchema>;
+export type GetCategoryProductsResponse = DefaultResponseBody & {
+  data: CreateProductResponse['data'][];
+};
 
 // Product types
+export type CreateProductRequest = zod.infer<typeof CreateProductSchema>;
+export type CreateProductResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    categoryId: number;
+    arName: string;
+    enName: string;
+    arDescription: string;
+    enDescription: string;
+    price: any; // Decimal;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+  };
+};
+
+export type UpdateProductRequest = zod.infer<typeof UpdateProductSchema>;
+export type UpdateProductResponse = CreateProductResponse;
+
+export type DeleteProductRequest = zod.infer<typeof DeleteProductSchema>;
+export type DeleteProductResponse = CreateProductResponse;
+
+export type GetProductRequest = DeleteProductRequest;
+export type GetProductResponse = DefaultResponseBody & {
+  data: CreateProductResponse['data'] & {
+    images: GetProductImagesResponse['data'];
+    category: CreateCategoryResponse['data'];
+  };
+};
+
+export type GetProductsListRequest = DefaultRequestQuery;
+export type GetProductsListResponse = DefaultResponseBody & {
+  data: {
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of products in the database (for pagination)
+    };
+    products: CreateProductResponse['data'][];
+  };
+};
+
+// Product images types
+export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema>;
+export type CreateProductImageResponse = DefaultResponseBody;
+
+export type DeleteProductImageRequest = zod.infer<typeof DeleteProductImageSchema>;
+export type DeleteProductImageResponse = DefaultResponseBody;
+
+export type GetProductImagesRequest = zod.infer<typeof GetProductImages>;
+export type GetProductImagesResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    productId: number;
+    imageUrl: string;
+    createdAt: Date;
+  }[];
+};
+
+export type GetProductStocksRequest = zod.infer<typeof GetProductImages>;
+export type GetProductStocksResponse = DefaultResponseBody & {
+  data: Pick<
+    GetStockResponse['data'],
+    'id' | 'quantity' | 'createdAt' | 'updatedAt' | 'color' | 'size'
+  >[];
+};
 
 // Colors types
+export type CreateColorRequest = zod.infer<typeof CreateColorSchema>;
+export type CreateColorResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    code: string;
+    arName: string;
+    enName: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
+
+export type UpdateColorRequest = zod.infer<typeof UpdateColorSchema>;
+export type UpdateColorResponse = CreateColorResponse;
+
+export type DeleteColorRequest = zod.infer<typeof DeleteColorSchema>;
+export type DeleteColorResponse = CreateColorResponse;
+
+export type GetColorRequest = DeleteColorRequest;
+export type GetColorResponse = DeleteColorResponse;
+
+export type GetColorsListRequest = DefaultRequestQuery;
+export type GetColorsListResponse = DefaultResponseBody & {
+  data: CreateColorResponse['data'][];
+};
 
 // Sizes types
+export type CreateSizeRequest = zod.infer<typeof CreateSizeSchema>;
+export type CreateSizeResponse = DefaultResponseBody & {
+  data: { id: number; name: string; createdAt: Date; updatedAt: Date };
+};
+
+export type UpdateSizeRequest = zod.infer<typeof UpdateSizeSchema>;
+export type UpdateSizeResponse = CreateSizeResponse;
+
+export type DeleteSizeRequest = zod.infer<typeof DeleteSizeSchema>;
+export type DeleteSizeResponse = CreateSizeResponse;
+
+export type GetSizeRequest = DeleteSizeRequest;
+export type GetSizeResponse = DeleteSizeResponse;
+
+export type GetSizesListRequest = DefaultRequestQuery;
+export type GetSizesListResponse = DefaultResponseBody & {
+  data: CreateSizeResponse['data'][];
+};
 
 // Stock types
+export type CreateStockRequest = zod.infer<typeof CreateStockSchema>;
+export type CreateStockResponse = DefaultResponseBody & {
+  data: CreateStockRequest['body'] & {
+    id: number;
+    productId: number;
+    colorId: number;
+    sizeId: number;
+    quantity: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
 
-// Cart types
+export type UpdateStockRequest = zod.infer<typeof UpdateStockSchema>;
+export type UpdateStockResponse = CreateStockResponse;
 
-// Wishlist types
+export type DeleteStockRequest = zod.infer<typeof DeleteStockSchema>;
+export type DeleteStockResponse = CreateStockResponse;
 
-// Order types
+export type GetStockRequest = DeleteStockRequest;
+export type GetStockResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    quantity: number;
+    createdAt: Date;
+    updatedAt: Date;
+    product: CreateProductResponse['data'];
+    color: CreateColorResponse['data'];
+    size: CreateSizeResponse['data'];
+  };
+};
 
-// Payment types
+export type GetStocksListRequest = DefaultRequestQuery;
+export type GetStocksListResponse = DefaultResponseBody & {
+  data: {
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of stocks in the database (for pagination)
+    };
+    stocks: GetStockResponse['data'][];
+  };
+};
 
 // Shipping types
+export type CreateCartRequest = zod.infer<typeof CreateCartSchema>;
+export type CreateCartResponse = DefaultResponseBody & {
+  data: {
+    userId: number;
+    quantity: number;
+    createdAt: Date;
+    updatedAt: Date;
+    stock: {
+      id: number;
+      quantity: number;
+      product: CreateProductResponse['data'];
+      color: CreateColorResponse['data'];
+      size: CreateSizeResponse['data'];
+    };
+  }[];
+};
+
+export type GetCartRequest = {};
+export type GetCartResponse = CreateCartResponse;
+
+export type DeleteCartRequest = zod.infer<typeof DeleteCartSchema>;
+export type DeleteCartResponse = CreateCartResponse;
+
+export type CreateWishlistRequest = zod.infer<typeof CreateWishlistSchema>;
+export type CreateWishlistResponse = DefaultResponseBody & {
+  data: CreateProductResponse['data'][];
+};
+
+export type GetWishlistRequest = {};
+export type GetWishlistResponse = CreateWishlistResponse;
+
+export type DeleteWishlistRequest = zod.infer<typeof DeleteWishlistSchema>;
+export type DeleteWishlistResponse = CreateWishlistResponse;
+
+// Order types
+export type CreateOrderRequest = zod.infer<typeof CreateOrderSchema>;
+export type CreateOrderResponse = DefaultResponseBody & {
+  data: {
+    order: {
+      id: number;
+      userId: number | null;
+      subtotal: any; // Decimal;
+      discount: any; // Decimal;
+      total: any; // Decimal;
+      orderStatus: 'PENDING' | 'FULFILLED' | 'CANCELLED';
+      paymentMethod: string;
+      paymentStatus: 'PENDING' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
+      note: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    payment: {
+      token: string;
+      iframeUrl: string;
+    } | null;
+  };
+};
+
+export type GetOrderRequest = zod.infer<typeof GetOrderSchema>;
+export type GetOrderResponse = DefaultResponseBody & {
+  data: CreateOrderResponse['data']['order'] & {
+    user: GetProfileResponse['data'] | null;
+    orderItems: {
+      id: number;
+      orderId: number;
+      name: string;
+      color: string;
+      size: string;
+      quantity: number;
+      price: any; // Decimal;
+      createdAt: Date;
+      updatedAt: Date;
+    }[];
+    paymentDetails: {
+      id: number;
+      orderId: number;
+      transactionId: number;
+      transactionOrderId: number;
+      pending: boolean;
+      success: boolean;
+      isAuth: boolean;
+      isCapture: boolean;
+      amountCents: any; // Decimal;
+      isVoided: boolean;
+      isRefunded: boolean;
+      is3DSecure: boolean;
+      integrationId: number;
+      deliveryNeeded: boolean;
+      currency: string;
+      createdAt: Date;
+      updatedAt: Date;
+    } | null;
+    shippingDetails: {
+      id: number;
+      address: CreateAddressResponse['data'];
+      cost: any; // Decimal;
+      createdAt: Date;
+      updatedAt: Date;
+    } | null;
+  };
+};
+
+export type GetOrdersListRequest = DefaultRequestQuery;
+export type GetOrdersListResponse = DefaultResponseBody & {
+  data: {
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of orders in the database (for pagination)
+    };
+    orders: CreateOrderResponse['data']['order'][];
+  };
+};
+
+export type DeleteOrderRequest = GetOrderRequest;
+export type DeleteOrderResponse = DefaultResponseBody & {
+  data: CreateOrderResponse['data']['order'];
+};
+
+// Payment types
 
 // Review types
 
