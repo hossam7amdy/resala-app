@@ -84,19 +84,15 @@ describe('inventoryService - [ Product ]', () => {
 
   describe('listProductsPaginated', () => {
     it('should return list of products', async () => {
-      const pagination = {
-        page: 1,
-        limit: 10,
-        query: '',
-      };
-
       const products = [PRODUCT_OUTPUT];
       prismaMock.$transaction.mockResolvedValue([1, products] as any);
 
-      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated(
-        pagination,
-        false
-      );
+      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated({
+        page: 1,
+        limit: 10,
+        query: '',
+        deleted: false,
+      });
 
       expect(total).toBe(1);
       expect(returnedProducts).toEqual(products);
@@ -104,18 +100,14 @@ describe('inventoryService - [ Product ]', () => {
     });
 
     it('should return empty list of products', async () => {
-      const pagination = {
+      prismaMock.$transaction.mockResolvedValue([0, []] as any);
+
+      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated({
         page: 1,
         limit: 10,
         query: '',
-      };
-
-      prismaMock.$transaction.mockResolvedValue([0, []] as any);
-
-      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated(
-        pagination,
-        false
-      );
+        deleted: false,
+      });
 
       expect(total).toBe(0);
       expect(returnedProducts).toEqual([]);
@@ -123,19 +115,15 @@ describe('inventoryService - [ Product ]', () => {
     });
 
     it('should return list of deleted products', async () => {
-      const pagination = {
-        page: 1,
-        limit: 10,
-        query: '',
-      };
-
       const products = [PRODUCT_OUTPUT];
       prismaMock.$transaction.mockResolvedValue([1, products] as any);
 
-      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated(
-        pagination,
-        true
-      );
+      const { total, products: returnedProducts } = await inventoryService.listProductsPaginated({
+        page: 1,
+        limit: 10,
+        query: '',
+        deleted: true,
+      });
 
       expect(total).toBe(1);
       expect(returnedProducts).toEqual(products);
