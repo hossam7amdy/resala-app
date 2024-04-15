@@ -1,50 +1,8 @@
 import { User } from '@prisma/client';
-import {
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse,
-  AdminGetUserRequest,
-  AdminGetUserResponse,
-  AdminGetUsersListRequest,
-  AdminGetUsersListResponse,
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse,
-  ChangePasswordRequest,
-  ChangePasswordResponse,
-  CreateAddressRequest,
-  CreateAddressResponse,
-  DeleteAddressRequest,
-  DeleteAddressResponse,
-  ForgotPasswordRequest,
-  ForgotPasswordResponse,
-  GetProfileRequest,
-  GetProfileResponse,
-  GetUserAddressListRequest,
-  GetUserAddressListResponse,
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  RegisterResponse,
-  ReqQuery,
-  ResBody,
-  ResendVerificationEmailRequest,
-  ResendVerificationEmailResponse,
-  ResetPasswordRequest,
-  ResetPasswordResponse,
-  UpdateAddressRequest,
-  UpdateAddressResponse,
-  UpdateProfileRequest,
-  UpdateProfileResponse,
-  VerifyEmailRequest,
-  VerifyEmailResponse,
-} from '@resala/shared';
+import { DefaultResponseBody } from '@resala/shared';
 import { RequestHandler } from 'express';
 
-export interface Pagination {
-  page: number;
-  limit: number;
-  query: string;
-}
-
+// Local User Interface
 export interface LocalUser {
   user: Pick<
     User,
@@ -61,78 +19,18 @@ export interface LocalUser {
   >;
 }
 
-export type ExpressHandler<Req, Res> = RequestHandler<
-  string,
-  ResBody | Res,
-  Req,
-  ReqQuery,
-  LocalUser
->;
+// Express Types
+export type ExpressHandler<
+  ReqBody = undefined,
+  ResBody = DefaultResponseBody,
+  ReqQuery = undefined,
+  Locals extends Record<string, any> = {},
+> = RequestHandler<{}, ResBody, ReqBody, ReqQuery, Locals>;
 
-export type ExpressHandlerWithParams<Params, Req, Res> = RequestHandler<
-  Params,
-  ResBody | Res,
-  Req,
-  ReqQuery,
-  LocalUser
->;
-
-export type GetProfile = ExpressHandler<GetProfileRequest, GetProfileResponse>;
-
-export type UpdateProfile = ExpressHandler<UpdateProfileRequest, UpdateProfileResponse>;
-
-export type AdminGetUser = ExpressHandlerWithParams<
-  { userId: string },
-  AdminGetUserRequest,
-  AdminGetUserResponse
->;
-
-export type AdminUpdateUser = ExpressHandlerWithParams<
-  { userId: string },
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse
->;
-
-export type AdminGetUsersList = ExpressHandler<AdminGetUsersListRequest, AdminGetUsersListResponse>;
-
-export type AdminDeleteUser = ExpressHandlerWithParams<
-  { userId: string },
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse
->;
-
-export type CreateUserAddress = ExpressHandler<CreateAddressRequest, CreateAddressResponse>;
-
-export type UpdateUserAddress = ExpressHandlerWithParams<
-  { addressId: string },
-  UpdateAddressRequest,
-  UpdateAddressResponse
->;
-
-export type DeleteUserAddress = ExpressHandlerWithParams<
-  { addressId: string },
-  DeleteAddressRequest,
-  DeleteAddressResponse
->;
-
-export type GetUserAddressList = ExpressHandler<
-  GetUserAddressListRequest,
-  GetUserAddressListResponse
->;
-
-export type Login = ExpressHandler<LoginRequest, LoginResponse>;
-
-export type Register = ExpressHandler<RegisterRequest, RegisterResponse>;
-
-export type VerifyEmail = ExpressHandler<VerifyEmailRequest, VerifyEmailResponse>;
-
-export type ForgotPassword = ExpressHandler<ForgotPasswordRequest, ForgotPasswordResponse>;
-
-export type ResetPassword = ExpressHandler<ResetPasswordRequest, ResetPasswordResponse>;
-
-export type ChangePassword = ExpressHandler<ChangePasswordRequest, ChangePasswordResponse>;
-
-export type ResendVerificationEmail = ExpressHandler<
-  ResendVerificationEmailRequest,
-  ResendVerificationEmailResponse
->;
+export type ExpressHandlerWithParams<
+  ReqParams,
+  ReqBody = undefined,
+  ResBody = DefaultResponseBody,
+  ReqQuery = undefined,
+  Locals extends Record<string, any> = {},
+> = RequestHandler<ReqParams, ResBody, ReqBody, ReqQuery, Locals>;

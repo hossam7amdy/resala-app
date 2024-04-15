@@ -6,6 +6,42 @@ import { findColorById } from './color';
 import { findProductById } from './product';
 import { findSizeById } from './size';
 
+export async function findStockById(stockId: number) {
+  const stock = await prisma.stock.findUnique({
+    include: {
+      color: true,
+      size: true,
+      product: true,
+    },
+    where: { id: stockId },
+  });
+
+  if (!stock) {
+    throw new NotFoundError('Stock not found');
+  }
+
+  return stock;
+}
+
+export async function getStocksList(query: { page: number; limit: number }) {
+  const { page, limit } = query;
+
+  const [total, stocks] = await prisma.$transaction([
+    prisma.stock.count(),
+    prisma.stock.findMany({
+      include: {
+        color: true,
+        size: true,
+        product: true,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+  ]);
+
+  return { total, stocks };
+}
+
 export async function getProductStocks(productId: number) {
   return await prisma.stock.findMany({
     include: {
@@ -18,7 +54,7 @@ export async function getProductStocks(productId: number) {
   });
 }
 
-export async function updateProductStock(stock: Prisma.StockUncheckedCreateInput) {
+export async function updateStock(stock: Prisma.StockUncheckedCreateInput) {
   await Promise.all([
     findProductById(stock.productId),
     findColorById(stock.colorId),
@@ -45,13 +81,10 @@ export async function updateProductStock(stock: Prisma.StockUncheckedCreateInput
   });
 }
 
-export async function deleteProductStock(productId: number, stockId: number) {
+export async function deleteStock(stockId: number) {
   try {
     return await prisma.stock.delete({
-      where: {
-        id: stockId,
-        productId,
-      },
+      where: { id: stockId },
     });
   } catch (error) {
     throw new NotFoundError('Stock not found');

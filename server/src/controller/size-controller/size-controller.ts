@@ -1,18 +1,15 @@
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { RequestHandler } from 'express';
-
 import { inventoryService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
+import {
+  CreateSize,
+  DeleteSize,
+  GetSize,
+  GetSizesList,
+  UpdateSize,
+} from './size-controller.interface';
 
-export const getSize: RequestHandler = async (req, res, next) => {
-  const sizeId = Number(req.params.sizeId);
-
+export const getSize: GetSize = async (req, res, next) => {
   try {
-    if (isNaN(sizeId)) {
-      throw new BadRequestError('Size id must be a number');
-    }
-
-    const size = await inventoryService.findSizeById(sizeId);
+    const size = await inventoryService.findSizeById(req.params.sizeId);
 
     return res.json({
       success: true,
@@ -23,7 +20,7 @@ export const getSize: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getSizesList: RequestHandler = async (_, res, next) => {
+export const getSizesList: GetSizesList = async (_, res, next) => {
   try {
     const sizes = await inventoryService.listSizes();
 
@@ -36,7 +33,7 @@ export const getSizesList: RequestHandler = async (_, res, next) => {
   }
 };
 
-export const createSize: RequestHandler = async (req, res, next) => {
+export const createSize: CreateSize = async (req, res, next) => {
   try {
     const size = await inventoryService.createSize(req.body.name);
 
@@ -49,37 +46,26 @@ export const createSize: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateSize: RequestHandler = async (req, res, next) => {
-  const sizeId = Number(req.params.sizeId);
-
+export const updateSize: UpdateSize = async (req, res, next) => {
   try {
-    const size = await inventoryService.updateSize(sizeId, req.body.name);
+    const size = await inventoryService.updateSize(req.params.sizeId, req.body.name);
 
     return res.json({
       success: true,
       data: size,
     });
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError) {
-      return next(new BadRequestError('Size already exists'));
-    }
     next(error);
   }
 };
 
-export const deleteSize: RequestHandler = async (req, res, next) => {
-  const sizeId = Number(req.params.sizeId);
-
+export const deleteSize: DeleteSize = async (req, res, next) => {
   try {
-    if (isNaN(sizeId)) {
-      throw new BadRequestError('Size id must be a number');
-    }
-
-    await inventoryService.deleteSize(sizeId);
+    const size = await inventoryService.deleteSize(req.params.sizeId);
 
     return res.json({
       success: true,
-      message: 'Size deleted',
+      data: size,
     });
   } catch (error) {
     next(error);

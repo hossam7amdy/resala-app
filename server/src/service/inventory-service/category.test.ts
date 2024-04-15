@@ -24,7 +24,7 @@ const COMPLETE_SUB_CATEGORY = {
   deletedAt: null,
 };
 
-describe('InventoryService - [ Category ]', () => {
+describe('inventoryService - [ Category ]', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
