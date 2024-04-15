@@ -239,10 +239,11 @@ describe('userService', () => {
   describe('deleteUserAddress', () => {
     it('should delete a user address', async () => {
       prismaMock.userAddress.findFirst.mockResolvedValue({} as any);
+      prismaMock.address.delete.mockResolvedValue(MOCK_USER_ADDRESS as any);
 
       const result = await userService.deleteUserAddress(1, 2);
 
-      expect(result).toBe(true);
+      expect(result).toBe(MOCK_USER_ADDRESS);
       expect(prismaMock.userAddress.findFirst).toHaveBeenCalledTimes(1);
       expect(prismaMock.address.delete).toHaveBeenCalledWith({ where: { id: 2 } });
     });
