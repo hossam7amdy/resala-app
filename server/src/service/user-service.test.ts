@@ -152,7 +152,12 @@ describe('userService', () => {
     it('should list users paginated', async () => {
       prismaMock.$transaction.mockResolvedValue([1, [MOCK_USER]]);
 
-      const result = await userService.listUsersPaginated({ page: 1, limit: 10 });
+      const result = await userService.listUsersPaginated({
+        page: 1,
+        limit: 10,
+        query: '',
+        deleted: false,
+      });
 
       expect(result).toEqual({
         users: [MOCK_USER],
