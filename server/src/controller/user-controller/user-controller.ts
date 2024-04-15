@@ -9,7 +9,7 @@ import {
   GetUserAddressList,
   UpdateProfile,
   UpdateUserAddress,
-} from '../../types';
+} from './user-controller.interface';
 
 export const getProfile: GetProfile = async (_, res, next) => {
   const userId = res.locals.user.id;
@@ -46,10 +46,8 @@ export const updateProfile: UpdateProfile = async (req, res, next) => {
 };
 
 export const adminGetUser: AdminGetUser = async (req, res, next) => {
-  const userId = parseInt(req.params.userId);
-
   try {
-    const user = await userService.findUserById(userId);
+    const user = await userService.findUserById(req.params.userId);
 
     return res.json({
       success: true,
@@ -61,15 +59,8 @@ export const adminGetUser: AdminGetUser = async (req, res, next) => {
 };
 
 export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
-  const PAGE_SIZE = 10;
-  const { page, query } = req.query;
-
   try {
-    const { users, pagination } = await userService.listUsersPaginated({
-      page: Number(page || '1'),
-      query: query || '',
-      limit: PAGE_SIZE,
-    });
+    const { users, pagination } = await userService.listUsersPaginated(req.query);
 
     return res.json({
       success: true,
@@ -84,9 +75,8 @@ export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
 };
 
 export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
-  const userId = parseInt(req.params.userId);
   try {
-    await userService.deleteUser(userId);
+    await userService.deleteUser(req.params.userId);
 
     return res.json({
       success: true,
@@ -98,10 +88,8 @@ export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
 };
 
 export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
-  const userId = parseInt(req.params.userId);
-
   try {
-    const user = await userService.updateUser(userId, {
+    const user = await userService.updateUser(req.params.userId, {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       role: req.body.role,
@@ -149,7 +137,7 @@ export const createUserAddress: CreateUserAddress = async (req, res, next) => {
 
 export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const addressId = parseInt(req.params.addressId);
+  const addressId = req.params.addressId;
 
   try {
     const address = await userService.updateUserAddress(userId, addressId, req.body);
@@ -165,13 +153,14 @@ export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
 
 export const deleteUserAddress: UpdateUserAddress = async (req, res, next) => {
   const userId = res.locals.user.id;
-  const addressId = parseInt(req.params.addressId);
+  const addressId = req.params.addressId;
 
   try {
-    await userService.deleteUserAddress(userId, addressId);
+    const address = await userService.deleteUserAddress(userId, addressId);
 
     return res.json({
       success: true,
+      data: address,
     });
   } catch (error) {
     next(error);

@@ -1,11 +1,16 @@
-import { RequestHandler } from 'express';
-
 import { shoppingService } from '../../service';
+import {
+  AddItemToCart,
+  AddProductToWishlist,
+  GetUserCart,
+  GetUserWishlist,
+  RemoveItemFromCart,
+  RemoveProductFromWishlist,
+} from './shopping-controller.interface';
 
-export const getUserCart: RequestHandler = async (_, res, next) => {
-  const userId = res.locals.user.id;
-
+export const getUserCart: GetUserCart = async (_, res, next) => {
   try {
+    const userId = res.locals.user.id;
     const cart = await shoppingService.getUserCart(userId);
     return res.json({
       success: true,
@@ -16,11 +21,10 @@ export const getUserCart: RequestHandler = async (_, res, next) => {
   }
 };
 
-export const addItemToCart: RequestHandler = async (req, res, next) => {
-  const userId = res.locals.user.id;
-
+export const addItemToCart: AddItemToCart = async (req, res, next) => {
   try {
-    const cart = await shoppingService.addItemToCart({ userId, ...req.body });
+    const userId = res.locals.user.id;
+    const cart = await shoppingService.addItemToCart({ ...req.body, userId });
 
     return res.json({
       success: true,
@@ -31,11 +35,10 @@ export const addItemToCart: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const removeItemFromCart: RequestHandler = async (req, res, next) => {
-  const userId = res.locals.user.id;
-  const stockId = Number(req.params.stockId);
-
+export const removeItemFromCart: RemoveItemFromCart = async (req, res, next) => {
   try {
+    const userId = res.locals.user.id;
+    const stockId = req.params.stockId;
     const cart = await shoppingService.removeItemFromCart(userId, stockId);
 
     return res.json({
@@ -47,25 +50,23 @@ export const removeItemFromCart: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const removeUserCart: RequestHandler = async (_, res, next) => {
-  const userId = res.locals.user.id;
-
+export const removeUserCart: RemoveItemFromCart = async (_, res, next) => {
   try {
+    const userId = res.locals.user.id;
     await shoppingService.clearUserCart(userId);
 
     return res.json({
       success: true,
-      message: 'Cart removed',
+      data: [],
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const getUserWishlist: RequestHandler = async (_, res, next) => {
-  const userId = res.locals.user.id;
-
+export const getUserWishlist: GetUserWishlist = async (_, res, next) => {
   try {
+    const userId = res.locals.user.id;
     const wishlist = await shoppingService.getUserWishlist(userId);
     return res.json({
       success: true,
@@ -76,10 +77,9 @@ export const getUserWishlist: RequestHandler = async (_, res, next) => {
   }
 };
 
-export const addProductToWishlist: RequestHandler = async (req, res, next) => {
-  const userId = res.locals.user.id;
-
+export const addProductToWishlist: AddProductToWishlist = async (req, res, next) => {
   try {
+    const userId = res.locals.user.id;
     const wishlist = await shoppingService.addProductToWishlist(userId, req.body.productId);
 
     return res.json({
@@ -91,11 +91,10 @@ export const addProductToWishlist: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const removeProductFromWishlist: RequestHandler = async (req, res, next) => {
-  const userId = res.locals.user.id;
-  const productId = Number(req.params.productId);
-
+export const removeProductFromWishlist: RemoveProductFromWishlist = async (req, res, next) => {
   try {
+    const userId = res.locals.user.id;
+    const productId = req.params.productId;
     const wishlist = await shoppingService.removeProductFromWishlist(userId, productId);
 
     return res.json({
@@ -107,15 +106,14 @@ export const removeProductFromWishlist: RequestHandler = async (req, res, next) 
   }
 };
 
-export const removeUserWishlist: RequestHandler = async (_, res, next) => {
-  const userId = res.locals.user.id;
-
+export const removeUserWishlist: RemoveProductFromWishlist = async (_, res, next) => {
   try {
+    const userId = res.locals.user.id;
     await shoppingService.removeUserWishlist(userId);
 
     return res.json({
       success: true,
-      message: 'Wishlist removed',
+      data: [],
     });
   } catch (error) {
     next(error);

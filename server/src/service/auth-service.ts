@@ -1,4 +1,4 @@
-import { RegisterRequest } from '@resala/shared';
+import { Prisma } from '@prisma/client';
 import { TokenExpiredError } from 'jsonwebtoken';
 
 import { ENV } from '../config';
@@ -60,13 +60,13 @@ export const authenticate = async (sign: string, password: string) => {
   });
 
   return {
-    expiresIn: 60 * 60 * 24, // 1 day
+    expiresAt: Date.now() + 60 * 60 * 24 * 1000, // 1 day
     accessToken: accessToken,
     refreshToken: refreshToken,
   };
 };
 
-export const register = async (payload: RegisterRequest) => {
+export const register = async (payload: Omit<Prisma.UserCreateInput, 'salt' | 'iterations'>) => {
   const duplicate = await prisma.user.findFirst({
     where: { OR: [{ email: payload.email }, { phone: payload.phone }] },
   });
@@ -105,7 +105,8 @@ export const verifyEmail = async (email: string, token: string) => {
     throw new NotFoundError('User not found');
   }
 
-  if (email !== JWT.verifyJwt(token, 'VERIFY').email) {
+  const jwtObj = await validateJwtToken(token, ENV.JWT_VERIFY!);
+  if (email !== jwtObj.email) {
     throw new BadRequestError('Invalid token');
   }
 
@@ -154,11 +155,11 @@ export const forgotPassword = async (email: string) => {
   }
 
   // generate reset token
-  const expiresIn = 60 * 60; // 1 hour
+  const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
   const resetCode = generateRandomString(6).toUpperCase();
   const token = JWT.signJwt({ id: user.id, email, resetCode }, ENV.JWT_RESET!, { expiresIn: '1h' });
 
-  return { expiresIn, token, resetCode };
+  return { expiresAt, token, resetCode };
 };
 
 export const resetPassword = async (token: string, code: string, password: string) => {
@@ -192,7 +193,7 @@ export const refreshToken = async (token: string) => {
     expiresIn: '1d',
   });
   return {
-    expiresIn: 60 * 60 * 24, // 1 day
+    expiresAt: Date.now() + 60 * 60 * 24 * 1000, // 1 day
     accessToken: accessToken,
   };
 };

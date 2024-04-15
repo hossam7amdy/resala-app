@@ -1,6 +1,7 @@
 import { ENV } from '../../config';
 import { signJwt } from '../../lib/jwt-token';
 import { authService, communicationService } from '../../service';
+import { BadRequestError } from '../../utils/api-errors';
 import {
   ChangePassword,
   ForgotPassword,
@@ -9,13 +10,11 @@ import {
   ResendVerificationEmail,
   ResetPassword,
   VerifyEmail,
-} from '../../types';
-import { BadRequestError } from '../../utils/api-errors';
+} from './auth-controller.interface';
 
 export const login: Login = async (req, res, next) => {
-  const { sign, password } = req.body;
-
   try {
+    const { sign, password } = req.body;
     const token = await authService.authenticate(sign, password);
 
     return res.json({
@@ -90,14 +89,14 @@ export const forgotPassword: ForgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    const { resetCode, token, expiresIn } = await authService.forgotPassword(email);
+    const { resetCode, token, expiresAt } = await authService.forgotPassword(email);
 
     await communicationService.sendResetPasswordEmail(email, resetCode);
 
     return res.json({
       success: true,
       data: {
-        expiresIn,
+        expiresAt,
         resetToken: token,
       },
     });
