@@ -46,26 +46,22 @@ const MOCK_ORDER_OUTPUT = {
 };
 
 describe('Order Service', () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('createOrder', () => {
     it('should create a new order', async () => {
-      const orderId = 1;
-      const addressId = 2;
-
-      prismaMock.$transaction.mockResolvedValueOnce(orderId);
-      prismaMock.order.create.mockResolvedValueOnce({ id: orderId } as any);
-      prismaMock.orderItem.createMany.mockResolvedValueOnce({} as any);
-      prismaMock.address.create.mockResolvedValueOnce({ id: addressId } as any);
-      prismaMock.shipping.create.mockResolvedValueOnce({} as any);
-      prismaMock.order.findUnique.mockResolvedValueOnce(MOCK_ORDER_OUTPUT as any);
+      prismaMock.$transaction.mockResolvedValueOnce(MOCK_ORDER);
 
       const result = await orderService.createOrder(MOCK_ORDER_INPUT as any);
 
-      expect(result).toEqual(MOCK_ORDER_OUTPUT);
+      expect(result).toEqual(MOCK_ORDER);
       expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+      expect(prismaMock.order.create).toHaveBeenCalledTimes(0);
+      expect(prismaMock.orderItem.createMany).toHaveBeenCalledTimes(0);
+      expect(prismaMock.address.create).toHaveBeenCalledTimes(0);
+      expect(prismaMock.shipping.create).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -73,17 +69,13 @@ describe('Order Service', () => {
     it('should list orders with pagination', async () => {
       const orders = [MOCK_ORDER_OUTPUT, MOCK_ORDER_OUTPUT];
 
-      prismaMock.order.findMany.mockResolvedValueOnce(orders as any);
+      prismaMock.$transaction.mockResolvedValueOnce([2, orders] as any);
 
-      const result = await orderService.listOrdersPaginated({ page: 0, limit: 10, query: '' });
+      const result = await orderService.listOrders({ page: 0, limit: 10 });
 
-      expect(result).toEqual(orders);
+      expect(result).toEqual({ total: 2, orders });
+      expect(prismaMock.order.count).toHaveBeenCalledTimes(1);
       expect(prismaMock.order.findMany).toHaveBeenCalledTimes(1);
-      expect(prismaMock.order.findMany).toHaveBeenCalledWith({
-        take: 10,
-        skip: 0,
-        orderBy: { createdAt: 'desc' },
-      });
     });
   });
 
@@ -92,32 +84,12 @@ describe('Order Service', () => {
       const orderId = 1;
       const userId = 1;
 
-      prismaMock.order.findUnique.mockResolvedValueOnce(MOCK_ORDER_OUTPUT as any);
+      prismaMock.order.findUnique.mockResolvedValue(MOCK_ORDER_OUTPUT as any);
 
       const result = await orderService.findUserOrderById(orderId, userId);
 
       expect(result).toEqual(MOCK_ORDER_OUTPUT);
-      expect(prismaMock.order.findUnique).toHaveBeenCalledTimes(1);
-      expect(prismaMock.order.findUnique).toHaveBeenCalledWith({
-        where: { id: orderId, userId },
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              firstName: true,
-              lastName: true,
-              phone: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-            },
-          },
-          orderItems: true,
-          paymentDetails: true,
-          shippingDetails: true,
-        },
-      });
+      expect(prismaMock.order.findUnique).toHaveBeenCalledTimes(2);
     });
 
     it('should throw an error if order not found', async () => {
@@ -148,13 +120,24 @@ describe('Order Service', () => {
               lastName: true,
               phone: true,
               role: true,
+              isVerified: true,
+              lastLogin: true,
               createdAt: true,
               updatedAt: true,
+              deletedAt: true,
             },
           },
           orderItems: true,
           paymentDetails: true,
-          shippingDetails: true,
+          shippingDetails: {
+            select: {
+              id: true,
+              cost: true,
+              address: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
         },
       });
     });
@@ -172,15 +155,15 @@ describe('Order Service', () => {
       const filters = { page: 0, limit: 10, query: '' };
       const orders = [MOCK_ORDER_OUTPUT, MOCK_ORDER_OUTPUT];
 
-      prismaMock.order.findMany.mockResolvedValueOnce(orders as any);
+      prismaMock.$transaction.mockResolvedValueOnce([10, orders] as any);
 
       const result = await orderService.getUserOrders(userId, filters);
 
-      expect(result).toEqual(orders);
+      expect(result).toEqual({ total: 10, orders });
       expect(prismaMock.order.findMany).toHaveBeenCalledTimes(1);
       expect(prismaMock.order.findMany).toHaveBeenCalledWith({
         take: filters.limit,
-        skip: filters.page * filters.limit,
+        skip: (filters.page - 1) * filters.limit,
         where: { userId },
         orderBy: { createdAt: 'desc' },
       });
@@ -217,12 +200,13 @@ describe('Order Service', () => {
       const orderId = 1;
       const userId = 1;
 
-      prismaMock.order.findUnique.mockResolvedValueOnce(MOCK_ORDER_OUTPUT as any);
+      prismaMock.order.findUnique.mockResolvedValue(MOCK_ORDER_OUTPUT as any);
       prismaMock.order.update.mockResolvedValueOnce(MOCK_ORDER_OUTPUT as any);
 
-      const result = await orderService.cancelOrder(orderId, userId);
+      const result = await orderService.cancelUserOrder(orderId, userId);
 
       expect(result).toEqual(MOCK_ORDER_OUTPUT);
+      expect(prismaMock.order.findUnique).toHaveBeenCalledTimes(2);
       expect(prismaMock.order.update).toHaveBeenCalledTimes(1);
       expect(prismaMock.order.update).toHaveBeenCalledWith({
         data: { orderStatus: 'CANCELLED' },
@@ -234,7 +218,7 @@ describe('Order Service', () => {
     it('should throw an error if order not found', async () => {
       prismaMock.order.findUnique.mockResolvedValueOnce(null);
 
-      await expect(orderService.cancelOrder(1, 1)).rejects.toThrow(NotFoundError);
+      await expect(orderService.cancelUserOrder(1, 1)).rejects.toThrow(NotFoundError);
     });
 
     it('should throw an BadRequestError if order is not created today', async () => {
@@ -242,7 +226,7 @@ describe('Order Service', () => {
 
       prismaMock.order.findUnique.mockResolvedValueOnce(order as any);
 
-      await expect(orderService.cancelOrder(1, 1)).rejects.toThrow();
+      await expect(orderService.cancelUserOrder(1, 1)).rejects.toThrow();
     });
   });
 

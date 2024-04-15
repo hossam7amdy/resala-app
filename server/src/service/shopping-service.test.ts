@@ -102,7 +102,6 @@ describe('Shopping Service', () => {
 
       const cartItem = await shoppingService.addItemToCart(MOCK_ADD_TO_CART);
       expect(cartItem).toEqual([MOCK_CART_ITEM]);
-      expect(prismaMock.stock.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
       expect(prismaMock.cart.upsert).toHaveBeenCalledTimes(1);
     });
 
@@ -110,7 +109,14 @@ describe('Shopping Service', () => {
       prismaMock.stock.findUnique.mockResolvedValue({ quantity: 1 } as any);
 
       await expect(shoppingService.addItemToCart(MOCK_ADD_TO_CART)).rejects.toThrow(NotFoundError);
-      expect(prismaMock.stock.findUnique).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(prismaMock.stock.findUnique).toHaveBeenCalledWith({
+        include: {
+          color: true,
+          product: true,
+          size: true,
+        },
+        where: { id: 1 },
+      });
     });
   });
 

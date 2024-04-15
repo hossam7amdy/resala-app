@@ -65,7 +65,7 @@ describe('auth-service', () => {
       expect(result).toEqual({
         accessToken: 'jwt-token',
         refreshToken: 'jwt-token',
-        expiresIn: 60 * 60 * 24,
+        expiresAt: expect.any(Number),
       });
       expect(jwtTokenMock.signJwt).toHaveBeenCalledTimes(2);
       expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
@@ -377,7 +377,7 @@ describe('auth-service', () => {
       const result = await authService.refreshToken(token);
 
       expect(result).toEqual({
-        expiresIn: 60 * 60 * 24, // 1 day
+        expiresAt: expect.any(Number),
         accessToken: newToken,
       });
       expect(jwtTokenMock.verifyJwt).toHaveBeenCalledTimes(1);
