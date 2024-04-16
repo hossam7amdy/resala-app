@@ -22,7 +22,7 @@ export interface Login extends ExpressHandler<LoginRequest['body'], LoginRespons
 export interface Register extends ExpressHandler<RegisterRequest['body'], RegisterResponse> {}
 
 export interface VerifyEmail
-  extends ExpressHandler<VerifyEmailRequest['body'], VerifyEmailResponse> {}
+  extends ExpressHandler<{}, VerifyEmailResponse, VerifyEmailRequest['query']> {}
 
 export interface ForgotPassword
   extends ExpressHandler<ForgotPasswordRequest['body'], ForgotPasswordResponse> {}

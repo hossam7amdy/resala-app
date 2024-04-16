@@ -1,3 +1,5 @@
+import { RequestHandler } from 'express';
+
 import { orderService, paymentService } from '../../service';
 import { CreatePayment, GetPayment, GetPaymentList } from './payment-controller.interface';
 
@@ -49,5 +51,20 @@ export const getPaymentList: GetPaymentList = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const paymentResponse: RequestHandler = async (req, res) => {
+  try {
+    const success = req.query.success;
+
+    if (!success) {
+      throw new Error('Payment failed');
+    }
+
+    res.render('success', { message: 'Payment successful' });
+  } catch (error) {
+    const msg = (error as Error).message;
+    res.render('error', { message: msg });
   }
 };

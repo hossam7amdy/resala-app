@@ -2,12 +2,12 @@ import { ENV } from '../config';
 import { sendEmail } from '../lib/mailer';
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const href = `${ENV.SERVER_URL}/verify-email.html?token=${token}&email=${email}`;
+  const href = `${ENV.SERVER_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
 
   return sendEmail({
     to: email,
     subject: 'Email Verification',
-    html: `<p>Click <a href="${href}">here</a> to verify your email</p>`,
+    html: `<p>Click <a href="${href}" target="_blank">here</a> to verify your email</p>`,
   });
 };
 
