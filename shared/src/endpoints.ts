@@ -481,14 +481,14 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/payments',
     method: 'post',
   },
-  [Endpoints.paymentResponse]: {
-    url: '/api/v1/payments/response',
-    method: 'get',
-  },
   [Endpoints.getPayment]: {
     url: '/api/v1/payments/:paymentId',
     method: 'get',
     auth: true,
+  },
+  [Endpoints.paymentResponse]: {
+    url: '/api/v1/payments/response',
+    method: 'get',
   },
   [Endpoints.getPaymentsList]: {
     url: '/api/v1/payments',

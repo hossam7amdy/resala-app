@@ -262,6 +262,7 @@ export function createExpressRouter(legRequests: boolean) {
 
     // payment endpoints
     [Endpoints.createPayment]: [validate(CreatePaymentSchema), paymentCtrl.createPayment],
+    [Endpoints.paymentResponse]: [paymentCtrl.paymentResponse],
     [Endpoints.getPayment]: [
       validate(GetPaymentSchema),
       authorizeUser(['ADMIN', 'MODERATOR']),
@@ -272,7 +273,6 @@ export function createExpressRouter(legRequests: boolean) {
       authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
-    [Endpoints.paymentResponse]: [validate(GetPaymentSchema), paymentCtrl.paymentResponse],
   };
 
   /** Register all the routes and their handlers */
