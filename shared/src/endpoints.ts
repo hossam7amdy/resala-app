@@ -174,7 +174,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     sensitive: true,
   },
   [Endpoints.verifyEmail]: {
-    method: 'post',
+    method: 'get',
     url: '/api/v1/auth/verify-email',
   },
   [Endpoints.changePassword]: {

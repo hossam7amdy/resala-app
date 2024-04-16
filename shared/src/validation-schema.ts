@@ -75,7 +75,7 @@ export const RegisterSchema = zod.object({
 });
 
 export const VerifyEmailSchema = zod.object({
-  body: zod.object({
+  query: zod.object({
     email: UserSchema.shape.email,
     token: zod.string().min(80),
   }),
