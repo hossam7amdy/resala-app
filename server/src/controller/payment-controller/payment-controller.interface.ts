@@ -17,7 +17,7 @@ export interface CreatePayment
   > {}
 
 export interface GetPayment
-  extends ExpressHandlerWithParams<GetPaymentRequest['param'], {}, GetPaymentResponse> {}
+  extends ExpressHandlerWithParams<GetPaymentRequest['params'], {}, GetPaymentResponse> {}
 
 export interface GetPaymentList
   extends ExpressHandler<{}, GetPaymentsListResponse, GetPaymentsListRequest['query']> {}
