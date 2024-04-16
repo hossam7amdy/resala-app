@@ -42,15 +42,14 @@ export const register: Register = async (req, res, next) => {
   }
 };
 
-export const verifyEmail: VerifyEmail = async (req, res, next) => {
+export const verifyEmail: VerifyEmail = async (req, res) => {
   try {
-    const verified = await authService.verifyEmail(req.body.email, req.body.token);
+    await authService.verifyEmail(req.query.email, req.query.token);
 
-    return res.json({
-      success: verified,
-    });
+    res.render('success', { message: 'Email verified successfully' });
   } catch (error) {
-    next(error);
+    const msg = (error as Error).message;
+    res.render('error', { message: msg });
   }
 };
 

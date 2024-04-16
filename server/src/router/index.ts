@@ -272,6 +272,7 @@ export function createExpressRouter(legRequests: boolean) {
       authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
+    [Endpoints.paymentResponse]: [validate(GetPaymentSchema), paymentCtrl.paymentResponse],
   };
 
   /** Register all the routes and their handlers */
