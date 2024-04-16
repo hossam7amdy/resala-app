@@ -1,6 +1,5 @@
 import cors, { CorsOptions } from 'cors';
 import express from 'express';
-import path from 'path';
 import swaggerUI from 'swagger-ui-express';
 
 import { errMiddleware } from './middleware/error-middleware';
@@ -10,6 +9,8 @@ import swaggerDocument from './swagger.json';
 /** creates an instance of express application. */
 export function createExpressApp(logRequests: boolean = true) {
   const app = express();
+  app.set('views', 'src/views');
+  app.set('view engine', 'ejs');
 
   const corsConfig: CorsOptions = {
     origin: '*',
@@ -18,7 +19,8 @@ export function createExpressApp(logRequests: boolean = true) {
   // Middlewares
   app.use(cors(corsConfig));
   app.use(express.json());
-  app.use(express.static(path.join(__dirname, '..', 'public')));
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.static('src/public'));
 
   // Swagger UI
   app.use(
@@ -35,7 +37,7 @@ export function createExpressApp(logRequests: boolean = true) {
 
   // Catch all routes
   app.get('*', (_, res) => {
-    return res.sendFile(path.join(__dirname, '..', 'public/index.html'));
+    res.redirect('/api-docs');
   });
 
   app.use(errMiddleware);
