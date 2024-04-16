@@ -19,9 +19,11 @@ export const validate = (schema: AnyZodObject) => {
         params: req.params,
       });
 
-      req.body = body;
-      req.query = query;
-      req.params = params;
+      // Merge the validated data with the request object
+      req.body = { ...req.body, ...body };
+      req.query = { ...req.query, ...query };
+      req.params = { ...req.params, ...params };
+
       next();
     } catch (error) {
       next(new BadRequestError(formatZodError(error as ZodError)));
