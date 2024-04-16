@@ -68,6 +68,10 @@ export async function refundPayment(transactionId: number, amount: number) {
 export async function createPayment(hmac: string, payload: (typeof callback)['obj']) {
   const authenticated = await paymob.authenticateCallback(hmac, payload);
 
+  if (!authenticated) {
+    throw new Error('Unauthorized request');
+  }
+
   const payment = {
     orderId: Number(payload.order.merchant_order_id),
     transactionId: payload.id,
@@ -92,7 +96,7 @@ export async function createPayment(hmac: string, payload: (typeof callback)['ob
     where: { orderId: payment.orderId },
   });
 
-  return authenticated ? getPaymentStatus(payload) : undefined;
+  return getPaymentStatus(payload);
 }
 
 export async function getPayment(paymentId: number) {
@@ -107,12 +111,20 @@ export async function getPayment(paymentId: number) {
   return payment;
 }
 
-export async function getPaymentsList(pagination: { limit: number; page: number }) {
-  return await prisma.payment.findMany({
-    take: pagination.limit,
-    skip: pagination.page! * pagination.limit!,
-    orderBy: { createdAt: 'desc' },
-  });
+export async function getPaymentsList({ page, limit }: { limit: number; page: number }) {
+  const [total, payments] = await prisma.$transaction([
+    prisma.payment.count(),
+    prisma.payment.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  return {
+    total,
+    payments,
+  };
 }
 
 function getPaymentStatus(payment: (typeof callback)['obj']) {
