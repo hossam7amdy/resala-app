@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Endpoints configuration
+ *
+ * This file contains the configuration for all the endpoints in the application.
+ */
+
+/**
+ * Endpoint configuration type definition for the application.
+ */
 export type EndpointConfig = {
   url: string;
   method: 'put' | 'patch' | 'get' | 'post' | 'delete';
@@ -5,6 +14,9 @@ export type EndpointConfig = {
   sensitive?: boolean; // Skips logging request body
 };
 
+/**
+ * Enum for all the endpoints in the application.
+ */
 export enum Endpoints {
   healthz = 'healthz',
 
@@ -96,6 +108,20 @@ export enum Endpoints {
   getPaymentsList = 'getPaymentsList',
 }
 
+/**
+ * Function to add params to the endpoint url
+ *
+ * @param endpoint EndpointConfig
+ * @param params string[]
+ * @returns EndpointConfig
+ *
+ * @example
+ * withParams(ENDPOINT_CONFIGS.getProduct, '123')
+ * // returns { url: '/api/v1/products/123', method: 'get' }
+ *
+ * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
+ * // returns { url: '/api/v1/users/123', method: 'get' }
+ */
 export function withParams(endpoint: EndpointConfig, ...params: string[]): EndpointConfig {
   let url = endpoint.url;
   const placeholders = url.match(/:[^\/]*/g) || [];
@@ -112,6 +138,17 @@ export function withParams(endpoint: EndpointConfig, ...params: string[]): Endpo
   } as EndpointConfig;
 }
 
+/**
+ * Endpoint configuration for all the endpoints in the application.
+ *
+ * @example
+ *
+ * ENDPOINT_CONFIGS.healthz
+ * // returns { url: '/api/v1/healthz', method: 'get' }
+ *
+ * ENDPOINT_CONFIGS.login
+ * // returns { url: '/api/v1/auth/login', method: 'post', sensitive: true }
+ */
 export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   // health check
   [Endpoints.healthz]: { method: 'get', url: '/api/v1/healthz' },
