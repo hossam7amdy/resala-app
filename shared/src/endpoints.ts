@@ -106,6 +106,7 @@ export enum Endpoints {
   createPayment = 'createPayment',
   getPayment = 'getPayment',
   getPaymentsList = 'getPaymentsList',
+  paymentResponse = 'paymentResponse',
 }
 
 /**
@@ -479,6 +480,10 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.createPayment]: {
     url: '/api/v1/payments',
     method: 'post',
+  },
+  [Endpoints.paymentResponse]: {
+    url: '/api/v1/payments/response',
+    method: 'get',
   },
   [Endpoints.getPayment]: {
     url: '/api/v1/payments/:paymentId',
