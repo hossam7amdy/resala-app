@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <meta http-equiv="refresh" content="5;url=https://www.google.com" /> -->
+
+    <link rel="stylesheet" href="css/global.css" />
+    <title>Payments</title>
+  </head>
+  <body>
+    <main id="root"></main>
+
+    <script>
+      const rootEl = document.getElementById('root');
+
+      const divEl = document.createElement('div');
+      const pEl = document.createElement('p');
+      const imgEl = document.createElement('img');
+
+      divEl.classList.add('center');
+      divEl.append(imgEl, pEl);
+
+      (() => {
+        try {
+          const searchParam = new URLSearchParams(window.location.search);
+
+          const success = searchParam.get('success');
+
+          window.history.replaceState({}, document.title, window.location.pathname);
+
+          if (success !== 'true') {
+            throw new Error('Rejected');
+          }
+
+          imgEl.src = 'assets/success.gif';
+          imgEl.alt = 'success';
+
+          pEl.innerText = 'Approved';
+        } catch (e) {
+          console.error(e);
+          imgEl.src = 'assets/failed.gif';
+          imgEl.alt = 'failed';
+
+          pEl.innerText = e.message;
+        } finally {
+          rootEl.appendChild(divEl);
+        }
+      })();
+    </script>
+  </body>
+</html>

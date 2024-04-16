@@ -16,6 +16,7 @@ import {
   CreateCategorySchema,
   CreateColorSchema,
   CreateOrderSchema,
+  CreatePaymentSchema,
   CreateProductImageSchema,
   CreateProductSchema,
   CreateSizeSchema,
@@ -34,6 +35,7 @@ import {
   ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
+  GetPaymentSchema,
   GetProductImages,
   LoginSchema,
   RegisterSchema,
@@ -481,6 +483,46 @@ export type DeleteOrderResponse = DefaultResponseBody & {
 };
 
 // Payment types
+export type CreatePaymentRequest = {
+  query: zod.infer<typeof CreatePaymentSchema>['query'];
+  body: { [key: string]: any };
+};
+export type CreatePaymentResponse = {};
+
+export type GetPaymentRequest = zod.infer<typeof GetPaymentSchema>;
+export type GetPaymentResponse = DefaultResponseBody & {
+  data: {
+    id: number;
+    orderId: number;
+    transactionId: number;
+    transactionOrderId: number;
+    pending: boolean;
+    success: boolean;
+    isAuth: boolean;
+    isCapture: boolean;
+    amountCents: any; // Decimal;
+    isVoided: boolean;
+    isRefunded: boolean;
+    is3DSecure: boolean;
+    integrationId: number;
+    deliveryNeeded: boolean;
+    currency: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
+
+export type GetPaymentsListRequest = DefaultRequestQuery;
+export type GetPaymentsListResponse = DefaultResponseBody & {
+  data: {
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of payments in the database (for pagination)
+    };
+    payments: GetPaymentResponse['data'][];
+  };
+};
 
 // Review types
 

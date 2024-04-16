@@ -329,3 +329,16 @@ export const GetOrderSchema = zod.object({
     orderId: zod.coerce.number().positive(),
   }),
 });
+
+// Payment Schemas
+export const CreatePaymentSchema = zod.object({
+  query: zod.object({
+    hmac: zod.string(),
+  }),
+});
+
+export const GetPaymentSchema = zod.object({
+  params: zod.object({
+    paymentId: zod.coerce.number().positive(),
+  }),
+});
