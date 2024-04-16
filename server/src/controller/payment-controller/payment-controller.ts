@@ -56,7 +56,7 @@ export const getPaymentList: GetPaymentList = async (req, res, next) => {
 
 export const paymentResponse: RequestHandler = async (req, res) => {
   try {
-    const success = req.query.success;
+    const success = req.query.success === 'true';
 
     if (!success) {
       throw new Error('Payment failed');
