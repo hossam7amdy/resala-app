@@ -1,19 +1,11 @@
-import { RequestHandler } from 'express';
-
 import { orderService, paymentService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
+import { CreatePayment, GetPayment, GetPaymentList } from './payment-controller.interface';
 
-export const createPayment: RequestHandler = async (req, res, next) => {
-  const hmac = String(req.query.hmac);
-
+export const createPayment: CreatePayment = async (req, res, next) => {
   try {
-    if (!hmac) {
-      throw new BadRequestError('HMAC is required');
-    }
-
     const bodyObj = req.body['obj'];
 
-    const status = await paymentService.createPayment(hmac, bodyObj);
+    const status = await paymentService.createPayment(req.query.hmac, bodyObj);
 
     await orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
       paymentStatus: status,
@@ -25,15 +17,9 @@ export const createPayment: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getPayment: RequestHandler = async (req, res, next) => {
-  const paymentId = Number(req.params.paymentId);
-
+export const getPayment: GetPayment = async (req, res, next) => {
   try {
-    if (!paymentId) {
-      throw new BadRequestError('Invalid payment id');
-    }
-
-    const payment = await paymentService.getPayment(paymentId);
+    const payment = await paymentService.getPayment(req.params.paymentId);
 
     return res.json({
       success: true,
@@ -44,15 +30,11 @@ export const getPayment: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getPaymentList: RequestHandler = async (req, res, next) => {
-  const limit = Number(req.query.limit) || 10;
-  const page = Number(req.query.page) || 1;
-
+export const getPaymentList: GetPaymentList = async (req, res, next) => {
   try {
-    const payments = await paymentService.getPaymentsList({
-      limit: limit,
-      page: page - 1,
-    });
+    const { limit, page } = req.query;
+
+    const { payments, total } = await paymentService.getPaymentsList({ page, limit });
 
     return res.json({
       success: true,
@@ -60,6 +42,7 @@ export const getPaymentList: RequestHandler = async (req, res, next) => {
         pagination: {
           limit,
           page,
+          total,
         },
         payments,
       },

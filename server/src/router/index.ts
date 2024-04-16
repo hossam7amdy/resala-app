@@ -8,6 +8,7 @@ import {
   CreateCategorySchema,
   CreateColorSchema,
   CreateOrderSchema,
+  CreatePaymentSchema,
   CreateProductImageSchema,
   CreateProductSchema,
   CreateSizeSchema,
@@ -27,6 +28,7 @@ import {
   ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
+  GetPaymentSchema,
   LoginSchema,
   RegisterSchema,
   ResetPasswordSchema,
@@ -259,9 +261,14 @@ export function createExpressRouter(legRequests: boolean) {
     ],
 
     // payment endpoints
-    [Endpoints.createPayment]: [paymentCtrl.createPayment],
-    [Endpoints.getPayment]: [authorizeUser(['ADMIN', 'MODERATOR']), paymentCtrl.getPayment],
+    [Endpoints.createPayment]: [validate(CreatePaymentSchema), paymentCtrl.createPayment],
+    [Endpoints.getPayment]: [
+      validate(GetPaymentSchema),
+      authorizeUser(['ADMIN', 'MODERATOR']),
+      paymentCtrl.getPayment,
+    ],
     [Endpoints.getPaymentsList]: [
+      validate(DefaultQuerySchema),
       authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
