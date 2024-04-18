@@ -1,25 +1,26 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import superset from 'supertest';
-import TestAgent from 'supertest/lib/agent';
+import TestAgent from 'supertest/lib/agent.js';
+import { describe, expect, it, vi } from 'vitest';
 
-import { getTestServer } from './testserver';
+import { getTestServer } from './testserver.js';
 
-jest.mock('nodemailer', () => {
+vi.mock('nodemailer', () => {
   return {
-    createTransport: jest.fn().mockReturnValue({
-      sendMail: jest.fn().mockResolvedValue(Promise.resolve(true) as never),
+    createTransport: vi.fn().mockReturnValue({
+      sendMail: vi.fn().mockResolvedValue(Promise.resolve(true) as never),
     }),
   };
 });
 
 /**
  * Mocking the azure storage module
- * @see https://remarkablemark.org/blog/2018/06/28/jest-mock-default-named-export/
+ * @see https://remarkablemark.org/blog/2018/06/28/vi-mock-default-named-export/
  */
-jest.mock('../../src/lib/azure-storage/azure', () => ({
+vi.mock('../../src/lib/azure-storage/azure.js', () => ({
   __esModule: true, // this property makes it work
-  uploadBlob: jest.fn(),
-  deleteBlob: jest.fn(),
+  uploadBlob: vi.fn(),
+  deleteBlob: vi.fn(),
 }));
 
 describe('TEST /auth endpoints', () => {

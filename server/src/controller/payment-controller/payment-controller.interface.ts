@@ -7,7 +7,7 @@ import {
   GetPaymentsListResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams } from '../../types';
+import { ExpressHandler, ExpressHandlerWithParams } from '../../types/index.js';
 
 export interface CreatePayment
   extends ExpressHandler<

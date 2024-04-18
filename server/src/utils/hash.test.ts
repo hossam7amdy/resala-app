@@ -1,4 +1,4 @@
-import { hash } from './hash';
+import { hash } from './hash.js';
 
 describe('hash', () => {
   it('should hash a string using pbkdf2 algorithm with sha512 and base64 encoding', async () => {

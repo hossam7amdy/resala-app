@@ -1,11 +1,11 @@
-import { inventoryService } from '../../service';
+import { inventoryService } from '../../service/index.js';
 import {
   CreateColor,
   DeleteColor,
   GetColor,
   GetColorsList,
   UpdateColor,
-} from './color-controller.interface';
+} from './color-controller.interface.js';
 
 export const getColor: GetColor = async (req, res, next) => {
   try {

@@ -1,8 +1,10 @@
-import { inventoryService } from '..';
-import prismaMock from '../../lib/__mocks__/prisma';
-import { ConflictError, NotFoundError } from '../../utils/api-errors';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-jest.mock('../../lib/prisma');
+import prismaMock from '../../lib/__mocks__/prisma.js';
+import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
+import { inventoryService } from '../index.js';
+
+vi.mock('../../lib/prisma/index.js');
 
 const MOCK_SIZE = {
   id: 1,
@@ -13,7 +15,7 @@ const MOCK_SIZE = {
 
 describe('Inventory Service [ Size ]', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('findSizeById', () => {

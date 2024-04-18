@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
-import prisma from '../../lib/prisma';
-import { ConflictError, NotFoundError } from '../../utils/api-errors';
+import prisma from '../../lib/prisma/index.js';
+import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 
 export async function findColorById(sizeId: number) {
   const color = await prisma.color.findUnique({

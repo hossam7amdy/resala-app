@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-import { logger } from '../lib/logger';
-import { APPError } from '../utils/api-errors';
+import { logger } from '../lib/logger/index.js';
+import { APPError } from '../utils/api-errors.js';
 
 /**
  * @description catch errors from async functions

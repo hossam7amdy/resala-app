@@ -1,7 +1,7 @@
 import superset from 'supertest';
-import TestAgent from 'supertest/lib/agent';
+import TestAgent from 'supertest/lib/agent.js';
 
-import { createExpressApp } from '../app';
+import { createExpressApp } from '../app.js';
 
 let client: TestAgent<superset.Test>;
 

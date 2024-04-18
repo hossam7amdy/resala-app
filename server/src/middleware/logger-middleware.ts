@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 
-import { logger } from '../lib/logger';
+import { logger } from '../lib/logger/index.js';
 
 /** logging incoming requests */
 export const loggerMiddleware: RequestHandler = (req, _, next) => {

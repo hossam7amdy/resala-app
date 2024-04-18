@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 
-import { createExpressApp } from './app';
-import { ENV } from './config/env';
+import { createExpressApp } from './app.js';
+import { ENV } from './config/env.js';
 
 const app = createExpressApp();
 

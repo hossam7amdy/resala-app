@@ -1,7 +1,7 @@
 import zod from 'zod';
 
-import { ROLE } from './enums';
-import { validationPatterns } from './validation-patterns';
+import { ROLE } from './enums.js';
+import { validationPatterns } from './validation-patterns.js';
 
 const UserSchema = zod.object({
   email: zod.string().min(5).max(128).email(),

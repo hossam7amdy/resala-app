@@ -1,8 +1,10 @@
-import { orderService } from '.';
-import prismaMock from '../lib/__mocks__/prisma';
-import { NotFoundError } from '../utils/api-errors';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-jest.mock('../lib/prisma');
+import prismaMock from '../lib/__mocks__/prisma.js';
+import { NotFoundError } from '../utils/api-errors.js';
+import { orderService } from './index.js';
+
+vi.mock('../lib/prisma/index.js');
 
 const MOCK_ORDER_INPUT = {
   userId: 1,
@@ -47,7 +49,7 @@ const MOCK_ORDER_OUTPUT = {
 
 describe('Order Service', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('createOrder', () => {
