@@ -12,11 +12,18 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "lib": ["ESNext"],
-    "moduleResolution": "Node",
+    "lib": ["ESNext", "ES2020", "ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "noEmit": true,
-    "outDir": "./dist"
+    "outDir": "dist"
   },
-  "include": ["src/**/*", "prisma/seed.ts"]
+  "include": ["src/**/*", "swagger.yml"],
+  "exclude": [
+    "node_modules",
+    "src/tests",
+    "src/lib/__mocks__",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

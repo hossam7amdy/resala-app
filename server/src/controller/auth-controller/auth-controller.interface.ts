@@ -15,7 +15,7 @@ import {
   VerifyEmailResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, LocalUser } from '../../types';
+import { ExpressHandler, LocalUser } from '../../types/index.js';
 
 export interface Login extends ExpressHandler<LoginRequest['body'], LoginResponse> {}
 

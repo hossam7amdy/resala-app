@@ -1,4 +1,4 @@
-import { userService } from '../../service';
+import { userService } from '../../service/index.js';
 import {
   AdminDeleteUser,
   AdminGetUser,
@@ -9,7 +9,7 @@ import {
   GetUserAddressList,
   UpdateProfile,
   UpdateUserAddress,
-} from './user-controller.interface';
+} from './user-controller.interface.js';
 
 export const getProfile: GetProfile = async (_, res, next) => {
   const userId = res.locals.user.id;

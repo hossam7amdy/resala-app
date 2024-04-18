@@ -1,19 +1,21 @@
-import prismaMock from '../lib/__mocks__/prisma';
-import * as jwtTokenMock from '../lib/jwt-token';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import prismaMock from '../lib/__mocks__/prisma.js';
+import * as jwtTokenMock from '../lib/jwt-token/index.js';
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
   UnauthorizedError,
-} from '../utils/api-errors';
-import * as passwordUtilMock from '../utils/password';
-import * as randomUtilMock from '../utils/random';
-import * as authService from './auth-service';
+} from '../utils/api-errors.js';
+import * as passwordUtilMock from '../utils/password.js';
+import * as randomUtilMock from '../utils/random.js';
+import * as authService from './auth-service.js';
 
-jest.mock('../lib/prisma');
-jest.mock('../utils/password');
-jest.mock('../utils/random');
-jest.mock('../lib/jwt-token');
+vi.mock('../lib/prisma/index.js');
+vi.mock('../utils/password.js');
+vi.mock('../utils/random.js');
+vi.mock('../lib/jwt-token/index.js');
 
 const MOCK_USER = {
   id: 1,
@@ -48,7 +50,7 @@ const SELECT = {
 
 describe('auth-service', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('authenticate', () => {
@@ -57,8 +59,8 @@ describe('auth-service', () => {
     it('should authenticate a user with valid credentials', async () => {
       prismaMock.user.findFirst.mockResolvedValue(MOCK_USER as any);
 
-      jest.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(true);
-      jest.spyOn(jwtTokenMock, 'signJwt').mockReturnValue('jwt-token');
+      vi.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(true);
+      vi.spyOn(jwtTokenMock, 'signJwt').mockReturnValue('jwt-token');
 
       const result = await authService.authenticate(sign, password);
 
@@ -92,7 +94,7 @@ describe('auth-service', () => {
     it('should throw BadRequestError for invalid credentials', async () => {
       prismaMock.user.findFirst.mockResolvedValue(MOCK_USER as any);
 
-      jest.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(false);
+      vi.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(false);
 
       await expect(authService.authenticate(sign, 'invalid-password')).rejects.toThrow(
         BadRequestError
@@ -110,7 +112,7 @@ describe('auth-service', () => {
       prismaMock.user.findFirst.mockResolvedValue(null);
       prismaMock.user.create.mockResolvedValue(MOCK_USER as any);
 
-      jest.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
+      vi.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
         hashedPassword: 'hashed-password',
         salt: 'salt',
         iterations: 10,
@@ -169,7 +171,7 @@ describe('auth-service', () => {
   describe('verifyEmail', () => {
     it('should verify the email address for a user', async () => {
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: MOCK_USER.email });
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: MOCK_USER.email });
 
       const email = MOCK_USER.email;
       const token = 'token';
@@ -200,7 +202,7 @@ describe('auth-service', () => {
 
     it('should throw BadRequestError if verification token is invalid', async () => {
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: 'invalid-email' });
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: 'invalid-email' });
 
       await expect(authService.verifyEmail(MOCK_USER.email, 'invalid-token')).rejects.toThrow(
         BadRequestError
@@ -222,8 +224,8 @@ describe('auth-service', () => {
       const newHashedPassword = 'new-hashed-password';
 
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(true);
-      jest.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
+      vi.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(true);
+      vi.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
         hashedPassword: newHashedPassword,
         iterations: newIterations,
         salt: newSalt,
@@ -264,7 +266,7 @@ describe('auth-service', () => {
 
     it('should throw UnauthorizedError if old password is incorrect', async () => {
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(false);
+      vi.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(false);
 
       await expect(
         authService.changePassword(MOCK_USER.email, 'invalid-password', 'new-password')
@@ -282,8 +284,8 @@ describe('auth-service', () => {
       const randomCode = 'ABC123';
 
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(randomUtilMock, 'generateRandomString').mockReturnValue(randomCode);
-      jest.spyOn(jwtTokenMock, 'signJwt').mockReturnValue('jwt-token');
+      vi.spyOn(randomUtilMock, 'generateRandomString').mockReturnValue(randomCode);
+      vi.spyOn(jwtTokenMock, 'signJwt').mockReturnValue('jwt-token');
 
       await authService.forgotPassword(email);
 
@@ -316,11 +318,13 @@ describe('auth-service', () => {
       const newHashedPassword = 'new-hashed-password';
 
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest
-        .spyOn(jwtTokenMock, 'verifyJwt')
-        .mockReturnValue({ id: MOCK_USER.id, email: MOCK_USER.email, resetCode: code });
-      jest.spyOn(randomUtilMock, 'generateRandomString').mockReturnValue(code);
-      jest.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({
+        id: MOCK_USER.id,
+        email: MOCK_USER.email,
+        resetCode: code,
+      });
+      vi.spyOn(randomUtilMock, 'generateRandomString').mockReturnValue(code);
+      vi.spyOn(passwordUtilMock, 'genHashedPassword').mockResolvedValue({
         hashedPassword: newHashedPassword,
         iterations: newIterations,
         salt: newSalt,
@@ -342,7 +346,7 @@ describe('auth-service', () => {
 
     it('should throw BadRequestError if reset token or code is invalid', async () => {
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: 'invalid-email' });
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({ id: -1, email: 'invalid-email' });
 
       await expect(
         authService.resetPassword('invalid-token', 'invalid-code', 'new-password')
@@ -367,9 +371,9 @@ describe('auth-service', () => {
       const token = 'jwt token';
       const newToken = 'new jwt token';
 
-      jest.spyOn(jwtTokenMock, 'signJwt').mockReturnValue(newToken);
+      vi.spyOn(jwtTokenMock, 'signJwt').mockReturnValue(newToken);
       prismaMock.user.findUnique.mockResolvedValue(MOCK_USER as any);
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({
         id: MOCK_USER.id,
         email: MOCK_USER.email,
       });
@@ -385,7 +389,7 @@ describe('auth-service', () => {
     });
 
     it('should throw TokenExpiredError if token is expired', async () => {
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockImplementation(() => {
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockImplementation(() => {
         throw new Error('TokenExpiredError');
       });
 
@@ -401,9 +405,10 @@ describe('auth-service', () => {
       const token = 'jwt token';
       const secret = 'secret';
 
-      jest
-        .spyOn(jwtTokenMock, 'verifyJwt')
-        .mockReturnValue({ id: MOCK_USER.id, email: MOCK_USER.email });
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({
+        id: MOCK_USER.id,
+        email: MOCK_USER.email,
+      });
 
       const result = await authService.validateJwtToken(token, secret);
 
@@ -412,7 +417,7 @@ describe('auth-service', () => {
     });
 
     it('should throw UnauthorizedError if token is invalid', async () => {
-      jest.spyOn(jwtTokenMock, 'verifyJwt').mockImplementation(() => {
+      vi.spyOn(jwtTokenMock, 'verifyJwt').mockImplementation(() => {
         throw new Error('Invalid token');
       });
 

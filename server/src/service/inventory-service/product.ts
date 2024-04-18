@@ -1,7 +1,7 @@
 import { Product } from '@prisma/client';
 
-import prisma from '../../lib/prisma';
-import { ConflictError, NotFoundError } from '../../utils/api-errors';
+import prisma from '../../lib/prisma/index.js';
+import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 
 export const findProductById = async (id: number, deleted: boolean = false) => {
   const product = await prisma.product.findUnique({

@@ -1,4 +1,4 @@
-import { shoppingService } from '../../service';
+import { shoppingService } from '../../service/index.js';
 import {
   AddItemToCart,
   AddProductToWishlist,
@@ -6,7 +6,7 @@ import {
   GetUserWishlist,
   RemoveItemFromCart,
   RemoveProductFromWishlist,
-} from './shopping-controller.interface';
+} from './shopping-controller.interface.js';
 
 export const getUserCart: GetUserCart = async (_, res, next) => {
   try {

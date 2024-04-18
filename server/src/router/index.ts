@@ -54,12 +54,12 @@ import {
   sizeCtrl,
   stockCtrl,
   userCtrl,
-} from '../controller';
-import { authenticateToken, authorizeUser } from '../middleware/auth-middleware';
-import { errHandler } from '../middleware/error-middleware';
-import { loggerMiddleware } from '../middleware/logger-middleware';
-import { uploadMultiple } from '../middleware/upload-middleware';
-import { validate } from '../middleware/validate-middleware';
+} from '../controller/index.js';
+import { authenticateToken, authorizeUser } from '../middleware/auth-middleware.js';
+import { errHandler } from '../middleware/error-middleware.js';
+import { loggerMiddleware } from '../middleware/logger-middleware.js';
+import { uploadMultiple } from '../middleware/upload-middleware.js';
+import { validate } from '../middleware/validate-middleware.js';
 
 export function createExpressRouter(legRequests: boolean) {
   const router = Router();
@@ -151,12 +151,12 @@ export function createExpressRouter(legRequests: boolean) {
       authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProduct,
     ],
-    [Endpoints.listProductImages]: [validate(DefaultQuerySchema), productCtrl.listProductImages],
+    [Endpoints.listProductImages]: [validate(DeleteProductSchema), productCtrl.listProductImages],
     [Endpoints.getProductStocks]: [validate(DeleteProductSchema), productCtrl.listProductStocks],
     [Endpoints.addProductImages]: [
-      validate(CreateProductImageSchema),
       authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMultiple('images'),
+      validate(CreateProductImageSchema),
       productCtrl.addProductImages,
     ],
     [Endpoints.deleteProductImage]: [

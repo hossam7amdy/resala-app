@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 
-import { JwtObject } from '../../types';
+import { JwtObject } from '../../types/index.js';
 
 /**
  * Sign JWT token with object

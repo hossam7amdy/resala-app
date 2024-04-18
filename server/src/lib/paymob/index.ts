@@ -1,10 +1,10 @@
-import { authenticate } from './authenticate';
-import { authenticateCallback } from './authenticate-callback';
-import { checkout } from './checkout';
-import { createOrder } from './create-order';
-import { refundTransaction } from './refund-transaction';
-import { retrieveTransactionById, retrieveTransactionByOrderDetails } from './retrieve-transaction';
-import { voidTransaction } from './void-transaction';
+import { authenticate } from './authenticate.js';
+import { authenticateCallback } from './authenticate-callback.js';
+import { checkout } from './checkout.js';
+import { createOrder } from './create-order.js';
+import { refundTransaction } from './refund-transaction.js';
+import { retrieveTransactionById, retrieveTransactionByOrderDetails } from './retrieve-transaction.js';
+import { voidTransaction } from './void-transaction.js';
 
 export const paymob = Object.freeze({
   authenticate,

@@ -1,11 +1,11 @@
-import { inventoryService } from '../../service';
+import { inventoryService } from '../../service/index.js';
 import {
   CreateSize,
   DeleteSize,
   GetSize,
   GetSizesList,
   UpdateSize,
-} from './size-controller.interface';
+} from './size-controller.interface.js';
 
 export const getSize: GetSize = async (req, res, next) => {
   try {

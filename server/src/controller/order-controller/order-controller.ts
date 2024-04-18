@@ -1,6 +1,6 @@
-import { orderService, paymentService, shoppingService, userService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
-import { CreateOrder, DeleteOrder, GetOrder, GetOrdersList } from './order-controller.interface';
+import { orderService, paymentService, shoppingService, userService } from '../../service/index.js';
+import { BadRequestError } from '../../utils/api-errors.js';
+import { CreateOrder, DeleteOrder, GetOrder, GetOrdersList } from './order-controller.interface.js';
 
 export const createOrder: CreateOrder = async (req, res, next) => {
   try {

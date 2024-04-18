@@ -1,7 +1,7 @@
-export * as authService from './auth-service';
-export * as userService from './user-service';
-export * as inventoryService from './inventory-service';
-export * as communicationService from './communication-service';
-export * as shoppingService from './shopping-service';
-export * as orderService from './order-service';
-export * as paymentService from './payment-service';
+export * as authService from './auth-service.js';
+export * as userService from './user-service.js';
+export * as inventoryService from './inventory-service/index.js';
+export * as communicationService from './communication-service.js';
+export * as shoppingService from './shopping-service.js';
+export * as orderService from './order-service.js';
+export * as paymentService from './payment-service.js';

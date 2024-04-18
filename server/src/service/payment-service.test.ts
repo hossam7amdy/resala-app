@@ -1,9 +1,10 @@
 import { Address } from '@prisma/client';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { paymentService } from '.';
-import prismaMock from '../lib/__mocks__/prisma';
+import prismaMock from '../lib/__mocks__/prisma.js';
 import callback from '../lib/paymob/callback.json';
-import { NotFoundError } from '../utils/api-errors';
+import { NotFoundError } from '../utils/api-errors.js';
+import { paymentService } from './index.js';
 
 const MOCK_CREATE_PAYMENT = {
   email: 'example@mail.com',
@@ -49,26 +50,26 @@ const MOCK_PAYMENT = {
   updatedAt: new Date(),
 };
 
-jest.mock('../lib/prisma');
-jest.mock('../lib/paymob', () => ({
+vi.mock('../lib/prisma/index.js');
+vi.mock('../lib/paymob/index.js', () => ({
   paymob: {
-    authenticate: jest.fn().mockResolvedValue({ token: 'token123' }),
-    createOrder: jest.fn().mockResolvedValue({ id: 1 }),
-    checkout: jest.fn().mockResolvedValue({
+    authenticate: vi.fn().mockResolvedValue({ token: 'token123' }),
+    createOrder: vi.fn().mockResolvedValue({ id: 1 }),
+    checkout: vi.fn().mockResolvedValue({
       token: 'token123',
       iframeUrl: 'https://accept.paymob.com/api/acceptance/iframes/726054?payment_token=token123',
     }),
-    voidTransaction: jest.fn().mockResolvedValue({}),
-    refundTransaction: jest.fn().mockResolvedValue({}),
-    retrieveTransactionById: jest.fn().mockResolvedValue({}),
-    retrieveTransactionByOrderDetails: jest.fn().mockResolvedValue({}),
-    authenticateCallback: jest.fn().mockResolvedValue(true),
+    voidTransaction: vi.fn().mockResolvedValue({}),
+    refundTransaction: vi.fn().mockResolvedValue({}),
+    retrieveTransactionById: vi.fn().mockResolvedValue({}),
+    retrieveTransactionByOrderDetails: vi.fn().mockResolvedValue({}),
+    authenticateCallback: vi.fn().mockResolvedValue(true),
   },
 }));
 
 describe('Payment Service', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('createPaymentRequest', () => {

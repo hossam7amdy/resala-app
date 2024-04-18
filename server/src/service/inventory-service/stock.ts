@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client';
 
-import prisma from '../../lib/prisma';
-import { NotFoundError } from '../../utils/api-errors';
-import { findColorById } from './color';
-import { findProductById } from './product';
-import { findSizeById } from './size';
+import prisma from '../../lib/prisma/index.js';
+import { NotFoundError } from '../../utils/api-errors.js';
+import { findColorById } from './color.js';
+import { findProductById } from './product.js';
+import { findSizeById } from './size.js';
 
 export async function findStockById(stockId: number) {
   const stock = await prisma.stock.findUnique({

@@ -2,12 +2,25 @@
   "name": "@resala/shared",
   "version": "1.0.0",
   "description": "Shared types and functions",
-  "main": "index.ts",
   "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "npm i && tsc"
+    "build": "npm i & tsc"
   },
   "dependencies": {
     "zod": "^3.22.4"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "devDependencies": {
+    "rollup": "^4.14.3"
   }
 }

@@ -1,24 +1,29 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2020",
-    "sourceMap": true,
-    "outDir": "./dist",
+    // Should be disabled -> https://github.com/Microsoft/TypeScript/issues/29172
+    "outDir": "dist",
 
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "module": "node16",
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
+    "target": "ES2022", // Node.js 18
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "resolveJsonModule": false, // ESM doesn't yet support JSON modules.
+    "jsx": "react",
+    "declaration": true,
+    "newLine": "lf",
+    "stripInternal": true,
     "strict": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noEmitOnError": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   }
 }

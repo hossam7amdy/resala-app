@@ -1,3 +1,4 @@
+import { validationPatterns } from '@resala/shared';
 import { useState } from 'react';
 
 import './App.css';
@@ -6,6 +7,8 @@ import viteLogo from '/vite.svg';
 
 function App() {
   const [count, setCount] = useState(0);
+
+  console.log(validationPatterns.validateAttributeName);
 
   return (
     <>

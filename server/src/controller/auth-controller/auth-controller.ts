@@ -1,7 +1,7 @@
-import { ENV } from '../../config';
-import { signJwt } from '../../lib/jwt-token';
-import { authService, communicationService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
+import { ENV } from '../../config/index.js';
+import { signJwt } from '../../lib/jwt-token/index.js';
+import { authService, communicationService } from '../../service/index.js';
+import { BadRequestError } from '../../utils/api-errors.js';
 import {
   ChangePassword,
   ForgotPassword,
@@ -10,7 +10,7 @@ import {
   ResendVerificationEmail,
   ResetPassword,
   VerifyEmail,
-} from './auth-controller.interface';
+} from './auth-controller.interface.js';
 
 export const login: Login = async (req, res, next) => {
   try {

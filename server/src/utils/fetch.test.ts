@@ -1,4 +1,4 @@
-import Fetch from './fetch';
+import Fetch from './fetch.js';
 
 describe('Fetch', () => {
   it('should make a GET request', async () => {

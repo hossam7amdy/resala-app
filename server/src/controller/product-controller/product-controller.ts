@@ -1,9 +1,9 @@
 import { unlink } from 'fs/promises';
 
-import { deleteBlob, uploadBlob } from '../../lib/azure-storage';
-import { logger } from '../../lib/logger';
-import { inventoryService } from '../../service';
-import { BadRequestError } from '../../utils/api-errors';
+import { deleteBlob, uploadBlob } from '../../lib/azure-storage/index.js';
+import { logger } from '../../lib/logger/index.js';
+import { inventoryService } from '../../service/index.js';
+import { BadRequestError } from '../../utils/api-errors.js';
 import {
   CreateProduct,
   CreateProductImage,
@@ -14,7 +14,7 @@ import {
   ListProductImages,
   ListProductStocks,
   UpdateProduct,
-} from './product-controller.interface';
+} from './product-controller.interface.js';
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
