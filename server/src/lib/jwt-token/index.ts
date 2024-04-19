@@ -1,2 +1,1 @@
-export { TokenExpiredError } from 'jsonwebtoken';
-export * from './jwt-token';
+export * from './jwt-token.js';

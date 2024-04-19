@@ -1,5 +1,5 @@
-import { ENV } from '../../config';
-import Fetch from '../../utils/fetch';
+import { ENV } from '../../config/index.js';
+import Fetch from '../../utils/fetch.js';
 
 const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
 const PAYMOB_API_TOKEN = ENV.PAYMOB_API_TOKEN;

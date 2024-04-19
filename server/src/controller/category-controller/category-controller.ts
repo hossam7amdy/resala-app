@@ -1,4 +1,4 @@
-import { inventoryService } from '../../service';
+import { inventoryService } from '../../service/index.js';
 import {
   CreateCategory,
   DeleteCategory,
@@ -6,7 +6,7 @@ import {
   GetCategoryProducts,
   ListCategories,
   UpdateCategory,
-} from './category-controller.interface';
+} from './category-controller.interface.js';
 
 export const getCategory: GetCategory = async (req, res, next) => {
   try {

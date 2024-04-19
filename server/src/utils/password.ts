@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
-import { hash } from './hash';
-import { generateRandomNumber } from './random';
+import { hash } from './hash.js';
+import { generateRandomNumber } from './random.js';
 
 /**
  * Generate a hashed password

@@ -1,8 +1,12 @@
-import { userService } from '.';
-import prismaMock from '../lib/__mocks__/prisma';
-import { ConflictError, NotFoundError } from '../utils/api-errors';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-jest.mock('../lib/prisma');
+import prismaMock from '../lib/__mocks__/prisma.js';
+import { ConflictError, NotFoundError } from '../utils/api-errors.js';
+import { userService } from './index.js';
+
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const MOCK_USER = {
   id: 1,
@@ -36,7 +40,7 @@ const MOCK_USER_ADDRESS = {
 
 describe('userService', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('updateUser', () => {

@@ -1,13 +1,16 @@
 import { Prisma } from '@prisma/client';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import prismaMock from '../../lib/__mocks__/prisma';
-import { NotFoundError } from '../../utils/api-errors';
-import { deleteStock, getProductStocks, updateStock } from './stock';
+import prismaMock from '../../lib/__mocks__/prisma.js';
+import { NotFoundError } from '../../utils/api-errors.js';
+import { deleteStock, getProductStocks, updateStock } from './stock.js';
 
-jest.mock('../../lib/prisma');
-jest.mock('./color');
-jest.mock('./product');
-jest.mock('./size');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
+vi.mock('./color.js');
+vi.mock('./product.js');
+vi.mock('./size.js');
 
 const MOCK_STOCK = {
   id: 1,
@@ -39,7 +42,7 @@ const MOCK_PRODUCT_STOCKS = {
 
 describe('stock module', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('getProductStocks', () => {

@@ -1,2 +1,2 @@
-export * from './express';
-export * from './jwt';
+export * from './express.js';
+export * from './jwt.js';

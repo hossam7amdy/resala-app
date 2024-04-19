@@ -11,7 +11,7 @@ import {
   UpdateStockResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types';
+import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetStock
   extends ExpressHandlerWithParams<

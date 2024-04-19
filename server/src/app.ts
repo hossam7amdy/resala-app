@@ -1,10 +1,13 @@
 import cors, { CorsOptions } from 'cors';
 import express from 'express';
+import fs from 'fs';
 import swaggerUI from 'swagger-ui-express';
+import { parse } from 'yaml';
 
-import { errMiddleware } from './middleware/error-middleware';
-import { createExpressRouter } from './router';
-import swaggerDocument from './swagger.json';
+import { errMiddleware } from './middleware/error-middleware.js';
+import { createExpressRouter } from './router/index.js';
+
+const swaggerDocument = fs.readFileSync('swagger.yml', 'utf8');
 
 /** creates an instance of express application. */
 export function createExpressApp(logRequests: boolean = true) {
@@ -26,7 +29,7 @@ export function createExpressApp(logRequests: boolean = true) {
   app.use(
     '/api-docs',
     swaggerUI.serve,
-    swaggerUI.setup(swaggerDocument, {
+    swaggerUI.setup(parse(swaggerDocument), {
       customCss: '.swagger-ui .topbar { display: none }',
       customSiteTitle: 'API Documentation',
     })

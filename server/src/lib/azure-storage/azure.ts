@@ -16,7 +16,7 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { BlobServiceClient } from '@azure/storage-blob';
 import fs from 'fs/promises';
 
-import { ENV } from '../../config/env';
+import { ENV } from '../../config/env.js';
 
 const publicContainer = 'public';
 const account = ENV.AZURE_STORAGE_NAME;

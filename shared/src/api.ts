@@ -48,7 +48,7 @@ import {
   UpdateSizeSchema,
   UpdateStockSchema,
   VerifyEmailSchema,
-} from './validation-schema';
+} from './validation-schema.js';
 
 export type DefaultRequestQuery = zod.infer<typeof DefaultQuerySchema>;
 export type DefaultResponseBody = {

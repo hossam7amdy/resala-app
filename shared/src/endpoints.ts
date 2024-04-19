@@ -130,7 +130,7 @@ export function withParams(endpoint: EndpointConfig, ...params: string[]): Endpo
     throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
   }
   for (let index = 0; index < params.length; index++) {
-    url = url.replace(placeholders[index], params[index]);
+    url = url.replace(placeholders[index]!, params[index]!);
   }
   return {
     url: url,
@@ -302,14 +302,13 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
 
   // product images endpoints
   [Endpoints.addProductImages]: {
-    url: '/api/v1/products/:productId/images',
+    url: '/api/v1/products/images',
     method: 'post',
     auth: true,
   },
   [Endpoints.listProductImages]: {
     url: '/api/v1/products/:productId/images',
     method: 'get',
-    auth: true,
   },
   [Endpoints.deleteProductImage]: {
     url: '/api/v1/products/:productId/images/:imageId',

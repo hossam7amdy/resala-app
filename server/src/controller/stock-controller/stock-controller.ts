@@ -1,11 +1,11 @@
-import { inventoryService } from '../../service';
+import { inventoryService } from '../../service/index.js';
 import {
   CreateStock,
   DeleteStock,
   GetStock,
   GetStocksList,
   UpdateStock,
-} from './stock-controller.interface';
+} from './stock-controller.interface.js';
 
 export const getStock: GetStock = async (req, res, next) => {
   try {
