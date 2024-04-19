@@ -4,7 +4,9 @@ import prismaMock from '../lib/__mocks__/prisma.js';
 import { NotFoundError } from '../utils/api-errors.js';
 import { orderService } from './index.js';
 
-vi.mock('../lib/prisma/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const MOCK_ORDER_INPUT = {
   userId: 1,

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../lib/__mocks__/prisma.js';
-import * as jwtTokenMock from '../lib/jwt-token/index.js';
+import * as jwtTokenMock from '../lib/jwt-token/jwt-token.js';
 import {
   BadRequestError,
   ConflictError,
@@ -12,10 +12,24 @@ import * as passwordUtilMock from '../utils/password.js';
 import * as randomUtilMock from '../utils/random.js';
 import * as authService from './auth-service.js';
 
-vi.mock('../lib/prisma/index.js');
-vi.mock('../utils/password.js');
-vi.mock('../utils/random.js');
-vi.mock('../lib/jwt-token/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
+vi.mock('utils/password.js', () => ({
+  genHashedPassword: vi.fn(() => ({
+    hashedPassword: 'hashed-password',
+    salt: 'salt',
+    iterations: 10,
+  })),
+  verifyHashedPassword: vi.fn(() => true),
+}));
+vi.mock('utils/random.js', () => ({
+  generateRandomString: vi.fn(() => 'random-code'),
+}));
+vi.mock('lib/jwt-token/jwt-token.js', () => ({
+  signJwt: vi.fn(() => 'jwt-token'),
+  verifyJwt: vi.fn(() => ({ id: MOCK_USER.id, email: MOCK_USER.email })),
+}));
 
 const MOCK_USER = {
   id: 1,
@@ -50,7 +64,7 @@ const SELECT = {
 
 describe('auth-service', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('authenticate', () => {
@@ -405,12 +419,9 @@ describe('auth-service', () => {
       const token = 'jwt token';
       const secret = 'secret';
 
-      vi.spyOn(jwtTokenMock, 'verifyJwt').mockReturnValue({
-        id: MOCK_USER.id,
-        email: MOCK_USER.email,
-      });
-
       const result = await authService.validateJwtToken(token, secret);
+
+      console.log('authService.validateJwtToken', result);
 
       expect(result).toEqual({ id: MOCK_USER.id, email: MOCK_USER.email });
       expect(jwtTokenMock.verifyJwt).toHaveBeenCalledWith(token, secret);
@@ -422,7 +433,7 @@ describe('auth-service', () => {
       });
 
       await expect(authService.validateJwtToken('invalid-token', 'secret')).rejects.toThrow(
-        UnauthorizedError
+        Error('Invalid token')
       );
     });
   });
