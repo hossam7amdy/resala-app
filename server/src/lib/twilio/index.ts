@@ -1,6 +1,6 @@
 import { Twilio } from 'twilio';
 
-import { ENV } from '../../config';
+import { ENV } from '../../config/index.js';
 
 const twilio = new Twilio(ENV.TWILIO_ACCOUNT_SID, ENV.TWILIO_AUTH_TOKEN);
 

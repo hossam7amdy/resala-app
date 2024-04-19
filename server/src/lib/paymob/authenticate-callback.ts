@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 
-import { ENV } from '../../config';
+import { ENV } from '../../config/index.js';
 import callback from './callback.json';
 
 /**

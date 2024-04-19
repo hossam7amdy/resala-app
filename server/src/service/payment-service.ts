@@ -1,9 +1,9 @@
 import { Address } from '@prisma/client';
 
-import { paymob } from '../lib/paymob';
+import { paymob } from '../lib/paymob/index.js';
 import callback from '../lib/paymob/callback.json';
-import prisma from '../lib/prisma';
-import { NotFoundError } from '../utils/api-errors';
+import prisma from '../lib/prisma/index.js';
+import { NotFoundError } from '../utils/api-errors.js';
 
 export async function createPaymentRequest(payload: {
   email: string;

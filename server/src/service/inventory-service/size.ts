@@ -1,5 +1,5 @@
-import prisma from '../../lib/prisma';
-import { ConflictError, NotFoundError } from '../../utils/api-errors';
+import prisma from '../../lib/prisma/index.js';
+import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 
 export async function findSizeById(sizeId: number) {
   const size = await prisma.size.findUnique({

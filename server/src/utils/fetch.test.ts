@@ -1,4 +1,6 @@
-import Fetch from './fetch';
+import { describe, expect, it } from 'vitest';
+
+import Fetch from './fetch.js';
 
 describe('Fetch', () => {
   it('should make a GET request', async () => {

@@ -1,8 +1,12 @@
-import { shoppingService } from '.';
-import prismaMock from '../lib/__mocks__/prisma';
-import { NotFoundError } from '../utils/api-errors';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-jest.mock('../lib/prisma');
+import prismaMock from '../lib/__mocks__/prisma.js';
+import { NotFoundError } from '../utils/api-errors.js';
+import { shoppingService } from './index.js';
+
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const MOCK_ADD_TO_CART = {
   userId: 1,
@@ -51,11 +55,11 @@ const MOCK_CART_ITEM = {
 describe('Shopping Service', () => {
   beforeAll(() => {
     // mock console.log to prevent writing to the console
-    jest.spyOn(console, 'log').mockImplementation(() => undefined);
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getUserCart', () => {

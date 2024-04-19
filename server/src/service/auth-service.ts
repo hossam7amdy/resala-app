@@ -1,17 +1,17 @@
-import { Prisma } from '@prisma/client';
-import { TokenExpiredError } from 'jsonwebtoken';
+import type { Prisma } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
-import { ENV } from '../config';
-import * as JWT from '../lib/jwt-token';
-import prisma from '../lib/prisma';
+import { ENV } from '../config/env.js';
+import * as Jwt from '../lib/jwt-token/jwt-token.js';
+import prisma from '../lib/prisma/index.js';
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
   UnauthorizedError,
-} from '../utils/api-errors';
-import { genHashedPassword, verifyHashedPassword } from '../utils/password';
-import { generateRandomString } from '../utils/random';
+} from '../utils/api-errors.js';
+import { genHashedPassword, verifyHashedPassword } from '../utils/password.js';
+import { generateRandomString } from '../utils/random.js';
 
 const SELECT = {
   id: true,
@@ -52,10 +52,10 @@ export const authenticate = async (sign: string, password: string) => {
     where: { id: user.id },
   });
 
-  const accessToken = JWT.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
+  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
     expiresIn: '1d',
   });
-  const refreshToken = JWT.signJwt({ id: user.id, email: user.email }, ENV.JWT_REFRESH!, {
+  const refreshToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_REFRESH!, {
     expiresIn: '7d',
   });
 
@@ -87,7 +87,7 @@ export const register = async (payload: Omit<Prisma.UserCreateInput, 'salt' | 'i
   });
 
   // generate verify token
-  const token = JWT.signJwt({ id: user.id, email: user.email }, ENV.JWT_VERIFY!, {
+  const token = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_VERIFY!, {
     expiresIn: '30d',
   });
 
@@ -157,7 +157,7 @@ export const forgotPassword = async (email: string) => {
   // generate reset token
   const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
   const resetCode = generateRandomString(6).toUpperCase();
-  const token = JWT.signJwt({ id: user.id, email, resetCode }, ENV.JWT_RESET!, { expiresIn: '1h' });
+  const token = Jwt.signJwt({ id: user.id, email, resetCode }, ENV.JWT_RESET!, { expiresIn: '1h' });
 
   return { expiresAt, token, resetCode };
 };
@@ -189,7 +189,7 @@ export const refreshToken = async (token: string) => {
     throw new NotFoundError('User not found');
   }
 
-  const accessToken = JWT.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
+  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
     expiresIn: '1d',
   });
   return {
@@ -200,9 +200,9 @@ export const refreshToken = async (token: string) => {
 
 export const validateJwtToken = async (token: string, secret: string) => {
   try {
-    return JWT.verifyJwt(token, secret);
+    return Jwt.verifyJwt(token, secret);
   } catch (error) {
-    if (error instanceof TokenExpiredError) {
+    if (error instanceof jwt.TokenExpiredError) {
       throw new UnauthorizedError('Token expired');
     }
     throw new UnauthorizedError('Invalid token');

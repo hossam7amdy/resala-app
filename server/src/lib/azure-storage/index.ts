@@ -1,1 +1,1 @@
-export * from './azure';
+export * from './azure.js';

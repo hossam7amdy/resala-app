@@ -1,8 +1,12 @@
-import { inventoryService } from '..';
-import prismaMock from '../../lib/__mocks__/prisma';
-import { NotFoundError } from '../../utils/api-errors';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-jest.mock('../../lib/prisma');
+import prismaMock from '../../lib/__mocks__/prisma.js';
+import { NotFoundError } from '../../utils/api-errors.js';
+import { inventoryService } from '../index.js';
+
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const MOCK_COLOR = {
   id: 1,
@@ -14,7 +18,7 @@ const MOCK_COLOR = {
 };
 
 beforeEach(() => {
-  jest.resetAllMocks();
+  vi.resetAllMocks();
 });
 
 describe('findColorById', () => {

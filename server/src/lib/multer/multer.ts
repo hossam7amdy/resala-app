@@ -1,9 +1,13 @@
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 
-import { BadRequestError } from '../../utils/api-errors';
+import { BadRequestError } from '../../utils/api-errors.js';
 
+// upload directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const uploadDir = path.join(__dirname, '..', '..', '..', 'uploads');
 
 // multer configuration
