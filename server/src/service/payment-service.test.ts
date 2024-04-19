@@ -50,7 +50,9 @@ const MOCK_PAYMENT = {
   updatedAt: new Date(),
 };
 
-vi.mock('../lib/prisma/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 vi.mock('../lib/paymob/index.js', () => ({
   paymob: {
     authenticate: vi.fn().mockResolvedValue({ token: 'token123' }),

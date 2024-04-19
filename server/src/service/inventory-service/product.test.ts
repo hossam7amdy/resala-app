@@ -4,7 +4,9 @@ import prismaMock from '../../lib/__mocks__/prisma.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 import { inventoryService } from '../index.js';
 
-vi.mock('../../lib/prisma/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const PRODUCT_OUTPUT = {
   id: 4,

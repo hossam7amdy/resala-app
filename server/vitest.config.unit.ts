@@ -6,4 +6,14 @@ export default defineConfig({
     name: 'resala/server - [ Unit Test ]',
     include: ['src/**/*.test.ts', '!src/tests'],
   },
+  resolve: {
+    alias: {
+      config: '/src/config',
+      controller: '/src/controller',
+      lib: '/src/lib',
+      middleware: '/src/middleware',
+      service: '/src/service',
+      utils: '/src/utils',
+    },
+  },
 });

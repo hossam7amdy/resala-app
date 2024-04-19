@@ -1,10 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../lib/__mocks__/prisma.js';
 import { NotFoundError } from '../utils/api-errors.js';
 import { shoppingService } from './index.js';
 
-vi.mock('../lib/prisma/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 
 const MOCK_ADD_TO_CART = {
   userId: 1,

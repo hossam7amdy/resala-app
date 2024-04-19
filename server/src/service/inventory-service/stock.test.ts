@@ -5,7 +5,9 @@ import prismaMock from '../../lib/__mocks__/prisma.js';
 import { NotFoundError } from '../../utils/api-errors.js';
 import { deleteStock, getProductStocks, updateStock } from './stock.js';
 
-vi.mock('../../lib/prisma/index.js');
+vi.mock('lib/prisma/index.js', () => ({
+  default: prismaMock,
+}));
 vi.mock('./color.js');
 vi.mock('./product.js');
 vi.mock('./size.js');
