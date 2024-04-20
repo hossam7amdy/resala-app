@@ -12,5 +12,9 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendEmail = (mailOptions: nodemailer.SendMailOptions) => {
-  return transporter.sendMail(mailOptions);
+  if (ENV.NODE_ENV === 'test') {
+    return Promise.resolve({} as nodemailer.SentMessageInfo);
+  } else {
+    return transporter.sendMail(mailOptions);
+  }
 };
