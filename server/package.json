@@ -11,7 +11,7 @@
     "start": "set NODE_ENV=prod&& node dist/index.js",
     "dev": "set NODE_ENV=dev&& tsx watch src/index.ts",
     "test:unit": "dotenv -e .env.test -- vitest -c ./vitest.config.unit.ts",
-    "test:integration": "./scripts/run-integration.sh",
+    "test:int": "bash ./scripts/run-integration.sh",
     "test": "npm run test:unit && npm run test:integration"
   },
   "keywords": [],

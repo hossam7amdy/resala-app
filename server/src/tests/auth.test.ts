@@ -1,26 +1,22 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { beforeEach } from 'node:test';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent.js';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getTestServer } from './testserver.js';
 
-vi.mock('nodemailer', () => {
-  return {
-    createTransport: vi.fn().mockReturnValue({
-      sendMail: vi.fn().mockResolvedValue(Promise.resolve(true) as never),
-    }),
-  };
-});
-
-/**
- * Mocking the azure storage module
- * @see https://remarkablemark.org/blog/2018/06/28/vi-mock-default-named-export/
- */
-vi.mock('../../src/lib/azure-storage/azure.js', () => ({
+vi.mock('lib/azure-storage/azure.js', () => ({
   __esModule: true, // this property makes it work
   uploadBlob: vi.fn(),
   deleteBlob: vi.fn(),
+}));
+
+vi.mock('../service/communication-service.js', () => ({
+  __esModule: true, // this property makes it work;
+  sendVerificationEmail: vi.fn(),
+  sendResetPasswordEmail: vi.fn(),
+  sendResetConfirmationEmail: vi.fn(),
 }));
 
 describe('TEST /auth endpoints', () => {
@@ -35,6 +31,10 @@ describe('TEST /auth endpoints', () => {
   beforeAll(async () => {
     client = await getTestServer();
   }, 10000);
+
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
     it('should not be able to register a new user, missing (firstName, lastName)', async () => {
