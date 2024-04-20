@@ -12,7 +12,7 @@
     "dev": "set NODE_ENV=dev&& tsx watch src/index.ts",
     "test:unit": "dotenv -e .env.test -- vitest -c ./vitest.config.unit.ts",
     "test:int": "bash ./scripts/run-integration.sh",
-    "test": "npm run test:unit && npm run test:integration"
+    "test": "npm run test:unit && npm run test:int"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
