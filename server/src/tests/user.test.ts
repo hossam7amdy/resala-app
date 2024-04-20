@@ -1,27 +1,24 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { beforeEach } from 'node:test';
 import superset from 'supertest';
 import TestAgent from 'supertest/lib/agent.js';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
+import * as communicationService from '../service/communication-service.js';
 import { userService } from '../service/index.js';
 import { getTestServer } from './testserver.js';
 
-vi.mock('nodemailer', () => {
-  return {
-    createTransport: vi.fn().mockReturnValue({
-      sendMail: vi.fn().mockResolvedValue(Promise.resolve(true) as never),
-    }),
-  };
-});
-
-/**
- * Mocking the azure storage module
- * @see https://remarkablemark.org/blog/2018/06/28/vi-mock-default-named-export/
- */
-vi.mock('../../src/lib/azure-storage/azure.js', () => ({
+vi.mock('lib/azure-storage/azure.js', () => ({
   __esModule: true, // this property makes it work
   uploadBlob: vi.fn(),
   deleteBlob: vi.fn(),
+}));
+
+vi.mock('service/communication-service.js', () => ({
+  __esModule: true, // this property makes it work;
+  sendVerificationEmail: vi.fn(),
+  sendResetPasswordEmail: vi.fn(),
+  sendResetConfirmationEmail: vi.fn(),
 }));
 
 describe('TEST /users endpoint', () => {
@@ -46,6 +43,10 @@ describe('TEST /users endpoint', () => {
 
     await makeUserAdmin();
   }, 10000);
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('should get current logged in user', async () => {
     const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
@@ -171,6 +172,7 @@ describe('TEST /users endpoint', () => {
   }) => {
     const { method, url } = ENDPOINT_CONFIGS.register;
 
+    vi.spyOn(communicationService, 'sendVerificationEmail');
     const res = await client[method](url).send(payload);
 
     expect(res.statusCode).toBe(201);
@@ -201,7 +203,7 @@ describe('TEST /users endpoint', () => {
       data: {
         accessToken: expect.any(String),
         refreshToken: expect.any(String),
-        expiresIn: expect.any(Number),
+        expiresAt: expect.any(Number),
       },
     });
 
