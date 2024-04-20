@@ -22,12 +22,12 @@ const publicContainer = 'public';
 const account = ENV.AZURE_STORAGE_NAME;
 const cdnEndpoint = ENV.AZURE_CDN_ENDPOINT;
 
-const storage = new BlobServiceClient(
-  `https://${account}.blob.core.windows.net`,
-  new DefaultAzureCredential()
-);
-
 export const uploadBlob = async (path: string) => {
+  const storage = new BlobServiceClient(
+    `https://${account}.blob.core.windows.net`,
+    new DefaultAzureCredential()
+  );
+
   const container = storage.getContainerClient(publicContainer);
 
   const filename = path.split('/').pop();
@@ -38,6 +38,11 @@ export const uploadBlob = async (path: string) => {
 };
 
 export const deleteBlob = async (url: string) => {
+  const storage = new BlobServiceClient(
+    `https://${account}.blob.core.windows.net`,
+    new DefaultAzureCredential()
+  );
+
   const container = storage.getContainerClient(publicContainer);
   const filename = url.replace(`${cdnEndpoint}/${publicContainer}/`, '');
   return container.deleteBlob(filename);
