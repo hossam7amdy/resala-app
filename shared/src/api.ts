@@ -50,7 +50,9 @@ import {
   VerifyEmailSchema,
 } from './validation-schema.js';
 
+export type DefaultRequestBody = { [key: string]: any };
 export type DefaultRequestQuery = zod.infer<typeof DefaultQuerySchema>;
+
 export type DefaultResponseBody = {
   success: boolean;
   message?: string;
@@ -92,8 +94,13 @@ export type ChangePasswordResponse = DefaultResponseBody;
 // User types
 export type GetProfileRequest = undefined;
 export type GetProfileResponse = DefaultResponseBody & {
-  data: Omit<RegisterRequest['body'], 'password'> & {
+  data: {
     id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    role: string;
     isVerified: boolean;
     lastLogin: Date | null;
     createdAt: Date;
