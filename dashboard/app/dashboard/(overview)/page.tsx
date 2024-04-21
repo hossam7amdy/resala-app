@@ -1,17 +1,14 @@
-'use client';
+import Title from 'antd/es/typography/Title';
+import { Metadata } from 'next';
 
-import 'next-auth';
-import { useSession } from 'next-auth/react';
+export const metadata: Metadata = {
+  title: 'Dashboard - Admin Resala',
+};
 
-export default function page() {
-  // access session
-  const session = useSession();
-
-  console.log(session);
-
+export default async function Page() {
   return (
-    <main>
-      <h1>Dashboard Page</h1>
+    <main style={{ padding: 10 }}>
+      <Title level={2}>Dashboard</Title>
     </main>
   );
 }

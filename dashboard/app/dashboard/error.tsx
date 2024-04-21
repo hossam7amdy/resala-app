@@ -3,6 +3,8 @@
 import { Button } from 'antd';
 import { useEffect } from 'react';
 
+import styles from './error.module.css';
+
 export default function Error({
   error,
   reset,
@@ -16,9 +18,11 @@ export default function Error({
   }, [error]);
 
   return (
-    <main>
-      <h2>Something went wrong!</h2>
-      <Button onClick={() => reset()}>Try again</Button>
-    </main>
+    <div className={styles.container}>
+      <p>Something went wrong!</p>
+      <Button size="large" danger onClick={() => reset()}>
+        Try again
+      </Button>
+    </div>
   );
 }
