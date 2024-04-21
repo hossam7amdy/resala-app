@@ -1,3 +1,6 @@
+'use server';
+
+import { auth } from '@/auth';
 import {
   DefaultRequestBody,
   DefaultRequestQuery,
@@ -25,13 +28,18 @@ export async function callEndpoint<
   Response = DefaultResponseBody,
 >(endpoint: EndpointConfig, request?: Request): Promise<Response> {
   try {
-    const { url, method, auth } = endpoint;
+    const { url, method, auth: isProtected } = endpoint;
+
+    const session = await auth();
 
     const config: AxiosRequestConfig = {
       url,
       method,
       data: request?.body,
       params: request?.query,
+      headers: {
+        Authorization: isProtected ? `Bearer ${session?.user.accessToken}` : undefined,
+      },
     };
 
     const response = await client<Request, AxiosResponse<Response>>(config);

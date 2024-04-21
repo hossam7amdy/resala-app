@@ -50,8 +50,8 @@ export const { auth, signIn, signOut } = NextAuth({
 
           return {
             ...user,
+            ...token.data,
             id: user.id.toString(),
-            token: token.data,
           };
         } catch (error) {
           return null; // Return User | null
@@ -59,7 +59,15 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  session: {
-    strategy: 'jwt',
+  session: { strategy: 'jwt' },
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    // @ts-expect-error
+    async session({ session, token }) {
+      session.user = token;
+      return session;
+    },
   },
 });
