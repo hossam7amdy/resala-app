@@ -1,5 +1,3 @@
-'use server';
-
 import {
   DefaultRequestBody,
   DefaultRequestQuery,
@@ -19,10 +17,10 @@ export const client = axios.create({
   },
 });
 
-export async function fetch<
+export async function callEndpoint<
   Request extends {
     body?: DefaultRequestBody;
-    query?: DefaultRequestQuery;
+    query?: DefaultRequestQuery['query'];
   },
   Response = DefaultResponseBody,
 >(endpoint: EndpointConfig, request?: Request): Promise<Response> {

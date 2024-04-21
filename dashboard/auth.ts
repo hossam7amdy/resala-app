@@ -12,7 +12,7 @@ import { AxiosResponse } from 'axios';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { client, fetch } from './app/lib/fetch';
+import { callEndpoint, client } from './app/lib/fetch';
 import { authConfig } from './auth.config';
 
 const getUser = async (token: string) => {
@@ -34,7 +34,7 @@ export const { auth, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials) {
         try {
-          const token = await fetch<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
+          const token = await callEndpoint<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
             body: {
               sign: credentials.sign as string,
               password: credentials.password as string,
@@ -59,4 +59,7 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
 });
