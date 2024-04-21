@@ -1,97 +1,52 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import {validationPatterns} from "@resala/shared";
+'use client';
 
-export default function Home() {
-  console.log(validationPatterns.validateLabelName);
-  
+import { Button, Flex, Form, Input } from 'antd';
+import FormItem from 'antd/es/form/FormItem';
+import Password from 'antd/es/input/Password';
+import Link from 'antd/es/typography/Link';
+import { useState } from 'react';
+
+import { authenticate } from './lib/action';
+import styles from './page.module.css';
+import Logo from './ui/logo';
+
+export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (values: { sign: string; password: string }) => {
+    setIsLoading(true);
+    try {
+      const error = await authenticate(values);
+      error && setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className={styles.container}>
+        <Flex vertical gap={10}>
+          <div style={{ alignSelf: 'center' }}>
+            <Logo />
+          </div>
+          <Form layout="vertical" size="large" onFinish={onSubmit}>
+            <FormItem name="sign" label="Sign" required>
+              <Input placeholder="Enter email or phone" autoFocus />
+            </FormItem>
+            <FormItem name="password" label="Password" required>
+              <Password placeholder="Enter password" />
+            </FormItem>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <FormItem>
+              <Button type="primary" block size="large" htmlType="submit" loading={isLoading}>
+                Sign in
+              </Button>
+            </FormItem>
+          </Form>
+          <Link href="#">Forget password?</Link>
+        </Flex>
       </div>
     </main>
   );
