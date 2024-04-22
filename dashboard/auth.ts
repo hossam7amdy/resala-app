@@ -12,12 +12,13 @@ import { AxiosResponse } from 'axios';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { callEndpoint, client } from './app/lib/fetch';
+import axios from './app/lib/axios';
+import { callEndpoint } from './app/lib/fetch';
 import { authConfig } from './auth.config';
 
 const getUser = async (token: string) => {
   const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
-  const profile = await client<GetProfileRequest, AxiosResponse<GetProfileResponse>>({
+  const profile = await axios<GetProfileRequest, AxiosResponse<GetProfileResponse>>({
     url,
     method,
     headers: {

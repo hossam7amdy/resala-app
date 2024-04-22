@@ -1,32 +1,27 @@
 'use server';
 
 import { auth } from '@/auth';
-import {
+import type {
   DefaultRequestBody,
   DefaultRequestQuery,
   DefaultResponseBody,
   EndpointConfig,
 } from '@resala/shared';
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { isDev } from './util';
+import axios from './axios';
 
-const API_HOST = isDev ? 'http://localhost:5000' : 'https://resala-app.onrender.com';
+type Res = DefaultResponseBody;
+type Req = {
+  body?: DefaultRequestBody;
+  query?: DefaultRequestQuery['query'];
+};
 
-export const client = axios.create({
-  baseURL: API_HOST,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export async function callEndpoint<
-  Request extends {
-    body?: DefaultRequestBody;
-    query?: DefaultRequestQuery['query'];
-  },
-  Response = DefaultResponseBody,
->(endpoint: EndpointConfig, request?: Request): Promise<Response> {
+export const callEndpoint = async <Request extends Req, Response extends Res>(
+  endpoint: EndpointConfig,
+  request?: Request
+): Promise<Response> => {
   try {
     const { url, method, auth: isProtected } = endpoint;
 
@@ -38,11 +33,11 @@ export async function callEndpoint<
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${session?.user.accessToken}` : undefined,
+        Authorization: isProtected ? `Bearer ${session?.user?.accessToken}` : undefined,
       },
     };
 
-    const response = await client<Request, AxiosResponse<Response>>(config);
+    const response = await axios<Request, AxiosResponse<Response>>(config);
 
     return response.data;
   } catch (error) {
@@ -51,4 +46,4 @@ export async function callEndpoint<
     }
     throw new Error('Something went wrong.');
   }
-}
+};

@@ -3,7 +3,7 @@
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 
-export async function authenticate(payload: Record<string, string> | undefined) {
+export const authenticate = async (payload: Record<string, string> | undefined) => {
   try {
     await signIn('credentials', {
       ...payload,
@@ -21,4 +21,4 @@ export async function authenticate(payload: Record<string, string> | undefined) 
     }
     throw error;
   }
-}
+};
