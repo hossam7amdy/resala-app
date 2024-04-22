@@ -1,6 +1,6 @@
 .container {
   width: 400px;
-  margin: 25% auto;
+  margin: 50px auto;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 2rem 1rem;
