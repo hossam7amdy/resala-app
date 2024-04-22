@@ -4,14 +4,13 @@ import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import React from 'react';
 
-import SideNav from '../ui/side-nav';
+import { SideNav } from '../ui/side-nav';
 import styles from './layout.module.css';
 
 interface LayoutProps {
   children: React.ReactNode;
-  session: any;
 }
-export default function Layout({ session, children }: LayoutProps) {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <AntdRegistry>
       <AppLayout hasSider>
@@ -22,4 +21,6 @@ export default function Layout({ session, children }: LayoutProps) {
       </AppLayout>
     </AntdRegistry>
   );
-}
+};
+
+export default Layout;
