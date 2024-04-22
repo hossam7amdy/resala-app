@@ -3,10 +3,10 @@ import { PoweroffOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
-import Logo from './logo';
-import NavLinks from './nav-links/nav-links';
+import { Logo } from './logo';
+import { NavLinks } from './nav-links/nav-links';
 
-export default function SideNav() {
+export const SideNav = () => {
   return (
     <Flex vertical style={{ height: '100%' }}>
       <Link href="/dashboard">
@@ -31,4 +31,4 @@ export default function SideNav() {
       </div>
     </Flex>
   );
-}
+};
