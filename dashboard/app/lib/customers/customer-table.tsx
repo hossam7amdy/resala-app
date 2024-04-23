@@ -1,18 +1,20 @@
-import { callEndpoint } from '@/app/lib/fetch';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import type { AdminGetUsersListRequest, AdminGetUsersListResponse } from '@resala/shared';
+// import { callEndpoint } from '@/app/lib/fetch';
+// import { ENDPOINT_CONFIGS } from '@resala/shared';
+import type { AdminGetUsersListResponse } from '@resala/shared';
 import { Table } from 'antd';
 
 export const CustomerTable = async () => {
-  const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
-    ENDPOINT_CONFIGS.adminGetUsersList
-  );
+  // const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
+  //   ENDPOINT_CONFIGS.adminGetUsersList
+  // );
+
+  const products: AdminGetUsersListResponse['data']['users'] = [];
 
   return (
     <Table
       pagination={{
-        total: response?.data.pagination.total,
-        current: response?.data.pagination.page,
+        total: products.length,
+        current: 1,
         pageSize: 10,
       }}
       columns={[
@@ -29,11 +31,7 @@ export const CustomerTable = async () => {
           dataIndex: 'createdAt',
         },
       ]}
-      dataSource={response?.data.users.map(user => ({
-        key: user.id,
-        name: user.firstName + ' ' + user.lastName,
-        createdAt: new Date(user.createdAt).toLocaleString(),
-      }))}
+      dataSource={products}
     />
   );
 };

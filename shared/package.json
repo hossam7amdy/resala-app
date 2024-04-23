@@ -4,15 +4,14 @@
   "description": "Shared types and functions",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./index.js",
+      "require": "./index.cjs"
     }
   },
   "scripts": {
-    "rollup": "npx rollup dist/index.js --file dist/index.cjs --format cjs",
+    "rollup": "npx rollup -c rollup.config.js",
     "build": "npm i && tsc && npm run rollup"
   },
   "dependencies": {
