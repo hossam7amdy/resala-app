@@ -1,53 +1,28 @@
-'use client';
+import { Button, Flex } from 'antd';
+import Paragraph from 'antd/es/typography/Paragraph';
+import Link from 'next/link';
 
-import { Button, Flex, Form, Input } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
-import Password from 'antd/es/input/Password';
-import Link from 'antd/es/typography/Link';
-import { useState } from 'react';
-
-import { authenticate } from './lib/action';
 import styles from './page.module.css';
-import Logo from './ui/logo';
+import { Logo } from './ui/logo';
 
-export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const onSubmit = async (values: { sign: string; password: string }) => {
-    setIsLoading(true);
-    try {
-      const error = await authenticate(values);
-      error && setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const Page = () => {
   return (
-    <main className={styles.main}>
+    <main>
       <div className={styles.container}>
-        <Flex vertical gap={10}>
-          <div style={{ alignSelf: 'center' }}>
+        <Flex vertical gap={10} align="center">
+          <div>
             <Logo />
           </div>
-          <Form layout="vertical" size="large" onFinish={onSubmit}>
-            <FormItem name="sign" label="Sign" required>
-              <Input placeholder="Enter email or phone" autoFocus />
-            </FormItem>
-            <FormItem name="password" label="Password" required>
-              <Password placeholder="Enter password" />
-            </FormItem>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <FormItem>
-              <Button type="primary" block size="large" htmlType="submit" loading={isLoading}>
-                Sign in
-              </Button>
-            </FormItem>
-          </Form>
-          <Link href="#">Forget password?</Link>
+          <Paragraph>
+            Welcome to the dashboard. You are not logged in. Please login to access the dashboard.
+          </Paragraph>
+          <Button>
+            <Link href="/auth/login">Login Page</Link>
+          </Button>
         </Flex>
       </div>
     </main>
   );
-}
+};
+
+export default Page;

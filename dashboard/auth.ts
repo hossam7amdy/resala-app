@@ -12,12 +12,13 @@ import { AxiosResponse } from 'axios';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { callEndpoint, client } from './app/lib/fetch';
+import axios from './app/lib/axios';
+import { callEndpoint } from './app/lib/fetch';
 import { authConfig } from './auth.config';
 
 const getUser = async (token: string) => {
   const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
-  const profile = await client<GetProfileRequest, AxiosResponse<GetProfileResponse>>({
+  const profile = await axios<GetProfileRequest, AxiosResponse<GetProfileResponse>>({
     url,
     method,
     headers: {
@@ -50,8 +51,8 @@ export const { auth, signIn, signOut } = NextAuth({
 
           return {
             ...user,
+            ...token.data,
             id: user.id.toString(),
-            token: token.data,
           };
         } catch (error) {
           return null; // Return User | null
@@ -59,7 +60,15 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  session: {
-    strategy: 'jwt',
+  session: { strategy: 'jwt' },
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    // @ts-expect-error
+    async session({ session, token }) {
+      session.user = token;
+      return session;
+    },
   },
 });

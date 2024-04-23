@@ -1,13 +1,15 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Products - Admin Resala',
+  title: 'Orders',
 };
 
-export default async function Page() {
+const OrderPage = () => {
   return (
     <main>
       <h1>Orders Page</h1>
     </main>
   );
-}
+};
+
+export default OrderPage;
