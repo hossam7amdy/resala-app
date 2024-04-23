@@ -17,7 +17,6 @@ COPY server/ /app/server/
 COPY shared/ /app/shared/
 
 # Build the app
-RUN npm run build:shared
 RUN npm run build:server
 
 # Remove development dependencies
