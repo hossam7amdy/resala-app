@@ -17,9 +17,10 @@ export type DefaultResponseBody = {
 export type LoginRequest = zod.infer<typeof LoginSchema>;
 export type LoginResponse = DefaultResponseBody & {
     data: {
-        expiresAt: number;
+        expiresAt: Date;
         accessToken: string;
         refreshToken: string;
+        user: GetProfileResponse['data'];
     };
 };
 export type RegisterRequest = zod.infer<typeof RegisterSchema>;
@@ -32,7 +33,7 @@ export type ForgotPasswordRequest = zod.infer<typeof ForgotPasswordSchema>;
 export type ForgotPasswordResponse = DefaultResponseBody & {
     data: {
         resetToken: string;
-        expiresAt: number;
+        expiresAt: Date;
     };
 };
 export type ResetPasswordRequest = zod.infer<typeof ResetPasswordSchema>;
