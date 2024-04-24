@@ -1,8 +1,8 @@
-import { Color, Product, Size } from '@prisma/client';
+import type { Color, Product, Size } from '@prisma/client';
 
-import { inventoryService } from './index.js';
 import prisma from '../lib/prisma/index.js';
 import { NotFoundError } from '../utils/api-errors.js';
+import { inventoryService } from './index.js';
 
 export interface CartItem {
   userId: number;

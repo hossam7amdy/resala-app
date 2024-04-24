@@ -4,9 +4,9 @@
  * It is used by the API service to validate the request and response data.
  * It is also used by the API service to generate the API client.
  */
-import * as zod from 'zod';
+import type * as zod from 'zod';
 
-import {
+import type {
   AdminDeleteUserSchema,
   AdminGetUserSchema,
   AdminUpdateUserSchema,

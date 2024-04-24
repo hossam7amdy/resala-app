@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 import prisma from '../../lib/prisma/index.js';
 import { NotFoundError } from '../../utils/api-errors.js';

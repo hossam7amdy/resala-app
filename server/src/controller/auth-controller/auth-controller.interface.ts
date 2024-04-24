@@ -1,4 +1,4 @@
-import {
+import type {
   ChangePasswordRequest,
   ChangePasswordResponse,
   ForgotPasswordRequest,
@@ -15,7 +15,7 @@ import {
   VerifyEmailResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, LocalUser } from '../../types/index.js';
 
 export interface Login extends ExpressHandler<LoginRequest['body'], LoginResponse> {}
 

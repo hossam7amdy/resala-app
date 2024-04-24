@@ -1,5 +1,5 @@
 import { shoppingService } from '../../service/index.js';
-import {
+import type {
   AddItemToCart,
   AddProductToWishlist,
   GetUserCart,

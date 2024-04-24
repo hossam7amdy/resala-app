@@ -4,6 +4,7 @@ node_modules
 # Build the project
 dist
 build
+.next
 
 # Angular Cache Busting
 web/.angular

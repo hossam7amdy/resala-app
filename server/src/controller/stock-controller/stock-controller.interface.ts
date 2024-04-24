@@ -1,4 +1,4 @@
-import {
+import type {
   CreateStockRequest,
   CreateStockResponse,
   DeleteStockRequest,
@@ -11,7 +11,7 @@ import {
   UpdateStockResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetStock
   extends ExpressHandlerWithParams<

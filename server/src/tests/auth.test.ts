@@ -1,7 +1,7 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { beforeEach } from 'node:test';
-import superset from 'supertest';
-import TestAgent from 'supertest/lib/agent.js';
+import type superset from 'supertest';
+import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getTestServer } from './testserver.js';
