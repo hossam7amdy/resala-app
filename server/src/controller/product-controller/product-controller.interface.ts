@@ -1,4 +1,4 @@
-import {
+import type {
   CreateProductImageRequest,
   CreateProductImageResponse,
   CreateProductRequest,
@@ -19,7 +19,7 @@ import {
   UpdateProductResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetProduct
   extends ExpressHandlerWithParams<

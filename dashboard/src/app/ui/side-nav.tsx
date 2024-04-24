@@ -1,4 +1,4 @@
-import { signOut } from '@/auth';
+import { logout } from '@/actions/auth';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ export const SideNav = () => {
         <form
           action={async () => {
             'use server';
-            await signOut({ redirect: true, redirectTo: '/' });
+            await logout();
           }}
         >
           <Button htmlType="submit" icon={<PoweroffOutlined />}>

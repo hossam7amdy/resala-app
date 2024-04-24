@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import { ENV } from '../config/index.js';
 import { authService, userService } from '../service/index.js';

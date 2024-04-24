@@ -1,5 +1,5 @@
 import { inventoryService } from '../../service/index.js';
-import {
+import type {
   CreateColor,
   DeleteColor,
   GetColor,

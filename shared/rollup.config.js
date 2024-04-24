@@ -1,4 +1,4 @@
-import {defineConfig} from 'rollup'
+import { defineConfig } from 'rollup';
 
 export default defineConfig({
   input: 'index.js',
@@ -7,5 +7,5 @@ export default defineConfig({
     format: 'cjs',
   },
 
-  external:['zod']
-})
+  external: ['zod'],
+});

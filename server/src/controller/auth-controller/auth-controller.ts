@@ -2,7 +2,7 @@ import { ENV } from '../../config/index.js';
 import { signJwt } from '../../lib/jwt-token/index.js';
 import { authService, communicationService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
-import {
+import type {
   ChangePassword,
   ForgotPassword,
   Login,

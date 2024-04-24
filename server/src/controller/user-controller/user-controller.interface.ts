@@ -1,4 +1,4 @@
-import {
+import type {
   AdminDeleteUserRequest,
   AdminDeleteUserResponse,
   AdminGetUserRequest,
@@ -21,7 +21,7 @@ import {
   UpdateProfileResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetProfile
   extends ExpressHandler<GetProfileRequest, GetProfileResponse, {}, LocalUser> {}

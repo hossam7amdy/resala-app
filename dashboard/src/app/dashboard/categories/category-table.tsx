@@ -1,4 +1,4 @@
-import type {  GetCategoriesListResponse } from '@resala/shared';
+import type { GetCategoriesListResponse } from '@resala/shared';
 import { Table } from 'antd';
 
 export const CategoryTable = async () => {
@@ -6,7 +6,7 @@ export const CategoryTable = async () => {
   //   ENDPOINT_CONFIGS.listCategories
   // );
 
-  const categories:GetCategoriesListResponse['data'] = [];
+  const categories: GetCategoriesListResponse['data'] = [];
   return (
     <Table
       pagination={{ total: categories.length, pageSize: 10 }}
