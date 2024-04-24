@@ -6,15 +6,17 @@ import type {
 } from '@resala/shared';
 import { AxiosError } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { cookies } from 'next/headers';
 
 import axios from './axios';
+import { getSession } from './session';
 
 type Res = DefaultResponseBody;
-type Req = {
-  body?: DefaultRequestBody;
-  query?: DefaultRequestQuery['query'];
-};
+type Req =
+  | {
+      body?: DefaultRequestBody;
+      query?: DefaultRequestQuery['query'];
+    }
+  | undefined;
 
 export const callEndpoint = async <Request extends Req, Response extends Res>(
   endpoint: EndpointConfig,
@@ -29,7 +31,7 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${cookies().get('session')}` : undefined,
+        Authorization: isProtected ? `Bearer ${getSession()?.value}` : undefined,
       },
     };
 
