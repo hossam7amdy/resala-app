@@ -61,11 +61,12 @@ export const authenticate = async (sign: string, password: string) => {
     expiresIn: '7d',
   });
 
+  const { password: _, salt: __, iterations: ___, ...userWithoutPassword } = user;
   return {
     expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
     accessToken: accessToken,
     refreshToken: refreshToken,
-    user,
+    user: userWithoutPassword,
   };
 };
 
