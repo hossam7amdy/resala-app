@@ -15,9 +15,10 @@
     "antd": "^5.16.2",
     "axios": "^1.6.8",
     "next": "14.2.2",
-    "next-auth": "^5.0.0-beta.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "resala": "file:..",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",

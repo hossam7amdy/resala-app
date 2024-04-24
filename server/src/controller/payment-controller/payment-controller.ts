@@ -1,7 +1,7 @@
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import { orderService, paymentService } from '../../service/index.js';
-import { CreatePayment, GetPayment, GetPaymentList } from './payment-controller.interface.js';
+import type { CreatePayment, GetPayment, GetPaymentList } from './payment-controller.interface.js';
 
 export const createPayment: CreatePayment = async (req, res, next) => {
   try {

@@ -1,4 +1,4 @@
-import {
+import type {
   CreateSizeRequest,
   CreateSizeResponse,
   DeleteSizeRequest,
@@ -11,7 +11,7 @@ import {
   UpdateSizeResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetSize
   extends ExpressHandlerWithParams<GetSizeRequest['params'], {}, GetSizeResponse, {}, LocalUser> {}

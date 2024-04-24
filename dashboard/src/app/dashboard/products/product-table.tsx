@@ -1,4 +1,4 @@
-import { callEndpoint } from '@/app/lib/fetch';
+import { callEndpoint } from '@/lib/fetch';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { GetProductsListRequest, GetProductsListResponse } from '@resala/shared';
 import { Table } from 'antd';

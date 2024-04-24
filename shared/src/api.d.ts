@@ -4,8 +4,8 @@
  * It is used by the API service to validate the request and response data.
  * It is also used by the API service to generate the API client.
  */
-import * as zod from 'zod';
-import { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, LoginSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateProductSchema, UpdateProfileSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
+import type * as zod from 'zod';
+import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, LoginSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateProductSchema, UpdateProfileSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
 export type DefaultRequestBody = {
     [key: string]: any;
 };

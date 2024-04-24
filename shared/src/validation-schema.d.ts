@@ -12,9 +12,9 @@ export declare const DefaultQuerySchema: zod.ZodObject<{
         limit: number;
         deleted: boolean;
     }, {
+        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        query?: string | undefined;
         deleted?: "true" | "false" | undefined;
     }>;
 }, "strip", zod.ZodTypeAny, {
@@ -26,9 +26,9 @@ export declare const DefaultQuerySchema: zod.ZodObject<{
     };
 }, {
     query: {
+        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        query?: string | undefined;
         deleted?: "true" | "false" | undefined;
     };
 }>;

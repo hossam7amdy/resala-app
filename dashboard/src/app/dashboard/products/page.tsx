@@ -1,4 +1,4 @@
-import { ProductTable } from '@/app/lib/products/product-table';
+import { ProductTable } from '@/app/dashboard/products/product-table';
 import type { DefaultRequestQuery } from '@resala/shared';
 import { Table } from 'antd';
 import Title from 'antd/es/typography/Title';

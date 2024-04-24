@@ -1,4 +1,5 @@
-import cors, { CorsOptions } from 'cors';
+import type { CorsOptions } from 'cors';
+import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
 import swaggerUI from 'swagger-ui-express';

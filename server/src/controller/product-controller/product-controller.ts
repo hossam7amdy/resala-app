@@ -4,7 +4,7 @@ import { deleteBlob, uploadBlob } from '../../lib/azure-storage/index.js';
 import { logger } from '../../lib/logger/index.js';
 import { inventoryService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
-import {
+import type {
   CreateProduct,
   CreateProductImage,
   DeleteProduct,

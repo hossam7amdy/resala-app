@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import { logger } from '../lib/logger/index.js';
 import { APPError } from '../utils/api-errors.js';

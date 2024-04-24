@@ -1,5 +1,5 @@
 import superset from 'supertest';
-import TestAgent from 'supertest/lib/agent.js';
+import type TestAgent from 'supertest/lib/agent.js';
 
 import { createExpressApp } from '../app.js';
 

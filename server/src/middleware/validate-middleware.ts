@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import type { AnyZodObject, ZodError } from 'zod';
 
 import { BadRequestError } from '../utils/api-errors.js';

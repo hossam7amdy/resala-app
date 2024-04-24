@@ -41,7 +41,8 @@ import {
   UpdateStockSchema,
   VerifyEmailSchema,
 } from '@resala/shared';
-import { Request, RequestHandler, Response, Router } from 'express';
+import type { Request, RequestHandler, Response } from 'express';
+import { Router } from 'express';
 
 import {
   authCtrl,

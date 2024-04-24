@@ -1,4 +1,4 @@
-import {
+import type {
   CreateOrderRequest,
   CreateOrderResponse,
   DeleteOrderRequest,
@@ -9,7 +9,7 @@ import {
   GetOrdersListResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface CreateOrder
   extends ExpressHandler<CreateOrderRequest['body'], CreateOrderResponse, {}, LocalUser> {}

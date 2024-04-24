@@ -1,4 +1,4 @@
-import { Product } from '@prisma/client';
+import type { Product } from '@prisma/client';
 
 import prisma from '../../lib/prisma/index.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';

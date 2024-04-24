@@ -3,7 +3,7 @@ import Title from 'antd/es/typography/Title';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-import { CategoryTable } from '../../lib/categories/category-table';
+import { CategoryTable } from './category-table';
 
 export const metadata: Metadata = {
   title: 'Categories',
