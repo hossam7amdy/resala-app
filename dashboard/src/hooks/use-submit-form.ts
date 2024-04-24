@@ -1,8 +1,9 @@
 'use client';
 
+import type { DefaultResponseBody } from '@resala/shared';
 import { useCallback, useState } from 'react';
 
-const useSubmitForm = <T, B>(submit: (payload: T) => Promise<B>) => {
+const useSubmitForm = <T, B extends DefaultResponseBody>(submit: (payload: T) => Promise<B>) => {
   const [pending, setPending] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string | undefined>();
 
@@ -10,12 +11,11 @@ const useSubmitForm = <T, B>(submit: (payload: T) => Promise<B>) => {
     async (payload: T) => {
       setPending(true);
       try {
-        return await submit(payload);
-      } catch (error) {
-        const err = error as Record<string, string>;
-        console.log('useSubmitForm error:', err);
+        const response = await submit(payload);
 
-        setErrMsg(err?.message || 'Something went wrong!');
+        if (typeof response?.success === 'boolean' && response.success === false) {
+          setErrMsg(response?.message || 'Something went wrong!');
+        }
       } finally {
         setPending(false);
       }
