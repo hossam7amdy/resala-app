@@ -173,6 +173,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'post',
     url: '/api/v1/auth/reset-password',
     sensitive: true,
+    auth: true,
   },
   [Endpoints.verifyEmail]: {
     method: 'get',
