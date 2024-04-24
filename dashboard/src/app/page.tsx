@@ -1,3 +1,4 @@
+import ROUTES from '@/lib/routes';
 import { Button, Flex } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Link from 'next/link';
@@ -17,7 +18,7 @@ const Page = () => {
             Welcome to the dashboard. You are not logged in. Please login to access the dashboard.
           </Paragraph>
           <Button>
-            <Link href="/auth/login">Login Page</Link>
+            <Link href={ROUTES.LOGIN}>Login Page</Link>
           </Button>
         </Flex>
       </div>
