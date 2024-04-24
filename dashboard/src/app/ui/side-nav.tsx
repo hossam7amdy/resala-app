@@ -1,4 +1,5 @@
 import { logout } from '@/actions/auth';
+import ROUTES from '@/lib/routes';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
@@ -9,7 +10,7 @@ import { NavLinks } from './nav-links/nav-links';
 export const SideNav = () => {
   return (
     <Flex vertical style={{ height: '100%' }}>
-      <Link href="/dashboard">
+      <Link href={ROUTES.DASHBOARD}>
         <div style={{ textAlign: 'center', margin: '50px auto' }}>
           <Logo />
         </div>
