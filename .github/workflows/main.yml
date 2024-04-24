@@ -1,4 +1,4 @@
-name: CI
+name: --frozen-lockfile
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
 
       - name: yarn install, build, and test
         run: |
-          yarn ci
+          yarn --frozen-lockfile
           yarn run build
           yarn run test
 
@@ -42,5 +42,5 @@ jobs:
           cache: 'yarn'
       - name: yarn install and lint
         run: |
-          yarn ci
+          yarn --frozen-lockfile
           yarn run format
