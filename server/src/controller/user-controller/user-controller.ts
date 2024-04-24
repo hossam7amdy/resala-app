@@ -1,5 +1,5 @@
 import { userService } from '../../service/index.js';
-import {
+import type {
   AdminDeleteUser,
   AdminGetUser,
   AdminGetUsersList,

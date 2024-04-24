@@ -1,6 +1,3 @@
-'use server';
-
-import { auth } from '@/auth';
 import type {
   DefaultRequestBody,
   DefaultRequestQuery,
@@ -9,6 +6,7 @@ import type {
 } from '@resala/shared';
 import { AxiosError } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { cookies } from 'next/headers';
 
 import axios from './axios';
 
@@ -25,15 +23,13 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
   try {
     const { url, method, auth: isProtected } = endpoint;
 
-    const session = await auth();
-
     const config: AxiosRequestConfig = {
       url,
       method,
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${session?.user?.accessToken}` : undefined,
+        Authorization: isProtected ? `Bearer ${cookies().get('session')}` : undefined,
       },
     };
 
@@ -42,8 +38,9 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      return error?.response?.data;
+      throw error?.response?.data;
     }
+    console.error(error);
     throw new Error('Something went wrong.');
   }
 };

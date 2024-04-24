@@ -1,4 +1,4 @@
-import {
+import type {
   CreateCartRequest,
   CreateCartResponse,
   CreateWishlistRequest,
@@ -13,7 +13,7 @@ import {
   GetWishlistResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface AddItemToCart
   extends ExpressHandler<CreateCartRequest['body'], CreateCartResponse, {}, LocalUser> {}

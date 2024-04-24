@@ -1,6 +1,6 @@
-import { User } from '@prisma/client';
-import { DefaultResponseBody } from '@resala/shared';
-import { RequestHandler } from 'express';
+import type { User } from '@prisma/client';
+import type { DefaultResponseBody } from '@resala/shared';
+import type { RequestHandler } from 'express';
 
 // Local User Interface
 export interface LocalUser {

@@ -1,7 +1,7 @@
-import { Address } from '@prisma/client';
+import type { Address } from '@prisma/client';
 
+import type callback from '../lib/paymob/callback.json';
 import { paymob } from '../lib/paymob/index.js';
-import callback from '../lib/paymob/callback.json';
 import prisma from '../lib/prisma/index.js';
 import { NotFoundError } from '../utils/api-errors.js';
 

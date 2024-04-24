@@ -55,7 +55,7 @@ describe('inventoryService - [ Product ]', () => {
     });
 
     it("should return non-active product's details", async () => {
-      let deletedProduct = { ...PRODUCT_OUTPUT, deletedAt: new Date() };
+      const deletedProduct = { ...PRODUCT_OUTPUT, deletedAt: new Date() };
       prismaMock.product.findUnique.mockResolvedValue(deletedProduct as any);
 
       const product = await inventoryService.findProductById(4, true);

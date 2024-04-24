@@ -11,8 +11,8 @@
     }
   },
   "scripts": {
-    "rollup": "npx rollup -c rollup.config.js",
-    "build": "npm i && tsc && npm run rollup"
+    "rollup": "rollup -c rollup.config.js",
+    "build": "yarn && tsc && yarn rollup"
   },
   "dependencies": {
     "zod": "^3.22.4"

@@ -1,4 +1,4 @@
-import { Address, Order, OrderItem, Prisma } from '@prisma/client';
+import type { Address, Order, OrderItem, Prisma } from '@prisma/client';
 
 import prisma from '../lib/prisma/index.js';
 import { BadRequestError, NotFoundError } from '../utils/api-errors.js';

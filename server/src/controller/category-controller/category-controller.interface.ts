@@ -1,4 +1,4 @@
-import {
+import type {
   CreateCategoryRequest,
   CreateCategoryResponse,
   DeleteCategoryRequest,
@@ -12,7 +12,7 @@ import {
   UpdateCategoryResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetCategory
   extends ExpressHandlerWithParams<

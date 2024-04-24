@@ -1,4 +1,4 @@
-import {
+import type {
   CreateColorRequest,
   CreateColorResponse,
   DeleteColorRequest,
@@ -11,7 +11,7 @@ import {
   UpdateColorResponse,
 } from '@resala/shared';
 
-import { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
+import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
 export interface GetColor
   extends ExpressHandlerWithParams<

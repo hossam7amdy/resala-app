@@ -6,13 +6,13 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "prisma:generate": "npx prisma generate",
-    "build": "npm i && npm run prisma:generate && tsc",
+    "prisma:generate": "prisma generate",
+    "build": "yarn && yarn prisma:generate && tsc",
     "start": "set NODE_ENV=prod&& node dist/index.js",
     "dev": "set NODE_ENV=dev&& tsx watch src/index.ts",
     "test:unit": "dotenv -e .env.test -- vitest -c ./vitest.config.unit.ts",
     "test:int": "bash ./scripts/run-integration.sh",
-    "test": "npm run test:unit && npm run test:int"
+    "test": "yarn test:unit && yarn test:int"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
