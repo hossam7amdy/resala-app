@@ -6,7 +6,6 @@ import { Button, Form, Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Password from 'antd/es/input/Password';
 import Text from 'antd/es/typography/Text';
-import React from 'react';
 
 const LoginForm = () => {
   const { errMsg, pending, dispatch } = useSubmitForm(login);

@@ -1,4 +1,5 @@
 import { Logo } from '@/app/ui/logo';
+import ROUTES from '@/lib/routes';
 import { Flex } from 'antd';
 import Link from 'antd/es/typography/Link';
 
@@ -14,7 +15,7 @@ const LoginPage = () => {
             <Logo />
           </div>
           <LoginForm />
-          <Link href="/auth/forgot-password">Forget password?</Link>
+          <Link href={ROUTES.FORGOT_PASSWORD}>Forget password?</Link>
         </Flex>
       </div>
     </main>
