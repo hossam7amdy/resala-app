@@ -85,7 +85,7 @@ const validationPatterns = {
         message: 'Invalid latitude/longitude point',
     },
     validateArabicCharacters: {
-        pattern: /^[\u0600-\u06FF\s]+[0-9]*$/,
+        pattern: /^[\u0600-\u06FF\s0-9]+$/,
         message: 'فقط الحروف العربية مسموح بها',
     },
 };
