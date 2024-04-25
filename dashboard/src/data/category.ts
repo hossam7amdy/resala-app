@@ -1,0 +1,24 @@
+import { callEndpoint } from '@/lib/fetch';
+import {
+  ENDPOINT_CONFIGS,
+  type GetCategoriesListRequest,
+  type GetCategoriesListResponse,
+  type GetCategoryResponse,
+  withParams,
+} from '@resala/shared';
+
+export const listAllCategories = async () => {
+  const response = await callEndpoint<GetCategoriesListRequest, GetCategoriesListResponse>(
+    ENDPOINT_CONFIGS.listCategories
+  );
+
+  return response.data;
+};
+
+export const findCategoryById = async (id: string) => {
+  const response = await callEndpoint<undefined, GetCategoryResponse>(
+    withParams(ENDPOINT_CONFIGS.getCategory, id)
+  );
+
+  return response.data;
+};

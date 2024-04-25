@@ -10,8 +10,11 @@ const authMiddleware = async (req: NextRequest) => {
 
   const session = getSession();
 
-  if (isProtectedRoute && !session) {
+  if (!session && isProtectedRoute) {
     return NextResponse.redirect(new URL(ROUTES.LOGIN, req.nextUrl));
+  }
+  if (session && !isProtectedRoute) {
+    return NextResponse.redirect(new URL(ROUTES.DASHBOARD, req.nextUrl));
   }
 
   return NextResponse.next();
