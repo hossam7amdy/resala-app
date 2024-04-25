@@ -47,9 +47,9 @@ describe('inventoryService - [ Product ]', () => {
     it("should return active product's details", async () => {
       prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT as any);
 
-      const product = await inventoryService.findProductById(1, false);
+      const product = await inventoryService.findProductById(1);
 
-      expect(product).toMatchObject(PRODUCT_OUTPUT);
+      expect(product).toEqual(PRODUCT_OUTPUT);
       expect(product.deletedAt).toBeNull();
       expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(1);
     });
@@ -222,7 +222,7 @@ describe('inventoryService - [ Product ]', () => {
 
       const product = await inventoryService.deleteProduct(4);
 
-      expect(product).toMatchObject(rest);
+      expect(product).toEqual(rest);
       expect(prismaMock.product.delete).toHaveBeenCalledTimes(1);
     });
 
