@@ -4,10 +4,10 @@ import { Flex } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
-import EmailForm from './email-form';
 import styles from './page.module.css';
+import EmailForm from './reset-form';
 
-const ForgotPasswordPage = () => {
+const ResetPasswordPage = () => {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -23,4 +23,4 @@ const ForgotPasswordPage = () => {
   );
 };
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;

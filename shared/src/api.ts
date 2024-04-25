@@ -62,9 +62,10 @@ export type DefaultResponseBody = {
 export type LoginRequest = zod.infer<typeof LoginSchema>;
 export type LoginResponse = DefaultResponseBody & {
   data: {
-    expiresAt: number; // timestamp in milliseconds
+    expiresAt: Date;
     accessToken: string;
     refreshToken: string;
+    user: GetProfileResponse['data'];
   };
 };
 
@@ -81,7 +82,7 @@ export type ForgotPasswordRequest = zod.infer<typeof ForgotPasswordSchema>;
 export type ForgotPasswordResponse = DefaultResponseBody & {
   data: {
     resetToken: string;
-    expiresAt: number; // timestamp in milliseconds
+    expiresAt: Date;
   };
 };
 

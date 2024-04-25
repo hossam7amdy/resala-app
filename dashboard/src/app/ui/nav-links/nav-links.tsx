@@ -1,5 +1,6 @@
 'use client';
 
+import ROUTES from '@/lib/routes';
 import {
   FileProtectOutlined,
   HomeOutlined,
@@ -14,11 +15,11 @@ import React from 'react';
 import styles from './nav-links.module.css';
 
 const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeOutlined },
-  { name: 'Categories', href: '/dashboard/categories', icon: TagOutlined },
-  { name: 'Products', href: '/dashboard/products', icon: ProductOutlined },
-  { name: 'Orders', href: '/dashboard/orders', icon: FileProtectOutlined },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserOutlined },
+  { name: 'Home', href: ROUTES.DASHBOARD, icon: HomeOutlined },
+  { name: 'Categories', href: ROUTES.CATEGORIES, icon: TagOutlined },
+  { name: 'Products', href: ROUTES.PRODUCTS, icon: ProductOutlined },
+  { name: 'Orders', href: ROUTES.ORDERS, icon: FileProtectOutlined },
+  { name: 'Customers', href: ROUTES.CUSTOMERS, icon: UserOutlined },
 ];
 
 export const NavLinks = () => {

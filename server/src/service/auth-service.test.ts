@@ -48,6 +48,8 @@ const MOCK_USER = {
   iterations: 10,
 };
 
+const { password: _, salt: __, iterations: ___, ...MOCK_USER_WITHOUT_PASSWORD } = MOCK_USER;
+
 const SELECT = {
   id: true,
   email: true,
@@ -72,16 +74,20 @@ describe('auth-service', () => {
     const password = 'password';
     it('should authenticate a user with valid credentials', async () => {
       prismaMock.user.findFirst.mockResolvedValue(MOCK_USER as any);
+      prismaMock.user.update.mockResolvedValue(MOCK_USER as any);
 
       vi.spyOn(passwordUtilMock, 'verifyHashedPassword').mockResolvedValue(true);
       vi.spyOn(jwtTokenMock, 'signJwt').mockReturnValue('jwt-token');
 
       const result = await authService.authenticate(sign, password);
 
+      console.log('result', result);
+
       expect(result).toEqual({
         accessToken: 'jwt-token',
         refreshToken: 'jwt-token',
-        expiresAt: expect.any(Number),
+        expiresAt: expect.any(Date),
+        user: expect.objectContaining(MOCK_USER_WITHOUT_PASSWORD),
       });
       expect(jwtTokenMock.signJwt).toHaveBeenCalledTimes(2);
       expect(prismaMock.user.findFirst).toHaveBeenCalledWith({
@@ -395,7 +401,7 @@ describe('auth-service', () => {
       const result = await authService.refreshToken(token);
 
       expect(result).toEqual({
-        expiresAt: expect.any(Number),
+        expiresAt: expect.any(Date),
         accessToken: newToken,
       });
       expect(jwtTokenMock.verifyJwt).toHaveBeenCalledTimes(1);
@@ -420,8 +426,6 @@ describe('auth-service', () => {
       const secret = 'secret';
 
       const result = await authService.validateJwtToken(token, secret);
-
-      console.log('authService.validateJwtToken', result);
 
       expect(result).toEqual({ id: MOCK_USER.id, email: MOCK_USER.email });
       expect(jwtTokenMock.verifyJwt).toHaveBeenCalledWith(token, secret);
