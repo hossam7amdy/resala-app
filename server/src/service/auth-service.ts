@@ -47,10 +47,12 @@ export const authenticate = async (sign: string, password: string) => {
     throw new BadRequestError('Invalid email/phone or password');
   }
 
-  await prisma.user.update({
-    data: { lastLogin: new Date() },
-    where: { id: user.id },
-  });
+  prisma.user
+    .update({
+      data: { lastLogin: new Date() },
+      where: { id: user.id },
+    })
+    .catch(console.error);
 
   const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
     expiresIn: '1d',
@@ -59,10 +61,12 @@ export const authenticate = async (sign: string, password: string) => {
     expiresIn: '7d',
   });
 
+  const { password: _, salt: __, iterations: ___, ...userWithoutPassword } = user;
   return {
-    expiresAt: Date.now() + 60 * 60 * 24 * 1000, // 1 day
+    expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
     accessToken: accessToken,
     refreshToken: refreshToken,
+    user: userWithoutPassword,
   };
 };
 
@@ -155,7 +159,7 @@ export const forgotPassword = async (email: string) => {
   }
 
   // generate reset token
-  const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
   const resetCode = generateRandomString(6).toUpperCase();
   const token = Jwt.signJwt({ id: user.id, email, resetCode }, ENV.JWT_RESET!, { expiresIn: '1h' });
 
@@ -193,7 +197,7 @@ export const refreshToken = async (token: string) => {
     expiresIn: '1d',
   });
   return {
-    expiresAt: Date.now() + 60 * 60 * 24 * 1000, // 1 day
+    expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
     accessToken: accessToken,
   };
 };

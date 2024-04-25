@@ -15,11 +15,11 @@ import type {
 export const login: Login = async (req, res, next) => {
   try {
     const { sign, password } = req.body;
-    const token = await authService.authenticate(sign, password);
+    const response = await authService.authenticate(sign, password);
 
     return res.json({
       success: true,
-      data: token,
+      data: response,
     });
   } catch (error) {
     next(error);
