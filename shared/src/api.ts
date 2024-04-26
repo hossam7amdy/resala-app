@@ -249,7 +249,7 @@ export type GetProductsListResponse = DefaultResponseBody & {
       limit: number;
       total: number; // Total number of products in the database (for pagination)
     };
-    products: CreateProductResponse['data'][];
+    products: GetProductResponse['data'][];
   };
 };
 

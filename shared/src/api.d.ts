@@ -173,7 +173,7 @@ export type GetProductsListResponse = DefaultResponseBody & {
             limit: number;
             total: number;
         };
-        products: CreateProductResponse['data'][];
+        products: GetProductResponse['data'][];
     };
 };
 export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema>;
