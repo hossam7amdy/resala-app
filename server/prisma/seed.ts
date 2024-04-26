@@ -316,36 +316,6 @@ async function main() {
     ],
   });
 
-  await prisma.productImage.createMany({
-    data: [
-      {
-        productId: products[0].id,
-        imageUrl:
-          'https://resala-hrb8f5d4fuesddfe.z02.azurefd.net/public/e84e0435-27b9-4b9b-82fc-105d18d81ff9.jpg',
-      },
-      {
-        productId: products[1].id,
-        imageUrl:
-          'https://resala-hrb8f5d4fuesddfe.z02.azurefd.net/public/9070c644-a4ed-40f4-b18b-69d2e9be9b5d.jpg',
-      },
-      {
-        productId: products[2].id,
-        imageUrl:
-          'https://resala-hrb8f5d4fuesddfe.z02.azurefd.net/public/25586091-2702-454d-909b-60d89be3290e.jpg',
-      },
-      {
-        productId: products[3].id,
-        imageUrl:
-          'https://resala-hrb8f5d4fuesddfe.z02.azurefd.net/public/42182174-c6cc-4f2b-a6b9-c624af449b01.jpg',
-      },
-      {
-        productId: products[0].id,
-        imageUrl:
-          'https://resala-hrb8f5d4fuesddfe.z02.azurefd.net/public/431a6f3a-795b-419f-9adf-d0f7bcf5d289.jpg',
-      },
-    ],
-  });
-
   console.log('seeded successfully');
 }
 
