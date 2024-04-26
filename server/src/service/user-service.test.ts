@@ -100,9 +100,24 @@ describe('userService', () => {
 
       const result = await userService.deleteUser(1);
 
-      expect(result).toBe(true);
+      expect(result).toBe(MOCK_USER);
       expect(prismaMock.user.findUnique).toHaveBeenCalledTimes(1);
-      expect(prismaMock.user.delete).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(prismaMock.user.delete).toHaveBeenCalledWith({
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          isVerified: true,
+          phone: true,
+          role: true,
+          lastLogin: true,
+          createdAt: true,
+          updatedAt: true,
+          deletedAt: true,
+        },
+        where: { id: 1 },
+      });
     });
 
     it('should throw an error if user not found', async () => {
@@ -160,7 +175,6 @@ describe('userService', () => {
         page: 1,
         limit: 10,
         query: '',
-        deleted: false,
       });
 
       expect(result).toEqual({

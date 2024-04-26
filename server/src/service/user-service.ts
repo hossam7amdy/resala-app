@@ -45,7 +45,7 @@ export const deleteUser = async (id: number) => {
     throw new NotFoundError('User not found');
   }
 
-  return !!(await prisma.user.delete({ where: { id } }));
+  return await prisma.user.delete({ select: SELECT, where: { id } });
 };
 
 export const findUserById = async (id: number) => {
@@ -64,9 +64,8 @@ export const listUsersPaginated = async (filters: {
   page: number;
   limit: number;
   query: string;
-  deleted: boolean;
 }) => {
-  const { page, limit, query, deleted } = filters;
+  const { page, limit, query } = filters;
 
   const _filters = [
     { firstName: { startsWith: query } },
@@ -79,18 +78,16 @@ export const listUsersPaginated = async (filters: {
     prisma.user.count({
       where: {
         OR: _filters,
-        deletedAt: deleted ? { not: null } : null,
       },
     }),
     prisma.user.findMany({
       select: SELECT,
       where: {
         OR: _filters,
-        deletedAt: deleted ? { not: null } : null,
       },
       take: limit,
       skip: (page - 1) * limit,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
     }),
   ]);
 

@@ -24,7 +24,8 @@ export function createExpressApp(logRequests: boolean = true) {
   app.use(cors(corsConfig));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.static('src/public'));
+  app.use(express.static('uploads')); // serve uploaded files
+  app.use(express.static('src/public')); // serve static files
 
   // Swagger UI
   app.use(
@@ -38,6 +39,10 @@ export function createExpressApp(logRequests: boolean = true) {
 
   // Routes
   app.use('/', createExpressRouter(logRequests));
+
+  app.get('/uploads/:file', (req, res) => {
+    res.sendFile(req.params.file, { root: 'uploads' });
+  });
 
   // Catch all routes
   app.get('*', (_, res) => {
