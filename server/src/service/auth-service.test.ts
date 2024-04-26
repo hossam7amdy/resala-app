@@ -81,8 +81,6 @@ describe('auth-service', () => {
 
       const result = await authService.authenticate(sign, password);
 
-      console.log('result', result);
-
       expect(result).toEqual({
         accessToken: 'jwt-token',
         refreshToken: 'jwt-token',

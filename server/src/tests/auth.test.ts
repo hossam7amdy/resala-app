@@ -6,12 +6,6 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getTestServer } from './testserver.js';
 
-vi.mock('lib/azure-storage/azure.js', () => ({
-  __esModule: true, // this property makes it work
-  uploadBlob: vi.fn(),
-  deleteBlob: vi.fn(),
-}));
-
 vi.mock('../service/communication-service.js', () => ({
   __esModule: true, // this property makes it work;
   sendVerificationEmail: vi.fn(),
