@@ -27,6 +27,7 @@
     "test": "npm-run-all --parallel test:server test:dashboard",
     "start:dashboard": "yarn --cwd dashboard dev",
     "start:server": "yarn --cwd server dev",
+    "start": "npm-run-all --parallel start:server start:dashboard",
     "start:server:prod": "yarn --cwd server start",
     "docker:build:server": "docker build -t resala/server . -f Dockerfile.server"
   },

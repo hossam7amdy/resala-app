@@ -1,10 +1,10 @@
+import { Logo } from '@/components/ui/logo';
 import ROUTES from '@/lib/routes';
 import { Button, Flex } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Link from 'next/link';
 
 import styles from './page.module.css';
-import { Logo } from './ui/logo';
 
 const Page = () => {
   return (

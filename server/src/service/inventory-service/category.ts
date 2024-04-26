@@ -30,6 +30,9 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
   }
 
   if (category.categoryId) {
+    if (found.subCategories.length) {
+      throw new ConflictError(`Category has subcategories`);
+    }
     const parentExist = await findCategoryById(category.categoryId);
     if (!parentExist) {
       throw new NotFoundError('Parent category not found');
@@ -37,7 +40,11 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
   }
 
   return await prisma.category.update({
-    data: category,
+    data: {
+      enName: category.enName,
+      arName: category.arName,
+      categoryId: category.categoryId || null,
+    },
     where: { id },
   });
 };

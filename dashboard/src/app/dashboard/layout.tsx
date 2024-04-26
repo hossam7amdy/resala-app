@@ -1,4 +1,4 @@
-import { SideNav } from '@/app/ui/side-nav';
+import { SideNav } from '@/components/ui/side-nav';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Layout as AppLayout } from 'antd';
 import Sider from 'antd/es/layout/Sider';
@@ -14,10 +14,20 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <AntdRegistry>
       <AppLayout hasSider>
-        <Sider className={styles.sider}>
+        <Sider
+          className={styles.sider}
+          style={{
+            overflow: 'auto',
+            height: '100vh',
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+          }}
+        >
           <SideNav />
         </Sider>
-        <Content>{children}</Content>
+        <Content style={{ marginLeft: 200, minHeight: '100vh' }}>{children}</Content>
       </AppLayout>
     </AntdRegistry>
   );

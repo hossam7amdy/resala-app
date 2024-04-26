@@ -67,4 +67,8 @@ export declare const validationPatterns: {
         pattern: RegExp;
         message: string;
     };
+    validateArabicCharacters: {
+        pattern: RegExp;
+        message: string;
+    };
 };

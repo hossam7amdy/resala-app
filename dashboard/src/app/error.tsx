@@ -1,11 +1,10 @@
 'use client';
 
+import ResalaTooltip from '@/components/ui/tooltip';
 import { Collapse, Input, List, Result } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Text from 'antd/es/typography/Text';
 import { useEffect } from 'react';
-
-import ResalaTooltip from './ui/tooltip';
 
 const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) => {
   useEffect(() => {
