@@ -1,7 +1,8 @@
 import { unlink } from 'fs/promises';
 
-import { deleteBlob, uploadBlob } from '../../lib/azure-storage/index.js';
-import { logger } from '../../lib/logger/index.js';
+import { ENV } from '../../config/env.js';
+import { logger } from '../../lib/logger/logger.js';
+import { deleteFile } from '../../lib/multer/multer.js';
 import { inventoryService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
@@ -99,7 +100,7 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       throw new BadRequestError('No files uploaded');
     }
 
-    const urls = await Promise.all(files.map(file => uploadBlob(file.path)));
+    const urls = files.map(file => `${ENV.APP_URL}/${file.filename}`);
     await inventoryService.addProductImages(req.body.productId, urls);
 
     return res.json({
@@ -107,9 +108,8 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       message: 'Files uploaded',
     });
   } catch (error) {
+    files?.forEach(file => unlink(file.path).catch(logger.warn));
     next(error);
-  } finally {
-    files.forEach(file => unlink(file.path).catch(logger.error));
   }
 };
 
@@ -144,7 +144,7 @@ export const deleteProductImage: DeleteProductImage = async (req, res, next) => 
     const { imageId, productId } = req.params;
 
     const image = await inventoryService.deleteProductImage(imageId, productId);
-    await deleteBlob(image.imageUrl);
+    deleteFile(image.imageUrl).catch(logger.warn);
 
     return res.json({
       success: true,

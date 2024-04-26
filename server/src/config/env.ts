@@ -5,7 +5,7 @@ env.config();
 const ENV = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
-  SERVER_URL: process.env.SERVER_URL,
+  APP_URL: process.env.APP_URL,
 
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_REFRESH: process.env.JWT_REFRESH,
@@ -13,9 +13,6 @@ const ENV = {
   JWT_VERIFY: process.env.JWT_VERIFY,
 
   DATABASE_URL: process.env.DATABASE_URL,
-
-  AZURE_STORAGE_NAME: process.env.AZURE_STORAGE_NAME,
-  AZURE_CDN_ENDPOINT: process.env.AZURE_CDN_ENDPOINT,
 
   MAIL_USER: process.env.MAIL_USER,
   MAIL_PASS: process.env.MAIL_PASS,

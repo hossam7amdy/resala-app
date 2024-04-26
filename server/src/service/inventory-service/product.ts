@@ -32,7 +32,7 @@ export const listProductsPaginated = async (filters: {
 
   const _filters = {
     OR: [{ enName: { contains: query } }, { arName: { contains: query } }],
-    deletedAt: deleted ? { not: null } : null,
+    deletedAt: deleted ? undefined : null,
   };
 
   const [total, products] = await prisma.$transaction([
@@ -50,7 +50,7 @@ export const listProductsPaginated = async (filters: {
       skip: (page - 1) * limit,
       take: limit,
       where: _filters,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
     }),
   ]);
 
@@ -108,6 +108,7 @@ export const updateProduct = async (id: number, product: Product) => {
       arDescription: product.arDescription,
       enDescription: product.enDescription,
       price: product.price,
+      deletedAt: !!product.deletedAt ? new Date() : null,
     },
   });
 };

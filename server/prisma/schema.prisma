@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,7 +14,7 @@ datasource db {
 //*             User Data                *//
 
 model User {
-  id            Int            @id @default(autoincrement()) @db.UnsignedInt
+  id            Int            @id @default(autoincrement()) @db.Integer
   email         String         @unique @db.VarChar(125)
   isVerified    Boolean        @default(false) @map("is_verified")
   phone         String         @db.Char(11)
@@ -40,8 +40,8 @@ model User {
 }
 
 model UserAddress {
-  userId    Int     @map("user_id") @db.UnsignedInt
-  addressId Int     @unique @map("address_id") @db.UnsignedInt
+  userId    Int     @map("user_id") @db.Integer
+  addressId Int     @unique @map("address_id") @db.Integer
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   address   Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
 
@@ -52,8 +52,8 @@ model UserAddress {
 // ------------------------------------------------ //
 //*             Inventory Data                *//
 model Category {
-  id            Int        @id @default(autoincrement()) @db.UnsignedInt
-  categoryId    Int?       @map("category_id") @db.UnsignedInt
+  id            Int        @id @default(autoincrement()) @db.Integer
+  categoryId    Int?       @map("category_id") @db.Integer
   arName        String     @unique @map("ar_name") @db.VarChar(100)
   enName        String     @unique @map("en_name") @db.VarChar(100)
   createdAt     DateTime   @default(now()) @map("created_at")
@@ -68,8 +68,8 @@ model Category {
 }
 
 model Product {
-  id            Int            @id @default(autoincrement()) @db.UnsignedInt
-  categoryId    Int            @map("category_id") @db.UnsignedInt
+  id            Int            @id @default(autoincrement()) @db.Integer
+  categoryId    Int            @map("category_id") @db.Integer
   arName        String         @unique @map("ar_name") @db.VarChar(50)
   enName        String         @unique @map("en_name") @db.VarChar(50)
   arDescription String         @map("ar_description") @db.VarChar(1000)
@@ -88,8 +88,8 @@ model Product {
 }
 
 model ProductImage {
-  id        Int      @default(autoincrement()) @db.UnsignedInt
-  productId Int      @map("product_id") @db.UnsignedInt
+  id        Int      @default(autoincrement()) @db.Integer
+  productId Int      @map("product_id") @db.Integer
   imageUrl  String   @map("image_url") @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -99,10 +99,10 @@ model ProductImage {
 }
 
 model Stock {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  productId Int      @map("product_id") @db.UnsignedInt
-  colorId   Int      @map("color_id") @db.UnsignedInt
-  sizeId    Int      @map("size_id") @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
+  productId Int      @map("product_id") @db.Integer
+  colorId   Int      @map("color_id") @db.Integer
+  sizeId    Int      @map("size_id") @db.Integer
   quantity  Int      @default(0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -116,7 +116,7 @@ model Stock {
 }
 
 model Color {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
   code      String   @unique @db.Char(7)
   arName    String   @unique @map("ar_name") @db.VarChar(15)
   enName    String   @unique @map("en_name") @db.VarChar(15)
@@ -128,7 +128,7 @@ model Color {
 }
 
 model Size {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
   name      String   @unique @db.VarChar(5) // S, M, L, XL, XXL
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -140,8 +140,8 @@ model Size {
 // ------------------------------------------------ //
 //*             Shopping Data                *//
 model Cart {
-  userId    Int      @map("user_id") @db.UnsignedInt
-  stockId   Int      @map("stock_id") @db.UnsignedInt
+  userId    Int      @map("user_id") @db.Integer
+  stockId   Int      @map("stock_id") @db.Integer
   quantity  Int      @default(1) @map("quantity")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -153,8 +153,8 @@ model Cart {
 }
 
 model Wishlist {
-  userId    Int      @map("user_id") @db.UnsignedInt
-  productId Int      @map("product_id") @db.UnsignedInt
+  userId    Int      @map("user_id") @db.Integer
+  productId Int      @map("product_id") @db.Integer
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -167,8 +167,8 @@ model Wishlist {
 // ------------------------------------------------ //
 //*             Order Data                *//
 model Order {
-  id              Int           @id @default(autoincrement()) @db.UnsignedInt
-  userId          Int?          @map("user_id") @db.UnsignedInt
+  id              Int           @id @default(autoincrement()) @db.Integer
+  userId          Int?          @map("user_id") @db.Integer
   subtotal        Decimal       @db.Decimal(9, 2)
   discount        Decimal       @default(0) @db.Decimal(9, 2)
   total           Decimal       @db.Decimal(9, 2)
@@ -187,8 +187,8 @@ model Order {
 }
 
 model OrderItem {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  orderId   Int      @map("order_id") @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
+  orderId   Int      @map("order_id") @db.Integer
   name      String   @db.VarChar(50)
   color     String   @db.VarChar(15)
   size      String   @db.VarChar(5)
@@ -202,9 +202,9 @@ model OrderItem {
 }
 
 model Shipping {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  orderId   Int      @unique @map("order_id") @db.UnsignedInt
-  addressId Int      @unique @map("address_id") @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
+  orderId   Int      @unique @map("order_id") @db.Integer
+  addressId Int      @unique @map("address_id") @db.Integer
   cost      Decimal  @default(0) @db.Decimal(9, 2)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -215,10 +215,10 @@ model Shipping {
 }
 
 model Payment {
-  id                 Int      @id @default(autoincrement()) @db.UnsignedInt
-  orderId            Int      @unique @map("order_id") @db.UnsignedInt
-  transactionId      Int      @map("transaction_id") @db.UnsignedInt
-  transactionOrderId Int      @map("transaction_order_id") @db.UnsignedInt
+  id                 Int      @id @default(autoincrement()) @db.Integer
+  orderId            Int      @unique @map("order_id") @db.Integer
+  transactionId      Int      @map("transaction_id") @db.Integer
+  transactionOrderId Int      @map("transaction_order_id") @db.Integer
   pending            Boolean
   success            Boolean
   isAuth             Boolean  @map("is_auth")
@@ -227,7 +227,7 @@ model Payment {
   isVoided           Boolean  @map("is_voided")
   isRefunded         Boolean  @map("is_refunded")
   is3DSecure         Boolean  @map("is_3d_secure")
-  integrationId      Int      @map("integration_id") @db.UnsignedInt
+  integrationId      Int      @map("integration_id") @db.Integer
   deliveryNeeded     Boolean  @map("delivery_needed")
   currency           String   @default("EGP") @db.Char(3)
   createdAt          DateTime @default(now()) @map("created_at")
@@ -240,9 +240,9 @@ model Payment {
 // ------------------------------------------------ //
 //*             Review Data                *//
 model Review {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  userId    Int?     @map("user_id") @db.UnsignedInt
-  productId Int      @map("product_id") @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
+  userId    Int?     @map("user_id") @db.Integer
+  productId Int      @map("product_id") @db.Integer
   rating    Int      @default(5)
   comment   String?  @db.VarChar(250)
   createdAt DateTime @default(now()) @map("created_at")
@@ -256,8 +256,8 @@ model Review {
 // ------------------------------------------------ //
 //*             Notification Data                *//
 model Notification {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  userId    Int      @map("user_id") @db.UnsignedInt
+  id        Int      @id @default(autoincrement()) @db.Integer
+  userId    Int      @map("user_id") @db.Integer
   title     String   @db.VarChar(25)
   content   String   @db.VarChar(250)
   isRead    Boolean  @default(false) @map("is_read")
@@ -272,7 +272,7 @@ model Notification {
 //*             Utils                *//
 
 model Address {
-  id          Int          @id @default(autoincrement()) @db.UnsignedInt
+  id          Int          @id @default(autoincrement()) @db.Integer
   country     String       @default("Egypt") @db.VarChar(50)
   state       String       @db.VarChar(50)
   city        String       @db.VarChar(50)

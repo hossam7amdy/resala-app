@@ -1,3 +1,4 @@
+import { unlink } from 'fs/promises';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -38,3 +39,9 @@ export const upload = multer({
   storage,
   fileFilter,
 });
+
+export const deleteFile = (filename: string) => {
+  filename = filename.split('/').pop() as string;
+  const filePath = path.join(uploadDir, filename);
+  return unlink(filePath);
+};

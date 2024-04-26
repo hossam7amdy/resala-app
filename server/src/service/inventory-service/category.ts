@@ -14,7 +14,10 @@ export const createCategory = async (category: Prisma.CategoryUncheckedCreateInp
   }
 
   return await prisma.category.create({
-    data: category,
+    data: {
+      enName: category.enName,
+      arName: category.arName,
+    },
   });
 };
 
@@ -44,6 +47,7 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
       enName: category.enName,
       arName: category.arName,
       categoryId: category.categoryId || null,
+      deletedAt: !!category.deletedAt ? new Date() : null,
     },
     where: { id },
   });
@@ -107,6 +111,9 @@ export const listCategories = async (deleted: boolean = false) => {
       categoryId: null,
       deletedAt: deleted ? undefined : null,
     },
+    orderBy: {
+      updatedAt: 'desc',
+    },
   });
 };
 
@@ -153,6 +160,10 @@ const createSubCategory = async (category: Prisma.CategoryUncheckedCreateInput) 
   }
 
   return await prisma.category.create({
-    data: category,
+    data: {
+      enName: category.enName,
+      arName: category.arName,
+      categoryId: category.categoryId,
+    },
   });
 };
