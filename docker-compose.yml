@@ -28,7 +28,7 @@ services:
       - JWT_VERIFY=jwt_verify_secret
       - SERVER_URL=http://localhost:5000
       # DATABASE
-      - DATABASE_URL=mysql://root:root@localhost/resala
+      - DATABASE_URL=mysql://root:root@db:3306/resala
       # AZURE CREDENTIALS
       - AZURE_STORAGE_NAME=azure_storage_name
       - AZURE_TENANT_ID=azure_tenant_id

@@ -1,18 +1,45 @@
 import prisma from '../src/lib/prisma';
+import { genHashedPassword } from '../src/utils/password';
+
+const generateRandomUsers = async () => {
+  const { hashedPassword, salt, iterations } = await genHashedPassword('abcABC@123');
+
+  const users = [
+    {
+      salt,
+      iterations,
+      password: hashedPassword,
+      email: `admin@resala.com`,
+      phone: `01500000000`,
+      firstName: 'admin',
+      lastName: 'user',
+      role: 'ADMIN',
+    },
+  ];
+
+  for (let i = 1; i < 10; i++) {
+    const { hashedPassword, salt, iterations } = await genHashedPassword('abcABC@123');
+    users.push({
+      salt,
+      iterations,
+      password: hashedPassword,
+      email: `customer_${i}@resala.com`,
+      phone: `01${`${Date.now()}`.slice(-9)}`,
+      firstName: `customer`,
+      lastName: `user ${i}`,
+      role: 'CUSTOMER',
+    });
+  }
+
+  return users;
+};
 
 async function main() {
   // create users
+  const users = await generateRandomUsers();
   await prisma.user.createMany({
-    data: new Array(10).fill(0).map((_, i) => ({
-      email: `test_${i}@test.com`,
-      password: 'abcABC@123',
-      phone: `01${`${Date.now()}`.slice(-9)}`,
-      firstName: 'test',
-      lastName: 'test',
-      iterations: i + 1,
-      role: i % 2 === 0 ? 'CUSTOMER' : 'ADMIN',
-      salt: 'salt',
-    })),
+    // @ts-expect-error - ignore ROLE ENUM error
+    data: users,
   });
 
   // create main categories
