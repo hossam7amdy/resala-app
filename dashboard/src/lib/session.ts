@@ -1,6 +1,5 @@
-'server-only';
-
 import { cookies } from 'next/headers';
+import 'server-only';
 
 const SESSION = 'session';
 

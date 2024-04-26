@@ -7,9 +7,9 @@ export const metadata: Metadata = {
 
 const DashboardPage = () => {
   return (
-    <main style={{ padding: 10 }}>
+    <div style={{ padding: 10 }}>
       <Title level={2}>Dashboard</Title>
-    </main>
+    </div>
   );
 };
 
