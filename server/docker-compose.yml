@@ -4,10 +4,11 @@ version: '3.9'
 # The containers that compose the project
 services:
   db:
-    image: mysql
+    image: postgres
     restart: always
-    container_name: integration-test-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
-      - '3306:3306'
+      - '5432:5432'
