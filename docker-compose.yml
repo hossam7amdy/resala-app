@@ -2,13 +2,14 @@ version: '3.8'
 
 services:
   db:
-    image: mysql
+    image: postgres
     restart: always
-    container_name: resala-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
-      - '3306:3306'
+      - '5432:5432'
 
   server:
     build:
@@ -28,7 +29,7 @@ services:
       - JWT_VERIFY=jwt_verify_secret
       - APP_URL=http://localhost:5000
       # DATABASE
-      - DATABASE_URL=mysql://root:root@db:3306/resala
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/resala
       # AZURE CREDENTIALS
       - AZURE_STORAGE_NAME=azure_storage_name
       - AZURE_TENANT_ID=azure_tenant_id
