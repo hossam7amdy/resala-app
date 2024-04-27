@@ -6,13 +6,26 @@ import Link from 'next/link';
 
 import DeleteButton from './delete-button';
 
-export const CategoryTable = async () => {
+export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();
+
+  const filteredCategories = categories.filter(category => {
+    // filter category and sub category by query
+    if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
+    if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
+
+    return category.subCategories.some(subCategory => {
+      if (subCategory.enName.toLowerCase().includes(query.toLowerCase())) return true;
+      if (subCategory.arName.toLowerCase().includes(query.toLowerCase())) return true;
+
+      return false;
+    });
+  });
 
   return (
     <Table
       scroll={{ y: 500 }}
-      pagination={{ total: categories.length, pageSize: 10 }}
+      pagination={{ total: filteredCategories.length, pageSize: 10, position: ['bottomCenter'] }}
       columns={[
         {
           title: 'English',
@@ -35,7 +48,7 @@ export const CategoryTable = async () => {
           dataIndex: 'action',
         },
       ]}
-      dataSource={categories.map(category => ({
+      dataSource={filteredCategories.map(category => ({
         key: category.id,
         enName: category.enName,
         arName: category.arName,
