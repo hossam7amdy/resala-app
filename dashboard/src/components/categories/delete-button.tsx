@@ -23,7 +23,6 @@ const DeleteButton = ({ id }: { id: number }) => {
       placement="topLeft"
       content={
         <form action={dispatch}>
-          <input type="hidden" name="id" value={id} />
           {error?.message && <Text type="danger">{error.message}</Text>}
           <SubmitButton onCancel={hide} />
         </form>
@@ -48,7 +47,7 @@ const SubmitButton = ({ onCancel }: { onCancel: () => void }) => {
       <Button size="small" onClick={onCancel} disabled={pending}>
         Cancel
       </Button>
-      <Button size="small" htmlType="submit" danger loading={pending}>
+      <Button size="small" htmlType="submit" type="primary" danger loading={pending}>
         Delete
       </Button>
     </Flex>
