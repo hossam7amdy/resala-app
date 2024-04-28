@@ -1,7 +1,7 @@
 'use client';
 
 import ResalaTooltip from '@/components/ui/tooltip';
-import { Collapse, Input, List, Result } from 'antd';
+import { Collapse, Input, Result } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Text from 'antd/es/typography/Text';
 import { useEffect } from 'react';
@@ -36,7 +36,7 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
           <Paragraph>
             <Text strong>What should I do?</Text>
           </Paragraph>
-          <List>
+          <ul className="error-list">
             <li>
               <ResalaTooltip title="Copied!" trigger="click">
                 {/* eslint-disable-next-line */}
@@ -53,7 +53,7 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
             </li>
             <li>
               Notify an administrator with the issue, provide also:
-              <ul>
+              <ul className="error-list">
                 <li>Steps to reproduce the issue</li>
                 <li>Your operating system and browser version</li>
               </ul>
@@ -63,7 +63,7 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
               <a onClick={reset}>Reload </a>
               the page
             </li>
-          </List>
+          </ul>
         </div>
       </Result>
     </div>
