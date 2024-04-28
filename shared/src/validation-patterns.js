@@ -38,18 +38,6 @@ export const validationPatterns = {
         pattern: /^(\p{L}|\p{Pd}|\p{Cf}|\p{Pc}|['\s]){2,}$/gu,
         message: 'Invalid name',
     },
-    validateAttributeName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
-    },
-    validateLabelName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
-    },
-    validateAttributeValue: {
-        pattern: /\S+/,
-        message: 'Invalid attribute value',
-    },
     validateURL: {
         // eslint-disable-next-line
         pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/, // url, ssh url, ip
@@ -83,5 +71,9 @@ export const validationPatterns = {
     validateArabicCharacters: {
         pattern: /^[\u0600-\u06FF\s0-9]+$/,
         message: 'فقط الحروف العربية مسموح بها',
+    },
+    validateEnglishCharacters: {
+        pattern: /^[a-zA-Z\s0-9]+$/,
+        message: 'Only English characters are allowed',
     },
 };
