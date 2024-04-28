@@ -21,7 +21,7 @@ const EditForm = ({
 }) => {
   const router = useRouter();
   const update = updateCategory.bind(null, String(category.id));
-  const { errMsg, pending, dispatch } = useSubmitForm(update);
+  const { error, pending, dispatch } = useSubmitForm(update);
 
   return (
     <Form
@@ -31,7 +31,7 @@ const EditForm = ({
       onFinish={dispatch}
       autoComplete="off"
       initialValues={{
-        categoryId: category.categoryId ? String(category.categoryId) : undefined,
+        categoryId: category.categoryId ? category.categoryId : undefined,
         enName: category.enName,
         arName: category.arName,
       }}
@@ -77,7 +77,7 @@ const EditForm = ({
         </FormItem>
       </Flex>
 
-      {errMsg && <Text type="danger">{errMsg}</Text>}
+      {error?.message && <Text type="danger">{error.message}</Text>}
 
       <Flex gap={10}>
         <FormItem noStyle>

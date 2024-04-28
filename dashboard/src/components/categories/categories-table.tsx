@@ -1,6 +1,8 @@
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
+import { EditFilled } from '@ant-design/icons';
+import { type GetCategoryResponse } from '@resala/shared';
 import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
@@ -54,37 +56,35 @@ export const CategoryTable = async ({ query }: { query: string }) => {
         },
       ]}
       dataSource={filteredCategories.map(category => ({
-        key: category.id,
-        enName: category.enName,
-        arName: category.arName,
-        subCategories: category.subCategories.length,
-        deletedAt: <DisableButton category={category} />,
-        createdAt: formatDate(new Date(category.createdAt)),
-        action: (
-          <Flex>
-            <Button type="link">
-              <Link href={ROUTES.EDIT_CATEGORY(category.id)}>Edit</Link>
-            </Button>
-            <DeleteButton id={category.id} />
-          </Flex>
+        ...renderRow(category),
+        children: category.subCategories.map(subCategory =>
+          renderRow({ ...subCategory, subCategories: [] })
         ),
-        children: category.subCategories.map(subCategory => ({
-          key: subCategory.id,
-          enName: subCategory.enName,
-          arName: subCategory.arName,
-          subCategories: null,
-          deletedAt: <DisableButton category={category} />,
-          createdAt: formatDate(new Date(subCategory.createdAt)),
-          action: (
-            <Flex>
-              <Button type="link">
-                <Link href={ROUTES.EDIT_CATEGORY(subCategory.id)}>Edit</Link>
-              </Button>
-              <DeleteButton id={subCategory.id} />
-            </Flex>
-          ),
-        })),
       }))}
     />
   );
+};
+
+const renderRow = (category: GetCategoryResponse['data']) => {
+  return {
+    key: category.id,
+    enName: category.enName,
+    arName: category.arName,
+    subCategories: category.subCategories.length || null,
+    deletedAt: <DisableButton category={category} />,
+    createdAt: formatDate(new Date(category.createdAt)),
+    action: (
+      <Flex>
+        <Button
+          type="link"
+          icon={
+            <Link href={ROUTES.EDIT_CATEGORY(category.id)}>
+              <EditFilled />
+            </Link>
+          }
+        />
+        <DeleteButton id={category.id} />
+      </Flex>
+    ),
+  };
 };

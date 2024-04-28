@@ -1,15 +1,15 @@
 'use client';
 
-import { deleteCategory } from '@/actions/category';
 import { DeleteFilled } from '@ant-design/icons';
 import { Button, Flex, Popover } from 'antd';
 import Text from 'antd/es/typography/Text';
 import React, { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
-const DeleteButton = ({ id }: { id: number }) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const DeleteButton = ({ deleteAction }: { deleteAction: () => Promise<any> }) => {
   const [open, setOpen] = useState(false);
-  const [error, dispatch] = useFormState(deleteCategory.bind(null, String(id)), undefined);
+  const [error, dispatch] = useFormState(deleteAction, undefined);
 
   const hide = () => {
     setOpen(false);
@@ -28,7 +28,7 @@ const DeleteButton = ({ id }: { id: number }) => {
           <SubmitButton onCancel={hide} />
         </form>
       }
-      title="Are you sure you want to delete this category?"
+      title="Are you sure?"
       trigger="click"
       open={open}
       onOpenChange={handleOpenChange}

@@ -1,3 +1,4 @@
+import { logout } from '@/actions/auth';
 import type {
   DefaultRequestBody,
   DefaultRequestQuery,
@@ -41,6 +42,9 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
+      if (error.status === 401) {
+        logout();
+      }
       throw error?.response?.data;
     }
     console.error(error);

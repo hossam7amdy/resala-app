@@ -17,7 +17,7 @@ const useSubmitForm = <T, B extends DefaultResponseBody>(
   form?: FormInstance
 ) => {
   const [pending, setPending] = useState<boolean>(false);
-  const [errMsg, setErrMsg] = useState<string | undefined>();
+  const [error, setError] = useState<B>();
 
   const dispatch = useCallback(
     async (payload: T) => {
@@ -31,9 +31,9 @@ const useSubmitForm = <T, B extends DefaultResponseBody>(
 
         if (response?.success) {
           form?.resetFields();
-          setErrMsg(undefined);
+          setError(response);
         } else {
-          setErrMsg(response?.message || 'Something went wrong!');
+          setError(response || { message: 'An error occurred' });
         }
       } finally {
         setPending(false);
@@ -42,7 +42,7 @@ const useSubmitForm = <T, B extends DefaultResponseBody>(
     [submit, form]
   );
 
-  return { dispatch, pending, errMsg };
+  return { dispatch, pending, error };
 };
 
 export default useSubmitForm;
