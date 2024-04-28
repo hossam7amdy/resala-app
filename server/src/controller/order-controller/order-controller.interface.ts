@@ -24,7 +24,12 @@ export interface GetOrder
   > {}
 
 export interface GetOrdersList
-  extends ExpressHandler<{}, GetOrdersListResponse, GetOrdersListRequest['query'], LocalUser> {}
+  extends ExpressHandler<
+    {},
+    GetOrdersListResponse,
+    Required<GetOrdersListRequest['query']>,
+    LocalUser
+  > {}
 
 export interface DeleteOrder
   extends ExpressHandlerWithParams<

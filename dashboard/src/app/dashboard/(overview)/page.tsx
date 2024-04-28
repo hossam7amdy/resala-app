@@ -1,5 +1,7 @@
-import Title from 'antd/es/typography/Title';
+import { Breadcrumb } from 'antd';
 import type { Metadata } from 'next';
+
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -7,8 +9,9 @@ export const metadata: Metadata = {
 
 const DashboardPage = () => {
   return (
-    <div style={{ padding: 10 }}>
-      <Title level={2}>Dashboard</Title>
+    <div className={styles.page}>
+      <Breadcrumb items={[{ title: 'Dashboard' }]} />
+      <br />
     </div>
   );
 };

@@ -9,7 +9,9 @@ import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, 
 export type DefaultRequestBody = {
     [key: string]: any;
 };
-export type DefaultRequestQuery = zod.infer<typeof DefaultQuerySchema>;
+export type DefaultRequestQuery = {
+    query: Partial<zod.infer<typeof DefaultQuerySchema>['query']>;
+};
 export type DefaultResponseBody = {
     success: boolean;
     message?: string;

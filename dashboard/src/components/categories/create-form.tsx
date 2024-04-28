@@ -40,7 +40,7 @@ const CreateForm = ({ categories }: { categories: GetCategoriesListResponse['dat
       <Flex gap={10}>
         <FormItem
           required
-          rules={[{ required: true }]}
+          rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
           name="enName"
           label="English Name"
           style={{ flex: 1 }}
@@ -49,12 +49,7 @@ const CreateForm = ({ categories }: { categories: GetCategoriesListResponse['dat
         </FormItem>
         <FormItem
           required
-          rules={[
-            {
-              required: true,
-              ...validationPatterns.validateArabicCharacters,
-            },
-          ]}
+          rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
           name="arName"
           label="الأسم بالعربية"
           style={{ direction: 'rtl', flex: 1 }}

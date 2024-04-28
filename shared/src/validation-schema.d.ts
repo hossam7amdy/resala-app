@@ -231,21 +231,28 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<{
     }, {
         userId: number;
     }>;
-    body: zod.ZodObject<{
-        phone: zod.ZodString;
+    body: zod.ZodObject<zod.objectUtil.extendShape<{
         firstName: zod.ZodString;
         lastName: zod.ZodString;
+        phone: zod.ZodString;
+    }, {
         role: zod.ZodEnum<[ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]>;
-    }, "strip", zod.ZodTypeAny, {
+        isVerified: zod.ZodOptional<zod.ZodBoolean>;
+        deletedAt: zod.ZodOptional<zod.ZodDate>;
+    }>, "strip", zod.ZodTypeAny, {
         phone: string;
         firstName: string;
         lastName: string;
         role: ROLE;
+        isVerified?: boolean | undefined;
+        deletedAt?: Date | undefined;
     }, {
         phone: string;
         firstName: string;
         lastName: string;
         role: ROLE;
+        isVerified?: boolean | undefined;
+        deletedAt?: Date | undefined;
     }>;
 }, "strip", zod.ZodTypeAny, {
     params: {
@@ -256,6 +263,8 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<{
         firstName: string;
         lastName: string;
         role: ROLE;
+        isVerified?: boolean | undefined;
+        deletedAt?: Date | undefined;
     };
 }, {
     params: {
@@ -266,6 +275,8 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<{
         firstName: string;
         lastName: string;
         role: ROLE;
+        isVerified?: boolean | undefined;
+        deletedAt?: Date | undefined;
     };
 }>;
 export declare const AdminDeleteUserSchema: zod.ZodObject<{
@@ -474,17 +485,21 @@ export declare const UpdateCategorySchema: zod.ZodObject<{
     }, {
         categoryId: number;
     }>;
-    body: zod.ZodObject<{
+    body: zod.ZodObject<zod.objectUtil.extendShape<{
         categoryId: zod.ZodOptional<zod.ZodNumber>;
         arName: zod.ZodString;
         enName: zod.ZodString;
-    }, "strip", zod.ZodTypeAny, {
+    }, {
+        deletedAt: zod.ZodOptional<zod.ZodDate>;
+    }>, "strip", zod.ZodTypeAny, {
         arName: string;
         enName: string;
+        deletedAt?: Date | undefined;
         categoryId?: number | undefined;
     }, {
         arName: string;
         enName: string;
+        deletedAt?: Date | undefined;
         categoryId?: number | undefined;
     }>;
 }, "strip", zod.ZodTypeAny, {
@@ -494,6 +509,7 @@ export declare const UpdateCategorySchema: zod.ZodObject<{
     body: {
         arName: string;
         enName: string;
+        deletedAt?: Date | undefined;
         categoryId?: number | undefined;
     };
 }, {
@@ -503,6 +519,7 @@ export declare const UpdateCategorySchema: zod.ZodObject<{
     body: {
         arName: string;
         enName: string;
+        deletedAt?: Date | undefined;
         categoryId?: number | undefined;
     };
 }>;
@@ -595,7 +612,7 @@ export declare const UpdateProductSchema: zod.ZodObject<{
     }, {
         productId: number;
     }>;
-    body: zod.ZodObject<{
+    body: zod.ZodObject<zod.objectUtil.extendShape<{
         id: zod.ZodOptional<zod.ZodNumber>;
         categoryId: zod.ZodNumber;
         arName: zod.ZodString;
@@ -603,13 +620,16 @@ export declare const UpdateProductSchema: zod.ZodObject<{
         arDescription: zod.ZodString;
         enDescription: zod.ZodString;
         price: zod.ZodNumber;
-    }, "strip", zod.ZodTypeAny, {
+    }, {
+        deletedAt: zod.ZodOptional<zod.ZodDate>;
+    }>, "strip", zod.ZodTypeAny, {
         categoryId: number;
         arName: string;
         enName: string;
         arDescription: string;
         enDescription: string;
         price: number;
+        deletedAt?: Date | undefined;
         id?: number | undefined;
     }, {
         categoryId: number;
@@ -618,6 +638,7 @@ export declare const UpdateProductSchema: zod.ZodObject<{
         arDescription: string;
         enDescription: string;
         price: number;
+        deletedAt?: Date | undefined;
         id?: number | undefined;
     }>;
 }, "strip", zod.ZodTypeAny, {
@@ -631,6 +652,7 @@ export declare const UpdateProductSchema: zod.ZodObject<{
         arDescription: string;
         enDescription: string;
         price: number;
+        deletedAt?: Date | undefined;
         id?: number | undefined;
     };
 }, {
@@ -644,6 +666,7 @@ export declare const UpdateProductSchema: zod.ZodObject<{
         arDescription: string;
         enDescription: string;
         price: number;
+        deletedAt?: Date | undefined;
         id?: number | undefined;
     };
 }>;
