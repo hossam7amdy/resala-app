@@ -1,7 +1,7 @@
 'use client';
 
 import { updateCategory } from '@/actions/category';
-import { GetCategoryResponse } from '@resala/shared';
+import type { GetCategoryResponse } from '@resala/shared';
 import useMessage from 'antd/es/message/useMessage';
 import React from 'react';
 import { useFormState } from 'react-dom';

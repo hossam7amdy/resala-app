@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from 'antd';
+import { Button, type ButtonProps } from 'antd';
 import { useFormStatus } from 'react-dom';
 
 const SubmitButton = ({ children, ...btnProps }: { children: React.ReactNode } & ButtonProps) => {
