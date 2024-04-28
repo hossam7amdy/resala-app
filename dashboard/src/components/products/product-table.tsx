@@ -5,7 +5,7 @@ import { type DefaultRequestQuery } from '@resala/shared';
 import { Flex, Table } from 'antd';
 
 export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['query']>) => {
-  const { products, pagination } = await listProductsPaginated(searchParams as any);
+  const { products, pagination } = await listProductsPaginated(searchParams);
 
   return (
     <>

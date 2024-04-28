@@ -1,6 +1,6 @@
 import { callEndpoint } from '@/lib/fetch';
 import {
-  DefaultRequestQuery,
+  type DefaultRequestQuery,
   ENDPOINT_CONFIGS,
   type GetProductsListRequest,
   type GetProductsListResponse,
