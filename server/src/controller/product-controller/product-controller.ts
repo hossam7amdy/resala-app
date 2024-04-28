@@ -72,7 +72,10 @@ export const updateProduct: UpdateProduct = async (req, res, next) => {
     const product = await inventoryService.updateProduct(req.params.productId, req.body);
     return res.json({
       success: true,
-      data: product,
+      data: {
+        ...product,
+        deletedAt: product.deletedAt ? new Date(product.deletedAt) : null,
+      },
     });
   } catch (error) {
     return next(error);
@@ -81,7 +84,10 @@ export const updateProduct: UpdateProduct = async (req, res, next) => {
 
 export const deleteProduct: DeleteProduct = async (req, res, next) => {
   try {
+    const images = await inventoryService.listProductImages(req.params.productId);
     const product = await inventoryService.deleteProduct(req.params.productId);
+
+    images.forEach(image => deleteFile(image.imageUrl).catch(logger.warn));
 
     return res.json({
       success: true,
@@ -100,7 +106,7 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       throw new BadRequestError('No files uploaded');
     }
 
-    const urls = files.map(file => `${ENV.APP_URL}/${file.filename}`);
+    const urls = files.map(file => `${ENV.APP_URL}/uploads/${file.filename}`);
     await inventoryService.addProductImages(req.body.productId, urls);
 
     return res.json({

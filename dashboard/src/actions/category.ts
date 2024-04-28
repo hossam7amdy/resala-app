@@ -36,6 +36,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
       withParams(ENDPOINT_CONFIGS.updateCategory, id),
       { body: payload }
     );
+    revalidatePath(ROUTES.CATEGORIES);
   } catch (error) {
     return error as CreateCategoryResponse;
   }

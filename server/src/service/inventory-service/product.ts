@@ -83,7 +83,7 @@ export const createProduct = async (product: Product) => {
 };
 
 export const updateProduct = async (id: number, product: Product) => {
-  await findProductById(id); // Check if product exists
+  await findProductById(id, true); // Check if product exists
 
   const category = await prisma.category.findUnique({
     where: { id: product.categoryId },

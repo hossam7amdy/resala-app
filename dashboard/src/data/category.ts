@@ -10,7 +10,6 @@ import { unstable_noStore as noStore } from 'next/cache';
 
 export const listAllCategories = async () => {
   noStore();
-
   const response = await callEndpoint<GetCategoriesListRequest, GetCategoriesListResponse>(
     ENDPOINT_CONFIGS.listCategories,
     { query: { deleted: true } }
@@ -21,10 +20,12 @@ export const listAllCategories = async () => {
 
 export const findCategoryById = async (id: string) => {
   noStore();
-
-  const response = await callEndpoint<undefined, GetCategoryResponse>(
-    withParams(ENDPOINT_CONFIGS.getCategory, id)
-  );
-
-  return response.data;
+  try {
+    const response = await callEndpoint<undefined, GetCategoryResponse>(
+      withParams(ENDPOINT_CONFIGS.getCategory, id)
+    );
+    return response.data;
+  } catch (e) {
+    return undefined;
+  }
 };

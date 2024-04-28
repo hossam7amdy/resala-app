@@ -8,6 +8,7 @@ const ROUTES = {
   CREATE_CATEGORY: '/dashboard/categories/create',
   EDIT_CATEGORY: (id: string | number) => `/dashboard/categories/${id}/edit`,
   PRODUCTS: '/dashboard/products',
+  PRODUCT_DETAILS: (id: string | number) => `/dashboard/products/${id}`,
   CREATE_PRODUCT: '/dashboard/products/create',
   EDIT_PRODUCT: (id: string | number) => `/dashboard/products/${id}/edit`,
   ORDERS: '/dashboard/orders',
