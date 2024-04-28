@@ -121,11 +121,10 @@ export const AdminUpdateUserSchema = zod.object({
   params: zod.object({
     userId: zod.coerce.number().positive(),
   }),
-  body: zod.object({
-    phone: UserSchema.shape.phone,
-    firstName: UserSchema.shape.firstName,
-    lastName: UserSchema.shape.lastName,
+  body: UpdateProfileSchema.shape.body.extend({
     role: UserSchema.shape.role,
+    isVerified: UserSchema.shape.isVerified,
+    deletedAt: zod.date().optional(),
   }),
 });
 
@@ -174,7 +173,9 @@ export const UpdateCategorySchema = zod.object({
   params: zod.object({
     categoryId: zod.coerce.number().positive(),
   }),
-  body: CreateCategorySchema.shape.body,
+  body: CreateCategorySchema.shape.body.extend({
+    deletedAt: zod.date().optional(),
+  }),
 });
 
 export const GetCategorySchema = zod.object({
@@ -202,7 +203,9 @@ export const UpdateProductSchema = zod.object({
   params: zod.object({
     productId: zod.coerce.number().positive(),
   }),
-  body: CreateProductSchema.shape.body,
+  body: CreateProductSchema.shape.body.extend({
+    deletedAt: zod.date().optional(),
+  }),
 });
 
 export const DeleteProductSchema = zod.object({
