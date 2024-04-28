@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 const CreateForm = ({ categories }: { categories: GetCategoriesListResponse['data'] }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const { errMsg, pending, dispatch } = useSubmitForm(createCategory, form);
+  const { error, pending, dispatch } = useSubmitForm(createCategory, form);
 
   return (
     <Form
@@ -58,7 +58,7 @@ const CreateForm = ({ categories }: { categories: GetCategoriesListResponse['dat
         </FormItem>
       </Flex>
 
-      {errMsg && <Text type="danger">{errMsg}</Text>}
+      {error?.message && <Text type="danger">{error.message}</Text>}
 
       <Flex gap={10}>
         <FormItem noStyle>

@@ -1,14 +1,23 @@
+'use server';
+
+import { deleteProduct } from '@/actions/product';
+import { DeleteButton } from '@/components/ui/delete-button';
 import Pagination from '@/components/ui/pagination';
 import { listProductsPaginated } from '@/data/product';
+import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
+import { EditFilled, EyeFilled } from '@ant-design/icons';
 import { type DefaultRequestQuery } from '@resala/shared';
-import { Flex, Table } from 'antd';
+import { Button, Flex, Space, Table } from 'antd';
+import Link from 'next/link';
+
+import DisableButton from './disable-button';
 
 export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['query']>) => {
   const { products, pagination } = await listProductsPaginated(searchParams);
 
   return (
-    <>
+    <Flex vertical gap={10}>
       <Table
         pagination={false}
         columns={[
@@ -36,6 +45,11 @@ export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['qu
             title: 'Create Date',
             dataIndex: 'createdAt',
           },
+          {
+            title: 'Actions',
+            dataIndex: 'actions',
+            align: 'center',
+          },
         ]}
         dataSource={products.map(product => ({
           key: product.id,
@@ -43,13 +57,34 @@ export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['qu
           arName: product.arName,
           category: product.category.arName,
           price: formatCurrency(product.price),
-          deletedAt: product.deletedAt ? 'No' : 'Yes',
+          deletedAt: <DisableButton product={product} />,
           createdAt: formatDate(product.createdAt),
+          actions: (
+            <Space>
+              <Button
+                type="link"
+                icon={
+                  <Link href={ROUTES.PRODUCT_DETAILS(product.id)}>
+                    <EyeFilled />
+                  </Link>
+                }
+              />
+              <Button
+                type="link"
+                icon={
+                  <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
+                    <EditFilled />
+                  </Link>
+                }
+              />
+              <DeleteButton deleteAction={deleteProduct.bind(null, product.id)} />
+            </Space>
+          ),
         }))}
       />
       <Flex justify="center">
         <Pagination totalPages={pagination.total} />
       </Flex>
-    </>
+    </Flex>
   );
 };

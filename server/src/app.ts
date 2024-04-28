@@ -41,12 +41,18 @@ export function createExpressApp(logRequests: boolean = true) {
   app.use('/', createExpressRouter(logRequests));
 
   app.get('/uploads/:file', (req, res) => {
-    res.sendFile(req.params.file, { root: 'uploads' });
+    const exist = fs.existsSync(`uploads/${req.params.file}`);
+
+    if (!exist) {
+      return res.status(404).send('File not found');
+    }
+
+    return res.sendFile(req.params.file, { root: 'uploads' });
   });
 
   // Catch all routes
   app.get('*', (_, res) => {
-    res.redirect('/api-docs');
+    res.status(404).send('Not found');
   });
 
   app.use(errMiddleware);

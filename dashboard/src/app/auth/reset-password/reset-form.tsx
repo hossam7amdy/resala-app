@@ -7,7 +7,7 @@ import FormItem from 'antd/es/form/FormItem';
 import Text from 'antd/es/typography/Text';
 
 const ResetPasswordForm = () => {
-  const { errMsg, pending, dispatch } = useSubmitForm(resetPassword);
+  const { error, pending, dispatch } = useSubmitForm(resetPassword);
 
   return (
     <Form
@@ -31,7 +31,7 @@ const ResetPasswordForm = () => {
       <FormItem required name="password" label="New Password" rules={[{ required: true }]}>
         <Input placeholder="Enter your new password" />
       </FormItem>
-      {errMsg && <Text type="danger">{errMsg}</Text>}
+      {error?.message && <Text type="danger">{error.message}</Text>}
       <FormItem noStyle>
         <Button type="primary" block htmlType="submit" loading={pending}>
           Confirm Password
