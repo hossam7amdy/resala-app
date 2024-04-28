@@ -12,7 +12,8 @@ export const listAllCategories = async () => {
   noStore();
 
   const response = await callEndpoint<GetCategoriesListRequest, GetCategoriesListResponse>(
-    ENDPOINT_CONFIGS.listCategories
+    ENDPOINT_CONFIGS.listCategories,
+    { query: { deleted: true } }
   );
 
   return response.data;

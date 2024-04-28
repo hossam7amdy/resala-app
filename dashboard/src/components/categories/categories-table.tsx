@@ -5,6 +5,7 @@ import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
 import DeleteButton from './delete-button';
+import DisableButton from './disable-button';
 
 export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();
@@ -40,6 +41,10 @@ export const CategoryTable = async ({ query }: { query: string }) => {
           dataIndex: 'subCategories',
         },
         {
+          title: 'Is Active',
+          dataIndex: 'deletedAt',
+        },
+        {
           title: 'Create Date',
           dataIndex: 'createdAt',
         },
@@ -53,6 +58,7 @@ export const CategoryTable = async ({ query }: { query: string }) => {
         enName: category.enName,
         arName: category.arName,
         subCategories: category.subCategories.length,
+        deletedAt: <DisableButton category={category} />,
         createdAt: formatDate(new Date(category.createdAt)),
         action: (
           <Flex>
@@ -67,6 +73,7 @@ export const CategoryTable = async ({ query }: { query: string }) => {
           enName: subCategory.enName,
           arName: subCategory.arName,
           subCategories: null,
+          deletedAt: <DisableButton category={category} />,
           createdAt: formatDate(new Date(subCategory.createdAt)),
           action: (
             <Flex>
