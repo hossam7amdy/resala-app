@@ -147,7 +147,7 @@ export const UpdateCategorySchema = zod.object({
         categoryId: zod.coerce.number().positive(),
     }),
     body: CreateCategorySchema.shape.body.extend({
-        deletedAt: zod.date().optional(),
+        deletedAt: zod.coerce.date().optional(),
     }),
 });
 export const GetCategorySchema = zod.object({
@@ -173,7 +173,7 @@ export const UpdateProductSchema = zod.object({
         productId: zod.coerce.number().positive(),
     }),
     body: CreateProductSchema.shape.body.extend({
-        deletedAt: zod.date().optional(),
+        deletedAt: zod.coerce.date().optional(),
     }),
 });
 export const DeleteProductSchema = zod.object({

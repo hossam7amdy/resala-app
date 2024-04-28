@@ -8,7 +8,7 @@ import Password from 'antd/es/input/Password';
 import Text from 'antd/es/typography/Text';
 
 const LoginForm = () => {
-  const { errMsg, pending, dispatch } = useSubmitForm(login);
+  const { error, pending, dispatch } = useSubmitForm(login);
 
   return (
     <Form size="large" name="login" layout="vertical" onFinish={dispatch} autoComplete="off">
@@ -18,7 +18,7 @@ const LoginForm = () => {
       <FormItem rules={[{ required: true }]} name="password" label="Password" required>
         <Password placeholder="Enter password" />
       </FormItem>
-      {errMsg && <Text type="danger">{errMsg}</Text>}
+      {error?.message && <Text type="danger">{error.message}</Text>}
       <FormItem noStyle>
         <Button type="primary" block htmlType="submit" loading={pending}>
           Sign in
