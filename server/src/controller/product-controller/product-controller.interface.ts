@@ -31,7 +31,7 @@ export interface GetProduct
   > {}
 
 export interface GetProductsList
-  extends ExpressHandler<{}, GetProductsListResponse, GetProductsListRequest['query']> {}
+  extends ExpressHandler<{}, GetProductsListResponse, Required<GetProductsListRequest['query']>> {}
 
 export interface CreateProduct
   extends ExpressHandler<CreateProductRequest['body'], CreateProductResponse> {}

@@ -42,18 +42,6 @@ const validationPatterns = {
         pattern: /^(\p{L}|\p{Pd}|\p{Cf}|\p{Pc}|['\s]){2,}$/gu,
         message: 'Invalid name',
     },
-    validateAttributeName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
-    },
-    validateLabelName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
-    },
-    validateAttributeValue: {
-        pattern: /\S+/,
-        message: 'Invalid attribute value',
-    },
     validateURL: {
         // eslint-disable-next-line
         pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/, // url, ssh url, ip
@@ -87,6 +75,10 @@ const validationPatterns = {
     validateArabicCharacters: {
         pattern: /^[\u0600-\u06FF\s0-9]+$/,
         message: 'فقط الحروف العربية مسموح بها',
+    },
+    validateEnglishCharacters: {
+        pattern: /^[a-zA-Z\s0-9]+$/,
+        message: 'Only English characters are allowed',
     },
 };
 
@@ -196,11 +188,10 @@ const AdminUpdateUserSchema = zod.object({
     params: zod.object({
         userId: zod.coerce.number().positive(),
     }),
-    body: zod.object({
-        phone: UserSchema.shape.phone,
-        firstName: UserSchema.shape.firstName,
-        lastName: UserSchema.shape.lastName,
+    body: UpdateProfileSchema.shape.body.extend({
         role: UserSchema.shape.role,
+        isVerified: UserSchema.shape.isVerified,
+        deletedAt: zod.date().optional(),
     }),
 });
 const AdminDeleteUserSchema = zod.object({
@@ -243,7 +234,9 @@ const UpdateCategorySchema = zod.object({
     params: zod.object({
         categoryId: zod.coerce.number().positive(),
     }),
-    body: CreateCategorySchema.shape.body,
+    body: CreateCategorySchema.shape.body.extend({
+        deletedAt: zod.date().optional(),
+    }),
 });
 const GetCategorySchema = zod.object({
     params: UpdateCategorySchema.shape.params,
@@ -267,7 +260,9 @@ const UpdateProductSchema = zod.object({
     params: zod.object({
         productId: zod.coerce.number().positive(),
     }),
-    body: CreateProductSchema.shape.body,
+    body: CreateProductSchema.shape.body.extend({
+        deletedAt: zod.date().optional(),
+    }),
 });
 const DeleteProductSchema = zod.object({
     params: UpdateProductSchema.shape.params,

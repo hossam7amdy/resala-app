@@ -27,18 +27,6 @@ export declare const validationPatterns: {
         pattern: RegExp;
         message: string;
     };
-    validateAttributeName: {
-        pattern: RegExp;
-        message: string;
-    };
-    validateLabelName: {
-        pattern: RegExp;
-        message: string;
-    };
-    validateAttributeValue: {
-        pattern: RegExp;
-        message: string;
-    };
     validateURL: {
         pattern: RegExp;
         message: string;
@@ -68,6 +56,10 @@ export declare const validationPatterns: {
         message: string;
     };
     validateArabicCharacters: {
+        pattern: RegExp;
+        message: string;
+    };
+    validateEnglishCharacters: {
         pattern: RegExp;
         message: string;
     };

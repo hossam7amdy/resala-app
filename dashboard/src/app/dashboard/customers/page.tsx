@@ -1,9 +1,8 @@
+import { CustomerTable } from '@/components/customers/customer-table';
 import { Table } from 'antd';
 import Title from 'antd/es/typography/Title';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-
-import { CustomerTable } from './customer-table';
 
 export const metadata: Metadata = {
   title: 'Customers',

@@ -6,6 +6,7 @@ import type {
 } from '@resala/shared';
 import { AxiosError } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import 'server-only';
 
 import axios from './axios';
 import { getSession } from './session';

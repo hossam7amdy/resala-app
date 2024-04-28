@@ -23,7 +23,7 @@ export interface GetStock
   > {}
 
 export interface GetStocksList
-  extends ExpressHandler<{}, GetStocksListResponse, GetStocksListRequest['query']> {}
+  extends ExpressHandler<{}, GetStocksListResponse, Required<GetStocksListRequest['query']>> {}
 
 export interface CreateStock
   extends ExpressHandler<CreateStockRequest['body'], CreateStockResponse> {}

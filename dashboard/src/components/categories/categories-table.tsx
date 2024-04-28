@@ -5,14 +5,28 @@ import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
 import DeleteButton from './delete-button';
+import DisableButton from './disable-button';
 
-export const CategoryTable = async () => {
+export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();
+
+  const filteredCategories = categories.filter(category => {
+    // filter category and sub category by query
+    if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
+    if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
+
+    return category.subCategories.some(subCategory => {
+      if (subCategory.enName.toLowerCase().includes(query.toLowerCase())) return true;
+      if (subCategory.arName.toLowerCase().includes(query.toLowerCase())) return true;
+
+      return false;
+    });
+  });
 
   return (
     <Table
       scroll={{ y: 500 }}
-      pagination={{ total: categories.length, pageSize: 10 }}
+      pagination={{ total: filteredCategories.length, pageSize: 10, position: ['bottomCenter'] }}
       columns={[
         {
           title: 'English',
@@ -27,6 +41,10 @@ export const CategoryTable = async () => {
           dataIndex: 'subCategories',
         },
         {
+          title: 'Is Active',
+          dataIndex: 'deletedAt',
+        },
+        {
           title: 'Create Date',
           dataIndex: 'createdAt',
         },
@@ -35,11 +53,12 @@ export const CategoryTable = async () => {
           dataIndex: 'action',
         },
       ]}
-      dataSource={categories.map(category => ({
+      dataSource={filteredCategories.map(category => ({
         key: category.id,
         enName: category.enName,
         arName: category.arName,
         subCategories: category.subCategories.length,
+        deletedAt: <DisableButton category={category} />,
         createdAt: formatDate(new Date(category.createdAt)),
         action: (
           <Flex>
@@ -54,6 +73,7 @@ export const CategoryTable = async () => {
           enName: subCategory.enName,
           arName: subCategory.arName,
           subCategories: null,
+          deletedAt: <DisableButton category={category} />,
           createdAt: formatDate(new Date(subCategory.createdAt)),
           action: (
             <Flex>
