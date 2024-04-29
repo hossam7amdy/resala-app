@@ -1,50 +1,47 @@
-version: '3.8'
+version: '3.9'
 
 services:
   db:
     image: postgres
     restart: always
+    container_name: resala-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-    ports:
-      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # ports:
+    #   - '5432:5432'
 
   server:
+    restart: always
     build:
       context: ./
       dockerfile: Dockerfile.server
-    ports:
-      - '5000:5000'
+    container_name: ${SERVER_HOST}
+    env_file: .env
+    volumes:
+      - uploads:/app/server/uploads
     depends_on:
       - db
-    environment:
-      - PORT=5000
-      - NODE_ENV=development
-      # JWT
-      - JWT_SECRET=jwt_access_sercret
-      - JWT_REFRESH=jwt_refresh_secret
-      - JWT_RESET=jwt_reset_secret
-      - JWT_VERIFY=jwt_verify_secret
-      - APP_URL=http://localhost:5000
-      # DATABASE
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/resala
-      # AZURE CREDENTIALS
-      - AZURE_STORAGE_NAME=azure_storage_name
-      - AZURE_TENANT_ID=azure_tenant_id
-      - AZURE_CLIENT_ID=azure_client_id
-      - AZURE_CLIENT_SECRET=azure_client_secret
-      - AZURE_CDN_ENDPOINT=azure_cdn_endpoint
-      # GOOGLE APP CREDENTIALS FOR GOOGLE MAILING SERVICE
-      - MAIL_USER=mail_user
-      - MAIL_PASS=mail_pass
-      # TWILIO CREDENTIALS
-      - TWILIO_ACCOUNT_SID=twilio_account_sid
-      - TWILIO_AUTH_TOKEN=twillio_auth_token
-      - TWILIO_PHONE_NUMBER=twilio_phone_number
-      # PayMob Gateway Credentials
-      - PAYMOB_INTEGRATION_ID=12345
-      - PAYMOB_API_URL=https://accept.paymob.com/api
-      - PAYMOB_HMAC_KEY=hmac_key
-      - PAYMOB_API_TOKEN=token
+    # ports:
+    #   - ${SERVER_PORT}:${SERVER_PORT}
+
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: ${NGINX_HOST}
+    volumes:
+      - uploads:/app/server/uploads
+    env_file: .env
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+    depends_on:
+      - server
+
+volumes:
+  db-data:
+  uploads:

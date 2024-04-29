@@ -11,7 +11,7 @@ COPY server/package*.json /app/server/
 COPY shared/package*.json /app/shared/
 
 # Install dependencies
-RUN yarn
+RUN yarn --frozen-lockfile
 
 # Copy source code
 COPY server/ /app/server/
