@@ -29,7 +29,7 @@
     "start:server": "yarn --cwd server dev",
     "start": "npm-run-all --parallel start:server start:dashboard",
     "start:server:prod": "yarn --cwd server start",
-    "docker:build:server": "docker build -t resala/server . -f Dockerfile.server"
+    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
