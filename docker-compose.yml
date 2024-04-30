@@ -41,6 +41,7 @@ services:
     env_file: .env
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
+      - ${NGINX_PORT_SSL}:${NGINX_PORT_SSL}
     depends_on:
       - server
 
