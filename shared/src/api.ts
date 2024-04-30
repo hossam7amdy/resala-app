@@ -195,7 +195,7 @@ export type UpdateCategoryResponse = CreateCategoryResponse;
 export type DeleteCategoryRequest = zod.infer<typeof DeleteCategorySchema>;
 export type DeleteCategoryResponse = CreateCategoryResponse;
 
-export type GetCategoryRequest = DeleteCategoryRequest;
+export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
 export type GetCategoryResponse = DefaultResponseBody & {
   data: CreateCategoryResponse['data'] & {
     subCategories: CreateCategoryResponse['data'][];
@@ -235,7 +235,7 @@ export type UpdateProductResponse = CreateProductResponse;
 export type DeleteProductRequest = zod.infer<typeof DeleteProductSchema>;
 export type DeleteProductResponse = CreateProductResponse;
 
-export type GetProductRequest = DeleteProductRequest;
+export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
 export type GetProductResponse = DefaultResponseBody & {
   data: CreateProductResponse['data'] & {
     images: GetProductImagesResponse['data'];
@@ -256,7 +256,9 @@ export type GetProductsListResponse = DefaultResponseBody & {
 };
 
 // Product images types
-export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema>;
+export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema> & {
+  images: FormData;
+};
 export type CreateProductImageResponse = DefaultResponseBody;
 
 export type DeleteProductImageRequest = zod.infer<typeof DeleteProductImageSchema>;

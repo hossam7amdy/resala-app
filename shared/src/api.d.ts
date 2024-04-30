@@ -127,7 +127,7 @@ export type UpdateCategoryRequest = zod.infer<typeof UpdateCategorySchema>;
 export type UpdateCategoryResponse = CreateCategoryResponse;
 export type DeleteCategoryRequest = zod.infer<typeof DeleteCategorySchema>;
 export type DeleteCategoryResponse = CreateCategoryResponse;
-export type GetCategoryRequest = DeleteCategoryRequest;
+export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
 export type GetCategoryResponse = DefaultResponseBody & {
     data: CreateCategoryResponse['data'] & {
         subCategories: CreateCategoryResponse['data'][];
@@ -160,7 +160,7 @@ export type UpdateProductRequest = zod.infer<typeof UpdateProductSchema>;
 export type UpdateProductResponse = CreateProductResponse;
 export type DeleteProductRequest = zod.infer<typeof DeleteProductSchema>;
 export type DeleteProductResponse = CreateProductResponse;
-export type GetProductRequest = DeleteProductRequest;
+export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
 export type GetProductResponse = DefaultResponseBody & {
     data: CreateProductResponse['data'] & {
         images: GetProductImagesResponse['data'];
