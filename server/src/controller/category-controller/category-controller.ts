@@ -10,7 +10,10 @@ import type {
 
 export const getCategory: GetCategory = async (req, res, next) => {
   try {
-    const category = await inventoryService.findCategoryById(req.params.categoryId);
+    const category = await inventoryService.findCategoryById(
+      req.params.categoryId,
+      req.query.deleted
+    );
 
     return res.json({
       success: true,

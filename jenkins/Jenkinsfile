@@ -8,17 +8,17 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                sh 'npm run build:server'
+                sh 'yarn build'
             }
         }
         stage('Test') {
             steps {
-                sh 'npm run test:server'
+                sh 'yarn test'
             }
         }
         stage('Docker Build') {
             steps {
-                sh 'npm run docker:build:server'
+                sh 'yarn docker:build:server'
             }
         }
     }
