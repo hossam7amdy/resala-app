@@ -19,7 +19,7 @@ export interface GetCategory
     GetCategoryRequest['params'],
     {},
     GetCategoryResponse,
-    {},
+    GetCategoryRequest['query'],
     LocalUser
   > {}
 
