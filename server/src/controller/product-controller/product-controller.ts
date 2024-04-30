@@ -19,7 +19,7 @@ import type {
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
-    const product = await inventoryService.findProductById(req.params.productId);
+    const product = await inventoryService.findProductById(req.params.productId, req.query.deleted);
 
     return res.json({
       success: true,

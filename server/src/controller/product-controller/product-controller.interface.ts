@@ -26,7 +26,7 @@ export interface GetProduct
     GetProductRequest['params'],
     {},
     GetProductResponse,
-    {},
+    Required<GetProductRequest['query']>,
     LocalUser
   > {}
 
