@@ -85,7 +85,7 @@ export const deleteCategory = async (id: number) => {
   });
 };
 
-export const findCategoryById = async (id: number, deleted: boolean = true) => {
+export const findCategoryById = async (id: number, deleted: boolean = false) => {
   const category = await prisma.category.findUnique({
     include: {
       subCategories: true,
