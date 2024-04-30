@@ -1,35 +1,32 @@
-import prisma from '../src/lib/prisma';
-import { genHashedPassword } from '../src/utils/password';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const generateRandomUsers = async () => {
-  const { hashedPassword, salt, iterations } = await genHashedPassword('abcABC@123');
-
   const users = [
     {
-      salt,
-      iterations,
-      password: hashedPassword,
+      salt: 'UIL2gAnLw13gMjwP5JonABkQDdaaCce7MfXekcacrlGs2z/7JhimgF/uyvT1y63gC695hhMBYbAynGQ35k4OUkFc00SwtMl/3zFgjx4JFyY=',
+      iterations: 10888,
+      password:
+        'A6oHPQAQVV5RBwd3dUTcuxgetr80ILDi0wf4XeuBaHn1llO2bGTjw0DSEDbWOIN7q5D04B5nO3+ywc5DU2IH5B9+pICTxuhyjDDdarjoSnOWK191YfOYJSPLJ8TdOTMnj9XRkGOVPE/0jPqaNP4kn0LYgLoPx76zR9JDhGV94q+CSUEmXjjZDBRhK5lw5YB65L7dJ9Q8',
       email: `admin@resala.com`,
       phone: `01500000000`,
       firstName: 'admin',
       lastName: 'user',
       role: 'ADMIN',
     },
-  ];
-
-  for (let i = 1; i < 10; i++) {
-    const { hashedPassword, salt, iterations } = await genHashedPassword('abcABC@123');
-    users.push({
-      salt,
-      iterations,
-      password: hashedPassword,
-      email: `customer_${i}@resala.com`,
+    {
+      salt: 'wsX1xE4HGE1FpE7PckEOKYgZf1Ty0xo+bOtqqpUYcw1BC3q5Kdq/7Q5/Kv2p7PUGrrvzSEe9wLEWBPKMwNakpP+q8HzA15lT31fGr46GwTU=',
+      iterations: 12511,
+      password:
+        'HuZk7inYeVodB2+1TScguTSkrmTH1OmFMw+ZITICxmlz7QdWuLstasslFANduLHyh+zKD7iGa3qdy2Z97zfv8/M/T830B/mkrqj2If+2NNEOWcUifo6EFC1rOBYbt/6ehcPQS07LdD2YNpPoVEbgG3MgsF6Gukgc2jD7a7uecGpkuUY6WSZlCkBHHw+BvfA0A/JLOVbh',
+      email: `customer@resala.com`,
       phone: `01${`${Date.now()}`.slice(-9)}`,
       firstName: `customer`,
-      lastName: `user ${i}`,
+      lastName: `user`,
       role: 'CUSTOMER',
-    });
-  }
+    },
+  ];
 
   return users;
 };
