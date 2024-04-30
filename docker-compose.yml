@@ -25,6 +25,8 @@ services:
       - uploads:/app/server/uploads
     depends_on:
       - db
+    command: >
+      sh -c "cd server && npx prisma migrate dev && yarn start"
     # ports:
     #   - ${SERVER_PORT}:${SERVER_PORT}
 
