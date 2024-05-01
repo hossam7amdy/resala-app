@@ -1,8 +1,7 @@
 'use client';
 
-import type { DefaultResponseBody } from '@resala/shared';
 import type { FormInstance } from 'antd';
-import { useCallback, useState } from 'react';
+import { useState, useTransition } from 'react';
 
 /**
  * useSubmitForm is a custom hook that handles antd form submission
@@ -12,35 +11,24 @@ import { useCallback, useState } from 'react';
  * @param form The antd form instance
  * @returns An object containing the dispatch function, pending state, and error message
  */
-const useSubmitForm = <T, B extends DefaultResponseBody>(
-  submit: (payload: T) => Promise<B>,
-  form?: FormInstance
-) => {
-  const [pending, setPending] = useState<boolean>(false);
-  const [error, setError] = useState<B>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- This is a generic hook
+const useSubmitForm = <T>(submit: (payload: T) => Promise<any>, form?: FormInstance) => {
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState<{ message: string | undefined }>({ message: undefined });
 
-  const dispatch = useCallback(
-    async (payload: T) => {
-      setPending(true);
+  const dispatch = (payload: T) =>
+    startTransition(async () => {
       try {
         const response = await submit(payload);
 
-        // If the response is not an object, return
-        // should only match DefaultResponseBody type
-        if (typeof response?.success !== 'boolean') return;
+        form?.resetFields();
+        setError({ message: response?.message });
 
-        if (response?.success) {
-          form?.resetFields();
-          setError(response);
-        } else {
-          setError(response || { message: 'An error occurred' });
-        }
-      } finally {
-        setPending(false);
+        return response;
+      } catch (e) {
+        setError({ message: (e as Error).message || 'Something went wrong' });
       }
-    },
-    [submit, form]
-  );
+    });
 
   return { dispatch, pending, error };
 };

@@ -5,86 +5,83 @@ import ROUTES from '@/lib/routes';
 import {
   type CreateProductRequest,
   type CreateProductResponse,
-  type DefaultResponseBody,
+  type DeleteProductImageRequest,
   type DeleteProductImageResponse,
+  type DeleteProductRequest,
   type DeleteProductResponse,
   ENDPOINT_CONFIGS,
   type UpdateProductRequest,
   type UpdateProductResponse,
-  withParams,
 } from '@resala/shared';
+import { type UploadFile } from 'antd/es/upload';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-export const addProduct = async (
-  product: CreateProductRequest['body']
-): Promise<CreateProductResponse> => {
+export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
-    const response = await callEndpoint<CreateProductRequest, CreateProductResponse>(
+    await callEndpoint<CreateProductRequest, CreateProductResponse>(
       ENDPOINT_CONFIGS.createProduct,
       { body: product }
     );
-
-    revalidatePath(ROUTES.PRODUCTS);
-    return response;
-  } catch (error) {
-    return error as CreateProductResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.PRODUCTS);
 };
 
 export const updateProduct = async (id: number | string, product: UpdateProductRequest['body']) => {
   try {
-    await callEndpoint<Omit<UpdateProductRequest, 'params'>, UpdateProductResponse>(
-      withParams(ENDPOINT_CONFIGS.updateProduct, String(id)),
-      { body: product }
+    await callEndpoint<UpdateProductRequest, UpdateProductResponse>(
+      ENDPOINT_CONFIGS.updateProduct,
+      { params: { productId: Number(id) }, body: product }
     );
-
-    revalidatePath(ROUTES.PRODUCTS);
-  } catch (error) {
-    return error as UpdateProductResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.PRODUCTS);
+  redirect(ROUTES.PRODUCTS);
 };
 
-export const deleteProduct = async (id: number | string): Promise<DeleteProductResponse> => {
+export const deleteProduct = async (id: number | string) => {
   try {
-    const response = await callEndpoint<undefined, DeleteProductResponse>(
-      withParams(ENDPOINT_CONFIGS.deleteProduct, String(id))
+    await callEndpoint<DeleteProductRequest, DeleteProductResponse>(
+      ENDPOINT_CONFIGS.deleteProduct,
+      { params: { productId: Number(id) } }
     );
-
-    revalidatePath(ROUTES.PRODUCTS);
-    return response;
-  } catch (error) {
-    return error as DeleteProductResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.PRODUCTS);
 };
 
-export const uploadProductImages = async (
-  id: string,
-  formData: FormData
-): Promise<DefaultResponseBody> => {
+export const uploadProductImages = async (payload: { productId: string; images: UploadFile[] }) => {
   try {
-    const response = await callEndpoint(withParams(ENDPOINT_CONFIGS.addProductImages, id), {
-      body: formData,
+    const formData = new FormData();
+    formData.append('productId', payload.productId);
+    payload.images.forEach(image => {
+      formData.append('images', image.originFileObj!);
     });
 
-    revalidatePath(ROUTES.PRODUCT_DETAILS(id));
-    return response;
-  } catch (error) {
-    return error as DefaultResponseBody;
+    await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.PRODUCT_IMAGES(payload.productId));
 };
 
-export const deleteProductImage = async (
-  productId: string,
-  imageId: string
-): Promise<DeleteProductImageResponse> => {
+export const deleteProductImage = async (productId: string, imageId: string) => {
   try {
-    const response = await callEndpoint<undefined, DeleteProductImageResponse>(
-      withParams(ENDPOINT_CONFIGS.deleteProductImage, productId, imageId)
+    await callEndpoint<DeleteProductImageRequest, DeleteProductImageResponse>(
+      ENDPOINT_CONFIGS.deleteProductImage,
+      { params: { productId: Number(productId), imageId: Number(imageId) } }
     );
-
-    revalidatePath(ROUTES.PRODUCT_DETAILS(productId));
-    return response;
-  } catch (error) {
-    return error as DeleteProductImageResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
 };

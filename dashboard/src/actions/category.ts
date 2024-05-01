@@ -5,40 +5,36 @@ import ROUTES from '@/lib/routes';
 import {
   type CreateCategoryRequest,
   type CreateCategoryResponse,
+  type DeleteCategoryRequest,
   type DeleteCategoryResponse,
   ENDPOINT_CONFIGS,
   type UpdateCategoryRequest,
   type UpdateCategoryResponse,
-  withParams,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export const createCategory = async (
-  payload: CreateCategoryRequest['body']
-): Promise<CreateCategoryResponse> => {
+export const createCategory = async (payload: CreateCategoryRequest['body']) => {
   try {
-    const response = await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
+    await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
       ENDPOINT_CONFIGS.createCategory,
       { body: payload }
     );
-
-    revalidatePath(ROUTES.CATEGORIES);
-    return response;
-  } catch (error) {
-    return error as CreateCategoryResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
+
+  revalidatePath(ROUTES.CATEGORIES);
 };
 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
   try {
-    await callEndpoint<Omit<UpdateCategoryRequest, 'params'>, UpdateCategoryResponse>(
-      withParams(ENDPOINT_CONFIGS.updateCategory, id),
-      { body: payload }
+    await callEndpoint<UpdateCategoryRequest, UpdateCategoryResponse>(
+      ENDPOINT_CONFIGS.updateCategory,
+      { params: { categoryId: Number(id) }, body: payload }
     );
-    revalidatePath(ROUTES.CATEGORIES);
-  } catch (error) {
-    return error as CreateCategoryResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
 
   revalidatePath(ROUTES.CATEGORIES);
@@ -47,11 +43,12 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
 
 export const deleteCategory = async (id: string) => {
   try {
-    await callEndpoint<undefined, DeleteCategoryResponse>(
-      withParams(ENDPOINT_CONFIGS.deleteCategory, id)
+    await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
+      ENDPOINT_CONFIGS.deleteCategory,
+      { params: { categoryId: Number(id) } }
     );
-  } catch (error) {
-    return error as CreateCategoryResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Something went wrong' };
   }
 
   revalidatePath(ROUTES.CATEGORIES);

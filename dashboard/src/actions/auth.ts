@@ -22,15 +22,12 @@ export const login = async (payload: LoginRequest['body']) => {
     });
 
     if (![ROLE.ADMIN, ROLE.MODERATOR].includes(response.data.user.role as ROLE)) {
-      return {
-        success: false,
-        message: 'You are not allowed to access this page',
-      } as LoginResponse;
+      throw new Error('You are not authorized to access this page');
     }
 
     createSession(response.data.accessToken, new Date(response.data.expiresAt));
-  } catch (error) {
-    return error as LoginResponse;
+  } catch (e) {
+    return { message: (e as Error).message || 'Invalid email or password' };
   }
 
   redirect(ROUTES.DASHBOARD, RedirectType.replace);
@@ -50,7 +47,7 @@ export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => 
 
     createSession(response.data.resetToken, new Date(response.data.expiresAt));
   } catch (error) {
-    return error as ForgotPasswordResponse;
+    return { message: (error as Error).message || 'Invalid email' };
   }
 
   redirect(ROUTES.RESET_PASSWORD, RedirectType.replace);
@@ -65,7 +62,7 @@ export const resetPassword = async (payload: ResetPasswordRequest['body']) => {
 
     deleteSession();
   } catch (error) {
-    return error as ResetPasswordResponse;
+    return { message: (error as Error).message || 'Invalid reset token' };
   }
 
   redirect(ROUTES.LOGIN, RedirectType.replace);

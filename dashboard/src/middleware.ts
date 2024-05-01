@@ -4,9 +4,21 @@ import { NextResponse } from 'next/server';
 import ROUTES from './lib/routes';
 import { getSession } from './lib/session';
 
+const PROTECTED_ROUTES = [
+  ROUTES.DASHBOARD,
+  ROUTES.CATEGORIES,
+  ROUTES.PRODUCTS,
+  ROUTES.ORDERS,
+  ROUTES.CUSTOMERS,
+];
+
+const checkIfProtectedRoute = (path: string) => {
+  return PROTECTED_ROUTES.some(route => path.startsWith(route));
+};
+
 const authMiddleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = path.startsWith(ROUTES.DASHBOARD);
+  const isProtectedRoute = checkIfProtectedRoute(path);
 
   const session = getSession();
 

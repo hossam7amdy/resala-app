@@ -1,31 +1,37 @@
 import { logout } from '@/actions/auth';
-import type {
-  DefaultRequestBody,
-  DefaultRequestQuery,
-  DefaultResponseBody,
-  EndpointConfig,
+import {
+  type DefaultRequestBody,
+  type DefaultRequestQuery,
+  type DefaultResponseBody,
+  type EndpointConfig,
+  withParams,
 } from '@resala/shared';
-import { AxiosError } from 'axios';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import 'server-only';
 
-import axios from './axios';
 import { getSession } from './session';
 
-type Res = DefaultResponseBody;
+const Endpoint = axios.create({
+  baseURL: process.env.API_HOST,
+});
+
 type Req =
   | {
+      params?: Record<string, string | number>;
       body?: DefaultRequestBody;
       query?: DefaultRequestQuery['query'];
     }
   | undefined;
+type Res = DefaultResponseBody;
 
 export const callEndpoint = async <Request extends Req, Response extends Res>(
   endpoint: EndpointConfig,
   request?: Request
 ): Promise<Response> => {
   try {
-    const { url, method, auth: isProtected } = endpoint;
+    const params = request?.params ? (Object.values(request.params) as string[]) : [];
+    const { url, method, auth: isProtected } = withParams(endpoint, ...params);
 
     const config: AxiosRequestConfig = {
       url,
@@ -37,17 +43,14 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
       },
     };
 
-    const response = await axios<Request, AxiosResponse<Response>>(config);
+    const response = await Endpoint<Request, AxiosResponse<Response>>(config);
 
     return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      if (error.status === 401) {
-        logout();
-      }
-      throw error?.response?.data;
+  } catch (e) {
+    const error = e as AxiosError<DefaultResponseBody>;
+    if (error.status === 401 || error.status === 403) {
+      return logout();
     }
-    console.error(error);
-    throw new Error('Something went wrong.');
+    throw new Error(error.response?.data?.message || 'Something went wrong.');
   }
 };

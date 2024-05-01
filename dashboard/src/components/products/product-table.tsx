@@ -6,7 +6,7 @@ import Pagination from '@/components/ui/pagination';
 import { listProductsPaginated } from '@/data/product';
 import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
-import { EditFilled, EyeFilled } from '@ant-design/icons';
+import { EditFilled, EyeFilled, UploadOutlined } from '@ant-design/icons';
 import { type DefaultRequestQuery } from '@resala/shared';
 import { Button, Flex, Space, Table } from 'antd';
 import Link from 'next/link';
@@ -60,23 +60,25 @@ export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['qu
           deletedAt: <DisableButton product={product} />,
           createdAt: formatDate(product.createdAt),
           actions: (
-            <Space>
-              <Button
-                type="link"
-                icon={
-                  <Link href={ROUTES.PRODUCT_DETAILS(product.id)}>
-                    <EyeFilled />
-                  </Link>
-                }
-              />
-              <Button
-                type="link"
-                icon={
-                  <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
-                    <EditFilled />
-                  </Link>
-                }
-              />
+            <Space size="small">
+              <Button size="small" type="link">
+                <Link href={ROUTES.PRODUCT_DETAILS(product.id)}>
+                  <EyeFilled />
+                </Link>
+              </Button>
+
+              <Button size="small" type="link">
+                <Link href={ROUTES.UPLOAD_IMAGES(product.id)}>
+                  <UploadOutlined />
+                </Link>
+              </Button>
+
+              <Button size="small" type="link">
+                <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
+                  <EditFilled />
+                </Link>
+              </Button>
+
               <DeleteButton deleteAction={deleteProduct.bind(null, product.id)} />
             </Space>
           ),

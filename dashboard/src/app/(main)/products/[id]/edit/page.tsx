@@ -1,14 +1,15 @@
-import CreateForm from '@/components/products/create-form';
+import Form from '@/components/products/create-form';
 import BackButton from '@/components/ui/back-button';
 import FormSkeleton from '@/components/ui/form-skeleton';
 import { listAllCategories } from '@/data/category';
+import { findProductById } from '@/data/product';
 import ROUTES from '@/lib/routes';
 import { type GetCategoryResponse } from '@resala/shared';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-const CreateProductPage = () => {
+const EditProductPage = ({ params }: { params: { id: string } }) => {
   return (
     <Row gutter={[10, 20]} style={{ padding: 20 }}>
       <Col span={24}>
@@ -16,14 +17,14 @@ const CreateProductPage = () => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Create New Product' },
+            { title: 'Edit Product' },
           ]}
         />
       </Col>
       <Col span={24}>
         <Card>
           <Suspense fallback={<FormSkeleton />}>
-            <CreateProductForm />
+            <EditProductForm id={params.id} />
           </Suspense>
         </Card>
       </Col>
@@ -31,8 +32,8 @@ const CreateProductPage = () => {
   );
 };
 
-const CreateProductForm = async () => {
-  const categories = await listAllCategories();
+const EditProductForm = async ({ id }: { id: string }) => {
+  const [categories, product] = await Promise.all([listAllCategories(), findProductById(id)]);
 
   const flatCategories: Omit<GetCategoryResponse['data'], 'subCategories'>[] = [];
   categories.forEach(category => {
@@ -46,7 +47,7 @@ const CreateProductForm = async () => {
     }
   });
 
-  return <CreateForm categories={flatCategories} />;
+  return <Form categories={flatCategories} product={product!} />;
 };
 
-export default CreateProductPage;
+export default EditProductPage;
