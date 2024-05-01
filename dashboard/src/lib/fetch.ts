@@ -49,7 +49,7 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
   } catch (e) {
     const error = e as AxiosError<DefaultResponseBody>;
     if (error.status === 401 || error.status === 403) {
-      return logout();
+      return await logout();
     }
     throw new Error(error.response?.data?.message || 'Something went wrong.');
   }
