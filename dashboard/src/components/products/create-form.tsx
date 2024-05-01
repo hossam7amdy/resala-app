@@ -1,31 +1,43 @@
 'use client';
 
-import { addProduct } from '@/actions/product';
+import { addProduct, updateProduct } from '@/actions/product';
 import useSubmitForm from '@/hooks/use-submit-form';
-import { type GetCategoryResponse, validationPatterns } from '@resala/shared';
-import { Button, Flex, Form, Input, InputNumber, Select } from 'antd';
+import {
+  type GetCategoryResponse,
+  type GetProductResponse,
+  validationPatterns,
+} from '@resala/shared';
+import { Form as AntForm, Button, Flex, Input, InputNumber, Select } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import TextArea from 'antd/es/input/TextArea';
 import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
 
-const CreateForm = ({
+const Form = ({
+  product,
   categories,
 }: {
+  product?: GetProductResponse['data'];
   categories: Omit<GetCategoryResponse['data'], 'subCategories'>[];
 }) => {
   const router = useRouter();
-  const [form] = Form.useForm();
-  const { error, pending, dispatch } = useSubmitForm(addProduct, form);
+  const [form] = useForm();
+
+  const isEdit = !!product;
+  const submit = isEdit ? updateProduct.bind(null, product.id) : addProduct;
+
+  const { error, pending, dispatch } = useSubmitForm(submit, form);
 
   return (
-    <Form
+    <AntForm
       form={form}
-      name="create-product"
+      name="product-form"
       layout="vertical"
       onFinish={dispatch}
       autoComplete="off"
       size="large"
+      initialValues={{ ...product }}
     >
       <FormItem name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select
@@ -113,7 +125,7 @@ const CreateForm = ({
       <Flex gap={10}>
         <FormItem noStyle>
           <Button block type="primary" htmlType="submit" loading={pending}>
-            Create
+            {isEdit ? 'Update' : 'Create'}
           </Button>
         </FormItem>
         <FormItem noStyle>
@@ -122,8 +134,8 @@ const CreateForm = ({
           </Button>
         </FormItem>
       </Flex>
-    </Form>
+    </AntForm>
   );
 };
 
-export default CreateForm;
+export default Form;

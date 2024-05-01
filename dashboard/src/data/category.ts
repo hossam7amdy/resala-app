@@ -3,8 +3,8 @@ import {
   ENDPOINT_CONFIGS,
   type GetCategoriesListRequest,
   type GetCategoriesListResponse,
+  type GetCategoryRequest,
   type GetCategoryResponse,
-  withParams,
 } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -21,8 +21,9 @@ export const listAllCategories = async () => {
 export const findCategoryById = async (id: string) => {
   noStore();
   try {
-    const response = await callEndpoint<undefined, GetCategoryResponse>(
-      withParams(ENDPOINT_CONFIGS.getCategory, id)
+    const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
+      ENDPOINT_CONFIGS.getCategory,
+      { params: { categoryId: Number(id) }, query: { deleted: true } }
     );
     return response.data;
   } catch (e) {
