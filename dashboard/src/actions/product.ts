@@ -13,7 +13,6 @@ import {
   type UpdateProductRequest,
   type UpdateProductResponse,
 } from '@resala/shared';
-import { type UploadFile } from 'antd/es/upload';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -27,7 +26,11 @@ export const addProduct = async (product: CreateProductRequest['body']) => {
     revalidatePath(ROUTES.PRODUCTS);
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
@@ -38,7 +41,11 @@ export const updateProduct = async (id: number | string, product: UpdateProductR
       { params: { productId: Number(id) }, body: product }
     );
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 
   revalidatePath(ROUTES.PRODUCTS);
@@ -55,24 +62,26 @@ export const deleteProduct = async (id: number | string) => {
     revalidatePath(ROUTES.PRODUCTS);
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
-export const uploadProductImages = async (payload: { productId: string; images: UploadFile[] }) => {
+export const uploadProductImages = async (formData: FormData) => {
   try {
-    const formData = new FormData();
-    formData.append('productId', payload.productId);
-    payload.images.forEach(image => {
-      formData.append('images', image.originFileObj!);
-    });
-
     const response = await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
 
-    revalidatePath(ROUTES.PRODUCT_IMAGES(payload.productId));
+    revalidatePath(ROUTES.PRODUCT_IMAGES(formData.get('productId') as string));
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
@@ -86,6 +95,10 @@ export const deleteProductImage = async (productId: string, imageId: string) => 
     revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };

@@ -16,6 +16,10 @@ const Endpoint = axios.create({
   baseURL: process.env.API_HOST,
 });
 
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null;
+};
+
 type Req =
   | {
       params?: Record<string, string | number>;
@@ -30,7 +34,7 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
   request?: Request
 ): Promise<Response> => {
   try {
-    const params = request?.params ? (Object.values(request.params) as string[]) : [];
+    const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
     const { url, method, auth: isProtected } = withParams(endpoint, ...params);
 
     const config: AxiosRequestConfig = {
@@ -51,6 +55,7 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
     if (error.status === 401 || error.status === 403) {
       return await logout();
     }
-    throw new Error(error.response?.data?.message || 'Something went wrong.');
+    const response = error.response?.data;
+    throw new Error(response?.message || 'Something went wrong');
   }
 };
