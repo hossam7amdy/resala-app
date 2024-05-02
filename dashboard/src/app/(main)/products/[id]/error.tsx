@@ -3,10 +3,8 @@
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 
-const Error = ({ error, reset }: { error: Error; reset: () => void }) => {
+const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) => {
   const router = useRouter();
-
-  console.log('error', error.message);
 
   const message = error.message ? `${error.message}` : 'Sorry, something went wrong.';
   return (

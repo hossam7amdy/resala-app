@@ -1,5 +1,6 @@
 'use client';
 
+import { type DefaultResponseBody } from '@resala/shared';
 import type { FormInstance } from 'antd';
 import { useState, useTransition } from 'react';
 
@@ -11,8 +12,10 @@ import { useState, useTransition } from 'react';
  * @param form The antd form instance
  * @returns An object containing the dispatch function, pending state, and error message
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- This is a generic hook
-const useSubmitForm = <T>(submit: (payload: T) => Promise<any>, form?: FormInstance) => {
+const useSubmitForm = <T>(
+  submit: (payload: T) => Promise<DefaultResponseBody>,
+  form?: FormInstance
+) => {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<{ message: string | undefined }>({ message: undefined });
 
@@ -21,10 +24,8 @@ const useSubmitForm = <T>(submit: (payload: T) => Promise<any>, form?: FormInsta
       try {
         const response = await submit(payload);
 
-        form?.resetFields();
+        response?.success && form?.resetFields();
         setError({ message: response?.message });
-
-        return response;
       } catch (e) {
         setError({ message: (e as Error).message || 'Something went wrong' });
       }

@@ -39,7 +39,7 @@ const UploadForm = ({ id }: { id: string }) => {
             maxCount={5}
             name="images"
             accept="image/*"
-            listType="picture-card"
+            listType="picture"
             onPreview={() => null}
             beforeUpload={() => false}
             showUploadList={{

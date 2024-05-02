@@ -1,5 +1,6 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
 
@@ -8,6 +9,14 @@ import './globals.css';
 import theme from './theme.config';
 
 const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Resala - Admin Dashboard',
+    template: '%s | Resala',
+  },
+  description: 'Resala Admin Dashboard for store management.',
+};
 
 interface LayoutProps {
   children: React.ReactNode;

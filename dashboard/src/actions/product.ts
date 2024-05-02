@@ -19,15 +19,16 @@ import { redirect } from 'next/navigation';
 
 export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
-    await callEndpoint<CreateProductRequest, CreateProductResponse>(
+    const response = await callEndpoint<CreateProductRequest, CreateProductResponse>(
       ENDPOINT_CONFIGS.createProduct,
       { body: product }
     );
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
 
-  revalidatePath(ROUTES.PRODUCTS);
+    revalidatePath(ROUTES.PRODUCTS);
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
 
 export const updateProduct = async (id: number | string, product: UpdateProductRequest['body']) => {
@@ -37,7 +38,7 @@ export const updateProduct = async (id: number | string, product: UpdateProductR
       { params: { productId: Number(id) }, body: product }
     );
   } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
   }
 
   revalidatePath(ROUTES.PRODUCTS);
@@ -46,15 +47,16 @@ export const updateProduct = async (id: number | string, product: UpdateProductR
 
 export const deleteProduct = async (id: number | string) => {
   try {
-    await callEndpoint<DeleteProductRequest, DeleteProductResponse>(
+    const response = await callEndpoint<DeleteProductRequest, DeleteProductResponse>(
       ENDPOINT_CONFIGS.deleteProduct,
       { params: { productId: Number(id) } }
     );
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
 
-  revalidatePath(ROUTES.PRODUCTS);
+    revalidatePath(ROUTES.PRODUCTS);
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
 
 export const uploadProductImages = async (payload: { productId: string; images: UploadFile[] }) => {
@@ -65,23 +67,25 @@ export const uploadProductImages = async (payload: { productId: string; images: 
       formData.append('images', image.originFileObj!);
     });
 
-    await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
+    const response = await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
 
-  revalidatePath(ROUTES.PRODUCT_IMAGES(payload.productId));
+    revalidatePath(ROUTES.PRODUCT_IMAGES(payload.productId));
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
 
 export const deleteProductImage = async (productId: string, imageId: string) => {
   try {
-    await callEndpoint<DeleteProductImageRequest, DeleteProductImageResponse>(
+    const response = await callEndpoint<DeleteProductImageRequest, DeleteProductImageResponse>(
       ENDPOINT_CONFIGS.deleteProductImage,
       { params: { productId: Number(productId), imageId: Number(imageId) } }
     );
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
 
-  revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
+    revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
