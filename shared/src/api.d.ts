@@ -178,7 +178,9 @@ export type GetProductsListResponse = DefaultResponseBody & {
         products: GetProductResponse['data'][];
     };
 };
-export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema>;
+export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema> & {
+    images: FormData;
+};
 export type CreateProductImageResponse = DefaultResponseBody;
 export type DeleteProductImageRequest = zod.infer<typeof DeleteProductImageSchema>;
 export type DeleteProductImageResponse = DefaultResponseBody;

@@ -1,19 +1,26 @@
-const ROUTES = {
-  HOME: '/',
-  LOGIN: '/auth/login',
-  FORGOT_PASSWORD: '/auth/forgot-password',
-  RESET_PASSWORD: '/auth/reset-password',
+export const ROUTES = {
+  // Auth routes (public)
+  LOGIN: '/login',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
+
+  // Dashboard routes (private)
   DASHBOARD: '/dashboard',
-  CATEGORIES: '/dashboard/categories',
-  CREATE_CATEGORY: '/dashboard/categories/create',
-  EDIT_CATEGORY: (id: string | number) => `/dashboard/categories/${id}/edit`,
-  PRODUCTS: '/dashboard/products',
-  PRODUCT_DETAILS: (id: string | number) => `/dashboard/products/${id}`,
-  CREATE_PRODUCT: '/dashboard/products/create',
-  EDIT_PRODUCT: (id: string | number) => `/dashboard/products/${id}/edit`,
-  ORDERS: '/dashboard/orders',
-  CUSTOMERS: '/dashboard/customers',
-  NOT_FOUND: '/404',
+  CATEGORIES: '/categories',
+  CREATE_CATEGORY: '/categories/create',
+  EDIT_CATEGORY: (id: string | number) => `/categories/${id}/edit`,
+  PRODUCTS: '/products',
+  PRODUCT_DETAILS: (id: string | number) => `/products/${id}`,
+  CREATE_PRODUCT: '/products/create',
+  EDIT_PRODUCT: (id: string | number) => `/products/${id}/edit`,
+  PRODUCT_IMAGES: (id: string | number) => `/products/${id}?tab=images`,
+  UPLOAD_IMAGES: (id: string | number) => `/products/${id}/upload`,
+  PRODUCT_STOCKS: (id: string | number) => `/products/${id}?tab=stocks`,
+  CREATE_STOCK: (id: string | number) => `/products/${id}/stocks/create`,
+  EDIT_STOCK: (id: string | number, stockId: string | number) =>
+    `/products/${id}/stocks/${stockId}/edit`,
+  ORDERS: '/orders',
+  CUSTOMERS: '/customers',
 };
 
 export default ROUTES;
