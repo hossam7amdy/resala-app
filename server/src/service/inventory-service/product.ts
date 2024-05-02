@@ -1,4 +1,4 @@
-import type { Product } from '@prisma/client';
+import type { Prisma, Product } from '@prisma/client';
 
 import prisma from '../../lib/prisma/index.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
@@ -30,8 +30,15 @@ export const listProductsPaginated = async (filters: {
 }) => {
   const { page, limit, query, deleted } = filters;
 
-  const _filters = {
-    OR: [{ enName: { contains: query } }, { arName: { contains: query } }],
+  const _filters: Prisma.ProductWhereInput = {
+    OR: [
+      {
+        enName: { startsWith: query, mode: 'insensitive' },
+      },
+      {
+        arName: { startsWith: query, mode: 'insensitive' },
+      },
+    ],
     deletedAt: deleted ? undefined : null,
   };
 
