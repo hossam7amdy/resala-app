@@ -33,7 +33,13 @@ export const DeleteButton = ({ deleteAction }: { deleteAction: () => Promise<any
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <Button danger type="link" onClick={() => setOpen(true)} icon={<DeleteFilled />} />
+      <Button
+        size="small"
+        danger
+        type="link"
+        onClick={() => setOpen(true)}
+        icon={<DeleteFilled />}
+      />
     </Popover>
   );
 };

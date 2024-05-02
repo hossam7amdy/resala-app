@@ -33,7 +33,7 @@ export const NavLinks = () => {
           <li key={name}>
             <Link
               href={href}
-              className={`${styles['link-item']} ${pathname === href && styles['link-active']}`}
+              className={`${styles['link-item']} ${pathname.startsWith(href) && styles['link-active']}`}
             >
               <LinkIcon />
               <span>{name}</span>

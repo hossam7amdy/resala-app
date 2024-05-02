@@ -9,17 +9,15 @@ import styles from './page.module.css';
 
 const ForgotPasswordPage = () => {
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <Flex vertical gap={10}>
-          <div style={{ alignSelf: 'center' }}>
-            <Logo />
-          </div>
-          <EmailForm />
-          <Link href={ROUTES.LOGIN}>Back to Login</Link>
-        </Flex>
-      </div>
-    </main>
+    <div className={styles.container}>
+      <Flex vertical gap={10}>
+        <div style={{ alignSelf: 'center' }}>
+          <Logo />
+        </div>
+        <EmailForm />
+        <Link href={ROUTES.LOGIN}>Back to Login</Link>
+      </Flex>
+    </div>
   );
 };
 

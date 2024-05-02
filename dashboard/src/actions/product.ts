@@ -5,19 +5,18 @@ import ROUTES from '@/lib/routes';
 import {
   type CreateProductRequest,
   type CreateProductResponse,
-  type DefaultResponseBody,
+  type DeleteProductImageRequest,
   type DeleteProductImageResponse,
+  type DeleteProductRequest,
   type DeleteProductResponse,
   ENDPOINT_CONFIGS,
   type UpdateProductRequest,
   type UpdateProductResponse,
-  withParams,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
-export const addProduct = async (
-  product: CreateProductRequest['body']
-): Promise<CreateProductResponse> => {
+export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
     const response = await callEndpoint<CreateProductRequest, CreateProductResponse>(
       ENDPOINT_CONFIGS.createProduct,
@@ -26,65 +25,80 @@ export const addProduct = async (
 
     revalidatePath(ROUTES.PRODUCTS);
     return response;
-  } catch (error) {
-    return error as CreateProductResponse;
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
 export const updateProduct = async (id: number | string, product: UpdateProductRequest['body']) => {
   try {
-    await callEndpoint<Omit<UpdateProductRequest, 'params'>, UpdateProductResponse>(
-      withParams(ENDPOINT_CONFIGS.updateProduct, String(id)),
-      { body: product }
+    await callEndpoint<UpdateProductRequest, UpdateProductResponse>(
+      ENDPOINT_CONFIGS.updateProduct,
+      { params: { productId: Number(id) }, body: product }
+    );
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
+  }
+
+  revalidatePath(ROUTES.PRODUCTS);
+  redirect(ROUTES.PRODUCTS);
+};
+
+export const deleteProduct = async (id: number | string) => {
+  try {
+    const response = await callEndpoint<DeleteProductRequest, DeleteProductResponse>(
+      ENDPOINT_CONFIGS.deleteProduct,
+      { params: { productId: Number(id) } }
     );
 
     revalidatePath(ROUTES.PRODUCTS);
-  } catch (error) {
-    return error as UpdateProductResponse;
+    return response;
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
-export const deleteProduct = async (id: number | string): Promise<DeleteProductResponse> => {
+export const uploadProductImages = async (formData: FormData) => {
   try {
-    const response = await callEndpoint<undefined, DeleteProductResponse>(
-      withParams(ENDPOINT_CONFIGS.deleteProduct, String(id))
+    const response = await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
+
+    revalidatePath(ROUTES.PRODUCT_IMAGES(formData.get('productId') as string));
+    return response;
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
+  }
+};
+
+export const deleteProductImage = async (productId: string, imageId: string) => {
+  try {
+    const response = await callEndpoint<DeleteProductImageRequest, DeleteProductImageResponse>(
+      ENDPOINT_CONFIGS.deleteProductImage,
+      { params: { productId: Number(productId), imageId: Number(imageId) } }
     );
 
-    revalidatePath(ROUTES.PRODUCTS);
+    revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
     return response;
-  } catch (error) {
-    return error as DeleteProductResponse;
-  }
-};
-
-export const uploadProductImages = async (
-  id: string,
-  formData: FormData
-): Promise<DefaultResponseBody> => {
-  try {
-    const response = await callEndpoint(withParams(ENDPOINT_CONFIGS.addProductImages, id), {
-      body: formData,
-    });
-
-    revalidatePath(ROUTES.PRODUCT_DETAILS(id));
-    return response;
-  } catch (error) {
-    return error as DefaultResponseBody;
-  }
-};
-
-export const deleteProductImage = async (
-  productId: string,
-  imageId: string
-): Promise<DeleteProductImageResponse> => {
-  try {
-    const response = await callEndpoint<undefined, DeleteProductImageResponse>(
-      withParams(ENDPOINT_CONFIGS.deleteProductImage, productId, imageId)
-    );
-
-    revalidatePath(ROUTES.PRODUCT_DETAILS(productId));
-    return response;
-  } catch (error) {
-    return error as DeleteProductImageResponse;
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
