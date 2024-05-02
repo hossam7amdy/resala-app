@@ -16,15 +16,16 @@ import { redirect } from 'next/navigation';
 
 export const createCategory = async (payload: CreateCategoryRequest['body']) => {
   try {
-    await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
+    const response = await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
       ENDPOINT_CONFIGS.createCategory,
       { body: payload }
     );
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
 
-  revalidatePath(ROUTES.CATEGORIES);
+    revalidatePath(ROUTES.CATEGORIES);
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
@@ -34,7 +35,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
       { params: { categoryId: Number(id) }, body: payload }
     );
   } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
   }
 
   revalidatePath(ROUTES.CATEGORIES);
@@ -43,13 +44,14 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
 
 export const deleteCategory = async (id: string) => {
   try {
-    await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
+    const response = await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
       ENDPOINT_CONFIGS.deleteCategory,
       { params: { categoryId: Number(id) } }
     );
-  } catch (e) {
-    return { message: (e as Error).message || 'Something went wrong' };
-  }
 
-  revalidatePath(ROUTES.CATEGORIES);
+    revalidatePath(ROUTES.CATEGORIES);
+    return response;
+  } catch (e) {
+    return { success: false, message: (e as Error).message || 'Something went wrong' };
+  }
 };
