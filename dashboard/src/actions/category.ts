@@ -24,7 +24,11 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
     revalidatePath(ROUTES.CATEGORIES);
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };
 
@@ -35,7 +39,11 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
       { params: { categoryId: Number(id) }, body: payload }
     );
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 
   revalidatePath(ROUTES.CATEGORIES);
@@ -52,6 +60,10 @@ export const deleteCategory = async (id: string) => {
     revalidatePath(ROUTES.CATEGORIES);
     return response;
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Something went wrong' };
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 };

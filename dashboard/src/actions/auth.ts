@@ -27,7 +27,11 @@ export const login = async (payload: LoginRequest['body']) => {
 
     createSession(response.data.accessToken, new Date(response.data.expiresAt));
   } catch (e) {
-    return { success: false, message: (e as Error).message || 'Invalid email or password' };
+    const error = e as Error;
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 
   redirect(ROUTES.DASHBOARD, RedirectType.replace);
@@ -46,8 +50,12 @@ export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => 
     );
 
     createSession(response.data.resetToken, new Date(response.data.expiresAt));
-  } catch (error) {
-    return { success: false, message: (error as Error).message || 'Invalid email' };
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 
   redirect(ROUTES.RESET_PASSWORD, RedirectType.replace);
@@ -61,8 +69,12 @@ export const resetPassword = async (payload: ResetPasswordRequest['body']) => {
     );
 
     deleteSession();
-  } catch (error) {
-    return { success: false, message: (error as Error).message || 'Invalid reset token' };
+  } catch (e) {
+    const error = e as Error;
+    return {
+      message: error.message,
+      success: false,
+    };
   }
 
   redirect(ROUTES.LOGIN, RedirectType.replace);

@@ -12,23 +12,19 @@ import { useState, useTransition } from 'react';
  * @param form The antd form instance
  * @returns An object containing the dispatch function, pending state, and error message
  */
-const useSubmitForm = <T>(
-  submit: (payload: T) => Promise<DefaultResponseBody>,
+const useSubmitForm = <Payload>(
+  submit: (payload: Payload) => Promise<DefaultResponseBody>,
   form?: FormInstance
 ) => {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<{ message: string | undefined }>({ message: undefined });
 
-  const dispatch = (payload: T) =>
+  const dispatch = (payload: Payload) =>
     startTransition(async () => {
-      try {
-        const response = await submit(payload);
+      const response = await submit(payload);
 
-        response?.success && form?.resetFields();
-        setError({ message: response?.message });
-      } catch (e) {
-        setError({ message: (e as Error).message || 'Something went wrong' });
-      }
+      response?.success && form?.resetFields();
+      !response?.success && setError({ message: response?.message });
     });
 
   return { dispatch, pending, error };
