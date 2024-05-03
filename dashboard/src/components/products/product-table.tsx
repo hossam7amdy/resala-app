@@ -13,7 +13,10 @@ import Link from 'next/link';
 
 import DisableButton from './disable-button';
 
-export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['query']>) => {
+interface ProductTableProps {
+  searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
+}
+export const ProductTable = async ({ searchParams }: ProductTableProps) => {
   const { products, pagination } = await listProductsPaginated(searchParams);
 
   return (
@@ -21,35 +24,13 @@ export const ProductTable = async (searchParams: Partial<DefaultRequestQuery['qu
       <Table
         pagination={false}
         columns={[
-          {
-            title: 'English',
-            dataIndex: 'enName',
-          },
-          {
-            title: 'Arabic',
-            dataIndex: 'arName',
-          },
-          {
-            title: 'Category',
-            dataIndex: 'category',
-          },
-          {
-            title: 'Price',
-            dataIndex: 'price',
-          },
-          {
-            title: 'Is Active',
-            dataIndex: 'deletedAt',
-          },
-          {
-            title: 'Create Date',
-            dataIndex: 'createdAt',
-          },
-          {
-            title: 'Actions',
-            dataIndex: 'actions',
-            align: 'center',
-          },
+          { title: 'English', dataIndex: 'enName' },
+          { title: 'Arabic', dataIndex: 'arName' },
+          { title: 'Category', dataIndex: 'category' },
+          { title: 'Price', dataIndex: 'price' },
+          { title: 'Is Active', dataIndex: 'deletedAt' },
+          { title: 'Create Date', dataIndex: 'createdAt' },
+          { title: 'Actions', dataIndex: 'actions', align: 'center' },
         ]}
         dataSource={products.map(product => ({
           key: product.id,
