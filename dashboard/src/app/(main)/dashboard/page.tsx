@@ -1,7 +1,5 @@
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Card, Col, Row } from 'antd';
 import type { Metadata } from 'next';
-
-import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -9,10 +7,31 @@ export const metadata: Metadata = {
 
 const DashboardPage = () => {
   return (
-    <div className={styles.page}>
-      <Breadcrumb items={[{ title: 'Dashboard' }]} />
-      <br />
-    </div>
+    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+      <Col span={24}>
+        <Breadcrumb items={[{ title: 'Dashboard' }]} />
+      </Col>
+
+      <Col span={6}>
+        <Card style={{ height: 200 }} />
+      </Col>
+      <Col span={6}>
+        <Card style={{ height: 200 }} />
+      </Col>
+      <Col span={6}>
+        <Card style={{ height: 200 }} />
+      </Col>
+      <Col span={6}>
+        <Card style={{ height: 200 }} />
+      </Col>
+
+      <Col span={12}>
+        <Card style={{ height: 400 }} />
+      </Col>
+      <Col span={12}>
+        <Card style={{ height: 400 }} />
+      </Col>
+    </Row>
   );
 };
 

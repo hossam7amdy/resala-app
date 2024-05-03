@@ -11,13 +11,31 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const getProfile = async () => {
   noStore();
 
-  return await callEndpoint<GetProfileRequest, GetProfileResponse>(ENDPOINT_CONFIGS.getCurrentUser);
+  const response = await callEndpoint<GetProfileRequest, GetProfileResponse>(
+    ENDPOINT_CONFIGS.getCurrentUser
+  );
+
+  return response.data;
 };
 
-export const listUsersPaginated = async () => {
+export const listUsersPaginated = async (searchParams: {
+  page: number;
+  limit: number;
+  query: string;
+}) => {
   noStore();
 
-  return await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
-    ENDPOINT_CONFIGS.adminGetUsersList
+  const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
+    ENDPOINT_CONFIGS.adminGetUsersList,
+    {
+      query: {
+        page: Number(searchParams.page),
+        limit: Number(searchParams.limit),
+        query: searchParams?.query || '',
+        deleted: true,
+      },
+    }
   );
+
+  return response.data;
 };
