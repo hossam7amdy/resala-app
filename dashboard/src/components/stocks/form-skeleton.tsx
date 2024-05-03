@@ -4,7 +4,7 @@ import SkeletonButton from 'antd/es/skeleton/Button';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import React from 'react';
 
-const Loading = () => {
+const FormSkeleton = () => {
   return (
     <>
       <FormItem>
@@ -33,4 +33,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default FormSkeleton;

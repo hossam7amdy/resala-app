@@ -1,3 +1,4 @@
+import StockColor from '@/components/ui/stock-color';
 import { listAllColors } from '@/data/colors';
 import { Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
@@ -10,8 +11,15 @@ const SelectColor = async () => {
       <Select
         allowClear
         showSearch
-        placeholder="Select product"
-        options={colors.map(c => ({ label: `${c.enName} | ${c.arName}`, value: c.id }))}
+        placeholder="Select color"
+        options={colors.map(c => ({
+          value: c.id,
+          label: (
+            <span>
+              <StockColor color={c.code} /> {c.enName} | {c.arName}
+            </span>
+          ),
+        }))}
       />
     </FormItem>
   );

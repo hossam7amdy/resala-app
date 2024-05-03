@@ -47,12 +47,7 @@ const StocksTable = async ({ searchParams }: StocksTableProps) => {
                 </Link>
               </Button>
 
-              <DeleteButton
-                deleteAction={async () => {
-                  'use server';
-                  return deleteStock.bind(null, stock.id);
-                }}
-              />
+              <DeleteButton deleteAction={deleteStock.bind(null, stock.id)} />
             </Space>
           ),
         }))}

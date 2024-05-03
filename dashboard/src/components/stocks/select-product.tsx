@@ -1,22 +1,23 @@
+'use client';
+
+import { DebounceSelect } from '@/components/ui/debounce-select';
 import { listProductsPaginated } from '@/data/product';
-import { Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 
-const SelectProduct = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  console.log('searchParams', searchParams);
-  const query = searchParams.query || '';
-  const { products } = await listProductsPaginated({ query, page: 1, limit: 10 });
-
+const SelectProduct = () => {
   return (
-    <FormItem required name="productId" label="Product">
-      <Select
-        showSearch
+    <FormItem required name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
+      <DebounceSelect
+        autoFocus
         allowClear
+        showSearch
         placeholder="Select product"
-        options={products.map(product => ({
-          label: `${product.enName} | ${product.arName}`,
-          value: product.id,
-        }))}
+        filterOption={false}
+        optionFilterProp="children"
+        fetchOptions={async search => {
+          const data = await listProductsPaginated({ page: 1, limit: 10, query: search });
+          return data.products.map(p => ({ label: p.enName, value: p.id }));
+        }}
       />
     </FormItem>
   );
