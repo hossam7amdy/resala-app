@@ -15,7 +15,7 @@ export const DebounceSelect = <
   ValueType extends { key?: string; label: React.ReactNode; value: string | number },
 >({
   fetchOptions,
-  debounceTimeout = 800,
+  debounceTimeout = 500,
   ...props
 }: DebounceSelectProps<ValueType>) => {
   const [fetching, setFetching] = useState(false);
