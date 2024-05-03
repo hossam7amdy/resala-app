@@ -1,6 +1,6 @@
 'use client';
 
-import { useDebounce } from '@/lib/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import AntSearch, { type SearchProps } from 'antd/es/input/Search';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 

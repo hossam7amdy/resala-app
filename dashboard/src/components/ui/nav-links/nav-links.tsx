@@ -5,6 +5,7 @@ import {
   FileProtectOutlined,
   HomeOutlined,
   ProductOutlined,
+  SkinOutlined,
   TagOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -18,6 +19,7 @@ const links = [
   { name: 'Home', href: ROUTES.DASHBOARD, icon: HomeOutlined },
   { name: 'Categories', href: ROUTES.CATEGORIES, icon: TagOutlined },
   { name: 'Products', href: ROUTES.PRODUCTS, icon: ProductOutlined },
+  { name: 'Stocks', href: ROUTES.STOCKS, icon: SkinOutlined },
   { name: 'Orders', href: ROUTES.ORDERS, icon: FileProtectOutlined },
   { name: 'Customers', href: ROUTES.CUSTOMERS, icon: UserOutlined },
 ];

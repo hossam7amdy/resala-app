@@ -1,0 +1,32 @@
+'use server';
+
+import { callEndpoint } from '@/lib/fetch';
+import type {
+  GetSizeRequest,
+  GetSizeResponse,
+  GetSizesListRequest,
+  GetSizesListResponse,
+} from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { unstable_noStore as noStore } from 'next/cache';
+
+export const listAllSizes = async () => {
+  noStore();
+
+  const response = await callEndpoint<GetSizesListRequest, GetSizesListResponse>(
+    ENDPOINT_CONFIGS.getSizesList
+  );
+
+  return response.data;
+};
+
+export const findSizeById = async (id: string | number) => {
+  noStore();
+
+  const response = await callEndpoint<GetSizeRequest, GetSizeResponse>(
+    ENDPOINT_CONFIGS.getSizesList,
+    { params: { sizeId: Number(id) } }
+  );
+
+  return response.data;
+};
