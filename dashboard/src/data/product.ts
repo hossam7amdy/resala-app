@@ -1,3 +1,5 @@
+'use server';
+
 import { callEndpoint } from '@/lib/fetch';
 import {
   type DefaultRequestQuery,
