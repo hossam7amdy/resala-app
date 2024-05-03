@@ -4,8 +4,8 @@ server {
     server_name ${NGINX_HOST};
     client_max_body_size 25M;
 
-    ssl_certificate /etc/nginx/certs/cert.pem;
-    ssl_certificate_key /etc/nginx/certs/key.pem;
+    ssl_certificate /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
 
     root /path/to/webroot;
 
