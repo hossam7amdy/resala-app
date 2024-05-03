@@ -1,17 +1,15 @@
 import EditForm from '@/components/stocks/form';
-import FormSkeleton from '@/components/stocks/form-skeleton';
 import SelectColor from '@/components/stocks/select-color';
 import SelectProduct from '@/components/stocks/select-product';
 import SelectSize from '@/components/stocks/select-size';
 import BackButton from '@/components/ui/back-button';
-import { findStockById } from '@/data/stocks';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import Link from 'next/link';
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 
-const EditStockPage = ({ params }: { params: { id: string } }) => {
+const CreateStockPage = ({ searchParams }: { searchParams?: { productId?: string } }) => {
   return (
     <Row gutter={[10, 20]} style={{ padding: 20 }}>
       <Col span={24}>
@@ -26,27 +24,17 @@ const EditStockPage = ({ params }: { params: { id: string } }) => {
 
       <Col span={24}>
         <Card>
-          <Suspense fallback={<FormSkeleton />}>
-            <Form id={params.id} />
-          </Suspense>
+          <Form productId={searchParams?.productId} />
         </Card>
       </Col>
     </Row>
   );
 };
 
-const Form = async ({ id }: { id: string }) => {
-  const stock = await findStockById(id);
-
+const Form = async ({ productId }: { productId?: string }) => {
   return (
     <EditForm
-      stock={{
-        id: stock.id,
-        colorId: stock.color.id,
-        sizeId: stock.size.id,
-        quantity: stock.quantity,
-        productId: stock.product.id,
-      }}
+      stock={{ productId: Number(productId) || undefined }}
       selectSize={
         <Suspense fallback={<SkeletonInput active block size="large" />}>
           <SelectSize />
@@ -62,4 +50,4 @@ const Form = async ({ id }: { id: string }) => {
   );
 };
 
-export default EditStockPage;
+export default CreateStockPage;

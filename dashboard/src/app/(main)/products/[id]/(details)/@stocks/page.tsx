@@ -2,6 +2,7 @@ import { deleteStock } from '@/actions/stock';
 import DeleteButton from '@/components/ui/delete-button';
 import StockColor from '@/components/ui/stock-color';
 import { getProductStocks } from '@/data/product';
+import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
 import { Button, Space, Table } from 'antd';
@@ -34,17 +35,12 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
         actions: (
           <Space size="small">
             <Button size="small" type="link">
-              <Link href={''}>
+              <Link href={ROUTES.EDIT_STOCK(stock.id)}>
                 <EditFilled />
               </Link>
             </Button>
 
-            <DeleteButton
-              deleteAction={async () => {
-                'use server';
-                return deleteStock.bind(null, stock.id);
-              }}
-            />
+            <DeleteButton deleteAction={deleteStock.bind(null, stock.id)} />
           </Space>
         ),
       }))}

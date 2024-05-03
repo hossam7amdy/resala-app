@@ -12,6 +12,7 @@ import {
   type UpdateStockResponse,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export const createStock = async (stock: CreateStockRequest['body']) => {
   try {
@@ -50,13 +51,19 @@ export const updateStock = async (stockId: string | number, stock: UpdateStockRe
       message: error.message,
     };
   }
+
+  return redirect(ROUTES.EDIT_STOCK(stockId));
 };
 
 export const deleteStock = async (stockId: string | number) => {
   try {
+    console.log('Deleting stock', stockId);
+
     await callEndpoint<DeleteStockRequest, DeleteStockResponse>(ENDPOINT_CONFIGS.deleteStock, {
       params: { stockId: Number(stockId) },
     });
+
+    console.log('Stock deleted successfully');
 
     revalidatePath(ROUTES.STOCKS);
   } catch (e) {
