@@ -36,7 +36,7 @@ const ProductPage = ({
       </Col>
       <Col span={24}>
         <Suspense key={page + limit + query} fallback={<Table loading />}>
-          <ProductTable query={query} limit={limit} page={page} />
+          <ProductTable searchParams={{ page, limit, query }} />
         </Suspense>
       </Col>
     </Row>
