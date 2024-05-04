@@ -5,7 +5,6 @@ import useSubmitForm from '@/hooks/use-submit-form';
 import { type GetCategoriesListResponse, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
 
 import ErrorMessage from '../ui/error-message';
