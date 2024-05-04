@@ -53,7 +53,11 @@ describe('Inventory Service [ Size ]', () => {
       const sizes = await inventoryService.listSizes();
 
       expect(sizes).toEqual([MOCK_SIZE]);
-      expect(prismaMock.size.findMany).toHaveBeenCalledWith();
+      expect(prismaMock.size.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
     });
   });
 

@@ -13,7 +13,7 @@ import Pagination from '../ui/pagination';
 import StockColor from '../ui/stock-color';
 
 interface StocksTableProps {
-  searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit'>;
+  searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
 }
 const StocksTable = async ({ searchParams }: StocksTableProps) => {
   const { pagination, stocks } = await listStocksPaginated(searchParams);
@@ -21,6 +21,7 @@ const StocksTable = async ({ searchParams }: StocksTableProps) => {
   return (
     <Flex vertical gap={10}>
       <Table
+        scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
           { title: 'Product', dataIndex: 'product', key: 'product' },
