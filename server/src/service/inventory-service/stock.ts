@@ -23,11 +23,21 @@ export async function findStockById(stockId: number) {
   return stock;
 }
 
-export async function getStocksList(query: { page: number; limit: number }) {
+export async function getStocksList(query: { page: number; limit: number; query?: string }) {
   const { page, limit } = query;
+  const search = query.query || '';
 
+  const filters: Prisma.StockWhereInput = {
+    OR: [
+      { product: { arName: { contains: search, mode: 'insensitive' } } },
+      { product: { enName: { contains: search, mode: 'insensitive' } } },
+      { color: { arName: { contains: search, mode: 'insensitive' } } },
+      { color: { enName: { contains: search, mode: 'insensitive' } } },
+      { size: { name: { contains: search, mode: 'insensitive' } } },
+    ],
+  };
   const [total, stocks] = await prisma.$transaction([
-    prisma.stock.count(),
+    prisma.stock.count({ where: filters }),
     prisma.stock.findMany({
       include: {
         color: true,
@@ -39,6 +49,7 @@ export async function getStocksList(query: { page: number; limit: number }) {
       orderBy: {
         updatedAt: 'desc',
       },
+      where: filters,
     }),
   ]);
 
