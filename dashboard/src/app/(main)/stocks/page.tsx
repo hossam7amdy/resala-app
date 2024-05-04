@@ -1,10 +1,16 @@
 import StocksTable from '@/components/stocks/table';
+import { Search } from '@/components/ui/search';
 import ROUTES from '@/lib/routes';
-import { Breadcrumb, Button, Col, Row, Table } from 'antd';
+import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 
-const StocksPage = ({ searchParams }: { searchParams: { page: string; limit: string } }) => {
+const StocksPage = ({
+  searchParams,
+}: {
+  searchParams: { query: string; page: string; limit: string };
+}) => {
+  const query = searchParams.query || '';
   const page = parseInt(searchParams.page, 10) || 1;
   const limit = parseInt(searchParams.limit, 10) || 10;
 
@@ -13,14 +19,17 @@ const StocksPage = ({ searchParams }: { searchParams: { page: string; limit: str
       <Col span={24}>
         <Breadcrumb items={[{ title: 'Stocks' }]} />
       </Col>
-      <Col span={24} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button type="primary">
-          <Link href={ROUTES.CREATE_STOCK('')}>Create New Stock</Link>
-        </Button>
+      <Col span={24}>
+        <Flex gap={10}>
+          <Search />
+          <Button type="primary">
+            <Link href={ROUTES.CREATE_STOCK('')}>Create New Stock</Link>
+          </Button>
+        </Flex>
       </Col>
       <Col span={24}>
-        <Suspense key={page + limit} fallback={<Table loading />}>
-          <StocksTable searchParams={{ page, limit }} />
+        <Suspense key={query + page + limit} fallback={<Table loading />}>
+          <StocksTable searchParams={{ query, page, limit }} />
         </Suspense>
       </Col>
     </Row>

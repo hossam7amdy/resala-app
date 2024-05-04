@@ -16,7 +16,11 @@ export async function findSizeById(sizeId: number) {
 }
 
 export async function listSizes() {
-  return await prisma.size.findMany();
+  return await prisma.size.findMany({
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
 }
 
 export async function createSize(name: string) {

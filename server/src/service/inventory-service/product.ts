@@ -146,6 +146,9 @@ export const addProductImages = async (productId: number, urls: string[]) => {
 export const listProductImages = async (productId: number) => {
   return await prisma.productImage.findMany({
     where: { productId },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 };
 

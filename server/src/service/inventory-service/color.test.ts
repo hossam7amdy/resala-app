@@ -54,7 +54,11 @@ describe('getColors', () => {
     const colors = await inventoryService.getColors();
 
     expect(colors).toEqual([MOCK_COLOR]);
-    expect(prismaMock.color.findMany).toHaveBeenCalledWith();
+    expect(prismaMock.color.findMany).toHaveBeenCalledWith({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
   });
 });
 

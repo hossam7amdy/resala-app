@@ -1,3 +1,4 @@
+import { deleteCategory } from '@/actions/category';
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -6,7 +7,7 @@ import { type GetCategoryResponse } from '@resala/shared';
 import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from './delete-button';
+import DeleteButton from '../ui/delete-button';
 import DisableButton from './disable-button';
 
 export const CategoryTable = async ({ query }: { query: string }) => {
@@ -27,33 +28,15 @@ export const CategoryTable = async ({ query }: { query: string }) => {
 
   return (
     <Table
-      scroll={{ y: 500 }}
+      scroll={{ x: 768, y: 500 }}
       pagination={{ total: filteredCategories.length, pageSize: 10, position: ['bottomCenter'] }}
       columns={[
-        {
-          title: 'English',
-          dataIndex: 'enName',
-        },
-        {
-          title: 'Arabic',
-          dataIndex: 'arName',
-        },
-        {
-          title: '# of Sub-Categories',
-          dataIndex: 'subCategories',
-        },
-        {
-          title: 'Is Active',
-          dataIndex: 'deletedAt',
-        },
-        {
-          title: 'Create Date',
-          dataIndex: 'createdAt',
-        },
-        {
-          title: 'Action',
-          dataIndex: 'action',
-        },
+        { title: 'English', dataIndex: 'enName' },
+        { title: 'Arabic', dataIndex: 'arName' },
+        { title: '# of Sub-Categories', dataIndex: 'subCategories' },
+        { title: 'Is Active', dataIndex: 'deletedAt' },
+        { title: 'Create Date', dataIndex: 'createdAt' },
+        { title: 'Action', dataIndex: 'action' },
       ]}
       dataSource={filteredCategories.map(category => ({
         ...renderRow(category),
@@ -83,7 +66,7 @@ const renderRow = (category: GetCategoryResponse['data']) => {
             </Link>
           }
         />
-        <DeleteButton id={category.id} />
+        <DeleteButton deleteAction={deleteCategory.bind(null, String(category.id))} />
       </Flex>
     ),
   };
