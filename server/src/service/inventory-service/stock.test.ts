@@ -64,6 +64,9 @@ describe('stock module', () => {
           color: true,
           size: true,
         },
+        orderBy: {
+          updatedAt: 'desc',
+        },
       });
     });
   });

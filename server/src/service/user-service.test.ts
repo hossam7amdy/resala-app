@@ -197,6 +197,9 @@ describe('userService', () => {
           address: true,
         },
         where: { userId: 1 },
+        orderBy: {
+          addressId: 'desc',
+        },
       });
     });
   });
@@ -282,11 +285,11 @@ describe('userService', () => {
     });
   });
 
-  describe('listUserAddresses', () => {
+  describe('getUserAddressList', () => {
     it('should list user addresses', async () => {
       prismaMock.userAddress.findMany.mockResolvedValue([{ address: MOCK_USER_ADDRESS }] as any);
 
-      const result = await userService.listUserAddresses(1);
+      const result = await userService.getUserAddressList(1);
 
       expect(result).toEqual([MOCK_USER_ADDRESS]);
       expect(prismaMock.userAddress.findMany).toHaveBeenCalledWith({
@@ -294,13 +297,16 @@ describe('userService', () => {
           address: true,
         },
         where: { userId: 1 },
+        orderBy: {
+          addressId: 'desc',
+        },
       });
     });
 
     it('should return an empty array if no addresses found', async () => {
       prismaMock.userAddress.findMany.mockResolvedValue([] as any);
 
-      const result = await userService.listUserAddresses(1);
+      const result = await userService.getUserAddressList(1);
 
       expect(result).toEqual([]);
     });

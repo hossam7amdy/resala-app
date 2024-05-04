@@ -18,7 +18,11 @@ export async function findColorById(sizeId: number) {
 }
 
 export async function getColors() {
-  return await prisma.color.findMany();
+  return await prisma.color.findMany({
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
 }
 
 export async function createColor(color: Prisma.ColorCreateInput) {
