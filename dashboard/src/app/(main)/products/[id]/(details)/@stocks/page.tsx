@@ -1,6 +1,7 @@
 import { deleteStock } from '@/actions/stock';
 import DeleteButton from '@/components/ui/delete-button';
 import StockColor from '@/components/ui/stock-color';
+import StockQuantity from '@/components/ui/stock-quantity';
 import { getProductStocks } from '@/data/product';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -27,7 +28,7 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
       }}
       dataSource={stocks.map(stock => ({
         key: stock.id,
-        quantity: stock.quantity,
+        quantity: <StockQuantity quantity={stock.quantity} />,
         updatedAt: formatDate(stock.updatedAt),
         color: <StockColor color={stock.color.code} />,
         colorName: `${stock.color.enName} | ${stock.color.arName}`,
