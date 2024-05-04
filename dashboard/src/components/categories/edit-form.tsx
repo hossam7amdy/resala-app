@@ -12,6 +12,8 @@ import FormItem from 'antd/es/form/FormItem';
 import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
 
+import ErrorMessage from '../ui/error-message';
+
 const EditForm = ({
   category,
   categories,
@@ -77,7 +79,7 @@ const EditForm = ({
         </FormItem>
       </Flex>
 
-      {error?.message && <Text type="danger">{error.message}</Text>}
+      {error?.message && <ErrorMessage message={error.message} />}
 
       <Flex gap={10}>
         <FormItem noStyle>
