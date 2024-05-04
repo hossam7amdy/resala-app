@@ -22,7 +22,7 @@ export const DefaultQuerySchema = zod.object({
         page: zod.coerce
             .number()
             .positive()
-            .max(100)
+            .max(10000)
             .optional()
             .transform(val => val || 1),
         limit: zod.coerce
