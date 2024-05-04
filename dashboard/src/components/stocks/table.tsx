@@ -11,6 +11,7 @@ import React from 'react';
 import DeleteButton from '../ui/delete-button';
 import Pagination from '../ui/pagination';
 import StockColor from '../ui/stock-color';
+import StockQuantity from '../ui/stock-quantity';
 
 interface StocksTableProps {
   searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
@@ -25,21 +26,21 @@ const StocksTable = async ({ searchParams }: StocksTableProps) => {
         pagination={false}
         columns={[
           { title: 'Product', dataIndex: 'product', key: 'product' },
-          { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
           { title: 'Color', dataIndex: 'color', key: 'color' },
           { title: 'Color Name', dataIndex: 'colorName', key: 'colorName' },
           { title: 'Size', dataIndex: 'size', key: 'size' },
+          { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
           { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt' },
           { title: 'Actions', dataIndex: 'actions', key: 'actions' },
         ]}
         dataSource={stocks.map(stock => ({
           key: stock.id,
           product: stock.product.arName,
-          quantity: stock.quantity,
           updatedAt: formatDate(stock.updatedAt),
           color: <StockColor color={stock.color.code} />,
           colorName: `${stock.color.enName} | ${stock.color.arName}`,
           size: stock.size.name,
+          quantity: <StockQuantity quantity={stock.quantity} />,
           actions: (
             <Space size="small">
               <Button size="small" type="link">
