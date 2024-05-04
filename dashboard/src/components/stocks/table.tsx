@@ -13,7 +13,7 @@ import Pagination from '../ui/pagination';
 import StockColor from '../ui/stock-color';
 
 interface StocksTableProps {
-  searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit'>;
+  searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
 }
 const StocksTable = async ({ searchParams }: StocksTableProps) => {
   const { pagination, stocks } = await listStocksPaginated(searchParams);
