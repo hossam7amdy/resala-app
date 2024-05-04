@@ -107,6 +107,9 @@ export const getUserAddressList = async (id: number) => {
       address: true,
     },
     where: { userId: id },
+    orderBy: {
+      addressId: 'desc',
+    },
   });
 
   return addresses.map(address => address.address);
@@ -169,15 +172,4 @@ export const deleteUserAddress = async (userId: number, addressId: number) => {
   return await prisma.address.delete({
     where: { id: addressId },
   });
-};
-
-export const listUserAddresses = async (userId: number) => {
-  const addresses = await prisma.userAddress.findMany({
-    select: {
-      address: true,
-    },
-    where: { userId },
-  });
-
-  return addresses.map(address => address.address);
 };

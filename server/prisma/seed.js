@@ -35,7 +35,6 @@ async function main() {
   // create users
   const users = await generateRandomUsers();
   await prisma.user.createMany({
-    // @ts-expect-error - ignore ROLE ENUM error
     data: users,
   });
 
@@ -50,6 +49,10 @@ async function main() {
         arName: 'اطفال',
         enName: 'Kids',
       },
+      ...new Array(50).fill(0).map((_, index) => ({
+        arName: `فئة رئيسية ${index + 1}`,
+        enName: `Main Category ${index + 1}`,
+      })),
     ],
   });
 
@@ -133,16 +136,13 @@ async function main() {
   });
 
   // create products
-  const womenCategory = await prisma.category.findMany({
-    where: {
-      categoryId: mainCategory[0].id,
-    },
+  const categories = await prisma.category.findMany({
     orderBy: { createdAt: 'asc' },
   });
   await prisma.product.createMany({
     data: [
       {
-        categoryId: womenCategory[0].id,
+        categoryId: categories[0].id,
         arName: 'فستان سهرة',
         enName: 'Evening Dress',
         arDescription: 'فستان سهرة طويل',
@@ -150,7 +150,7 @@ async function main() {
         price: 100,
       },
       {
-        categoryId: womenCategory[0].id,
+        categoryId: categories[0].id,
         arName: 'فستان زفاف',
         enName: 'Wedding Dress',
         arDescription: 'فستان زفاف طويل',
@@ -158,21 +158,21 @@ async function main() {
         price: 200,
       },
       {
-        categoryId: womenCategory[1].id,
-        arName: 'تنورة قصيرة',
-        enName: 'Short Skirt',
-        arDescription: 'تنورة قصيرة',
-        enDescription: 'Short Skirt',
-        price: 50,
-      },
-      {
-        categoryId: womenCategory[2].id,
+        categoryId: categories[2].id,
         arName: 'بلوزة كتان',
         enName: 'Cotton Blouse',
         arDescription: 'بلوزة كتان',
         enDescription: 'Cotton Blouse',
-        price: 40,
+        price: 400,
       },
+      ...new Array(50).fill(0).map((_, index) => ({
+        categoryId: categories[Math.floor(Math.random() * categories.length)].id,
+        arName: `منتج ${index + 1}`,
+        enName: `Product ${index + 1}`,
+        arDescription: `وصف المنتج ${index + 1} `.repeat(15),
+        enDescription: `Product ${index + 1} Description `.repeat(15),
+        price: Math.floor(Math.random() * 1000),
+      })),
     ],
   });
 
@@ -236,82 +236,21 @@ async function main() {
   const sizes = await prisma.size.findMany({
     orderBy: { createdAt: 'asc' },
   });
-  await prisma.stock.createMany({
-    data: [
-      {
-        productId: products[0].id,
-        colorId: colors[0].id,
-        sizeId: sizes[0].id,
-        quantity: 10,
-      },
-      {
-        productId: products[0].id,
-        colorId: colors[1].id,
-        sizeId: sizes[1].id,
-        quantity: 5,
-      },
-      {
-        productId: products[0].id,
-        colorId: colors[2].id,
-        sizeId: sizes[2].id,
-        quantity: 7,
-      },
-      {
-        productId: products[1].id,
-        colorId: colors[0].id,
-        sizeId: sizes[0].id,
-        quantity: 3,
-      },
-      {
-        productId: products[1].id,
-        colorId: colors[1].id,
-        sizeId: sizes[1].id,
-        quantity: 2,
-      },
-      {
-        productId: products[1].id,
-        colorId: colors[2].id,
-        sizeId: sizes[2].id,
-        quantity: 4,
-      },
-      {
-        productId: products[2].id,
-        colorId: colors[0].id,
-        sizeId: sizes[0].id,
-        quantity: 6,
-      },
-      {
-        productId: products[2].id,
-        colorId: colors[1].id,
-        sizeId: sizes[1].id,
-        quantity: 8,
-      },
-      {
-        productId: products[2].id,
-        colorId: colors[2].id,
-        sizeId: sizes[2].id,
-        quantity: 9,
-      },
-      {
-        productId: products[3].id,
-        colorId: colors[0].id,
-        sizeId: sizes[0].id,
-        quantity: 2,
-      },
-      {
-        productId: products[3].id,
-        colorId: colors[1].id,
-        sizeId: sizes[1].id,
-        quantity: 3,
-      },
-      {
-        productId: products[3].id,
-        colorId: colors[2].id,
-        sizeId: sizes[2].id,
-        quantity: 4,
-      },
-    ],
-  });
+
+  for (let i = 0; i < products.length; i++) {
+    for (let j = 0; j < colors.length; j++) {
+      for (let k = 0; k < sizes.length; k++) {
+        await prisma.stock.create({
+          data: {
+            productId: products[i].id,
+            colorId: colors[j].id,
+            sizeId: sizes[k].id,
+            quantity: Math.floor(Math.random() * 20),
+          },
+        });
+      }
+    }
+  }
 
   console.log('seeded successfully');
 }

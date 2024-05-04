@@ -4,7 +4,11 @@ import prisma from '../../lib/prisma/index.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 
 export const createCategory = async (category: Prisma.CategoryUncheckedCreateInput) => {
-  const exist = await findCategoryByName(category.enName, category.arName);
+  const exist = await prisma.category.findFirst({
+    where: {
+      OR: [{ arName: category.arName }, { enName: category.enName }],
+    },
+  });
   if (exist) {
     throw new ConflictError('Category already exists');
   }
@@ -22,13 +26,18 @@ export const createCategory = async (category: Prisma.CategoryUncheckedCreateInp
 };
 
 export const updateCategory = async (id: number, category: Prisma.CategoryUncheckedCreateInput) => {
-  const found = await findCategoryById(id);
+  const found = await findCategoryById(id, true);
   if (!found) {
     throw new NotFoundError('Category not found');
   }
 
-  const exist = await findCategoryByName(String(category.enName), String(category.arName));
-  if (exist && exist.id !== id) {
+  const exist = await prisma.category.findFirst({
+    where: {
+      OR: [{ arName: category.arName }, { enName: category.enName }],
+      AND: { NOT: { id } },
+    },
+  });
+  if (exist) {
     throw new ConflictError('Category already exists');
   }
 
@@ -40,6 +49,10 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
     if (!parentExist) {
       throw new NotFoundError('Parent category not found');
     }
+  }
+
+  if (id === category.categoryId) {
+    throw new ConflictError('Category cannot be its own parent');
   }
 
   return await prisma.category.update({
@@ -122,30 +135,26 @@ export const listCategoryProducts = async (id: number) => {
     include: {
       subCategories: {
         include: {
-          products: true,
+          products: {
+            orderBy: {
+              updatedAt: 'desc',
+            },
+          },
         },
       },
-      products: true,
+      products: {
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      },
     },
-    where: {
-      id,
-    },
+    where: { id },
   });
   if (!category) {
     throw new NotFoundError('Category not found');
   }
 
   return [...category.products, ...category.subCategories.flatMap(c => c.products)];
-};
-
-const findCategoryByName = async (enName: string, arName: string) => {
-  const category = await prisma.category.findFirst({
-    where: {
-      OR: [{ arName }, { enName }],
-    },
-  });
-
-  return category;
 };
 
 const createSubCategory = async (category: Prisma.CategoryUncheckedCreateInput) => {

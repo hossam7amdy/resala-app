@@ -36,6 +36,9 @@ export async function getStocksList(query: { page: number; limit: number }) {
       },
       skip: (page - 1) * limit,
       take: limit,
+      orderBy: {
+        updatedAt: 'desc',
+      },
     }),
   ]);
 
@@ -50,6 +53,9 @@ export async function getProductStocks(productId: number) {
     },
     where: {
       productId,
+    },
+    orderBy: {
+      updatedAt: 'desc',
     },
   });
 }
