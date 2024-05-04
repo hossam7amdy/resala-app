@@ -15,6 +15,7 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
   return (
     <>
       <AntTable
+        scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
           { title: 'First Name', dataIndex: 'firstName' },
