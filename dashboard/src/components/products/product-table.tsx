@@ -22,6 +22,7 @@ export const ProductTable = async ({ searchParams }: ProductTableProps) => {
   return (
     <Flex vertical gap={10}>
       <Table
+        scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
           { title: 'English', dataIndex: 'enName' },

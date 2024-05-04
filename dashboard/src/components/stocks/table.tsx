@@ -21,6 +21,7 @@ const StocksTable = async ({ searchParams }: StocksTableProps) => {
   return (
     <Flex vertical gap={10}>
       <Table
+        scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
           { title: 'Product', dataIndex: 'product', key: 'product' },

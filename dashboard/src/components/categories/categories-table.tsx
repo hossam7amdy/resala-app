@@ -28,7 +28,7 @@ export const CategoryTable = async ({ query }: { query: string }) => {
 
   return (
     <Table
-      scroll={{ y: 500 }}
+      scroll={{ x: 768, y: 500 }}
       pagination={{ total: filteredCategories.length, pageSize: 10, position: ['bottomCenter'] }}
       columns={[
         { title: 'English', dataIndex: 'enName' },

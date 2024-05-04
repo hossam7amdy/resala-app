@@ -19,8 +19,8 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <Table
+      scroll={{ x: 768, y: 500 }}
       pagination={{
-        current: 1,
         pageSize: 10,
         total: stocks.length,
         position: ['bottomCenter'],
