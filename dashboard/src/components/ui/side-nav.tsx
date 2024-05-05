@@ -1,6 +1,6 @@
 import { logout } from '@/actions/auth';
 import ROUTES from '@/lib/routes';
-import { PoweroffOutlined } from '@ant-design/icons';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
@@ -25,7 +25,7 @@ export const SideNav = () => {
             await logout();
           }}
         >
-          <Button htmlType="submit" icon={<PoweroffOutlined />}>
+          <Button htmlType="submit" icon={<LogoutOutlined />}>
             Logout
           </Button>
         </form>

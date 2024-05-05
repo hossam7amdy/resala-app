@@ -1,6 +1,6 @@
 import { listUsersPaginated } from '@/data/user';
 import { formatDate } from '@/lib/util';
-import { Table as AntTable, Flex } from 'antd';
+import { Flex, Table } from 'antd';
 
 import Pagination from '../ui/pagination';
 
@@ -13,8 +13,8 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
   const users = await listUsersPaginated({ page, limit, query });
 
   return (
-    <>
-      <AntTable
+    <Flex vertical gap={10}>
+      <Table
         scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
@@ -38,7 +38,7 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
       <Flex justify="center">
         <Pagination totalPages={users.pagination.total} />
       </Flex>
-    </>
+    </Flex>
   );
 };
 
