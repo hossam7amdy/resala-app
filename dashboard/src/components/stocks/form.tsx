@@ -36,7 +36,6 @@ const StockForm = ({ stock, selectColor, selectSize, selectProduct }: EditFormPr
       name="stock-form"
       layout="vertical"
       onFinish={dispatch}
-      autoComplete="off"
       size="large"
       initialValues={{ ...stock }}
     >
