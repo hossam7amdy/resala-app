@@ -15,14 +15,7 @@ const CreateForm = ({ categories }: { categories: GetCategoriesListResponse['dat
   const { error, pending, dispatch } = useSubmitForm(createCategory, form);
 
   return (
-    <Form
-      form={form}
-      size="large"
-      name="create-category"
-      layout="vertical"
-      onFinish={dispatch}
-      autoComplete="off"
-    >
+    <Form form={form} size="large" name="create-category" layout="vertical" onFinish={dispatch}>
       <FormItem name="categoryId" label="Main Category">
         <Select
           allowClear

@@ -24,7 +24,7 @@ export const findColorById = async (id: string | number) => {
   noStore();
 
   const response = await callEndpoint<GetColorRequest, GetColorResponse>(
-    ENDPOINT_CONFIGS.getColorsList,
+    ENDPOINT_CONFIGS.getColor,
     { params: { colorId: Number(id) } }
   );
 

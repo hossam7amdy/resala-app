@@ -35,7 +35,6 @@ const Form = ({
       name="product-form"
       layout="vertical"
       onFinish={dispatch}
-      autoComplete="off"
       size="large"
       initialValues={{ ...product }}
     >
