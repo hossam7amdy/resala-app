@@ -59,13 +59,13 @@ const ColorForm = ({ color }: ColorFormProps) => {
             { min: 2, max: 15, message: 'English name must be between 2 and 15 characters' },
           ]}
         >
-          <Input placeholder="English name" />
+          <Input placeholder="Blue" />
         </FormItem>
         <FormItem
           validateFirst
           style={{ flex: 1, direction: 'rtl' }}
           name="arName"
-          label="Arabic Name"
+          label="الاسم بالعربي"
           required
           hasFeedback
           rules={[
@@ -74,7 +74,7 @@ const ColorForm = ({ color }: ColorFormProps) => {
             { min: 2, max: 15, message: 'الاسم بالعربي يجب ان يكون بين 2 و 15 حرف' },
           ]}
         >
-          <Input placeholder="Arabic name" />
+          <Input placeholder="أزرق" />
         </FormItem>
       </Flex>
 
