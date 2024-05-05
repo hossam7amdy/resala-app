@@ -30,7 +30,6 @@ const EditForm = ({
       name="create-category"
       layout="vertical"
       onFinish={dispatch}
-      autoComplete="off"
       initialValues={{
         categoryId: category.categoryId ? category.categoryId : undefined,
         enName: category.enName,
