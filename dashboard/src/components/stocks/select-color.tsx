@@ -1,9 +1,9 @@
 import StockColor from '@/components/ui/stock-color';
 import { listAllColors } from '@/data/colors';
-import { Flex, Select } from 'antd';
+import ROUTES from '@/lib/routes';
+import { Button, Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-
-import CreateColorModal from './create-color-modal';
+import Link from 'next/link';
 
 const SelectColor = async () => {
   const colors = await listAllColors();
@@ -33,7 +33,9 @@ const SelectColor = async () => {
         />
       </FormItem>
       <FormItem label=" ">
-        <CreateColorModal />
+        <Link href={ROUTES.CREATE_COLOR}>
+          <Button>Add Color</Button>
+        </Link>
       </FormItem>
     </Flex>
   );

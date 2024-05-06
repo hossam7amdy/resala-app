@@ -6,15 +6,6 @@ import SkeletonInput from 'antd/es/skeleton/Input';
 const LoadingColorPage = () => {
   return (
     <>
-      <Flex gap={10}>
-        <FormItem wrapperCol={{ span: 12 }}>
-          <SkeletonInput active block size="large" />
-        </FormItem>
-        <FormItem wrapperCol={{ span: 12 }}>
-          <SkeletonInput active block size="large" />
-        </FormItem>
-      </Flex>
-
       <FormItem wrapperCol={{ span: 12 }}>
         <SkeletonInput active block size="large" />
       </FormItem>
