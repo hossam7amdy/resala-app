@@ -1,6 +1,6 @@
 'use client';
 
-import CreateColorPage from '@/app/(main)/colors/create/page';
+import CreateColorPage from '@/app/(main)/stocks/colors/create/page';
 import { Button, Modal } from 'antd';
 import { useState } from 'react';
 
