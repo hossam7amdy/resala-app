@@ -1,4 +1,5 @@
 import { listAllSizes } from '@/data/sizes';
+import ROUTES from '@/lib/routes';
 import { Button, Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Link from 'next/link';
@@ -24,7 +25,7 @@ const SelectSize = async () => {
         />
       </FormItem>
       <FormItem label=" ">
-        <Link href="">
+        <Link href={ROUTES.CREATE_SIZE}>
           <Button style={{ padding: '0 20px' }}>Add Size</Button>
         </Link>
       </FormItem>

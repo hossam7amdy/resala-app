@@ -1,6 +1,6 @@
 import { listUsersPaginated } from '@/data/user';
 import { formatDate } from '@/lib/util';
-import { Flex, Table } from 'antd';
+import { Flex, Table, Tag } from 'antd';
 
 import Pagination from '../ui/pagination';
 
@@ -30,8 +30,12 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
         dataSource={users.users.map(user => ({
           ...user,
           key: user.id,
-          isVerified: user.isVerified ? 'Yes' : 'No',
-          lastLogin: user.lastLogin ? formatDate(user.lastLogin) : 'Never',
+          isVerified: (
+            <Tag color={user.isVerified ? 'success' : 'error'}>
+              {user.isVerified ? 'Yes' : 'No'}
+            </Tag>
+          ),
+          lastLogin: user.lastLogin ? formatDate(user.lastLogin) : <Tag color="warning">Never</Tag>,
           createdAt: formatDate(user.createdAt),
         }))}
       />

@@ -21,9 +21,9 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
       <Col span={24}>
         <Flex gap={10}>
           <Search placeholder="Find category" />
-          <Button type="primary">
-            <Link href={ROUTES.CREATE_CATEGORY}>Create New Category</Link>
-          </Button>
+          <Link href={ROUTES.CREATE_CATEGORY}>
+            <Button type="primary">Create New Category</Button>
+          </Link>
         </Flex>
       </Col>
       <Col span={24}>

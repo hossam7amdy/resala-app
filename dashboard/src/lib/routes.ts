@@ -23,13 +23,13 @@ export const ROUTES = {
   CREATE_STOCK: (id?: string | number) => `/stocks/create?productId=${id}`,
   EDIT_STOCK: (stockId: string | number) => `/stocks/${stockId}/edit`,
 
-  COLORS: '/colors',
-  CREATE_COLOR: '/colors/create',
-  EDIT_COLOR: (id: string | number) => `/colors/${id}/edit`,
+  COLORS: '/stocks/colors',
+  CREATE_COLOR: '/stocks/colors/create',
+  EDIT_COLOR: (id: string | number) => `/stocks/colors/${id}/edit`,
 
-  SIZES: '/sizes',
-  CREATE_SIZE: '/sizes/create',
-  EDIT_SIZE: (id: string | number) => `/sizes/${id}/edit`,
+  SIZES: '/stocks/sizes',
+  CREATE_SIZE: '/stocks/sizes/create',
+  EDIT_SIZE: (id: string | number) => `/stocks/sizes/${id}/edit`,
 
   ORDERS: '/orders',
   CUSTOMERS: '/customers',

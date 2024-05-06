@@ -1,13 +1,18 @@
 'use client';
 
 import { DeleteFilled } from '@ant-design/icons';
-import { Button, Flex, Popover } from 'antd';
-import Text from 'antd/es/typography/Text';
+import { Button, type ButtonProps, Flex, Popover } from 'antd';
 import React, { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const DeleteButton = ({ deleteAction }: { deleteAction: () => Promise<any> }) => {
+import ErrorMessage from './error-message';
+
+interface DeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  deleteAction: () => Promise<any>;
+}
+
+export const DeleteButton = ({ deleteAction, ...props }: DeleteButtonProps) => {
   const [open, setOpen] = useState(false);
   const [error, dispatch] = useFormState(deleteAction, undefined);
 
@@ -24,7 +29,7 @@ export const DeleteButton = ({ deleteAction }: { deleteAction: () => Promise<any
       placement="topLeft"
       content={
         <form action={dispatch}>
-          {error?.message && <Text type="danger">{error.message}</Text>}
+          {error?.message && <ErrorMessage message={error.message} />}
           <SubmitButton onCancel={hide} />
         </form>
       }
@@ -39,6 +44,7 @@ export const DeleteButton = ({ deleteAction }: { deleteAction: () => Promise<any
         type="link"
         onClick={() => setOpen(true)}
         icon={<DeleteFilled />}
+        {...props}
       />
     </Popover>
   );
