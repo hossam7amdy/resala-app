@@ -11,7 +11,7 @@ const CreateLayout = ({ children }: { children: React.ReactNode }) => {
         <Breadcrumb
           items={[
             { title: <BackButton /> },
-            { title: <Link href={ROUTES.COLORS}>Colors</Link> },
+            { title: <Link href={ROUTES.SIZES}>Sizes</Link> },
             { title: 'Create New' },
           ]}
         />

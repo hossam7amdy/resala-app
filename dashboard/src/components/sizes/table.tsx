@@ -1,44 +1,40 @@
-import { deleteColor } from '@/actions/color';
+import { deleteSize } from '@/actions/size';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
-import type { GetColorsListResponse } from '@resala/shared';
+import type { GetSizesListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
 
 import DeleteButton from '../ui/delete-button';
-import StockColor from '../ui/stock-color';
 
-const Table = ({ colors }: { colors: GetColorsListResponse['data'] }) => {
+const Table = ({ sizes }: { sizes: GetSizesListResponse['data'] }) => {
   return (
     <AntTable
       pagination={{
         current: 1,
         pageSize: 10,
-        total: colors.length,
+        total: sizes.length,
         position: ['bottomCenter'],
       }}
       scroll={{ x: 768, y: 500 }}
       rowKey="id"
       columns={[
-        { title: 'Color', dataIndex: 'code', key: 'code' },
-        { title: 'English Name', dataIndex: 'enName', key: 'enName' },
-        { title: 'Arabic Name', dataIndex: 'arName', key: 'arName' },
+        { title: 'Size', dataIndex: 'name', key: 'name' },
         { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
         { title: 'Actions', dataIndex: 'actions', key: 'actions' },
       ]}
-      dataSource={colors.map(color => ({
-        ...color,
+      dataSource={sizes.map(size => ({
+        ...size,
         actions: (
           <Space>
-            <Link href={ROUTES.EDIT_COLOR(color.id)}>
+            <Link href={ROUTES.EDIT_SIZE(size.id)}>
               <EditFilled />
             </Link>
-            <DeleteButton deleteAction={deleteColor.bind(null, color.id)} />
+            <DeleteButton deleteAction={deleteSize.bind(null, size.id)} />
           </Space>
         ),
-        createdAt: formatDate(color.createdAt),
-        code: <StockColor color={color.code} />,
+        createdAt: formatDate(size.createdAt),
       }))}
     />
   );

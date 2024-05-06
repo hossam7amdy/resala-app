@@ -277,7 +277,7 @@ export const DeleteColorSchema = zod.object({
 // Size Schemas
 export const CreateSizeSchema = zod.object({
   body: zod.object({
-    name: zod.string().min(1).max(15),
+    name: zod.string().min(1).max(5),
   }),
 });
 

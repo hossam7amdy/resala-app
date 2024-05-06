@@ -1,11 +1,11 @@
-import EditForm from '@/components/colors/form';
-import { findColorById } from '@/data/colors';
+import EditForm from '@/components/sizes/form';
+import { findSizeById } from '@/data/sizes';
 import React from 'react';
 
-const EditColorPage = async ({ params }: { params: { id: string } }) => {
-  const color = await findColorById(params.id);
+const EditSizePage = async ({ params }: { params: { id: string } }) => {
+  const size = await findSizeById(params.id);
 
-  return <EditForm color={color} />;
+  return <EditForm size={size} />;
 };
 
-export default EditColorPage;
+export default EditSizePage;

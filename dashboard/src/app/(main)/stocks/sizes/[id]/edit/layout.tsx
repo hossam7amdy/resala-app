@@ -10,8 +10,8 @@ const EditColorLayout = ({ children }: { children: React.ReactNode }) => {
         <Breadcrumb
           items={[
             { title: <BackButton /> },
-            { title: <Link href={ROUTES.COLORS}>Colors</Link> },
-            { title: 'Edit Color' },
+            { title: <Link href={ROUTES.SIZES}>Sizes</Link> },
+            { title: 'Edit Size' },
           ]}
         />
       </Col>
