@@ -55,15 +55,15 @@ const Layout = ({
 const ExtraAction = ({ id, tab }: { id: string; tab: string }) => {
   if (tab === 'images') {
     return (
-      <Button type="primary">
-        <Link href={ROUTES.UPLOAD_IMAGES(id)}>Add Image</Link>
-      </Button>
+      <Link href={ROUTES.UPLOAD_IMAGES(id)}>
+        <Button type="primary">Add Image</Button>
+      </Link>
     );
   }
   return (
-    <Button type="primary">
-      <Link href={ROUTES.CREATE_STOCK(id)}>Add Stock</Link>
-    </Button>
+    <Link href={ROUTES.CREATE_STOCK(id)}>
+      <Button type="primary">Add Stock</Button>
+    </Link>
   );
 };
 
