@@ -1,18 +1,17 @@
 'use client';
 
 import { DeleteFilled } from '@ant-design/icons';
-import { Button, ButtonProps, Flex, Popover } from 'antd';
-import Text from 'antd/es/typography/Text';
+import { Button, type ButtonProps, Flex, Popover } from 'antd';
 import React, { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import ErrorMessage from './error-message';
 
 interface DeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   deleteAction: () => Promise<any>;
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const DeleteButton = ({ deleteAction, ...props }: DeleteButtonProps) => {
   const [open, setOpen] = useState(false);
   const [error, dispatch] = useFormState(deleteAction, undefined);

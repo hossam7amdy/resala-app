@@ -22,7 +22,7 @@ const OrderStatus = ({ status }: OrderStatusProps) => {
     if (error.message) {
       messageApi.error(error.message);
     }
-  }, [error?.message]);
+  }, [error?.message, messageApi]);
 
   if (editMode) {
     return (
