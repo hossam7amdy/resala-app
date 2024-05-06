@@ -29,9 +29,9 @@ const ProductPage = ({
       <Col span={24}>
         <Flex gap={10} align="center" justify="space-between">
           <Search placeholder="Find product" />
-          <Button type="primary">
-            <Link href={ROUTES.CREATE_PRODUCT}>Create New Product</Link>
-          </Button>
+          <Link href={ROUTES.CREATE_PRODUCT}>
+            <Button type="primary">Create New Product</Button>
+          </Link>
         </Flex>
       </Col>
       <Col span={24}>

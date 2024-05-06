@@ -1,7 +1,9 @@
-import List from '@/components/colors/list';
+import Table from '@/components/colors/table';
 import BackButton from '@/components/ui/back-button';
 import { listAllColors } from '@/data/colors';
-import { List as AntList, Breadcrumb, Col, Row } from 'antd';
+import ROUTES from '@/lib/routes';
+import { Table as AntList, Breadcrumb, Button, Col, Flex, Row } from 'antd';
+import Link from 'next/link';
 import React, { Suspense } from 'react';
 
 const ColorsPage = () => {
@@ -12,18 +14,27 @@ const ColorsPage = () => {
       </Col>
 
       <Col span={24}>
+        <Flex gap={10} justify="space-between">
+          <div></div>
+          <Link href={ROUTES.CREATE_COLOR}>
+            <Button type="primary">Add New</Button>
+          </Link>
+        </Flex>
+      </Col>
+
+      <Col span={24}>
         <Suspense fallback={<AntList loading />}>
-          <ColorsList />
+          <ColorsTable />
         </Suspense>
       </Col>
     </Row>
   );
 };
 
-const ColorsList = async () => {
+const ColorsTable = async () => {
   const colors = await listAllColors();
 
-  return <List colors={colors} />;
+  return <Table colors={colors} />;
 };
 
 export default ColorsPage;
