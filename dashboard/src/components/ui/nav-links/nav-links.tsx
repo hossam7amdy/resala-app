@@ -12,6 +12,7 @@ import {
 import { Menu, type MenuProps } from 'antd';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 // import styles from './nav-links.module.css';
 
@@ -96,17 +97,65 @@ const items: MenuItem[] = [
   },
 ];
 
+interface LevelKeysProps {
+  key?: string;
+  children?: LevelKeysProps[];
+}
+
+const getLevelKeys = (items1: LevelKeysProps[]) => {
+  const key: Record<string, number> = {};
+  const func = (items2: LevelKeysProps[], level = 1) => {
+    items2.forEach(item => {
+      if (item.key) {
+        key[item.key] = level;
+      }
+      if (item.children) {
+        func(item.children, level + 1);
+      }
+    });
+  };
+  func(items1);
+  return key;
+};
+
+const levelKeys = getLevelKeys(items as LevelKeysProps[]);
+
 export const NavLinks = () => {
   const pathname = usePathname();
 
   const [, ...keys] = pathname.split('/');
-  const activeKey = keys.join('/');
+  const activeKeys = keys.map((_, i) => `/${keys.slice(0, i + 1).join('/')}`);
+  const [stateOpenKeys, setStateOpenKeys] = useState(activeKeys);
+
+  const onOpenChange: MenuProps['onOpenChange'] = openKeys => {
+    const currentOpenKey = openKeys.find(key => stateOpenKeys.indexOf(key) === -1);
+    // open
+    if (currentOpenKey !== undefined) {
+      const repeatIndex = openKeys
+        .filter(key => key !== currentOpenKey)
+        .findIndex(key => levelKeys[key] === levelKeys[currentOpenKey]);
+
+      setStateOpenKeys(
+        openKeys
+          // remove repeat key
+          .filter((_, index) => index !== repeatIndex)
+          // remove current level all child
+          .filter(key => levelKeys[key] <= levelKeys[currentOpenKey])
+      );
+    } else {
+      // close
+      console.log('close', openKeys);
+      setStateOpenKeys(openKeys);
+    }
+  };
 
   return (
     <Menu
       theme="light"
       mode="inline"
-      selectedKeys={[`/${activeKey}`]}
+      openKeys={stateOpenKeys}
+      onOpenChange={onOpenChange}
+      selectedKeys={[`/${keys.join('/')}`]}
       items={items}
       style={{ fontWeight: 600, background: 'transparent' }}
     />
