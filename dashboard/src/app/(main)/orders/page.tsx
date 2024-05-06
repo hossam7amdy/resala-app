@@ -1,12 +1,12 @@
+import OrdersTable from '@/components/orders/table';
 import { Breadcrumb, Col, Row, Table } from 'antd';
 import Search from 'antd/es/input/Search';
-import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
-export const metadata: Metadata = {
-  title: 'Orders',
-};
+const OrdersPage = ({ searchParams }: { searchParams: { page: string; limit: string } }) => {
+  const page = Number(searchParams.page) || 1;
+  const limit = Number(searchParams.limit) || 10;
 
-const OrdersPage = async () => {
   return (
     <Row gutter={[10, 20]} style={{ padding: 20 }}>
       <Col span={24}>
@@ -18,7 +18,9 @@ const OrdersPage = async () => {
       </Col>
 
       <Col span={24}>
-        <Table />
+        <Suspense fallback={<Table loading />}>
+          <OrdersTable page={page} limit={limit} />
+        </Suspense>
       </Col>
     </Row>
   );
