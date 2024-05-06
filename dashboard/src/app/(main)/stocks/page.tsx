@@ -22,9 +22,9 @@ const StocksPage = ({
       <Col span={24}>
         <Flex gap={10}>
           <Search />
-          <Button type="primary">
-            <Link href={ROUTES.CREATE_STOCK('')}>Create New Stock</Link>
-          </Button>
+          <Link href={ROUTES.CREATE_STOCK('')}>
+            <Button type="primary">Create New Stock</Button>
+          </Link>
         </Flex>
       </Col>
       <Col span={24}>
