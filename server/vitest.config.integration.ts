@@ -5,7 +5,8 @@ export default defineConfig({
     name: 'resala/server - [ Integration Test ]',
     environment: 'node',
     include: ['src/tests/**/*.test.ts'],
-    setupFiles: ['src/tests/testserver.ts'],
+    setupFiles: ['src/tests/setup.ts'],
+    fileParallelism: false,
   },
   resolve: {
     alias: {
