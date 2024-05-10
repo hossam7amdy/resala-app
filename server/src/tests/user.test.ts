@@ -197,7 +197,7 @@ describe('TEST /users endpoint', () => {
       data: {
         accessToken: expect.any(String),
         refreshToken: expect.any(String),
-        expiresAt: expect.any(Number),
+        expiresAt: expect.any(String),
       },
     });
 

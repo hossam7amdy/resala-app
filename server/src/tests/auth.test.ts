@@ -13,14 +13,29 @@ vi.mock('../service/communication-service.js', () => ({
   sendResetConfirmationEmail: vi.fn(),
 }));
 
+const ADMIN_USER = {
+  email: 'admin@resala.com',
+  phone: '01500000000',
+  password: 'abcABC@123',
+};
+const CUSTOMER_USER = {
+  email: 'customer@resala.com',
+  phone: '01500000001',
+  password: 'abcABC@123',
+};
+
+const genRandomUser = () => {
+  return {
+    email: `test_${Date.now()}@mail.com`,
+    password: 'abcABC@123',
+    firstName: 'test',
+    lastName: 'test',
+    phone: `01${`${Date.now()}`.slice(-9)}`,
+  };
+};
+
 describe('TEST /auth endpoints', () => {
   let client: TestAgent<superset.Test>;
-  let token = '';
-  const email = `test_${Date.now()}@mail.com`;
-  const password = 'abcABC@123';
-  const firstName = 'test';
-  const lastName = 'test';
-  const phone = `01${`${Date.now()}`.slice(-9)}`;
 
   beforeAll(async () => {
     client = await getTestServer();
@@ -33,9 +48,11 @@ describe('TEST /auth endpoints', () => {
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
     it('should not be able to register a new user, missing (firstName, lastName)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
+
+      const randUser = genRandomUser();
       const res = await client[method](url).send({
-        email,
-        password,
+        email: randUser.email,
+        password: randUser.password,
       });
       expect(res.statusCode).toBe(400);
     });
@@ -43,11 +60,7 @@ describe('TEST /auth endpoints', () => {
     it(`should able to register a new user with complete data`, async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
-        email,
-        phone,
-        password,
-        firstName,
-        lastName,
+        ...genRandomUser(),
       });
       expect(res.statusCode).toBe(201);
     });
@@ -55,11 +68,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to register an already exist email', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
-        email,
-        phone: `01${`${Date.now()}`.slice(-9)}`,
-        password,
-        firstName,
-        lastName,
+        ...genRandomUser(),
+        email: CUSTOMER_USER.email,
       });
       expect(res.statusCode).toBe(409);
     });
@@ -67,11 +77,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to register an already exist phone', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
-        email: `test_${Date.now()}@mail.com`,
-        phone,
-        password,
-        firstName,
-        lastName,
+        ...genRandomUser(),
+        phone: CUSTOMER_USER.phone,
       });
       expect(res.statusCode).toBe(409);
     });
@@ -79,10 +86,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to register with wrong data (short password)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
-        email,
+        ...genRandomUser(),
         password: 'abc', // short password
-        firstName,
-        lastName,
       });
       expect(res.statusCode).toBe(400);
     });
@@ -90,10 +95,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to register with wrong data (no capital character)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
-        email,
+        ...genRandomUser(),
         password: 'password',
-        firstName,
-        lastName,
       });
       expect(res.statusCode).toBe(400);
     });
@@ -101,10 +104,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to register with wrong data (invalid email)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
+        ...genRandomUser(),
         email: 'email', // invalid email
-        password,
-        firstName,
-        lastName,
       });
       expect(res.statusCode).toBe(400);
     });
@@ -114,8 +115,8 @@ describe('TEST /auth endpoints', () => {
     it('should login with complete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        sign: email,
-        password,
+        sign: CUSTOMER_USER.email,
+        password: CUSTOMER_USER.password,
       });
       expect(res.statusCode).toBe(200);
     });
@@ -123,8 +124,8 @@ describe('TEST /auth endpoints', () => {
     it('should fail to login with non-existent user', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        sign: `notfound_${email}`,
-        password,
+        sign: `notfound_${CUSTOMER_USER.email}`,
+        password: CUSTOMER_USER.password,
       });
       expect(res.statusCode).toBe(404);
     });
@@ -132,7 +133,7 @@ describe('TEST /auth endpoints', () => {
     it('should fail to login without sign property (email/phone)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        password,
+        password: CUSTOMER_USER.password,
       });
       expect(res.statusCode).toBe(400);
     });
@@ -144,8 +145,8 @@ describe('TEST /auth endpoints', () => {
       const res = await client[method](url)
         .set(await getAuthToken())
         .send({
-          oldPassword: password,
-          newPassword: 'newPassword@123',
+          oldPassword: ADMIN_USER.password,
+          newPassword: ADMIN_USER.password,
         });
       expect(res.statusCode).toBe(200);
     });
@@ -155,7 +156,7 @@ describe('TEST /auth endpoints', () => {
       const res = await client[method](url)
         .set(await getAuthToken())
         .send({
-          oldPassword: password,
+          oldPassword: CUSTOMER_USER.password,
         });
       expect(res.statusCode).toBe(400);
     });
@@ -165,8 +166,8 @@ describe('TEST /auth endpoints', () => {
       const res = await client[method](url)
         .set(await getAuthToken())
         .send({
-          oldPassword: password,
-          newPassword: 'password', // wrong password
+          oldPassword: CUSTOMER_USER.password,
+          newPassword: 'password', // doesn't meet the requirements
         });
       expect(res.statusCode).toBe(400);
     });
@@ -175,7 +176,7 @@ describe('TEST /auth endpoints', () => {
   describe(`TEST ${ENDPOINT_CONFIGS.forgotPassword.method.toUpperCase()} ${ENDPOINT_CONFIGS.forgotPassword.url}`, () => {
     it('should forgot password with complete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.forgotPassword;
-      const res = await client[method](url).send({ email });
+      const res = await client[method](url).send({ email: CUSTOMER_USER.email });
       expect(res.statusCode).toBe(200);
     });
 
@@ -195,24 +196,33 @@ describe('TEST /auth endpoints', () => {
   describe(`TEST ${ENDPOINT_CONFIGS.resetPassword.method.toUpperCase()} ${ENDPOINT_CONFIGS.resetPassword.url}`, () => {
     it('should reset password with incomplete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
-      const res = await client[method](url).send({ email, password });
+      const res = await client[method](url).send({
+        email: CUSTOMER_USER.email,
+        password: CUSTOMER_USER.password,
+      });
       expect(res.statusCode).toBe(400);
     });
 
     it('should reset password with wrong data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
-      const res = await client[method](url).send({ email, code: 'code', password });
+      const res = await client[method](url).send({
+        email: CUSTOMER_USER.email,
+        code: 'code',
+        password: CUSTOMER_USER.password,
+      });
       expect(res.statusCode).toBe(400);
     });
   });
 
   const getAuthToken = async () => {
-    if (token) return { Authorization: 'Bearer ' + token };
-
     const { method, url } = ENDPOINT_CONFIGS.login;
-    const result = await client[method](url).send({ sign: email, password }).expect(200);
+    const result = await client[method](url)
+      .send({
+        sign: ADMIN_USER.email,
+        password: ADMIN_USER.password,
+      })
+      .expect(200);
 
-    token = result.body.data.accessToken;
     return { Authorization: 'Bearer ' + result.body.data.accessToken };
   };
 });

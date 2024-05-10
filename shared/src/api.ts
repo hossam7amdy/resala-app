@@ -421,7 +421,7 @@ export type CreateOrderResponse = DefaultResponseBody & {
       total: any; // Decimal;
       orderStatus: 'PENDING' | 'FULFILLED' | 'CANCELLED';
       paymentMethod: string;
-      paymentStatus: 'PENDING' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
+      paymentStatus: 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
       note: string | null;
       createdAt: Date;
       updatedAt: Date;
