@@ -141,9 +141,9 @@ export const adminGetOrder: GetOrder = async (req, res, next) => {
 
 export const adminGetOrdersList: GetOrdersList = async (req, res, next) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, query } = req.query;
 
-    const { orders, total } = await orderService.listOrders({ page, limit });
+    const { orders, total } = await orderService.listOrders({ page, limit, query });
 
     return res.json({
       success: true,

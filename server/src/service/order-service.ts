@@ -4,6 +4,19 @@ import prisma from '../lib/prisma/index.js';
 import { BadRequestError, NotFoundError } from '../utils/api-errors.js';
 
 const SHIPPING = 60;
+const USER_ATTRIBUTES = {
+  id: true,
+  email: true,
+  isVerified: true,
+  phone: true,
+  firstName: true,
+  lastName: true,
+  role: true,
+  lastLogin: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
+};
 interface CreateOrderInput {
   userId: number;
   address: Omit<Address, 'id' | 'createdAt' | 'updatedAt'>;
@@ -50,12 +63,43 @@ export async function createOrder(order: CreateOrderInput) {
   });
 }
 
-export async function listOrders(pagination: { limit: number; page: number }) {
-  const { limit, page } = pagination;
+export async function listOrders(pagination: { limit: number; page: number; query: string }) {
+  const { limit, page, query } = pagination;
+
+  // filter by order id, user's email or phone
+  const filters: Prisma.OrderWhereInput = {
+    OR: [
+      {
+        id: {
+          equals: Number(query) || undefined,
+        },
+      },
+      {
+        user: {
+          email: {
+            startsWith: query,
+          },
+        },
+      },
+      {
+        user: {
+          phone: {
+            startsWith: query,
+          },
+        },
+      },
+    ],
+  };
 
   const [total, orders] = await prisma.$transaction([
-    prisma.order.count(),
+    prisma.order.count({ where: filters }),
     prisma.order.findMany({
+      include: {
+        user: {
+          select: USER_ATTRIBUTES,
+        },
+      },
+      where: filters,
       take: limit,
       skip: (page - 1) * limit,
       orderBy: { createdAt: 'desc' },
@@ -82,19 +126,7 @@ export async function findOrderById(id: number) {
   const order = await prisma.order.findUnique({
     include: {
       user: {
-        select: {
-          id: true,
-          email: true,
-          isVerified: true,
-          phone: true,
-          firstName: true,
-          lastName: true,
-          role: true,
-          lastLogin: true,
-          createdAt: true,
-          updatedAt: true,
-          deletedAt: true,
-        },
+        select: USER_ATTRIBUTES,
       },
       orderItems: true,
       paymentDetails: true,
