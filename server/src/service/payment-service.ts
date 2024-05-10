@@ -129,7 +129,7 @@ export async function getPaymentsList({ page, limit }: { limit: number; page: nu
 
 function getPaymentStatus(payment: (typeof callback)['obj']) {
   if (payment.pending) {
-    return 'PENDING';
+    return 'UNPAID';
   } else if (payment.is_voided) {
     return 'VOIDED';
   } else if (payment.is_refunded) {
