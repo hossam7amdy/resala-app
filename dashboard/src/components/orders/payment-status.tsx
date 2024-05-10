@@ -8,7 +8,7 @@ const PaymentStatus = ({ status }: PaymentStatusProps) => {
   let color = 'default';
 
   switch (status) {
-    case 'PENDING':
+    case 'UNPAID':
       color = 'warning';
       break;
     case 'PAID':
