@@ -75,7 +75,7 @@ describe('Order Service', () => {
 
       prismaMock.$transaction.mockResolvedValueOnce([2, orders] as any);
 
-      const result = await orderService.listOrders({ page: 0, limit: 10 });
+      const result = await orderService.listOrders({ page: 0, limit: 10, query: '' });
 
       expect(result).toEqual({ total: 2, orders });
       expect(prismaMock.order.count).toHaveBeenCalledTimes(1);
