@@ -21,7 +21,7 @@ const generateRandomUsers = async () => {
       password:
         'HuZk7inYeVodB2+1TScguTSkrmTH1OmFMw+ZITICxmlz7QdWuLstasslFANduLHyh+zKD7iGa3qdy2Z97zfv8/M/T830B/mkrqj2If+2NNEOWcUifo6EFC1rOBYbt/6ehcPQS07LdD2YNpPoVEbgG3MgsF6Gukgc2jD7a7uecGpkuUY6WSZlCkBHHw+BvfA0A/JLOVbh',
       email: `customer@resala.com`,
-      phone: `01${`${Date.now()}`.slice(-9)}`,
+      phone: `01500000001`,
       firstName: `customer`,
       lastName: `user`,
       role: 'CUSTOMER',
@@ -252,7 +252,7 @@ async function main() {
     }
   }
 
-  console.log('seeded successfully');
+  console.log('seeded successfully 🌱');
 }
 
 main()
