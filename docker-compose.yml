@@ -26,7 +26,7 @@ services:
     depends_on:
       - db
     command: >
-      sh -c "cd server && npx prisma migrate dev && yarn start"
+      sh -c "cd server && npx prisma migrate deploy && yarn start"
     # ports:
     #   - ${SERVER_PORT}:${SERVER_PORT}
 
