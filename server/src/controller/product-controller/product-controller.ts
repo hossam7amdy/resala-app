@@ -1,8 +1,7 @@
 import { unlink } from 'fs/promises';
 
-import { ENV } from '../../config/env.js';
 import { logger } from '../../lib/logger/logger.js';
-import { deleteFile } from '../../lib/multer/multer.js';
+import { s3Service } from '../../lib/s3/index.js';
 import { inventoryService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
@@ -87,7 +86,7 @@ export const deleteProduct: DeleteProduct = async (req, res, next) => {
     const images = await inventoryService.listProductImages(req.params.productId);
     const product = await inventoryService.deleteProduct(req.params.productId);
 
-    images.forEach(image => deleteFile(image.imageUrl).catch(logger.warn));
+    images.forEach(image => s3Service.deleteS3Object(image.imageUrl).catch(logger.warn));
 
     return res.json({
       success: true,
@@ -106,7 +105,10 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       throw new BadRequestError('No files uploaded');
     }
 
-    const urls = files.map(file => `${ENV.APP_URL}/uploads/${file.filename}`);
+    const s3Promises = files.map(file => s3Service.uploadS3Object(file));
+    const s3Response = await Promise.all(s3Promises);
+
+    const urls = s3Response.map(({ url }) => url);
     await inventoryService.addProductImages(req.body.productId, urls);
 
     return res.json({
@@ -114,8 +116,9 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       message: 'Files uploaded',
     });
   } catch (error) {
-    files?.forEach(file => unlink(file.path).catch(logger.warn));
     next(error);
+  } finally {
+    files?.forEach(file => unlink(file.path).catch(logger.warn));
   }
 };
 
@@ -150,7 +153,7 @@ export const deleteProductImage: DeleteProductImage = async (req, res, next) => 
     const { imageId, productId } = req.params;
 
     const image = await inventoryService.deleteProductImage(imageId, productId);
-    deleteFile(image.imageUrl).catch(logger.warn);
+    s3Service.deleteS3Object(image.imageUrl).catch(logger.warn);
 
     return res.json({
       success: true,
