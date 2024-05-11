@@ -43,6 +43,7 @@ import type {
   UpdateAddressSchema,
   UpdateCategorySchema,
   UpdateColorSchema,
+  UpdateOrderStatusSchema,
   UpdateProductSchema,
   UpdateProfileSchema,
   UpdateSizeSchema,
@@ -499,6 +500,11 @@ export type AdminGetOrdersListResponse = DefaultResponseBody & {
     };
     orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
   };
+};
+
+export type UpdateOrderRequest = zod.infer<typeof UpdateOrderStatusSchema>;
+export type UpdateOrderResponse = DefaultResponseBody & {
+  data: CreateOrderResponse['data']['order'];
 };
 
 export type DeleteOrderRequest = GetOrderRequest;

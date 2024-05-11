@@ -101,6 +101,7 @@ export enum Endpoints {
   adminGetOrder = 'adminGetOrder',
   adminGetOrdersList = 'adminGetOrdersList',
   adminDeleteOrder = 'adminDeleteOrder',
+  adminUpdateOrderStatus = 'adminUpdateOrderStatus',
 
   // payment endpoints
   createPayment = 'createPayment',
@@ -473,6 +474,11 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.adminDeleteOrder]: {
     url: '/api/v1/admin/orders/:orderId',
     method: 'delete',
+    auth: true,
+  },
+  [Endpoints.adminUpdateOrderStatus]: {
+    url: '/api/v1/admin/orders/:orderId',
+    method: 'patch',
     auth: true,
   },
 

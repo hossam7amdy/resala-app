@@ -17,5 +17,15 @@ export const Search = (props: Omit<SearchProps, 'onChange'>) => {
     router.replace(`${pathname}?query=${value}`);
   }, 500);
 
-  return <AntSearch onChange={e => handleSearch(e.target.value)} placeholder="Search" {...props} />;
+  const defaultValue = params.get('query') || '';
+  return (
+    <AntSearch
+      defaultValue={defaultValue}
+      onChange={e => handleSearch(e.target.value)}
+      placeholder="Search"
+      {...props}
+    />
+  );
 };
+
+export default Search;

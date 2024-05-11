@@ -181,6 +181,21 @@ export async function updateOrder(id: number, order: Prisma.OrderUpdateInput) {
   });
 }
 
+export async function updateOrderStatus(id: number, status: Order['orderStatus']) {
+  await findOrderById(id);
+
+  // only allow to update order status to 'FULFILLED' or 'CANCELLED'
+  if (!['FULFILLED', 'CANCELLED'].includes(status)) {
+    throw new BadRequestError('Invalid order status');
+  }
+
+  return await prisma.order.update({
+    data: { orderStatus: status },
+    where: { id },
+    include: { user: true },
+  });
+}
+
 export async function cancelUserOrder(id: number, userId: number) {
   const order = await findUserOrderById(id, userId);
 
@@ -202,6 +217,6 @@ async function cancelOrder(id: number) {
   return prisma.order.update({
     data: { orderStatus: 'CANCELLED' },
     where: { id },
-    include: { paymentDetails: true },
+    include: { user: true, paymentDetails: true },
   });
 }

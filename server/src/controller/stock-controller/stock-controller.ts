@@ -42,7 +42,7 @@ export const getStocksList: GetStocksList = async (req, res, next) => {
 
 export const createStock: CreateStock = async (req, res, next) => {
   try {
-    const stock = await inventoryService.updateStock(req.body);
+    const stock = await inventoryService.createStock(req.body);
 
     return res.json({
       success: true,
@@ -55,7 +55,7 @@ export const createStock: CreateStock = async (req, res, next) => {
 
 export const updateStock: UpdateStock = async (req, res, next) => {
   try {
-    const stock = await inventoryService.updateStock(req.body);
+    const stock = await inventoryService.updateStock(req.params.stockId, req.body);
 
     return res.json({
       success: true,

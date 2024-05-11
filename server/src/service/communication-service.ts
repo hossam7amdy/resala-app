@@ -26,3 +26,19 @@ export const sendResetConfirmationEmail = async (email: string) => {
     text: 'Your password has been reset successfully',
   });
 };
+
+export const sendOrderConfirmationEmail = async (email: string, orderId: number) => {
+  return sendEmail({
+    to: email,
+    subject: 'Order Confirmation',
+    text: `Your order with id ${orderId} has been confirmed`,
+  });
+};
+
+export const sendOrderCancellationEmail = async (email: string, orderId: number) => {
+  return sendEmail({
+    to: email,
+    subject: 'Order Cancellation',
+    text: `Your order with id ${orderId} has been cancelled`,
+  });
+};
