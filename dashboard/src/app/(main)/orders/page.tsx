@@ -1,9 +1,14 @@
 import OrdersTable from '@/components/orders/table';
+import { Search } from '@/components/ui/search';
 import { Breadcrumb, Col, Row, Table } from 'antd';
-import Search from 'antd/es/input/Search';
 import { Suspense } from 'react';
 
-const OrdersPage = ({ searchParams }: { searchParams: { page: string; limit: string } }) => {
+const OrdersPage = ({
+  searchParams,
+}: {
+  searchParams: { page?: string; limit?: string; query?: string };
+}) => {
+  const query = searchParams?.query || '';
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 10;
 
@@ -18,8 +23,8 @@ const OrdersPage = ({ searchParams }: { searchParams: { page: string; limit: str
       </Col>
 
       <Col span={24}>
-        <Suspense fallback={<Table loading />}>
-          <OrdersTable page={page} limit={limit} />
+        <Suspense key={query + page + limit} fallback={<Table loading />}>
+          <OrdersTable page={page} limit={limit} query={query} />
         </Suspense>
       </Col>
     </Row>
