@@ -6,6 +6,11 @@ import { findColorById } from './color.js';
 import { findProductById } from './product.js';
 import { findSizeById } from './size.js';
 
+type StockPayload = Pick<
+  Prisma.StockUncheckedCreateInput,
+  'productId' | 'colorId' | 'sizeId' | 'quantity'
+>;
+
 export async function findStockById(stockId: number) {
   const stock = await prisma.stock.findUnique({
     include: {
@@ -71,7 +76,7 @@ export async function getProductStocks(productId: number) {
   });
 }
 
-export async function createStock(stock: Prisma.StockUncheckedCreateInput) {
+export async function createStock(stock: StockPayload) {
   await Promise.all([
     findProductById(stock.productId),
     findColorById(stock.colorId),
@@ -83,12 +88,13 @@ export async function createStock(stock: Prisma.StockUncheckedCreateInput) {
   });
 }
 
-export async function updateStock(id: number, stock: Prisma.StockUncheckedCreateInput) {
+export async function updateStock(stockId: number, stock: StockPayload) {
   // Make sure the product, color and size exist
   await Promise.all([
     findProductById(stock.productId),
     findColorById(stock.colorId),
     findSizeById(stock.sizeId),
+    findStockById(stockId),
   ]);
 
   // Check if the stock already exist
@@ -101,13 +107,13 @@ export async function updateStock(id: number, stock: Prisma.StockUncheckedCreate
       },
     },
   });
-  if (exist && exist.id !== id) {
+  if (exist && exist.id !== stockId) {
     throw new ConflictError('Stock already exist!');
   }
 
   return await prisma.stock.update({
     data: stock,
-    where: { id },
+    where: { id: stockId },
   });
 }
 
