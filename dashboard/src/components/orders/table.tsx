@@ -13,9 +13,10 @@ import PaymentStatus from './payment-status';
 interface TableProps {
   page: number;
   limit: number;
+  query: string;
 }
-const Table = async ({ page, limit }: TableProps) => {
-  const { pagination, orders } = await getOrdersList({ page, limit });
+const Table = async ({ page, limit, query }: TableProps) => {
+  const { pagination, orders } = await getOrdersList({ page, limit, query });
 
   return (
     <Flex vertical gap={10}>
@@ -35,7 +36,7 @@ const Table = async ({ page, limit }: TableProps) => {
         dataSource={orders.map(order => ({
           key: order.id,
           id: order.id,
-          clientName: '',
+          clientName: `${order.user?.firstName} ${order.user?.lastName}`,
           amount: formatCurrency(order.total),
           paymentMethod: order.paymentMethod,
           paymentStatus: <PaymentStatus status={order.paymentStatus} />,
