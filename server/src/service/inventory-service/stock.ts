@@ -1,10 +1,15 @@
 import type { Prisma } from '@prisma/client';
 
 import prisma from '../../lib/prisma/index.js';
-import { NotFoundError } from '../../utils/api-errors.js';
+import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 import { findColorById } from './color.js';
 import { findProductById } from './product.js';
 import { findSizeById } from './size.js';
+
+type StockPayload = Pick<
+  Prisma.StockUncheckedCreateInput,
+  'productId' | 'colorId' | 'sizeId' | 'quantity'
+>;
 
 export async function findStockById(stockId: number) {
   const stock = await prisma.stock.findUnique({
@@ -71,23 +76,29 @@ export async function getProductStocks(productId: number) {
   });
 }
 
-export async function updateStock(stock: Prisma.StockUncheckedCreateInput) {
+export async function createStock(stock: StockPayload) {
   await Promise.all([
     findProductById(stock.productId),
     findColorById(stock.colorId),
     findSizeById(stock.sizeId),
   ]);
 
-  return await prisma.stock.upsert({
-    create: {
-      productId: stock.productId,
-      colorId: stock.colorId,
-      sizeId: stock.sizeId,
-      quantity: stock.quantity,
-    },
-    update: {
-      quantity: stock.quantity,
-    },
+  return await prisma.stock.create({
+    data: stock,
+  });
+}
+
+export async function updateStock(stockId: number, stock: StockPayload) {
+  // Make sure the product, color and size exist
+  await Promise.all([
+    findProductById(stock.productId),
+    findColorById(stock.colorId),
+    findSizeById(stock.sizeId),
+    findStockById(stockId),
+  ]);
+
+  // Check if the stock already exist
+  const exist = await prisma.stock.findUnique({
     where: {
       stock_unique_constraint: {
         productId: stock.productId,
@@ -95,6 +106,14 @@ export async function updateStock(stock: Prisma.StockUncheckedCreateInput) {
         sizeId: stock.sizeId,
       },
     },
+  });
+  if (exist && exist.id !== stockId) {
+    throw new ConflictError('Stock already exist!');
+  }
+
+  return await prisma.stock.update({
+    data: stock,
+    where: { id: stockId },
   });
 }
 

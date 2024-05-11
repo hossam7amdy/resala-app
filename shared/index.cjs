@@ -365,6 +365,14 @@ const CreateOrderSchema = zod.object({
         addressId: zod.coerce.number().positive(),
     }),
 });
+const UpdateOrderStatusSchema = zod.object({
+    params: zod.object({
+        orderId: zod.coerce.number().positive(),
+    }),
+    body: zod.object({
+        status: zod.enum(['PENDING', 'FULFILLED']),
+    }),
+});
 const GetOrderSchema = zod.object({
     params: zod.object({
         orderId: zod.coerce.number().positive(),
@@ -465,6 +473,7 @@ exports.Endpoints = void 0;
     Endpoints["adminGetOrder"] = "adminGetOrder";
     Endpoints["adminGetOrdersList"] = "adminGetOrdersList";
     Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
+    Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
     // payment endpoints
     Endpoints["createPayment"] = "createPayment";
     Endpoints["getPayment"] = "getPayment";
@@ -823,6 +832,11 @@ const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
+    [exports.Endpoints.adminUpdateOrderStatus]: {
+        url: '/api/v1/admin/orders/:orderId',
+        method: 'patch',
+        auth: true,
+    },
     // payment endpoints
     [exports.Endpoints.createPayment]: {
         url: '/api/v1/payments',
@@ -881,6 +895,7 @@ exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;
 exports.UpdateCategorySchema = UpdateCategorySchema;
 exports.UpdateColorSchema = UpdateColorSchema;
+exports.UpdateOrderStatusSchema = UpdateOrderStatusSchema;
 exports.UpdateProductSchema = UpdateProductSchema;
 exports.UpdateProfileSchema = UpdateProfileSchema;
 exports.UpdateSizeSchema = UpdateSizeSchema;

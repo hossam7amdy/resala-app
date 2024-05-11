@@ -79,6 +79,7 @@ export declare enum Endpoints {
     adminGetOrder = "adminGetOrder",
     adminGetOrdersList = "adminGetOrdersList",
     adminDeleteOrder = "adminDeleteOrder",
+    adminUpdateOrderStatus = "adminUpdateOrderStatus",
     createPayment = "createPayment",
     getPayment = "getPayment",
     getPaymentsList = "getPaymentsList",
