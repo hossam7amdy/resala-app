@@ -489,6 +489,18 @@ export type GetOrdersListResponse = DefaultResponseBody & {
   };
 };
 
+export type AdminGetOrdersListRequest = DefaultRequestQuery;
+export type AdminGetOrdersListResponse = DefaultResponseBody & {
+  data: {
+    pagination: {
+      page: number;
+      limit: number;
+      total: number; // Total number of orders in the database (for pagination)
+    };
+    orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
+  };
+};
+
 export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody & {
   data: CreateOrderResponse['data']['order'];

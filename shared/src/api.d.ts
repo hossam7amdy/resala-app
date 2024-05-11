@@ -380,6 +380,17 @@ export type GetOrdersListResponse = DefaultResponseBody & {
         orders: CreateOrderResponse['data']['order'][];
     };
 };
+export type AdminGetOrdersListRequest = DefaultRequestQuery;
+export type AdminGetOrdersListResponse = DefaultResponseBody & {
+    data: {
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+        };
+        orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
+    };
+};
 export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody & {
     data: CreateOrderResponse['data']['order'];
