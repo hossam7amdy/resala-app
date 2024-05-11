@@ -1,10 +1,18 @@
-import { orderService, paymentService, shoppingService, userService } from '../../service/index.js';
+import { logger } from '../../lib/logger/logger.js';
+import {
+  communicationService,
+  orderService,
+  paymentService,
+  shoppingService,
+  userService,
+} from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
   CreateOrder,
   DeleteOrder,
   GetOrder,
   GetOrdersList,
+  UpdateOrderStatus,
 } from './order-controller.interface.js';
 
 export const createOrder: CreateOrder = async (req, res, next) => {
@@ -117,6 +125,11 @@ export const deleteOrder: DeleteOrder = async (req, res, next) => {
       await paymentService.voidPayment(order.paymentDetails.transactionId);
     }
 
+    // notify user with order cancellation
+    communicationService
+      .sendOrderCancellationEmail(order.user?.email!, order.id)
+      .catch(logger.warn);
+
     return res.json({
       success: true,
       data: order,
@@ -163,15 +176,41 @@ export const adminGetOrdersList: GetOrdersList = async (req, res, next) => {
 
 export const adminDeleteOrder: DeleteOrder = async (req, res, next) => {
   try {
-    // cancel order
+    // Cancel order
     const order = await orderService.adminCancelOrder(req.params.orderId);
 
-    // void payment
+    // Refund payment if paid by card
     if (order.paymentMethod === 'CARD' && order.paymentDetails) {
       await paymentService.refundPayment(
         order.paymentDetails.transactionId,
         Number(order.total) * 100
       );
+    }
+
+    // Notify user with order cancellation
+    communicationService
+      .sendOrderCancellationEmail(order.user?.email!, order.id)
+      .catch(logger.warn);
+
+    return res.json({
+      success: true,
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const adminUpdateOrderStatus: UpdateOrderStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    const order = await orderService.updateOrderStatus(req.params.orderId, status);
+
+    // Notify user with order fulfillment
+    if (status === 'FULFILLED') {
+      communicationService
+        .sendOrderConfirmationEmail(order.user?.email!, order.id)
+        .catch(logger.warn);
     }
 
     return res.json({

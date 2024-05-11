@@ -327,6 +327,15 @@ export const CreateOrderSchema = zod.object({
   }),
 });
 
+export const UpdateOrderStatusSchema = zod.object({
+  params: zod.object({
+    orderId: zod.coerce.number().positive(),
+  }),
+  body: zod.object({
+    status: zod.enum(['PENDING', 'FULFILLED']),
+  }),
+});
+
 export const GetOrderSchema = zod.object({
   params: zod.object({
     orderId: zod.coerce.number().positive(),

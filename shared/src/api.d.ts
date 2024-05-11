@@ -5,7 +5,7 @@
  * It is also used by the API service to generate the API client.
  */
 import type * as zod from 'zod';
-import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, LoginSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateProductSchema, UpdateProfileSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
+import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, LoginSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateOrderStatusSchema, UpdateProductSchema, UpdateProfileSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
 export type DefaultRequestBody = {
     [key: string]: any;
 };
@@ -390,6 +390,10 @@ export type AdminGetOrdersListResponse = DefaultResponseBody & {
         };
         orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
     };
+};
+export type UpdateOrderRequest = zod.infer<typeof UpdateOrderStatusSchema>;
+export type UpdateOrderResponse = DefaultResponseBody & {
+    data: CreateOrderResponse['data']['order'];
 };
 export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody & {
