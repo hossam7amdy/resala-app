@@ -215,7 +215,7 @@ describe('Order Service', () => {
       expect(prismaMock.order.update).toHaveBeenCalledWith({
         data: { orderStatus: 'CANCELLED' },
         where: { id: orderId },
-        include: { paymentDetails: true },
+        include: { user: true, paymentDetails: true },
       });
     });
 
@@ -248,7 +248,7 @@ describe('Order Service', () => {
       expect(prismaMock.order.update).toHaveBeenCalledWith({
         data: { orderStatus: 'CANCELLED' },
         where: { id: orderId },
-        include: { paymentDetails: true },
+        include: { user: true, paymentDetails: true },
       });
     });
 

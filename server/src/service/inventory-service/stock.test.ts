@@ -75,7 +75,6 @@ describe('stock module', () => {
     it('should update the stock of a product', async () => {
       // Mock data
       const stock: Prisma.StockUncheckedCreateInput = {
-        id: 1,
         productId: 1,
         quantity: 20,
         colorId: 1,
@@ -83,29 +82,23 @@ describe('stock module', () => {
       };
 
       // Mock Prisma query
-      prismaMock.stock.upsert.mockResolvedValue(MOCK_STOCK);
+      prismaMock.stock.findUnique.mockResolvedValue(MOCK_STOCK);
+      prismaMock.stock.update.mockResolvedValue(MOCK_STOCK);
 
       // Call the function
-      const result = await updateStock(stock);
+      const result = await updateStock(MOCK_STOCK.id, stock);
 
       // Assertions
       expect(result).toEqual(MOCK_STOCK);
-      expect(prismaMock.stock.upsert).toHaveBeenCalledWith({
-        create: {
+      expect(prismaMock.stock.update).toHaveBeenCalledWith({
+        data: {
           productId: stock.productId,
           colorId: stock.colorId,
           sizeId: stock.sizeId,
           quantity: stock.quantity,
         },
-        update: {
-          quantity: stock.quantity,
-        },
         where: {
-          stock_unique_constraint: {
-            productId: stock.productId,
-            colorId: stock.colorId,
-            sizeId: stock.sizeId,
-          },
+          id: MOCK_STOCK.id,
         },
       });
     });
