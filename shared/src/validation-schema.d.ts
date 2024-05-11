@@ -1085,6 +1085,36 @@ export declare const CreateOrderSchema: zod.ZodObject<{
         note?: string | undefined;
     };
 }>;
+export declare const UpdateOrderStatusSchema: zod.ZodObject<{
+    params: zod.ZodObject<{
+        orderId: zod.ZodNumber;
+    }, "strip", zod.ZodTypeAny, {
+        orderId: number;
+    }, {
+        orderId: number;
+    }>;
+    body: zod.ZodObject<{
+        status: zod.ZodEnum<["PENDING", "FULFILLED"]>;
+    }, "strip", zod.ZodTypeAny, {
+        status: "PENDING" | "FULFILLED";
+    }, {
+        status: "PENDING" | "FULFILLED";
+    }>;
+}, "strip", zod.ZodTypeAny, {
+    params: {
+        orderId: number;
+    };
+    body: {
+        status: "PENDING" | "FULFILLED";
+    };
+}, {
+    params: {
+        orderId: number;
+    };
+    body: {
+        status: "PENDING" | "FULFILLED";
+    };
+}>;
 export declare const GetOrderSchema: zod.ZodObject<{
     params: zod.ZodObject<{
         orderId: zod.ZodNumber;

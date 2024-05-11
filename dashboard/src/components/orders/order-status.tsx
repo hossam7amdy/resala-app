@@ -32,7 +32,7 @@ const OrderStatus = ({ status }: OrderStatusProps) => {
           <FormItem name="status" noStyle>
             <Select
               options={[
-                { label: 'Pending', value: 'PENDING' },
+                { label: 'Pending', value: 'PENDING', disabled: true },
                 { label: 'Fulfilled', value: 'FULFILLED' },
               ]}
             />
@@ -57,7 +57,13 @@ const OrderStatus = ({ status }: OrderStatusProps) => {
   return (
     <Flex>
       <Status status={status} />
-      <Button size="small" type="text" icon={<FormOutlined />} onClick={() => setEditMode(true)} />
+      <Button
+        size="small"
+        type="text"
+        icon={<FormOutlined />}
+        onClick={() => setEditMode(true)}
+        disabled={status !== 'PENDING'}
+      />
     </Flex>
   );
 };

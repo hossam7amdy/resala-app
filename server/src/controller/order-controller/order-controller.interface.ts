@@ -7,6 +7,8 @@ import type {
   GetOrderResponse,
   GetOrdersListRequest,
   GetOrdersListResponse,
+  UpdateOrderRequest,
+  UpdateOrderResponse,
 } from '@resala/shared';
 
 import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
@@ -28,6 +30,15 @@ export interface GetOrdersList
     {},
     GetOrdersListResponse,
     Required<GetOrdersListRequest['query']>,
+    LocalUser
+  > {}
+
+export interface UpdateOrderStatus
+  extends ExpressHandlerWithParams<
+    UpdateOrderRequest['params'],
+    UpdateOrderRequest['body'],
+    UpdateOrderResponse,
+    {},
     LocalUser
   > {}
 

@@ -35,6 +35,7 @@ import {
   UpdateAddressSchema,
   UpdateCategorySchema,
   UpdateColorSchema,
+  UpdateOrderStatusSchema,
   UpdateProductSchema,
   UpdateProfileSchema,
   UpdateSizeSchema,
@@ -254,6 +255,11 @@ export function createExpressRouter(legRequests: boolean) {
       validate(DefaultQuerySchema),
       authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminGetOrdersList,
+    ],
+    [Endpoints.adminUpdateOrderStatus]: [
+      validate(UpdateOrderStatusSchema),
+      authorizeUser(['ADMIN', 'MODERATOR']),
+      orderCtrl.adminUpdateOrderStatus,
     ],
     [Endpoints.adminDeleteOrder]: [
       validate(GetOrderSchema),
