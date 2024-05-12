@@ -39,7 +39,7 @@ services:
       - db
       - s3
     command: >
-      sh -c "cd server && npx prisma migrate deploy && yarn start"
+      sh -c "cd server && npx prisma migrate dev && yarn start"
     ports:
       - '5000:5000'
     environment:
