@@ -11,40 +11,62 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
-    # ports:
-    #   - '5432:5432'
+    ports:
+      - '5432:5432'
+
+  s3:
+    image: minio/minio
+    restart: always
+    container_name: resala-s3
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    volumes:
+      - s3-data:/data
+    ports:
+      - '9000:9000'
+    command: server /data
 
   server:
     restart: always
     build:
       context: ./
       dockerfile: Dockerfile.server
-    container_name: ${SERVER_HOST}
-    env_file: .env
+    container_name: resala-server
     volumes:
       - uploads:/app/server/uploads
     depends_on:
       - db
+      - s3
     command: >
       sh -c "cd server && npx prisma migrate deploy && yarn start"
-    # ports:
-    #   - ${SERVER_PORT}:${SERVER_PORT}
-
-  nginx:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: ${NGINX_HOST}
-    volumes:
-      - uploads:/app/server/uploads
-    env_file: .env
     ports:
-      - ${NGINX_PORT}:${NGINX_PORT}
-      - ${NGINX_PORT_SSL}:${NGINX_PORT_SSL}
-    depends_on:
-      - server
+      - '5000:5000'
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+      - APP_URL=http://localhost:5000
+      - JWT_SECRET=jwt_secret
+      - JWT_REFRESH=jwt_refresh
+      - JWT_RESET=jwt_reset
+      - JWT_VERIFY=jwt_verify
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - MAIL_USER=user@mail.com
+      - MAIL_PASS=password
+      - TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      - TWILIO_AUTH_TOKEN=your_auth_token
+      - TWILIO_PHONE_NUMBER=+1234567890
+      - PAYMOB_INTEGRATION_ID=123456
+      - PAYMOB_API_URL=https://accept.paymob.com/api
+      - PAYMOB_HMAC_KEY=your_hmac_key
+      - PAYMOB_API_TOKEN=your_api_token
+      - S3_BUCKET_REGION=us-east-1
+      - S3_BUCKET_NAME=resala
+      - S3_ACCESS_KEY_ID=minio
+      - S3_SECRET_ACCESS_KEY=minio123
+      - S3_CLOUDFRONT_DOMAIN=http://localhost:9000
 
 volumes:
   db-data:
   uploads:
+  s3-data:
