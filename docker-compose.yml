@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile.server
     container_name: resala-server
     volumes:
-      - uploads:/app/server/uploads
+      - uploads:/app/packages/server/uploads
     depends_on:
       - db
       - s3
