@@ -99,7 +99,7 @@ export declare enum Endpoints {
  * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
-export declare function withParams(endpoint: EndpointConfig, ...params: string[]): EndpointConfig;
+export declare const withParams: (endpoint: EndpointConfig, ...params: string[]) => EndpointConfig;
 /**
  * Endpoint configuration for all the endpoints in the application.
  *

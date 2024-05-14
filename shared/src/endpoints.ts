@@ -124,9 +124,9 @@ export enum Endpoints {
  * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
-export function withParams(endpoint: EndpointConfig, ...params: string[]): EndpointConfig {
+export const withParams = (endpoint: EndpointConfig, ...params: string[]): EndpointConfig => {
   let url = endpoint.url;
-  const placeholders = url.match(/:[^\/]*/g) || [];
+  const placeholders = url.match(/:[^\\/]*/g) || [];
   if (placeholders.length !== params.length) {
     throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
   }
@@ -138,7 +138,7 @@ export function withParams(endpoint: EndpointConfig, ...params: string[]): Endpo
     method: endpoint.method,
     auth: endpoint.auth,
   } as EndpointConfig;
-}
+};
 
 /**
  * Endpoint configuration for all the endpoints in the application.

@@ -11,7 +11,7 @@ import { createExpressRouter } from './router/index.js';
 const swaggerDocument = fs.readFileSync('swagger.yml', 'utf8');
 
 /** creates an instance of express application. */
-export function createExpressApp(logRequests: boolean = true) {
+export const createExpressApp = (logRequests: boolean = true) => {
   const app = express();
   app.set('views', 'src/views');
   app.set('view engine', 'ejs');
@@ -58,4 +58,4 @@ export function createExpressApp(logRequests: boolean = true) {
   app.use(errMiddleware);
 
   return app;
-}
+};

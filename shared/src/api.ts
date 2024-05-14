@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * @file This file contains all the types for the API requests and responses.
  *
@@ -393,7 +395,7 @@ export type CreateCartResponse = DefaultResponseBody & {
   }[];
 };
 
-export type GetCartRequest = {};
+export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = CreateCartResponse;
 
 export type DeleteCartRequest = zod.infer<typeof DeleteCartSchema>;
@@ -404,7 +406,7 @@ export type CreateWishlistResponse = DefaultResponseBody & {
   data: CreateProductResponse['data'][];
 };
 
-export type GetWishlistRequest = {};
+export type GetWishlistRequest = Record<string, never>;
 export type GetWishlistResponse = CreateWishlistResponse;
 
 export type DeleteWishlistRequest = zod.infer<typeof DeleteWishlistSchema>;
@@ -517,7 +519,7 @@ export type CreatePaymentRequest = {
   query: zod.infer<typeof CreatePaymentSchema>['query'];
   body: { [key: string]: any };
 };
-export type CreatePaymentResponse = {};
+export type CreatePaymentResponse = Record<string, never>;
 
 export type GetPaymentRequest = zod.infer<typeof GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {

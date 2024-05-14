@@ -24,13 +24,15 @@ export type ExpressHandler<
   ReqBody = undefined,
   ResBody = DefaultResponseBody,
   ReqQuery = undefined,
-  Locals extends Record<string, any> = {},
-> = RequestHandler<{}, ResBody, ReqBody, ReqQuery, Locals>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  Locals extends Record<string, object> = {},
+> = RequestHandler<object, ResBody, ReqBody, ReqQuery, Locals>;
 
 export type ExpressHandlerWithParams<
   ReqParams,
   ReqBody = undefined,
   ResBody = DefaultResponseBody,
   ReqQuery = undefined,
-  Locals extends Record<string, any> = {},
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  Locals extends Record<string, object> = {},
 > = RequestHandler<ReqParams, ResBody, ReqBody, ReqQuery, Locals>;

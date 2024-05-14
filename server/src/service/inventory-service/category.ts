@@ -60,7 +60,7 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
       enName: category.enName,
       arName: category.arName,
       categoryId: category.categoryId || null,
-      deletedAt: !!category.deletedAt ? new Date() : null,
+      deletedAt: category.deletedAt ? new Date() : null,
     },
     where: { id },
   });

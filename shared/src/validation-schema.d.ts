@@ -1,5 +1,5 @@
-import zod from 'zod';
-import { ROLE } from './enums.js';
+import type zod from 'zod';
+import type { ROLE } from './enums.js';
 export declare const DefaultQuerySchema: zod.ZodObject<{
     query: zod.ZodObject<{
         page: zod.ZodEffects<zod.ZodOptional<zod.ZodNumber>, number, number | undefined>;

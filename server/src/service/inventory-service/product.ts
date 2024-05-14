@@ -115,7 +115,7 @@ export const updateProduct = async (id: number, product: Product) => {
       arDescription: product.arDescription,
       enDescription: product.enDescription,
       price: product.price,
-      deletedAt: !!product.deletedAt ? new Date() : null,
+      deletedAt: product.deletedAt ? new Date() : null,
     },
   });
 };

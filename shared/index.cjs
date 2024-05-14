@@ -494,9 +494,9 @@ exports.Endpoints = void 0;
  * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
-function withParams(endpoint, ...params) {
+const withParams = (endpoint, ...params) => {
     let url = endpoint.url;
-    const placeholders = url.match(/:[^\/]*/g) || [];
+    const placeholders = url.match(/:[^\\/]*/g) || [];
     if (placeholders.length !== params.length) {
         throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
     }
@@ -508,7 +508,7 @@ function withParams(endpoint, ...params) {
         method: endpoint.method,
         auth: endpoint.auth,
     };
-}
+};
 /**
  * Endpoint configuration for all the endpoints in the application.
  *

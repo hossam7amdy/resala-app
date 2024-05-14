@@ -292,7 +292,7 @@ export type CreateCartResponse = DefaultResponseBody & {
         };
     }[];
 };
-export type GetCartRequest = {};
+export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = CreateCartResponse;
 export type DeleteCartRequest = zod.infer<typeof DeleteCartSchema>;
 export type DeleteCartResponse = CreateCartResponse;
@@ -300,7 +300,7 @@ export type CreateWishlistRequest = zod.infer<typeof CreateWishlistSchema>;
 export type CreateWishlistResponse = DefaultResponseBody & {
     data: CreateProductResponse['data'][];
 };
-export type GetWishlistRequest = {};
+export type GetWishlistRequest = Record<string, never>;
 export type GetWishlistResponse = CreateWishlistResponse;
 export type DeleteWishlistRequest = zod.infer<typeof DeleteWishlistSchema>;
 export type DeleteWishlistResponse = CreateWishlistResponse;
@@ -405,7 +405,7 @@ export type CreatePaymentRequest = {
         [key: string]: any;
     };
 };
-export type CreatePaymentResponse = {};
+export type CreatePaymentResponse = Record<string, never>;
 export type GetPaymentRequest = zod.infer<typeof GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
     data: {
