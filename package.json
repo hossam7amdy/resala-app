@@ -4,13 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "server",
-    "shared",
-    "dashboard"
+    "packages/*"
   ],
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
@@ -18,17 +13,17 @@
     "format:check": "prettier --check .",
     "checks": "yarn format:check && yarn lint:check",
     "checks:fix": "yarn format && yarn lint",
-    "build:shared": "yarn --cwd shared build",
-    "build:server": "yarn --cwd server build",
-    "build:dashboard": "yarn --cwd dashboard build",
+    "build:shared": "yarn workspace @resala/shared build",
+    "build:server": "yarn workspace @resala/server build",
+    "build:dashboard": "yarn workspace @resala/dashboard build",
     "build": "npm-run-all build:shared build:server build:dashboard",
-    "test:server": "yarn --cwd server test",
-    "test:dashboard": "yarn --cwd dashboard test",
+    "test:server": "yarn workspace @resala/server test",
+    "test:dashboard": "yarn workspace @resala/dashboard test",
     "test": "npm-run-all --parallel test:server test:dashboard",
-    "start:dashboard": "yarn --cwd dashboard dev",
-    "start:server": "yarn --cwd server dev",
+    "start:dashboard": "yarn workspace @resala/dashboard dev",
+    "start:server": "yarn workspace @resala/server dev",
     "start": "npm-run-all --parallel start:server start:dashboard",
-    "start:server:prod": "yarn --cwd server start",
+    "start:server:prod": "yarn workspace @resala/server start",
     "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
   },
   "devDependencies": {
