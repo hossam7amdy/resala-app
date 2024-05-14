@@ -20,7 +20,8 @@ describe('hash', () => {
     const salt = 'somesalt';
     const iterations = 10000;
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const result = hash(str, salt, iterations);
 
     await expect(result).rejects.toThrow();
