@@ -12,10 +12,9 @@ export const errHandler = (fn: RequestHandler): RequestHandler => {
   return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-/**
- * @description error middleware
- */
-export function errMiddleware(error: Error, _req: Request, res: Response, _next: NextFunction) {
+/** @description error middleware */
+// eslint-disable-next-line no-unused-vars
+export const errMiddleware = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof APPError) {
     return res.status(error.statusCode).json({
       success: false,
@@ -28,4 +27,4 @@ export function errMiddleware(error: Error, _req: Request, res: Response, _next:
     success: false,
     message: 'Oops, an unexpected error occurred, please try again.',
   });
-}
+};

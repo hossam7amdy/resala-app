@@ -13,39 +13,43 @@ services:
       - db-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
+    networks:
+      - node-network
 
   s3:
     image: minio/minio
     restart: always
     container_name: resala-s3
     environment:
-      MINIO_ACCESS_KEY: minio
-      MINIO_SECRET_KEY: minio123
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
     volumes:
       - s3-data:/data
     ports:
       - '9000:9000'
-    command: server /data
+      - '9001:9001'
+    command: 'minio server /data --console-address :9001'
+    networks:
+      - node-network
 
   server:
     restart: always
     build:
-      context: ./
-      dockerfile: Dockerfile.server
+      context: ./packages/server
+      dockerfile: Dockerfile
     container_name: resala-server
     volumes:
-      - uploads:/app/packages/server/uploads
+      - uploads:/uploads
     depends_on:
       - db
       - s3
-    command: >
-      sh -c "cd server && npx prisma migrate dev && yarn start"
     ports:
       - '5000:5000'
+    # command: ['sh', '-c', 'yarn start']
     environment:
       - PORT=5000
       - NODE_ENV=development
-      - APP_URL=http://localhost:5000
+      - APP_URL=http://127.0.0.1:5000
       - JWT_SECRET=jwt_secret
       - JWT_REFRESH=jwt_refresh
       - JWT_RESET=jwt_reset
@@ -62,11 +66,17 @@ services:
       - PAYMOB_API_TOKEN=your_api_token
       - S3_BUCKET_REGION=us-east-1
       - S3_BUCKET_NAME=resala
-      - S3_ACCESS_KEY_ID=minio
-      - S3_SECRET_ACCESS_KEY=minio123
-      - S3_CLOUDFRONT_DOMAIN=http://localhost:9000
+      - S3_ACCESS_KEY_ID=minio_key
+      - S3_SECRET_ACCESS_KEY=minio_secret
+      - S3_CLOUDFRONT_DOMAIN=http://http://127.0.0.1:9000
+    networks:
+      - node-network
 
 volumes:
   db-data:
   uploads:
   s3-data:
+
+networks:
+  node-network:
+    driver: bridge
