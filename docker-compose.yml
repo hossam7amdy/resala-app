@@ -35,8 +35,8 @@ services:
   server:
     restart: always
     build:
-      context: ./packages/server
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Dockerfile.server
     container_name: resala-server
     volumes:
       - uploads:/uploads
@@ -45,7 +45,6 @@ services:
       - s3
     ports:
       - '5000:5000'
-    # command: ['sh', '-c', 'yarn start']
     environment:
       - PORT=5000
       - NODE_ENV=development
@@ -71,6 +70,11 @@ services:
       - S3_CLOUDFRONT_DOMAIN=http://http://127.0.0.1:9000
     networks:
       - node-network
+    command: 
+      - sh
+      - -c
+      - |
+        cd packages/server && yarn prisma migrate deploy && yarn start
 
 volumes:
   db-data:
