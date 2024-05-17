@@ -1,7 +1,9 @@
 import { unlink } from 'fs/promises';
 
+import { ENV } from '../../config/env.js';
 import { logger } from '../../lib/logger/logger.js';
-import { s3Service } from '../../lib/s3/index.js';
+import S3Service from '../../lib/s3/s3.js';
+import FileService from '../../service/file-service.js';
 import { inventoryService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
@@ -15,6 +17,14 @@ import type {
   ListProductStocks,
   UpdateProduct,
 } from './product-controller.interface.js';
+
+const s3Bucket = new S3Service({
+  accessKey: ENV.S3_ACCESS_KEY_ID!,
+  accessSecret: ENV.S3_SECRET_ACCESS_KEY!,
+  region: ENV.S3_BUCKET_REGION!,
+  bucketName: ENV.S3_BUCKET_NAME!,
+});
+const fileService = new FileService(ENV.S3_CLOUDFRONT_DOMAIN!, s3Bucket);
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
@@ -53,7 +63,7 @@ export const getProductsList: GetProductsList = async (req, res, next) => {
 
 export const createProduct: CreateProduct = async (req, res, next) => {
   try {
-    // @ts-ignore - Incompatible types Decimal not assignable to number
+    // @ts-expect-error - Incompatible types Decimal not assignable to number
     const product = await inventoryService.createProduct(req.body);
 
     return res.json({
@@ -67,7 +77,7 @@ export const createProduct: CreateProduct = async (req, res, next) => {
 
 export const updateProduct: UpdateProduct = async (req, res, next) => {
   try {
-    // @ts-ignore - Incompatible types Decimal not assignable to number
+    // @ts-expect-error - Incompatible types Decimal not assignable to number
     const product = await inventoryService.updateProduct(req.params.productId, req.body);
     return res.json({
       success: true,
@@ -86,7 +96,8 @@ export const deleteProduct: DeleteProduct = async (req, res, next) => {
     const images = await inventoryService.listProductImages(req.params.productId);
     const product = await inventoryService.deleteProduct(req.params.productId);
 
-    images.forEach(image => s3Service.deleteS3Object(image.imageUrl).catch(logger.warn));
+    const imageUrls = images.map(({ imageUrl }) => imageUrl);
+    fileService.deleteFiles(imageUrls).catch(logger.warn);
 
     return res.json({
       success: true,
@@ -99,16 +110,14 @@ export const deleteProduct: DeleteProduct = async (req, res, next) => {
 
 export const addProductImages: CreateProductImage = async (req, res, next) => {
   const files = req.files as Express.Multer.File[];
+  const productId = req.body.productId;
 
   try {
     if (!files || !files.length) {
       throw new BadRequestError('No files uploaded');
     }
 
-    const s3Promises = files.map(file => s3Service.uploadS3Object(file));
-    const s3Response = await Promise.all(s3Promises);
-
-    const urls = s3Response.map(({ url }) => url);
+    const urls = await fileService.uploadFiles(files, productId.toString());
     await inventoryService.addProductImages(req.body.productId, urls);
 
     return res.json({
@@ -118,7 +127,7 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
   } catch (error) {
     next(error);
   } finally {
-    files?.forEach(file => unlink(file.path).catch(logger.warn));
+    files.map(file => unlink(file.path).catch(logger.warn));
   }
 };
 
@@ -153,7 +162,7 @@ export const deleteProductImage: DeleteProductImage = async (req, res, next) => 
     const { imageId, productId } = req.params;
 
     const image = await inventoryService.deleteProductImage(imageId, productId);
-    s3Service.deleteS3Object(image.imageUrl).catch(logger.warn);
+    await fileService.deleteFile(image.imageUrl);
 
     return res.json({
       success: true,

@@ -61,6 +61,7 @@ export const authenticate = async (sign: string, password: string) => {
     expiresIn: '7d',
   });
 
+  // eslint-disable-next-line no-unused-vars
   const { password: _, salt: __, iterations: ___, ...userWithoutPassword } = user;
   return {
     expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day

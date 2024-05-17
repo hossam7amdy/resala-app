@@ -1,4 +1,4 @@
-import { unlink } from 'fs/promises';
+import type { Request } from 'express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,13 +16,12 @@ const storage = multer.diskStorage({
   destination: uploadDir,
   filename: (_req, file, cb) => {
     const uniqueSuffix = uuidv4();
-    const fileExtension = path.extname(file.originalname);
-    cb(null, uniqueSuffix + fileExtension);
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
   },
 });
 
 // multer filter
-const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
 
   if (!allowedTypes.includes(file.mimetype)) {
@@ -39,9 +38,3 @@ export const upload = multer({
   storage,
   fileFilter,
 });
-
-export const deleteFile = (filename: string) => {
-  filename = filename.split('/').pop() as string;
-  const filePath = path.join(uploadDir, filename);
-  return unlink(filePath);
-};
