@@ -7,10 +7,10 @@
   "type": "module",
   "scripts": {
     "prisma:generate": "yarn prisma generate",
-    "build": "yarn && yarn prisma:generate && tsc",
-    "start": "set NODE_ENV=prod&& node dist/index.js",
-    "dev": "set NODE_ENV=dev&& tsx watch src/index.ts",
-    "test:unit": "dotenv -e .env.test -- vitest -c ./vitest.config.unit.ts",
+    "build": "yarn prisma:generate && tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test:unit": "DOTENV_CONFIG_PATH=.env.test vitest -c ./vitest.config.unit.ts",
     "test:int": "bash ./scripts/run-integration.sh",
     "test": "yarn test:unit && yarn test:int"
   },
