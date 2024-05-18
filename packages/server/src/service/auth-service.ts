@@ -1,7 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
-import { ENV } from '../config/env.js';
 import * as Jwt from '../lib/jwt-token/jwt-token.js';
 import prisma from '../lib/prisma/index.js';
 import {
@@ -54,10 +53,10 @@ export const authenticate = async (sign: string, password: string) => {
     })
     .catch(console.error);
 
-  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
+  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
     expiresIn: '1d',
   });
-  const refreshToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_REFRESH!, {
+  const refreshToken = Jwt.signJwt({ id: user.id, email: user.email }, process.env.JWT_REFRESH!, {
     expiresIn: '7d',
   });
 
@@ -92,7 +91,7 @@ export const register = async (payload: Omit<Prisma.UserCreateInput, 'salt' | 'i
   });
 
   // generate verify token
-  const token = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_VERIFY!, {
+  const token = Jwt.signJwt({ id: user.id, email: user.email }, process.env.JWT_VERIFY!, {
     expiresIn: '30d',
   });
 
@@ -110,7 +109,7 @@ export const verifyEmail = async (email: string, token: string) => {
     throw new NotFoundError('User not found');
   }
 
-  const jwtObj = await validateJwtToken(token, ENV.JWT_VERIFY!);
+  const jwtObj = await validateJwtToken(token, process.env.JWT_VERIFY!);
   if (email !== jwtObj.email) {
     throw new BadRequestError('Invalid token');
   }
@@ -162,14 +161,16 @@ export const forgotPassword = async (email: string) => {
   // generate reset token
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
   const resetCode = generateRandomString(6).toUpperCase();
-  const token = Jwt.signJwt({ id: user.id, email, resetCode }, ENV.JWT_RESET!, { expiresIn: '1h' });
+  const token = Jwt.signJwt({ id: user.id, email, resetCode }, process.env.JWT_RESET!, {
+    expiresIn: '1h',
+  });
 
   return { expiresAt, token, resetCode };
 };
 
 export const resetPassword = async (token: string, code: string, password: string) => {
   // validate reset code
-  const { id, resetCode } = await validateJwtToken(token, ENV.JWT_RESET!);
+  const { id, resetCode } = await validateJwtToken(token, process.env.JWT_RESET!);
 
   if (resetCode !== code) {
     throw new BadRequestError('Invalid code');
@@ -186,7 +187,7 @@ export const resetPassword = async (token: string, code: string, password: strin
 };
 
 export const refreshToken = async (token: string) => {
-  const { id } = await validateJwtToken(token, ENV.JWT_REFRESH!);
+  const { id } = await validateJwtToken(token, process.env.JWT_REFRESH!);
   const user = await prisma.user.findUnique({
     where: { id },
   });
@@ -194,7 +195,7 @@ export const refreshToken = async (token: string) => {
     throw new NotFoundError('User not found');
   }
 
-  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, ENV.JWT_SECRET!, {
+  const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
     expiresIn: '1d',
   });
   return {

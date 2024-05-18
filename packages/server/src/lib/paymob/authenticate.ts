@@ -1,8 +1,7 @@
-import { ENV } from '../../config/index.js';
 import Fetch from '../../utils/fetch.js';
 
-const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
-const PAYMOB_API_TOKEN = ENV.PAYMOB_API_TOKEN;
+const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
+const PAYMOB_API_TOKEN = process.env.PAYMOB_API_TOKEN;
 
 export interface AuthenticateResponse {
   token: string;

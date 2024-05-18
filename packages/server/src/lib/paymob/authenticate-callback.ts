@@ -1,6 +1,5 @@
 import { createHmac } from 'crypto';
 
-import { ENV } from '../../config/index.js';
 import type callback from './callback.json';
 
 /**
@@ -40,7 +39,9 @@ export async function authenticateCallback(
       bodyObj.source_data.type +
       bodyObj.success;
 
-    const hash = createHmac('sha512', ENV.PAYMOB_HMAC_KEY!).update(lexicographical).digest('hex');
+    const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
+      .update(lexicographical)
+      .digest('hex');
 
     // Compare the hash with the hmac sent by Paymob to verify the request is authentic
     if (hash === hmac) {
