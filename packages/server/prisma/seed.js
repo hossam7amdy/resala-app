@@ -1,16 +1,28 @@
 import { PrismaClient } from '@prisma/client';
+import process from 'process';
 
 const prisma = new PrismaClient();
 
 const generateRandomUsers = async () => {
   const users = [
     {
+      salt: 'wsX1xE4HGE1FpE7PckEOKYgZf1Ty0xo+bOtqqpUYcw1BC3q5Kdq/7Q5/Kv2p7PUGrrvzSEe9wLEWBPKMwNakpP+q8HzA15lT31fGr46GwTU=',
+      iterations: 12511,
+      password:
+        'HuZk7inYeVodB2+1TScguTSkrmTH1OmFMw+ZITICxmlz7QdWuLstasslFANduLHyh+zKD7iGa3qdy2Z97zfv8/M/T830B/mkrqj2If+2NNEOWcUifo6EFC1rOBYbt/6ehcPQS07LdD2YNpPoVEbgG3MgsF6Gukgc2jD7a7uecGpkuUY6WSZlCkBHHw+BvfA0A/JLOVbh',
+      email: `customer@resala.com`,
+      phone: `01500000000`,
+      firstName: `customer`,
+      lastName: `user`,
+      role: 'CUSTOMER',
+    },
+    {
       salt: 'UIL2gAnLw13gMjwP5JonABkQDdaaCce7MfXekcacrlGs2z/7JhimgF/uyvT1y63gC695hhMBYbAynGQ35k4OUkFc00SwtMl/3zFgjx4JFyY=',
       iterations: 10888,
       password:
         'A6oHPQAQVV5RBwd3dUTcuxgetr80ILDi0wf4XeuBaHn1llO2bGTjw0DSEDbWOIN7q5D04B5nO3+ywc5DU2IH5B9+pICTxuhyjDDdarjoSnOWK191YfOYJSPLJ8TdOTMnj9XRkGOVPE/0jPqaNP4kn0LYgLoPx76zR9JDhGV94q+CSUEmXjjZDBRhK5lw5YB65L7dJ9Q8',
       email: `admin@resala.com`,
-      phone: `01500000000`,
+      phone: `01500000001`,
       firstName: 'admin',
       lastName: 'user',
       role: 'ADMIN',
@@ -20,8 +32,8 @@ const generateRandomUsers = async () => {
       iterations: 12511,
       password:
         'HuZk7inYeVodB2+1TScguTSkrmTH1OmFMw+ZITICxmlz7QdWuLstasslFANduLHyh+zKD7iGa3qdy2Z97zfv8/M/T830B/mkrqj2If+2NNEOWcUifo6EFC1rOBYbt/6ehcPQS07LdD2YNpPoVEbgG3MgsF6Gukgc2jD7a7uecGpkuUY6WSZlCkBHHw+BvfA0A/JLOVbh',
-      email: `customer@resala.com`,
-      phone: `01500000001`,
+      email: `customer2@resala.com`,
+      phone: `01500000002`,
       firstName: `customer`,
       lastName: `user`,
       role: 'CUSTOMER',
@@ -31,7 +43,7 @@ const generateRandomUsers = async () => {
   return users;
 };
 
-async function main() {
+const main = async () => {
   // create users
   const users = await generateRandomUsers();
   await prisma.user.createMany({
@@ -49,10 +61,6 @@ async function main() {
         arName: 'اطفال',
         enName: 'Kids',
       },
-      ...new Array(50).fill(0).map((_, index) => ({
-        arName: `فئة رئيسية ${index + 1}`,
-        enName: `Main Category ${index + 1}`,
-      })),
     ],
   });
 
@@ -99,42 +107,6 @@ async function main() {
     ],
   });
 
-  // create nested sub categories
-  const subCategories = await prisma.category.findMany({
-    where: {
-      categoryId: mainCategory[1].id,
-    },
-    orderBy: { createdAt: 'asc' },
-  });
-  await prisma.category.createMany({
-    data: [
-      {
-        categoryId: subCategories[0].id,
-        arName: 'بناطيل',
-        enName: 'Pants',
-      },
-      {
-        categoryId: subCategories[0].id,
-        arName: 'قمصان',
-        enName: 'Shirts',
-      },
-    ],
-  });
-  await prisma.category.createMany({
-    data: [
-      {
-        categoryId: subCategories[2].id,
-        arName: 'بجامات',
-        enName: 'Pajamas',
-      },
-      {
-        categoryId: subCategories[2].id,
-        arName: 'بدل',
-        enName: 'Suits',
-      },
-    ],
-  });
-
   // create products
   const categories = await prisma.category.findMany({
     orderBy: { createdAt: 'asc' },
@@ -165,14 +137,6 @@ async function main() {
         enDescription: 'Cotton Blouse',
         price: 400,
       },
-      ...new Array(50).fill(0).map((_, index) => ({
-        categoryId: categories[Math.floor(Math.random() * categories.length)].id,
-        arName: `منتج ${index + 1}`,
-        enName: `Product ${index + 1}`,
-        arDescription: `وصف المنتج ${index + 1} `.repeat(15),
-        enDescription: `Product ${index + 1} Description `.repeat(15),
-        price: Math.floor(Math.random() * 1000),
-      })),
     ],
   });
 
@@ -226,7 +190,7 @@ async function main() {
     ],
   });
 
-  // create product variants (stocks)
+  // create product variants (stocks) 2 for each product
   const products = await prisma.product.findMany({
     orderBy: { createdAt: 'asc' },
   });
@@ -237,23 +201,49 @@ async function main() {
     orderBy: { createdAt: 'asc' },
   });
 
-  for (let i = 0; i < products.length; i++) {
-    for (let j = 0; j < colors.length; j++) {
-      for (let k = 0; k < sizes.length; k++) {
-        await prisma.stock.create({
-          data: {
-            productId: products[i].id,
-            colorId: colors[j].id,
-            sizeId: sizes[k].id,
-            quantity: Math.floor(Math.random() * 20),
-          },
-        });
-      }
-    }
-  }
+  await prisma.stock.createMany({
+    data: [
+      {
+        productId: products[0].id,
+        colorId: colors[0].id,
+        sizeId: sizes[0].id,
+        quantity: 10,
+      },
+      {
+        productId: products[0].id,
+        colorId: colors[1].id,
+        sizeId: sizes[1].id,
+        quantity: 20,
+      },
+      {
+        productId: products[1].id,
+        colorId: colors[2].id,
+        sizeId: sizes[2].id,
+        quantity: 30,
+      },
+      {
+        productId: products[1].id,
+        colorId: colors[3].id,
+        sizeId: sizes[3].id,
+        quantity: 40,
+      },
+      {
+        productId: products[2].id,
+        colorId: colors[4].id,
+        sizeId: sizes[4].id,
+        quantity: 50,
+      },
+      {
+        productId: products[2].id,
+        colorId: colors[0].id,
+        sizeId: sizes[0].id,
+        quantity: 60,
+      },
+    ],
+  });
 
   console.log('seeded successfully 🌱');
-}
+};
 
 main()
   .catch(async e => {

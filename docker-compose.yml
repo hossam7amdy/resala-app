@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   db:
     image: postgres
@@ -14,23 +12,23 @@ services:
     ports:
       - '5432:5432'
     networks:
-      - node-network
+      - resala-net
 
   s3:
     image: minio/minio
     restart: always
     container_name: resala-s3
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio123
+      MINIO_ROOT_USER: minio_key
+      MINIO_ROOT_PASSWORD: minio_secret
     volumes:
-      - s3-data:/data
+      - s3-data:/mnt/data
     ports:
       - '9000:9000'
       - '9001:9001'
-    command: 'minio server /data --console-address :9001'
     networks:
-      - node-network
+      - resala-net
+    command: 'minio server /data --console-address :9001'
 
   server:
     restart: always
@@ -38,8 +36,7 @@ services:
       context: ./
       dockerfile: Dockerfile.server
     container_name: resala-server
-    volumes:
-      - uploads:/uploads
+    image: hossam7amdy/resala-server
     depends_on:
       - db
       - s3
@@ -48,7 +45,7 @@ services:
     environment:
       - PORT=5000
       - NODE_ENV=development
-      - APP_URL=http://127.0.0.1:5000
+      - APP_URL=http://localhost:5000
       - JWT_SECRET=jwt_secret
       - JWT_REFRESH=jwt_refresh
       - JWT_RESET=jwt_reset
@@ -63,24 +60,24 @@ services:
       - PAYMOB_API_URL=https://accept.paymob.com/api
       - PAYMOB_HMAC_KEY=your_hmac_key
       - PAYMOB_API_TOKEN=your_api_token
-      - S3_BUCKET_REGION=us-east-1
-      - S3_BUCKET_NAME=resala
-      - S3_ACCESS_KEY_ID=minio_key
-      - S3_SECRET_ACCESS_KEY=minio_secret
-      - S3_CLOUDFRONT_DOMAIN=http://http://127.0.0.1:9000
+      - S3_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=minio_key
+      - AWS_SECRET_ACCESS_KEY=minio_secret
+      - S3_BUCKET=resala-app
+      - S3_ENDPOINT=http://s3:9000
+      - S3_BASE_URL=http://localhost:9000/resala-app
     networks:
-      - node-network
-    command: 
+      - resala-net
+    command:
       - sh
       - -c
       - |
-        cd packages/server && yarn prisma migrate deploy && yarn start
+        cd packages/server && yarn prisma migrate deploy && node prisma/seed.js && yarn start
 
 volumes:
   db-data:
-  uploads:
   s3-data:
 
 networks:
-  node-network:
+  resala-net:
     driver: bridge

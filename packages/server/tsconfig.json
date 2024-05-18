@@ -16,7 +16,8 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "outDir": "dist"
+    "outDir": "dist",
+    "typeRoots": ["node_modules/@types"]
   },
   "include": ["src/**/*", "swagger.yml"],
   "exclude": [

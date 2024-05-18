@@ -1,10 +1,10 @@
 export interface IFileStorage {
-  uploadFile(localFilePath: string, remoteDestination: string): Promise<void>;
-  downloadFile(remoteSource: string, localDestination: string): Promise<void>;
-  deleteFile(remoteFilePath: string): Promise<void>;
-  deleteFiles(remoteFilePaths: string[]): Promise<void>;
-  listFiles(remoteDirectory: string): Promise<string[]>;
-  getFileMetadata(remoteFilePath: string): Promise<FileMetadata>;
+  uploadFile(fileBuffer: Buffer, filename: string): Promise<string>;
+  downloadFile(filename: string): Promise<Buffer>;
+  deleteFile(filename: string): Promise<void>;
+  deleteFiles(filename: string[]): Promise<void>;
+  listFiles(filename: string): Promise<string[]>;
+  getFileMetadata(filename: string): Promise<FileMetadata>;
 }
 
 export interface FileMetadata {

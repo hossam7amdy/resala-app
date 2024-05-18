@@ -22,7 +22,7 @@ RUN yarn build:shared
 RUN yarn build:server
 
 # Remove development dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 # Use node alpine image as base
 FROM node:22-alpine
@@ -35,12 +35,6 @@ COPY --from=build /app/package*.json /app/
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/server /app/packages/server
 COPY --from=build /app/packages/shared /app/packages/shared
-
-# Create nessessary directories
-RUN mkdir /app/packages/server/uploads
-
-# Make sure multer can write to uploads directory
-RUN chown -R node:node /app/packages/server/uploads
 
 # Set user to node
 USER node

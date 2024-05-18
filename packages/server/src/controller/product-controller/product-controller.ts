@@ -1,10 +1,7 @@
-import { unlink } from 'fs/promises';
-
-import { ENV } from '../../config/env.js';
 import { logger } from '../../lib/logger/logger.js';
-import S3Service from '../../lib/s3/s3.js';
 import FileService from '../../service/file-service.js';
 import { inventoryService } from '../../service/index.js';
+import S3Service from '../../service/s3-service.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
   CreateProduct,
@@ -18,13 +15,8 @@ import type {
   UpdateProduct,
 } from './product-controller.interface.js';
 
-const s3Bucket = new S3Service({
-  accessKey: ENV.S3_ACCESS_KEY_ID!,
-  accessSecret: ENV.S3_SECRET_ACCESS_KEY!,
-  region: ENV.S3_BUCKET_REGION!,
-  bucketName: ENV.S3_BUCKET_NAME!,
-});
-const fileService = new FileService(ENV.S3_CLOUDFRONT_DOMAIN!, s3Bucket);
+const s3Service = new S3Service();
+const fileService = new FileService(s3Service);
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
@@ -117,6 +109,7 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
       throw new BadRequestError('No files uploaded');
     }
 
+    await inventoryService.findProductById(productId); // Check if product exists
     const urls = await fileService.uploadFiles(files, productId.toString());
     await inventoryService.addProductImages(req.body.productId, urls);
 
@@ -126,8 +119,6 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  } finally {
-    files.map(file => unlink(file.path).catch(logger.warn));
   }
 };
 
