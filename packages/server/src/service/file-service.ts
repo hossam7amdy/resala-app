@@ -3,20 +3,15 @@ import { v4 as uuid } from 'uuid';
 import type { IFileStorage } from '../interfaces/file-storage.js';
 
 export default class FileService {
-  constructor(
-    private readonly endpoint: string,
-    private readonly fileStorage: IFileStorage
-  ) {}
+  constructor(private readonly fileStorage: IFileStorage) {}
 
   async uploadFile(file: Express.Multer.File, directory: string = 'uploads') {
-    const key = `${directory}/${this._generateFileKey()}-${file.originalname}`;
+    const fileExtension = file.originalname.split('.').pop();
+    const key = `${directory}/${this._generateFileKey()}.${fileExtension}`;
 
-    await this.fileStorage.uploadFile(file.path, key);
+    const url = await this.fileStorage.uploadFile(file.buffer, key);
 
-    return {
-      key,
-      url: this._generateS3Url(key),
-    };
+    return { key, url };
   }
 
   async uploadFiles(files: Express.Multer.File[], directory?: string) {
@@ -31,25 +26,21 @@ export default class FileService {
   }
 
   async deleteFile(url: string) {
-    const key = this._keyFromUrl(url);
-    return await this.fileStorage.deleteFile(key);
+    // const key = this._keyFromUrl(url);
+    return await this.fileStorage.deleteFile(url);
   }
 
   async deleteFiles(urls: string[]) {
-    const keys = urls.map(url => this._keyFromUrl(url));
-    return await this.fileStorage.deleteFiles(keys);
-  }
-
-  private _generateS3Url(key: string) {
-    return `${this.endpoint}/${key}`;
+    // const keys = urls.map(url => this._keyFromUrl(url));
+    return await this.fileStorage.deleteFiles(urls);
   }
 
   private _generateFileKey() {
     return uuid();
   }
 
-  private _keyFromUrl(url: string) {
-    const urlParts = url.replace(`${this.endpoint}/`, '');
-    return urlParts;
-  }
+  // private _keyFromUrl(url: string) {
+  //   const urlParts = url.replace(`${this.baseUrl}/`, '');
+  //   return urlParts;
+  // }
 }
