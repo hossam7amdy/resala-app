@@ -1,16 +1,18 @@
+import dotenv from 'dotenv';
 import { createServer } from 'http';
 
 import { createExpressApp } from './app.js';
-import { ENV } from './config/env.js';
+
+dotenv.config();
 
 const app = createExpressApp();
 
 const server = createServer(app);
 
-const PORT = ENV.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`Server is running on ${ENV.NODE_ENV} mode on port ${PORT} 🚀`);
+  console.log(`Server is running on ${process.env.NODE_ENV} mode on port ${PORT} 🚀`);
 });
 
 process.on('unhandledRejection', reason => {

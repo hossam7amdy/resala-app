@@ -1,4 +1,3 @@
-import { ENV } from '../../config/index.js';
 import { signJwt } from '../../lib/jwt-token/index.js';
 import { authService, communicationService } from '../../service/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
@@ -57,7 +56,7 @@ export const resendVerificationEmail: ResendVerificationEmail = async (_, res, n
   try {
     const { id, email } = res.locals.user;
 
-    const verifyToken = signJwt({ id, email }, ENV.JWT_VERIFY!, { expiresIn: '30d' });
+    const verifyToken = signJwt({ id, email }, process.env.JWT_VERIFY!, { expiresIn: '30d' });
     await communicationService.sendVerificationEmail(email, verifyToken);
 
     return res.json({

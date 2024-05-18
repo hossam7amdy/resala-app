@@ -1,6 +1,5 @@
 import type { RequestHandler } from 'express';
 
-import { ENV } from '../config/index.js';
 import { authService, userService } from '../service/index.js';
 import { BadRequestError, ForbiddenError } from '../utils/api-errors.js';
 
@@ -11,7 +10,7 @@ export const authenticateToken: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('Token required');
     }
 
-    const jwtPayload = await authService.validateJwtToken(token, ENV.JWT_SECRET!);
+    const jwtPayload = await authService.validateJwtToken(token, process.env.JWT_SECRET!);
 
     const user = await userService.findUserById(jwtPayload.id);
 

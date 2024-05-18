@@ -1,9 +1,8 @@
-import { ENV } from '../../config/index.js';
 import Fetch from '../../utils/fetch.js';
 
 const CURRENCY = 'EGP';
-const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
-const PAYMOB_INTEGRATION_ID = ENV.PAYMOB_INTEGRATION_ID;
+const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
+const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
 
 export interface BillingData {
   first_name: string;

@@ -1,7 +1,6 @@
-import { ENV } from '../../config/index.js';
 import Fetch from '../../utils/fetch.js';
 
-const PAYMOB_API_URL = ENV.PAYMOB_API_URL;
+const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
 
 interface TransactionResponse {
   type: string;
