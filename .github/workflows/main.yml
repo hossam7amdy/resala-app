@@ -23,16 +23,17 @@ jobs:
       MAIL_PASS: password
       TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       TWILIO_AUTH_TOKEN: your_auth_token
-      TWILIO_PHONE_NUMBE: =+1234567890
+      TWILIO_PHONE_NUMBER: +1234567890
       PAYMOB_INTEGRATION_ID: 123456
       PAYMOB_API_URL: https://accept.paymob.com/api
       PAYMOB_HMAC_KEY: your_hmac_key
       PAYMOB_API_TOKEN: your_api_token
-      S3_BUCKET_REGION: us-east-1
-      S3_BUCKET_NAME: resala
-      S3_ACCESS_KEY_ID: minio
-      S3_SECRET_ACCESS_KEY: minio123
-      S3_CLOUDFRONT_DOMAIN: http://localhost:9000
+      S3_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: minio_key
+      AWS_SECRET_ACCESS_KEY: minio_secret
+      S3_BUCKET: resala-app
+      S3_ENDPOINT: http://localhost:9000
+      S3_BASE_URL: http://localhost:9000/resala-app
 
     steps:
       - name: Checkout repository
