@@ -5,11 +5,11 @@
 **.git
 
 # Server files
-server/scripts
-server/uploads
-server/.env*
-server/docker-compose.yml
-server/tests
-server/vitest.config*
+packages/server/scripts
+packages/server/uploads
+packages/server/.env*
+packages/server/docker-compose.yml
+packages/server/tests
+packages/server/vitest.config*
 
 # Client files
