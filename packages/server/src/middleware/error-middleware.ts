@@ -1,4 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import { MulterError } from 'multer';
 
 import { logger } from '../lib/logger/index.js';
 import { APPError } from '../utils/api-errors.js';
@@ -17,6 +18,13 @@ export const errHandler = (fn: RequestHandler): RequestHandler => {
 export const errMiddleware = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof APPError) {
     return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+
+  if (error instanceof MulterError) {
+    return res.status(400).json({
       success: false,
       message: error.message,
     });
