@@ -64,7 +64,9 @@ export default class S3Service implements IFileStorage {
     await this.client.send(command);
     return this.getPublicUrl(filename);
   }
-  async deleteFile(filename: string): Promise<void> {
+  async deleteFile(path: string): Promise<void> {
+    const filename = this.getFilenameFromUrl(path);
+
     const command = new DeleteObjectCommand({
       Bucket: this.bucketName,
       Key: filename,
@@ -72,17 +74,19 @@ export default class S3Service implements IFileStorage {
 
     await this.client.send(command);
   }
-  async listFiles(remoteDirectory: string): Promise<string[]> {
+  async listFiles(directory: string): Promise<string[]> {
     const command = new ListObjectsV2Command({
       Bucket: this.bucketName,
-      Prefix: remoteDirectory,
+      Prefix: directory,
     });
 
     const { Contents: contents } = await this.client.send(command);
 
     return contents!.map(obj => obj.Key!);
   }
-  async getFileMetadata(filename: string): Promise<FileMetadata> {
+  async getFileMetadata(path: string): Promise<FileMetadata> {
+    const filename = this.getFilenameFromUrl(path);
+
     const command = new HeadObjectCommand({
       Bucket: this.bucketName,
       Key: filename,
@@ -94,13 +98,11 @@ export default class S3Service implements IFileStorage {
       lastModified: obj.LastModified!,
     };
   }
-  async deleteFiles(filename: string[]) {
+  async deleteFiles(paths: string[]) {
     const command = new DeleteObjectsCommand({
       Bucket: this.bucketName,
       Delete: {
-        Objects: filename.map(path => ({
-          Key: path,
-        })),
+        Objects: paths.map(path => ({ Key: this.getFilenameFromUrl(path) })),
       },
     });
 
@@ -109,6 +111,9 @@ export default class S3Service implements IFileStorage {
 
   private getPublicUrl(filename: string) {
     return `${process.env.S3_BASE_URL}/${filename}`;
+  }
+  private getFilenameFromUrl(url: string) {
+    return url.replace(`${process.env.S3_BASE_URL}/`, '');
   }
 
   private async makeBucketPublicRead(bucketName: string) {

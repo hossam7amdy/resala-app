@@ -3,14 +3,15 @@ import multer from 'multer';
 
 import { BadRequestError } from '../../utils/api-errors.js';
 
+const FILE_SIZE_LIMIT = 1024 * 1024 * 50; // 50MB
+const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+
 // multer filter
 const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-
-  if (!allowedTypes.includes(file.mimetype)) {
+  if (!ALLOWED_FILE_TYPES.includes(file.mimetype)) {
     return cb(new BadRequestError('File type not allowed'));
   }
-  if (file.size > 1024 * 1024 * 5) {
+  if (file.size > FILE_SIZE_LIMIT) {
     return cb(new BadRequestError('File size should be less than 5MB'));
   }
 
@@ -21,6 +22,6 @@ export const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: FILE_SIZE_LIMIT,
   },
 });
