@@ -72,7 +72,7 @@ services:
       - sh
       - -c
       - |
-        cd packages/server && yarn prisma migrate deploy && node prisma/seed.js && yarn start
+        cd packages/server && yarn prisma:migrate:reset && yarn start
 
 volumes:
   db-data:
