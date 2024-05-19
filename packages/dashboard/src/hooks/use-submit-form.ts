@@ -19,13 +19,21 @@ const useSubmitForm = <Payload>(
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<{ message: string | undefined }>({ message: undefined });
 
-  const dispatch = (payload: Payload) =>
-    startTransition(async () => {
-      const response = await submit(payload);
+  const dispatch = (payload: Payload) => {
+    setError({ message: undefined });
 
-      response?.success && form?.resetFields();
-      !response?.success && setError({ message: response?.message });
+    return startTransition(async () => {
+      try {
+        const response = await submit(payload);
+
+        response?.success && form?.resetFields();
+        !response?.success && setError({ message: response?.message });
+      } catch (e) {
+        const error = e as Error;
+        setError({ message: error?.message });
+      }
     });
+  };
 
   return { dispatch, pending, error };
 };
