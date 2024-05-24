@@ -7,8 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import type { Router } from '@angular/router';
-import type { AuthService } from 'src/app/core/services/auth.service';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +22,13 @@ export class LoginComponent {
     private _AuthService: AuthService,
     private _Router: Router
   ) {}
+
+  //show password
+  showPW: any;
+  togglePW() {
+    this.showPW = !this.showPW;
+  }
+
   errMsg: string = '';
   successMsg: string = '';
   isLoading: boolean = false;
@@ -41,8 +48,16 @@ export class LoginComponent {
       ])
     ),
 
-    sign: new FormControl('', [Validators.required, Validators.email]),
+    sign: new FormControl('', [
+      Validators.required,
+      Validators.pattern(
+        /(^[0-9]{11,11}$)|(^[a-z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+))?$/
+      ),
+    ]),
   });
+
+  //|| Validators.pattern(/^(?:\d{10}|\w+@\w+\.\w{2,3})$/)
+  // /^01[0125][0-9]{8}$/
 
   handleForm(loginForm: FormGroup): void {
     this.isLoading = true;

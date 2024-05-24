@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import type { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import type { AuthService } from 'src/app/core/services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-nav-auth',
