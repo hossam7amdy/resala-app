@@ -1,0 +1,450 @@
+'use strict';
+(self.webpackChunkfreshcart = self.webpackChunkfreshcart || []).push([
+  [560],
+  {
+    6560: (S, u, g) => {
+      g.r(u), g.d(u, { RegisterComponent: () => y });
+      var c = g(6814),
+        o = g(95),
+        e = g(4769),
+        f = g(9410),
+        d = g(1120);
+      function h(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Named is required'), e.qZA());
+      }
+      function Z(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'The Name Min Lenght 2'), e.qZA());
+      }
+      function x(t, s) {
+        1 & t &&
+          (e.TgZ(0, 'p'),
+          e._uU(1, 'Should be not contain symbols & less 2 chars and only spaces'),
+          e.qZA());
+      }
+      function T(t, s) {
+        if (
+          (1 & t &&
+            (e.TgZ(0, 'div', 22),
+            e.YNc(1, h, 2, 0, 'p', 19),
+            e.YNc(2, Z, 2, 0, 'p', 19),
+            e.YNc(3, x, 2, 0, 'p', 19),
+            e.qZA()),
+          2 & t)
+        ) {
+          const n = e.oxw();
+          let i, r, l;
+          e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (i = n.registerForm.get('firstName')) ? null : i.getError('required')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (r = n.registerForm.get('firstName')) ? null : r.getError('minLength')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (l = n.registerForm.get('firstName')) ? null : l.getError('pattern')
+            );
+        }
+      }
+      function N(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Named is required'), e.qZA());
+      }
+      function I(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'The Name Min Lenght 2'), e.qZA());
+      }
+      function C(t, s) {
+        1 & t &&
+          (e.TgZ(0, 'p'),
+          e._uU(1, 'Should be not contain symbols & less 2 chars and only spaces'),
+          e.qZA());
+      }
+      function v(t, s) {
+        if (
+          (1 & t &&
+            (e.TgZ(0, 'div', 22),
+            e.YNc(1, N, 2, 0, 'p', 19),
+            e.YNc(2, I, 2, 0, 'p', 19),
+            e.YNc(3, C, 2, 0, 'p', 19),
+            e.qZA()),
+          2 & t)
+        ) {
+          const n = e.oxw();
+          let i, r, l;
+          e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (i = n.registerForm.get('lastName')) ? null : i.getError('required')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (r = n.registerForm.get('lastName')) ? null : r.getError('minLength')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (l = n.registerForm.get('lastName')) ? null : l.getError('pattern')
+            );
+        }
+      }
+      function q(t, s) {
+        if (1 & t) {
+          const n = e.EpF();
+          e.TgZ(0, 'i', 23),
+            e.NdJ('click', function () {
+              e.CHM(n);
+              const r = e.oxw();
+              return e.KtG(r.togglePW());
+            }),
+            e.qZA();
+        }
+      }
+      function A(t, s) {
+        if (1 & t) {
+          const n = e.EpF();
+          e.TgZ(0, 'i', 24),
+            e.NdJ('click', function () {
+              e.CHM(n);
+              const r = e.oxw();
+              return e.KtG(r.togglePW());
+            }),
+            e.qZA();
+        }
+      }
+      function R(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Named is required'), e.qZA());
+      }
+      function b(t, s) {
+        1 & t &&
+          (e.TgZ(0, 'p'),
+          e._uU(1, 'Should be contain symbols & chars & numbers and Not less 8 chars'),
+          e.qZA());
+      }
+      function F(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Should be 8 Chars at least'), e.qZA());
+      }
+      function w(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Should be 8 Chars sharp'), e.qZA());
+      }
+      function U(t, s) {
+        if (
+          (1 & t &&
+            (e.TgZ(0, 'div', 22),
+            e.YNc(1, R, 2, 0, 'p', 19),
+            e.YNc(2, b, 2, 0, 'p', 19),
+            e.YNc(3, F, 2, 0, 'p', 19),
+            e.YNc(4, w, 2, 0, 'p', 19),
+            e.qZA()),
+          2 & t)
+        ) {
+          const n = e.oxw();
+          let i, r, l, a;
+          e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (i = n.registerForm.get('password')) ? null : i.getError('required')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (r = n.registerForm.get('password')) ? null : r.getError('pattern')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (l = n.registerForm.get('password')) ? null : l.getError('minLength')
+            ),
+            e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (a = n.registerForm.get('password')) ? null : a.getError('maxLength')
+            );
+        }
+      }
+      function E(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'Email is required'), e.qZA());
+      }
+      function M(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'This Not matching as Email'), e.qZA());
+      }
+      function J(t, s) {
+        if (
+          (1 & t &&
+            (e.TgZ(0, 'div', 22), e.YNc(1, E, 2, 0, 'p', 19), e.YNc(2, M, 2, 0, 'p', 19), e.qZA()),
+          2 & t)
+        ) {
+          const n = e.oxw();
+          let i, r;
+          e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (i = n.registerForm.get('email')) ? null : i.getError('required')
+            ),
+            e.xp6(1),
+            e.Q6J('ngIf', null == (r = n.registerForm.get('email')) ? null : r.getError('email'));
+        }
+      }
+      function P(t, s) {
+        1 & t && (e.TgZ(0, 'p'), e._uU(1, 'phone is required'), e.qZA());
+      }
+      function k(t, s) {
+        1 & t &&
+          (e.TgZ(0, 'p'), e._uU(1, 'Should be 11 digts sharp & start be 011,012,010,015'), e.qZA());
+      }
+      function Q(t, s) {
+        if (
+          (1 & t &&
+            (e.TgZ(0, 'div', 22), e.YNc(1, P, 2, 0, 'p', 19), e.YNc(2, k, 2, 0, 'p', 19), e.qZA()),
+          2 & t)
+        ) {
+          const n = e.oxw();
+          let i, r;
+          e.xp6(1),
+            e.Q6J(
+              'ngIf',
+              null == (i = n.registerForm.get('phone')) ? null : i.getError('required')
+            ),
+            e.xp6(1),
+            e.Q6J('ngIf', null == (r = n.registerForm.get('phone')) ? null : r.getError('pattern'));
+        }
+      }
+      function Y(t, s) {
+        1 & t && (e.TgZ(0, 'span'), e._UZ(1, 'i', 25), e.qZA());
+      }
+      function O(t, s) {
+        if ((1 & t && (e.TgZ(0, 'p', 26), e._uU(1), e.qZA()), 2 & t)) {
+          const n = e.oxw();
+          e.xp6(1), e.Oqu(n.successMsg);
+        }
+      }
+      function L(t, s) {
+        if ((1 & t && (e.TgZ(0, 'p', 27), e._uU(1), e.qZA()), 2 & t)) {
+          const n = e.oxw();
+          e.xp6(1), e.Oqu(n.errMsg);
+        }
+      }
+      let y = (() => {
+        class t {
+          constructor(n, i) {
+            (this._AuthService = n),
+              (this._Router = i),
+              (this.errMsg = ''),
+              (this.successMsg = ''),
+              (this.isLoading = !1),
+              (this.registerForm = new o.cw({
+                firstName: new o.NI('', [
+                  o.kI.required,
+                  o.kI.minLength(2),
+                  o.kI.maxLength(50),
+                  o.kI.pattern('.*\\S.*[a-zA-Z0-9 ]'),
+                ]),
+                lastName: new o.NI('', [
+                  o.kI.required,
+                  o.kI.minLength(2),
+                  o.kI.maxLength(50),
+                  o.kI.pattern('.*\\S.*[a-zA-Z0-9 ]'),
+                ]),
+                phone: new o.NI('', [o.kI.required, o.kI.pattern(/^01[0125][0-9]{8}$/)]),
+                password: new o.NI(
+                  '',
+                  o.kI.compose([
+                    o.kI.required,
+                    o.kI.pattern(/\d/),
+                    o.kI.pattern(/[a-z]/),
+                    o.kI.pattern(/[A-Z]/),
+                    o.kI.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>\/?]/),
+                    o.kI.minLength(8),
+                  ])
+                ),
+                email: new o.NI('', [o.kI.required, o.kI.email]),
+              }));
+          }
+          togglePW() {
+            this.showPW = !this.showPW;
+          }
+          handleForm(n) {
+            this.isLoading = !0;
+            const i = this.registerForm.value;
+            !0 === this.registerForm.valid &&
+              (console.log(i),
+              this._AuthService.register(i).subscribe({
+                next: r => {
+                  1 == r.success &&
+                    ((this.successMsg = 'Registration successfuly'),
+                    (this.isLoading = !1),
+                    this._Router.navigate(['/login']));
+                },
+                error: r => {
+                  (this.errMsg = r.error.message), (this.isLoading = !1);
+                },
+              }));
+          }
+          textTimer(n) {
+            setTimeout(() => {}, 3e3);
+          }
+          static #e = (this.ɵfac = function (i) {
+            return new (i || t)(e.Y36(f.e), e.Y36(d.F0));
+          });
+          static #t = (this.ɵcmp = e.Xpm({
+            type: t,
+            selectors: [['app-register']],
+            standalone: !0,
+            features: [e.jDz],
+            decls: 37,
+            vars: 13,
+            consts: [
+              [1, 'w-25', 'mx-auto', 'shadow', 'rounded', 'p-4', 'my-1', 'bg-main-ligh'],
+              [1, 'my-3'],
+              [1, 'form', 3, 'formGroup', 'ngSubmit'],
+              [1, 'form-item'],
+              ['for', 'firstName'],
+              [
+                'type',
+                'text',
+                'formControlName',
+                'firstName',
+                'id',
+                'firstName',
+                1,
+                'form-control',
+              ],
+              ['class', 'alert text-danger', 4, 'ngIf'],
+              ['for', 'lastName'],
+              ['type', 'text', 'formControlName', 'lastName', 'id', 'lastName', 1, 'form-control'],
+              ['for', 'password'],
+              [1, 'password-input'],
+              ['formControlName', 'password', 'id', 'password', 1, 'form-control', 3, 'type'],
+              ['class', 'fa-regular fa-eye', 3, 'click', 4, 'ngIf'],
+              ['class', 'far fa-eye-slash', 3, 'click', 4, 'ngIf'],
+              ['for', 'email'],
+              ['type', 'email', 'formControlName', 'email', 'id', 'email', 1, 'form-control'],
+              ['for', 'phone'],
+              ['type', 'text', 'formControlName', 'phone', 'id', 'phone', 1, 'form-control'],
+              ['type', 'submit', 1, 'submit', 'mt-3', 3, 'disabled'],
+              [4, 'ngIf'],
+              ['class', 'alert text-green mx-auto', 4, 'ngIf'],
+              ['class', 'alert text-danger mx-auto', 4, 'ngIf'],
+              [1, 'alert', 'text-danger'],
+              [1, 'fa-regular', 'fa-eye', 3, 'click'],
+              [1, 'far', 'fa-eye-slash', 3, 'click'],
+              [1, 'fa-spin', 'fas', 'fa-spinner'],
+              [1, 'alert', 'text-green', 'mx-auto'],
+              [1, 'alert', 'text-danger', 'mx-auto'],
+            ],
+            template: function (i, r) {
+              if (
+                (1 & i &&
+                  (e.TgZ(0, 'section', 0)(1, 'h1', 1),
+                  e._uU(2, 'Register Now'),
+                  e.qZA(),
+                  e.TgZ(3, 'form', 2),
+                  e.NdJ('ngSubmit', function () {
+                    return r.handleForm(r.registerForm);
+                  }),
+                  e.TgZ(4, 'div', 3)(5, 'label', 4),
+                  e._uU(6, 'First Name'),
+                  e.qZA(),
+                  e._UZ(7, 'input', 5),
+                  e.YNc(8, T, 4, 3, 'div', 6),
+                  e.qZA(),
+                  e.TgZ(9, 'div', 3)(10, 'label', 7),
+                  e._uU(11, 'Last Name'),
+                  e.qZA(),
+                  e._UZ(12, 'input', 8),
+                  e.YNc(13, v, 4, 3, 'div', 6),
+                  e.qZA(),
+                  e.TgZ(14, 'div', 3)(15, 'label', 9),
+                  e._uU(16, 'Password'),
+                  e.qZA(),
+                  e.TgZ(17, 'div', 10),
+                  e._UZ(18, 'input', 11),
+                  e.YNc(19, q, 1, 0, 'i', 12),
+                  e.YNc(20, A, 1, 0, 'i', 13),
+                  e.qZA(),
+                  e.YNc(21, U, 5, 4, 'div', 6),
+                  e.qZA(),
+                  e.TgZ(22, 'div', 3)(23, 'label', 14),
+                  e._uU(24, 'Email'),
+                  e.qZA(),
+                  e._UZ(25, 'input', 15),
+                  e.YNc(26, J, 3, 2, 'div', 6),
+                  e.qZA(),
+                  e.TgZ(27, 'div', 3)(28, 'label', 16),
+                  e._uU(29, 'Phone'),
+                  e.qZA(),
+                  e._UZ(30, 'input', 17),
+                  e.YNc(31, Q, 3, 2, 'div', 6),
+                  e.qZA(),
+                  e.TgZ(32, 'button', 18),
+                  e._uU(33, 'Register '),
+                  e.YNc(34, Y, 2, 0, 'span', 19),
+                  e.qZA(),
+                  e.YNc(35, O, 2, 1, 'p', 20),
+                  e.YNc(36, L, 2, 1, 'p', 21),
+                  e.qZA()()),
+                2 & i)
+              ) {
+                let l, a, p, _, m;
+                e.xp6(3),
+                  e.Q6J('formGroup', r.registerForm),
+                  e.xp6(5),
+                  e.Q6J(
+                    'ngIf',
+                    null != (null == (l = r.registerForm.get('firstName')) ? null : l.errors) &&
+                      (null == (l = r.registerForm.get('firstName')) ? null : l.touched)
+                  ),
+                  e.xp6(5),
+                  e.Q6J(
+                    'ngIf',
+                    (null == (a = r.registerForm.get('lastName')) ? null : a.errors) &&
+                      (null == (a = r.registerForm.get('lastName')) ? null : a.touched)
+                  ),
+                  e.xp6(5),
+                  e.Q6J('type', r.showPW ? 'text' : 'password'),
+                  e.xp6(1),
+                  e.Q6J('ngIf', !r.showPW),
+                  e.xp6(1),
+                  e.Q6J('ngIf', r.showPW),
+                  e.xp6(1),
+                  e.Q6J(
+                    'ngIf',
+                    (null == (p = r.registerForm.get('password')) ? null : p.errors) &&
+                      (null == (p = r.registerForm.get('password')) ? null : p.touched)
+                  ),
+                  e.xp6(5),
+                  e.Q6J(
+                    'ngIf',
+                    (null == (_ = r.registerForm.get('email')) ? null : _.errors) &&
+                      (null == (_ = r.registerForm.get('email')) ? null : _.touched)
+                  ),
+                  e.xp6(5),
+                  e.Q6J(
+                    'ngIf',
+                    (null == (m = r.registerForm.get('phone')) ? null : m.errors) &&
+                      (null == (m = r.registerForm.get('phone')) ? null : m.touched)
+                  ),
+                  e.xp6(1),
+                  e.Q6J('disabled', r.registerForm.invalid),
+                  e.xp6(2),
+                  e.Q6J('ngIf', r.isLoading),
+                  e.xp6(1),
+                  e.Q6J('ngIf', r.successMsg),
+                  e.xp6(1),
+                  e.Q6J('ngIf', r.errMsg);
+              }
+            },
+            dependencies: [c.ez, c.O5, o.UX, o._Y, o.Fj, o.JJ, o.JL, o.sg, o.u],
+            styles: [
+              'section[_ngcontent-%COMP%]{background-color:#fff;color:#016373}section[_ngcontent-%COMP%]   p[_ngcontent-%COMP%]{margin-bottom:0}.form-item[_ngcontent-%COMP%]{margin-top:20px;margin-bottom:20px}.form-item[_ngcontent-%COMP%]   label[_ngcontent-%COMP%]{color:#016373}.password-input[_ngcontent-%COMP%]{position:relative;margin-bottom:20px}.password-input[_ngcontent-%COMP%]   i[_ngcontent-%COMP%]{position:absolute;top:30%;right:2%;color:#ccc}.submit[_ngcontent-%COMP%]:disabled{cursor:text;background-color:#ccc}.submit[_ngcontent-%COMP%]{background-color:#016373;color:#fff;border-radius:5px;font-weight:700;padding:10px 50px;cursor:pointer}.submit[_ngcontent-%COMP%]:active{background-color:#fbb935;transition-duration:2ms}',
+            ],
+          }));
+        }
+        return t;
+      })();
+    },
+  },
+]);

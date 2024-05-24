@@ -1,12 +1,14 @@
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
-  baseURL: string = 'https://resala-app.onrender.com/';
+  // baseurl = https://resala-app.onrender.com/
+
+  baseURL: string = `http://ec2-13-60-47-151.eu-north-1.compute.amazonaws.com/`;
   constructor(private _HTTPClient: HttpClient) {}
 
   getCategories(): Observable<any> {
