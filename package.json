@@ -41,7 +41,6 @@
     "typescript": "^5.3.3"
   },
   "engines": {
-    "strict": "true",
     "node": ">=18.0.0",
     "yarn": ">=1.22.00",
     "npm": "use yarn instead"
