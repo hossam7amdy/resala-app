@@ -2,37 +2,39 @@ name: CI
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'staging', 'develop']
   pull_request:
-    branches: ['main']
+    branches: ['main', 'staging', 'develop']
   workflow_dispatch:
+
+env:
+  PORT: 5000
+  NODE_ENV: test
+  APP_URL: http://localhost:5000
+  JWT_SECRET: jwt_secret
+  JWT_REFRESH: jwt_refresh
+  JWT_RESET: jwt_reset
+  JWT_VERIFY: jwt_verify
+  DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+  MAIL_USER: user@mail.com
+  MAIL_PASS: password
+  TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  TWILIO_AUTH_TOKEN: your_auth_token
+  TWILIO_PHONE_NUMBER: +1234567890
+  PAYMOB_INTEGRATION_ID: 123456
+  PAYMOB_API_URL: https://accept.paymob.com/api
+  PAYMOB_HMAC_KEY: your_hmac_key
+  PAYMOB_API_TOKEN: your_api_token
+  S3_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: minio_key
+  AWS_SECRET_ACCESS_KEY: minio_secret
+  S3_BUCKET: resala-app
+  S3_ENDPOINT: http://localhost:9000
+  S3_BASE_URL: http://localhost:9000/resala-app
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      PORT: 5000
-      APP_URL: http://localhost:5000
-      JWT_SECRET: jwt_secret
-      JWT_REFRESH: jwt_refresh
-      JWT_RESET: jwt_reset
-      JWT_VERIFY: jwt_verify
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
-      MAIL_USER: user@mail.com
-      MAIL_PASS: password
-      TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      TWILIO_AUTH_TOKEN: your_auth_token
-      TWILIO_PHONE_NUMBER: +1234567890
-      PAYMOB_INTEGRATION_ID: 123456
-      PAYMOB_API_URL: https://accept.paymob.com/api
-      PAYMOB_HMAC_KEY: your_hmac_key
-      PAYMOB_API_TOKEN: your_api_token
-      S3_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: minio_key
-      AWS_SECRET_ACCESS_KEY: minio_secret
-      S3_BUCKET: resala-app
-      S3_ENDPOINT: http://localhost:9000
-      S3_BASE_URL: http://localhost:9000/resala-app
 
     steps:
       - name: Checkout repository
@@ -46,34 +48,28 @@ jobs:
       - name: yarn install and build
         run: |
           yarn --frozen-lockfile
-          yarn run build
+          yarn build
 
   test:
     runs-on: ubuntu-latest
-    env:
-      PORT: 5000
-      NODE_ENV: development
-      APP_URL: http://localhost:5000
-      JWT_SECRET: jwt_secret
-      JWT_REFRESH: jwt_refresh
-      JWT_RESET: jwt_reset
-      JWT_VERIFY: jwt_verify
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
-      MAIL_USER: user@mail.com
-      MAIL_PASS: password
-      TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      TWILIO_AUTH_TOKEN: your_auth_token
-      TWILIO_PHONE_NUMBER: +1234567890
-      PAYMOB_INTEGRATION_ID: 123456
-      PAYMOB_API_URL: https://accept.paymob.com/api
-      PAYMOB_HMAC_KEY: your_hmac_key
-      PAYMOB_API_TOKEN: your_api_token
-      S3_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: minio_key
-      AWS_SECRET_ACCESS_KEY: minio_secret
-      S3_BUCKET: resala-app
-      S3_ENDPOINT: http://localhost:9000
-      S3_BASE_URL: http://localhost:9000/resala-app
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
     steps:
       - name: Checkout repository
@@ -87,7 +83,7 @@ jobs:
       - name: yarn install and test
         run: |
           yarn --frozen-lockfile
-          yarn run test
+          yarn test
 
   lint:
     runs-on: ubuntu-latest
@@ -103,4 +99,4 @@ jobs:
       - name: yarn install and lint
         run: |
           yarn --frozen-lockfile
-          yarn run format
+          yarn format
