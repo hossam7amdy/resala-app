@@ -39,7 +39,7 @@
     "@angular-devkit/core" "16.2.14"
     rxjs "7.8.1"
 
-"@angular-devkit/build-angular@^16.2.13":
+"@angular-devkit/build-angular@^16.0.6":
   version "16.2.14"
   resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-16.2.14.tgz#0c4e41aa3f67e52b474b2fabeb027aebf6e76566"
   integrity sha512-bXQ6i7QPhwmYHuh+DSNkBhjTIHQF0C6fqZEg2ApJA3NmnzE98oQnmJ9AnGnAkdf1Mjn3xi2gxoZWPDDxGEINMw==
@@ -8613,6 +8613,13 @@ ngx-owl-carousel-o@^16.0.0:
   dependencies:
     tslib "^2.3.0"
 
+ngx-spinner@^16.0.2:
+  version "16.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-spinner/-/ngx-spinner-16.0.2.tgz#07fb97a4bfc21ea10a7d52dcbd848cb055058c0f"
+  integrity sha512-MZpOHb3dvSqD6xiEdR+EtOfPY2r1kfA7t5Hv5IVwi7gkbTwVgnqxDWdOYJ/HW1pSZ5iEGhqlJqWg6CysLmNfHQ==
+  dependencies:
+    tslib "^2.3.0"
+
 nice-napi@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/nice-napi/-/nice-napi-1.0.2.tgz#dc0ab5a1eac20ce548802fc5686eaa6bc654927b"
@@ -11276,6 +11283,11 @@ typescript@^5, typescript@^5.3.3:
   version "5.4.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.5.tgz#42ccef2c571fdbd0f6718b1d1f5e6e5ef006f611"
   integrity sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==
+
+typescript@~5.0.2:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 ua-parser-js@^0.7.30:
   version "0.7.37"

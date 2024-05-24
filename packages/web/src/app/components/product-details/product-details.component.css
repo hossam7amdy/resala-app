@@ -1,0 +1,187 @@
+.product-details {
+  margin-top: 100px;
+}
+
+.img-product img {
+  width: 100%;
+}
+
+.main-img {
+  padding: 10px 120px;
+}
+
+.main-img > img {
+  margin-bottom: 24px;
+}
+
+.price {
+  /* padding:10px; */
+  font-size: 20px;
+}
+
+.p {
+  font-size: 20px;
+}
+
+/********************************/
+
+.porduct img {
+  background-size: cover;
+}
+
+.img-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.img-content .w-100 {
+  height: 300px !important;
+}
+
+/* NGXowl carowsel all cat*/
+::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+::ng-deep .owl-theme .owl-nav [class*='owl-'] {
+  color: #fff;
+  font-size: 14px;
+  margin: 5px;
+  padding: 9px 12px;
+  background: #016373;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 0px;
+  font-weight: bold;
+}
+
+/********************************/
+.sub-text {
+  font-size: 11px;
+  color: #666;
+  display: block;
+  padding: 10px;
+  background-color: #efefef;
+}
+
+.btn-group {
+  display: block;
+}
+
+.color {
+  margin: 20px 0;
+}
+
+.color-btn {
+  display: inline-flex;
+  margin: 3px 5px;
+  padding: 10px;
+  border: 1px soild #999;
+  border-radius: 0;
+  color: #016373;
+  font-size: 14px;
+}
+
+/* .white {
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+
+.black {
+  background-color: #000;
+  border: 1px solid #000;
+  color: #fff;
+}
+
+.orange {
+  background-color: orange;
+  border: 1px solid orange;
+  color: #fff;
+} */
+
+.btn-check:checked + .btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check) + .btn:active,
+.btn-check + .btn:hover {
+  color: #fff;
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  border-radius: 0;
+}
+
+.size {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.size .btn-not-active {
+  background-color: #eee;
+  border: 1px solid #999;
+  padding: 5px;
+  border-radius: 0;
+  outline: none;
+  color: #999;
+}
+
+.size .active {
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  padding: 5px;
+  border-radius: 0;
+  outline: none;
+  color: #fff;
+}
+
+.quantity {
+  border: 1px solid #ccc;
+  margin: 10px 0 20px;
+  width: 134px;
+}
+
+.counter {
+  padding: 5px 10px;
+}
+
+.counter .min-counter-btn,
+.counter .plus-counter-btn {
+  background-color: #fff;
+  border: none;
+  border-radius: 0;
+
+  color: #016373;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.counter .counter-text {
+  background-color: #fff;
+  color: #016373;
+  text-align: center;
+  padding-left: 21%;
+  width: 50%;
+}
+
+.add-cart-btn button {
+  padding: 10px 0;
+  color: #fff;
+  font-weight: 500;
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  transition: all 0.3s ease-in-out;
+}
+
+.add-cart-btn button:hover,
+.add-cart-btn button:active {
+  padding: 10px 0;
+  color: #016373;
+  font-weight: 500;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}

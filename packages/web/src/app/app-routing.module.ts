@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import type { Routes } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 // import { HomeComponent } from './components/home/home.component';
 // import { ProductsComponent } from './components/products/products.component';
@@ -51,6 +50,15 @@ const routes: Routes = [
         loadComponent: () =>
           import('./components/favorites/favorites.component').then(m => m.FavoritesComponent),
         title: 'Favorites',
+      },
+
+      {
+        path: 'product-details/:product-id',
+        loadComponent: () =>
+          import('./components/product-details/product-details.component').then(
+            m => m.ProductDetailsComponent
+          ),
+        title: 'Product',
       },
     ],
   },
