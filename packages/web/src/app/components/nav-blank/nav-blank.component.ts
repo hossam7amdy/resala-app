@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import type { Router } from '@angular/router';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import type { AuthService } from 'src/app/core/services/auth.service';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-nav-blank',
@@ -18,8 +17,14 @@ export class NavBlankComponent {
   ) {}
   signOut: boolean = this._AuthService.signOut;
 
+  //attributes
+  onClick: boolean = true;
   removeTokenSignOut(): void {
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
+  }
+
+  closeOverlay() {
+    this.onClick = false;
   }
 }

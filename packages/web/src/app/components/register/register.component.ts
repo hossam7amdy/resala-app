@@ -7,8 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import type { Router } from '@angular/router';
-import type { AuthService } from 'src/app/core/services/auth.service';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +22,13 @@ export class RegisterComponent {
     private _AuthService: AuthService,
     private _Router: Router
   ) {}
+
+  //show password
+  showPW: any;
+  togglePW() {
+    this.showPW = !this.showPW;
+  }
+
   errMsg: string = '';
   successMsg: string = '';
   isLoading: boolean = false;
@@ -50,6 +57,8 @@ export class RegisterComponent {
 
     // ]),
 
+    phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
+
     password: new FormControl(
       '',
       Validators.compose([
@@ -71,6 +80,7 @@ export class RegisterComponent {
     const userData = this.registerForm.value;
 
     if (this.registerForm.valid === true) {
+      console.log(userData);
       this._AuthService.register(userData).subscribe({
         next: response => {
           if (response.success == true) {

@@ -7,4 +7,4 @@ build
 .next
 
 # Angular Cache Busting
-web/.angular
+.angular

@@ -1,0 +1,50 @@
+'use strict';
+(self.webpackChunkfreshcart = self.webpackChunkfreshcart || []).push([
+  [510],
+  {
+    9510: (d, a, e) => {
+      e.r(a), e.d(a, { ProductsComponent: () => n });
+      var r = e(6814),
+        t = e(4769);
+      let n = (() => {
+        class s {
+          static #t = (this.ɵfac = function (c) {
+            return new (c || s)();
+          });
+          static #e = (this.ɵcmp = t.Xpm({
+            type: s,
+            selectors: [['app-products']],
+            standalone: !0,
+            features: [t.jDz],
+            decls: 9,
+            vars: 0,
+            consts: [
+              [1, 'card', 'bg-dark', 'text-white'],
+              ['src', '../../../assets/products/5.jpg', 'alt', 'Title', 1, 'card-img'],
+              [1, 'card-img-overlay'],
+              [1, 'card-title'],
+              [1, 'card-text'],
+            ],
+            template: function (c, u) {
+              1 & c &&
+                (t.TgZ(0, 'p'),
+                t._uU(1, 'products works!'),
+                t.qZA(),
+                t.TgZ(2, 'div', 0),
+                t._UZ(3, 'img', 1),
+                t.TgZ(4, 'div', 2)(5, 'h4', 3),
+                t._uU(6, 'Title'),
+                t.qZA(),
+                t.TgZ(7, 'p', 4),
+                t._uU(8, 'Text'),
+                t.qZA()()());
+            },
+            dependencies: [r.ez],
+            styles: ['p[_ngcontent-%COMP%]{margin-top:40px}'],
+          }));
+        }
+        return s;
+      })();
+    },
+  },
+]);
