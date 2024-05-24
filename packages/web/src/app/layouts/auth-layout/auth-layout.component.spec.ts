@@ -1,5 +1,4 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthLayoutComponent } from './auth-layout.component';
 
@@ -9,7 +8,7 @@ describe('AuthLayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AuthLayoutComponent],
+      imports: [AuthLayoutComponent]
     });
     fixture = TestBed.createComponent(AuthLayoutComponent);
     component = fixture.componentInstance;

@@ -1,5 +1,4 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BlankLayoutComponent } from './blank-layout.component';
 
@@ -9,7 +8,7 @@ describe('BlankLayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [BlankLayoutComponent],
+      imports: [BlankLayoutComponent]
     });
     fixture = TestBed.createComponent(BlankLayoutComponent);
     component = fixture.componentInstance;

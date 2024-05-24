@@ -1,18 +1,31 @@
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeProductsService {
-  constructor(private _HttpClient: HttpClient) {}
+  constructor(private _HttpClient: HttpClient) { }
 
-  baseURL: string = 'https://resala-app.onrender.com/';
+  baseURL: string = `http://ec2-13-60-47-151.eu-north-1.compute.amazonaws.com/`;
+  //base url = 
+
+  // Products
 
   getProducts(): Observable<any> {
     return this._HttpClient.get(
-      this.baseURL + 'api/v1/products?page=1&limit=10&query=&deleted=true'
+      this.baseURL + 'api/v1/products?page=1&limit=10&query='
     );
+  }
+
+  //Product Details
+
+  getProductDetails(id: string | null): Observable<any> {
+    return this._HttpClient.get(this.baseURL + `api/v1/products/${id}`);
+  }
+
+  getProductStock(id: string | null): Observable<any> {
+    return this._HttpClient.get(this.baseURL + `api/v1/products/${id}/stocks`);
   }
 }

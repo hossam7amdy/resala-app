@@ -1,45 +1,53 @@
 :host {
-  margin-top: auto;
+    margin-top: auto;
 }
 
 .h1 {
-  color: #016373;
-  font-weight: bold;
+    color: #016373;
+    font-weight: bold;
 }
 
 footer {
-  padding: 40px 0;
-  background-color: #14adc6;
-  color: #fff;
+    padding: 40px 0;
+    background-color: #14adc6;
+    color: #fff;
+
 }
+
 .hover-title:hover,
 .hover-title:focus,
 .hover-title:active {
-  cursor: pointer;
-  color: #efefef;
+    cursor: pointer;
+    color: #efefef;
 }
+
 .title h5 {
-  font-weight: bold;
-  margin: 0;
+    font-weight: bold;
+    margin: 0;
 }
+
 .title p {
-  text-align: left;
-  padding: 0;
-  margin: 0;
+    text-align: left;
+    padding: 0;
+    margin: 0;
 }
 
 i {
-  color: #fff;
+    color: #fff;
 }
+
 .copy-right p {
-  font-size: 12px;
+
+    font-size: 12px;
 }
+
 p span {
-  font-weight: bold;
+    font-weight: bold;
 }
+
 nav a {
-  color: #fff;
-  cursor: pointer;
+    color: #fff;
+    cursor: pointer;
 }
 
 nav a:hover,
@@ -48,55 +56,60 @@ nav a:active,
 i:active,
 nav a:focus,
 i:focus {
-  color: #efefef;
+    color: #efefef;
+
 }
 
+
 .powerd {
-  background-color: #016373;
-  font-weight: 100;
-  padding: 5px 0;
+    background-color: #016373;
+    font-weight: 100;
+    padding: 5px 0;
 }
+
 .powerd p {
-  font-size: 10px;
-  font-weight: lighter;
+    font-size: 10px;
+    font-weight: lighter;
 }
+
 .powerd span {
-  color: #fbb935;
+    color: #fbb935;
 }
 
 /* Fixed buttons on scroll*/
 
 .btn-up {
-  position: fixed;
-  bottom: 40px;
-  right: 20px;
-  background-color: #fbb935;
-  color: #14adc6;
-  width: 40px;
-  height: 40px;
-  border-radius: 5px;
-  font-weight: bolder;
-  font-size: 30px;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+    background-color: #fbb935;
+    color: #14adc6;
+    width: 37px;
+    height: 37px;
+    border-radius: 5px;
+    font-weight: bolder;
+    font-size: 20px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .whats-icon {
-  position: fixed;
-  bottom: 90px;
-  right: 20px;
-  background-color: #1bd741;
-  color: #fff;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-weight: bolder;
-  font-size: 30px;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background-color: #1bd741;
+    color: #fff;
+    border: none;
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    font-weight: bolder;
+    font-size: 20px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
 }

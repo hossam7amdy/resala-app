@@ -1,5 +1,4 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotfoundComponent } from './notfound.component';
 
@@ -9,7 +8,7 @@ describe('NotfoundComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NotfoundComponent],
+      imports: [NotfoundComponent]
     });
     fixture = TestBed.createComponent(NotfoundComponent);
     component = fixture.componentInstance;
