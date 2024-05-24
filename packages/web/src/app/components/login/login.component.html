@@ -1,41 +1,57 @@
-<section class="w-75 mx-auto shadow rounded p-4 my-3 bg-main-ligh">
-  <h1 class="my-3">Login Now</h1>
-  <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
-    <div class="form-item">
-      <label for="password">Password</label>
-      <input type="password" formControlName="password" class="form-control" id="password" />
-      <div
-        *ngIf="loginForm.get('password')?.errors && loginForm.get('password')?.touched"
-        class="alert text-danger"
-      >
-        <p *ngIf="loginForm.get('password')?.getError('required')">Password is required</p>
 
-        <p *ngIf="loginForm.get('password')?.getError('pattern')">
-          Should be contain symbols & chars & numbers and Not less 8 chars
-        </p>
-        <p *ngIf="loginForm.get('password')?.getError('minLength()')">Should be 8 Chars at least</p>
-        <p *ngIf="loginForm.get('password')?.getError('maxLength()')">Should be 8 Chars sharp</p>
-      </div>
-    </div>
+<section class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
+    <h1 class="my-3">Login Now</h1>
+    <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
+       
 
-    <div class="form-item">
-      <label for="email">Email</label>
-      <input type="email" formControlName="sign" class="form-control" id="email" />
-      <div
-        *ngIf="loginForm.get('sign')?.errors && loginForm.get('sign')?.touched"
-        class="alert text-danger"
-      >
-        <p *ngIf="loginForm.get('sign')?.getError('required')">Email is required</p>
-        <p *ngIf="loginForm.get('sign')?.getError('email')">This Not matching as Email</p>
-      </div>
-    </div>
+        <div class="form-item">
+            <label for="email">Email / Phone</label>
+            
+                <input type="text" formControlName="sign" class="form-control" id="email" placeholder="Email or Phone">
+                
+            
+            <div *ngIf="loginForm.get('sign')?.errors&& loginForm.get('sign')?.touched" class="alert text-danger">
+                <p *ngIf="loginForm.get('sign')?.getError('required')">Email is required</p>
+                <!-- <p *ngIf="loginForm.get('sign')?.getError('email')">This Not matching as Email</p> -->
+                <p *ngIf="loginForm.get('sign')?.getError('pattern')">This Not matching as mobile number</p>
+                
+            </div>
+        </div>
 
-    <button [disabled]="loginForm.invalid" type="submit" class="submit mt-3">
-      Login
-      <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
-    </button>
 
-    <p *ngIf="successMsg" class="alert text-green mx-auto">{{ successMsg }}</p>
-    <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
-  </form>
+        <div class="form-item">
+            <label for="password">Password</label>
+            <div class="password-input">
+                <input [type]="showPW?'text':'password'" formControlName="password" placeholder="Password" class="form-control" id="password">
+                <i class="fa-regular fa-eye" *ngIf="!showPW" (click) ='togglePW()'></i>
+                <i class="far fa-eye-slash" *ngIf="showPW" (click) ='togglePW()'></i>
+
+            </div>
+            <div *ngIf="loginForm.get('password')?.errors&& loginForm.get('password')?.touched" class="alert text-danger">
+                <p *ngIf="loginForm.get('password')?.getError('required')">Password is required</p>
+                
+                <p *ngIf="loginForm.get('password')?.getError('pattern')">Should be contain symbols &  chars & numbers and Not less 8 chars</p>
+                <p *ngIf="loginForm.get('password')?.getError('minLength()')">Should be 8 Chars at least</p>
+                <p *ngIf="loginForm.get('password')?.getError('maxLength()')">Should be 8 Chars sharp</p>
+            
+            </div>
+        
+        </div>
+
+        <div class="forget">
+            <p>Forget Password</p>
+        </div>
+
+        
+        
+
+        <button [disabled]="loginForm.invalid"  type="submit"  class="submit mt-3" >Login 
+            <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
+        </button>
+        
+        <p *ngIf="successMsg" class="alert text-green mx-auto">{{successMsg}}</p>
+        <p *ngIf="errMsg" class="alert text-danger mx-auto">{{errMsg}}</p>
+                
+    </form>
+
 </section>

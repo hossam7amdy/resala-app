@@ -1,5 +1,4 @@
-import type { ComponentFixture } from '@angular/core/testing';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NavBlankComponent } from './nav-blank.component';
 
@@ -9,7 +8,7 @@ describe('NavBlankComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NavBlankComponent],
+      imports: [NavBlankComponent]
     });
     fixture = TestBed.createComponent(NavBlankComponent);
     component = fixture.componentInstance;
