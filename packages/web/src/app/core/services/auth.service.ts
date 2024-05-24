@@ -1,7 +1,7 @@
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,8 @@ export class AuthService {
 
   signOut: boolean = false;
   userInfo: any;
-  baseURL: string = 'https://resala-app.onrender.com/';
+  baseURL: string = `http://ec2-13-60-47-151.eu-north-1.compute.amazonaws.com/`;
+  //baseurl = https://resala-app.onrender.com/
 
   register(userData: object): Observable<any> {
     return this._HttpClient.post(this.baseURL + 'api/v1/auth/register', userData);

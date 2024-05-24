@@ -2,6 +2,40 @@ section {
   background-color: #fff;
   color: #016373;
 }
+section p {
+  margin-bottom: 0;
+}
+.form-item {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.form-item label {
+  color: #016373;
+}
+.password-input {
+  position: relative;
+  margin-bottom: 20px;
+}
+.password-input i {
+  position: absolute;
+  top: 30%;
+  right: 2%;
+  color: #ccc;
+}
+
+.forget {
+  text-align: right;
+  margin-top: 20px;
+}
+.forget p {
+  display: inline;
+  cursor: pointer;
+  color: #016373;
+}
+.forget p:hover {
+  text-decoration: solid;
+  color: #016473a1;
+}
 .submit:disabled {
   cursor: text;
   background-color: #ccc;

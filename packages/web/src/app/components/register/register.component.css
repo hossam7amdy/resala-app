@@ -2,6 +2,27 @@ section {
   background-color: #fff;
   color: #016373;
 }
+section p {
+  margin-bottom: 0;
+}
+.form-item {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.form-item label {
+  color: #016373;
+}
+.password-input {
+  position: relative;
+  margin-bottom: 20px;
+}
+.password-input i {
+  position: absolute;
+  top: 30%;
+  right: 2%;
+  color: #ccc;
+}
+
 .submit:disabled {
   cursor: text;
   background-color: #ccc;
