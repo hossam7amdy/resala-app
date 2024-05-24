@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
-import { ProductDetails } from 'src/app/core/interfaces/product-details';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ProductDetails } from 'src/app/core/interfaces/product-details';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
 
 @Component({
   selector: 'app-product-details',
@@ -21,7 +20,7 @@ export class ProductDetailsComponent implements OnInit {
     private _ActivatedRoute: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
     private spinner: NgxSpinnerService
-  ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+  ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
 
@@ -41,14 +40,14 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.spinner.show();
     this._ActivatedRoute.paramMap.subscribe({
-      next: (params) => {
+      next: params => {
         this.productId = params.get('product-id');
         console.log('product id', this.productId);
       },
     });
 
     this._HomeProductsService.getProductDetails(this.productId).subscribe({
-      next: (respons) => {
+      next: respons => {
         //we can using destructing for data ({data}) insteade of (respons)
         console.log('productdetails', respons.data);
         this.productDetails = respons.data;
@@ -56,18 +55,17 @@ export class ProductDetailsComponent implements OnInit {
     });
 
     this._HomeProductsService.getProductDetails(this.productId).subscribe({
-      next: (respons) => {
+      next: respons => {
         //we can using destructing for data ({data}) insteade of (respons)
         console.log('productdetails', respons.data.images);
         this.productImages = respons.data.images;
-
       },
     });
 
     this._HomeProductsService.getProductStock(this.productId).subscribe({
       complete: () => {
         this._HomeProductsService.getProductStock(this.productId).subscribe({
-          next: (response) => {
+          next: response => {
             this.productStock = response.data;
             console.log(this.productStock);
             this.spinner.hide();
@@ -75,8 +73,6 @@ export class ProductDetailsComponent implements OnInit {
         });
       },
     });
-
-
   }
 
   // owl carusal  navText: ['<<', '>>'],
@@ -103,20 +99,20 @@ export class ProductDetailsComponent implements OnInit {
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
       0: {
-        items: 1
+        items: 1,
       },
       400: {
-        items: 2
+        items: 2,
       },
       740: {
-        items: 3
+        items: 3,
       },
       940: {
-        items: 4
-      }
+        items: 4,
+      },
     },
-    nav: true
-  }
+    nav: true,
+  };
 
   onColorChange(event: string) {
     this.selectedColor = event;

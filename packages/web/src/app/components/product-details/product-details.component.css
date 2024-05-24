@@ -10,7 +10,7 @@
   padding: 10px 120px;
 }
 
-.main-img>img {
+.main-img > img {
   margin-bottom: 24px;
 }
 
@@ -27,9 +27,7 @@
 
 .porduct img {
   background-size: cover;
-
 }
-
 
 .img-content {
   position: relative;
@@ -43,15 +41,15 @@
 }
 
 /* NGXowl carowsel all cat*/
-::ng-deep .owl-theme .owl-nav [class*=owl-]:hover {
+::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
   background: #000;
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
   font-weight: bold;
 }
 
-::ng-deep .owl-theme .owl-nav [class*=owl-] {
-  color: #FFF;
+::ng-deep .owl-theme .owl-nav [class*='owl-'] {
+  color: #fff;
   font-size: 14px;
   margin: 5px;
   padding: 9px 12px;
@@ -106,12 +104,12 @@
   color: #fff;
 } */
 
-.btn-check:checked+.btn,
+.btn-check:checked + .btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check)+.btn:active,
-.btn-check+.btn:hover {
+:not(.btn-check) + .btn:active,
+.btn-check + .btn:hover {
   color: #fff;
   background-color: #fbb935;
   border: 1px solid #fbb935;
@@ -121,7 +119,6 @@
 .size {
   margin-top: 20px;
   margin-bottom: 20px;
-
 }
 
 .size .btn-not-active {

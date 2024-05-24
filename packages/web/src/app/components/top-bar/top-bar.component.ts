@@ -1,17 +1,15 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
-
 
 @Component({
   selector: 'app-top-bar',
   standalone: true,
   imports: [CommonModule, CarouselModule],
   templateUrl: './top-bar.component.html',
-  styleUrls: ['./top-bar.component.css']
+  styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent {
-
   // main slider
   topBarSlide: OwlOptions = {
     loop: true,
@@ -27,6 +25,6 @@ export class TopBarComponent {
     autoplayTimeout: 5000,
     autoplaySpeed: 3000,
 
-    autoplayHoverPause: true
-  }
+    autoplayHoverPause: true,
+  };
 }
