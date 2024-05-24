@@ -1,0 +1,31 @@
+'use strict';
+(self.webpackChunkfreshcart = self.webpackChunkfreshcart || []).push([
+  [937],
+  {
+    937: (u, n, t) => {
+      t.r(n), t.d(n, { CategoriesComponent: () => r });
+      var o = t(6814),
+        e = t(4769);
+      let r = (() => {
+        class s {
+          static #e = (this.ɵfac = function (a) {
+            return new (a || s)();
+          });
+          static #t = (this.ɵcmp = e.Xpm({
+            type: s,
+            selectors: [['app-categories']],
+            standalone: !0,
+            features: [e.jDz],
+            decls: 2,
+            vars: 0,
+            template: function (a, l) {
+              1 & a && (e.TgZ(0, 'p'), e._uU(1, 'categories works!'), e.qZA());
+            },
+            dependencies: [o.ez],
+          }));
+        }
+        return s;
+      })();
+    },
+  },
+]);

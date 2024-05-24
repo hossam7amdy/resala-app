@@ -12,16 +12,19 @@ footer {
   background-color: #14adc6;
   color: #fff;
 }
+
 .hover-title:hover,
 .hover-title:focus,
 .hover-title:active {
   cursor: pointer;
   color: #efefef;
 }
+
 .title h5 {
   font-weight: bold;
   margin: 0;
 }
+
 .title p {
   text-align: left;
   padding: 0;
@@ -31,12 +34,15 @@ footer {
 i {
   color: #fff;
 }
+
 .copy-right p {
   font-size: 12px;
 }
+
 p span {
   font-weight: bold;
 }
+
 nav a {
   color: #fff;
   cursor: pointer;
@@ -56,10 +62,12 @@ i:focus {
   font-weight: 100;
   padding: 5px 0;
 }
+
 .powerd p {
   font-size: 10px;
   font-weight: lighter;
 }
+
 .powerd span {
   color: #fbb935;
 }
@@ -72,16 +80,17 @@ i:focus {
   right: 20px;
   background-color: #fbb935;
   color: #14adc6;
-  width: 40px;
-  height: 40px;
+  width: 37px;
+  height: 37px;
   border-radius: 5px;
   font-weight: bolder;
-  font-size: 30px;
+  font-size: 20px;
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .whats-icon {
   position: fixed;
   bottom: 90px;
@@ -89,11 +98,11 @@ i:focus {
   background-color: #1bd741;
   color: #fff;
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 37px;
+  height: 37px;
   border-radius: 50%;
   font-weight: bolder;
-  font-size: 30px;
+  font-size: 20px;
   z-index: 99999;
   display: flex;
   align-items: center;
