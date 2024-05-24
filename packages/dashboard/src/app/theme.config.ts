@@ -11,6 +11,9 @@ const theme: ThemeConfig = {
     colorLink: primaryColor,
   },
   components: {
+    Button: {
+      primaryShadow: 'none',
+    },
     Layout: {
       siderBg: 'transparent',
     },
