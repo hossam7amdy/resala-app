@@ -11,9 +11,9 @@ import type { JwtObject } from '../../types/index.js';
  * @param options JWT sign options
  * @returns JWT token
  */
-export function signJwt(obj: JwtObject, secret: string, options?: SignOptions): string {
+export const signJwt = (obj: JwtObject, secret: string, options?: SignOptions): string => {
   return jwt.sign(obj, secret, options);
-}
+};
 
 /**
  * Verify JWT token. Throws one of VerifyErrors on bad tokens
@@ -23,6 +23,6 @@ export function signJwt(obj: JwtObject, secret: string, options?: SignOptions): 
  * @returns Decoded JWT object
  * @throws { VerifyErrors } If token is expired
  */
-export function verifyJwt(token: string, secret: string): JwtObject {
+export const verifyJwt = (token: string, secret: string): JwtObject => {
   return jwt.verify(token, secret) as JwtObject;
-}
+};
