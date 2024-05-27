@@ -10,7 +10,7 @@
   padding: 10px 120px;
 }
 
-.main-img>img {
+.main-img > img {
   margin-bottom: 24px;
 }
 
@@ -27,9 +27,7 @@
 
 .porduct img {
   background-size: cover;
-
 }
-
 
 .img-content {
   position: relative;
@@ -44,15 +42,15 @@
 }
 
 /* NGXowl carowsel all cat*/
-::ng-deep .owl-theme .owl-nav [class*=owl-]:hover {
+::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
   background: #000;
-  color: #FFF;
+  color: #fff;
   text-decoration: none;
   font-weight: bold;
 }
 
-::ng-deep .owl-theme .owl-nav [class*=owl-] {
-  color: #FFF;
+::ng-deep .owl-theme .owl-nav [class*='owl-'] {
+  color: #fff;
   font-size: 14px;
   margin: 5px;
   padding: 9px 12px;
@@ -122,7 +120,6 @@
 .size {
   margin-top: 20px;
   margin-bottom: 20px;
-
 }
 
 .size .btn-not-active {
@@ -190,7 +187,7 @@
   border: 1px solid #ccc;
 }
 
-.btn-check:checked+.btn {
+.btn-check:checked + .btn {
   border: 0;
 }
 

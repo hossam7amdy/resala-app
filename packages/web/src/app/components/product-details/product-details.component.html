@@ -6,25 +6,31 @@
           <ng-container *ngFor="let product of productImages">
             <ng-template carouselSlide>
               <div class="main-img">
-                <img [src]="product.imageUrl" class="w-100 image-products" [alt]="product.id" [title]="product.enName">
+                <img
+                  [src]="product.imageUrl"
+                  class="w-100 image-products"
+                  [alt]="product.id"
+                  [title]="product.enName"
+                />
               </div>
-
             </ng-template>
           </ng-container>
         </owl-carousel-o>
 
         <owl-carousel-o [options]="miniImgCarousel">
-
           <ng-container *ngFor="let product of productImages">
             <ng-template carouselSlide [id]="product.id">
               <div class="img-content">
-                <img [src]="product.imageUrl" class="w-100 image-products" [alt]="product.id" [title]="product.enName">
+                <img
+                  [src]="product.imageUrl"
+                  class="w-100 image-products"
+                  [alt]="product.id"
+                  [title]="product.enName"
+                />
               </div>
             </ng-template>
           </ng-container>
-
         </owl-carousel-o>
-
       </div>
       <div class="col-md-3">
         <h2 class="h2">{{ productDetails.enName }}</h2>
@@ -35,17 +41,21 @@
         <h3 class="h4">Color</h3>
         <div class="d-flex flex-wrap color-options-list">
           <ng-container *ngFor="let product of productStockColor">
-            <div [ngClass]="{ 'active' : (currentColor === product?.color?.id) }" class="color-option">
-              <input [(ngModel)]="selectedColor" type="radio" class="btn-check" name="color-option" id="btncolor"
-                [value]="selectedColor" />
+            <div [ngClass]="{ active: currentColor === product?.color?.id }" class="color-option">
+              <input
+                [(ngModel)]="selectedColor"
+                type="radio"
+                class="btn-check"
+                name="color-option"
+                id="btncolor"
+                [value]="selectedColor"
+              />
               <label (click)="[onColorChange(product)]" for="btncolor">
-                {{product.color.enName}}
+                {{ product.color.enName }}
               </label>
-
             </div>
           </ng-container>
         </div>
-
 
         <!-- <div class="row">
           <div *ngFor="let colors of productStock" class="btn-group color col-md-4" role="group"
@@ -65,11 +75,21 @@
         <h3 class="h4">Size</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock">
-            <div [ngClass]="{ 'active' : (currentSize === product?.size?.id) }" class="size-option">
-              <input [(ngModel)]="selectedSize" type="radio" class="btn-check" name="size-option" id="btnsize"
-                [value]="selectedSize" />
-              <label *ngIf="currentColor == product.colorId" (click)="onSizeChange(product)" for="btnsize">
-                {{product.size.name}}
+            <div [ngClass]="{ active: currentSize === product?.size?.id }" class="size-option">
+              <input
+                [(ngModel)]="selectedSize"
+                type="radio"
+                class="btn-check"
+                name="size-option"
+                id="btnsize"
+                [value]="selectedSize"
+              />
+              <label
+                *ngIf="currentColor == product.colorId"
+                (click)="onSizeChange(product)"
+                for="btnsize"
+              >
+                {{ product.size.name }}
               </label>
             </div>
           </ng-container>
@@ -96,27 +116,32 @@
         <h4 class="h4">Quantity</h4>
         <section class="quantity">
           <div class="counter">
-            <button class="min-counter-btn" (click)="minCounterQuantity()"> <i class="fa-solid fa-minus"></i> </button>
-            <input class="counter-text" type="number" [value]="counterQuantity" disabled min="1" data-min="1" />
-            <button class="plus-counter-btn" (click)="plusCounterQuantity()"><i class="fa-solid fa-plus"></i></button>
+            <button class="min-counter-btn" (click)="minCounterQuantity()">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <input
+              class="counter-text"
+              type="number"
+              [value]="counterQuantity"
+              disabled
+              min="1"
+              data-min="1"
+            />
+            <button class="plus-counter-btn" (click)="plusCounterQuantity()">
+              <i class="fa-solid fa-plus"></i>
+            </button>
           </div>
         </section>
 
-
         <div class="add-cart-btn">
-          <button (click)="addProduct('1' , '5')" class="w-100">ADD TO CART</button>
-          <label for="">product id : {{productDetails.id}}</label>
-
+          <button (click)="addProduct('1', '5')" class="w-100">ADD TO CART</button>
+          <label for="">product id : {{ productDetails.id }}</label>
         </div>
       </div>
     </div>
   </div>
-
-
-
 </section>
 
 <!-- start test  -->
-
 
 <!-- end test  -->

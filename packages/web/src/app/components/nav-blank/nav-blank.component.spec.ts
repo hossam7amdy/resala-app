@@ -8,7 +8,7 @@ describe('NavBlankComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NavBlankComponent]
+      imports: [NavBlankComponent],
     });
     fixture = TestBed.createComponent(NavBlankComponent);
     component = fixture.componentInstance;
