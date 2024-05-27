@@ -130,12 +130,16 @@ export const deleteProduct = async (id: number) => {
   }
 };
 
-export const addProductImages = async (productId: number, urls: string[]) => {
+export const addProductImages = async (
+  productId: number,
+  imagesInfo: { url: string; key: string }[]
+) => {
   try {
     return await prisma.productImage.createMany({
-      data: urls.map(url => ({
+      data: imagesInfo.map(image => ({
         productId,
-        imageUrl: url,
+        imageKey: image.key,
+        imageUrl: image.url,
       })),
     });
   } catch (error) {
