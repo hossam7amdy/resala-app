@@ -1,46 +1,32 @@
 import { v4 as uuid } from 'uuid';
 
-import type { IFileStorage } from '../interfaces/file-storage.js';
+import type { IFileStorage } from '../interfaces/IFileStorage.js';
 
 export default class FileService {
   constructor(private readonly fileStorage: IFileStorage) {}
 
-  async uploadFile(file: Express.Multer.File, directory: string = 'uploads') {
+  async uploadFile(file: Express.Multer.File, directory?: string) {
     const fileExtension = file.originalname.split('.').pop();
-    const key = `${directory}/${this._generateFileKey()}.${fileExtension}`;
+    const filename = `${uuid()}.${fileExtension}`;
+    const key = directory ? `${directory}/${filename}` : filename;
 
     const url = await this.fileStorage.uploadFile(file.buffer, key);
-
     return { key, url };
   }
 
   async uploadFiles(files: Express.Multer.File[], directory?: string) {
-    const urls: string[] = await Promise.all(
+    return Promise.all(
       files.map(async file => {
-        const { url } = await this.uploadFile(file, directory);
-        return url;
+        return await this.uploadFile(file, directory);
       })
     );
-
-    return urls;
   }
 
-  async deleteFile(url: string) {
-    // const key = this._keyFromUrl(url);
-    return await this.fileStorage.deleteFile(url);
+  async deleteFile(key: string) {
+    return await this.fileStorage.deleteFile(key);
   }
 
-  async deleteFiles(urls: string[]) {
-    // const keys = urls.map(url => this._keyFromUrl(url));
-    return await this.fileStorage.deleteFiles(urls);
+  async deleteFiles(keys: string[]) {
+    return await this.fileStorage.deleteFiles(keys);
   }
-
-  private _generateFileKey() {
-    return uuid();
-  }
-
-  // private _keyFromUrl(url: string) {
-  //   const urlParts = url.replace(`${this.baseUrl}/`, '');
-  //   return urlParts;
-  // }
 }
