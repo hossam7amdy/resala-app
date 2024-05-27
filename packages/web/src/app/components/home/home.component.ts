@@ -113,9 +113,9 @@ export class HomeComponent implements OnInit {
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,
-    dots: false,
+    dots: true,
     center: true,
-    margin: 20,
+    margin: 5,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
@@ -133,5 +133,6 @@ export class HomeComponent implements OnInit {
       },
     },
     nav: true,
+    autoWidth: false,
   };
 }

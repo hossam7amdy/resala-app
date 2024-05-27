@@ -6,14 +6,21 @@
   height: 35px;
   /* width: 99.1%; */
 }
+
 .promo {
   color: #fff;
 }
+
 .promo-text {
   color: #222;
   margin: 0;
   text-align: center;
 }
+
+.promo-text p {
+  font-size: 10px;
+}
+
 div {
   margin: 0;
 }
@@ -27,6 +34,7 @@ div {
   z-index: 99999;
   width: 20%;
 }
+
 .social-icon > i:hover {
   transition-duration: 0.4s;
   color: #fff;
@@ -44,11 +52,13 @@ button:not(:disabled) {
   width: fit-content;
   margin: 10px;
 }
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   width: 14px;
   color: #efefef;
 }
+
 .carousel-item {
   height: 0;
 }

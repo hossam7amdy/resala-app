@@ -1,6 +1,6 @@
 import type { CorsOptions } from 'cors';
 import cors from 'cors';
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import fs from 'fs';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
@@ -40,14 +40,16 @@ export const createExpressApp = (logRequests: boolean = true) => {
   // Routes
   app.use('/', createExpressRouter(logRequests));
 
-  app.get('/uploads/:file', (req, res) => {
-    const exist = fs.existsSync(`uploads/${req.params.file}`);
+  app.get('/uploads/*', (req: Request, res: Response) => {
+    const filepath = req.params[0];
+
+    const exist = fs.existsSync(`uploads/${filepath}`);
 
     if (!exist) {
       return res.status(404).send('File not found');
     }
 
-    return res.sendFile(req.params.file, { root: 'uploads' });
+    return res.sendFile(filepath, { root: 'uploads' });
   });
 
   // Catch all routes

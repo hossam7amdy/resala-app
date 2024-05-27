@@ -7,6 +7,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { httpInterceptors } from './core/interceptors';
 
 //@syncfusion/ej2-angular-navigations
 
@@ -21,7 +22,7 @@ import { AppComponent } from './app.component';
     NgxSpinnerModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [],
+  providers: [...httpInterceptors],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

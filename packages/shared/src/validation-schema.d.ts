@@ -1,22 +1,22 @@
-import zod from 'zod';
+import { z } from 'zod';
 
 import { ROLE } from './enums.js';
 
-export declare const DefaultQuerySchema: zod.ZodObject<
+export declare const DefaultQuerySchema: z.ZodObject<
   {
-    query: zod.ZodObject<
+    query: z.ZodObject<
       {
-        page: zod.ZodEffects<zod.ZodOptional<zod.ZodNumber>, number, number | undefined>;
-        limit: zod.ZodEffects<zod.ZodOptional<zod.ZodNumber>, number, number | undefined>;
-        query: zod.ZodEffects<zod.ZodOptional<zod.ZodString>, string, string | undefined>;
-        deleted: zod.ZodEffects<
-          zod.ZodOptional<zod.ZodEnum<['true', 'false']>>,
+        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+        deleted: z.ZodEffects<
+          z.ZodOptional<z.ZodEnum<['true', 'false']>>,
           boolean,
           'true' | 'false' | undefined
         >;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         query: string;
         page: number;
@@ -32,7 +32,7 @@ export declare const DefaultQuerySchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     query: {
       query: string;
@@ -50,15 +50,15 @@ export declare const DefaultQuerySchema: zod.ZodObject<
     };
   }
 >;
-export declare const LoginSchema: zod.ZodObject<
+export declare const LoginSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        sign: zod.ZodString;
-        password: zod.ZodString;
+        sign: z.ZodString;
+        password: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         password: string;
         sign: string;
@@ -70,7 +70,7 @@ export declare const LoginSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       password: string;
@@ -84,18 +84,18 @@ export declare const LoginSchema: zod.ZodObject<
     };
   }
 >;
-export declare const RegisterSchema: zod.ZodObject<
+export declare const RegisterSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        firstName: zod.ZodString;
-        lastName: zod.ZodString;
-        phone: zod.ZodString;
-        email: zod.ZodString;
-        password: zod.ZodString;
+        firstName: z.ZodString;
+        lastName: z.ZodString;
+        phone: z.ZodString;
+        email: z.ZodString;
+        password: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         email: string;
         phone: string;
@@ -113,7 +113,7 @@ export declare const RegisterSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       email: string;
@@ -133,15 +133,15 @@ export declare const RegisterSchema: zod.ZodObject<
     };
   }
 >;
-export declare const VerifyEmailSchema: zod.ZodObject<
+export declare const VerifyEmailSchema: z.ZodObject<
   {
-    query: zod.ZodObject<
+    query: z.ZodObject<
       {
-        email: zod.ZodString;
-        token: zod.ZodString;
+        email: z.ZodString;
+        token: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         email: string;
         token: string;
@@ -153,7 +153,7 @@ export declare const VerifyEmailSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     query: {
       email: string;
@@ -167,16 +167,16 @@ export declare const VerifyEmailSchema: zod.ZodObject<
     };
   }
 >;
-export declare const ResetPasswordSchema: zod.ZodObject<
+export declare const ResetPasswordSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        email: zod.ZodString;
-        code: zod.ZodString;
-        password: zod.ZodString;
+        email: z.ZodString;
+        code: z.ZodString;
+        password: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         email: string;
         code: string;
@@ -190,7 +190,7 @@ export declare const ResetPasswordSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       email: string;
@@ -206,15 +206,15 @@ export declare const ResetPasswordSchema: zod.ZodObject<
     };
   }
 >;
-export declare const ChangePasswordSchema: zod.ZodObject<
+export declare const ChangePasswordSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        oldPassword: zod.ZodString;
-        newPassword: zod.ZodString;
+        oldPassword: z.ZodString;
+        newPassword: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         oldPassword: string;
         newPassword: string;
@@ -226,7 +226,7 @@ export declare const ChangePasswordSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       oldPassword: string;
@@ -240,14 +240,14 @@ export declare const ChangePasswordSchema: zod.ZodObject<
     };
   }
 >;
-export declare const ForgotPasswordSchema: zod.ZodObject<
+export declare const ForgotPasswordSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        email: zod.ZodString;
+        email: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         email: string;
       },
@@ -257,7 +257,7 @@ export declare const ForgotPasswordSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       email: string;
@@ -269,16 +269,16 @@ export declare const ForgotPasswordSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateProfileSchema: zod.ZodObject<
+export declare const UpdateProfileSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        firstName: zod.ZodString;
-        lastName: zod.ZodString;
-        phone: zod.ZodString;
+        firstName: z.ZodString;
+        lastName: z.ZodString;
+        phone: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         phone: string;
         firstName: string;
@@ -292,7 +292,7 @@ export declare const UpdateProfileSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       phone: string;
@@ -308,14 +308,14 @@ export declare const UpdateProfileSchema: zod.ZodObject<
     };
   }
 >;
-export declare const AdminGetUserSchema: zod.ZodObject<
+export declare const AdminGetUserSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        userId: zod.ZodNumber;
+        userId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         userId: number;
       },
@@ -325,7 +325,7 @@ export declare const AdminGetUserSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       userId: number;
@@ -337,14 +337,14 @@ export declare const AdminGetUserSchema: zod.ZodObject<
     };
   }
 >;
-export declare const AdminUpdateUserSchema: zod.ZodObject<
+export declare const AdminUpdateUserSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        userId: zod.ZodNumber;
+        userId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         userId: number;
       },
@@ -352,21 +352,21 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<
         userId: number;
       }
     >;
-    body: zod.ZodObject<
-      zod.objectUtil.extendShape<
+    body: z.ZodObject<
+      z.objectUtil.extendShape<
         {
-          firstName: zod.ZodString;
-          lastName: zod.ZodString;
-          phone: zod.ZodString;
+          firstName: z.ZodString;
+          lastName: z.ZodString;
+          phone: z.ZodString;
         },
         {
-          role: zod.ZodEnum<[ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]>;
-          isVerified: zod.ZodOptional<zod.ZodBoolean>;
-          deletedAt: zod.ZodOptional<zod.ZodDate>;
+          role: z.ZodEnum<[ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]>;
+          isVerified: z.ZodOptional<z.ZodBoolean>;
+          deletedAt: z.ZodOptional<z.ZodDate>;
         }
       >,
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         phone: string;
         firstName: string;
@@ -386,7 +386,7 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       userId: number;
@@ -414,14 +414,14 @@ export declare const AdminUpdateUserSchema: zod.ZodObject<
     };
   }
 >;
-export declare const AdminDeleteUserSchema: zod.ZodObject<
+export declare const AdminDeleteUserSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        userId: zod.ZodNumber;
+        userId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         userId: number;
       },
@@ -431,7 +431,7 @@ export declare const AdminDeleteUserSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       userId: number;
@@ -443,23 +443,23 @@ export declare const AdminDeleteUserSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateAddressSchema: zod.ZodObject<
+export declare const CreateAddressSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        firstName: zod.ZodString;
-        lastName: zod.ZodString;
-        phone: zod.ZodString;
-        state: zod.ZodString;
-        city: zod.ZodString;
-        street: zod.ZodString;
-        country: zod.ZodOptional<zod.ZodString>;
-        building: zod.ZodOptional<zod.ZodString>;
-        floor: zod.ZodOptional<zod.ZodNumber>;
-        address: zod.ZodOptional<zod.ZodString>;
+        firstName: z.ZodString;
+        lastName: z.ZodString;
+        phone: z.ZodString;
+        state: z.ZodString;
+        city: z.ZodString;
+        street: z.ZodString;
+        country: z.ZodOptional<z.ZodString>;
+        building: z.ZodOptional<z.ZodString>;
+        floor: z.ZodOptional<z.ZodNumber>;
+        address: z.ZodOptional<z.ZodString>;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         phone: string;
         firstName: string;
@@ -487,7 +487,7 @@ export declare const CreateAddressSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       phone: string;
@@ -517,14 +517,14 @@ export declare const CreateAddressSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateAddressSchema: zod.ZodObject<
+export declare const UpdateAddressSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        addressId: zod.ZodNumber;
+        addressId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         addressId: number;
       },
@@ -532,21 +532,21 @@ export declare const UpdateAddressSchema: zod.ZodObject<
         addressId: number;
       }
     >;
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        firstName: zod.ZodString;
-        lastName: zod.ZodString;
-        phone: zod.ZodString;
-        state: zod.ZodString;
-        city: zod.ZodString;
-        street: zod.ZodString;
-        country: zod.ZodOptional<zod.ZodString>;
-        building: zod.ZodOptional<zod.ZodString>;
-        floor: zod.ZodOptional<zod.ZodNumber>;
-        address: zod.ZodOptional<zod.ZodString>;
+        firstName: z.ZodString;
+        lastName: z.ZodString;
+        phone: z.ZodString;
+        state: z.ZodString;
+        city: z.ZodString;
+        street: z.ZodString;
+        country: z.ZodOptional<z.ZodString>;
+        building: z.ZodOptional<z.ZodString>;
+        floor: z.ZodOptional<z.ZodNumber>;
+        address: z.ZodOptional<z.ZodString>;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         phone: string;
         firstName: string;
@@ -574,7 +574,7 @@ export declare const UpdateAddressSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       addressId: number;
@@ -610,14 +610,14 @@ export declare const UpdateAddressSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteAddressSchema: zod.ZodObject<
+export declare const DeleteAddressSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        addressId: zod.ZodNumber;
+        addressId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         addressId: number;
       },
@@ -627,7 +627,7 @@ export declare const DeleteAddressSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       addressId: number;
@@ -639,16 +639,16 @@ export declare const DeleteAddressSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateCategorySchema: zod.ZodObject<
+export declare const CreateCategorySchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        categoryId: zod.ZodOptional<zod.ZodNumber>;
-        arName: zod.ZodString;
-        enName: zod.ZodString;
+        categoryId: z.ZodOptional<z.ZodNumber>;
+        arName: z.ZodString;
+        enName: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         arName: string;
         enName: string;
@@ -662,7 +662,7 @@ export declare const CreateCategorySchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       arName: string;
@@ -678,14 +678,14 @@ export declare const CreateCategorySchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateCategorySchema: zod.ZodObject<
+export declare const UpdateCategorySchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        categoryId: zod.ZodNumber;
+        categoryId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         categoryId: number;
       },
@@ -693,19 +693,19 @@ export declare const UpdateCategorySchema: zod.ZodObject<
         categoryId: number;
       }
     >;
-    body: zod.ZodObject<
-      zod.objectUtil.extendShape<
+    body: z.ZodObject<
+      z.objectUtil.extendShape<
         {
-          categoryId: zod.ZodOptional<zod.ZodNumber>;
-          arName: zod.ZodString;
-          enName: zod.ZodString;
+          categoryId: z.ZodOptional<z.ZodNumber>;
+          arName: z.ZodString;
+          enName: z.ZodString;
         },
         {
-          deletedAt: zod.ZodOptional<zod.ZodDate>;
+          deletedAt: z.ZodOptional<z.ZodDate>;
         }
       >,
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         arName: string;
         enName: string;
@@ -721,7 +721,7 @@ export declare const UpdateCategorySchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       categoryId: number;
@@ -745,14 +745,14 @@ export declare const UpdateCategorySchema: zod.ZodObject<
     };
   }
 >;
-export declare const GetCategorySchema: zod.ZodObject<
+export declare const GetCategorySchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        categoryId: zod.ZodNumber;
+        categoryId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         categoryId: number;
       },
@@ -762,7 +762,7 @@ export declare const GetCategorySchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       categoryId: number;
@@ -774,14 +774,14 @@ export declare const GetCategorySchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteCategorySchema: zod.ZodObject<
+export declare const DeleteCategorySchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        categoryId: zod.ZodNumber;
+        categoryId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         categoryId: number;
       },
@@ -791,7 +791,7 @@ export declare const DeleteCategorySchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       categoryId: number;
@@ -803,20 +803,20 @@ export declare const DeleteCategorySchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateProductSchema: zod.ZodObject<
+export declare const CreateProductSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        id: zod.ZodOptional<zod.ZodNumber>;
-        categoryId: zod.ZodNumber;
-        arName: zod.ZodString;
-        enName: zod.ZodString;
-        arDescription: zod.ZodString;
-        enDescription: zod.ZodString;
-        price: zod.ZodNumber;
+        id: z.ZodOptional<z.ZodNumber>;
+        categoryId: z.ZodNumber;
+        arName: z.ZodString;
+        enName: z.ZodString;
+        arDescription: z.ZodString;
+        enDescription: z.ZodString;
+        price: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         categoryId: number;
         arName: string;
@@ -838,7 +838,7 @@ export declare const CreateProductSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       categoryId: number;
@@ -862,14 +862,14 @@ export declare const CreateProductSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateProductSchema: zod.ZodObject<
+export declare const UpdateProductSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -877,23 +877,23 @@ export declare const UpdateProductSchema: zod.ZodObject<
         productId: number;
       }
     >;
-    body: zod.ZodObject<
-      zod.objectUtil.extendShape<
+    body: z.ZodObject<
+      z.objectUtil.extendShape<
         {
-          id: zod.ZodOptional<zod.ZodNumber>;
-          categoryId: zod.ZodNumber;
-          arName: zod.ZodString;
-          enName: zod.ZodString;
-          arDescription: zod.ZodString;
-          enDescription: zod.ZodString;
-          price: zod.ZodNumber;
+          id: z.ZodOptional<z.ZodNumber>;
+          categoryId: z.ZodNumber;
+          arName: z.ZodString;
+          enName: z.ZodString;
+          arDescription: z.ZodString;
+          enDescription: z.ZodString;
+          price: z.ZodNumber;
         },
         {
-          deletedAt: zod.ZodOptional<zod.ZodDate>;
+          deletedAt: z.ZodOptional<z.ZodDate>;
         }
       >,
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         categoryId: number;
         arName: string;
@@ -917,7 +917,7 @@ export declare const UpdateProductSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       productId: number;
@@ -949,14 +949,14 @@ export declare const UpdateProductSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteProductSchema: zod.ZodObject<
+export declare const DeleteProductSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -966,7 +966,7 @@ export declare const DeleteProductSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       productId: number;
@@ -978,14 +978,14 @@ export declare const DeleteProductSchema: zod.ZodObject<
     };
   }
 >;
-export declare const GetProductImages: zod.ZodObject<
+export declare const GetProductImages: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -995,7 +995,7 @@ export declare const GetProductImages: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       productId: number;
@@ -1007,14 +1007,14 @@ export declare const GetProductImages: zod.ZodObject<
     };
   }
 >;
-export declare const CreateProductImageSchema: zod.ZodObject<
+export declare const CreateProductImageSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -1024,7 +1024,7 @@ export declare const CreateProductImageSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       productId: number;
@@ -1036,15 +1036,15 @@ export declare const CreateProductImageSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteProductImageSchema: zod.ZodObject<
+export declare const DeleteProductImageSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        productId: zod.ZodNumber;
-        imageId: zod.ZodNumber;
+        productId: z.ZodNumber;
+        imageId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
         imageId: number;
@@ -1056,7 +1056,7 @@ export declare const DeleteProductImageSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       productId: number;
@@ -1070,17 +1070,17 @@ export declare const DeleteProductImageSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateStockSchema: zod.ZodObject<
+export declare const CreateStockSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        productId: zod.ZodNumber;
-        colorId: zod.ZodNumber;
-        sizeId: zod.ZodNumber;
-        quantity: zod.ZodNumber;
+        productId: z.ZodNumber;
+        colorId: z.ZodNumber;
+        sizeId: z.ZodNumber;
+        quantity: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
         colorId: number;
@@ -1096,7 +1096,7 @@ export declare const CreateStockSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       productId: number;
@@ -1114,14 +1114,14 @@ export declare const CreateStockSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateStockSchema: zod.ZodObject<
+export declare const UpdateStockSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        stockId: zod.ZodNumber;
+        stockId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         stockId: number;
       },
@@ -1129,15 +1129,15 @@ export declare const UpdateStockSchema: zod.ZodObject<
         stockId: number;
       }
     >;
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        productId: zod.ZodNumber;
-        colorId: zod.ZodNumber;
-        sizeId: zod.ZodNumber;
-        quantity: zod.ZodNumber;
+        productId: z.ZodNumber;
+        colorId: z.ZodNumber;
+        sizeId: z.ZodNumber;
+        quantity: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
         colorId: number;
@@ -1153,7 +1153,7 @@ export declare const UpdateStockSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       stockId: number;
@@ -1177,14 +1177,14 @@ export declare const UpdateStockSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteStockSchema: zod.ZodObject<
+export declare const DeleteStockSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        stockId: zod.ZodNumber;
+        stockId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         stockId: number;
       },
@@ -1194,7 +1194,7 @@ export declare const DeleteStockSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       stockId: number;
@@ -1206,16 +1206,16 @@ export declare const DeleteStockSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateColorSchema: zod.ZodObject<
+export declare const CreateColorSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        arName: zod.ZodString;
-        enName: zod.ZodString;
-        code: zod.ZodString;
+        arName: z.ZodString;
+        enName: z.ZodString;
+        code: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         code: string;
         arName: string;
@@ -1229,7 +1229,7 @@ export declare const CreateColorSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       code: string;
@@ -1245,14 +1245,14 @@ export declare const CreateColorSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateColorSchema: zod.ZodObject<
+export declare const UpdateColorSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        colorId: zod.ZodNumber;
+        colorId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         colorId: number;
       },
@@ -1260,14 +1260,14 @@ export declare const UpdateColorSchema: zod.ZodObject<
         colorId: number;
       }
     >;
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        arName: zod.ZodString;
-        enName: zod.ZodString;
-        code: zod.ZodString;
+        arName: z.ZodString;
+        enName: z.ZodString;
+        code: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         code: string;
         arName: string;
@@ -1281,7 +1281,7 @@ export declare const UpdateColorSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       colorId: number;
@@ -1303,14 +1303,14 @@ export declare const UpdateColorSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteColorSchema: zod.ZodObject<
+export declare const DeleteColorSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        colorId: zod.ZodNumber;
+        colorId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         colorId: number;
       },
@@ -1320,7 +1320,7 @@ export declare const DeleteColorSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       colorId: number;
@@ -1332,14 +1332,14 @@ export declare const DeleteColorSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateSizeSchema: zod.ZodObject<
+export declare const CreateSizeSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        name: zod.ZodString;
+        name: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         name: string;
       },
@@ -1349,7 +1349,7 @@ export declare const CreateSizeSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       name: string;
@@ -1361,14 +1361,14 @@ export declare const CreateSizeSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateSizeSchema: zod.ZodObject<
+export declare const UpdateSizeSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        sizeId: zod.ZodNumber;
+        sizeId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         sizeId: number;
       },
@@ -1376,12 +1376,12 @@ export declare const UpdateSizeSchema: zod.ZodObject<
         sizeId: number;
       }
     >;
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        name: zod.ZodString;
+        name: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         name: string;
       },
@@ -1391,7 +1391,7 @@ export declare const UpdateSizeSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       sizeId: number;
@@ -1409,14 +1409,14 @@ export declare const UpdateSizeSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteSizeSchema: zod.ZodObject<
+export declare const DeleteSizeSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        sizeId: zod.ZodNumber;
+        sizeId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         sizeId: number;
       },
@@ -1426,7 +1426,7 @@ export declare const DeleteSizeSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       sizeId: number;
@@ -1438,15 +1438,15 @@ export declare const DeleteSizeSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateCartSchema: zod.ZodObject<
+export declare const CreateCartSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        stockId: zod.ZodNumber;
-        quantity: zod.ZodNumber;
+        stockId: z.ZodNumber;
+        quantity: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         quantity: number;
         stockId: number;
@@ -1458,7 +1458,7 @@ export declare const CreateCartSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       quantity: number;
@@ -1472,14 +1472,14 @@ export declare const CreateCartSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteCartSchema: zod.ZodObject<
+export declare const DeleteCartSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        stockId: zod.ZodNumber;
+        stockId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         stockId: number;
       },
@@ -1489,7 +1489,7 @@ export declare const DeleteCartSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       stockId: number;
@@ -1501,14 +1501,14 @@ export declare const DeleteCartSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateWishlistSchema: zod.ZodObject<
+export declare const CreateWishlistSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -1518,7 +1518,7 @@ export declare const CreateWishlistSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       productId: number;
@@ -1530,14 +1530,14 @@ export declare const CreateWishlistSchema: zod.ZodObject<
     };
   }
 >;
-export declare const DeleteWishlistSchema: zod.ZodObject<
+export declare const DeleteWishlistSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        productId: zod.ZodNumber;
+        productId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         productId: number;
       },
@@ -1547,7 +1547,7 @@ export declare const DeleteWishlistSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       productId: number;
@@ -1559,16 +1559,16 @@ export declare const DeleteWishlistSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreateOrderSchema: zod.ZodObject<
+export declare const CreateOrderSchema: z.ZodObject<
   {
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        paymentMethod: zod.ZodEnum<['CARD', 'CASH']>;
-        note: zod.ZodOptional<zod.ZodString>;
-        addressId: zod.ZodNumber;
+        paymentMethod: z.ZodEnum<['CARD', 'CASH']>;
+        note: z.ZodOptional<z.ZodString>;
+        addressId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         addressId: number;
         paymentMethod: 'CARD' | 'CASH';
@@ -1582,7 +1582,7 @@ export declare const CreateOrderSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     body: {
       addressId: number;
@@ -1598,14 +1598,14 @@ export declare const CreateOrderSchema: zod.ZodObject<
     };
   }
 >;
-export declare const UpdateOrderStatusSchema: zod.ZodObject<
+export declare const UpdateOrderStatusSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        orderId: zod.ZodNumber;
+        orderId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         orderId: number;
       },
@@ -1613,12 +1613,12 @@ export declare const UpdateOrderStatusSchema: zod.ZodObject<
         orderId: number;
       }
     >;
-    body: zod.ZodObject<
+    body: z.ZodObject<
       {
-        status: zod.ZodEnum<['PENDING', 'FULFILLED']>;
+        status: z.ZodEnum<['PENDING', 'FULFILLED']>;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         status: 'PENDING' | 'FULFILLED';
       },
@@ -1628,7 +1628,7 @@ export declare const UpdateOrderStatusSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       orderId: number;
@@ -1646,14 +1646,14 @@ export declare const UpdateOrderStatusSchema: zod.ZodObject<
     };
   }
 >;
-export declare const GetOrderSchema: zod.ZodObject<
+export declare const GetOrderSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        orderId: zod.ZodNumber;
+        orderId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         orderId: number;
       },
@@ -1663,7 +1663,7 @@ export declare const GetOrderSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       orderId: number;
@@ -1675,14 +1675,14 @@ export declare const GetOrderSchema: zod.ZodObject<
     };
   }
 >;
-export declare const CreatePaymentSchema: zod.ZodObject<
+export declare const CreatePaymentSchema: z.ZodObject<
   {
-    query: zod.ZodObject<
+    query: z.ZodObject<
       {
-        hmac: zod.ZodString;
+        hmac: z.ZodString;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         hmac: string;
       },
@@ -1692,7 +1692,7 @@ export declare const CreatePaymentSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     query: {
       hmac: string;
@@ -1704,14 +1704,14 @@ export declare const CreatePaymentSchema: zod.ZodObject<
     };
   }
 >;
-export declare const GetPaymentSchema: zod.ZodObject<
+export declare const GetPaymentSchema: z.ZodObject<
   {
-    params: zod.ZodObject<
+    params: z.ZodObject<
       {
-        paymentId: zod.ZodNumber;
+        paymentId: z.ZodNumber;
       },
       'strip',
-      zod.ZodTypeAny,
+      z.ZodTypeAny,
       {
         paymentId: number;
       },
@@ -1721,7 +1721,7 @@ export declare const GetPaymentSchema: zod.ZodObject<
     >;
   },
   'strip',
-  zod.ZodTypeAny,
+  z.ZodTypeAny,
   {
     params: {
       paymentId: number;
