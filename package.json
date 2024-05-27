@@ -26,7 +26,6 @@
     "start:web": "yarn workspace @resala/web ng serve --open",
     "start:server": "yarn workspace @resala/server dev",
     "start": "npm-run-all --parallel start:server start:dashboard start:web",
-    "start:server:prod": "yarn workspace @resala/server start",
     "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
   },
   "devDependencies": {

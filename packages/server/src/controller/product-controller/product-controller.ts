@@ -1,7 +1,7 @@
+import LocalStorage from '../../lib/local-storage/local-storage.js';
 import { logger } from '../../lib/logger/logger.js';
 import FileService from '../../service/file-service.js';
 import { inventoryService } from '../../service/index.js';
-import S3Service from '../../service/s3-service.js';
 import { BadRequestError } from '../../utils/api-errors.js';
 import type {
   CreateProduct,
@@ -15,7 +15,7 @@ import type {
   UpdateProduct,
 } from './product-controller.interface.js';
 
-const s3Service = new S3Service();
+const s3Service = new LocalStorage();
 const fileService = new FileService(s3Service);
 
 export const getProduct: GetProduct = async (req, res, next) => {
@@ -88,8 +88,8 @@ export const deleteProduct: DeleteProduct = async (req, res, next) => {
     const images = await inventoryService.listProductImages(req.params.productId);
     const product = await inventoryService.deleteProduct(req.params.productId);
 
-    const imageUrls = images.map(({ imageUrl }) => imageUrl);
-    fileService.deleteFiles(imageUrls).catch(logger.warn);
+    const imageKeys = images.map(({ imageKey }) => imageKey);
+    fileService.deleteFiles(imageKeys).catch(logger.warn);
 
     return res.json({
       success: true,
@@ -110,8 +110,8 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
     }
 
     await inventoryService.findProductById(productId); // Check if product exists
-    const urls = await fileService.uploadFiles(files, productId.toString());
-    await inventoryService.addProductImages(req.body.productId, urls);
+    const response = await fileService.uploadFiles(files, productId.toString());
+    await inventoryService.addProductImages(req.body.productId, response);
 
     return res.json({
       success: true,
@@ -153,7 +153,7 @@ export const deleteProductImage: DeleteProductImage = async (req, res, next) => 
     const { imageId, productId } = req.params;
 
     const image = await inventoryService.deleteProductImage(imageId, productId);
-    await fileService.deleteFile(image.imageUrl);
+    await fileService.deleteFile(image.imageKey);
 
     return res.json({
       success: true,

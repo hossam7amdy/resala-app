@@ -50,7 +50,7 @@ services:
       - JWT_REFRESH=jwt_refresh
       - JWT_RESET=jwt_reset
       - JWT_VERIFY=jwt_verify
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/resala
       - MAIL_USER=user@mail.com
       - MAIL_PASS=password
       - TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
