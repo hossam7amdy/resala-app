@@ -43,4 +43,4 @@ USER node
 EXPOSE 5000
 
 # Define command to run the app
-CMD ["yarn", "start:server:prod"]
+CMD ["yarn", "workspace", "@resala/server", "start"]
