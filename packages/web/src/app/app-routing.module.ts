@@ -1,113 +1,94 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 // import { HomeComponent } from './components/home/home.component';
 // import { ProductsComponent } from './components/products/products.component';
 
-const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () =>
-      import('./layouts/blank-layout/blank-layout.component').then(m => m.BlankLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
+const routes: Routes = 
+[
+  {path:'', 
+  loadComponent:()=>import('./layouts/blank-layout/blank-layout.component').then (m=>m.BlankLayoutComponent),
+  children:[
+    {path:'', redirectTo:'home', pathMatch:'full'},
+    
+    {path:'home', 
+    loadComponent:()=>import('./components/home/home.component').then (m=>m.HomeComponent), 
+    title:'Home'},
 
-      {
-        path: 'home',
-        loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
-        title: 'Home',
-      },
+    {path:'brands', 
+    loadComponent:()=>import('./components/brands/brands.component').then(m=>m.BrandsComponent), 
+    title:'Brands'},
 
-      {
-        path: 'brands',
-        loadComponent: () =>
-          import('./components/brands/brands.component').then(m => m.BrandsComponent),
-        title: 'Brands',
-      },
+    {path:'categories', 
+    loadComponent:()=>import('./components/categories/categories.component').then(m=>m.CategoriesComponent), 
+    title:'Categories'},
 
-      {
-        path: 'categories',
-        loadComponent: () =>
-          import('./components/categories/categories.component').then(m => m.CategoriesComponent),
-        title: 'Categories',
-      },
+    {path:'products', 
+    loadComponent:()=>import('./components/products/products.component').then(m=>m.ProductsComponent), 
+    title:'Products'},
 
-      {
-        path: 'products',
-        loadComponent: () =>
-          import('./components/products/products.component').then(m => m.ProductsComponent),
-        title: 'Products',
-      },
+    {path:'cart', 
+    loadComponent:()=>import('./components/cart/cart.component').then(m=>m.CartComponent), 
+    title:'Cart'},
 
-      {
-        path: 'cart',
-        loadComponent: () => import('./components/cart/cart.component').then(m => m.CartComponent),
-        title: 'Cart',
-      },
+    {path:'favorites', 
+    loadComponent:()=>import('./components/favorites/favorites.component').then(m=>m.FavoritesComponent), 
+    title:'Favorites'},
 
-      {
-        path: 'favorites',
-        loadComponent: () =>
-          import('./components/favorites/favorites.component').then(m => m.FavoritesComponent),
-        title: 'Favorites',
-      },
 
-      {
-        path: 'product-details/:product-id',
-        loadComponent: () =>
-          import('./components/product-details/product-details.component').then(
-            m => m.ProductDetailsComponent
-          ),
-        title: 'Product',
-      },
-    ],
-  },
+    {path:'product-details/:product-id', 
+    loadComponent:()=>import('./components/product-details/product-details.component').then(m=>m.ProductDetailsComponent), 
+    title:'Product'},
 
-  {
-    path: '',
-    loadComponent: () =>
-      import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    
+  
 
-      {
-        path: 'login',
-        loadComponent: () =>
-          import('./components/login/login.component').then(m => m.LoginComponent),
-        title: 'Login',
-      },
 
-      {
-        path: 'register',
-        loadComponent: () =>
-          import('./components/register/register.component').then(m => m.RegisterComponent),
-        title: 'Register',
-      },
-    ],
-  },
+    
+   
+  
+]},
 
-  {
-    path: '',
-    loadComponent: () =>
-      import('./layouts/blank-layout/blank-layout.component').then(m => m.BlankLayoutComponent),
-    children: [
-      {
-        path: '**',
-        loadComponent: () =>
-          import('./components/notfound/notfound.component').then(m => m.NotfoundComponent),
-        title: 'Not Found',
-      },
-    ],
-  },
+{path:'',
+loadComponent: ()=>import('./layouts/auth-layout/auth-layout.component').then(m=>m.AuthLayoutComponent),
+children:[
+  {path:'', redirectTo:'login', pathMatch:'full'},
+  
+  {path:'login', 
+  loadComponent: ()=>import('./components/login/login.component').then(m=>m.LoginComponent), 
+  title:'Login'},
 
-  // {path:'home', component:HomeComponent},
-  // {path:'products', component:ProductsComponent},
+  {path:'register', 
+  loadComponent: ()=>import('./components/register/register.component').then(m=>m.RegisterComponent),
+  title:'Register'},
 
-  // {path:'home' , loadChildren:()=>import('./components/home/home.component').then(m=>m.HomeComponent)}
-  // ;
-];
+  
+
+]
+},
+
+{path:'', 
+  loadComponent:()=>import('./layouts/blank-layout/blank-layout.component').then (m=>m.BlankLayoutComponent),
+  children:[
+    {
+      path:'**', 
+      loadComponent:()=>import('./components/notfound/notfound.component').then((m)=>m.NotfoundComponent),
+      title:'Not Found'
+    }
+  
+  ]
+}
+
+
+
+// {path:'home', component:HomeComponent},
+// {path:'products', component:ProductsComponent},
+
+// {path:'home' , loadChildren:()=>import('./components/home/home.component').then(m=>m.HomeComponent)}
+// ;
+
+]
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

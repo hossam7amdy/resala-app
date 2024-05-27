@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './notfound.component.html',
-  styleUrls: ['./notfound.component.css'],
+  styleUrls: ['./notfound.component.css']
 })
-export class NotfoundComponent {}
+export class NotfoundComponent {
+
+}

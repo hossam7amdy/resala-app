@@ -8,7 +8,7 @@ describe('BlankLayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [BlankLayoutComponent],
+      imports: [BlankLayoutComponent]
     });
     fixture = TestBed.createComponent(BlankLayoutComponent);
     component = fixture.componentInstance;

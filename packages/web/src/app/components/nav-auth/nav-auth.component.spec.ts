@@ -8,7 +8,7 @@ describe('NavAuthComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NavAuthComponent],
+      imports: [NavAuthComponent]
     });
     fixture = TestBed.createComponent(NavAuthComponent);
     component = fixture.componentInstance;

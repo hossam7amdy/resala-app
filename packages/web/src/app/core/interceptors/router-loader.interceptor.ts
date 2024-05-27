@@ -1,4 +1,9 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   NavigationCancel,
@@ -13,13 +18,17 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class RouterLoaderInterceptor implements HttpInterceptor {
+
   constructor(
     private router: Router,
-    private spinnerService: NgxSpinnerService
-  ) {}
+    private spinnerService: NgxSpinnerService,
+  ) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.router.events.pipe(map(evt => evt)).subscribe(event => {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    this.router.events.pipe(map((evt) => evt)).subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.spinnerService.show('httpSpinner');
       }
