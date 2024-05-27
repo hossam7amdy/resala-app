@@ -22,6 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (err.status === 401 || err.status === 403) {
           // this.authService.logout();
           console.log('NOT Authorized');
+          alert('NOT Authorized');
         }
         return throwError(() => err);
       })

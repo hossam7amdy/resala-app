@@ -8,21 +8,15 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class HomeProductsService {
-  private readonly baseURL = environment.apiUrl;
   constructor(private _HttpClient: HttpClient) {}
 
+  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  //base url =
+
   // Products
-  getProducts(
-    query: DefaultRequestQuery['query'] = {
-      page: 1,
-      limit: 10,
-      query: '',
-    }
-  ): Observable<any> {
-    const { url } = ENDPOINT_CONFIGS[Endpoints.getProductsList];
-    return this._HttpClient.get(
-      this.baseURL + `${url}?page=${query.page}&limit=${query.limit}&query=${query.query}`
-    );
+
+  getProducts(): Observable<any> {
+    return this._HttpClient.get(this.baseURL + 'api/v1/products?page=1&limit=10&query=');
   }
 
   //Product Details

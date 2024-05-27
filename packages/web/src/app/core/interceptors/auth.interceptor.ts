@@ -1,7 +1,8 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment as env } from 'environments/environment';
 import { Observable } from 'rxjs';
+
+// import { environment as env } from 'environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -19,14 +20,15 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    request = request.clone({
-      url: `${env.baseApi}${request.url}`,
-    });
+    // request = request.clone({
+    //   url: `${env.baseApi}${request.url}`,
+    // });
 
     // Set Request Headers
-    if (localStorage.getItem('token')) {
+    const token = localStorage.getItem('etoken');
+    if (token) {
       request = request.clone({
-        headers: request.headers.set('Authorization', 'Bearer ' + localStorage.getItem('token')),
+        headers: request.headers.set('Authorization', `Bearer ${token}`),
       });
     }
 
