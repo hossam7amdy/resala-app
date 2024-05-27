@@ -1,100 +1,109 @@
 /* Slider*/
 .custom-owl .row,
 .custom-owl .row .col-6 {
-  padding: 0 !important;
+    padding: 0 !important;
+
 }
 
 .half-slide {
-  background-color: #14aec602;
+    background-color: #14aec602;
 }
 
 .right-content {
-  text-align: center;
+    text-align: center;
 }
 
 .right-content .title-content {
-  color: hsl(188, 98%, 23%);
-  margin-top: 40%;
+    color: hsl(188, 98%, 23%);
+    margin-top: 40%;
+
 }
 
 .custom-owl {
-  .owl-theme .owl-nav.disabled + .owl-dots {
-    position: absolute !important;
-    bottom: 0% !important;
-    left: 49% !important;
-  }
+    .owl-theme .owl-nav.disabled+.owl-dots {
+
+        position: absolute !important;
+        bottom: 0% !important;
+        left: 49% !important;
+    }
 }
 
 .custom-owl {
-  .owl-theme .owl-dots .owl-dot span {
-    background-color: #016373;
-  }
+    .owl-theme .owl-dots .owl-dot span {
+        background-color: #016373;
+    }
 }
 
 .custom-owl {
-  .owl-theme .owl-dots .owl-dot.active span,
-  .owl-theme .owl-dots .owl-dot:hover span {
-    background-color: #fbb935 !important;
-  }
+
+    .owl-theme .owl-dots .owl-dot.active span,
+    .owl-theme .owl-dots .owl-dot:hover span {
+        background-color: #fbb935 !important;
+    }
 }
 
 /*Loading icon*/
 .spinner-border {
-  left: 50%;
-  position: relative;
+
+    left: 50%;
+    position: relative;
 }
 
 .slider img {
-  background-size: contain;
+    background-size: contain;
+
+
 }
 
 /* Trends */
 .trends .trends-slide {
-  padding-left: 1px !important;
-  padding-right: 1px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
 }
 
 .trends-title .h1 {
-  background-color: #fbb935;
-  padding: 40px;
-  margin: 0;
-  color: #fff;
+    background-color: #fbb935;
+    padding: 40px;
+    margin: 0;
+    color: #fff;
 }
 
 .trends-slide a {
-  position: relative;
+    position: relative;
 }
 
 .trends-slide a .favourit-icon {
-  position: absolute;
-  top: 2%;
-  right: 7%;
+    position: absolute;
+    top: 2%;
+    right: 7%;
+
 }
 
 .trends-slide a .favourit-icon::before {
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 50%;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 50%;
+
 }
 
 .trends-slide a .shopping-icon {
-  position: absolute;
-  bottom: 17%;
-  right: 7%;
-  color: #fbb935;
-  font-size: 20px;
-  cursor: pointer;
+    position: absolute;
+    bottom: 17%;
+    right: 7%;
+    color: #fbb935;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .w-100[_ngcontent-ng-c3001152195] {
-  height: 500px !important;
+    height: 500px !important;
 }
 
 .img-trend {
-  height: 700px;
-  width: 30%;
-  padding-left: 2px;
-  padding-right: 2px;
+    height: 700px;
+    width: 30%;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 /* .trends .notes{
@@ -106,133 +115,146 @@
     right: 2px;
 } */
 
+
 /* Products*/
 
+
 .porduct {
-  display: block;
-  position: relative;
+    display: block;
+    position: relative;
+
 }
 
 .porduct img {
-  background-size: cover;
+    background-size: cover;
+
 }
 
 .parent-img-content {
-  position: relative;
+    position: relative;
 }
 
+
 .img-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
 }
 
 .img-content .offer {
-  background-color: #14adc6;
-  color: #fff;
-  position: absolute;
-  top: 1%;
-  left: -3%;
-  padding: 5px;
-  margin: 0;
-  z-index: 55;
+    background-color: #14adc6;
+    color: #fff;
+    position: absolute;
+    top: 1%;
+    left: -3%;
+    padding: 5px;
+    margin: 0;
+    z-index: 55;
+
 }
 
 .img-content .offer span {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .img-content .offer::after {
-  content: '';
-  position: absolute;
-  background-color: #14adc6;
-  width: 23px;
-  height: 23px;
-  top: 5px;
-  right: -12px;
-  transform: rotate(45deg);
-  /* border-radius: 5px; */
-  z-index: -1;
+    content: "";
+    position: absolute;
+    background-color: #14adc6;
+    width: 23px;
+    height: 23px;
+    top: 5px;
+    right: -12px;
+    transform: rotate(45deg);
+    /* border-radius: 5px; */
+    z-index: -1;
 }
 
 .favourit-icon {
-  position: absolute;
-  top: 2.5%;
-  right: 4.5%;
-  color: #fbb935;
-  font-size: 20px;
-  z-index: 10;
-  font-weight: lighter;
-  cursor: pointer;
-  text-shadow: 0 2px 2px rgba(251, 170, 49, 0.308);
+    position: absolute;
+    top: 2.5%;
+    right: 4.5%;
+    color: #fbb935;
+    font-size: 20px;
+    z-index: 10;
+    font-weight: lighter;
+    cursor: pointer;
+    text-shadow: 0 2px 2px rgba(251, 170, 49, 0.308);
+
 }
 
 .favourit-icon::before {
-  background-color: #fff;
-  padding: 5px;
-  border-radius: 50%;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 50%;
+
 }
 
 .favourit-icon:hover {
-  font-weight: bold;
+
+    font-weight: bold;
 }
 
 .shopping-icon {
-  position: absolute;
-  bottom: 3.5%;
-  right: 4.5%;
-  color: #fbb935;
-  font-size: 20px;
-  cursor: pointer;
+    position: absolute;
+    bottom: 3.5%;
+    right: 4.5%;
+    color: #fbb935;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .img-content .fa-plus {
-  color: #14adc6;
-  font-size: 20px;
-  position: absolute;
-  top: 7px;
-  right: 13px;
+    color: #14adc6;
+    font-size: 20px;
+    position: absolute;
+    top: 7px;
+    right: 13px;
+
 }
 
 .shopping-icon::before {
-  background-color: #fff;
-  padding: 8px 10px;
-  border-radius: 50%;
+    background-color: #fff;
+    padding: 8px 10px;
+    border-radius: 50%;
+
 }
 
 .img-content .w-100 {
-  height: 300px !important;
+    height: 300px !important;
 }
+
 
 .descrp {
-  text-align: left;
-  color: #016373;
+    text-align: left;
+    color: #016373;
 }
 
+
 .descrp .fa-star {
-  color: #fbb935;
-  font-weight: bold;
-  font-size: 10px;
-  margin-right: 2px;
+    color: #fbb935;
+    font-weight: bold;
+    font-size: 10px;
+    margin-right: 2px;
 }
 
 /* NGXowl carowsel all cat*/
-::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
-  background: #000;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
+::ng-deep .owl-theme .owl-nav [class*=owl-]:hover {
+    background: #000;
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-::ng-deep .owl-theme .owl-nav [class*='owl-'] {
-  color: #fff;
-  font-size: 14px;
-  margin: 5px;
-  padding: 9px 12px;
-  background: #016373;
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 0px;
-  font-weight: bold;
+::ng-deep .owl-theme .owl-nav [class*=owl-] {
+    color: #FFF;
+    font-size: 14px;
+    margin: 5px;
+    padding: 9px 12px;
+    background: #016373;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 0px;
+    font-weight: bold;
 }
