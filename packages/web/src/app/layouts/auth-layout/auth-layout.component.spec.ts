@@ -8,7 +8,7 @@ describe('AuthLayoutComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AuthLayoutComponent]
+      imports: [AuthLayoutComponent],
     });
     fixture = TestBed.createComponent(AuthLayoutComponent);
     component = fixture.componentInstance;
