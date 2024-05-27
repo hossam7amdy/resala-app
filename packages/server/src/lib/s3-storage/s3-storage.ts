@@ -7,19 +7,18 @@ import {
   ListObjectsV2Command,
   PutBucketPolicyCommand,
   PutObjectCommand,
+  S3Client,
+  type S3ClientConfig,
 } from '@aws-sdk/client-s3';
-import { S3Client } from '@aws-sdk/client-s3';
 
-import type { FileMetadata, IFileStorage } from '../interfaces/file-storage.js';
+import type { FileMetadata, IFileStorage } from '../../interfaces/IFileStorage.js';
 
-export default class S3Service implements IFileStorage {
+export default class S3StorageService implements IFileStorage {
   private readonly bucketName: string;
   private readonly client: S3Client;
 
-  constructor() {
-    this.bucketName = process.env.S3_BUCKET;
-
-    this.client = new S3Client({
+  constructor(
+    clientConfig: S3ClientConfig = {
       region: process.env.S3_REGION,
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -27,7 +26,11 @@ export default class S3Service implements IFileStorage {
       },
       endpoint: process.env.S3_ENDPOINT,
       forcePathStyle: process.env.NODE_ENV !== 'production',
-    });
+    },
+    bucketName: string = process.env.S3_BUCKET
+  ) {
+    this.bucketName = bucketName;
+    this.client = new S3Client(clientConfig);
 
     (async () => {
       await this.createBucketIfNotExist(process.env.S3_BUCKET);
@@ -49,27 +52,27 @@ export default class S3Service implements IFileStorage {
     }
   }
 
-  downloadFile(filename: string): Promise<Buffer> {
-    console.log('Downloading file', filename);
+  downloadFile(key: string): Promise<Buffer> {
+    console.log('Downloading file', key);
     throw new Error('Method not implemented.');
   }
-  async uploadFile(fileBuffer: Buffer, filename: string): Promise<string> {
+  async uploadFile(fileBuffer: Buffer, key: string): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
-      Key: filename,
+      Key: key,
       Body: fileBuffer,
       ACL: 'public-read',
     });
 
     await this.client.send(command);
-    return this.getPublicUrl(filename);
+    return this.getPublicUrl(key);
   }
   async deleteFile(path: string): Promise<void> {
-    const filename = this.getFilenameFromUrl(path);
+    const key = this.getFilenameFromUrl(path);
 
     const command = new DeleteObjectCommand({
       Bucket: this.bucketName,
-      Key: filename,
+      Key: key,
     });
 
     await this.client.send(command);
@@ -85,11 +88,11 @@ export default class S3Service implements IFileStorage {
     return contents!.map(obj => obj.Key!);
   }
   async getFileMetadata(path: string): Promise<FileMetadata> {
-    const filename = this.getFilenameFromUrl(path);
+    const key = this.getFilenameFromUrl(path);
 
     const command = new HeadObjectCommand({
       Bucket: this.bucketName,
-      Key: filename,
+      Key: key,
     });
     const obj = await this.client.send(command);
 
@@ -109,8 +112,8 @@ export default class S3Service implements IFileStorage {
     await this.client.send(command);
   }
 
-  private getPublicUrl(filename: string) {
-    return `${process.env.S3_BASE_URL}/${filename}`;
+  private getPublicUrl(key: string) {
+    return `${process.env.S3_BASE_URL}/${key}`;
   }
   private getFilenameFromUrl(url: string) {
     return url.replace(`${process.env.S3_BASE_URL}/`, '');

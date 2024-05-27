@@ -90,6 +90,7 @@ model Product {
 model ProductImage {
   id        Int      @default(autoincrement()) @db.Integer
   productId Int      @map("product_id") @db.Integer
+  imageKey  String   @default("") @map("image_key") @db.VarChar(50)
   imageUrl  String   @map("image_url") @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)

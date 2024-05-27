@@ -47,7 +47,7 @@ jobs:
 
       - name: yarn install and build
         run: |
-          yarn --frozen-lockfile
+          yarn
           yarn build
 
   test:
@@ -65,14 +65,6 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      s3:
-        image: minio/minio
-        env:
-          MINIO_ROOT_USER: minio_key
-          MINIO_ROOT_PASSWORD: minio_secret
-        ports:
-          - 9000:9000
-        options: --health-cmd "curl -f http://localhost:9000/minio/health/live" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -85,7 +77,7 @@ jobs:
 
       - name: yarn install and test
         run: |
-          yarn --frozen-lockfile
+          yarn
           yarn test
 
   lint:
@@ -101,5 +93,5 @@ jobs:
           cache: 'yarn'
       - name: yarn install and lint
         run: |
-          yarn --frozen-lockfile
+          yarn
           yarn format
