@@ -8,11 +8,12 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class CategoriesService {
-  baseURL: string = environment.apiUrl;
+  // baseurl = https://resala-app.onrender.com/
+
+  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
   constructor(private _HTTPClient: HttpClient) {}
 
   getCategories(): Observable<any> {
-    const { url } = ENDPOINT_CONFIGS.listCategories;
-    return this._HTTPClient.get(this.baseURL + url);
+    return this._HTTPClient.get(this.baseURL + 'api/v1/categories');
   }
 }

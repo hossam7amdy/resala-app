@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
-import type { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,16 +11,15 @@ export class AuthService {
 
   signOut: boolean = false;
   userInfo: any;
-  baseURL: string = environment.apiUrl;
+  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  //baseurl = https://resala-app.onrender.com/
 
   register(userData: object): Observable<any> {
-    const { method, url } = ENDPOINT_CONFIGS[Endpoints.register];
-    return this._HttpClient[method as 'post'](this.baseURL + url, userData);
+    return this._HttpClient.post(this.baseURL + 'api/v1/auth/register', userData);
   }
 
   login(userdata: any): Observable<any> {
-    const { method, url } = ENDPOINT_CONFIGS[Endpoints.login];
-    return this._HttpClient[method](this.baseURL + url, userdata);
+    return this._HttpClient.post(this.baseURL + 'api/v1/auth/login', userdata);
   }
 
   decodeUser(): void {

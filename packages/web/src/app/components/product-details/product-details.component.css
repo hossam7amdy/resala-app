@@ -31,8 +31,9 @@
 
 .img-content {
   position: relative;
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
+  width: 200px;
   padding: 0;
 }
 
@@ -104,17 +105,17 @@
   color: #fff;
 } */
 
-.btn-check:checked + .btn,
+/* .btn-check:checked+.btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check) + .btn:active,
-.btn-check + .btn:hover {
+:not(.btn-check)+.btn:active,
+.btn-check+.btn:hover {
   color: #fff;
   background-color: #fbb935;
   border: 1px solid #fbb935;
   border-radius: 0;
-}
+} */
 
 .size {
   margin-top: 20px;
@@ -184,4 +185,53 @@
   font-weight: 500;
   background-color: #fff;
   border: 1px solid #ccc;
+}
+
+.btn-check:checked + .btn {
+  border: 0;
+}
+
+.size-options-list {
+  margin-left: -8px;
+}
+
+.size-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #fff;
+  margin: 0 8px;
+  cursor: pointer;
+}
+
+.size-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
+}
+
+/* color option*/
+.color-options-list {
+  margin-left: -8px;
+}
+
+.color-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #fff;
+  margin: 0 8px 0px;
+  cursor: pointer;
+}
+
+.color-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
 }
