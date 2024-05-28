@@ -36,14 +36,14 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/server /app/packages/server
 COPY --from=build /app/packages/shared /app/packages/shared
 
-# Set user to node
-USER node
-
 # Create uploads directory
 RUN mkdir -p /app/packages/server/uploads
 
-# Give permissions to uploads directory
+# Give permissions
 RUN chown -R node:node /app/packages/server/uploads
+
+# Set user to node
+USER node
 
 # Expose port
 EXPOSE 5000
