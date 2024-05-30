@@ -16,12 +16,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out...'
-                checkout scm
-            }
-        }
         stage('Prepare') {
             steps {
                 echo 'Preparing...'
