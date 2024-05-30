@@ -16,11 +16,17 @@ pipeline {
     }
 
     stages {
-        stage('Install') {
+        stage('Checkout') {
             steps {
-                echo 'Installing...'
-                sh 'yarn install'
+                echo 'Checking out...'
+                checkout scm
             }
+        }
+        stage('Prepare') {
+            steps {
+                echo 'Preparing...'
+                sh "npm install -g yarn"
+                sh "yarn install"
         }
         stage('Build') { 
             steps {
