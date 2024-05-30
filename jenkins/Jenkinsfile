@@ -16,11 +16,11 @@ pipeline {
     }
 
     stages {
-        stage('Install') {
+        stage('Prepare') {
             steps {
-                echo 'Installing...'
-                sh 'yarn install'
-            }
+                echo 'Preparing...'
+                sh "npm install -g yarn"
+                sh "yarn install"
         }
         stage('Build') { 
             steps {
