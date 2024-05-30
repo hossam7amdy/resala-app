@@ -1,23 +1,42 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:22-alpine'
+            args '-u root'
+        }
+    }
+
+    environment {
+        CI = 'true'
+        NODE_ENV = 'test'
+    }
 
     tools {
       nodejs "NodeJS21.7.1"
     }
 
     stages {
+        stage('Install') {
+            steps {
+                echo 'Installing...'
+                sh 'yarn install'
+            }
+        }
         stage('Build') { 
             steps {
+                echo 'Building...'
                 sh 'yarn build'
             }
         }
         stage('Test') {
             steps {
+                echo 'Testing...'
                 sh 'yarn test'
             }
         }
         stage('Docker Build') {
             steps {
+                echo 'Building Docker Image...'
                 sh 'yarn docker:build:server'
             }
         }
