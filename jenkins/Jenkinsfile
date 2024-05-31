@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:22-alpine'
-            args '-u root'
+            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
@@ -12,7 +12,7 @@ pipeline {
     }
 
     tools {
-      nodejs "NodeJS21.7.1"
+      nodejs "NodeJS22.0.0"
     }
 
     stages {

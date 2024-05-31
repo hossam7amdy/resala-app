@@ -1,5 +1,6 @@
 'use server';
 
+import { SharpImageOptimizer } from '@/lib/ImageOptimizer/SharpImageOptimizer';
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
 import {
@@ -70,8 +71,39 @@ export const deleteProduct = async (id: number | string) => {
   }
 };
 
+const optimizeImages = async (images: File[]) => {
+  const imageOptimizer = new SharpImageOptimizer();
+
+  const optimizedImages: File[] = [];
+
+  for (const image of images) {
+    const imageFile = image as File;
+    const mimeType = imageFile.type;
+
+    if (!imageOptimizer.supported(mimeType)) {
+      throw new Error('Unsupported image type');
+    }
+
+    const buffer = await imageFile.arrayBuffer();
+    const optimizedImage = await imageOptimizer.optimize(buffer as Buffer);
+
+    const file = new File([optimizedImage], 'optimized.webp', { type: 'image/webp' });
+    optimizedImages.push(file);
+  }
+
+  return optimizedImages;
+};
+
 export const uploadProductImages = async (formData: FormData) => {
   try {
+    const images = formData.getAll('images') || [];
+    const optimizedImages = await optimizeImages(images as File[]);
+    formData.delete('images');
+
+    optimizedImages.forEach(optimizedImage => {
+      formData.append('images', optimizedImage);
+    });
+
     const response = await callEndpoint(ENDPOINT_CONFIGS.addProductImages, { body: formData });
 
     revalidatePath(ROUTES.PRODUCT_IMAGES(formData.get('productId') as string));
