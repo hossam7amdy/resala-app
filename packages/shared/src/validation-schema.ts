@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ROLE } from './enums.js';
+import { OrderStatus, PaymentMethod, Role } from './enums.js';
 import { validationPatterns } from './validation-patterns.js';
 
 const UserSchema = z.object({
@@ -9,7 +9,7 @@ const UserSchema = z.object({
   phone: z.string().length(11).startsWith('01'),
   firstName: z.string().min(2).max(50),
   lastName: z.string().min(2).max(50),
-  role: z.enum([ROLE.ADMIN, ROLE.MODERATOR, ROLE.CUSTOMER]),
+  role: z.enum([Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]),
   password: z
     .string()
     .min(8)
@@ -321,7 +321,7 @@ export const DeleteWishlistSchema = z.object({
 // Order Schemas
 export const CreateOrderSchema = z.object({
   body: z.object({
-    paymentMethod: z.enum(['CARD', 'CASH']),
+    paymentMethod: z.enum([PaymentMethod.CARD, PaymentMethod.CASH]),
     note: z.string().max(500).optional(),
     addressId: z.coerce.number().positive(),
   }),
@@ -332,7 +332,7 @@ export const UpdateOrderStatusSchema = z.object({
     orderId: z.coerce.number().positive(),
   }),
   body: z.object({
-    status: z.enum(['PENDING', 'FULFILLED']),
+    status: z.enum([OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.CANCELLED]),
   }),
 });
 
@@ -353,4 +353,39 @@ export const GetPaymentSchema = z.object({
   params: z.object({
     paymentId: z.coerce.number().positive(),
   }),
+});
+
+// Review Schemas
+export const CreateReviewSchema = z.object({
+  body: z.object({
+    productId: z.coerce.number().positive(),
+    rating: z.coerce.number().min(1).max(5),
+    comment: z.string().max(500).optional(),
+  }),
+});
+
+export const GetReviewSchema = z.object({
+  params: z.object({
+    reviewId: z.coerce.number().positive(),
+  }),
+});
+
+export const ListProductReviewsSchema = z.object({
+  params: z.object({
+    productId: z.coerce.number().positive(),
+  }),
+  query: DefaultQuerySchema.shape.query,
+});
+
+export const ListReviewsSchema = z.object({
+  query: DefaultQuerySchema.shape.query,
+});
+
+export const UpdateReviewSchema = z.object({
+  params: GetReviewSchema.shape.params,
+  body: CreateReviewSchema.shape.body,
+});
+
+export const DeleteReviewSchema = z.object({
+  params: GetReviewSchema.shape.params,
 });
