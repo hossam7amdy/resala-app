@@ -108,6 +108,14 @@ export enum Endpoints {
   getPayment = 'getPayment',
   getPaymentsList = 'getPaymentsList',
   paymentResponse = 'paymentResponse',
+
+  // product reviews endpoints
+  getReview = 'getReview',
+  listReviews = 'listReviews',
+  createReview = 'createReview',
+  updateReview = 'updateReview',
+  deleteReview = 'deleteReview',
+  listProductReviews = 'listProductReviews',
 }
 
 /**
@@ -500,5 +508,34 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/payments',
     method: 'get',
     auth: true,
+  },
+
+  // product reviews endpoints
+  [Endpoints.createReview]: {
+    url: '/api/v1/reviews',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.updateReview]: {
+    url: '/api/v1/reviews/:reviewId',
+    method: 'put',
+    auth: true,
+  },
+  [Endpoints.deleteReview]: {
+    url: '/api/v1/reviews/:reviewId',
+    method: 'delete',
+    auth: true,
+  },
+  [Endpoints.getReview]: {
+    url: '/api/v1/reviews/:reviewId',
+    method: 'get',
+  },
+  [Endpoints.listReviews]: {
+    url: '/api/v1/reviews',
+    method: 'get',
+  },
+  [Endpoints.listProductReviews]: {
+    url: '/api/v1/products/:productId/reviews',
+    method: 'get',
   },
 };

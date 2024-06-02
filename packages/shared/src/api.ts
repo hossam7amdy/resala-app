@@ -6,8 +6,9 @@
  * It is used by the API service to validate the request and response data.
  * It is also used by the API service to generate the API client.
  */
-import type * as zod from 'zod';
+import type { z } from 'zod';
 
+import type { Pagination, Product, Review, User } from './types.js';
 import type {
   AdminDeleteUserSchema,
   AdminGetUserSchema,
@@ -21,6 +22,7 @@ import type {
   CreatePaymentSchema,
   CreateProductImageSchema,
   CreateProductSchema,
+  CreateReviewSchema,
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
@@ -31,6 +33,7 @@ import type {
   DeleteColorSchema,
   DeleteProductImageSchema,
   DeleteProductSchema,
+  DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
   DeleteWishlistSchema,
@@ -39,6 +42,8 @@ import type {
   GetOrderSchema,
   GetPaymentSchema,
   GetProductImages,
+  GetReviewSchema,
+  ListProductReviewsSchema,
   LoginSchema,
   RegisterSchema,
   ResetPasswordSchema,
@@ -48,6 +53,7 @@ import type {
   UpdateOrderStatusSchema,
   UpdateProductSchema,
   UpdateProfileSchema,
+  UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
   VerifyEmailSchema,
@@ -55,7 +61,7 @@ import type {
 
 export type DefaultRequestBody = { [key: string]: any };
 export type DefaultRequestQuery = {
-  query: Partial<zod.infer<typeof DefaultQuerySchema>['query']>;
+  query: Partial<z.infer<typeof DefaultQuerySchema>['query']>;
 };
 
 export type DefaultResponseBody = {
@@ -64,7 +70,7 @@ export type DefaultResponseBody = {
 };
 
 // Auth types
-export type LoginRequest = zod.infer<typeof LoginSchema>;
+export type LoginRequest = z.infer<typeof LoginSchema>;
 export type LoginResponse = DefaultResponseBody & {
   data: {
     expiresAt: Date;
@@ -74,16 +80,16 @@ export type LoginResponse = DefaultResponseBody & {
   };
 };
 
-export type RegisterRequest = zod.infer<typeof RegisterSchema>;
+export type RegisterRequest = z.infer<typeof RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
 
-export type VerifyEmailRequest = zod.infer<typeof VerifyEmailSchema>;
+export type VerifyEmailRequest = z.infer<typeof VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
 
 export type ResendVerificationEmailRequest = undefined; // No data needed
 export type ResendVerificationEmailResponse = DefaultResponseBody;
 
-export type ForgotPasswordRequest = zod.infer<typeof ForgotPasswordSchema>;
+export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordSchema>;
 export type ForgotPasswordResponse = DefaultResponseBody & {
   data: {
     resetToken: string;
@@ -91,10 +97,10 @@ export type ForgotPasswordResponse = DefaultResponseBody & {
   };
 };
 
-export type ResetPasswordRequest = zod.infer<typeof ResetPasswordSchema>;
+export type ResetPasswordRequest = z.infer<typeof ResetPasswordSchema>;
 export type ResetPasswordResponse = DefaultResponseBody;
 
-export type ChangePasswordRequest = zod.infer<typeof ChangePasswordSchema>;
+export type ChangePasswordRequest = z.infer<typeof ChangePasswordSchema>;
 export type ChangePasswordResponse = DefaultResponseBody;
 
 // User types
@@ -115,38 +121,34 @@ export type GetProfileResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateProfileRequest = zod.infer<typeof UpdateProfileSchema>;
+export type UpdateProfileRequest = z.infer<typeof UpdateProfileSchema>;
 export type UpdateProfileResponse = DefaultResponseBody & {
   data: GetProfileResponse['data'];
 };
 
-export type AdminGetUserRequest = zod.infer<typeof AdminGetUserSchema>;
+export type AdminGetUserRequest = z.infer<typeof AdminGetUserSchema>;
 export type AdminGetUserResponse = DefaultResponseBody & {
   data: GetProfileResponse['data'];
 };
 
-export type AdminGetUsersListRequest = zod.infer<typeof DefaultQuerySchema>;
+export type AdminGetUsersListRequest = z.infer<typeof DefaultQuerySchema>;
 export type AdminGetUsersListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of users in the database (for pagination)
-    };
+    pagination: Pagination;
     users: GetProfileResponse['data'][];
   };
 };
 
-export type AdminUpdateUserRequest = zod.infer<typeof AdminUpdateUserSchema>;
+export type AdminUpdateUserRequest = z.infer<typeof AdminUpdateUserSchema>;
 export type AdminUpdateUserResponse = DefaultResponseBody & {
   data: GetProfileResponse['data'];
 };
 
-export type AdminDeleteUserRequest = zod.infer<typeof AdminDeleteUserSchema>;
+export type AdminDeleteUserRequest = z.infer<typeof AdminDeleteUserSchema>;
 export type AdminDeleteUserResponse = DefaultResponseBody;
 
 // Address types
-export type CreateAddressRequest = zod.infer<typeof CreateAddressSchema>;
+export type CreateAddressRequest = z.infer<typeof CreateAddressSchema>;
 export type CreateAddressResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -165,7 +167,7 @@ export type CreateAddressResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateAddressRequest = zod.infer<typeof UpdateAddressSchema>;
+export type UpdateAddressRequest = z.infer<typeof UpdateAddressSchema>;
 export type UpdateAddressResponse = CreateAddressResponse;
 
 export type GetUserAddressListRequest = undefined; // No data needed
@@ -173,13 +175,13 @@ export type GetUserAddressListResponse = DefaultResponseBody & {
   data: CreateAddressResponse['data'][];
 };
 
-export type DeleteAddressRequest = zod.infer<typeof DeleteAddressSchema>;
+export type DeleteAddressRequest = z.infer<typeof DeleteAddressSchema>;
 export type DeleteAddressResponse = DefaultResponseBody & {
   data: CreateAddressResponse['data'];
 };
 
 // Category types
-export type CreateCategoryRequest = zod.infer<typeof CreateCategorySchema>;
+export type CreateCategoryRequest = z.infer<typeof CreateCategorySchema>;
 export type CreateCategoryResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -192,10 +194,10 @@ export type CreateCategoryResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateCategoryRequest = zod.infer<typeof UpdateCategorySchema>;
+export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
 export type UpdateCategoryResponse = CreateCategoryResponse;
 
-export type DeleteCategoryRequest = zod.infer<typeof DeleteCategorySchema>;
+export type DeleteCategoryRequest = z.infer<typeof DeleteCategorySchema>;
 export type DeleteCategoryResponse = CreateCategoryResponse;
 
 export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
@@ -210,13 +212,13 @@ export type GetCategoriesListResponse = DefaultResponseBody & {
   data: GetCategoryResponse['data'][];
 };
 
-export type GetCategoryProductsRequest = zod.infer<typeof GetCategorySchema>;
+export type GetCategoryProductsRequest = z.infer<typeof GetCategorySchema>;
 export type GetCategoryProductsResponse = DefaultResponseBody & {
   data: CreateProductResponse['data'][];
 };
 
 // Product types
-export type CreateProductRequest = zod.infer<typeof CreateProductSchema>;
+export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
 export type CreateProductResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -232,10 +234,10 @@ export type CreateProductResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateProductRequest = zod.infer<typeof UpdateProductSchema>;
+export type UpdateProductRequest = z.infer<typeof UpdateProductSchema>;
 export type UpdateProductResponse = CreateProductResponse;
 
-export type DeleteProductRequest = zod.infer<typeof DeleteProductSchema>;
+export type DeleteProductRequest = z.infer<typeof DeleteProductSchema>;
 export type DeleteProductResponse = CreateProductResponse;
 
 export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
@@ -249,25 +251,21 @@ export type GetProductResponse = DefaultResponseBody & {
 export type GetProductsListRequest = DefaultRequestQuery;
 export type GetProductsListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of products in the database (for pagination)
-    };
+    pagination: Pagination;
     products: GetProductResponse['data'][];
   };
 };
 
 // Product images types
-export type CreateProductImageRequest = zod.infer<typeof CreateProductImageSchema> & {
+export type CreateProductImageRequest = z.infer<typeof CreateProductImageSchema> & {
   images: FormData;
 };
 export type CreateProductImageResponse = DefaultResponseBody;
 
-export type DeleteProductImageRequest = zod.infer<typeof DeleteProductImageSchema>;
+export type DeleteProductImageRequest = z.infer<typeof DeleteProductImageSchema>;
 export type DeleteProductImageResponse = DefaultResponseBody;
 
-export type GetProductImagesRequest = zod.infer<typeof GetProductImages>;
+export type GetProductImagesRequest = z.infer<typeof GetProductImages>;
 export type GetProductImagesResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -277,7 +275,7 @@ export type GetProductImagesResponse = DefaultResponseBody & {
   }[];
 };
 
-export type GetProductStocksRequest = zod.infer<typeof GetProductImages>;
+export type GetProductStocksRequest = z.infer<typeof GetProductImages>;
 export type GetProductStocksResponse = DefaultResponseBody & {
   data: Pick<
     GetStockResponse['data'],
@@ -286,7 +284,7 @@ export type GetProductStocksResponse = DefaultResponseBody & {
 };
 
 // Colors types
-export type CreateColorRequest = zod.infer<typeof CreateColorSchema>;
+export type CreateColorRequest = z.infer<typeof CreateColorSchema>;
 export type CreateColorResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -298,10 +296,10 @@ export type CreateColorResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateColorRequest = zod.infer<typeof UpdateColorSchema>;
+export type UpdateColorRequest = z.infer<typeof UpdateColorSchema>;
 export type UpdateColorResponse = CreateColorResponse;
 
-export type DeleteColorRequest = zod.infer<typeof DeleteColorSchema>;
+export type DeleteColorRequest = z.infer<typeof DeleteColorSchema>;
 export type DeleteColorResponse = CreateColorResponse;
 
 export type GetColorRequest = DeleteColorRequest;
@@ -313,15 +311,15 @@ export type GetColorsListResponse = DefaultResponseBody & {
 };
 
 // Sizes types
-export type CreateSizeRequest = zod.infer<typeof CreateSizeSchema>;
+export type CreateSizeRequest = z.infer<typeof CreateSizeSchema>;
 export type CreateSizeResponse = DefaultResponseBody & {
   data: { id: number; name: string; createdAt: Date; updatedAt: Date };
 };
 
-export type UpdateSizeRequest = zod.infer<typeof UpdateSizeSchema>;
+export type UpdateSizeRequest = z.infer<typeof UpdateSizeSchema>;
 export type UpdateSizeResponse = CreateSizeResponse;
 
-export type DeleteSizeRequest = zod.infer<typeof DeleteSizeSchema>;
+export type DeleteSizeRequest = z.infer<typeof DeleteSizeSchema>;
 export type DeleteSizeResponse = CreateSizeResponse;
 
 export type GetSizeRequest = DeleteSizeRequest;
@@ -333,7 +331,7 @@ export type GetSizesListResponse = DefaultResponseBody & {
 };
 
 // Stock types
-export type CreateStockRequest = zod.infer<typeof CreateStockSchema>;
+export type CreateStockRequest = z.infer<typeof CreateStockSchema>;
 export type CreateStockResponse = DefaultResponseBody & {
   data: CreateStockRequest['body'] & {
     id: number;
@@ -346,10 +344,10 @@ export type CreateStockResponse = DefaultResponseBody & {
   };
 };
 
-export type UpdateStockRequest = zod.infer<typeof UpdateStockSchema>;
+export type UpdateStockRequest = z.infer<typeof UpdateStockSchema>;
 export type UpdateStockResponse = CreateStockResponse;
 
-export type DeleteStockRequest = zod.infer<typeof DeleteStockSchema>;
+export type DeleteStockRequest = z.infer<typeof DeleteStockSchema>;
 export type DeleteStockResponse = CreateStockResponse;
 
 export type GetStockRequest = DeleteStockRequest;
@@ -368,17 +366,13 @@ export type GetStockResponse = DefaultResponseBody & {
 export type GetStocksListRequest = DefaultRequestQuery;
 export type GetStocksListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of stocks in the database (for pagination)
-    };
+    pagination: Pagination;
     stocks: GetStockResponse['data'][];
   };
 };
 
 // Shipping types
-export type CreateCartRequest = zod.infer<typeof CreateCartSchema>;
+export type CreateCartRequest = z.infer<typeof CreateCartSchema>;
 export type CreateCartResponse = DefaultResponseBody & {
   data: {
     userId: number;
@@ -398,10 +392,10 @@ export type CreateCartResponse = DefaultResponseBody & {
 export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = CreateCartResponse;
 
-export type DeleteCartRequest = zod.infer<typeof DeleteCartSchema>;
+export type DeleteCartRequest = z.infer<typeof DeleteCartSchema>;
 export type DeleteCartResponse = CreateCartResponse;
 
-export type CreateWishlistRequest = zod.infer<typeof CreateWishlistSchema>;
+export type CreateWishlistRequest = z.infer<typeof CreateWishlistSchema>;
 export type CreateWishlistResponse = DefaultResponseBody & {
   data: CreateProductResponse['data'][];
 };
@@ -409,11 +403,11 @@ export type CreateWishlistResponse = DefaultResponseBody & {
 export type GetWishlistRequest = Record<string, never>;
 export type GetWishlistResponse = CreateWishlistResponse;
 
-export type DeleteWishlistRequest = zod.infer<typeof DeleteWishlistSchema>;
+export type DeleteWishlistRequest = z.infer<typeof DeleteWishlistSchema>;
 export type DeleteWishlistResponse = CreateWishlistResponse;
 
 // Order types
-export type CreateOrderRequest = zod.infer<typeof CreateOrderSchema>;
+export type CreateOrderRequest = z.infer<typeof CreateOrderSchema>;
 export type CreateOrderResponse = DefaultResponseBody & {
   data: {
     order: {
@@ -436,7 +430,7 @@ export type CreateOrderResponse = DefaultResponseBody & {
   };
 };
 
-export type GetOrderRequest = zod.infer<typeof GetOrderSchema>;
+export type GetOrderRequest = z.infer<typeof GetOrderSchema>;
 export type GetOrderResponse = DefaultResponseBody & {
   data: CreateOrderResponse['data']['order'] & {
     user: GetProfileResponse['data'] | null;
@@ -483,11 +477,7 @@ export type GetOrderResponse = DefaultResponseBody & {
 export type GetOrdersListRequest = DefaultRequestQuery;
 export type GetOrdersListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of orders in the database (for pagination)
-    };
+    pagination: Pagination;
     orders: CreateOrderResponse['data']['order'][];
   };
 };
@@ -495,16 +485,12 @@ export type GetOrdersListResponse = DefaultResponseBody & {
 export type AdminGetOrdersListRequest = DefaultRequestQuery;
 export type AdminGetOrdersListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of orders in the database (for pagination)
-    };
+    pagination: Pagination;
     orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
   };
 };
 
-export type UpdateOrderRequest = zod.infer<typeof UpdateOrderStatusSchema>;
+export type UpdateOrderRequest = z.infer<typeof UpdateOrderStatusSchema>;
 export type UpdateOrderResponse = DefaultResponseBody & {
   data: CreateOrderResponse['data']['order'];
 };
@@ -516,12 +502,12 @@ export type DeleteOrderResponse = DefaultResponseBody & {
 
 // Payment types
 export type CreatePaymentRequest = {
-  query: zod.infer<typeof CreatePaymentSchema>['query'];
+  query: z.infer<typeof CreatePaymentSchema>['query'];
   body: { [key: string]: any };
 };
 export type CreatePaymentResponse = Record<string, never>;
 
-export type GetPaymentRequest = zod.infer<typeof GetPaymentSchema>;
+export type GetPaymentRequest = z.infer<typeof GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
   data: {
     id: number;
@@ -547,15 +533,45 @@ export type GetPaymentResponse = DefaultResponseBody & {
 export type GetPaymentsListRequest = DefaultRequestQuery;
 export type GetPaymentsListResponse = DefaultResponseBody & {
   data: {
-    pagination: {
-      page: number;
-      limit: number;
-      total: number; // Total number of payments in the database (for pagination)
-    };
+    pagination: Pagination;
     payments: GetPaymentResponse['data'][];
   };
 };
 
 // Review types
+export type GetReviewRequest = z.infer<typeof GetReviewSchema>;
+export type GetReviewResponse = DefaultResponseBody & {
+  data: {
+    review: Pick<Review, 'id' | 'rating' | 'comment' | 'createdAt' | 'updatedAt'> & {
+      user: User;
+      product: Product;
+    };
+  };
+};
+
+export type ListReviewsRequest = DefaultRequestQuery;
+export type ListReviewsResponse = DefaultResponseBody & {
+  data: {
+    pagination: Pagination;
+    reviews: Pick<GetReviewResponse['data'], 'review'>[];
+  };
+};
+
+export type ListProductReviewsRequest = z.infer<typeof ListProductReviewsSchema>;
+export type ListProductReviewsResponse = DefaultResponseBody & {
+  data: {
+    pagination: Pagination;
+    reviews: Omit<GetReviewResponse['data']['review'], 'product'>[];
+  };
+};
+
+export type CreateReviewRequest = z.infer<typeof CreateReviewSchema>;
+export type CreateReviewResponse = GetReviewResponse;
+
+export type UpdateReviewRequest = z.infer<typeof UpdateReviewSchema>;
+export type UpdateReviewResponse = GetReviewResponse;
+
+export type DeleteReviewRequest = z.infer<typeof DeleteReviewSchema>;
+export type DeleteReviewResponse = GetReviewResponse;
 
 // Notification types
