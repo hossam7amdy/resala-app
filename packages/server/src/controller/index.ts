@@ -1,3 +1,5 @@
+import ReviewController from './review-controller/ReviewController.js';
+
 export * as authCtrl from './auth-controller/auth-controller.js';
 export * as userCtrl from './user-controller/user-controller.js';
 export * as categoryCtrl from './category-controller/category-controller.js';
@@ -8,3 +10,5 @@ export * as stockCtrl from './stock-controller/stock-controller.js';
 export * as sizeCtrl from './size-controller/size-controller.js';
 export * as colorCtrl from './color-controller/color-controller.js';
 export * as shoppingCtrl from './shopping-controller/shopping-controller.js';
+
+export { ReviewController };

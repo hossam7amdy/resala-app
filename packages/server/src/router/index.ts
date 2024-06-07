@@ -11,6 +11,7 @@ import {
   CreatePaymentSchema,
   CreateProductImageSchema,
   CreateProductSchema,
+  CreateReviewSchema,
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
@@ -21,6 +22,7 @@ import {
   DeleteColorSchema,
   DeleteProductImageSchema,
   DeleteProductSchema,
+  DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
   ENDPOINT_CONFIGS,
@@ -29,6 +31,9 @@ import {
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
+  GetReviewSchema,
+  ListProductReviewsSchema,
+  ListReviewsSchema,
   LoginSchema,
   RegisterSchema,
   ResetPasswordSchema,
@@ -38,6 +43,7 @@ import {
   UpdateOrderStatusSchema,
   UpdateProductSchema,
   UpdateProfileSchema,
+  UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
   VerifyEmailSchema,
@@ -57,16 +63,23 @@ import {
   stockCtrl,
   userCtrl,
 } from '../controller/index.js';
+import { ReviewController } from '../controller/index.js';
+import prisma from '../lib/prisma/index.js';
 import { authenticateToken, authorizeUser } from '../middleware/auth-middleware.js';
 import { errHandler } from '../middleware/error-middleware.js';
 import { loggerMiddleware } from '../middleware/logger-middleware.js';
 import { uploadMultiple } from '../middleware/upload-middleware.js';
 import { validate } from '../middleware/validate-middleware.js';
+import PrismaReviewRepository from '../repository/review-repository/PrismaReviewRepository.js';
+import ReviewService from '../service/review-service/ReviewService.js';
 
-export function createExpressRouter(legRequests: boolean) {
+export const createExpressRouter = (legRequests: boolean) => {
   const router = Router();
 
+  const reviewCtrl = new ReviewController(new ReviewService(new PrismaReviewRepository(prisma)));
+
   /** Define the handlers for each endpoint */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const HANDLER: { [key in Endpoints]: RequestHandler<any, any, any, any, any>[] } = {
     // health check
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
@@ -85,20 +98,20 @@ export function createExpressRouter(legRequests: boolean) {
     [Endpoints.updateCurrentUser]: [validate(UpdateProfileSchema), userCtrl.updateProfile],
 
     // admin user endpoints
-    [Endpoints.adminUpdateUser]: [
-      validate(AdminUpdateUserSchema),
-      authorizeUser(['ADMIN']),
-      userCtrl.adminUpdateUser,
-    ],
     [Endpoints.adminGetUser]: [
       validate(AdminGetUserSchema),
-      authorizeUser(['ADMIN']),
+      authorizeUser(['ADMIN', 'MODERATOR']),
       userCtrl.adminGetUser,
     ],
     [Endpoints.adminGetUsersList]: [
       validate(DefaultQuerySchema),
-      authorizeUser(['ADMIN']),
+      authorizeUser(['ADMIN', 'MODERATOR']),
       userCtrl.adminGetUsersList,
+    ],
+    [Endpoints.adminUpdateUser]: [
+      validate(AdminUpdateUserSchema),
+      authorizeUser(['ADMIN']),
+      userCtrl.adminUpdateUser,
     ],
     [Endpoints.adminDeleteUser]: [
       validate(AdminDeleteUserSchema),
@@ -280,6 +293,17 @@ export function createExpressRouter(legRequests: boolean) {
       authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
+
+    // review endpoints
+    [Endpoints.createReview]: [validate(CreateReviewSchema), reviewCtrl.createReview],
+    [Endpoints.updateReview]: [validate(UpdateReviewSchema), reviewCtrl.updateReview],
+    [Endpoints.deleteReview]: [validate(DeleteReviewSchema), reviewCtrl.deleteReview],
+    [Endpoints.getReview]: [validate(GetReviewSchema), reviewCtrl.getReview],
+    [Endpoints.listReviews]: [validate(ListReviewsSchema), reviewCtrl.listReviews],
+    [Endpoints.listProductReviews]: [
+      validate(ListProductReviewsSchema),
+      reviewCtrl.listProductReviews,
+    ],
   };
 
   /** Register all the routes and their handlers */
@@ -298,4 +322,4 @@ export function createExpressRouter(legRequests: boolean) {
   });
 
   return router;
-}
+};
