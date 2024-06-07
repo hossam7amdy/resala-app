@@ -76,7 +76,7 @@ export type LoginResponse = DefaultResponseBody & {
     expiresAt: Date;
     accessToken: string;
     refreshToken: string;
-    user: GetProfileResponse['data'];
+    user: User;
   };
 };
 
@@ -541,11 +541,9 @@ export type GetPaymentsListResponse = DefaultResponseBody & {
 // Review types
 export type GetReviewRequest = z.infer<typeof GetReviewSchema>;
 export type GetReviewResponse = DefaultResponseBody & {
-  data: {
-    review: Pick<Review, 'id' | 'rating' | 'comment' | 'createdAt' | 'updatedAt'> & {
-      user: User;
-      product: Product;
-    };
+  data: Pick<Review, 'id' | 'rating' | 'comment' | 'createdAt' | 'updatedAt'> & {
+    user: User | null;
+    product: Product;
   };
 };
 
@@ -553,7 +551,7 @@ export type ListReviewsRequest = DefaultRequestQuery;
 export type ListReviewsResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
-    reviews: Pick<GetReviewResponse['data'], 'review'>[];
+    reviews: Omit<GetReviewResponse['data'], 'product'>[];
   };
 };
 
@@ -561,7 +559,7 @@ export type ListProductReviewsRequest = z.infer<typeof ListProductReviewsSchema>
 export type ListProductReviewsResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
-    reviews: Omit<GetReviewResponse['data']['review'], 'product'>[];
+    reviews: Omit<GetReviewResponse['data'], 'product'>[];
   };
 };
 
@@ -572,6 +570,6 @@ export type UpdateReviewRequest = z.infer<typeof UpdateReviewSchema>;
 export type UpdateReviewResponse = GetReviewResponse;
 
 export type DeleteReviewRequest = z.infer<typeof DeleteReviewSchema>;
-export type DeleteReviewResponse = GetReviewResponse;
+export type DeleteReviewResponse = DefaultResponseBody;
 
 // Notification types

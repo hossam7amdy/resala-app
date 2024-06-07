@@ -1,4 +1,10 @@
-import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
+export type Role = 'ADMIN' | 'CUSTOMER' | 'MODERATOR';
+
+export type OrderStatus = 'PENDING' | 'FULFILLED' | 'CANCELLED';
+
+export type PaymentStatus = 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
+
+export type PaymentMethod = 'CASH' | 'CARD';
 
 export type User = {
   id: number;
@@ -8,10 +14,10 @@ export type User = {
   firstName: string;
   lastName: string;
   role: Role;
-  lastLogin?: Date | string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  deletedAt?: Date | string;
+  lastLogin: null | Date;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
 };
 
 export type UserAddress = {
@@ -21,12 +27,12 @@ export type UserAddress = {
 
 export type Category = {
   id: number;
-  categoryId?: number;
+  categoryId: null | number;
   arName: string;
   enName: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  deletedAt?: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
 };
 
 export type Product = {
@@ -37,9 +43,9 @@ export type Product = {
   arDescription: string;
   enDescription: string;
   price: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  deletedAt?: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: null | Date;
 };
 
 export type ProductImage = {
@@ -47,7 +53,7 @@ export type ProductImage = {
   productId: number;
   imageKey: string;
   imageUrl: string;
-  createdAt: Date | string;
+  createdAt: Date;
 };
 
 export type Stock = {
@@ -56,8 +62,8 @@ export type Stock = {
   colorId: number;
   sizeId: number;
   quantity: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Color = {
@@ -65,44 +71,44 @@ export type Color = {
   code: string;
   arName: string;
   enName: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Size = {
   id: number;
   name: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Cart = {
   userId: number;
   stockId: number;
   quantity: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Wishlist = {
   userId: number;
   productId: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Order = {
   id: number;
-  userId?: number;
+  userId: null | number;
   subtotal: number;
   discount: number;
   total: number;
   orderStatus: OrderStatus;
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
-  note?: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  note: null | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type OrderItem = {
@@ -112,8 +118,8 @@ export type OrderItem = {
   size: string;
   price: number;
   quantity: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Shipping = {
@@ -121,8 +127,8 @@ export type Shipping = {
   orderId: number;
   addressId: number;
   cost: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Payment = {
@@ -141,18 +147,18 @@ export type Payment = {
   integrationId: number;
   deliveryNeeded: boolean;
   currency: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Review = {
   id: number;
   productId: number;
-  userId?: number;
+  userId: null | number;
   rating: number;
-  comment?: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  comment: null | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Address = {
@@ -161,14 +167,14 @@ export type Address = {
   state: string;
   city: string;
   street: string;
-  building?: string;
-  floor?: string;
-  address?: string;
+  building: null | string;
+  floor: null | string;
+  address: null | string;
   phone: string;
   firstName: string;
   lastName: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Notification = {
@@ -177,8 +183,8 @@ export type Notification = {
   title: string;
   content: string;
   isRead: boolean;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Pagination = {
