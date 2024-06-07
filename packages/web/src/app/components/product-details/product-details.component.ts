@@ -41,12 +41,16 @@ export class ProductDetailsComponent implements OnInit {
   //color option variable
   selectedColor: string = '';
   currentColor: string = '';
+  isChooseColor: boolean = false;
 
   //size Btn variable
   statusClassSizeBtn = 'btn-not-active';
   selectedSize: string = '';
   currentSize: string = '';
-
+  stockIdColor: string = '';
+  stockIdSize: string = '';
+  quantity: string = '';
+  isChooseSize: boolean = false;
   ngOnInit(): void {
     // start code test
 
@@ -141,12 +145,21 @@ export class ProductDetailsComponent implements OnInit {
   onColorChange(event: any) {
     this.selectedColor = event?.color?.enName;
     this.currentColor = event?.color?.id;
+    this.stockIdColor = event?.id;
     console.log(this.selectedColor);
   }
+  isChooseColorFun() {
+    this.isChooseColor = true;
+  }
 
+  isChooseSizeFun() {
+    this.isChooseSize = true;
+  }
   onSizeChange(event: any) {
     this.selectedSize = event?.size?.name;
     this.currentSize = event?.size?.id;
+    this.stockIdSize = event?.id;
+    this.quantity = event?.quantity;
     console.log(this.selectedSize);
   }
 
@@ -166,15 +179,20 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, quantity: string) {
-    this._CartService.addToCart(productId, quantity).subscribe({
-      next: res => {
-        console.log(res);
-        this._toaster.success('added one product successfuly');
-      },
-      error: err => {
-        this._toaster.error('Should be Login')
-      }
-    });
+  addProduct(productId: string, quantity: any) {
+    if (this.isChooseColor && this.isChooseSize === true) {
+      this._CartService.addToCart(productId, quantity).subscribe({
+        next: res => {
+          console.log(res);
+          this._toaster.success('added one product successfuly');
+        },
+        error: err => {
+          this._toaster.error('Should be Login')
+        }
+      });
+
+    } else {
+      alert('should be choose color and size');
+    }
   }
 }
