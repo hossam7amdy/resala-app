@@ -14,7 +14,7 @@
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "test:unit": "DOTENV_CONFIG_PATH=.env.test vitest -c ./vitest.config.unit.ts",
-    "test:int": "bash ./scripts/run-integration.sh",
+    "test:int": "DOTENV_CONFIG_PATH=.env.test vitest -c ./vitest.config.integration.ts",
     "test": "yarn test:unit && yarn test:int"
   },
   "keywords": [],
@@ -23,6 +23,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.574.0",
     "@prisma/client": "^5.12.1",
+    "@testcontainers/postgresql": "^10.9.0",
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
