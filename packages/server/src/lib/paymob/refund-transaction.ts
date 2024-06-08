@@ -10,6 +10,7 @@ interface RefundTransactionRequest {
 
 interface RefundTransactionResponse {
   type: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: { [key: string]: any };
 }
 
@@ -23,9 +24,9 @@ interface RefundTransactionResponse {
  *
  * @see https://docs.paymob.com/docs/refund-transaction
  */
-export async function refundTransaction(
+export const refundTransaction = async (
   payload: RefundTransactionRequest
-): Promise<RefundTransactionResponse> {
+): Promise<RefundTransactionResponse> => {
   try {
     const response = await Fetch.post(`${PAYMOB_API_URL}/acceptance/void_refund/refund`, payload);
 
@@ -33,4 +34,4 @@ export async function refundTransaction(
   } catch (error) {
     throw new Error('Failed to refund transaction with Paymob API');
   }
-}
+};

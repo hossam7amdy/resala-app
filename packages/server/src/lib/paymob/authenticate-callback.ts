@@ -11,10 +11,10 @@ import type callback from './callback.json';
  *
  * @see https://docs.paymob.com/docs/hmac-calculation
  */
-export async function authenticateCallback(
+export const authenticateCallback = async (
   hmac: string,
   bodyObj: (typeof callback)['obj']
-): Promise<boolean> {
+): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     // Create a hash using the lexogragical string and the HMAC key
     const lexicographical =
@@ -50,4 +50,4 @@ export async function authenticateCallback(
 
     reject(new Error('Invalid HMAC'));
   });
-}
+};

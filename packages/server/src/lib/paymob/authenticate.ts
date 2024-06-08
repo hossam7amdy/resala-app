@@ -13,7 +13,7 @@ export interface AuthenticateResponse {
  *
  * @see https://docs.paymob.com/docs/accept-standard-redirect#1-authentication-request
  */
-export async function authenticate(): Promise<AuthenticateResponse> {
+export const authenticate = async (): Promise<AuthenticateResponse> => {
   try {
     const response = await Fetch.post(`${PAYMOB_API_URL}/auth/tokens`, {
       api_key: PAYMOB_API_TOKEN,
@@ -23,4 +23,4 @@ export async function authenticate(): Promise<AuthenticateResponse> {
   } catch (error) {
     throw new Error('Failed to authenticate with Paymob API');
   }
-}
+};
