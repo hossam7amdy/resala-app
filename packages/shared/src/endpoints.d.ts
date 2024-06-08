@@ -19,6 +19,7 @@ export declare enum Endpoints {
     healthz = "healthz",
     login = "login",
     register = "register",
+    refresh = "refresh",
     forgotPassword = "forgotPassword",
     resetPassword = "resetPassword",
     changePassword = "changePassword",

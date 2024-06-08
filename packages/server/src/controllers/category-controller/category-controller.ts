@@ -1,4 +1,5 @@
 import { inventoryService } from '../../services/index.js';
+import { checkIsAdmin } from '../../utils/isAdmin.js';
 import type {
   CreateCategory,
   DeleteCategory,
@@ -10,10 +11,8 @@ import type {
 
 export const getCategory: GetCategory = async (req, res, next) => {
   try {
-    const category = await inventoryService.findCategoryById(
-      req.params.categoryId,
-      req.query.deleted
-    );
+    const isAdmin = checkIsAdmin(res.locals.user.role);
+    const category = await inventoryService.findCategoryById(req.params.categoryId, isAdmin);
 
     return res.json({
       success: true,
@@ -24,9 +23,10 @@ export const getCategory: GetCategory = async (req, res, next) => {
   }
 };
 
-export const listCategories: ListCategories = async (req, res, next) => {
+export const listCategories: ListCategories = async (_req, res, next) => {
   try {
-    const categories = await inventoryService.listCategories(req.query.deleted);
+    const isAdmin = checkIsAdmin(res.locals.user.role);
+    const categories = await inventoryService.listCategories(isAdmin);
 
     return res.json({
       success: true,

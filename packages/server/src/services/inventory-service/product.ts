@@ -26,9 +26,8 @@ export const listProductsPaginated = async (filters: {
   page: number;
   limit: number;
   query: string;
-  deleted: boolean;
 }) => {
-  const { page, limit, query, deleted } = filters;
+  const { page, limit, query } = filters;
 
   const _filters: Prisma.ProductWhereInput = {
     OR: [
@@ -39,7 +38,7 @@ export const listProductsPaginated = async (filters: {
         arName: { startsWith: query, mode: 'insensitive' },
       },
     ],
-    deletedAt: deleted ? undefined : null,
+    deletedAt: undefined,
   };
 
   const [total, products] = await prisma.$transaction([

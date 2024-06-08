@@ -24,14 +24,18 @@ import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../
 export interface GetProduct
   extends ExpressHandlerWithParams<
     GetProductRequest['params'],
-    {},
+    undefined,
     GetProductResponse,
-    Required<GetProductRequest['query']>,
+    undefined,
     LocalUser
   > {}
 
 export interface GetProductsList
-  extends ExpressHandler<{}, GetProductsListResponse, Required<GetProductsListRequest['query']>> {}
+  extends ExpressHandler<
+    undefined,
+    GetProductsListResponse,
+    Required<GetProductsListRequest['query']>
+  > {}
 
 export interface CreateProduct
   extends ExpressHandler<CreateProductRequest['body'], CreateProductResponse> {}
@@ -44,12 +48,16 @@ export interface UpdateProduct
   > {}
 
 export interface DeleteProduct
-  extends ExpressHandlerWithParams<DeleteProductRequest['params'], {}, DeleteProductResponse> {}
+  extends ExpressHandlerWithParams<
+    DeleteProductRequest['params'],
+    undefined,
+    DeleteProductResponse
+  > {}
 
 export interface ListProductImages
   extends ExpressHandlerWithParams<
     GetProductImagesRequest['params'],
-    {},
+    undefined,
     GetProductImagesResponse
   > {}
 
@@ -59,14 +67,14 @@ export interface CreateProductImage
 export interface DeleteProductImage
   extends ExpressHandlerWithParams<
     DeleteProductImageRequest['params'],
-    {},
+    undefined,
     DeleteProductImageResponse
   > {}
 
 export interface ListProductStocks
   extends ExpressHandlerWithParams<
     GetProductStocksRequest['params'],
-    {},
+    undefined,
     GetProductStocksResponse,
-    {}
+    undefined
   > {}

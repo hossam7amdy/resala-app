@@ -2,6 +2,7 @@ import { logger } from '../../lib/logger/logger.js';
 import { FileService, LocalFileStorageService } from '../../services/index.js';
 import { inventoryService } from '../../services/index.js';
 import { BadRequestError } from '../../utils/api-errors.js';
+import { checkIsAdmin } from '../../utils/isAdmin.js';
 import type {
   CreateProduct,
   CreateProductImage,
@@ -19,7 +20,8 @@ const fileService = new FileService(s3Service);
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
-    const product = await inventoryService.findProductById(req.params.productId, req.query.deleted);
+    const isAdmin = checkIsAdmin(res.locals.user.role);
+    const product = await inventoryService.findProductById(req.params.productId, isAdmin);
 
     return res.json({
       success: true,
@@ -32,12 +34,11 @@ export const getProduct: GetProduct = async (req, res, next) => {
 
 export const getProductsList: GetProductsList = async (req, res, next) => {
   try {
-    const { page, limit, query, deleted } = req.query;
+    const { page, limit, query } = req.query;
     const { products, total } = await inventoryService.listProductsPaginated({
       page,
       limit,
       query,
-      deleted,
     });
 
     return res.json({

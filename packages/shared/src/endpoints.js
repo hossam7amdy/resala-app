@@ -12,6 +12,7 @@ export var Endpoints;
     // auth endpoints
     Endpoints["login"] = "login";
     Endpoints["register"] = "register";
+    Endpoints["refresh"] = "refresh";
     Endpoints["forgotPassword"] = "forgotPassword";
     Endpoints["resetPassword"] = "resetPassword";
     Endpoints["changePassword"] = "changePassword";
@@ -148,6 +149,10 @@ export const ENDPOINT_CONFIGS = {
         method: 'post',
         url: '/api/v1/auth/register',
         sensitive: true,
+    },
+    [Endpoints.refresh]: {
+        method: 'post',
+        url: '/api/v1/auth/refresh',
     },
     [Endpoints.forgotPassword]: {
         method: 'post',
