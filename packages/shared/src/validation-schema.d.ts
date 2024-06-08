@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { OrderStatus, PaymentMethod, Role } from './enums.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
@@ -235,21 +236,21 @@ export declare const AdminUpdateUserSchema: z.ZodObject<{
         lastName: z.ZodString;
         phone: z.ZodString;
     }, {
-        role: z.ZodEnum<["ADMIN", "MODERATOR", "CUSTOMER"]>;
+        role: z.ZodEnum<[Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]>;
         isVerified: z.ZodOptional<z.ZodBoolean>;
         deletedAt: z.ZodOptional<z.ZodDate>;
     }>, "strip", z.ZodTypeAny, {
         phone: string;
         firstName: string;
         lastName: string;
-        role: "ADMIN" | "MODERATOR" | "CUSTOMER";
+        role: Role;
         isVerified?: boolean | undefined;
         deletedAt?: Date | undefined;
     }, {
         phone: string;
         firstName: string;
         lastName: string;
-        role: "ADMIN" | "MODERATOR" | "CUSTOMER";
+        role: Role;
         isVerified?: boolean | undefined;
         deletedAt?: Date | undefined;
     }>;
@@ -261,7 +262,7 @@ export declare const AdminUpdateUserSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
-        role: "ADMIN" | "MODERATOR" | "CUSTOMER";
+        role: Role;
         isVerified?: boolean | undefined;
         deletedAt?: Date | undefined;
     };
@@ -273,7 +274,7 @@ export declare const AdminUpdateUserSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
-        role: "ADMIN" | "MODERATOR" | "CUSTOMER";
+        role: Role;
         isVerified?: boolean | undefined;
         deletedAt?: Date | undefined;
     };
@@ -1059,28 +1060,28 @@ export declare const DeleteWishlistSchema: z.ZodObject<{
 }>;
 export declare const CreateOrderSchema: z.ZodObject<{
     body: z.ZodObject<{
-        paymentMethod: z.ZodEnum<["CARD", "CASH"]>;
+        paymentMethod: z.ZodEnum<[PaymentMethod.CARD, PaymentMethod.CASH]>;
         note: z.ZodOptional<z.ZodString>;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         addressId: number;
-        paymentMethod: "CARD" | "CASH";
+        paymentMethod: PaymentMethod;
         note?: string | undefined;
     }, {
         addressId: number;
-        paymentMethod: "CARD" | "CASH";
+        paymentMethod: PaymentMethod;
         note?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
         addressId: number;
-        paymentMethod: "CARD" | "CASH";
+        paymentMethod: PaymentMethod;
         note?: string | undefined;
     };
 }, {
     body: {
         addressId: number;
-        paymentMethod: "CARD" | "CASH";
+        paymentMethod: PaymentMethod;
         note?: string | undefined;
     };
 }>;
@@ -1093,25 +1094,25 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
         orderId: number;
     }>;
     body: z.ZodObject<{
-        status: z.ZodEnum<["PENDING", "FULFILLED", "CANCELLED"]>;
+        status: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.CANCELLED]>;
     }, "strip", z.ZodTypeAny, {
-        status: "PENDING" | "FULFILLED" | "CANCELLED";
+        status: OrderStatus;
     }, {
-        status: "PENDING" | "FULFILLED" | "CANCELLED";
+        status: OrderStatus;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         orderId: number;
     };
     body: {
-        status: "PENDING" | "FULFILLED" | "CANCELLED";
+        status: OrderStatus;
     };
 }, {
     params: {
         orderId: number;
     };
     body: {
-        status: "PENDING" | "FULFILLED" | "CANCELLED";
+        status: OrderStatus;
     };
 }>;
 export declare const GetOrderSchema: z.ZodObject<{

@@ -61,7 +61,6 @@ export default class PrismaReviewRepository implements IReviewRepository {
   }
 
   async findById(reviewId: number): Promise<ReviewOutput | null> {
-    // @ts-expect-error Type 'Decimal' is not assignable to type 'number'
     return await this.prisma.review.findUnique({
       where: {
         id: reviewId,
@@ -81,7 +80,6 @@ export default class PrismaReviewRepository implements IReviewRepository {
   }
 
   async findByUserAndProduct(userId: number, productId: number): Promise<ReviewOutput | null> {
-    // @ts-expect-error Type 'Decimal' is not assignable to type 'number'
     return await this.prisma.review.findFirst({
       where: {
         userId,
@@ -127,7 +125,6 @@ export default class PrismaReviewRepository implements IReviewRepository {
       }),
     ]);
 
-    // @ts-expect-error Type 'Decimal' is not assignable to type 'number'
     return { reviews, count };
   }
 

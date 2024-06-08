@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { OrderStatus, PaymentMethod, Role } from './enums.js';
 import { validationPatterns } from './validation-patterns.js';
 
 const UserSchema = z.object({
@@ -8,7 +9,7 @@ const UserSchema = z.object({
   phone: z.string().length(11).startsWith('01'),
   firstName: z.string().min(2).max(50),
   lastName: z.string().min(2).max(50),
-  role: z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
+  role: z.enum([Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]),
   password: z
     .string()
     .min(8)
@@ -320,7 +321,7 @@ export const DeleteWishlistSchema = z.object({
 // Order Schemas
 export const CreateOrderSchema = z.object({
   body: z.object({
-    paymentMethod: z.enum(['CARD', 'CASH']),
+    paymentMethod: z.enum([PaymentMethod.CARD, PaymentMethod.CASH]),
     note: z.string().max(500).optional(),
     addressId: z.coerce.number().positive(),
   }),
@@ -331,7 +332,7 @@ export const UpdateOrderStatusSchema = z.object({
     orderId: z.coerce.number().positive(),
   }),
   body: z.object({
-    status: z.enum(['PENDING', 'FULFILLED', 'CANCELLED']),
+    status: z.enum([OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.CANCELLED]),
   }),
 });
 

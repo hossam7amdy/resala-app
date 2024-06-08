@@ -1,10 +1,18 @@
-export type Role = 'ADMIN' | 'CUSTOMER' | 'MODERATOR';
+import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
 
-export type OrderStatus = 'PENDING' | 'FULFILLED' | 'CANCELLED';
+export type RoleType = keyof typeof Role;
 
-export type PaymentStatus = 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
+export type OrderStatusType = keyof typeof OrderStatus;
 
-export type PaymentMethod = 'CASH' | 'CARD';
+export type PaymentStatusType = keyof typeof PaymentStatus;
+
+export type PaymentMethodType = keyof typeof PaymentMethod;
+
+export type Pagination = {
+  page: number;
+  limit: number;
+  total: number;
+};
 
 export type User = {
   id: number;
@@ -13,7 +21,7 @@ export type User = {
   phone: string;
   firstName: string;
   lastName: string;
-  role: Role;
+  role: RoleType;
   lastLogin: null | Date;
   createdAt: Date;
   updatedAt: Date;
@@ -42,7 +50,8 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  price: number | unknown; // Decimal
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  price: number | any; // Decimal
   createdAt: Date;
   updatedAt: Date;
   deletedAt: null | Date;
@@ -100,12 +109,15 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  subtotal: number | unknown; // Decimal
-  discount: number | unknown; // Decimal
-  total: number | unknown; // Decimal;
-  orderStatus: OrderStatus;
-  paymentMethod: PaymentMethod;
-  paymentStatus: PaymentStatus;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  subtotal: number | any; // Decimal
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  discount: number | any; // Decimal
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  total: number | any; // Decimal;
+  orderStatus: OrderStatusType;
+  paymentMethod: PaymentMethodType;
+  paymentStatus: PaymentStatusType;
   note: null | string;
   createdAt: Date;
   updatedAt: Date;
@@ -116,7 +128,8 @@ export type OrderItem = {
   name: string;
   color: string;
   size: string;
-  price: number | unknown; // Decimal
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  price: number | any; // Decimal
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -140,7 +153,8 @@ export type Payment = {
   success: boolean;
   isAuth: boolean;
   isCapture: boolean;
-  amountCents: number | unknown; // Decimal
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  amountCents: number | any; // Decimal
   isVoided: boolean;
   isRefunded: boolean;
   is3DSecure: boolean;
@@ -185,10 +199,4 @@ export type Notification = {
   isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
 };
