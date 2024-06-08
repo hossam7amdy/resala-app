@@ -8,7 +8,17 @@
  */
 import type { z } from 'zod';
 
-import type { Pagination, Product, Review, User } from './types.js';
+import type {
+  Address,
+  Category,
+  Order,
+  OrderItem,
+  Pagination,
+  Payment,
+  Product,
+  Review,
+  User,
+} from './types.js';
 import type {
   AdminDeleteUserSchema,
   AdminGetUserSchema,
@@ -106,19 +116,7 @@ export type ChangePasswordResponse = DefaultResponseBody;
 // User types
 export type GetProfileRequest = undefined;
 export type GetProfileResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    role: string;
-    isVerified: boolean;
-    lastLogin: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  };
+  data: User;
 };
 
 export type UpdateProfileRequest = z.infer<typeof UpdateProfileSchema>;
@@ -150,21 +148,7 @@ export type AdminDeleteUserResponse = DefaultResponseBody;
 // Address types
 export type CreateAddressRequest = z.infer<typeof CreateAddressSchema>;
 export type CreateAddressResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    country: string;
-    state: string;
-    city: string;
-    street: string;
-    building: string | null;
-    floor: number | null;
-    address: string | null;
-    phone: string;
-    firstName: string;
-    lastName: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  data: Address;
 };
 
 export type UpdateAddressRequest = z.infer<typeof UpdateAddressSchema>;
@@ -183,15 +167,7 @@ export type DeleteAddressResponse = DefaultResponseBody & {
 // Category types
 export type CreateCategoryRequest = z.infer<typeof CreateCategorySchema>;
 export type CreateCategoryResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    categoryId: number | null;
-    arName: string;
-    enName: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  };
+  data: Category;
 };
 
 export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
@@ -220,18 +196,7 @@ export type GetCategoryProductsResponse = DefaultResponseBody & {
 // Product types
 export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
 export type CreateProductResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    categoryId: number;
-    arName: string;
-    enName: string;
-    arDescription: string;
-    enDescription: string;
-    price: any; // Decimal;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  };
+  data: Product;
 };
 
 export type UpdateProductRequest = z.infer<typeof UpdateProductSchema>;
@@ -410,19 +375,7 @@ export type DeleteWishlistResponse = CreateWishlistResponse;
 export type CreateOrderRequest = z.infer<typeof CreateOrderSchema>;
 export type CreateOrderResponse = DefaultResponseBody & {
   data: {
-    order: {
-      id: number;
-      userId: number | null;
-      subtotal: any; // Decimal;
-      discount: any; // Decimal;
-      total: any; // Decimal;
-      orderStatus: 'PENDING' | 'FULFILLED' | 'CANCELLED';
-      paymentMethod: string;
-      paymentStatus: 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
-      note: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    };
+    order: Order;
     payment: {
       token: string;
       iframeUrl: string;
@@ -434,40 +387,12 @@ export type GetOrderRequest = z.infer<typeof GetOrderSchema>;
 export type GetOrderResponse = DefaultResponseBody & {
   data: CreateOrderResponse['data']['order'] & {
     user: GetProfileResponse['data'] | null;
-    orderItems: {
-      id: number;
-      orderId: number;
-      name: string;
-      color: string;
-      size: string;
-      quantity: number;
-      price: any; // Decimal;
-      createdAt: Date;
-      updatedAt: Date;
-    }[];
-    paymentDetails: {
-      id: number;
-      orderId: number;
-      transactionId: number;
-      transactionOrderId: number;
-      pending: boolean;
-      success: boolean;
-      isAuth: boolean;
-      isCapture: boolean;
-      amountCents: any; // Decimal;
-      isVoided: boolean;
-      isRefunded: boolean;
-      is3DSecure: boolean;
-      integrationId: number;
-      deliveryNeeded: boolean;
-      currency: string;
-      createdAt: Date;
-      updatedAt: Date;
-    } | null;
+    orderItems: OrderItem[];
+    paymentDetails: Payment | null;
     shippingDetails: {
       id: number;
-      address: CreateAddressResponse['data'];
-      cost: any; // Decimal;
+      address: Address;
+      cost: number | unknown; // Decimal;
       createdAt: Date;
       updatedAt: Date;
     } | null;

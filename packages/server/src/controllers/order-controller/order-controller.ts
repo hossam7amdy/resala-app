@@ -126,9 +126,11 @@ export const deleteOrder: DeleteOrder = async (req, res, next) => {
     }
 
     // notify user with order cancellation
-    communicationService
-      .sendOrderCancellationEmail(order.user?.email!, order.id)
-      .catch(logger.warn);
+    if (order.user?.email) {
+      communicationService
+        .sendOrderCancellationEmail(order.user.email, order.id)
+        .catch(logger.warn);
+    }
 
     return res.json({
       success: true,
@@ -188,9 +190,11 @@ export const adminDeleteOrder: DeleteOrder = async (req, res, next) => {
     }
 
     // Notify user with order cancellation
-    communicationService
-      .sendOrderCancellationEmail(order.user?.email!, order.id)
-      .catch(logger.warn);
+    if (order.user?.email) {
+      communicationService
+        .sendOrderCancellationEmail(order.user.email, order.id)
+        .catch(logger.warn);
+    }
 
     return res.json({
       success: true,
@@ -207,9 +211,9 @@ export const adminUpdateOrderStatus: UpdateOrderStatus = async (req, res, next) 
     const order = await orderService.updateOrderStatus(req.params.orderId, status);
 
     // Notify user with order fulfillment
-    if (status === 'FULFILLED') {
+    if (order.user?.email) {
       communicationService
-        .sendOrderConfirmationEmail(order.user?.email!, order.id)
+        .sendOrderCancellationEmail(order.user.email, order.id)
         .catch(logger.warn);
     }
 

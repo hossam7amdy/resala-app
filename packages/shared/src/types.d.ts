@@ -1,4 +1,7 @@
-import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
+export type Role = 'ADMIN' | 'CUSTOMER' | 'MODERATOR';
+export type OrderStatus = 'PENDING' | 'FULFILLED' | 'CANCELLED';
+export type PaymentStatus = 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
+export type PaymentMethod = 'CASH' | 'CARD';
 export type User = {
     id: number;
     email: string;
@@ -7,10 +10,10 @@ export type User = {
     firstName: string;
     lastName: string;
     role: Role;
-    lastLogin?: Date;
+    lastLogin: null | Date;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: null | Date;
 };
 export type UserAddress = {
     userId: number;
@@ -18,12 +21,12 @@ export type UserAddress = {
 };
 export type Category = {
     id: number;
-    categoryId?: number;
+    categoryId: null | number;
     arName: string;
     enName: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: null | Date;
 };
 export type Product = {
     id: number;
@@ -32,10 +35,10 @@ export type Product = {
     enName: string;
     arDescription: string;
     enDescription: string;
-    price: number;
+    price: number | unknown;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt?: Date;
+    deletedAt: null | Date;
 };
 export type ProductImage = {
     id: number;
@@ -82,14 +85,14 @@ export type Wishlist = {
 };
 export type Order = {
     id: number;
-    userId?: number;
-    subtotal: number;
-    discount: number;
-    total: number;
+    userId: null | number;
+    subtotal: number | unknown;
+    discount: number | unknown;
+    total: number | unknown;
     orderStatus: OrderStatus;
     paymentMethod: PaymentMethod;
     paymentStatus: PaymentStatus;
-    note?: string;
+    note: null | string;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -98,7 +101,7 @@ export type OrderItem = {
     name: string;
     color: string;
     size: string;
-    price: number;
+    price: number | unknown;
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
@@ -114,13 +117,13 @@ export type Shipping = {
 export type Payment = {
     id: number;
     orderId: number;
-    transactionId: string;
-    transactionOrderId: string;
+    transactionId: string | number;
+    transactionOrderId: number;
     pending: boolean;
     success: boolean;
     isAuth: boolean;
     isCapture: boolean;
-    amountCents: number;
+    amountCents: number | unknown;
     isVoided: boolean;
     isRefunded: boolean;
     is3DSecure: boolean;
@@ -133,9 +136,9 @@ export type Payment = {
 export type Review = {
     id: number;
     productId: number;
-    userId?: number;
+    userId: null | number;
     rating: number;
-    comment?: string;
+    comment: null | string;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -145,9 +148,9 @@ export type Address = {
     state: string;
     city: string;
     street: string;
-    building?: string;
-    floor?: string;
-    address?: string;
+    building: null | string;
+    floor: null | number;
+    address: null | string;
     phone: string;
     firstName: string;
     lastName: string;

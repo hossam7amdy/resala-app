@@ -82,39 +82,13 @@ const validationPatterns = {
     },
 };
 
-exports.Role = void 0;
-(function (Role) {
-    Role["ADMIN"] = "ADMIN";
-    Role["CUSTOMER"] = "CUSTOMER";
-    Role["MODERATOR"] = "MODERATOR";
-})(exports.Role || (exports.Role = {}));
-exports.OrderStatus = void 0;
-(function (OrderStatus) {
-    OrderStatus["PENDING"] = "PENDING";
-    OrderStatus["FULFILLED"] = "FULFILLED";
-    OrderStatus["CANCELLED"] = "CANCELLED";
-})(exports.OrderStatus || (exports.OrderStatus = {}));
-exports.PaymentStatus = void 0;
-(function (PaymentStatus) {
-    PaymentStatus["UNPAID"] = "UNPAID";
-    PaymentStatus["PAID"] = "PAID";
-    PaymentStatus["FAILED"] = "FAILED";
-    PaymentStatus["VOIDED"] = "VOIDED";
-    PaymentStatus["REFUNDED"] = "REFUNDED";
-})(exports.PaymentStatus || (exports.PaymentStatus = {}));
-exports.PaymentMethod = void 0;
-(function (PaymentMethod) {
-    PaymentMethod["CASH"] = "CASH";
-    PaymentMethod["CARD"] = "CARD";
-})(exports.PaymentMethod || (exports.PaymentMethod = {}));
-
 const UserSchema = zod.z.object({
     email: zod.z.string().min(5).max(128).email(),
     isVerified: zod.z.boolean().optional(),
     phone: zod.z.string().length(11).startsWith('01'),
     firstName: zod.z.string().min(2).max(50),
     lastName: zod.z.string().min(2).max(50),
-    role: zod.z.enum([exports.Role.ADMIN, exports.Role.MODERATOR, exports.Role.CUSTOMER]),
+    role: zod.z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
     password: zod.z
         .string()
         .min(8)
@@ -379,7 +353,7 @@ const DeleteWishlistSchema = zod.z.object({
 // Order Schemas
 const CreateOrderSchema = zod.z.object({
     body: zod.z.object({
-        paymentMethod: zod.z.enum([exports.PaymentMethod.CARD, exports.PaymentMethod.CASH]),
+        paymentMethod: zod.z.enum(['CARD', 'CASH']),
         note: zod.z.string().max(500).optional(),
         addressId: zod.z.coerce.number().positive(),
     }),
@@ -389,7 +363,7 @@ const UpdateOrderStatusSchema = zod.z.object({
         orderId: zod.z.coerce.number().positive(),
     }),
     body: zod.z.object({
-        status: zod.z.enum([exports.OrderStatus.PENDING, exports.OrderStatus.FULFILLED, exports.OrderStatus.CANCELLED]),
+        status: zod.z.enum(['PENDING', 'FULFILLED', 'CANCELLED']),
     }),
 });
 const GetOrderSchema = zod.z.object({
