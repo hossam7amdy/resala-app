@@ -13,7 +13,7 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor() {} // private authService: AuthService
+  constructor() { } // private authService: AuthService
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -21,7 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (err.status === 401 || err.status === 403) {
           // this.authService.logout();
           console.log('NOT Authorized');
-          alert('NOT Authorized');
+
         }
         return throwError(() => err);
       })
