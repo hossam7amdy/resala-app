@@ -3,3 +3,4 @@ export * from './src/validation-schema.js';
 export * from './src/api.js';
 export * from './src/endpoints.js';
 export * from './src/enums.js';
+export * from './src/types.js';

@@ -1,7 +1,7 @@
 'use server';
 
 import ROUTES from '@/lib/routes';
-import { ENDPOINT_CONFIGS, ROLE } from '@resala/shared';
+import { ENDPOINT_CONFIGS, Role } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
@@ -21,7 +21,7 @@ export const login = async (payload: LoginRequest['body']) => {
       body: payload,
     });
 
-    if (![ROLE.ADMIN, ROLE.MODERATOR].includes(response.data.user.role as ROLE)) {
+    if (![Role.ADMIN, Role.MODERATOR].includes(response.data.user.role as Role)) {
       throw new Error('You are not authorized to access this page');
     }
 
