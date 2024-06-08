@@ -42,7 +42,7 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  price: number;
+  price: number | unknown; // Decimal
   createdAt: Date;
   updatedAt: Date;
   deletedAt: null | Date;
@@ -100,9 +100,9 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  subtotal: number;
-  discount: number;
-  total: number;
+  subtotal: number | unknown; // Decimal
+  discount: number | unknown; // Decimal
+  total: number | unknown; // Decimal;
   orderStatus: OrderStatus;
   paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
@@ -116,7 +116,7 @@ export type OrderItem = {
   name: string;
   color: string;
   size: string;
-  price: number;
+  price: number | unknown; // Decimal
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -134,13 +134,13 @@ export type Shipping = {
 export type Payment = {
   id: number;
   orderId: number;
-  transactionId: string;
-  transactionOrderId: string;
+  transactionId: string | number;
+  transactionOrderId: number;
   pending: boolean;
   success: boolean;
   isAuth: boolean;
   isCapture: boolean;
-  amountCents: number;
+  amountCents: number | unknown; // Decimal
   isVoided: boolean;
   isRefunded: boolean;
   is3DSecure: boolean;
@@ -168,7 +168,7 @@ export type Address = {
   city: string;
   street: string;
   building: null | string;
-  floor: null | string;
+  floor: null | number;
   address: null | string;
   phone: string;
   firstName: string;
