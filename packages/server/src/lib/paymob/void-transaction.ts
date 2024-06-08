@@ -9,6 +9,7 @@ interface VoidTransactionRequest {
 
 interface VoidTransactionResponse {
   success: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: { [key: string]: any };
 }
 
@@ -23,9 +24,9 @@ interface VoidTransactionResponse {
  *
  * @see https://docs.paymob.com/docs/void-transaction
  */
-export async function voidTransaction(
+export const voidTransaction = async (
   payload: VoidTransactionRequest
-): Promise<VoidTransactionResponse> {
+): Promise<VoidTransactionResponse> => {
   try {
     const response = await Fetch.post(
       `${PAYMOB_API_URL}/acceptance/void_refund/void?token=${payload.access_token}`,
@@ -36,4 +37,4 @@ export async function voidTransaction(
   } catch (error) {
     throw new Error('Failed to void transaction with Paymob API');
   }
-}
+};

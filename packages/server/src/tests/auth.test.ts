@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getTestServer } from './testserver.js';
 
-vi.mock('../service/communication-service.js', () => ({
+vi.mock('service/communication-service/communication-service.js', () => ({
   __esModule: true, // this property makes it work;
   sendVerificationEmail: vi.fn(),
   sendResetPasswordEmail: vi.fn(),

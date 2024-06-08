@@ -8,11 +8,15 @@ interface CreateOrderRequest {
   delivery_needed: boolean;
   amount_cents: number;
   merchant_order_id: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   items: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shipping_data?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shipping_details?: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface CreateOrderResponse extends Record<string, any> {
   id: number;
 }
@@ -28,7 +32,7 @@ interface CreateOrderResponse extends Record<string, any> {
  *
  * @see https://docs.paymob.com/docs/accept-standard-redirect#2-order-registration-api
  */
-export async function createOrder(order: CreateOrderRequest): Promise<CreateOrderResponse> {
+export const createOrder = async (order: CreateOrderRequest): Promise<CreateOrderResponse> => {
   try {
     const response = await Fetch.post(`${PAYMOB_API_URL}/ecommerce/orders`, {
       ...order,
@@ -39,4 +43,4 @@ export async function createOrder(order: CreateOrderRequest): Promise<CreateOrde
   } catch (error) {
     throw new Error('Failed to create order with Paymob API');
   }
-}
+};

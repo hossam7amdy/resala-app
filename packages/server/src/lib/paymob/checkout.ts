@@ -42,7 +42,7 @@ interface CheckoutResponse {
  *
  * @see https://docs.paymob.com/docs/accept-standard-redirect#3-payment-key-request
  */
-export async function checkout(payload: CheckoutRequest): Promise<CheckoutResponse> {
+export const checkout = async (payload: CheckoutRequest): Promise<CheckoutResponse> => {
   try {
     const response = await Fetch.post(`${PAYMOB_API_URL}/acceptance/payment_keys`, {
       ...payload,
@@ -60,4 +60,4 @@ export async function checkout(payload: CheckoutRequest): Promise<CheckoutRespon
   } catch (error) {
     throw new Error('Failed to checkout with Paymob API');
   }
-}
+};

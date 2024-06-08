@@ -4,11 +4,10 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import * as communicationService from '../service/communication-service.js';
-import { userService } from '../service/index.js';
+import { communicationService, userService } from '../services/index.js';
 import { getTestServer } from './testserver.js';
 
-vi.mock('service/communication-service.js', () => ({
+vi.mock('service/communication-service/communication-service.js', () => ({
   __esModule: true, // this property makes it work;
   sendVerificationEmail: vi.fn(),
   sendResetPasswordEmail: vi.fn(),
