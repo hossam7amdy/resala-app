@@ -1,6 +1,5 @@
-import Fetch from '../../utils/fetch.js';
+import { axiosInstance } from './axiosInstance.js';
 
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
 const PAYMOB_API_TOKEN = process.env.PAYMOB_API_TOKEN;
 
 export interface AuthenticateResponse {
@@ -13,14 +12,14 @@ export interface AuthenticateResponse {
  *
  * @see https://docs.paymob.com/docs/accept-standard-redirect#1-authentication-request
  */
-export async function authenticate(): Promise<AuthenticateResponse> {
+export const authenticate = async (): Promise<AuthenticateResponse> => {
   try {
-    const response = await Fetch.post(`${PAYMOB_API_URL}/auth/tokens`, {
+    const response = await axiosInstance.post<AuthenticateResponse>('/auth/tokens', {
       api_key: PAYMOB_API_TOKEN,
     });
 
-    return response as AuthenticateResponse;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to authenticate with Paymob API');
   }
-}
+};

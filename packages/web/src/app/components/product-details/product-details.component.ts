@@ -8,6 +8,8 @@ import { ProductDetails } from 'src/app/core/interfaces/product-details';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
@@ -21,8 +23,9 @@ export class ProductDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
     private spinner: NgxSpinnerService,
-    private _CartService: CartService
-  ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+    private _CartService: CartService,
+    private _toaster: ToastrService
+  ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
 
@@ -167,7 +170,11 @@ export class ProductDetailsComponent implements OnInit {
     this._CartService.addToCart(productId, quantity).subscribe({
       next: res => {
         console.log(res);
+        this._toaster.success('added one product successfuly');
       },
+      error: err => {
+        this._toaster.error('Should be Login')
+      }
     });
   }
 }
