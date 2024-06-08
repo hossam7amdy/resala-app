@@ -55,6 +55,7 @@ import type {
   GetReviewSchema,
   ListProductReviewsSchema,
   LoginSchema,
+  RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
   UpdateAddressSchema,
@@ -92,6 +93,15 @@ export type LoginResponse = DefaultResponseBody & {
 
 export type RegisterRequest = z.infer<typeof RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
+
+export type RefreshTokenRequest = z.infer<typeof RefreshTokenSchema>;
+export type RefreshTokenResponse = DefaultResponseBody & {
+  data: {
+    expiresAt: Date;
+    accessToken: string;
+    refreshToken: string;
+  };
+};
 
 export type VerifyEmailRequest = z.infer<typeof VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
@@ -176,7 +186,7 @@ export type UpdateCategoryResponse = CreateCategoryResponse;
 export type DeleteCategoryRequest = z.infer<typeof DeleteCategorySchema>;
 export type DeleteCategoryResponse = CreateCategoryResponse;
 
-export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
+export type GetCategoryRequest = z.infer<typeof GetCategorySchema>;
 export type GetCategoryResponse = DefaultResponseBody & {
   data: CreateCategoryResponse['data'] & {
     subCategories: CreateCategoryResponse['data'][];
@@ -205,7 +215,7 @@ export type UpdateProductResponse = CreateProductResponse;
 export type DeleteProductRequest = z.infer<typeof DeleteProductSchema>;
 export type DeleteProductResponse = CreateProductResponse;
 
-export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
+export type GetProductRequest = DeleteProductRequest;
 export type GetProductResponse = DefaultResponseBody & {
   data: CreateProductResponse['data'] & {
     images: GetProductImagesResponse['data'];

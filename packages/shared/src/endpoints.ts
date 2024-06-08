@@ -23,6 +23,7 @@ export enum Endpoints {
   // auth endpoints
   login = 'login',
   register = 'register',
+  refresh = 'refresh',
   forgotPassword = 'forgotPassword',
   resetPassword = 'resetPassword',
   changePassword = 'changePassword',
@@ -173,6 +174,10 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'post',
     url: '/api/v1/auth/register',
     sensitive: true,
+  },
+  [Endpoints.refresh]: {
+    method: 'post',
+    url: '/api/v1/auth/refresh',
   },
   [Endpoints.forgotPassword]: {
     method: 'post',

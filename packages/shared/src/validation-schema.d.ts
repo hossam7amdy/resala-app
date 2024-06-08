@@ -5,31 +5,26 @@ export declare const DefaultQuerySchema: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
-        deleted: z.ZodEffects<z.ZodOptional<z.ZodEnum<["true", "false"]>>, boolean, "true" | "false" | undefined>;
     }, "strip", z.ZodTypeAny, {
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     }, {
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     };
 }, {
     query: {
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     };
 }>;
 export declare const LoginSchema: z.ZodObject<{
@@ -89,6 +84,23 @@ export declare const RegisterSchema: z.ZodObject<{
         firstName: string;
         lastName: string;
         password: string;
+    };
+}>;
+export declare const RefreshTokenSchema: z.ZodObject<{
+    body: z.ZodObject<{
+        token: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        token: string;
+    }, {
+        token: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    body: {
+        token: string;
+    };
+}, {
+    body: {
+        token: string;
     };
 }>;
 export declare const VerifyEmailSchema: z.ZodObject<{
@@ -1222,17 +1234,14 @@ export declare const ListProductReviewsSchema: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
-        deleted: z.ZodEffects<z.ZodOptional<z.ZodEnum<["true", "false"]>>, boolean, "true" | "false" | undefined>;
     }, "strip", z.ZodTypeAny, {
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     }, {
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
@@ -1242,7 +1251,6 @@ export declare const ListProductReviewsSchema: z.ZodObject<{
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     };
 }, {
     params: {
@@ -1252,7 +1260,6 @@ export declare const ListProductReviewsSchema: z.ZodObject<{
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     };
 }>;
 export declare const ListReviewsSchema: z.ZodObject<{
@@ -1260,31 +1267,26 @@ export declare const ListReviewsSchema: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
         query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
-        deleted: z.ZodEffects<z.ZodOptional<z.ZodEnum<["true", "false"]>>, boolean, "true" | "false" | undefined>;
     }, "strip", z.ZodTypeAny, {
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     }, {
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
         query: string;
         page: number;
         limit: number;
-        deleted: boolean;
     };
 }, {
     query: {
         query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
-        deleted?: "true" | "false" | undefined;
     };
 }>;
 export declare const UpdateReviewSchema: z.ZodObject<{

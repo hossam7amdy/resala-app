@@ -144,10 +144,6 @@ const DefaultQuerySchema = zod.z.object({
             .max(50)
             .optional()
             .transform(val => val || ''),
-        deleted: zod.z
-            .enum(['true', 'false'])
-            .optional()
-            .transform(val => val === 'true'),
     }),
 });
 // Auth Schemas
@@ -164,6 +160,11 @@ const RegisterSchema = zod.z.object({
         phone: UserSchema.shape.phone,
         email: UserSchema.shape.email,
         password: UserSchema.shape.password,
+    }),
+});
+const RefreshTokenSchema = zod.z.object({
+    body: zod.z.object({
+        token: zod.z.string().min(80),
     }),
 });
 const VerifyEmailSchema = zod.z.object({
@@ -452,6 +453,7 @@ exports.Endpoints = void 0;
     // auth endpoints
     Endpoints["login"] = "login";
     Endpoints["register"] = "register";
+    Endpoints["refresh"] = "refresh";
     Endpoints["forgotPassword"] = "forgotPassword";
     Endpoints["resetPassword"] = "resetPassword";
     Endpoints["changePassword"] = "changePassword";
@@ -588,6 +590,10 @@ const ENDPOINT_CONFIGS = {
         method: 'post',
         url: '/api/v1/auth/register',
         sensitive: true,
+    },
+    [exports.Endpoints.refresh]: {
+        method: 'post',
+        url: '/api/v1/auth/refresh',
     },
     [exports.Endpoints.forgotPassword]: {
         method: 'post',
@@ -978,6 +984,7 @@ exports.GetReviewSchema = GetReviewSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;
+exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RegisterSchema = RegisterSchema;
 exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;

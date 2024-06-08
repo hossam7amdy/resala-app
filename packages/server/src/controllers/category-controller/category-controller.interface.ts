@@ -17,15 +17,15 @@ import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../
 export interface GetCategory
   extends ExpressHandlerWithParams<
     GetCategoryRequest['params'],
-    {},
+    undefined,
     GetCategoryResponse,
-    GetCategoryRequest['query'],
+    undefined,
     LocalUser
   > {}
 
 export interface ListCategories
   extends ExpressHandler<
-    {},
+    undefined,
     GetCategoriesListResponse,
     GetCategoriesListRequest['query'],
     LocalUser
@@ -34,29 +34,34 @@ export interface ListCategories
 export interface GetCategoryProducts
   extends ExpressHandlerWithParams<
     GetCategoryRequest['params'],
-    {},
+    undefined,
     GetCategoryProductsResponse,
-    {},
+    undefined,
     LocalUser
   > {}
 
 export interface CreateCategory
-  extends ExpressHandler<CreateCategoryRequest['body'], CreateCategoryResponse, {}, LocalUser> {}
+  extends ExpressHandler<
+    CreateCategoryRequest['body'],
+    CreateCategoryResponse,
+    undefined,
+    LocalUser
+  > {}
 
 export interface UpdateCategory
   extends ExpressHandlerWithParams<
     UpdateCategoryRequest['params'],
     UpdateCategoryRequest['body'],
     UpdateCategoryResponse,
-    {},
+    undefined,
     LocalUser
   > {}
 
 export interface DeleteCategory
   extends ExpressHandlerWithParams<
     DeleteCategoryRequest['params'],
-    {},
+    undefined,
     DeleteCategoryResponse,
-    {},
+    undefined,
     LocalUser
   > {}
