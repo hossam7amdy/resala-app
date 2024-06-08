@@ -1,7 +1,13 @@
-export type Role = 'ADMIN' | 'CUSTOMER' | 'MODERATOR';
-export type OrderStatus = 'PENDING' | 'FULFILLED' | 'CANCELLED';
-export type PaymentStatus = 'UNPAID' | 'PAID' | 'FAILED' | 'VOIDED' | 'REFUNDED';
-export type PaymentMethod = 'CASH' | 'CARD';
+import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
+export type RoleType = keyof typeof Role;
+export type OrderStatusType = keyof typeof OrderStatus;
+export type PaymentStatusType = keyof typeof PaymentStatus;
+export type PaymentMethodType = keyof typeof PaymentMethod;
+export type Pagination = {
+    page: number;
+    limit: number;
+    total: number;
+};
 export type User = {
     id: number;
     email: string;
@@ -9,7 +15,7 @@ export type User = {
     phone: string;
     firstName: string;
     lastName: string;
-    role: Role;
+    role: RoleType;
     lastLogin: null | Date;
     createdAt: Date;
     updatedAt: Date;
@@ -35,7 +41,7 @@ export type Product = {
     enName: string;
     arDescription: string;
     enDescription: string;
-    price: number | unknown;
+    price: number | any;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: null | Date;
@@ -86,12 +92,12 @@ export type Wishlist = {
 export type Order = {
     id: number;
     userId: null | number;
-    subtotal: number | unknown;
-    discount: number | unknown;
-    total: number | unknown;
-    orderStatus: OrderStatus;
-    paymentMethod: PaymentMethod;
-    paymentStatus: PaymentStatus;
+    subtotal: number | any;
+    discount: number | any;
+    total: number | any;
+    orderStatus: OrderStatusType;
+    paymentMethod: PaymentMethodType;
+    paymentStatus: PaymentStatusType;
     note: null | string;
     createdAt: Date;
     updatedAt: Date;
@@ -101,7 +107,7 @@ export type OrderItem = {
     name: string;
     color: string;
     size: string;
-    price: number | unknown;
+    price: number | any;
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
@@ -123,7 +129,7 @@ export type Payment = {
     success: boolean;
     isAuth: boolean;
     isCapture: boolean;
-    amountCents: number | unknown;
+    amountCents: number | any;
     isVoided: boolean;
     isRefunded: boolean;
     is3DSecure: boolean;
@@ -165,9 +171,4 @@ export type Notification = {
     isRead: boolean;
     createdAt: Date;
     updatedAt: Date;
-};
-export type Pagination = {
-    page: number;
-    limit: number;
-    total: number;
 };
