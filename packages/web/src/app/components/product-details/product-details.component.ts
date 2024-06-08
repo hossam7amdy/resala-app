@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProductDetails } from 'src/app/core/interfaces/product-details';
@@ -15,8 +15,6 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet],
 
-
-
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
@@ -26,8 +24,7 @@ export class ProductDetailsComponent implements OnInit {
     private _HomeProductsService: HomeProductsService,
     private spinner: NgxSpinnerService,
     private _CartService: CartService,
-    private _toaster: ToastrService,
-    private _Router: Router
+    private _toaster: ToastrService
   ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
@@ -111,7 +108,7 @@ export class ProductDetailsComponent implements OnInit {
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
-    dots: true,
+    dots: false,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
@@ -187,16 +184,15 @@ export class ProductDetailsComponent implements OnInit {
       this._CartService.addToCart(productId, quantity).subscribe({
         next: res => {
           console.log(res);
-          this._toaster.success('added product successfuly');
+          this._toaster.success('added one product successfuly');
         },
         error: err => {
-          this._toaster.info('Should be Login');
-          this._Router.navigate(['/login']);
+          this._toaster.error('Should be Login')
         }
       });
 
     } else {
-      this._toaster.error('please choose color & size');
+      alert('should be choose color and size');
     }
   }
 }
