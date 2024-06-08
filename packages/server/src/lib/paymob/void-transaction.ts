@@ -1,6 +1,4 @@
-import Fetch from '../../utils/fetch.js';
-
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
+import { axiosInstance } from './axiosInstance.js';
 
 interface VoidTransactionRequest {
   access_token: string;
@@ -28,12 +26,12 @@ export const voidTransaction = async (
   payload: VoidTransactionRequest
 ): Promise<VoidTransactionResponse> => {
   try {
-    const response = await Fetch.post(
-      `${PAYMOB_API_URL}/acceptance/void_refund/void?token=${payload.access_token}`,
+    const response = await axiosInstance.post<VoidTransactionResponse>(
+      `/acceptance/void_refund/void?token=${payload.access_token}`,
       { transaction_id: payload.transaction_id }
     );
 
-    return response as Promise<VoidTransactionResponse>;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to void transaction with Paymob API');
   }

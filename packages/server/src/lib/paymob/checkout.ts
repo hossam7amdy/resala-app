@@ -1,7 +1,6 @@
-import Fetch from '../../utils/fetch.js';
+import { axiosInstance } from './axiosInstance.js';
 
 const CURRENCY = 'EGP';
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
 const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
 
 export interface BillingData {
@@ -44,13 +43,13 @@ interface CheckoutResponse {
  */
 export const checkout = async (payload: CheckoutRequest): Promise<CheckoutResponse> => {
   try {
-    const response = await Fetch.post(`${PAYMOB_API_URL}/acceptance/payment_keys`, {
+    const response = await axiosInstance.post<CheckoutResponse>('/acceptance/payment_keys', {
       ...payload,
       currency: CURRENCY,
       integration_id: PAYMOB_INTEGRATION_ID,
     });
 
-    const { token } = response as CheckoutResponse;
+    const { token } = response.data;
     const iframeUrl = `https://accept.paymob.com/api/acceptance/iframes/726054?payment_token=${token}`;
 
     return {

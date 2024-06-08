@@ -1,7 +1,6 @@
-import Fetch from '../../utils/fetch.js';
+import { axiosInstance } from './axiosInstance.js';
 
 const CURRENCY = 'EGP';
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
 
 interface CreateOrderRequest {
   auth_token: string;
@@ -34,12 +33,12 @@ interface CreateOrderResponse extends Record<string, any> {
  */
 export const createOrder = async (order: CreateOrderRequest): Promise<CreateOrderResponse> => {
   try {
-    const response = await Fetch.post(`${PAYMOB_API_URL}/ecommerce/orders`, {
+    const response = await axiosInstance.post<CreateOrderResponse>('/ecommerce/orders', {
       ...order,
       currency: CURRENCY,
     });
 
-    return response as CreateOrderResponse;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to create order with Paymob API');
   }

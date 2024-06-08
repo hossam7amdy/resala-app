@@ -1,6 +1,4 @@
-import Fetch from '../../utils/fetch.js';
-
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
+import { axiosInstance } from './axiosInstance.js';
 
 interface RefundTransactionRequest {
   auth_token: string;
@@ -28,9 +26,12 @@ export const refundTransaction = async (
   payload: RefundTransactionRequest
 ): Promise<RefundTransactionResponse> => {
   try {
-    const response = await Fetch.post(`${PAYMOB_API_URL}/acceptance/void_refund/refund`, payload);
+    const response = await axiosInstance.post<RefundTransactionResponse>(
+      '/acceptance/void_refund/refund',
+      payload
+    );
 
-    return response as RefundTransactionResponse;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to refund transaction with Paymob API');
   }

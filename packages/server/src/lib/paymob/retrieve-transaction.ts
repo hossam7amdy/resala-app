@@ -1,6 +1,4 @@
-import Fetch from '../../utils/fetch.js';
-
-const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
+import { axiosInstance } from './axiosInstance.js';
 
 interface TransactionResponse {
   type: string;
@@ -23,11 +21,16 @@ export const retrieveTransactionById = async ({
   transaction_id: number;
 }): Promise<TransactionResponse> => {
   try {
-    const response = await Fetch.get(`${PAYMOB_API_URL}/acceptance/payments/${transaction_id}`, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await axiosInstance.get<TransactionResponse>(
+      `/acceptance/payments/${transaction_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    return response as TransactionResponse;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to retrieve transaction with Paymob API');
   }
@@ -47,12 +50,12 @@ export const retrieveTransactionByOrderDetails = async (orderInfo: {
   order_id: number;
 }): Promise<TransactionResponse> => {
   try {
-    const response = await Fetch.post(
-      `${PAYMOB_API_URL}/ecommerce/orders/transaction_inquiry`,
+    const response = await axiosInstance.post<TransactionResponse>(
+      `/ecommerce/orders/transaction_inquiry`,
       orderInfo
     );
 
-    return response as TransactionResponse;
+    return response.data;
   } catch (error) {
     throw new Error('Failed to retrieve transaction with Paymob API');
   }
