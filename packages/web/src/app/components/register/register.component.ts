@@ -21,7 +21,7 @@ export class RegisterComponent {
   constructor(
     private _AuthService: AuthService,
     private _Router: Router
-  ) {}
+  ) { }
 
   //show password
   showPW: any;
