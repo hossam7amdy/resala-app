@@ -35,6 +35,7 @@ import {
   ListProductReviewsSchema,
   ListReviewsSchema,
   LoginSchema,
+  RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
   UpdateAddressSchema,
@@ -52,7 +53,7 @@ import type { Request, RequestHandler, Response } from 'express';
 import { Router } from 'express';
 
 import {
-  authCtrl,
+  AuthController,
   categoryCtrl,
   colorCtrl,
   orderCtrl,
@@ -77,6 +78,7 @@ import ReviewService from '../services/review-service/ReviewService.js';
 export const createExpressRouter = (legRequests: boolean) => {
   const router = Router();
 
+  const authCtrl = new AuthController();
   const reviewCtrl = new ReviewController(new ReviewService(new PrismaReviewRepository(prisma)));
 
   /** Define the handlers for each endpoint */
@@ -88,6 +90,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     // auth endpoints
     [Endpoints.login]: [validate(LoginSchema), authCtrl.login],
     [Endpoints.register]: [validate(RegisterSchema), authCtrl.register],
+    [Endpoints.refresh]: [validate(RefreshTokenSchema), authCtrl.refresh],
     [Endpoints.verifyEmail]: [validate(VerifyEmailSchema), authCtrl.verifyEmail],
     [Endpoints.forgotPassword]: [validate(ForgotPasswordSchema), authCtrl.forgotPassword],
     [Endpoints.resetPassword]: [validate(ResetPasswordSchema), authCtrl.resetPassword],

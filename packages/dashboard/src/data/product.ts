@@ -20,7 +20,7 @@ export const listProductsPaginated = async (query: DefaultRequestQuery['query'])
 
   const response = await callEndpoint<GetProductsListRequest, GetProductsListResponse>(
     ENDPOINT_CONFIGS.getProductsList,
-    { query: { ...query, deleted: true } }
+    { query }
   );
 
   return response.data;
@@ -53,7 +53,7 @@ export const findProductById = async (id: string | number) => {
 
   const response = await callEndpoint<GetProductRequest, GetProductResponse>(
     ENDPOINT_CONFIGS.getProduct,
-    { query: { deleted: true }, params: { productId: Number(id) } }
+    { params: { productId: Number(id) } }
   );
 
   return response.data;

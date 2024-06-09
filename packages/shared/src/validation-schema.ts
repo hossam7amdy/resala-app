@@ -49,10 +49,6 @@ export const DefaultQuerySchema = z.object({
       .max(50)
       .optional()
       .transform(val => val || ''),
-    deleted: z
-      .enum(['true', 'false'])
-      .optional()
-      .transform(val => val === 'true'),
   }),
 });
 
@@ -71,6 +67,12 @@ export const RegisterSchema = z.object({
     phone: UserSchema.shape.phone,
     email: UserSchema.shape.email,
     password: UserSchema.shape.password,
+  }),
+});
+
+export const RefreshTokenSchema = z.object({
+  body: z.object({
+    token: z.string().min(80),
   }),
 });
 

@@ -24,8 +24,3 @@ process.on('uncaughtException', reason => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...', reason);
   process.exit(1);
 });
-
-// prompt user to enter a value and log it
-process.stdin.on('data', data => {
-  console.log(data.toString());
-});
