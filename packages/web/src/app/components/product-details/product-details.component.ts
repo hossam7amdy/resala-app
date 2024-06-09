@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProductDetails } from 'src/app/core/interfaces/product-details';
@@ -15,6 +15,8 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet],
 
+
+
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
@@ -24,7 +26,8 @@ export class ProductDetailsComponent implements OnInit {
     private _HomeProductsService: HomeProductsService,
     private spinner: NgxSpinnerService,
     private _CartService: CartService,
-    private _toaster: ToastrService
+    private _toaster: ToastrService,
+    private _Router: Router
   ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
@@ -41,12 +44,16 @@ export class ProductDetailsComponent implements OnInit {
   //color option variable
   selectedColor: string = '';
   currentColor: string = '';
+  isChooseColor: boolean = false;
 
   //size Btn variable
   statusClassSizeBtn = 'btn-not-active';
   selectedSize: string = '';
   currentSize: string = '';
-
+  stockIdColor: string = '';
+  stockIdSize: string = '';
+  quantity: string = '';
+  isChooseSize: boolean = false;
   ngOnInit(): void {
     // start code test
 
@@ -104,7 +111,7 @@ export class ProductDetailsComponent implements OnInit {
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
-    dots: false,
+    dots: true,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
@@ -141,12 +148,21 @@ export class ProductDetailsComponent implements OnInit {
   onColorChange(event: any) {
     this.selectedColor = event?.color?.enName;
     this.currentColor = event?.color?.id;
+    this.stockIdColor = event?.id;
     console.log(this.selectedColor);
   }
+  isChooseColorFun() {
+    this.isChooseColor = true;
+  }
 
+  isChooseSizeFun() {
+    this.isChooseSize = true;
+  }
   onSizeChange(event: any) {
     this.selectedSize = event?.size?.name;
     this.currentSize = event?.size?.id;
+    this.stockIdSize = event?.id;
+    this.quantity = event?.quantity;
     console.log(this.selectedSize);
   }
 
@@ -166,15 +182,21 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, quantity: string) {
-    this._CartService.addToCart(productId, quantity).subscribe({
-      next: res => {
-        console.log(res);
-        this._toaster.success('added one product successfuly');
-      },
-      error: err => {
-        this._toaster.error('Should be Login')
-      }
-    });
+  addProduct(productId: string, quantity: any) {
+    if (this.isChooseColor && this.isChooseSize === true) {
+      this._CartService.addToCart(productId, quantity).subscribe({
+        next: res => {
+          console.log(res);
+          this._toaster.success('added product successfuly');
+        },
+        error: err => {
+          this._toaster.info('Should be Login');
+          this._Router.navigate(['/login']);
+        }
+      });
+
+    } else {
+      this._toaster.error('please choose color & size');
+    }
   }
 }
