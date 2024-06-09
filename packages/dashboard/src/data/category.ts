@@ -12,8 +12,7 @@ export const listAllCategories = async () => {
   noStore();
 
   const response = await callEndpoint<GetCategoriesListRequest, GetCategoriesListResponse>(
-    ENDPOINT_CONFIGS.listCategories,
-    { query: { deleted: true } }
+    ENDPOINT_CONFIGS.listCategories
   );
 
   return response.data;
@@ -24,7 +23,7 @@ export const findCategoryById = async (id: string) => {
 
   const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
     ENDPOINT_CONFIGS.getCategory,
-    { params: { categoryId: Number(id) }, query: { deleted: true } }
+    { params: { categoryId: Number(id) } }
   );
 
   return response.data;

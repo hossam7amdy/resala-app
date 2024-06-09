@@ -4,7 +4,7 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { getTestServer } from './testserver.js';
+import { getTestServer } from './setup/testServer.js';
 
 vi.mock('service/communication-service/communication-service.js', () => ({
   __esModule: true, // this property makes it work;

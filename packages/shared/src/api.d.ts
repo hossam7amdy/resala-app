@@ -6,7 +6,7 @@
  */
 import type { z } from 'zod';
 import type { Address, Category, Order, OrderItem, Pagination, Payment, Product, Review, User } from './types.js';
-import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateReviewSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteReviewSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, GetReviewSchema, ListProductReviewsSchema, LoginSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateOrderStatusSchema, UpdateProductSchema, UpdateProfileSchema, UpdateReviewSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
+import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductImageSchema, CreateProductSchema, CreateReviewSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductImageSchema, DeleteProductSchema, DeleteReviewSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, GetReviewSchema, ListProductReviewsSchema, LoginSchema, RefreshTokenSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateOrderStatusSchema, UpdateProductSchema, UpdateProfileSchema, UpdateReviewSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
 export type DefaultRequestBody = {
     [key: string]: any;
 };
@@ -28,6 +28,14 @@ export type LoginResponse = DefaultResponseBody & {
 };
 export type RegisterRequest = z.infer<typeof RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
+export type RefreshTokenRequest = z.infer<typeof RefreshTokenSchema>;
+export type RefreshTokenResponse = DefaultResponseBody & {
+    data: {
+        expiresAt: Date;
+        accessToken: string;
+        refreshToken: string;
+    };
+};
 export type VerifyEmailRequest = z.infer<typeof VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
 export type ResendVerificationEmailRequest = undefined;
@@ -90,7 +98,7 @@ export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
 export type UpdateCategoryResponse = CreateCategoryResponse;
 export type DeleteCategoryRequest = z.infer<typeof DeleteCategorySchema>;
 export type DeleteCategoryResponse = CreateCategoryResponse;
-export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
+export type GetCategoryRequest = z.infer<typeof GetCategorySchema>;
 export type GetCategoryResponse = DefaultResponseBody & {
     data: CreateCategoryResponse['data'] & {
         subCategories: CreateCategoryResponse['data'][];
@@ -112,7 +120,7 @@ export type UpdateProductRequest = z.infer<typeof UpdateProductSchema>;
 export type UpdateProductResponse = CreateProductResponse;
 export type DeleteProductRequest = z.infer<typeof DeleteProductSchema>;
 export type DeleteProductResponse = CreateProductResponse;
-export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
+export type GetProductRequest = DeleteProductRequest;
 export type GetProductResponse = DefaultResponseBody & {
     data: CreateProductResponse['data'] & {
         images: GetProductImagesResponse['data'];

@@ -1,18 +1,10 @@
-import { exec } from 'child_process';
 import { afterAll, beforeAll } from 'vitest';
 
-import prisma from '../lib/prisma';
+import prisma from '../../lib/prisma';
+import { execAsync } from '../../utils/execAsync.js';
 
-const resetDatabase = () => {
-  return new Promise((resolve, reject) => {
-    exec('yarn prisma db seed', (err, stdout, stderr) => {
-      if (err) {
-        return reject(err);
-      }
-      console.log('stderr', stderr);
-      return resolve(stdout);
-    });
-  });
+const resetDatabase = async () => {
+  await execAsync('yarn prisma db seed');
 };
 
 beforeAll(async () => {

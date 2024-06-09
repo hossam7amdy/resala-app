@@ -32,7 +32,6 @@ export const listUsersPaginated = async (searchParams: {
         page: Number(searchParams.page),
         limit: Number(searchParams.limit),
         query: searchParams?.query || '',
-        deleted: true,
       },
     }
   );
