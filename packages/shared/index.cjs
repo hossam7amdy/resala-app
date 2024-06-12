@@ -594,6 +594,7 @@ const ENDPOINT_CONFIGS = {
     [exports.Endpoints.refresh]: {
         method: 'post',
         url: '/api/v1/auth/refresh',
+        sensitive: true,
     },
     [exports.Endpoints.forgotPassword]: {
         method: 'post',

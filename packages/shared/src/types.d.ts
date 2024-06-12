@@ -1,8 +1,11 @@
+import type { z } from 'zod';
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
+import type { DefaultQuerySchema } from './validation-schema.js';
 export type RoleType = keyof typeof Role;
 export type OrderStatusType = keyof typeof OrderStatus;
 export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
+export type DefaultFilters = z.infer<typeof DefaultQuerySchema>['query'];
 export type Pagination = {
     page: number;
     limit: number;
