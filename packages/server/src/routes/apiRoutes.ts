@@ -327,8 +327,10 @@ export const createExpressRouter = (legRequests: boolean) => {
       handlers = [loggerMiddleware, ...handlers];
     }
     if (auth) {
-      handlers = [authMiddleware.authenticateToken, ...handlers];
+      handlers = [authMiddleware.enforceJwtMiddleware, ...handlers];
     }
+
+    handlers = [authMiddleware.jwtParseMiddleware, ...handlers];
 
     const withErrorHandler = handlers.map(handler => errHandler(handler));
     router[method](url, ...withErrorHandler);
