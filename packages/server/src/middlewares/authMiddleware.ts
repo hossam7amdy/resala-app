@@ -9,18 +9,28 @@ export default class AuthMiddleware {
     private readonly userService: UserService
   ) {}
 
-  authenticateToken: RequestHandler = async (req, res, next) => {
+  jwtParseMiddleware: RequestHandler = async (req, res, next) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
+        return next();
+      }
+
+      const payload = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
+      res.locals.user = await this.userService.findUserById(payload.id);
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  enforceJwtMiddleware: RequestHandler = async (_, res, next) => {
+    try {
+      if (!res.locals?.user?.id) {
         throw new BadRequestError('Token required');
       }
 
-      const jwtPayload = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
-
-      const user = await this.userService.findUserById(jwtPayload.id);
-
-      res.locals.user = user;
       next();
     } catch (error) {
       next(error);
