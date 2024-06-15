@@ -27,31 +27,30 @@ const SELECT = {
 };
 
 export const authenticate = async (sign: string, password: string) => {
-  const user = await prisma.user.findFirst({
+  const sensitiveUser = await prisma.user.findFirst({
     where: {
       OR: [{ email: sign }, { phone: sign }],
     },
   });
-  if (!user) {
+  if (!sensitiveUser || sensitiveUser.deletedAt) {
     throw new NotFoundError('User not registered');
   }
 
   const verified = await verifyHashedPassword({
     password: password!,
-    salt: user.salt,
-    iterations: user.iterations,
-    hashedPassword: user.password,
+    salt: sensitiveUser.salt,
+    iterations: sensitiveUser.iterations,
+    hashedPassword: sensitiveUser.password,
   });
   if (!verified) {
     throw new BadRequestError('Invalid email/phone or password');
   }
 
-  prisma.user
-    .update({
-      data: { lastLogin: new Date() },
-      where: { id: user.id },
-    })
-    .catch(console.error);
+  const user = await prisma.user.update({
+    data: { lastLogin: new Date() },
+    where: { id: sensitiveUser.id },
+    select: SELECT,
+  });
 
   const accessToken = Jwt.signJwt({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
     expiresIn: '1d',
@@ -60,13 +59,11 @@ export const authenticate = async (sign: string, password: string) => {
     expiresIn: '7d',
   });
 
-  // eslint-disable-next-line no-unused-vars
-  const { password: _, salt: __, iterations: ___, ...userWithoutPassword } = user;
   return {
     expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
     accessToken: accessToken,
     refreshToken: refreshToken,
-    user: userWithoutPassword,
+    user: user,
   };
 };
 
