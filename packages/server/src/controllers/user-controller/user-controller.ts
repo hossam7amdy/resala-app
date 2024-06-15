@@ -1,4 +1,4 @@
-import { userService } from '../../services/index.js';
+import type { UserService } from '../../services/index.js';
 import type {
   AdminDeleteUser,
   AdminGetUser,
@@ -11,158 +11,162 @@ import type {
   UpdateUserAddress,
 } from './user-controller.interface.js';
 
-export const getProfile: GetProfile = async (_, res, next) => {
-  const userId = res.locals.user.id;
-  try {
-    const user = await userService.findUserById(userId);
+export default class UserController {
+  constructor(private readonly userService: UserService) {}
 
-    return res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  getProfile: GetProfile = async (_, res, next) => {
+    const userId = res.locals.user.id;
+    try {
+      const user = await this.userService.findUserById(userId);
 
-export const updateProfile: UpdateProfile = async (req, res, next) => {
-  const userId = res.locals.user.id;
-  const { firstName, lastName, phone } = req.body;
+      return res.json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  try {
-    const user = await userService.updateUser(userId, {
-      firstName,
-      lastName,
-      phone,
-    });
+  updateProfile: UpdateProfile = async (req, res, next) => {
+    const userId = res.locals.user.id;
+    const { firstName, lastName, phone } = req.body;
 
-    return res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    try {
+      const user = await this.userService.updateUser(userId, {
+        firstName,
+        lastName,
+        phone,
+      });
 
-export const adminGetUser: AdminGetUser = async (req, res, next) => {
-  try {
-    const user = await userService.findUserById(req.params.userId);
+      return res.json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    return res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  adminGetUser: AdminGetUser = async (req, res, next) => {
+    try {
+      const user = await this.userService.findUserById(req.params.userId);
 
-export const adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
-  try {
-    const { users, pagination } = await userService.listUsersPaginated(req.query);
+      return res.json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    return res.json({
-      success: true,
-      data: {
-        users,
-        pagination,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
+    try {
+      const { users, pagination } = await this.userService.listUsersPaginated(req.query);
 
-export const adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
-  try {
-    await userService.deleteUser(req.params.userId);
+      return res.json({
+        success: true,
+        data: {
+          users,
+          pagination,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    return res.json({
-      success: true,
-      message: 'User deleted successfully',
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
+    try {
+      await this.userService.deleteUser(req.params.userId);
 
-export const adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
-  try {
-    const user = await userService.updateUser(req.params.userId, {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      role: req.body.role,
-      phone: req.body.phone,
-    });
+      return res.json({
+        success: true,
+        message: 'User deleted successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-    return res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
+    try {
+      const user = await this.userService.updateUser(req.params.userId, {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: req.body.role,
+        phone: req.body.phone,
+      });
 
-export const getUserAddressList: GetUserAddressList = async (_, res, next) => {
-  const userId = res.locals.user.id;
+      return res.json({
+        success: true,
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  try {
-    const addresses = await userService.getUserAddressList(userId);
+  getUserAddressList: GetUserAddressList = async (_, res, next) => {
+    const userId = res.locals.user.id;
 
-    return res.json({
-      success: true,
-      data: addresses,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    try {
+      const addresses = await this.userService.getUserAddressList(userId);
 
-export const createUserAddress: CreateUserAddress = async (req, res, next) => {
-  const userId = res.locals.user.id;
+      return res.json({
+        success: true,
+        data: addresses,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  try {
-    const address = await userService.createUserAddress(userId, req.body);
+  createUserAddress: CreateUserAddress = async (req, res, next) => {
+    const userId = res.locals.user.id;
 
-    return res.status(201).json({
-      success: true,
-      data: address,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    try {
+      const address = await this.userService.createUserAddress(userId, req.body);
 
-export const updateUserAddress: UpdateUserAddress = async (req, res, next) => {
-  const userId = res.locals.user.id;
-  const addressId = req.params.addressId;
+      return res.status(201).json({
+        success: true,
+        data: address,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  try {
-    const address = await userService.updateUserAddress(userId, addressId, req.body);
+  updateUserAddress: UpdateUserAddress = async (req, res, next) => {
+    const userId = res.locals.user.id;
+    const addressId = req.params.addressId;
 
-    return res.json({
-      success: true,
-      data: address,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    try {
+      const address = await this.userService.updateUserAddress(userId, addressId, req.body);
 
-export const deleteUserAddress: UpdateUserAddress = async (req, res, next) => {
-  const userId = res.locals.user.id;
-  const addressId = req.params.addressId;
+      return res.json({
+        success: true,
+        data: address,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  try {
-    const address = await userService.deleteUserAddress(userId, addressId);
+  deleteUserAddress: UpdateUserAddress = async (req, res, next) => {
+    const userId = res.locals.user.id;
+    const addressId = req.params.addressId;
 
-    return res.json({
-      success: true,
-      data: address,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+    try {
+      const address = await this.userService.deleteUserAddress(userId, addressId);
+
+      return res.json({
+        success: true,
+        data: address,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+}

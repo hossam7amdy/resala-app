@@ -4,7 +4,8 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { communicationService, userService } from '../services/index.js';
+import prisma from '../lib/prisma/index.js';
+import { UserService, communicationService } from '../services/index.js';
 import { getTestServer } from './setup/testServer.js';
 
 vi.mock('service/communication-service/communication-service.js', () => ({
@@ -16,6 +17,7 @@ vi.mock('service/communication-service/communication-service.js', () => ({
 
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
+  const userService = new UserService(prisma);
 
   const firstName = 'test';
   const lastName = 'test';

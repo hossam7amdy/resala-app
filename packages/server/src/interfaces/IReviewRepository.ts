@@ -1,9 +1,4 @@
-import type {
-  CreateReviewInput,
-  Filters,
-  ReviewOutput,
-  UpdateReviewInput,
-} from '../../types/dto.js';
+import type { CreateReviewInput, Filters, ReviewOutput, UpdateReviewInput } from '../DTOs/index.js';
 
 export default interface IReviewRepository {
   create(review: CreateReviewInput): Promise<ReviewOutput>;

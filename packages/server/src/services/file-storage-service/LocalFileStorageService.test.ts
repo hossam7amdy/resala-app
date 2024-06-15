@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LocalFileStorageService } from './index.js';
+import { LocalFileStorageService } from '../index.js';
 
 vi.mock('fs/promises');
 vi.mock('path', () => ({
@@ -23,13 +24,7 @@ describe('LocalFileStorageService', () => {
 
   beforeEach(() => {
     localStorage = new LocalFileStorageService({ baseUrl, rootDirectory });
-    fs.writeFile.mockClear();
-    fs.readFile.mockClear();
-    fs.unlink.mockClear();
-    fs.readdir.mockClear();
-    fs.stat.mockClear();
-    fs.access.mockClear();
-    fs.mkdir.mockClear();
+    vi.clearAllMocks();
   });
 
   describe('uploadFile', () => {
@@ -37,13 +32,13 @@ describe('LocalFileStorageService', () => {
       const path = join(__dirname, '..', '..', '..', rootDirectory, key);
       const publicUrl = `${baseUrl}/${rootDirectory}/${key}`;
 
-      vi.spyOn(localStorage, 'getPath').mockReturnValue(path);
-      vi.spyOn(localStorage, 'getPublicUrl').mockReturnValue(publicUrl);
+      vi.spyOn(localStorage as any, 'getPath').mockImplementation(() => path);
+      vi.spyOn(localStorage as any, 'getPublicUrl').mockImplementation(() => publicUrl);
       vi.spyOn(localStorage, 'createDirectoryIfNotExist').mockResolvedValue('CREATED');
 
       const result = await localStorage.uploadFile(buffer, key);
 
-      expect(localStorage.getPath).toHaveBeenCalledWith(key);
+      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(localStorage.createDirectoryIfNotExist).toHaveBeenCalledWith(dirname(path));
       expect(fs.writeFile).toHaveBeenCalledWith(path, buffer);
       expect(result).toBe(publicUrl);
@@ -54,12 +49,12 @@ describe('LocalFileStorageService', () => {
     it('should download a file and return its content as a buffer', async () => {
       const path = join(__dirname, '..', '..', '..', rootDirectory, key);
 
-      vi.spyOn(localStorage, 'getPath').mockReturnValue(path);
-      fs.readFile.mockResolvedValue(buffer);
+      vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
+      (fs.readFile as Mock).mockResolvedValue(buffer);
 
       const result = await localStorage.downloadFile(key);
 
-      expect(localStorage.getPath).toHaveBeenCalledWith(key);
+      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.readFile).toHaveBeenCalledWith(path);
       expect(result).toBe(buffer);
     });
@@ -69,11 +64,11 @@ describe('LocalFileStorageService', () => {
     it('should delete a file', async () => {
       const path = join(__dirname, '..', '..', '..', rootDirectory, key);
 
-      vi.spyOn(localStorage, 'getPath').mockReturnValue(path);
+      vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
 
       await localStorage.deleteFile(key);
 
-      expect(localStorage.getPath).toHaveBeenCalledWith(key);
+      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.unlink).toHaveBeenCalledWith(path);
     });
   });
@@ -83,14 +78,14 @@ describe('LocalFileStorageService', () => {
       const keys = ['file1.txt', 'file2.txt'];
       const paths = keys.map(key => join(__dirname, '..', '..', '..', rootDirectory, key));
 
-      vi.spyOn(localStorage, 'getPath').mockImplementation(key =>
-        join(__dirname, '..', '..', '..', rootDirectory, key)
+      vi.spyOn(localStorage as any, 'getPath').mockImplementation(key =>
+        join(__dirname, '..', '..', '..', rootDirectory, key as string)
       );
 
       await localStorage.deleteFiles(keys);
 
       keys.forEach((key, index) => {
-        expect(localStorage.getPath).toHaveBeenCalledWith(key);
+        expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
         expect(fs.unlink).toHaveBeenCalledWith(paths[index]);
       });
     });
@@ -101,12 +96,12 @@ describe('LocalFileStorageService', () => {
       const files = ['file1.txt', 'file2.txt'];
       const path = join(__dirname, '..', '..', '..', rootDirectory, key);
 
-      vi.spyOn(localStorage, 'getPath').mockReturnValue(path);
-      fs.readdir.mockResolvedValue(files);
+      vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
+      (fs.readdir as Mock).mockResolvedValue(files);
 
       const result = await localStorage.listFiles(key);
 
-      expect(localStorage.getPath).toHaveBeenCalledWith(key);
+      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.readdir).toHaveBeenCalledWith(path);
       expect(result).toEqual(files.map(file => join(key, file)));
     });
@@ -120,12 +115,12 @@ describe('LocalFileStorageService', () => {
         mtime: new Date(),
       };
 
-      vi.spyOn(localStorage, 'getPath').mockReturnValue(path);
-      fs.stat.mockResolvedValue(stat);
+      vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
+      (fs.stat as Mock).mockResolvedValue(stat);
 
       const result = await localStorage.getFileMetadata(key);
 
-      expect(localStorage.getPath).toHaveBeenCalledWith(key);
+      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.stat).toHaveBeenCalledWith(path);
       expect(result).toEqual({
         size: stat.size,
@@ -138,8 +133,8 @@ describe('LocalFileStorageService', () => {
     it('should create a directory if it does not exist', async () => {
       const path = join(__dirname, '..', '..', '..', rootDirectory, 'new_dir');
 
-      fs.access.mockRejectedValue(new Error('Directory does not exist'));
-      fs.mkdir.mockResolvedValue();
+      (fs.access as Mock).mockRejectedValue(new Error('Directory does not exist'));
+      (fs.mkdir as Mock).mockResolvedValue(undefined);
 
       const result = await localStorage.createDirectoryIfNotExist(path);
 
@@ -151,7 +146,7 @@ describe('LocalFileStorageService', () => {
     it('should return EXIST if the directory already exists', async () => {
       const path = join(__dirname, '..', '..', '..', rootDirectory, 'existing_dir');
 
-      fs.access.mockResolvedValue();
+      (fs.access as Mock).mockResolvedValue('EXIST');
 
       const result = await localStorage.createDirectoryIfNotExist(path);
 

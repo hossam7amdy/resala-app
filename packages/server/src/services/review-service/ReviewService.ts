@@ -1,23 +1,27 @@
 import { Role } from '@resala/shared';
 
-import type IReviewRepository from '../../repositories/review-repository/IReviewRepository.js';
 import type {
   CreateReviewInput,
   Filters,
   ReviewOutput,
   UpdateReviewInput,
-} from '../../types/dto.js';
+} from '../../DTOs/index.js';
+import type IReviewRepository from '../../interfaces/IReviewRepository.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
-import { inventoryService, userService } from '../index.js';
-import type IReviewService from './IReviewService.js';
+import type { inventoryService as InventoryService } from '../index.js';
+import type UserService from '../user-service/user-service.js';
 
-export default class ReviewService implements IReviewService {
-  constructor(private readonly reviewRepo: IReviewRepository) {}
+export default class ReviewService {
+  constructor(
+    private readonly reviewRepo: IReviewRepository,
+    private readonly userService: UserService,
+    private readonly inventoryService: typeof InventoryService
+  ) {}
 
   async createReview(review: CreateReviewInput): Promise<ReviewOutput> {
     const [exist] = await Promise.all([
       this.reviewRepo.findByUserAndProduct(review.userId, review.productId),
-      inventoryService.findProductById(review.productId),
+      this.inventoryService.findProductById(review.productId),
     ]);
     if (exist) {
       throw new ConflictError('Review already exists');
@@ -29,7 +33,7 @@ export default class ReviewService implements IReviewService {
   async updateReview(reviewId: number, review: UpdateReviewInput): Promise<ReviewOutput> {
     const [exist, user] = await Promise.all([
       this.reviewRepo.findById(reviewId),
-      userService.findUserById(review.userId),
+      this.userService.findUserById(review.userId),
     ]);
 
     if (!exist) {
@@ -49,7 +53,7 @@ export default class ReviewService implements IReviewService {
   async deleteReview(reviewId: number, userId: number): Promise<void> {
     const [exist, user] = await Promise.all([
       this.reviewRepo.findById(reviewId),
-      userService.findUserById(userId),
+      this.userService.findUserById(userId),
     ]);
 
     if (!exist) {
