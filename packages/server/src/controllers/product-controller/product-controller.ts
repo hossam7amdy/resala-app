@@ -20,7 +20,7 @@ const fileService = new FileService(s3Service);
 
 export const getProduct: GetProduct = async (req, res, next) => {
   try {
-    const isAdmin = checkIsAdmin(res.locals.user.role);
+    const isAdmin = checkIsAdmin(res.locals.user);
     const product = await inventoryService.findProductById(req.params.productId, isAdmin);
 
     return res.json({

@@ -11,7 +11,7 @@ import type {
 
 export const getCategory: GetCategory = async (req, res, next) => {
   try {
-    const isAdmin = checkIsAdmin(res.locals.user.role);
+    const isAdmin = checkIsAdmin(res.locals.user);
     const category = await inventoryService.findCategoryById(req.params.categoryId, isAdmin);
 
     return res.json({
@@ -25,7 +25,9 @@ export const getCategory: GetCategory = async (req, res, next) => {
 
 export const listCategories: ListCategories = async (_req, res, next) => {
   try {
-    const isAdmin = checkIsAdmin(res.locals.user.role);
+    console.log(res.locals);
+
+    const isAdmin = checkIsAdmin(res.locals.user);
     const categories = await inventoryService.listCategories(isAdmin);
 
     return res.json({
