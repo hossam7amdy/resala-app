@@ -7,6 +7,22 @@ import prisma from '../lib/prisma/index.js';
 import { UserService } from '../services/index.js';
 import { getTestServer } from './setup/testServer.js';
 
+const addressAssertions = {
+  id: expect.any(Number),
+  state: expect.any(String),
+  city: expect.any(String),
+  street: expect.any(String),
+  phone: expect.any(String),
+  firstName: expect.any(String),
+  lastName: expect.any(String),
+  building: expect.any(String),
+  floor: expect.any(Number),
+  address: expect.any(String),
+  country: expect.any(String),
+  createdAt: expect.any(String),
+  updatedAt: expect.any(String),
+};
+
 const userAssertions = {
   id: expect.any(Number),
   email: expect.any(String),
@@ -23,7 +39,7 @@ const userAssertions = {
   deletedAt: expect.toBeNullOrString(),
 };
 
-describe('TEST /users endpoint', () => {
+describe('TEST /users/self/addresses endpoint', () => {
   let client: TestAgent<superset.Test>;
   const userService = new UserService(prisma);
 
@@ -59,57 +75,65 @@ describe('TEST /users endpoint', () => {
     });
   });
 
-  it('should update current logged in user', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.updateCurrentUser;
+  it('should create user address', async () => {
+    const address = {
+      state: 'الجيزة',
+      city: 'السادس من أكتوبر',
+      street: 'المنطقة الصناعية الثالثة',
+      phone: '01010000000',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      building: 'building', // optional
+      floor: 111, // optional
+      address: 'address', // optional,
+    };
 
+    const { method, url } = ENDPOINT_CONFIGS.createAddress;
     const res = await client[method](url)
       .set(await getAuthToken())
-      .send({ firstName, lastName, phone });
+      .send(address);
+
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toEqual({ success: true, data: addressAssertions });
+  });
+
+  it('should update user address', async () => {
+    const address = await getLastAddress();
+
+    const { url, method } = ENDPOINT_CONFIGS.updateAddress;
+    const res = await client[method](url.replace(':addressId', address.id))
+      .set(await getAuthToken())
+      .send({
+        firstName,
+        lastName,
+        phone,
+        state: 'test address1',
+        city: 'test city1',
+        street: 'test street1',
+      });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({
-      success: true,
-      data: userAssertions,
-    });
+    expect(res.body).toEqual({ success: true, data: addressAssertions });
   });
 
-  it("it should get a user by it's id", async () => {
-    const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUser;
-
-    const res = await client[method](url.replace(':userId', user.id)).set(await getAuthToken());
+  it('should get user address list', async () => {
+    const res = await client.get(ENDPOINT_CONFIGS.getAddressList.url).set(await getAuthToken());
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ success: true, data: userAssertions });
+    expect(res.body).toEqual({ success: true, data: expect.arrayContaining([addressAssertions]) });
   });
 
-  it('it should get users list', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUsersList;
+  it('should delete user address', async () => {
+    const { url, method } = ENDPOINT_CONFIGS.deleteAddress;
 
-    await client[method](url)
-      .set(await getAuthToken())
-      .expect(200);
-  });
+    const address = await getLastAddress();
 
-  it("it should update a user by it's id", async () => {
-    const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminUpdateUser;
-
-    const res = await client[method](url.replace(':userId', user.id))
-      .set(await getAuthToken())
-      .send({ firstName: 'test1', lastName: 'test1', role: 'CUSTOMER', phone: '01000000000' });
+    const res = await client[method](url.replace(':addressId', address.id)).set(
+      await getAuthToken()
+    );
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ success: true, data: userAssertions });
-  });
-
-  it("it should delete a user by it's id", async () => {
-    const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminDeleteUser;
-
-    await client[method](url.replace(':userId', user.id))
-      .set(await getAuthToken())
-      .expect(200);
+    expect(res.body).toEqual({ success: true, data: addressAssertions });
   });
 
   const registerNewUser = async (payload: {
@@ -149,14 +173,14 @@ describe('TEST /users endpoint', () => {
     return result.body;
   };
 
-  const getLastUser = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUsersList;
+  const getLastAddress = async () => {
+    const { method, url } = ENDPOINT_CONFIGS.getAddressList;
 
     const res = await client[method](url).set(await getAuthToken());
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.data.users.length).toBeGreaterThan(0);
+    expect(res.body.data.length).toBeGreaterThan(0);
 
-    return res.body.data.users.pop();
+    return res.body.data.pop();
   };
 });
