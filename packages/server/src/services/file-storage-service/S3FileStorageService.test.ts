@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { S3FileStorageService } from './index.js';
+import { S3FileStorageService } from '../index.js';
 
 vi.mock('@aws-sdk/client-s3', () => {
   const mS3Client = {

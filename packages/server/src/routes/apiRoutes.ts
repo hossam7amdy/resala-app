@@ -54,32 +54,41 @@ import { Router } from 'express';
 
 import {
   AuthController,
+  OrderController,
+  ReviewController,
+  UserController,
   categoryCtrl,
   colorCtrl,
-  orderCtrl,
   paymentCtrl,
   productCtrl,
   shoppingCtrl,
   sizeCtrl,
   stockCtrl,
-  userCtrl,
 } from '../controllers/index.js';
-import { ReviewController } from '../controllers/index.js';
 import prisma from '../lib/prisma/index.js';
-import { authenticateToken, authorizeUser } from '../middlewares/auth-middleware.js';
-import { errHandler } from '../middlewares/error-middleware.js';
-import { loggerMiddleware } from '../middlewares/logger-middleware.js';
-import { uploadMultiple } from '../middlewares/upload-middleware.js';
-import { validate } from '../middlewares/validate-middleware.js';
+import { errHandler } from '../middlewares/errorMiddleware.js';
+import { AuthMiddleware } from '../middlewares/index.js';
+import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
+import { uploadMultiple } from '../middlewares/uploadMiddleware.js';
+import { validate } from '../middlewares/validateMiddleware.js';
 import PrismaReviewRepository from '../repositories/review-repository/PrismaReviewRepository.js';
+import { UserService, authService, inventoryService } from '../services/index.js';
 import ReviewService from '../services/review-service/ReviewService.js';
 
 /** Create Express Router with all the endpoints and their handlers */
 export const createExpressRouter = (legRequests: boolean) => {
   const router = Router();
 
+  const userService = new UserService(prisma);
+
   const authCtrl = new AuthController();
-  const reviewCtrl = new ReviewController(new ReviewService(new PrismaReviewRepository(prisma)));
+  const userCtrl = new UserController(userService);
+  const orderCtrl = new OrderController(userService);
+  const reviewCtrl = new ReviewController(
+    new ReviewService(new PrismaReviewRepository(prisma), userService, inventoryService)
+  );
+
+  const authMiddleware = new AuthMiddleware(authService, userService);
 
   /** Define the handlers for each endpoint */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,22 +113,22 @@ export const createExpressRouter = (legRequests: boolean) => {
     // admin user endpoints
     [Endpoints.adminGetUser]: [
       validate(AdminGetUserSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       userCtrl.adminGetUser,
     ],
     [Endpoints.adminGetUsersList]: [
       validate(DefaultQuerySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       userCtrl.adminGetUsersList,
     ],
     [Endpoints.adminUpdateUser]: [
       validate(AdminUpdateUserSchema),
-      authorizeUser(['ADMIN']),
+      authMiddleware.authorizeUser(['ADMIN']),
       userCtrl.adminUpdateUser,
     ],
     [Endpoints.adminDeleteUser]: [
       validate(AdminDeleteUserSchema),
-      authorizeUser(['ADMIN']),
+      authMiddleware.authorizeUser(['ADMIN']),
       userCtrl.adminDeleteUser,
     ],
 
@@ -138,17 +147,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
     [Endpoints.createCategory]: [
       validate(CreateCategorySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.createCategory,
     ],
     [Endpoints.updateCategory]: [
       validate(UpdateCategorySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.updateCategory,
     ],
     [Endpoints.deleteCategory]: [
       validate(DeleteCategorySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.deleteCategory,
     ],
 
@@ -157,30 +166,30 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.getProductsList]: [validate(DefaultQuerySchema), productCtrl.getProductsList],
     [Endpoints.createProduct]: [
       validate(CreateProductSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.createProduct,
     ],
     [Endpoints.updateProduct]: [
       validate(UpdateProductSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.updateProduct,
     ],
     [Endpoints.deleteProduct]: [
       validate(DeleteProductSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProduct,
     ],
     [Endpoints.listProductImages]: [validate(DeleteProductSchema), productCtrl.listProductImages],
     [Endpoints.getProductStocks]: [validate(DeleteProductSchema), productCtrl.listProductStocks],
     [Endpoints.addProductImages]: [
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMultiple('images'),
       validate(CreateProductImageSchema),
       productCtrl.addProductImages,
     ],
     [Endpoints.deleteProductImage]: [
       validate(DeleteProductImageSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProductImage,
     ],
 
@@ -189,17 +198,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.getStocksList]: [validate(DefaultQuerySchema), stockCtrl.getStocksList],
     [Endpoints.addStock]: [
       validate(CreateStockSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.createStock,
     ],
     [Endpoints.updateStock]: [
       validate(UpdateStockSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.updateStock,
     ],
     [Endpoints.deleteStock]: [
       validate(DeleteStockSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.deleteStock,
     ],
 
@@ -208,17 +217,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.getColorsList]: [colorCtrl.getColorsList],
     [Endpoints.createColor]: [
       validate(CreateColorSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.createColor,
     ],
     [Endpoints.updateColor]: [
       validate(UpdateColorSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.updateColor,
     ],
     [Endpoints.deleteColor]: [
       validate(DeleteColorSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.deleteColor,
     ],
 
@@ -227,17 +236,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.getSizesList]: [sizeCtrl.getSizesList],
     [Endpoints.createSize]: [
       validate(CreateSizeSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.createSize,
     ],
     [Endpoints.updateSize]: [
       validate(UpdateSizeSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.updateSize,
     ],
     [Endpoints.deleteSize]: [
       validate(DeleteSizeSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.deleteSize,
     ],
 
@@ -265,22 +274,22 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.deleteOrder]: [validate(GetOrderSchema), orderCtrl.deleteOrder],
     [Endpoints.adminGetOrder]: [
       validate(GetOrderSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminGetOrder,
     ],
     [Endpoints.adminGetOrdersList]: [
       validate(DefaultQuerySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminGetOrdersList,
     ],
     [Endpoints.adminUpdateOrderStatus]: [
       validate(UpdateOrderStatusSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminUpdateOrderStatus,
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      orderCtrl.updateOrderStatus,
     ],
     [Endpoints.adminDeleteOrder]: [
       validate(GetOrderSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminDeleteOrder,
     ],
 
@@ -289,12 +298,12 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.paymentResponse]: [paymentCtrl.paymentResponse],
     [Endpoints.getPayment]: [
       validate(GetPaymentSchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPayment,
     ],
     [Endpoints.getPaymentsList]: [
       validate(DefaultQuerySchema),
-      authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
 
@@ -318,7 +327,7 @@ export const createExpressRouter = (legRequests: boolean) => {
       handlers = [loggerMiddleware, ...handlers];
     }
     if (auth) {
-      handlers = [authenticateToken, ...handlers];
+      handlers = [authMiddleware.authenticateToken, ...handlers];
     }
 
     const withErrorHandler = handlers.map(handler => errHandler(handler));

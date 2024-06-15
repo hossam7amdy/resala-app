@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../../lib/__mocks__/prisma.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
-import { userService } from '../index.js';
+import { UserService } from '../index.js';
 
 vi.mock('lib/prisma/index.js', () => ({
   default: prismaMock,
@@ -39,8 +39,11 @@ const MOCK_USER_ADDRESS = {
 };
 
 describe('userService', () => {
+  let userService: UserService;
+
   beforeEach(() => {
     vi.resetAllMocks();
+    userService = new UserService(prismaMock);
   });
 
   describe('updateUser', () => {

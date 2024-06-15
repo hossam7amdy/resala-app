@@ -1,4 +1,4 @@
-import type { IReviewService } from '../../services/index.js';
+import type { ReviewService } from '../../services/index.js';
 import type {
   CreateReview,
   DeleteReview,
@@ -9,9 +9,9 @@ import type {
 } from './IReviewController.js';
 
 export default class ReviewController {
-  private readonly reviewService: IReviewService;
+  private readonly reviewService: ReviewService;
 
-  constructor(reviewService: IReviewService) {
+  constructor(reviewService: ReviewService) {
     this.reviewService = reviewService;
   }
 

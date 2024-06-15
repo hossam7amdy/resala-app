@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import type { IFileStorageService } from '../file-storage-service/index.js';
+import type { IFileStorageService } from '../../interfaces/index.js';
 
 export default class FileService {
   constructor(private readonly fileStorage: IFileStorageService) {}

@@ -11,7 +11,7 @@ import {
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
-import type { FileMetadata, IFileStorageService } from './index.js';
+import type { FileMetadata, IFileStorageService } from '../../interfaces/index.js';
 
 export default class S3StorageService implements IFileStorageService {
   private readonly bucketName: string;

@@ -5,8 +5,8 @@ import type {
   Filters,
   ReviewOutput,
   UpdateReviewInput,
-} from '../../types/dto.js';
-import type IReviewRepository from './IReviewRepository.js';
+} from '../../DTOs/index.js';
+import type IReviewRepository from '../../interfaces/IReviewRepository.js';
 
 const SELECT = {
   id: true,
