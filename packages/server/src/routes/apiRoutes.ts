@@ -66,11 +66,13 @@ import {
   stockCtrl,
 } from '../controllers/index.js';
 import prisma from '../lib/prisma/index.js';
-import { errHandler } from '../middlewares/errorMiddleware.js';
-import { AuthMiddleware } from '../middlewares/index.js';
-import { loggerMiddleware } from '../middlewares/loggerMiddleware.js';
-import { uploadMultiple } from '../middlewares/uploadMiddleware.js';
-import { validate } from '../middlewares/validateMiddleware.js';
+import {
+  AuthMiddleware,
+  errHandler,
+  loggerMiddleware,
+  uploadMultiple,
+  validate,
+} from '../middlewares/index.js';
 import PrismaReviewRepository from '../repositories/review-repository/PrismaReviewRepository.js';
 import { UserService, authService, inventoryService } from '../services/index.js';
 import ReviewService from '../services/review-service/ReviewService.js';
