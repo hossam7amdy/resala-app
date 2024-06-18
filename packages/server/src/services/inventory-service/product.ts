@@ -1,5 +1,7 @@
-import type { Prisma, Product } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import type { Product } from '@resala/shared';
 
+import type { Filters } from '../../DTOs/review.js';
 import prisma from '../../lib/prisma/index.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
 
@@ -22,11 +24,7 @@ export const findProductById = async (id: number, deleted: boolean = false) => {
   return product;
 };
 
-export const listProductsPaginated = async (filters: {
-  page: number;
-  limit: number;
-  query: string;
-}) => {
+export const listProductsPaginated = async (filters: Filters, deleted: boolean = false) => {
   const { page, limit, query } = filters;
 
   const _filters: Prisma.ProductWhereInput = {
@@ -38,7 +36,7 @@ export const listProductsPaginated = async (filters: {
         arName: { startsWith: query, mode: 'insensitive' },
       },
     ],
-    deletedAt: undefined,
+    deletedAt: deleted ? undefined : null,
   };
 
   const [total, products] = await prisma.$transaction([
@@ -63,7 +61,12 @@ export const listProductsPaginated = async (filters: {
   return { products, total };
 };
 
-export const createProduct = async (product: Product) => {
+export const createProduct = async (
+  product: Pick<
+    Product,
+    'arName' | 'enName' | 'arDescription' | 'enDescription' | 'categoryId' | 'price'
+  >
+) => {
   const category = await prisma.category.findUnique({
     where: { id: product.categoryId },
   });
@@ -76,7 +79,7 @@ export const createProduct = async (product: Product) => {
     throw new ConflictError('Product already exists');
   }
 
-  return await prisma.product.create({
+  const { id } = await prisma.product.create({
     data: {
       categoryId: product.categoryId,
       arName: product.arName,
@@ -86,10 +89,20 @@ export const createProduct = async (product: Product) => {
       price: product.price,
     },
   });
+
+  return await findProductById(id);
 };
 
-export const updateProduct = async (id: number, product: Product) => {
-  await findProductById(id, true); // Check if product exists
+export const updateProduct = async (
+  id: number,
+  product: Partial<
+    Pick<
+      Product,
+      'arName' | 'enName' | 'arDescription' | 'enDescription' | 'categoryId' | 'price' | 'deletedAt'
+    >
+  >
+) => {
+  const oldProduct = await findProductById(id, true); // Check if product exists
 
   const category = await prisma.category.findUnique({
     where: { id: product.categoryId },
@@ -98,12 +111,12 @@ export const updateProduct = async (id: number, product: Product) => {
     throw new NotFoundError('Category not found');
   }
 
-  const exist = await findProductByName(product.enName, product.arName);
+  const exist = await findProductByName(product.enName || '', product.arName || '');
   if (exist && exist.id !== id) {
     throw new ConflictError('Product already exists');
   }
 
-  return prisma.product.update({
+  const updatedProduct = await prisma.product.update({
     where: {
       id,
     },
@@ -117,11 +130,13 @@ export const updateProduct = async (id: number, product: Product) => {
       deletedAt: product.deletedAt ? new Date() : null,
     },
   });
+
+  return { ...oldProduct, ...updatedProduct };
 };
 
 export const deleteProduct = async (id: number) => {
   try {
-    return await prisma.product.delete({
+    await prisma.product.delete({
       where: { id },
     });
   } catch (error) {
@@ -134,30 +149,27 @@ export const addProductImages = async (
   imagesInfo: { url: string; key: string }[]
 ) => {
   try {
-    return await prisma.productImage.createMany({
+    await prisma.productImage.createMany({
       data: imagesInfo.map(image => ({
         productId,
         imageKey: image.key,
         imageUrl: image.url,
       })),
     });
+
+    return await listProductImages(productId);
   } catch (error) {
     throw new NotFoundError('Product not found');
   }
 };
 
 export const listProductImages = async (productId: number) => {
-  return await prisma.productImage.findMany({
-    where: { productId },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  return await findProductById(productId);
 };
 
 export const deleteProductImage = async (imageId: number, productId: number) => {
   try {
-    return await prisma.productImage.delete({
+    await prisma.productImage.delete({
       where: { id_productId: { id: imageId, productId } },
     });
   } catch (error) {
@@ -166,7 +178,7 @@ export const deleteProductImage = async (imageId: number, productId: number) => 
 };
 
 const findProductByName = async (enName: string, arName: string) => {
-  return prisma.product.findFirst({
+  return await prisma.product.findFirst({
     where: {
       OR: [{ enName }, { arName }],
     },

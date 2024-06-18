@@ -68,11 +68,11 @@ export const updateStock: UpdateStock = async (req, res, next) => {
 
 export const deleteStock: DeleteStock = async (req, res, next) => {
   try {
-    const stock = await inventoryService.deleteStock(req.params.stockId);
+    await inventoryService.deleteStock(req.params.stockId);
 
     return res.json({
       success: true,
-      data: stock,
+      message: 'Stock deleted successfully',
     });
   } catch (error) {
     next(error);

@@ -1,31 +1,16 @@
+import { PrismaClient } from '@prisma/client';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import prisma from '../lib/prisma/index.js';
 import { UserService } from '../services/index.js';
-import { getTestServer } from './setup/testServer.js';
-
-const userAssertions = {
-  id: expect.any(Number),
-  email: expect.any(String),
-  firstName: expect.any(String),
-  lastName: expect.any(String),
-  phone: expect.any(String),
-  role: expect.any(String),
-  isVerified: expect.any(Boolean),
-  // @ts-expect-error lastLogin is a string or null
-  lastLogin: expect.toBeNullOrString(),
-  createdAt: expect.any(String),
-  updatedAt: expect.any(String),
-  // @ts-expect-error lastLogin is a string or null
-  deletedAt: expect.toBeNullOrString(),
-};
+import { userAssertions } from './helpers/customAssertions.js';
+import { getTestServer } from './helpers/testServer.js';
 
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
-  const userService = new UserService(prisma);
+  const userService = new UserService(new PrismaClient());
 
   const firstName = 'test';
   const lastName = 'test';
@@ -45,7 +30,7 @@ describe('TEST /users endpoint', () => {
     });
 
     await makeUserAdmin();
-  }, 10000);
+  });
 
   it('should get current logged in user', async () => {
     const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;

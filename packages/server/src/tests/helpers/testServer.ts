@@ -9,7 +9,6 @@ export const getTestServer = async () => {
   if (!client) {
     const app = createExpressApp(false);
     client = superset(app);
-    console.log(`Test running in ${process.env.NODE_ENV} mode`);
   }
 
   return client;

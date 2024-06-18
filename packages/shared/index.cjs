@@ -284,6 +284,9 @@ const UpdateProductSchema = zod.z.object({
         deletedAt: zod.z.coerce.date().optional(),
     }),
 });
+const GetProductSchema = zod.z.object({
+    params: UpdateProductSchema.shape.params,
+});
 const DeleteProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
 });
@@ -981,6 +984,7 @@ exports.GetCategorySchema = GetCategorySchema;
 exports.GetOrderSchema = GetOrderSchema;
 exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductImages = GetProductImages;
+exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;

@@ -1,6 +1,5 @@
 import { logout } from '@/actions/auth';
 import {
-  type DefaultRequestBody,
   type DefaultRequestQuery,
   type DefaultResponseBody,
   type EndpointConfig,
@@ -23,7 +22,8 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
 type Req =
   | {
       params?: Record<string, string | number>;
-      body?: DefaultRequestBody;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body?: { [key: string]: any };
       query?: DefaultRequestQuery['query'];
     }
   | undefined;

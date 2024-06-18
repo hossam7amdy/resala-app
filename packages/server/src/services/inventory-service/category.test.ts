@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../../lib/__mocks__/prisma.js';
@@ -46,6 +47,7 @@ describe('inventoryService - [ Category ]', () => {
     };
 
     it('should create root category', async () => {
+      prismaMock.category.findUnique.mockResolvedValue(COMPLETE_CATEGORY);
       prismaMock.category.create.mockResolvedValue(COMPLETE_CATEGORY);
 
       await expect(inventoryService.createCategory(category)).resolves.toEqual(COMPLETE_CATEGORY);
@@ -62,7 +64,7 @@ describe('inventoryService - [ Category ]', () => {
     });
 
     it('should create new sub-category', async () => {
-      prismaMock.category.findUnique.mockImplementation(() => ({}) as any);
+      prismaMock.category.findUnique.mockResolvedValue(COMPLETE_SUB_CATEGORY);
       prismaMock.category.create.mockResolvedValue(COMPLETE_SUB_CATEGORY);
 
       await expect(inventoryService.createCategory(subCategory)).resolves.toEqual(
@@ -70,7 +72,7 @@ describe('inventoryService - [ Category ]', () => {
       );
       expect(prismaMock.category.create).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.findFirst).toHaveBeenCalledTimes(1);
-      expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
+      expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(2);
     });
 
     it('should create new sub-category only if parent category exists', async () => {
@@ -145,7 +147,7 @@ describe('inventoryService - [ Category ]', () => {
       } as any);
       prismaMock.category.delete.mockResolvedValue(COMPLETE_CATEGORY);
 
-      await expect(inventoryService.deleteCategory(1)).resolves.toEqual(COMPLETE_CATEGORY);
+      await expect(inventoryService.deleteCategory(1)).resolves.toEqual(undefined);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.category.delete).toHaveBeenCalledTimes(1);
     });
@@ -219,17 +221,15 @@ describe('inventoryService - [ Category ]', () => {
 
   describe('listCategoryProducts', () => {
     it('should get category products', async () => {
-      prismaMock.category.findUnique.mockResolvedValue({
-        products: [],
-        subCategories: [],
-      } as any);
+      prismaMock.category.findUnique.mockResolvedValue(COMPLETE_CATEGORY);
+      prismaMock.product.findMany.mockResolvedValue([]);
 
       await expect(inventoryService.listCategoryProducts(1)).resolves.toEqual([]);
-      expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);
+      expect(prismaMock.product.findMany).toHaveBeenCalledTimes(1);
     });
 
     it('should only get category products if category exists', async () => {
-      prismaMock.category.findUnique.mockResolvedValue(null);
+      prismaMock.product.findMany.mockResolvedValue([]);
 
       await expect(inventoryService.listCategoryProducts(1)).rejects.toThrow(NotFoundError);
       expect(prismaMock.category.findUnique).toHaveBeenCalledTimes(1);

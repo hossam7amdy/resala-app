@@ -210,6 +210,10 @@ export const UpdateProductSchema = z.object({
   }),
 });
 
+export const GetProductSchema = z.object({
+  params: UpdateProductSchema.shape.params,
+});
+
 export const DeleteProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });

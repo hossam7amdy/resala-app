@@ -55,7 +55,6 @@ export const getProductsList: GetProductsList = async (req, res, next) => {
 
 export const createProduct: CreateProduct = async (req, res, next) => {
   try {
-    // @ts-expect-error - Incompatible types Decimal not assignable to number
     const product = await inventoryService.createProduct(req.body);
 
     return res.json({
@@ -69,7 +68,6 @@ export const createProduct: CreateProduct = async (req, res, next) => {
 
 export const updateProduct: UpdateProduct = async (req, res, next) => {
   try {
-    // @ts-expect-error - Incompatible types Decimal not assignable to number
     const product = await inventoryService.updateProduct(req.params.productId, req.body);
     return res.json({
       success: true,
@@ -85,15 +83,15 @@ export const updateProduct: UpdateProduct = async (req, res, next) => {
 
 export const deleteProduct: DeleteProduct = async (req, res, next) => {
   try {
-    const images = await inventoryService.listProductImages(req.params.productId);
-    const product = await inventoryService.deleteProduct(req.params.productId);
+    const product = await inventoryService.findProductById(req.params.productId);
+    await inventoryService.deleteProduct(req.params.productId);
 
-    const imageKeys = images.map(({ imageKey }) => imageKey);
+    const imageKeys = product.images.map(({ imageKey }) => imageKey);
     fileService.deleteFiles(imageKeys).catch(logger.warn);
 
     return res.json({
       success: true,
-      data: product,
+      message: 'Product deleted',
     });
   } catch (error) {
     return next(error);
@@ -124,11 +122,11 @@ export const addProductImages: CreateProductImage = async (req, res, next) => {
 
 export const listProductImages: ListProductImages = async (req, res, next) => {
   try {
-    const images = await inventoryService.listProductImages(req.params.productId);
+    const product = await inventoryService.findProductById(req.params.productId);
 
     return res.json({
       success: true,
-      data: images,
+      data: product.images,
     });
   } catch (error) {
     next(error);
@@ -152,8 +150,11 @@ export const deleteProductImage: DeleteProductImage = async (req, res, next) => 
   try {
     const { imageId, productId } = req.params;
 
-    const image = await inventoryService.deleteProductImage(imageId, productId);
-    await fileService.deleteFile(image.imageKey);
+    const product = await inventoryService.findProductById(productId);
+    await inventoryService.deleteProductImage(imageId, productId);
+
+    const image = product.images.find(({ id }) => id === Number(imageId));
+    image?.imageKey && (await fileService.deleteFile(image.imageKey));
 
     return res.json({
       success: true,

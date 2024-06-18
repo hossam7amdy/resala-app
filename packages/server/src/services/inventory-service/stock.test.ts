@@ -60,7 +60,12 @@ describe('stock module', () => {
       expect(result).toEqual([MOCK_PRODUCT_STOCKS]);
       expect(prismaMock.stock.findMany).toHaveBeenCalledWith({
         where: { productId },
-        include: {
+        select: {
+          id: true,
+          quantity: true,
+          createdAt: true,
+          updatedAt: true,
+          product: true,
           color: true,
           size: true,
         },

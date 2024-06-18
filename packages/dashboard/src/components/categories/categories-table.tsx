@@ -41,7 +41,7 @@ export const CategoryTable = async ({ query }: { query: string }) => {
       dataSource={filteredCategories.map(category => ({
         ...renderRow(category),
         children: category.subCategories.map(subCategory =>
-          renderRow({ ...subCategory, subCategories: [] })
+          renderRow({ ...subCategory, mainCategory: null, subCategories: [] })
         ),
       }))}
     />

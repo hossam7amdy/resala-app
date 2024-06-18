@@ -8,7 +8,7 @@ export default defineConfig({
     name: 'resala/server - [ Integration Test ]',
     environment: 'node',
     include: ['src/tests/**/*.test.ts'],
-    setupFiles: ['src/tests/setup/setup.ts'],
+    setupFiles: ['src/tests/setup/dbSeedAndReset.ts', 'src/tests/setup/customMatchers.ts'],
     globalSetup: 'src/tests/setup/globalSetup.ts',
     fileParallelism: false,
   },
