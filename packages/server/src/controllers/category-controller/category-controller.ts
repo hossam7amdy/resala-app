@@ -25,8 +25,6 @@ export const getCategory: GetCategory = async (req, res, next) => {
 
 export const listCategories: ListCategories = async (_req, res, next) => {
   try {
-    console.log(res.locals);
-
     const isAdmin = checkIsAdmin(res.locals.user);
     const categories = await inventoryService.listCategories(isAdmin);
 
@@ -41,11 +39,13 @@ export const listCategories: ListCategories = async (_req, res, next) => {
 
 export const listCategoryProducts: GetCategoryProducts = async (req, res, next) => {
   try {
-    const products = await inventoryService.listCategoryProducts(req.params.categoryId);
+    const isAdmin = checkIsAdmin(res.locals.user);
+    const products = await inventoryService.listCategoryProducts(req.params.categoryId, isAdmin);
 
     return res.json({
       success: true,
-      data: products,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: products as any,
     });
   } catch (error) {
     next(error);
@@ -80,11 +80,11 @@ export const updateCategory: UpdateCategory = async (req, res, next) => {
 
 export const deleteCategory: DeleteCategory = async (req, res, next) => {
   try {
-    const category = await inventoryService.deleteCategory(req.params.categoryId);
+    await inventoryService.deleteCategory(req.params.categoryId);
 
     return res.json({
       success: true,
-      data: category,
+      message: 'Category deleted successfully',
     });
   } catch (error) {
     next(error);

@@ -177,6 +177,9 @@ export const UpdateProductSchema = z.object({
         deletedAt: z.coerce.date().optional(),
     }),
 });
+export const GetProductSchema = z.object({
+    params: UpdateProductSchema.shape.params,
+});
 export const DeleteProductSchema = z.object({
     params: UpdateProductSchema.shape.params,
 });

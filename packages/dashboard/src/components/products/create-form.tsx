@@ -2,11 +2,7 @@
 
 import { addProduct, updateProduct } from '@/actions/product';
 import useSubmitForm from '@/hooks/use-submit-form';
-import {
-  type GetCategoryResponse,
-  type GetProductResponse,
-  validationPatterns,
-} from '@resala/shared';
+import { type Category, type Product, validationPatterns } from '@resala/shared';
 import { Form as AntForm, Button, Flex, Input, InputNumber, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
@@ -14,13 +10,7 @@ import TextArea from 'antd/es/input/TextArea';
 import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
 
-const Form = ({
-  product,
-  categories,
-}: {
-  product?: GetProductResponse['data'];
-  categories: Omit<GetCategoryResponse['data'], 'subCategories'>[];
-}) => {
+const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product, categories }) => {
   const router = useRouter();
   const [form] = useForm();
 

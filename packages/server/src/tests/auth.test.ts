@@ -3,7 +3,8 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { getTestServer } from './setup/testServer.js';
+import { userAssertions } from './helpers/customAssertions.js';
+import { getTestServer } from './helpers/testServer.js';
 
 const ADMIN_USER = {
   email: 'admin@resala.com',
@@ -14,22 +15,6 @@ const CUSTOMER_USER = {
   email: 'customer@resala.com',
   phone: '01500000001',
   password: 'abcABC@123',
-};
-
-const userAssertions = {
-  id: expect.any(Number),
-  email: expect.any(String),
-  firstName: expect.any(String),
-  lastName: expect.any(String),
-  phone: expect.any(String),
-  role: expect.any(String),
-  isVerified: expect.any(Boolean),
-  // @ts-expect-error lastLogin is a string or null
-  lastLogin: expect.toBeNullOrString(),
-  createdAt: expect.any(String),
-  updatedAt: expect.any(String),
-  // @ts-expect-error lastLogin is a string or null
-  deletedAt: expect.toBeNullOrString(),
 };
 
 const genRandomUser = () => {
@@ -47,7 +32,7 @@ describe('TEST /auth endpoints', () => {
 
   beforeAll(async () => {
     client = await getTestServer();
-  }, 10000);
+  });
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
     it('should not be able to register a new user, missing (firstName, lastName)', async () => {

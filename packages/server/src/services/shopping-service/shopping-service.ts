@@ -18,7 +18,7 @@ export interface CartItem {
   };
 }
 
-export async function getUserCart(userId: number): Promise<CartItem[]> {
+export const getUserCart = async (userId: number) => {
   try {
     return await prisma.cart.findMany({
       select: {
@@ -29,10 +29,14 @@ export async function getUserCart(userId: number): Promise<CartItem[]> {
         stock: {
           select: {
             id: true,
-            quantity: true,
-            product: true,
             color: true,
             size: true,
+            product: {
+              include: {
+                images: true,
+                category: true,
+              },
+            },
           },
         },
       },
@@ -43,13 +47,13 @@ export async function getUserCart(userId: number): Promise<CartItem[]> {
     console.log(error);
     throw new NotFoundError('User not found');
   }
-}
+};
 
-export async function addItemToCart(cartItem: {
+export const addItemToCart = async (cartItem: {
   userId: number;
   stockId: number;
   quantity: number;
-}): Promise<CartItem[]> {
+}) => {
   const stock = await inventoryService.findStockById(cartItem.stockId);
 
   if (stock.quantity < cartItem.quantity) {
@@ -73,9 +77,9 @@ export async function addItemToCart(cartItem: {
     console.log(error);
     throw new NotFoundError('User not found');
   }
-}
+};
 
-export async function removeItemFromCart(userId: number, stockId: number): Promise<CartItem[]> {
+export const removeItemFromCart = async (userId: number, stockId: number) => {
   try {
     const cart = await prisma.cart.delete({
       where: { userId_stockId: { userId, stockId } },
@@ -86,23 +90,30 @@ export async function removeItemFromCart(userId: number, stockId: number): Promi
     console.log(error);
     throw new NotFoundError('Item not found in cart');
   }
-}
+};
 
-export async function clearUserCart(userId: number) {
+export const clearUserCart = async (userId: number) => {
   return await prisma.cart.deleteMany({ where: { userId } });
-}
+};
 
-export async function getUserWishlist(userId: number): Promise<Product[]> {
+export const getUserWishlist = async (userId: number) => {
   const wishlist = await prisma.wishlist.findMany({
-    select: { product: true },
+    select: {
+      product: {
+        include: {
+          images: true,
+          category: true,
+        },
+      },
+    },
     where: { userId },
     orderBy: { createdAt: 'desc' },
   });
 
   return wishlist.map(item => item.product);
-}
+};
 
-export async function addProductToWishlist(userId: number, productId: number): Promise<Product[]> {
+export const addProductToWishlist = async (userId: number, productId: number) => {
   await inventoryService.findProductById(productId);
 
   const wishlist = await prisma.wishlist.upsert({
@@ -112,12 +123,9 @@ export async function addProductToWishlist(userId: number, productId: number): P
   });
 
   return await getUserWishlist(wishlist.userId);
-}
+};
 
-export async function removeProductFromWishlist(
-  userId: number,
-  productId: number
-): Promise<Product[]> {
+export const removeProductFromWishlist = async (userId: number, productId: number) => {
   try {
     await prisma.wishlist.delete({
       where: { userId_productId: { userId, productId } },
@@ -127,8 +135,8 @@ export async function removeProductFromWishlist(
   } catch (error) {
     throw new NotFoundError('Product not found in wishlist');
   }
-}
+};
 
-export async function removeUserWishlist(userId: number) {
+export const removeUserWishlist = async (userId: number) => {
   return await prisma.wishlist.deleteMany({ where: { userId } });
-}
+};

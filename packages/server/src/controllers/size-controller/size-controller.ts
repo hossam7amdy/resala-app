@@ -61,11 +61,11 @@ export const updateSize: UpdateSize = async (req, res, next) => {
 
 export const deleteSize: DeleteSize = async (req, res, next) => {
   try {
-    const size = await inventoryService.deleteSize(req.params.sizeId);
+    await inventoryService.deleteSize(req.params.sizeId);
 
     return res.json({
       success: true,
-      data: size,
+      message: 'Size deleted successfully',
     });
   } catch (error) {
     next(error);

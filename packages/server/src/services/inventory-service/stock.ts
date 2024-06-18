@@ -11,7 +11,7 @@ type StockPayload = Pick<
   'productId' | 'colorId' | 'sizeId' | 'quantity'
 >;
 
-export async function findStockById(stockId: number) {
+export const findStockById = async (stockId: number) => {
   const stock = await prisma.stock.findUnique({
     include: {
       color: true,
@@ -26,9 +26,9 @@ export async function findStockById(stockId: number) {
   }
 
   return stock;
-}
+};
 
-export async function getStocksList(query: { page: number; limit: number; query?: string }) {
+export const getStocksList = async (query: { page: number; limit: number; query?: string }) => {
   const { page, limit } = query;
   const search = query.query || '';
 
@@ -59,13 +59,18 @@ export async function getStocksList(query: { page: number; limit: number; query?
   ]);
 
   return { total, stocks };
-}
+};
 
-export async function getProductStocks(productId: number) {
+export const getProductStocks = async (productId: number) => {
   return await prisma.stock.findMany({
-    include: {
+    select: {
+      id: true,
+      quantity: true,
+      createdAt: true,
+      updatedAt: true,
       color: true,
       size: true,
+      product: true,
     },
     where: {
       productId,
@@ -74,21 +79,23 @@ export async function getProductStocks(productId: number) {
       updatedAt: 'desc',
     },
   });
-}
+};
 
-export async function createStock(stock: StockPayload) {
+export const createStock = async (stock: StockPayload) => {
   await Promise.all([
     findProductById(stock.productId),
     findColorById(stock.colorId),
     findSizeById(stock.sizeId),
   ]);
 
-  return await prisma.stock.create({
+  const { id } = await prisma.stock.create({
     data: stock,
   });
-}
 
-export async function updateStock(stockId: number, stock: StockPayload) {
+  return await findStockById(id);
+};
+
+export const updateStock = async (stockId: number, stock: StockPayload) => {
   // Make sure the product, color and size exist
   await Promise.all([
     findProductById(stock.productId),
@@ -111,13 +118,15 @@ export async function updateStock(stockId: number, stock: StockPayload) {
     throw new ConflictError('Stock already exist!');
   }
 
-  return await prisma.stock.update({
+  await prisma.stock.update({
     data: stock,
     where: { id: stockId },
   });
-}
 
-export async function deleteStock(stockId: number) {
+  return await findStockById(stockId);
+};
+
+export const deleteStock = async (stockId: number) => {
   try {
     return await prisma.stock.delete({
       where: { id: stockId },
@@ -125,4 +134,4 @@ export async function deleteStock(stockId: number) {
   } catch (error) {
     throw new NotFoundError('Stock not found');
   }
-}
+};

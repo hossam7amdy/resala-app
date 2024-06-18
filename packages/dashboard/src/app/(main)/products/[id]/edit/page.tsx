@@ -4,7 +4,7 @@ import FormSkeleton from '@/components/ui/form-skeleton';
 import { listAllCategories } from '@/data/category';
 import { findProductById } from '@/data/product';
 import ROUTES from '@/lib/routes';
-import { type GetCategoryResponse } from '@resala/shared';
+import type { Category } from '@resala/shared';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -35,15 +35,16 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
 const EditProductForm = async ({ id }: { id: string }) => {
   const [categories, product] = await Promise.all([listAllCategories(), findProductById(id)]);
 
-  const flatCategories: Omit<GetCategoryResponse['data'], 'subCategories'>[] = [];
+  const flatCategories: Category[] = [];
   categories.forEach(category => {
-    const { subCategories, ...main } = category;
-    flatCategories.push(main);
-
+    // eslint-disable-next-line no-unused-vars
+    const { subCategories, mainCategory: _, ...currentCategory } = category;
     if (subCategories.length > 0) {
       subCategories.forEach(sub => {
         flatCategories.push(sub);
       });
+    } else {
+      flatCategories.push(currentCategory);
     }
   });
 

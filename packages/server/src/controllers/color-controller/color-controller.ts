@@ -63,11 +63,11 @@ export const updateColor: UpdateColor = async (req, res, next) => {
 export const deleteColor: DeleteColor = async (req, res, next) => {
   const colorId = Number(req.params.colorId);
   try {
-    const color = await inventoryService.deleteColor(colorId);
+    await inventoryService.deleteColor(colorId);
 
     return res.json({
       success: true,
-      data: color,
+      message: 'Color deleted successfully',
     });
   } catch (error) {
     next(error);

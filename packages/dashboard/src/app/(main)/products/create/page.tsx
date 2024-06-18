@@ -3,7 +3,7 @@ import BackButton from '@/components/ui/back-button';
 import FormSkeleton from '@/components/ui/form-skeleton';
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
-import { type GetCategoryResponse } from '@resala/shared';
+import type { Category } from '@resala/shared';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -34,15 +34,17 @@ const CreateProductPage = () => {
 const CreateProductForm = async () => {
   const categories = await listAllCategories();
 
-  const flatCategories: Omit<GetCategoryResponse['data'], 'subCategories'>[] = [];
+  const flatCategories: Category[] = [];
   categories.forEach(category => {
-    const { subCategories, ...main } = category;
-    flatCategories.push(main);
+    // eslint-disable-next-line no-unused-vars
+    const { subCategories, mainCategory: _, ...currentCategory } = category;
 
     if (subCategories.length > 0) {
       subCategories.forEach(sub => {
         flatCategories.push(sub);
       });
+    } else {
+      flatCategories.push(currentCategory);
     }
   });
 

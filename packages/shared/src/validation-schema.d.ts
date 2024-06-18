@@ -682,6 +682,23 @@ export declare const UpdateProductSchema: z.ZodObject<{
         id?: number | undefined;
     };
 }>;
+export declare const GetProductSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        productId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        productId: number;
+    }, {
+        productId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        productId: number;
+    };
+}, {
+    params: {
+        productId: number;
+    };
+}>;
 export declare const DeleteProductSchema: z.ZodObject<{
     params: z.ZodObject<{
         productId: z.ZodNumber;

@@ -17,18 +17,20 @@ export const createCategory = async (category: Prisma.CategoryUncheckedCreateInp
     return await createSubCategory(category);
   }
 
-  return await prisma.category.create({
+  const { id } = await prisma.category.create({
     data: {
       enName: category.enName,
       arName: category.arName,
     },
   });
+
+  return await findCategoryById(id);
 };
 
 export const updateCategory = async (id: number, category: Prisma.CategoryUncheckedCreateInput) => {
-  const found = await findCategoryById(id, true);
-  if (!found) {
-    throw new NotFoundError('Category not found');
+  const oldCategory = await findCategoryById(id, true);
+  if (!oldCategory) {
+    throw new NotFoundError('Category not oldCategory');
   }
 
   const exist = await prisma.category.findFirst({
@@ -42,12 +44,12 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
   }
 
   if (category.categoryId) {
-    if (found.subCategories.length) {
+    if (oldCategory.subCategories.length) {
       throw new ConflictError(`Category has subcategories`);
     }
     const parentExist = await findCategoryById(category.categoryId);
     if (!parentExist) {
-      throw new NotFoundError('Parent category not found');
+      throw new NotFoundError('Parent category not oldCategory');
     }
   }
 
@@ -55,7 +57,7 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
     throw new ConflictError('Category cannot be its own parent');
   }
 
-  return await prisma.category.update({
+  const updatedCategory = await prisma.category.update({
     data: {
       enName: category.enName,
       arName: category.arName,
@@ -64,10 +66,12 @@ export const updateCategory = async (id: number, category: Prisma.CategoryUnchec
     },
     where: { id },
   });
+
+  return { ...oldCategory, ...updatedCategory };
 };
 
 export const deleteCategory = async (id: number) => {
-  const found = await prisma.category.findUnique({
+  const oldCategory = await prisma.category.findUnique({
     select: {
       subCategories: {
         take: 1,
@@ -81,17 +85,17 @@ export const deleteCategory = async (id: number) => {
     },
   });
 
-  if (!found) {
-    throw new NotFoundError('Category not found');
+  if (!oldCategory) {
+    throw new NotFoundError('Category not oldCategory');
   }
-  if (found.subCategories.length) {
+  if (oldCategory.subCategories.length) {
     throw new ConflictError(`Category has subcategories`);
   }
-  if (found.products.length) {
+  if (oldCategory.products.length) {
     throw new ConflictError(`Category has products`);
   }
 
-  return await prisma.category.delete({
+  await prisma.category.delete({
     where: {
       id,
     },
@@ -101,6 +105,7 @@ export const deleteCategory = async (id: number) => {
 export const findCategoryById = async (id: number, deleted: boolean = false) => {
   const category = await prisma.category.findUnique({
     include: {
+      mainCategory: true,
       subCategories: true,
     },
     where: {
@@ -109,7 +114,7 @@ export const findCategoryById = async (id: number, deleted: boolean = false) => 
     },
   });
   if (!category) {
-    throw new NotFoundError('Category not found');
+    throw new NotFoundError('Category not oldCategory');
   }
 
   return category;
@@ -118,6 +123,7 @@ export const findCategoryById = async (id: number, deleted: boolean = false) => 
 export const listCategories = async (deleted: boolean = false) => {
   return await prisma.category.findMany({
     include: {
+      mainCategory: true,
       subCategories: true,
     },
     where: {
@@ -130,31 +136,24 @@ export const listCategories = async (deleted: boolean = false) => {
   });
 };
 
-export const listCategoryProducts = async (id: number) => {
-  const category = await prisma.category.findUnique({
+export const listCategoryProducts = async (categoryId: number, deleted: boolean = false) => {
+  await findCategoryById(categoryId, deleted);
+
+  return await prisma.product.findMany({
     include: {
-      subCategories: {
-        include: {
-          products: {
-            orderBy: {
-              updatedAt: 'desc',
-            },
-          },
-        },
-      },
-      products: {
-        orderBy: {
-          updatedAt: 'desc',
-        },
+      category: true,
+      images: true,
+    },
+    where: {
+      categoryId,
+      category: {
+        deletedAt: deleted ? undefined : null,
       },
     },
-    where: { id },
+    orderBy: {
+      updatedAt: 'desc',
+    },
   });
-  if (!category) {
-    throw new NotFoundError('Category not found');
-  }
-
-  return [...category.products, ...category.subCategories.flatMap(c => c.products)];
 };
 
 const createSubCategory = async (category: Prisma.CategoryUncheckedCreateInput) => {
@@ -165,14 +164,16 @@ const createSubCategory = async (category: Prisma.CategoryUncheckedCreateInput) 
     },
   });
   if (!parentExist) {
-    throw new NotFoundError('Parent category not found');
+    throw new NotFoundError('Parent category not oldCategory');
   }
 
-  return await prisma.category.create({
+  const { id } = await prisma.category.create({
     data: {
       enName: category.enName,
       arName: category.arName,
       categoryId: category.categoryId,
     },
   });
+
+  return await findCategoryById(id);
 };

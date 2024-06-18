@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../../lib/__mocks__/prisma.js';
@@ -33,6 +34,7 @@ const PRODUCT_OUTPUT = {
       id: 1,
       productId: 4,
       imageUrl: 'url',
+      imageKey: 'key',
       createdAt: new Date(),
     },
   ],
@@ -95,7 +97,6 @@ describe('inventoryService - [ Product ]', () => {
         page: 1,
         limit: 10,
         query: '',
-        deleted: false,
       });
 
       expect(total).toBe(1);
@@ -110,7 +111,6 @@ describe('inventoryService - [ Product ]', () => {
         page: 1,
         limit: 10,
         query: '',
-        deleted: false,
       });
 
       expect(total).toBe(0);
@@ -126,7 +126,6 @@ describe('inventoryService - [ Product ]', () => {
         page: 1,
         limit: 10,
         query: '',
-        deleted: true,
       });
 
       expect(total).toBe(1);
@@ -137,7 +136,8 @@ describe('inventoryService - [ Product ]', () => {
 
   describe('createProduct', () => {
     it('should create product', async () => {
-      prismaMock.category.findUnique.mockResolvedValue({ id: 1 } as any);
+      prismaMock.category.findUnique.mockResolvedValue(PRODUCT_OUTPUT);
+      prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT as any);
       prismaMock.product.create.mockResolvedValue(PRODUCT_OUTPUT as any);
 
       const product = await inventoryService.createProduct(PRODUCT_OUTPUT as any);
@@ -217,12 +217,13 @@ describe('inventoryService - [ Product ]', () => {
     it('should delete product', async () => {
       prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT as any);
 
-      const { category, images, ...rest } = PRODUCT_OUTPUT;
+      // eslint-disable-next-line no-unused-vars
+      const { category: _, images: __, ...rest } = PRODUCT_OUTPUT;
       prismaMock.product.delete.mockResolvedValue(rest as any);
 
       const product = await inventoryService.deleteProduct(4);
 
-      expect(product).toEqual(rest);
+      expect(product).toEqual(undefined);
       expect(prismaMock.product.delete).toHaveBeenCalledTimes(1);
     });
 
@@ -241,26 +242,32 @@ describe('inventoryService - [ Product ]', () => {
 
   describe('addProductImages', () => {
     it('should add product images', async () => {
-      const urls = ['url1', 'url2'];
-      prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT.images[0] as any);
+      const urls = [
+        { url: 'url1', key: 'key1' },
+        { url: 'url2', key: 'key2' },
+      ];
+      prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT as any);
       prismaMock.productImage.createMany.mockResolvedValue(urls as any);
 
       const product = await inventoryService.addProductImages(4, urls);
 
-      expect(product).toEqual(urls);
-      expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(0);
+      expect(product).toEqual(PRODUCT_OUTPUT);
+      expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(1);
       expect(prismaMock.productImage.createMany).toHaveBeenCalledTimes(1);
     });
 
     it('should throw NotFoundError if product not found', async () => {
-      prismaMock.product.findUnique.mockResolvedValue(null);
+      prismaMock.product.createMany.mockRejectedValue(new NotFoundError('Product not found'));
 
       try {
-        await inventoryService.addProductImages(4, ['url1', 'url2']);
+        await inventoryService.addProductImages(4, [
+          { url: 'url1', key: 'key1' },
+          { url: 'url2', key: 'key2' },
+        ]);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundError);
         expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(1);
-        expect(prismaMock.productImage.createMany).toHaveBeenCalledTimes(0);
+        expect(prismaMock.productImage.createMany).toHaveBeenCalledTimes(1);
       }
     });
   });
@@ -268,11 +275,10 @@ describe('inventoryService - [ Product ]', () => {
   describe('deleteProductImage', () => {
     it('should delete product image', async () => {
       prismaMock.productImage.delete.mockResolvedValue(PRODUCT_OUTPUT.images[0]);
-      prismaMock.productImage.findUnique.mockResolvedValue(PRODUCT_OUTPUT.images[0]);
 
       const image = await inventoryService.deleteProductImage(1, 4);
 
-      expect(image).toMatchObject(PRODUCT_OUTPUT.images[0]);
+      expect(image).toEqual(undefined);
       expect(prismaMock.productImage.delete).toHaveBeenCalledTimes(1);
     });
 

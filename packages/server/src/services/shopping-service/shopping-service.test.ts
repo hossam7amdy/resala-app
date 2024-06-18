@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../../lib/__mocks__/prisma.js';
@@ -64,9 +65,10 @@ describe('Shopping Service', () => {
 
   describe('getUserCart', () => {
     it('should return the user cart', async () => {
+      const userId = 1;
       prismaMock.cart.findMany.mockResolvedValue([MOCK_CART_ITEM]);
 
-      const cart = await shoppingService.getUserCart(1);
+      const cart = await shoppingService.getUserCart(userId);
 
       expect(cart).toEqual([MOCK_CART_ITEM]);
       expect(prismaMock.cart.findMany).toHaveBeenCalledWith({
@@ -78,14 +80,18 @@ describe('Shopping Service', () => {
           stock: {
             select: {
               id: true,
-              quantity: true,
-              product: true,
               color: true,
               size: true,
+              product: {
+                include: {
+                  images: true,
+                  category: true,
+                },
+              },
             },
           },
         },
-        where: { userId: 1 },
+        where: { userId },
         orderBy: { createdAt: 'desc' },
       });
     });
@@ -155,15 +161,23 @@ describe('Shopping Service', () => {
 
   describe('getUserWishlist', () => {
     it('should return the user wishlist', async () => {
+      const userId = 1;
       prismaMock.wishlist.findMany.mockResolvedValue([MOCK_CART_ITEM.stock] as any);
 
-      const wishlist = await shoppingService.getUserWishlist(1);
+      const wishlist = await shoppingService.getUserWishlist(userId);
 
       expect(wishlist).toEqual([MOCK_CART_ITEM.stock.product]);
 
       expect(prismaMock.wishlist.findMany).toHaveBeenCalledWith({
-        select: { product: true },
-        where: { userId: 1 },
+        select: {
+          product: {
+            include: {
+              images: true,
+              category: true,
+            },
+          },
+        },
+        where: { userId },
         orderBy: { createdAt: 'desc' },
       });
     });

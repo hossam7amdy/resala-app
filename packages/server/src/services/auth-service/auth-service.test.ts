@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import prismaMock from '../../lib/__mocks__/prisma.js';
@@ -48,6 +49,7 @@ const MOCK_USER = {
   iterations: 10,
 };
 
+// eslint-disable-next-line no-unused-vars
 const { password: _, salt: __, iterations: ___, ...MOCK_USER_WITHOUT_PASSWORD } = MOCK_USER;
 
 const SELECT = {
@@ -94,6 +96,7 @@ describe('auth-service', () => {
       expect(prismaMock.user.update).toHaveBeenCalledWith({
         data: { lastLogin: expect.any(Date) },
         where: { id: MOCK_USER.id },
+        select: SELECT,
       });
     });
 
