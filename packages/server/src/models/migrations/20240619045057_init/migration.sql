@@ -5,7 +5,7 @@ CREATE TYPE "role" AS ENUM ('ADMIN', 'MODERATOR', 'CUSTOMER');
 CREATE TYPE "order_status" AS ENUM ('PENDING', 'FULFILLED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "payment_status" AS ENUM ('PENDING', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED');
+CREATE TYPE "payment_status" AS ENUM ('UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED');
 
 -- CreateEnum
 CREATE TYPE "payment_method" AS ENUM ('CASH', 'CARD');
@@ -25,7 +25,6 @@ CREATE TABLE "user" (
     "last_login" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
@@ -41,12 +40,10 @@ CREATE TABLE "user_address" (
 -- CreateTable
 CREATE TABLE "category" (
     "id" SERIAL NOT NULL,
-    "category_id" INTEGER,
     "ar_name" VARCHAR(100) NOT NULL,
     "en_name" VARCHAR(100) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "category_pkey" PRIMARY KEY ("id")
 );
@@ -62,7 +59,6 @@ CREATE TABLE "product" (
     "price" DECIMAL(9,2) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "product_pkey" PRIMARY KEY ("id")
 );
@@ -70,7 +66,9 @@ CREATE TABLE "product" (
 -- CreateTable
 CREATE TABLE "product_image" (
     "id" SERIAL NOT NULL,
+    "color_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
+    "image_key" VARCHAR(50) NOT NULL DEFAULT '',
     "image_url" VARCHAR(500) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -140,7 +138,7 @@ CREATE TABLE "order" (
     "total" DECIMAL(9,2) NOT NULL,
     "order_status" "order_status" NOT NULL DEFAULT 'PENDING',
     "payment_method" "payment_method" NOT NULL,
-    "payment_status" "payment_status" NOT NULL DEFAULT 'PENDING',
+    "payment_status" "payment_status" NOT NULL DEFAULT 'UNPAID',
     "note" VARCHAR(250),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -243,6 +241,48 @@ CREATE TABLE "address" (
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
 );
 
+-- AlterSequence
+ALTER SEQUENCE user_id_seq RESTART WITH 200;
+
+-- AlterSequence
+ALTER SEQUENCE category_id_seq RESTART WITH 300;
+
+-- AlterSequence
+ALTER SEQUENCE product_id_seq RESTART WITH 400;
+
+-- AlterSequence
+ALTER SEQUENCE product_image_id_seq RESTART WITH 500;
+
+-- AlterSequence
+ALTER SEQUENCE stock_id_seq RESTART WITH 600;
+
+-- AlterSequence
+ALTER SEQUENCE color_id_seq RESTART WITH 700;
+
+-- AlterSequence
+ALTER SEQUENCE size_id_seq RESTART WITH 800;
+
+-- AlterSequence
+ALTER SEQUENCE order_id_seq RESTART WITH 1000;
+
+-- AlterSequence
+ALTER SEQUENCE order_item_id_seq RESTART WITH 1100;
+
+-- AlterSequence
+ALTER SEQUENCE shipping_id_seq RESTART WITH 1200;
+
+-- AlterSequence
+ALTER SEQUENCE payment_id_seq RESTART WITH 1300;
+
+-- AlterSequence
+ALTER SEQUENCE review_id_seq RESTART WITH 1400;
+
+-- AlterSequence
+ALTER SEQUENCE notification_id_seq RESTART WITH 1500;
+
+-- AlterSequence
+ALTER SEQUENCE address_id_seq RESTART WITH 1600;
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
@@ -257,9 +297,6 @@ CREATE UNIQUE INDEX "category_ar_name_key" ON "category"("ar_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "category_en_name_key" ON "category"("en_name");
-
--- CreateIndex
-CREATE INDEX "category_category_id_idx" ON "category"("category_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "product_ar_name_key" ON "product"("ar_name");
@@ -301,10 +338,7 @@ ALTER TABLE "user_address" ADD CONSTRAINT "user_address_user_id_fkey" FOREIGN KE
 ALTER TABLE "user_address" ADD CONSTRAINT "user_address_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "category" ADD CONSTRAINT "category_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "product_image" ADD CONSTRAINT "product_image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
