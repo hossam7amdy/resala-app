@@ -27,7 +27,6 @@ model User {
   lastLogin     DateTime?      @map("last_login")
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
-  deletedAt     DateTime?      @map("deleted_at")
   cart          Cart[]
   wishlist      Wishlist[]
   addressList   UserAddress[]
@@ -52,18 +51,13 @@ model UserAddress {
 // ------------------------------------------------ //
 //*             Inventory Data                *//
 model Category {
-  id            Int        @id @default(autoincrement()) @db.Integer
-  categoryId    Int?       @map("category_id") @db.Integer
-  arName        String     @unique @map("ar_name") @db.VarChar(100)
-  enName        String     @unique @map("en_name") @db.VarChar(100)
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @updatedAt @map("updated_at")
-  deletedAt     DateTime?  @map("deleted_at")
-  products      Product[]
-  subCategories Category[] @relation("SubCategories")
-  mainCategory  Category?  @relation("SubCategories", fields: [categoryId], references: [id])
+  id        Int       @id @default(autoincrement()) @db.Integer
+  arName    String    @unique @map("ar_name") @db.VarChar(100)
+  enName    String    @unique @map("en_name") @db.VarChar(100)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  products  Product[]
 
-  @@index([categoryId])
   @@map("category")
 }
 
@@ -77,8 +71,7 @@ model Product {
   price         Decimal        @db.Decimal(9, 2)
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
-  deletedAt     DateTime?      @map("deleted_at")
-  category      Category       @relation(fields: [categoryId], references: [id])
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   stocks        Stock[]
   wishlist      Wishlist[]
   images        ProductImage[]
@@ -89,6 +82,7 @@ model Product {
 
 model ProductImage {
   id        Int      @default(autoincrement()) @db.Integer
+  colorId   Int      @map("color_id") @db.Integer
   productId Int      @map("product_id") @db.Integer
   imageKey  String   @default("") @map("image_key") @db.VarChar(50)
   imageUrl  String   @map("image_url") @db.VarChar(500)

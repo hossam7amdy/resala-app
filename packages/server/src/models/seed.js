@@ -54,55 +54,12 @@ const main = async () => {
   await prisma.category.createMany({
     data: [
       {
-        arName: 'نساء',
-        enName: 'Women',
+        arName: 'ملابس خروج',
+        enName: 'Outfits',
       },
       {
-        arName: 'اطفال',
-        enName: 'Kids',
-      },
-    ],
-  });
-
-  // create sub categories
-  const mainCategory = await prisma.category.findMany({
-    orderBy: { createdAt: 'asc' },
-  });
-  await prisma.category.createMany({
-    data: [
-      {
-        categoryId: mainCategory[0].id,
-        arName: 'فساتين',
-        enName: 'Dresses',
-      },
-      {
-        categoryId: mainCategory[0].id,
-        arName: 'تنانير',
-        enName: 'Skirts',
-      },
-      {
-        categoryId: mainCategory[0].id,
-        arName: 'بلوزات',
-        enName: 'Blouses',
-      },
-    ],
-  });
-  await prisma.category.createMany({
-    data: [
-      {
-        categoryId: mainCategory[1].id,
-        arName: 'اولاد',
-        enName: 'boys',
-      },
-      {
-        categoryId: mainCategory[1].id,
-        arName: 'بنات',
-        enName: 'Girls',
-      },
-      {
-        categoryId: mainCategory[1].id,
-        arName: 'حديثى الولادة',
-        enName: 'Newborn',
+        arName: 'ملابس مناسبات',
+        enName: 'Occasions',
       },
     ],
   });
@@ -130,8 +87,8 @@ const main = async () => {
         price: 200,
       },
       {
-        categoryId: categories[2].id,
-        arName: 'بلوزة كتان',
+        categoryId: categories[1].id,
+        arName: 'بلوزة قطن',
         enName: 'Cotton Blouse',
         arDescription: 'بلوزة كتان',
         enDescription: 'Cotton Blouse',
