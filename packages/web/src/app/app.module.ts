@@ -13,17 +13,25 @@ import { CommonModule } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
 
+
+
+
+
+
+
 //@syncfusion/ej2-angular-navigations
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
+
     BrowserModule,
     AppRoutingModule,
     RouterModule,
     HttpClientModule,
     BrowserAnimationsModule,
     NgxSpinnerModule,
+
     ToastrModule.forRoot(), // ToastrModule added
 
   ],
