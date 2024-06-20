@@ -23,6 +23,13 @@ white
 
 /* Globel */
 
+
+.mat-sidenav-container,
+.mat-sidenav-content,
+.mat-tab-body-content {
+  transform: none !important;
+}
+
 ::-webkit-scrollbar {
   width: 13px;
 }
@@ -55,6 +62,7 @@ white
 
   font-weight: 400;
 }
+
 .body {
   margin-top: 50px;
 }
@@ -62,6 +70,7 @@ white
 body {
   overflow-x: hidden;
 }
+
 .h1 {
   color: #016373;
   font-weight: bold;
@@ -70,6 +79,7 @@ body {
   margin-left: 40px;
   font-size: 40px;
 }
+
 .h2 {
   color: #016373;
   font-weight: bold;
@@ -78,6 +88,7 @@ body {
 
   font-size: 30px;
 }
+
 .h3 {
   color: #016373;
   font-weight: bold;
@@ -86,6 +97,7 @@ body {
 
   font-size: 20px;
 }
+
 .h4 {
   color: #016373;
   font-weight: 500;
@@ -94,16 +106,19 @@ body {
 
   font-size: 15px;
 }
+
 .p {
   color: #777;
   font-size: 14px;
   text-justify: 10px;
   padding: 10px;
 }
+
 .price {
   font-weight: bold;
   color: #fbb935;
 }
+
 .currency {
   color: #016373;
 }
