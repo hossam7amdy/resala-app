@@ -53,14 +53,8 @@ const main = async () => {
   // create main categories
   await prisma.category.createMany({
     data: [
-      {
-        arName: 'ملابس خروج',
-        enName: 'Outfits',
-      },
-      {
-        arName: 'ملابس مناسبات',
-        enName: 'Occasions',
-      },
+      { arName: 'ملابس خروج', enName: 'Outfits' },
+      { arName: 'ملابس مناسبات', enName: 'Occasions' },
     ],
   });
 
@@ -78,7 +72,7 @@ const main = async () => {
         enDescription: 'Long Evening Dress',
         price: 100,
         imageKey: 'evening-dress.jpg',
-        imageUrl: 'http://localhost:5000/uploads/evening-dress.jpg',
+        imageUrl: `${process.env.APP_URL}/uploads/evening-dress.jpg`,
       },
       {
         categoryId: categories[0].id,
@@ -88,7 +82,7 @@ const main = async () => {
         enDescription: 'Long Wedding Dress',
         price: 200,
         imageKey: 'wedding-dress.jpg',
-        imageUrl: 'http://localhost:5000/uploads/wedding-dress.jpg',
+        imageUrl: `${process.env.APP_URL}/uploads/wedding-dress.jpg`,
       },
       {
         categoryId: categories[1].id,
@@ -98,7 +92,7 @@ const main = async () => {
         enDescription: 'Cotton Blouse',
         price: 400,
         imageKey: 'cotton-blouse.jpg',
-        imageUrl: 'http://localhost:5000/uploads/cotton-blouse.jpg',
+        imageUrl: `${process.env.APP_URL}/uploads/cotton-blouse.jpg`,
       },
     ],
   });
@@ -106,51 +100,15 @@ const main = async () => {
   // create colors and sizes
   await prisma.color.createMany({
     data: [
-      {
-        enName: 'white',
-        arName: 'ابيض',
-        code: '#ffffff',
-      },
-      {
-        enName: 'black',
-        arName: 'اسود',
-        code: '#000000',
-      },
-      {
-        enName: 'orange',
-        arName: 'برتقالى',
-        code: '#ffa500',
-      },
-      {
-        enName: 'pink',
-        arName: 'وردى',
-        code: '#ffc0cb',
-      },
-      {
-        enName: 'brown',
-        arName: 'بنى',
-        code: '#a52a2a',
-      },
+      { enName: 'white', arName: 'ابيض', code: '#ffffff' },
+      { enName: 'black', arName: 'اسود', code: '#000000' },
+      { enName: 'orange', arName: 'برتقالى', code: '#ffa500' },
+      { enName: 'pink', arName: 'وردى', code: '#ffc0cb' },
+      { enName: 'brown', arName: 'بنى', code: '#a52a2a' },
     ],
   });
   await prisma.size.createMany({
-    data: [
-      {
-        name: 'S',
-      },
-      {
-        name: 'M',
-      },
-      {
-        name: 'L',
-      },
-      {
-        name: 'XL',
-      },
-      {
-        name: 'XXL',
-      },
-    ],
+    data: [{ name: 'S' }, { name: 'M' }, { name: 'L' }, { name: 'XL' }, { name: 'XXL' }],
   });
 
   // create product variants (stocks) 2 for each product

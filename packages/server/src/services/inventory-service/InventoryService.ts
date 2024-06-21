@@ -1,4 +1,5 @@
 import type { InventoryRepository } from '../../repositories/index.js';
+import type FileService from '../file-service/FileService.js';
 import CategoryService from './CategoryService.js';
 import ColorService from './ColorService.js';
 import ProductService from './ProductService.js';
@@ -12,9 +13,9 @@ export default class InventoryService {
   readonly size: SizeService;
   readonly stock: StockService;
 
-  constructor(inventoryRepo: InventoryRepository) {
+  constructor(inventoryRepo: InventoryRepository, fileService: FileService) {
     this.category = new CategoryService(inventoryRepo);
-    this.product = new ProductService(inventoryRepo, this.category);
+    this.product = new ProductService(inventoryRepo, this.category, fileService);
     this.color = new ColorService(inventoryRepo);
     this.size = new SizeService(inventoryRepo);
     this.stock = new StockService(inventoryRepo, this.product, this.color, this.size);
