@@ -188,12 +188,12 @@ describe('TEST /categories', () => {
   // };
 
   const getLastCategory = async () => {
-    const categories = await inventoryService.categoryService.listCategories();
+    const categories = await inventoryService.category.listCategories();
     return categories[categories.length - 1];
   };
 
   const getFirstCategory = async () => {
-    const categories = await inventoryService.categoryService.listCategories();
+    const categories = await inventoryService.category.listCategories();
     return categories[0];
   };
 });

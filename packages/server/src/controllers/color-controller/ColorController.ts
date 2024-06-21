@@ -12,7 +12,7 @@ export default class ColorController {
 
   getColor: GetColor = async (req, res, next) => {
     try {
-      const color = await this.inventoryService.colorService.findColorById(req.params.colorId);
+      const color = await this.inventoryService.color.findColorById(req.params.colorId);
 
       return res.json({ success: true, data: color });
     } catch (error) {
@@ -22,7 +22,7 @@ export default class ColorController {
 
   getColorsList: GetColorsList = async (_, res, next) => {
     try {
-      const colors = await this.inventoryService.colorService.getColors();
+      const colors = await this.inventoryService.color.getColors();
 
       return res.json({ success: true, data: colors });
     } catch (error) {
@@ -32,7 +32,7 @@ export default class ColorController {
 
   createColor: CreateColor = async (req, res, next) => {
     try {
-      const color = await this.inventoryService.colorService.createColor(req.body);
+      const color = await this.inventoryService.color.createColor(req.body);
 
       return res.status(201).json({ success: true, data: color });
     } catch (error) {
@@ -43,7 +43,7 @@ export default class ColorController {
   updateColor: UpdateColor = async (req, res, next) => {
     const colorId = Number(req.params.colorId);
     try {
-      const color = await this.inventoryService.colorService.updateColor(colorId, req.body);
+      const color = await this.inventoryService.color.updateColor(colorId, req.body);
 
       return res.json({ success: true, data: color });
     } catch (error) {
@@ -54,7 +54,7 @@ export default class ColorController {
   deleteColor: DeleteColor = async (req, res, next) => {
     const colorId = Number(req.params.colorId);
     try {
-      const color = await this.inventoryService.colorService.deleteColor(colorId);
+      const color = await this.inventoryService.color.deleteColor(colorId);
 
       return res.json({ success: true, data: color });
     } catch (error) {

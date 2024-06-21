@@ -22,7 +22,7 @@ export default class ReviewService {
   async createReview(review: CreateReviewRequest['body'] & { userId: number }) {
     const [exist] = await Promise.all([
       this.reviewRepo.findByUserAndProduct(review.userId, review.productId),
-      this.inventoryService.productService.findProductById(review.productId),
+      this.inventoryService.product.findProductById(review.productId),
     ]);
     if (exist) {
       throw new ConflictError('Review already exists');

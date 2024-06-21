@@ -16,9 +16,9 @@ import type SizeService from './SizeService.js';
 export default class StockService {
   constructor(
     private readonly inventoryRepo: InventoryRepository,
-    private readonly productService: ProductService,
-    private readonly colorService: ColorService,
-    private readonly sizeService: SizeService
+    private readonly product: ProductService,
+    private readonly color: ColorService,
+    private readonly size: SizeService
   ) {}
 
   async findById(stockId: number): Promise<GetStockResponse['data']> {
@@ -41,16 +41,16 @@ export default class StockService {
   }
 
   async getByProduct(productId: number): Promise<GetProductStocksResponse['data']> {
-    await this.productService.findProductById(productId);
+    await this.product.findProductById(productId);
 
     return await this.inventoryRepo.stock.findByProduct(productId);
   }
 
   async create(stock: CreateStockRequest['body']) {
     await Promise.all([
-      this.productService.findProductById(stock.productId),
-      this.colorService.findColorById(stock.colorId),
-      this.sizeService.findSizeById(stock.sizeId),
+      this.product.findProductById(stock.productId),
+      this.color.findColorById(stock.colorId),
+      this.size.findSizeById(stock.sizeId),
     ]);
 
     return await this.inventoryRepo.stock.create({
@@ -65,9 +65,9 @@ export default class StockService {
 
   async update(stockId: number, stock: UpdateStockRequest['body']) {
     await Promise.all([
-      this.productService.findProductById(stock.productId),
-      this.colorService.findColorById(stock.colorId),
-      this.sizeService.findSizeById(stock.sizeId),
+      this.product.findProductById(stock.productId),
+      this.color.findColorById(stock.colorId),
+      this.size.findSizeById(stock.sizeId),
       this.findById(stockId),
     ]);
 
