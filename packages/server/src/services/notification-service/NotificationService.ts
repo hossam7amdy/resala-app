@@ -1,7 +1,7 @@
-import type { IMailer } from '../../interfaces/index.js';
+import type { INotification } from '../../interfaces/index.js';
 
 export default class NotificationService {
-  constructor(private readonly mailer: IMailer) {}
+  constructor(private readonly mailer: INotification) {}
 
   async sendVerificationEmail(email: string, token: string) {
     const href = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;

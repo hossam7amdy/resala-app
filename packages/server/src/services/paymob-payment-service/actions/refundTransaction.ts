@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance.js';
+import { axiosInstance } from '../config/axiosInstance.js';
 
 interface RefundTransactionRequest {
   auth_token: string;
