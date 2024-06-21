@@ -5,7 +5,7 @@ export default class WishlistRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   async update(wishlist: Omit<Wishlist, 'id'>) {
-    await this.prisma.wishlist.upsert({
+    return await this.prisma.wishlist.upsert({
       create: wishlist,
       update: wishlist,
       where: {
@@ -15,8 +15,6 @@ export default class WishlistRepository {
         },
       },
     });
-
-    return await this.list(wishlist.userId);
   }
 
   async list(userId: number) {
@@ -33,7 +31,7 @@ export default class WishlistRepository {
   }
 
   async delete(userId: number, productId: number) {
-    await this.prisma.wishlist.delete({
+    return await this.prisma.wishlist.delete({
       where: {
         userId_productId: {
           userId,
@@ -41,17 +39,13 @@ export default class WishlistRepository {
         },
       },
     });
-
-    return await this.list(userId);
   }
 
   async deleteAll(userId: number) {
-    await this.prisma.wishlist.deleteMany({
+    return await this.prisma.wishlist.deleteMany({
       where: {
         userId,
       },
     });
-
-    return await this.list(userId);
   }
 }

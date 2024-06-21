@@ -49,12 +49,10 @@ export default class CartRepository {
   }
 
   async deleteAll(userId: number) {
-    await this.prisma.cart.deleteMany({
+    return await this.prisma.cart.deleteMany({
       where: {
         userId,
       },
     });
-
-    return true;
   }
 }
