@@ -1,6 +1,6 @@
-import { signJwt } from '../../lib/jwt-token/index.js';
-import { authService, communicationService } from '../../services/index.js';
-import { BadRequestError } from '../../utils/api-errors.js';
+import { signJwt } from '../../lib/index.js';
+import type { AuthService, NotificationService } from '../../services/index.js';
+import { BadRequestError } from '../../utils/ApiErrors.js';
 import type {
   ChangePassword,
   ForgotPassword,
@@ -14,10 +14,15 @@ import type {
 import type IAuthController from './IAuthController.js';
 
 export default class AuthController implements IAuthController {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly notificationService: NotificationService
+  ) {}
+
   login: Login = async (req, res, next) => {
     try {
       const { sign, password } = req.body;
-      const response = await authService.authenticate(sign, password);
+      const response = await this.authService.authenticate(sign, password);
 
       return res.json({
         success: true,
@@ -31,10 +36,10 @@ export default class AuthController implements IAuthController {
   register: Register = async (req, res, next) => {
     try {
       // Register user
-      const { user, verifyToken } = await authService.register(req.body);
+      const { user, verifyToken } = await this.authService.register(req.body);
 
       // Send verification email
-      await communicationService.sendVerificationEmail(user.email, verifyToken);
+      await this.notificationService.sendVerificationEmail(user.email, verifyToken);
 
       return res.status(201).json({
         success: true,
@@ -47,7 +52,7 @@ export default class AuthController implements IAuthController {
   refresh: Refresh = async (req, res, next) => {
     try {
       const { token } = req.body;
-      const response = await authService.refreshToken(token);
+      const response = await this.authService.refreshToken(token);
 
       return res.json({
         success: true,
@@ -64,7 +69,7 @@ export default class AuthController implements IAuthController {
 
   verifyEmail: VerifyEmail = async (req, res) => {
     try {
-      await authService.verifyEmail(req.query.email, req.query.token);
+      await this.authService.verifyEmail(req.query.email, req.query.token);
 
       res.render('success', { message: 'Email verified successfully' });
     } catch (error) {
@@ -77,9 +82,9 @@ export default class AuthController implements IAuthController {
     try {
       const { email } = req.body;
 
-      const { resetCode, token, expiresAt } = await authService.forgotPassword(email);
+      const { resetCode, token, expiresAt } = await this.authService.forgotPassword(email);
 
-      await communicationService.sendResetPasswordEmail(email, resetCode);
+      await this.notificationService.sendResetPasswordEmail(email, resetCode);
 
       return res.json({
         success: true,
@@ -102,8 +107,8 @@ export default class AuthController implements IAuthController {
         return next(new BadRequestError('Invalid token'));
       }
 
-      const rested = await authService.resetPassword(resetToken, code, password);
-      await communicationService.sendResetConfirmationEmail(email);
+      const rested = await this.authService.resetPassword(resetToken, code, password);
+      await this.notificationService.sendResetConfirmationEmail(email);
 
       return res.json({
         success: rested,
@@ -118,8 +123,8 @@ export default class AuthController implements IAuthController {
       const email = res.locals.user.email;
       const { oldPassword, newPassword } = req.body;
 
-      const changed = await authService.changePassword(email, oldPassword, newPassword);
-      await communicationService.sendResetConfirmationEmail(email);
+      const changed = await this.authService.changePassword(email, oldPassword, newPassword);
+      await this.notificationService.sendResetConfirmationEmail(email);
 
       return res.json({
         success: changed,
@@ -134,7 +139,7 @@ export default class AuthController implements IAuthController {
       const { id, email } = res.locals.user;
 
       const verifyToken = signJwt({ id, email }, process.env.JWT_VERIFY!, { expiresIn: '30d' });
-      await communicationService.sendVerificationEmail(email, verifyToken);
+      await this.notificationService.sendVerificationEmail(email, verifyToken);
 
       return res.json({
         success: true,

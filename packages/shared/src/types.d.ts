@@ -22,7 +22,6 @@ export type User = {
     lastLogin: null | Date;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
 export type UserAddress = {
     userId: number;
@@ -30,12 +29,10 @@ export type UserAddress = {
 };
 export type Category = {
     id: number;
-    categoryId: null | number;
     arName: string;
     enName: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
 export type Product = {
     id: number;
@@ -45,12 +42,14 @@ export type Product = {
     arDescription: string;
     enDescription: string;
     price: number | any;
+    imageKey: string;
+    imageUrl: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
 export type ProductImage = {
     id: number;
+    colorId: number;
     productId: number;
     imageKey: string;
     imageUrl: string;
@@ -119,14 +118,14 @@ export type Shipping = {
     id: number;
     orderId: number;
     addressId: number;
-    cost: number;
+    cost: number | any;
     createdAt: Date;
     updatedAt: Date;
 };
 export type Payment = {
     id: number;
     orderId: number;
-    transactionId: string | number;
+    transactionId: number;
     transactionOrderId: number;
     pending: boolean;
     success: boolean;

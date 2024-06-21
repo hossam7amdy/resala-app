@@ -1,36 +1,44 @@
 import { Role } from '@resala/shared';
-
 import type {
-  CreateReviewInput,
-  Filters,
-  ReviewOutput,
-  UpdateReviewInput,
-} from '../../DTOs/index.js';
-import type IReviewRepository from '../../interfaces/IReviewRepository.js';
-import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
-import type { inventoryService as InventoryService } from '../index.js';
-import type UserService from '../user-service/user-service.js';
+  CreateReviewRequest,
+  DefaultFilters,
+  GetReviewResponse,
+  GetReviewsListResponse,
+  UpdateReviewRequest,
+} from '@resala/shared';
+
+import type { ReviewRepository } from '../../repositories/index.js';
+import { ConflictError, NotFoundError } from '../../utils/ApiErrors.js';
+import type { InventoryService } from '../index.js';
+import type UserService from '../user-service/UserService.js';
 
 export default class ReviewService {
   constructor(
-    private readonly reviewRepo: IReviewRepository,
+    private readonly reviewRepo: ReviewRepository,
     private readonly userService: UserService,
-    private readonly inventoryService: typeof InventoryService
+    private readonly inventoryService: InventoryService
   ) {}
 
-  async createReview(review: CreateReviewInput): Promise<ReviewOutput> {
+  async createReview(review: CreateReviewRequest['body'] & { userId: number }) {
     const [exist] = await Promise.all([
       this.reviewRepo.findByUserAndProduct(review.userId, review.productId),
-      this.inventoryService.findProductById(review.productId),
+      this.inventoryService.productService.findProductById(review.productId),
     ]);
     if (exist) {
       throw new ConflictError('Review already exists');
     }
 
-    return await this.reviewRepo.create(review);
+    return await this.reviewRepo.create({
+      productId: review.productId,
+      userId: review.userId,
+      rating: review.rating,
+      comment: review.comment || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
 
-  async updateReview(reviewId: number, review: UpdateReviewInput): Promise<ReviewOutput> {
+  async updateReview(reviewId: number, review: UpdateReviewRequest['body'] & { userId: number }) {
     const [exist, user] = await Promise.all([
       this.reviewRepo.findById(reviewId),
       this.userService.findUserById(review.userId),
@@ -50,7 +58,7 @@ export default class ReviewService {
     return await this.reviewRepo.update(reviewId, review);
   }
 
-  async deleteReview(reviewId: number, userId: number): Promise<void> {
+  async deleteReview(reviewId: number, userId: number) {
     const [exist, user] = await Promise.all([
       this.reviewRepo.findById(reviewId),
       this.userService.findUserById(userId),
@@ -64,10 +72,10 @@ export default class ReviewService {
       throw new ConflictError('Review not owned by user');
     }
 
-    await this.reviewRepo.delete(reviewId);
+    return await this.reviewRepo.delete(reviewId);
   }
 
-  async getReviewById(reviewId: number): Promise<ReviewOutput> {
+  async getReviewById(reviewId: number): Promise<GetReviewResponse['data']> {
     const review = await this.reviewRepo.findById(reviewId);
 
     if (!review) {
@@ -77,20 +85,24 @@ export default class ReviewService {
     return review;
   }
 
-  async listAndCountProductReviews(
+  async listProductReviews(
     productId: number,
-    filters: Filters
-  ): Promise<{
-    count: number;
-    reviews: Omit<ReviewOutput, 'product'>[];
-  }> {
-    return await this.reviewRepo.listAndCountByProductId(productId, filters);
+    filters: Omit<DefaultFilters, 'query'>
+  ): Promise<GetReviewsListResponse['data']> {
+    const { count, reviews } = await this.reviewRepo.listByProductId(productId, filters);
+
+    return {
+      pagination: { page: filters.page, limit: filters.limit, total: count },
+      reviews,
+    };
   }
 
-  async listAndCountReviews(filters: Filters): Promise<{
-    count: number;
-    reviews: ReviewOutput[];
-  }> {
-    return await this.reviewRepo.listAndCount(filters);
+  async listReviews(filters: DefaultFilters): Promise<GetReviewsListResponse['data']> {
+    const { count, reviews } = await this.reviewRepo.list(filters);
+
+    return {
+      pagination: { page: filters.page, limit: filters.limit, total: count },
+      reviews,
+    };
   }
 }

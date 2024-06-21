@@ -1,16 +1,19 @@
 import { PrismaClient } from '@prisma/client';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { ENDPOINT_CONFIGS, type Role } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { UserService, inventoryService } from '../services/index.js';
+import InventoryRepository from '../repositories/InventoryRepository.js';
+import UserRepository from '../repositories/UserRepository.js';
+import { InventoryService, UserService } from '../services/index.js';
 import { categoryAssertion, productAssertion } from './helpers/customAssertions.js';
 import { getTestServer } from './helpers/testServer.js';
 
 describe('TEST /categories', () => {
   let client: TestAgent<superset.Test>;
-  const userService = new UserService(new PrismaClient());
+  let userService: UserService;
+  let inventoryService: InventoryService;
 
   const testUser = {
     firstName: 'test',
@@ -21,7 +24,13 @@ describe('TEST /categories', () => {
   };
 
   beforeAll(async () => {
+    const prisma = new PrismaClient();
+
+    userService = new UserService(new UserRepository(prisma));
+    inventoryService = new InventoryService(new InventoryRepository(prisma));
+
     client = await getTestServer();
+
     await register(testUser);
   });
 
@@ -84,7 +93,6 @@ describe('TEST /categories', () => {
   });
 
   describe(`${ENDPOINT_CONFIGS.createCategory.method.toUpperCase()} ${ENDPOINT_CONFIGS.createCategory.url}`, () => {
-    let parentId: number;
     const testCategory = {
       arName: 'تصنيف تجريبى',
       enName: 'test category',
@@ -96,19 +104,6 @@ describe('TEST /categories', () => {
       const res = await client[method](url)
         .set(await getAccessToken())
         .send(testCategory);
-
-      expect(res.statusCode).toBe(403);
-      expect(res.body).toEqual({
-        success: false,
-        message: expect.any(String),
-      });
-    });
-    it('should fail to sub-create new category if non-admin user', async () => {
-      const { method, url } = ENDPOINT_CONFIGS.createCategory;
-
-      const res = await client[method](url)
-        .set(await getAccessToken())
-        .send({ ...testCategory, categoryId: 1 });
 
       expect(res.statusCode).toBe(403);
       expect(res.body).toEqual({
@@ -129,27 +124,7 @@ describe('TEST /categories', () => {
         success: true,
         data: categoryAssertion,
       });
-
-      parentId = res.body.data.id;
     });
-    it('should create new sub-category', async () => {
-      const { method, url } = ENDPOINT_CONFIGS.createCategory;
-      const res = await client[method](url)
-        .set(await getAccessToken())
-        .send({
-          categoryId: parentId,
-          arName: 'تصنيف فرعى تجريبى',
-          enName: 'test sub-category',
-        });
-
-      expect(res.statusCode).toBe(201);
-      expect(res.body).toEqual({
-        success: true,
-        data: categoryAssertion,
-      });
-    });
-    it('should fail to create new sub-category with invalid parent id', async () => {});
-    it('should fail to create new sub-category of sub-category', async () => {});
     it('should fail to create new category with insufficient data', async () => {});
   });
 
@@ -202,23 +177,23 @@ describe('TEST /categories', () => {
     const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
     const res = await client[method](url).set(await getAccessToken());
 
-    return await userService.updateUser(res.body.data.id, { role: 'ADMIN' });
+    return await userService.updateUser(res.body.data.id, { role: 'ADMIN' as Role });
   };
 
-  const makeUserNonAdmin = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
-    const res = await client[method](url).set(await getAccessToken());
+  // const makeUserNonAdmin = async () => {
+  //   const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
+  //   const res = await client[method](url).set(await getAccessToken());
 
-    return await userService.updateUser(res.body.data.id, { role: 'CUSTOMER' });
-  };
+  //   return await userService.updateUser(res.body.data.id, { role: 'CUSTOMER' as Role });
+  // };
 
   const getLastCategory = async () => {
-    const categories = await inventoryService.listCategories();
+    const categories = await inventoryService.categoryService.listCategories();
     return categories[categories.length - 1];
   };
 
   const getFirstCategory = async () => {
-    const categories = await inventoryService.listCategories();
+    const categories = await inventoryService.categoryService.listCategories();
     return categories[0];
   };
 });

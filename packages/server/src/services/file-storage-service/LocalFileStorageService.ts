@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-import type { FileMetadata, IFileStorageService } from '../../interfaces/index.js';
+import type { FileMetadata, IFileStorage } from '../../interfaces/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -11,7 +11,7 @@ interface LocalStorageOptions {
   baseUrl?: string;
   rootDirectory?: string;
 }
-export default class LocalStorage implements IFileStorageService {
+export default class LocalStorage implements IFileStorage {
   private readonly baseUrl: string;
   private readonly rootDirectory: string;
 
@@ -20,7 +20,7 @@ export default class LocalStorage implements IFileStorageService {
     this.rootDirectory = options?.rootDirectory ?? 'uploads'; // Default rootDirectory
   }
 
-  async uploadFile(buffer: Buffer, key: string): Promise<string> {
+  async upload(buffer: Buffer, key: string): Promise<string> {
     const path = this.getPath(key);
 
     await this.createDirectoryIfNotExist(dirname(path));
@@ -29,27 +29,27 @@ export default class LocalStorage implements IFileStorageService {
     return this.getPublicUrl(key);
   }
 
-  async downloadFile(key: string): Promise<Buffer> {
+  async download(key: string): Promise<Buffer> {
     const path = this.getPath(key);
     return await fs.readFile(path);
   }
 
-  async deleteFile(key: string): Promise<void> {
+  async delete(key: string): Promise<void> {
     const path = this.getPath(key);
     await fs.unlink(path);
   }
 
-  async deleteFiles(keys: string[]): Promise<void> {
-    await Promise.all(keys.map(key => this.deleteFile(key)));
+  async deleteMany(keys: string[]): Promise<void> {
+    await Promise.all(keys.map(key => this.delete(key)));
   }
 
-  async listFiles(key: string): Promise<string[]> {
+  async list(key: string): Promise<string[]> {
     const path = this.getPath(key);
     const files = await fs.readdir(path);
     return files.map(file => join(key, file));
   }
 
-  async getFileMetadata(key: string): Promise<FileMetadata> {
+  async getMetadata(key: string): Promise<FileMetadata> {
     const path = this.getPath(key);
     const stat = await fs.stat(path);
     return {

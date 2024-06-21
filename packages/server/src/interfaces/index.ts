@@ -1,2 +1,2 @@
-export type { default as IFileStorageService, FileMetadata } from './IFileStorageService.js';
-export type { default as IReviewRepository } from './IReviewRepository.js';
+export type { default as IMailer } from './IMailer.js';
+export type { default as IFileStorage, FileMetadata } from './IFileStorage.js';

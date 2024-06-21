@@ -17,8 +17,6 @@ export const userAssertions: GetProfileResponse['data'] = {
   lastLogin: expect.toBeNullOrString(),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),
-  // @ts-expect-error custom matcher
-  deletedAt: expect.toBeNullOrString(),
 };
 
 export const addressAssertions: GetUserAddressListResponse['data'][0] = {
@@ -29,9 +27,12 @@ export const addressAssertions: GetUserAddressListResponse['data'][0] = {
   phone: expect.any(String),
   firstName: expect.any(String),
   lastName: expect.any(String),
-  building: expect.any(String),
-  floor: expect.any(Number),
-  address: expect.any(String),
+  // @ts-expect-error custom matcher
+  building: expect.toBeNullOrString(),
+  // @ts-expect-error custom matcher
+  floor: expect.toBeNullOrNumber(),
+  // @ts-expect-error custom matcher
+  address: expect.toBeNullOrString(),
   country: expect.any(String),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),
@@ -39,16 +40,10 @@ export const addressAssertions: GetUserAddressListResponse['data'][0] = {
 
 export const categoryAssertion: GetCategoryResponse['data'] = {
   id: expect.any(Number),
-  // @ts-expect-error - custom matcher
-  categoryId: expect.toBeNullOrNumber(),
   arName: expect.any(String),
   enName: expect.any(String),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),
-  // @ts-expect-error - custom matcher
-  deletedAt: expect.toBeNullOrString(),
-  mainCategory: expect.any(Object), // Add the mainCategory property
-  subCategories: expect.any(Array),
 };
 
 export const imageAssertion = {
@@ -70,8 +65,4 @@ export const productAssertion = {
   price: expect.toBeStringWithNumber(),
   createdAt: expect.any(String),
   updatedAt: expect.any(String),
-  // @ts-expect-error - custom matcher
-  deletedAt: expect.toBeNullOrString(),
-  // @ts-expect-error - custom matcher
-  images: expect.toBeArrayOfImageObjectMatching(imageAssertion),
 };
