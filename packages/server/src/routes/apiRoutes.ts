@@ -69,6 +69,7 @@ import {
   errHandler,
   loggerMiddleware,
   uploadMultiple,
+  uploadSingle,
   validate,
 } from '../middlewares/index.js';
 import {
@@ -111,10 +112,10 @@ export const createExpressRouter = (legRequests: boolean) => {
   // services
   const authService = new AuthService(userRepository);
   const userService = new UserService(userRepository);
-  const inventoryService = new InventoryService(inventoryRepository);
+  const fileService = new FileService(new LocalFileStorageService());
+  const inventoryService = new InventoryService(inventoryRepository, fileService);
   const notificationService = new NotificationService(new EmailNotificationService());
   const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
-  const fileService = new FileService(new LocalFileStorageService());
   const shoppingService = new ShoppingService(shoppingRepository, inventoryService);
   const paymentService = new PaymentService(paymentRepository, new PaymobPaymentService());
   const orderService = new OrderService(orderRepository, shoppingService, userService);
@@ -123,7 +124,7 @@ export const createExpressRouter = (legRequests: boolean) => {
   const authCtrl = new AuthController(authService, notificationService);
   const userCtrl = new UserController(userService);
   const categoryCtrl = new CategoryCtrl(inventoryService);
-  const productCtrl = new ProductController(inventoryService, fileService);
+  const productCtrl = new ProductController(inventoryService);
   const colorCtrl = new ColorController(inventoryService);
   const sizeCtrl = new SizeController(inventoryService);
   const stockCtrl = new StockController(inventoryService, fileService);
@@ -209,11 +210,13 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.getProduct]: [validate(DeleteProductSchema), productCtrl.getProduct],
     [Endpoints.getProductsList]: [validate(DefaultQuerySchema), productCtrl.getProductsList],
     [Endpoints.createProduct]: [
+      uploadSingle('image'),
       validate(CreateProductSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.createProduct,
     ],
     [Endpoints.updateProduct]: [
+      uploadSingle('image'),
       validate(UpdateProductSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.updateProduct,

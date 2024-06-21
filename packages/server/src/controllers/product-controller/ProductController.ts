@@ -1,4 +1,4 @@
-import type { FileService, InventoryService } from '../../services/index.js';
+import type { InventoryService } from '../../services/index.js';
 import type {
   CreateProduct,
   DeleteProduct,
@@ -10,10 +10,7 @@ import type {
 import type IProductController from './IProductController.js';
 
 export default class ProductController implements IProductController {
-  constructor(
-    private readonly inventoryService: InventoryService,
-    private readonly fileService: FileService
-  ) {}
+  constructor(private readonly inventoryService: InventoryService) {}
 
   getProduct: GetProduct = async (req, res, next) => {
     try {
@@ -39,12 +36,11 @@ export default class ProductController implements IProductController {
 
   createProduct: CreateProduct = async (req, res, next) => {
     try {
-      const { key, url } = await this.fileService.uploadFile(req.file!);
+      await this.inventoryService.category.findCategoryById(req.body.categoryId);
 
       const data = await this.inventoryService.product.createProduct({
         ...req.body,
-        imageKey: key,
-        imageUrl: url,
+        file: req.file!,
       });
 
       return res.json({ success: true, data });
@@ -55,15 +51,10 @@ export default class ProductController implements IProductController {
 
   updateProduct: UpdateProduct = async (req, res, next) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let product: any = req.body;
-
-      if (req.file) {
-        const { key, url } = await this.fileService.uploadFile(req.file);
-        product = { ...product, imageKey: key, imageUrl: url };
-      }
-
-      const data = await this.inventoryService.product.updateProduct(req.params.productId, product);
+      const data = await this.inventoryService.product.updateProduct(req.params.productId, {
+        ...req.body,
+        file: req.file,
+      });
       return res.json({ success: true, data });
     } catch (error) {
       return next(error);
@@ -72,12 +63,7 @@ export default class ProductController implements IProductController {
 
   deleteProduct: DeleteProduct = async (req, res, next) => {
     try {
-      const product = await this.inventoryService.product.findProductById(req.params.productId);
-
-      const [data] = await Promise.all([
-        this.inventoryService.product.deleteProduct(req.params.productId),
-        this.fileService.deleteFile(product.imageKey),
-      ]);
+      const data = await this.inventoryService.product.deleteProduct(req.params.productId);
 
       return res.json({ success: true, data });
     } catch (error) {

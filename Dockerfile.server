@@ -37,6 +37,7 @@ COPY --from=build /app/packages/server /app/packages/server
 COPY --from=build /app/packages/shared /app/packages/shared
 
 # Give permissions
+RUN chown -R node:node /app/packages/server/logs
 RUN chown -R node:node /app/packages/server/uploads
 
 # Set user to node
