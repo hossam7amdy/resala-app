@@ -1,12 +1,12 @@
-import { Twilio } from 'twilio';
+import Twilio from 'twilio';
 
 import type { INotification } from '../../interfaces/index.js';
 
 export default class SmsNotificationService implements INotification {
-  private readonly twilio: Twilio;
+  private readonly twilio: Twilio.Twilio;
 
   constructor() {
-    this.twilio = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    this.twilio = new Twilio.Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
   }
 
   async send(to: string | string[], _: string, body: string) {
