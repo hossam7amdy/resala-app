@@ -211,7 +211,6 @@ const AdminUpdateUserSchema = zod.z.object({
     body: UpdateProfileSchema.shape.body.extend({
         role: UserSchema.shape.role,
         isVerified: UserSchema.shape.isVerified,
-        deletedAt: zod.z.date().optional(),
     }),
 });
 const AdminDeleteUserSchema = zod.z.object({
@@ -245,7 +244,6 @@ const DeleteAddressSchema = zod.z.object({
 // Category Schemas
 const CreateCategorySchema = zod.z.object({
     body: zod.z.object({
-        categoryId: zod.z.coerce.number().positive().optional(),
         arName: zod.z.string().min(2).max(100),
         enName: zod.z.string().min(2).max(100),
     }),
@@ -254,9 +252,7 @@ const UpdateCategorySchema = zod.z.object({
     params: zod.z.object({
         categoryId: zod.z.coerce.number().positive(),
     }),
-    body: CreateCategorySchema.shape.body.extend({
-        deletedAt: zod.z.coerce.date().optional(),
-    }),
+    body: CreateCategorySchema.shape.body,
 });
 const GetCategorySchema = zod.z.object({
     params: UpdateCategorySchema.shape.params,
@@ -267,7 +263,6 @@ const DeleteCategorySchema = zod.z.object({
 // Product Schemas
 const CreateProductSchema = zod.z.object({
     body: zod.z.object({
-        id: zod.z.coerce.number().positive().optional(),
         categoryId: zod.z.coerce.number().positive(),
         arName: zod.z.string().min(2).max(100),
         enName: zod.z.string().min(2).max(100),
@@ -280,9 +275,7 @@ const UpdateProductSchema = zod.z.object({
     params: zod.z.object({
         productId: zod.z.coerce.number().positive(),
     }),
-    body: CreateProductSchema.shape.body.extend({
-        deletedAt: zod.z.coerce.date().optional(),
-    }),
+    body: CreateProductSchema.shape.body,
 });
 const GetProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
@@ -293,17 +286,6 @@ const DeleteProductSchema = zod.z.object({
 const GetProductImages = zod.z.object({
     params: zod.z.object({
         productId: zod.z.coerce.number().positive(),
-    }),
-});
-const CreateProductImageSchema = zod.z.object({
-    body: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-    }),
-});
-const DeleteProductImageSchema = zod.z.object({
-    params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-        imageId: zod.z.coerce.number().positive(),
     }),
 });
 // Stock Schemas
@@ -961,7 +943,6 @@ exports.CreateCategorySchema = CreateCategorySchema;
 exports.CreateColorSchema = CreateColorSchema;
 exports.CreateOrderSchema = CreateOrderSchema;
 exports.CreatePaymentSchema = CreatePaymentSchema;
-exports.CreateProductImageSchema = CreateProductImageSchema;
 exports.CreateProductSchema = CreateProductSchema;
 exports.CreateReviewSchema = CreateReviewSchema;
 exports.CreateSizeSchema = CreateSizeSchema;
@@ -972,7 +953,6 @@ exports.DeleteAddressSchema = DeleteAddressSchema;
 exports.DeleteCartSchema = DeleteCartSchema;
 exports.DeleteCategorySchema = DeleteCategorySchema;
 exports.DeleteColorSchema = DeleteColorSchema;
-exports.DeleteProductImageSchema = DeleteProductImageSchema;
 exports.DeleteProductSchema = DeleteProductSchema;
 exports.DeleteReviewSchema = DeleteReviewSchema;
 exports.DeleteSizeSchema = DeleteSizeSchema;

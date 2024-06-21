@@ -1,8 +1,8 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { MulterError } from 'multer';
 
-import { logger } from '../lib/logger/index.js';
-import { APPError } from '../utils/api-errors.js';
+import { logger } from '../lib/index.js';
+import { APPError } from '../utils/ApiErrors.js';
 
 /**
  * @description catch errors from async functions

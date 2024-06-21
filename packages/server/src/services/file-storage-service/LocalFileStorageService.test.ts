@@ -36,7 +36,7 @@ describe('LocalFileStorageService', () => {
       vi.spyOn(localStorage as any, 'getPublicUrl').mockImplementation(() => publicUrl);
       vi.spyOn(localStorage, 'createDirectoryIfNotExist').mockResolvedValue('CREATED');
 
-      const result = await localStorage.uploadFile(buffer, key);
+      const result = await localStorage.upload(buffer, key);
 
       expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(localStorage.createDirectoryIfNotExist).toHaveBeenCalledWith(dirname(path));
@@ -52,7 +52,7 @@ describe('LocalFileStorageService', () => {
       vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
       (fs.readFile as Mock).mockResolvedValue(buffer);
 
-      const result = await localStorage.downloadFile(key);
+      const result = await localStorage.download(key);
 
       expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.readFile).toHaveBeenCalledWith(path);
@@ -66,7 +66,7 @@ describe('LocalFileStorageService', () => {
 
       vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
 
-      await localStorage.deleteFile(key);
+      await localStorage.delete(key);
 
       expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.unlink).toHaveBeenCalledWith(path);
@@ -82,7 +82,7 @@ describe('LocalFileStorageService', () => {
         join(__dirname, '..', '..', '..', rootDirectory, key as string)
       );
 
-      await localStorage.deleteFiles(keys);
+      await localStorage.deleteMany(keys);
 
       keys.forEach((key, index) => {
         expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
@@ -99,7 +99,7 @@ describe('LocalFileStorageService', () => {
       vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
       (fs.readdir as Mock).mockResolvedValue(files);
 
-      const result = await localStorage.listFiles(key);
+      const result = await localStorage.list(key);
 
       expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.readdir).toHaveBeenCalledWith(path);
@@ -118,7 +118,7 @@ describe('LocalFileStorageService', () => {
       vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
       (fs.stat as Mock).mockResolvedValue(stat);
 
-      const result = await localStorage.getFileMetadata(key);
+      const result = await localStorage.getMetadata(key);
 
       expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
       expect(fs.stat).toHaveBeenCalledWith(path);

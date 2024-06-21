@@ -1,12 +1,11 @@
-export * as authService from './auth-service/auth-service.js';
-export * as inventoryService from './inventory-service/index.js';
-export * as communicationService from './communication-service/communicationService.js';
-export * as shoppingService from './shopping-service/shopping-service.js';
-export * as orderService from './order-service/order-service.js';
-export * as paymentService from './payment-service/payment-service.js';
-
-export { default as FileService } from './file-service/FileService.js';
+export { default as AuthService } from './auth-service/AuthService.js';
+export { default as UserService } from './user-service/UserService.js';
+export { default as InventoryService } from './inventory-service/InventoryService.js';
+export { default as NotificationService } from './notification-service/NotificationService.js';
 export { default as ReviewService } from './review-service/ReviewService.js';
 export { default as S3FileStorageService } from '../services/file-storage-service/S3FileStorageService.js';
 export { default as LocalFileStorageService } from '../services/file-storage-service/LocalFileStorageService.js';
-export { default as UserService } from './user-service/user-service.js';
+export { default as FileService } from './file-service/FileService.js';
+export { default as ShoppingService } from './shopping-service/ShoppingService.js';
+export { default as PaymentService } from './payment-service/PaymentService.js';
+export { default as OrderService } from './order-service/OrderService.js';

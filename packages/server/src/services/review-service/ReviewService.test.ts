@@ -1,17 +1,11 @@
 import { Decimal } from '@prisma/client/runtime/library';
-import type { Category, Product, User } from '@resala/shared';
+import type { Category, ProductImage, User } from '@resala/shared';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock, mockClear } from 'vitest-mock-extended';
 
-import type {
-  CreateReviewInput,
-  Filters,
-  ReviewOutput,
-  UpdateReviewInput,
-} from '../../DTOs/index.js';
-import type IReviewRepository from '../../interfaces/IReviewRepository.js';
+import type { ReviewRepository } from '../../repositories/index.js';
 import { ConflictError, NotFoundError } from '../../utils/api-errors.js';
-import type { inventoryService as InventoryService, UserService } from '../index.js';
+import type { InventoryService, UserService } from '../index.js';
 import ReviewService from './ReviewService.js';
 
 const userMock: User = {
@@ -19,7 +13,6 @@ const userMock: User = {
   role: 'CUSTOMER',
   createdAt: new Date(),
   updatedAt: new Date(),
-  deletedAt: null,
   email: 'fake@mail.com',
   isVerified: false,
   phone: '01000000000',
@@ -28,7 +21,7 @@ const userMock: User = {
   lastLogin: new Date(),
 };
 
-const productMock: Product = {
+const productMock: ProductImage = {
   id: 1,
   categoryId: 10,
   arName: 'اسم المنتج',
@@ -36,12 +29,11 @@ const productMock: Product = {
   arDescription: 'وصف المنتج',
   enDescription: 'Product Description',
   price: new Decimal(109),
-  deletedAt: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
-const reviewOutputMock: ReviewOutput = {
+const reviewOutputMock = {
   id: 1,
   rating: 3,
   comment: 'Great product!',
@@ -53,13 +45,13 @@ const reviewOutputMock: ReviewOutput = {
 
 describe('ReviewService', () => {
   let userService: MockProxy<UserService>;
-  let reviewRepo: MockProxy<IReviewRepository>;
+  let reviewRepo: MockProxy<ReviewRepository>;
   let reviewService: ReviewService;
   let inventoryService: MockProxy<typeof InventoryService>;
 
   beforeAll(() => {
     userService = mock<UserService>();
-    reviewRepo = mock<IReviewRepository>();
+    reviewRepo = mock<ReviewRepository>();
     inventoryService = mock<typeof InventoryService>();
   });
 

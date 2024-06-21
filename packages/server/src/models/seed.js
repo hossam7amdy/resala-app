@@ -77,6 +77,8 @@ const main = async () => {
         arDescription: 'فستان سهرة طويل',
         enDescription: 'Long Evening Dress',
         price: 100,
+        imageKey: 'evening-dress.jpg',
+        imageUrl: 'http://localhost:5000/uploads/evening-dress.jpg',
       },
       {
         categoryId: categories[0].id,
@@ -85,6 +87,8 @@ const main = async () => {
         arDescription: 'فستان زفاف طويل',
         enDescription: 'Long Wedding Dress',
         price: 200,
+        imageKey: 'wedding-dress.jpg',
+        imageUrl: 'http://localhost:5000/uploads/wedding-dress.jpg',
       },
       {
         categoryId: categories[1].id,
@@ -93,6 +97,8 @@ const main = async () => {
         arDescription: 'بلوزة كتان',
         enDescription: 'Cotton Blouse',
         price: 400,
+        imageKey: 'cotton-blouse.jpg',
+        imageUrl: 'http://localhost:5000/uploads/cotton-blouse.jpg',
       },
     ],
   });

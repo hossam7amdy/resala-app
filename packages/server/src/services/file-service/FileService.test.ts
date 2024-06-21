@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock } from 'vitest-mock-extended';
 
-import type { IFileStorageService } from '../../interfaces/index.js';
+import type { IFileStorage } from '../../interfaces/index.js';
 import FileService from './FileService';
 
 vi.mock('uuid', () => ({
@@ -11,13 +11,13 @@ vi.mock('uuid', () => ({
 }));
 
 describe('FileService', (): void => {
-  let fileStorageMock: MockProxy<IFileStorageService>;
+  let fileStorageMock: MockProxy<IFileStorage>;
   let fileService: FileService;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    fileStorageMock = mock<IFileStorageService>();
+    fileStorageMock = mock<IFileStorage>();
     fileService = new FileService(fileStorageMock);
   });
 
@@ -41,12 +41,12 @@ describe('FileService', (): void => {
       const expectedUrl = 'http://example.com/uploads/1234-5678.txt';
 
       (uuid as Mock).mockReturnValue(fakeUuid);
-      fileStorageMock.uploadFile.mockResolvedValue(expectedUrl);
+      fileStorageMock.upload.mockResolvedValue(expectedUrl);
 
       const result = await fileService.uploadFile(file, directory);
 
       expect(result).toEqual({ key: expectedKey, url: expectedUrl });
-      expect(fileStorageMock.uploadFile).toHaveBeenCalledWith(file.buffer, expectedKey);
+      expect(fileStorageMock.upload).toHaveBeenCalledWith(file.buffer, expectedKey);
     });
 
     it('should upload a file without directory and return the key and url', async () => {
@@ -67,12 +67,12 @@ describe('FileService', (): void => {
       const expectedUrl = 'http://example.com/1234-5678.txt';
 
       (uuid as Mock).mockReturnValue(fakeUuid);
-      fileStorageMock.uploadFile.mockResolvedValue(expectedUrl);
+      fileStorageMock.upload.mockResolvedValue(expectedUrl);
 
       const result = await fileService.uploadFile(file);
 
       expect(result).toEqual({ key: expectedKey, url: expectedUrl });
-      expect(fileStorageMock.uploadFile).toHaveBeenCalledWith(file.buffer, expectedKey);
+      expect(fileStorageMock.upload).toHaveBeenCalledWith(file.buffer, expectedKey);
     });
   });
 
@@ -113,7 +113,7 @@ describe('FileService', (): void => {
       ];
 
       (uuid as Mock).mockReturnValueOnce(fakeUuids[0]).mockReturnValueOnce(fakeUuids[1]);
-      fileStorageMock.uploadFile
+      fileStorageMock.upload
         .mockResolvedValueOnce(expectedUrls[0])
         .mockResolvedValueOnce(expectedUrls[1]);
 
@@ -123,8 +123,8 @@ describe('FileService', (): void => {
         { key: expectedKeys[0], url: expectedUrls[0] },
         { key: expectedKeys[1], url: expectedUrls[1] },
       ]);
-      expect(fileStorageMock.uploadFile).toHaveBeenCalledWith(files[0].buffer, expectedKeys[0]);
-      expect(fileStorageMock.uploadFile).toHaveBeenCalledWith(files[1].buffer, expectedKeys[1]);
+      expect(fileStorageMock.upload).toHaveBeenCalledWith(files[0].buffer, expectedKeys[0]);
+      expect(fileStorageMock.upload).toHaveBeenCalledWith(files[1].buffer, expectedKeys[1]);
     });
   });
 
@@ -132,12 +132,12 @@ describe('FileService', (): void => {
     it('should delete a file and return the result', async () => {
       const key = 'uploads/1234-5678.txt';
 
-      fileStorageMock.deleteFile.mockResolvedValueOnce(undefined);
+      fileStorageMock.delete.mockResolvedValueOnce(undefined);
 
       const result = await fileService.deleteFile(key);
 
       expect(result).toEqual(undefined);
-      expect(fileStorageMock.deleteFile).toHaveBeenCalledWith(key);
+      expect(fileStorageMock.delete).toHaveBeenCalledWith(key);
     });
   });
 
@@ -145,54 +145,54 @@ describe('FileService', (): void => {
     it('should delete multiple files and return the result', async () => {
       const keys = ['uploads/1234-5678.txt', 'uploads/8765-4321.txt'];
 
-      fileStorageMock.deleteFiles.mockResolvedValue(undefined);
+      fileStorageMock.deleteMany.mockResolvedValue(undefined);
 
       const result = await fileService.deleteFiles(keys);
 
       expect(result).toEqual(undefined);
-      expect(fileStorageMock.deleteFiles).toHaveBeenCalledWith(keys);
+      expect(fileStorageMock.deleteMany).toHaveBeenCalledWith(keys);
     });
   });
 
   describe('deleteFile', () => {
     it('should delete a file and return the result', async () => {
       const key = 'uploads/1234-5678.txt';
-      fileStorageMock.deleteFile.mockResolvedValue(undefined);
+      fileStorageMock.delete.mockResolvedValue(undefined);
       const result = await fileService.deleteFile(key);
       expect(result).toEqual(undefined);
-      expect(fileStorageMock.deleteFile).toHaveBeenCalledWith(key);
+      expect(fileStorageMock.delete).toHaveBeenCalledWith(key);
     });
 
     it('should throw an error if the file does not exist', async () => {
       const key = 'uploads/non-existent.txt';
-      fileStorageMock.deleteFile.mockResolvedValue(undefined);
+      fileStorageMock.delete.mockResolvedValue(undefined);
       try {
         await fileService.deleteFile(key);
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
       }
-      expect(fileStorageMock.deleteFile).toHaveBeenCalledWith(key);
+      expect(fileStorageMock.delete).toHaveBeenCalledWith(key);
     });
   });
 
   describe('deleteFiles', () => {
     it('should delete multiple files and return the result', async () => {
       const keys = ['uploads/1234-5678.txt', 'uploads/8765-4321.txt'];
-      fileStorageMock.deleteFiles.mockResolvedValue(undefined);
+      fileStorageMock.deleteMany.mockResolvedValue(undefined);
       const result = await fileService.deleteFiles(keys);
       expect(result).toEqual(undefined);
-      expect(fileStorageMock.deleteFiles).toHaveBeenCalledWith(keys);
+      expect(fileStorageMock.deleteMany).toHaveBeenCalledWith(keys);
     });
 
     it('should throw an error if any of the files do not exist', async () => {
       const keys = ['uploads/1234-5678.txt', 'uploads/non-existent.txt'];
-      fileStorageMock.deleteFiles.mockResolvedValue(undefined);
+      fileStorageMock.deleteMany.mockResolvedValue(undefined);
       try {
         await fileService.deleteFiles(keys);
       } catch (error) {
         expect(error).toBeInstanceOf(Error);
       }
-      expect(fileStorageMock.deleteFiles).toHaveBeenCalledWith(keys);
+      expect(fileStorageMock.deleteMany).toHaveBeenCalledWith(keys);
     });
   });
 });

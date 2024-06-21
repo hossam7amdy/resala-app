@@ -1,16 +1,17 @@
 import { PrismaClient } from '@prisma/client';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { ENDPOINT_CONFIGS, type Role } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import UserRepository from '../repositories/UserRepository.js';
 import { UserService } from '../services/index.js';
 import { addressAssertions, userAssertions } from './helpers/customAssertions.js';
 import { getTestServer } from './helpers/testServer.js';
 
 describe('TEST /users/self/addresses endpoint', () => {
   let client: TestAgent<superset.Test>;
-  const userService = new UserService(new PrismaClient());
+  const userService = new UserService(new UserRepository(new PrismaClient()));
 
   const firstName = 'test';
   const lastName = 'test';
@@ -131,7 +132,7 @@ describe('TEST /users/self/addresses endpoint', () => {
     const res = await client[method](url).set(await getAuthToken());
 
     // make him admin
-    return userService.updateUser(res.body.data.id, { role: 'ADMIN' });
+    return userService.updateUser(res.body.data.id, { role: 'ADMIN' as Role });
   };
 
   const loginUser = async (sign: string, password: string) => {

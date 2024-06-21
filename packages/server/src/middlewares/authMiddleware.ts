@@ -1,11 +1,11 @@
 import type { RequestHandler } from 'express';
 
-import type { authService as AuthService, UserService } from '../services/index.js';
-import { BadRequestError, ForbiddenError } from '../utils/api-errors.js';
+import type { AuthService, UserService } from '../services/index.js';
+import { BadRequestError, ForbiddenError } from '../utils/ApiErrors.js';
 
 export default class AuthMiddleware {
   constructor(
-    private readonly authService: typeof AuthService,
+    private readonly authService: AuthService,
     private readonly userService: UserService
   ) {}
 

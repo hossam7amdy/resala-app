@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { AnyZodObject, ZodError } from 'zod';
 
-import { BadRequestError } from '../utils/api-errors.js';
-import { formatZodError } from '../utils/zod-errors.js';
+import { BadRequestError } from '../utils/ApiErrors.js';
+import { formatZodError } from '../utils/zodErrors.js';
 
 /**
  *  Validate the request body, query, and params against the schema

@@ -30,7 +30,6 @@ export type User = {
   lastLogin: null | Date;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: null | Date;
 };
 
 export type UserAddress = {
@@ -40,12 +39,10 @@ export type UserAddress = {
 
 export type Category = {
   id: number;
-  categoryId: null | number;
   arName: string;
   enName: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: null | Date;
 };
 
 export type Product = {
@@ -57,13 +54,15 @@ export type Product = {
   enDescription: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   price: number | any; // Decimal
+  imageKey: string;
+  imageUrl: string;
   createdAt: Date;
   updatedAt: Date;
-  deletedAt: null | Date;
 };
 
 export type ProductImage = {
   id: number;
+  colorId: number;
   productId: number;
   imageKey: string;
   imageUrl: string;
@@ -144,7 +143,8 @@ export type Shipping = {
   id: number;
   orderId: number;
   addressId: number;
-  cost: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cost: number | any; // Decimal
   createdAt: Date;
   updatedAt: Date;
 };
@@ -152,7 +152,7 @@ export type Shipping = {
 export type Payment = {
   id: number;
   orderId: number;
-  transactionId: string | number;
+  transactionId: number;
   transactionOrderId: number;
   pending: boolean;
   success: boolean;

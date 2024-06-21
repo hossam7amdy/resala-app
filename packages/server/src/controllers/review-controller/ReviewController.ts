@@ -22,10 +22,7 @@ export default class ReviewController {
         userId: res.locals.user.id,
       });
 
-      res.status(201).json({
-        success: true,
-        data: review,
-      });
+      res.status(201).json({ success: true, data: review });
     } catch (e) {
       next(e);
     }
@@ -33,18 +30,12 @@ export default class ReviewController {
 
   updateReview: UpdateReview = async (req, res, next) => {
     try {
-      console.log(res.locals.user);
-
       const review = await this.reviewService.updateReview(req.params.reviewId, {
+        ...req.body,
         userId: res.locals.user.id,
-        rating: req.body.rating,
-        comment: req.body.comment,
       });
 
-      res.json({
-        success: true,
-        data: review,
-      });
+      res.json({ success: true, data: review });
     } catch (e) {
       next(e);
     }
@@ -52,11 +43,12 @@ export default class ReviewController {
 
   deleteReview: DeleteReview = async (req, res, next) => {
     try {
-      await this.reviewService.deleteReview(req.params.reviewId, res.locals.user.id);
+      const address = await this.reviewService.deleteReview(
+        req.params.reviewId,
+        res.locals.user.id
+      );
 
-      res.json({
-        success: true,
-      });
+      res.json({ success: true, data: address });
     } catch (e) {
       next(e);
     }
@@ -66,10 +58,7 @@ export default class ReviewController {
     try {
       const review = await this.reviewService.getReviewById(req.params.reviewId);
 
-      res.json({
-        success: true,
-        data: review,
-      });
+      res.json({ success: true, data: review });
     } catch (e) {
       next(e);
     }
@@ -80,7 +69,7 @@ export default class ReviewController {
       const page = req.query.page || 1;
       const limit = req.query.limit || 10;
 
-      const { reviews, count } = await this.reviewService.listAndCountReviews({
+      const { reviews, pagination } = await this.reviewService.listReviews({
         page,
         limit,
         query: req.query.query || '',
@@ -88,14 +77,7 @@ export default class ReviewController {
 
       res.json({
         success: true,
-        data: {
-          reviews,
-          pagination: {
-            page,
-            limit,
-            total: count,
-          },
-        },
+        data: { reviews, pagination },
       });
     } catch (e) {
       next(e);
@@ -107,25 +89,14 @@ export default class ReviewController {
       const page = req.query.page || 1;
       const limit = req.query.limit || 10;
 
-      const { reviews, count } = await this.reviewService.listAndCountProductReviews(
+      const { reviews, pagination } = await this.reviewService.listProductReviews(
         req.params.productId,
-        {
-          page,
-          limit,
-          query: req.query.query || '',
-        }
+        { page, limit }
       );
 
       res.json({
         success: true,
-        data: {
-          reviews,
-          pagination: {
-            page,
-            limit,
-            total: count,
-          },
-        },
+        data: { reviews, pagination },
       });
     } catch (e) {
       next(e);

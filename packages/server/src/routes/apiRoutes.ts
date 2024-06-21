@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import {
   AdminDeleteUserSchema,
   AdminGetUserSchema,
@@ -9,7 +10,6 @@ import {
   CreateColorSchema,
   CreateOrderSchema,
   CreatePaymentSchema,
-  CreateProductImageSchema,
   CreateProductSchema,
   CreateReviewSchema,
   CreateSizeSchema,
@@ -20,7 +20,6 @@ import {
   DeleteCartSchema,
   DeleteCategorySchema,
   DeleteColorSchema,
-  DeleteProductImageSchema,
   DeleteProductSchema,
   DeleteReviewSchema,
   DeleteSizeSchema,
@@ -54,18 +53,18 @@ import { Router } from 'express';
 
 import {
   AuthController,
+  CategoryCtrl,
+  ColorController,
   OrderController,
+  PaymentController,
+  ProductController,
   ReviewController,
+  ShoppingController,
+  SizeController,
+  StockController,
   UserController,
-  categoryCtrl,
-  colorCtrl,
-  paymentCtrl,
-  productCtrl,
-  shoppingCtrl,
-  sizeCtrl,
-  stockCtrl,
 } from '../controllers/index.js';
-import prisma from '../lib/prisma/index.js';
+import { Mailer } from '../lib/index.js';
 import {
   AuthMiddleware,
   errHandler,
@@ -73,22 +72,64 @@ import {
   uploadMultiple,
   validate,
 } from '../middlewares/index.js';
-import PrismaReviewRepository from '../repositories/review-repository/PrismaReviewRepository.js';
-import { UserService, authService, inventoryService } from '../services/index.js';
-import ReviewService from '../services/review-service/ReviewService.js';
+import {
+  InventoryRepository,
+  OrderRepository,
+  PaymentRepository,
+  ReviewRepository,
+  ShoppingRepository,
+  UserRepository,
+} from '../repositories/index.js';
+import {
+  AuthService,
+  FileService,
+  InventoryService,
+  LocalFileStorageService,
+  NotificationService,
+  OrderService,
+  PaymentService,
+  ReviewService,
+  ShoppingService,
+  UserService,
+} from '../services/index.js';
 
 /** Create Express Router with all the endpoints and their handlers */
 export const createExpressRouter = (legRequests: boolean) => {
   const router = Router();
 
-  const userService = new UserService(prisma);
+  const prisma = new PrismaClient();
 
-  const authCtrl = new AuthController();
+  // repositories
+  const userRepository = new UserRepository(prisma);
+  const inventoryRepository = new InventoryRepository(prisma);
+  const orderRepository = new OrderRepository(prisma);
+  const paymentRepository = new PaymentRepository(prisma);
+  const reviewRepository = new ReviewRepository(prisma);
+  const shoppingRepository = new ShoppingRepository(prisma);
+
+  // services
+  const authService = new AuthService(userRepository);
+  const userService = new UserService(userRepository);
+  const inventoryService = new InventoryService(inventoryRepository);
+  const notificationService = new NotificationService(new Mailer());
+  const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
+  const fileService = new FileService(new LocalFileStorageService());
+  const shoppingService = new ShoppingService(shoppingRepository, inventoryService);
+  const paymentService = new PaymentService(paymentRepository);
+  const orderService = new OrderService(orderRepository, shoppingService, userService);
+
+  // controllers
+  const authCtrl = new AuthController(authService, notificationService);
   const userCtrl = new UserController(userService);
-  const orderCtrl = new OrderController(userService);
-  const reviewCtrl = new ReviewController(
-    new ReviewService(new PrismaReviewRepository(prisma), userService, inventoryService)
-  );
+  const categoryCtrl = new CategoryCtrl(inventoryService);
+  const productCtrl = new ProductController(inventoryService, fileService);
+  const colorCtrl = new ColorController(inventoryService);
+  const sizeCtrl = new SizeController(inventoryService);
+  const stockCtrl = new StockController(inventoryService, fileService);
+  const shoppingCtrl = new ShoppingController(shoppingService);
+  const paymentCtrl = new PaymentController(paymentService, orderService);
+  const orderCtrl = new OrderController(orderService, paymentService, notificationService);
+  const reviewCtrl = new ReviewController(reviewService);
 
   const authMiddleware = new AuthMiddleware(authService, userService);
 
@@ -181,19 +222,13 @@ export const createExpressRouter = (legRequests: boolean) => {
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProduct,
     ],
-    [Endpoints.listProductImages]: [validate(DeleteProductSchema), productCtrl.listProductImages],
+    [Endpoints.listProductImages]: [validate(DeleteProductSchema)],
     [Endpoints.getProductStocks]: [validate(DeleteProductSchema), productCtrl.listProductStocks],
     [Endpoints.addProductImages]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMultiple('images'),
-      validate(CreateProductImageSchema),
-      productCtrl.addProductImages,
     ],
-    [Endpoints.deleteProductImage]: [
-      validate(DeleteProductImageSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      productCtrl.deleteProductImage,
-    ],
+    [Endpoints.deleteProductImage]: [authMiddleware.authorizeUser(['ADMIN', 'MODERATOR'])],
 
     // stock endpoints
     [Endpoints.getStock]: [validate(DeleteStockSchema), stockCtrl.getStock],

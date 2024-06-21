@@ -104,7 +104,6 @@ export const AdminUpdateUserSchema = z.object({
     body: UpdateProfileSchema.shape.body.extend({
         role: UserSchema.shape.role,
         isVerified: UserSchema.shape.isVerified,
-        deletedAt: z.date().optional(),
     }),
 });
 export const AdminDeleteUserSchema = z.object({
@@ -138,7 +137,6 @@ export const DeleteAddressSchema = z.object({
 // Category Schemas
 export const CreateCategorySchema = z.object({
     body: z.object({
-        categoryId: z.coerce.number().positive().optional(),
         arName: z.string().min(2).max(100),
         enName: z.string().min(2).max(100),
     }),
@@ -147,9 +145,7 @@ export const UpdateCategorySchema = z.object({
     params: z.object({
         categoryId: z.coerce.number().positive(),
     }),
-    body: CreateCategorySchema.shape.body.extend({
-        deletedAt: z.coerce.date().optional(),
-    }),
+    body: CreateCategorySchema.shape.body,
 });
 export const GetCategorySchema = z.object({
     params: UpdateCategorySchema.shape.params,
@@ -160,7 +156,6 @@ export const DeleteCategorySchema = z.object({
 // Product Schemas
 export const CreateProductSchema = z.object({
     body: z.object({
-        id: z.coerce.number().positive().optional(),
         categoryId: z.coerce.number().positive(),
         arName: z.string().min(2).max(100),
         enName: z.string().min(2).max(100),
@@ -173,9 +168,7 @@ export const UpdateProductSchema = z.object({
     params: z.object({
         productId: z.coerce.number().positive(),
     }),
-    body: CreateProductSchema.shape.body.extend({
-        deletedAt: z.coerce.date().optional(),
-    }),
+    body: CreateProductSchema.shape.body,
 });
 export const GetProductSchema = z.object({
     params: UpdateProductSchema.shape.params,
@@ -186,17 +179,6 @@ export const DeleteProductSchema = z.object({
 export const GetProductImages = z.object({
     params: z.object({
         productId: z.coerce.number().positive(),
-    }),
-});
-export const CreateProductImageSchema = z.object({
-    body: z.object({
-        productId: z.coerce.number().positive(),
-    }),
-});
-export const DeleteProductImageSchema = z.object({
-    params: z.object({
-        productId: z.coerce.number().positive(),
-        imageId: z.coerce.number().positive(),
     }),
 });
 // Stock Schemas

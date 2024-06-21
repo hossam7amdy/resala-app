@@ -1,12 +1,4 @@
-import { logger } from '../../lib/logger/logger.js';
-import {
-  type UserService,
-  communicationService,
-  orderService,
-  paymentService,
-  shoppingService,
-} from '../../services/index.js';
-import { BadRequestError } from '../../utils/api-errors.js';
+import type { NotificationService, OrderService, PaymentService } from '../../services/index.js';
 import type {
   CreateOrder,
   DeleteOrder,
@@ -17,61 +9,36 @@ import type {
 import type IOrderController from './IOrderController.js';
 
 export default class OrderController implements IOrderController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private orderService: OrderService,
+    private paymentService: PaymentService,
+    private notificationService: NotificationService
+  ) {}
 
   createOrder: CreateOrder = async (req, res, next) => {
     try {
       const user = res.locals.user;
       const { addressId, paymentMethod, note } = req.body;
 
-      // order items
-      const cart = await shoppingService.getUserCart(user.id);
-      if (cart.length === 0) {
-        throw new BadRequestError('Cart is empty');
-      }
-
-      // shipping address
-      const { id, ...address } = await this.userService.findUserAddress(user.id, addressId);
-
-      const orderItems = cart.map(item => ({
-        name: item.stock.product.enName,
-        price: item.stock.product.price,
-        quantity: item.quantity,
-        color: item.stock.color.enName,
-        size: item.stock.size.name,
-      }));
-
-      // create order
-      const order = await orderService.createOrder({
-        userId: user.id,
-        address,
+      const order = await this.orderService.createOrder(user.id, {
+        addressId,
         paymentMethod,
         note,
-        items: orderItems,
       });
 
-      let payment = null;
+      let payment;
       if (paymentMethod === 'CARD') {
         // create payment
-        payment = await paymentService.createPaymentRequest({
+        payment = await this.paymentService.createPaymentRequest({
           orderId: order.id,
           email: user.email,
           amount: Number(order.total) * 100,
-          shipping: { id, ...address },
-          items: orderItems.map(item => ({
-            ...item,
-            amount_cents: Number(item.price) * 100,
-          })),
+          shipping: order.address,
+          items: order.items,
         });
       }
 
-      return res.status(201).json({
-        success: true,
-        data: {
-          order,
-          payment,
-        },
-      });
+      return res.status(201).json({ success: true, data: payment });
     } catch (error) {
       next(error);
     }
@@ -82,12 +49,9 @@ export default class OrderController implements IOrderController {
       const user = res.locals.user;
       const orderId = req.params.orderId;
 
-      const order = await orderService.findUserOrderById(orderId, user.id);
+      const order = await this.orderService.findUserOrderById(orderId, user.id);
 
-      return res.status(200).json({
-        success: true,
-        data: order,
-      });
+      return res.status(200).json({ success: true, data: order });
     } catch (error) {
       next(error);
     }
@@ -98,18 +62,14 @@ export default class OrderController implements IOrderController {
       const user = res.locals.user;
       const { page, limit } = req.query;
 
-      const { orders, total } = await orderService.getUserOrders(user.id, { page, limit });
+      const { orders, pagination } = await this.orderService.getUserOrders(user.id, {
+        page,
+        limit,
+      });
 
       return res.status(200).json({
         success: true,
-        data: {
-          pagination: {
-            page,
-            limit,
-            total,
-          },
-          orders,
-        },
+        data: { pagination, orders },
       });
     } catch (error) {
       next(error);
@@ -122,24 +82,19 @@ export default class OrderController implements IOrderController {
       const orderId = req.params.orderId;
 
       // cancel order
-      const order = await orderService.cancelUserOrder(orderId, user.id);
+      const order = await this.orderService.cancelUserOrder(orderId, user.id);
 
       // void payment
-      if (order.paymentMethod === 'CARD' && order.paymentDetails) {
-        await paymentService.voidPayment(order.paymentDetails.transactionId);
+      if (order.paymentMethod === 'CARD') {
+        await this.paymentService.voidPayment(order.id);
       }
 
       // notify user with order cancellation
-      if (order.user?.email) {
-        communicationService
-          .sendOrderCancellationEmail(order.user.email, order.id)
-          .catch(logger.warn);
+      if (user.email) {
+        await this.notificationService.sendOrderCancellationEmail(user.email, order.id);
       }
 
-      return res.json({
-        success: true,
-        data: order,
-      });
+      return res.json({ success: true, message: 'Order canceled' });
     } catch (error) {
       next(error);
     }
@@ -147,7 +102,7 @@ export default class OrderController implements IOrderController {
 
   adminGetOrder: GetOrder = async (req, res, next) => {
     try {
-      const order = await orderService.findOrderById(req.params.orderId);
+      const order = await this.orderService.findOrderById(req.params.orderId);
 
       return res.json({
         success: true,
@@ -162,18 +117,11 @@ export default class OrderController implements IOrderController {
     try {
       const { page, limit, query } = req.query;
 
-      const { orders, total } = await orderService.listOrders({ page, limit, query });
+      const { orders, pagination } = await this.orderService.listOrders({ page, limit, query });
 
       return res.json({
         success: true,
-        data: {
-          pagination: {
-            page,
-            limit,
-            total,
-          },
-          orders,
-        },
+        data: { pagination, orders },
       });
     } catch (error) {
       next(error);
@@ -183,27 +131,19 @@ export default class OrderController implements IOrderController {
   adminDeleteOrder: DeleteOrder = async (req, res, next) => {
     try {
       // Cancel order
-      const order = await orderService.adminCancelOrder(req.params.orderId);
+      const order = await this.orderService.adminCancelOrder(req.params.orderId);
 
       // Refund payment if paid by card
       if (order.paymentMethod === 'CARD' && order.paymentDetails) {
-        await paymentService.refundPayment(
-          order.paymentDetails.transactionId,
-          Number(order.total) * 100
-        );
+        await this.paymentService.refundPayment(order.paymentDetails.id);
       }
 
       // Notify user with order cancellation
       if (order.user?.email) {
-        communicationService
-          .sendOrderCancellationEmail(order.user.email, order.id)
-          .catch(logger.warn);
+        await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
       }
 
-      return res.json({
-        success: true,
-        data: order,
-      });
+      return res.json({ success: true, message: 'Order canceled' });
     } catch (error) {
       next(error);
     }
@@ -212,19 +152,13 @@ export default class OrderController implements IOrderController {
   updateOrderStatus: UpdateOrderStatus = async (req, res, next) => {
     try {
       const { status } = req.body;
-      const order = await orderService.updateOrderStatus(req.params.orderId, status);
+      const order = await this.orderService.updateOrderStatus(req.params.orderId, status);
 
-      // Notify user with order fulfillment
       if (order.user?.email) {
-        communicationService
-          .sendOrderCancellationEmail(order.user.email, order.id)
-          .catch(logger.warn);
+        await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
       }
 
-      return res.json({
-        success: true,
-        data: order,
-      });
+      return res.json({ success: true, message: 'Order status updated' });
     } catch (error) {
       next(error);
     }

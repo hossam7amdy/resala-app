@@ -1,4 +1,4 @@
-import { upload } from '../lib/multer/index.js';
+import { upload } from '../lib/index.js';
 
 /**
  * Returns middleware that processes a single file associated with the
