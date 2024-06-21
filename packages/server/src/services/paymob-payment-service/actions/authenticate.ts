@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance.js';
+import { axiosInstance } from '../config/axiosInstance.js';
 
 const PAYMOB_API_TOKEN = process.env.PAYMOB_API_TOKEN;
 

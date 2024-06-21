@@ -1,7 +1,7 @@
 import type { RegisterRequest } from '@resala/shared';
 import jwt from 'jsonwebtoken';
 
-import * as Jwt from '../../lib/jwt-token/jwtToken.js';
+import * as Jwt from '../../lib/jwtToken.js';
 import type { UserRepository } from '../../repositories/index.js';
 import {
   BadRequestError,

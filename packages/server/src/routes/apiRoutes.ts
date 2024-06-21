@@ -64,7 +64,6 @@ import {
   StockController,
   UserController,
 } from '../controllers/index.js';
-import { Mailer } from '../lib/index.js';
 import {
   AuthMiddleware,
   errHandler,
@@ -82,12 +81,14 @@ import {
 } from '../repositories/index.js';
 import {
   AuthService,
+  EmailNotificationService,
   FileService,
   InventoryService,
   LocalFileStorageService,
   NotificationService,
   OrderService,
   PaymentService,
+  PaymobPaymentService,
   ReviewService,
   ShoppingService,
   UserService,
@@ -111,11 +112,11 @@ export const createExpressRouter = (legRequests: boolean) => {
   const authService = new AuthService(userRepository);
   const userService = new UserService(userRepository);
   const inventoryService = new InventoryService(inventoryRepository);
-  const notificationService = new NotificationService(new Mailer());
+  const notificationService = new NotificationService(new EmailNotificationService());
   const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
   const fileService = new FileService(new LocalFileStorageService());
   const shoppingService = new ShoppingService(shoppingRepository, inventoryService);
-  const paymentService = new PaymentService(paymentRepository);
+  const paymentService = new PaymentService(paymentRepository, new PaymobPaymentService());
   const orderService = new OrderService(orderRepository, shoppingService, userService);
 
   // controllers

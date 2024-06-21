@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance.js';
+import { axiosInstance } from '../config/axiosInstance.js';
 
 interface VoidTransactionRequest {
   access_token: string;

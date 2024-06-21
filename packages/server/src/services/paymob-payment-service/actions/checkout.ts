@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance.js';
+import { axiosInstance } from '../config/axiosInstance.js';
 
 const CURRENCY = 'EGP';
 const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;

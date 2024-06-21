@@ -6,13 +6,16 @@ import type {
   OrderItem,
 } from '@resala/shared';
 
-import type callback from '../../lib/paymob/callback.json';
-import { paymob } from '../../lib/paymob/index.js';
 import type { PaymentRepository } from '../../repositories/index.js';
 import { NotFoundError } from '../../utils/ApiErrors.js';
+import type PaymobPaymentService from '../paymob-payment-service/PaymobPaymentService.js';
+import type Response from '../paymob-payment-service/data/response.json';
 
 export default class PaymentService {
-  constructor(private readonly paymentRepo: PaymentRepository) {}
+  constructor(
+    private readonly paymentRepo: PaymentRepository,
+    private readonly paymobService: PaymobPaymentService
+  ) {}
 
   async createPaymentRequest(payload: {
     email: string;
@@ -21,9 +24,9 @@ export default class PaymentService {
     shipping: Address;
     items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
   }) {
-    const { token } = await paymob.authenticate();
+    const { token } = await this.paymobService.authenticate();
 
-    const { id } = await paymob.createOrder({
+    const { id } = await this.paymobService.createOrder({
       auth_token: token,
       delivery_needed: false,
       amount_cents: payload.amount * 100,
@@ -36,7 +39,7 @@ export default class PaymentService {
       })),
     });
 
-    return await paymob.checkout({
+    return await this.paymobService.checkout({
       order_id: id,
       auth_token: token,
       billing_data: {
@@ -63,9 +66,9 @@ export default class PaymentService {
   async voidPayment(orderId: number) {
     const order = await this.findPaymentByOrderId(orderId);
 
-    const { token } = await paymob.authenticate();
+    const { token } = await this.paymobService.authenticate();
 
-    return await paymob.voidTransaction({
+    return await this.paymobService.voidTransaction({
       transaction_id: order.transactionId,
       access_token: token,
     });
@@ -74,17 +77,17 @@ export default class PaymentService {
   async refundPayment(orderId: number) {
     const order = await this.findPaymentByOrderId(orderId);
 
-    const { token } = await paymob.authenticate();
+    const { token } = await this.paymobService.authenticate();
 
-    return await paymob.refundTransaction({
+    return await this.paymobService.refundTransaction({
       transaction_id: order.transactionId,
       amount_cents: Number(order.amountCents) * 100,
       auth_token: token,
     });
   }
 
-  async createPayment(hmac: string, payload: (typeof callback)['obj']) {
-    const authenticated = await paymob.authenticateCallback(hmac, payload);
+  async createPayment(hmac: string, payload: (typeof Response)['obj']) {
+    const authenticated = await this.paymobService.authenticateCallback(hmac, payload);
 
     if (!authenticated) {
       throw new Error('Unauthorized request');
@@ -149,7 +152,7 @@ export default class PaymentService {
     return payment;
   }
 
-  _getPaymentStatus(payment: (typeof callback)['obj']) {
+  _getPaymentStatus(payment: (typeof Response)['obj']) {
     if (payment.pending) {
       return 'UNPAID';
     } else if (payment.is_voided) {

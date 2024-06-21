@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 
-import type callback from './callback.json';
+import type callback from '../data/response.json';
 
 /**
  * Authenticate the request from Paymob
