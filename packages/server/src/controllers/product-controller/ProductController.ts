@@ -17,9 +17,7 @@ export default class ProductController implements IProductController {
 
   getProduct: GetProduct = async (req, res, next) => {
     try {
-      const product = await this.inventoryService.productService.findProductById(
-        req.params.productId
-      );
+      const product = await this.inventoryService.product.findProductById(req.params.productId);
 
       return res.json({ success: true, data: product });
     } catch (error) {
@@ -29,8 +27,9 @@ export default class ProductController implements IProductController {
 
   getProductsList: GetProductsList = async (req, res, next) => {
     try {
-      const { products, pagination } =
-        await this.inventoryService.productService.listProductsPaginated(req.query);
+      const { products, pagination } = await this.inventoryService.product.listProductsPaginated(
+        req.query
+      );
 
       return res.json({ success: true, data: { pagination, products } });
     } catch (error) {
@@ -42,7 +41,7 @@ export default class ProductController implements IProductController {
     try {
       const { key, url } = await this.fileService.uploadFile(req.file!);
 
-      const data = await this.inventoryService.productService.createProduct({
+      const data = await this.inventoryService.product.createProduct({
         ...req.body,
         imageKey: key,
         imageUrl: url,
@@ -64,10 +63,7 @@ export default class ProductController implements IProductController {
         product = { ...product, imageKey: key, imageUrl: url };
       }
 
-      const data = await this.inventoryService.productService.updateProduct(
-        req.params.productId,
-        product
-      );
+      const data = await this.inventoryService.product.updateProduct(req.params.productId, product);
       return res.json({ success: true, data });
     } catch (error) {
       return next(error);
@@ -76,12 +72,10 @@ export default class ProductController implements IProductController {
 
   deleteProduct: DeleteProduct = async (req, res, next) => {
     try {
-      const product = await this.inventoryService.productService.findProductById(
-        req.params.productId
-      );
+      const product = await this.inventoryService.product.findProductById(req.params.productId);
 
       const [data] = await Promise.all([
-        this.inventoryService.productService.deleteProduct(req.params.productId),
+        this.inventoryService.product.deleteProduct(req.params.productId),
         this.fileService.deleteFile(product.imageKey),
       ]);
 
@@ -93,7 +87,7 @@ export default class ProductController implements IProductController {
 
   listProductStocks: ListProductStocks = async (req, res, next) => {
     try {
-      const stocks = await this.inventoryService.stockService.getByProduct(req.params.productId);
+      const stocks = await this.inventoryService.stock.getByProduct(req.params.productId);
 
       return res.json({ success: true, data: stocks });
     } catch (error) {

@@ -14,9 +14,7 @@ export default class CategoryController implements ICategoryController {
 
   getCategory: GetCategory = async (req, res, next) => {
     try {
-      const category = await this.inventoryService.categoryService.findCategoryById(
-        req.params.categoryId
-      );
+      const category = await this.inventoryService.category.findCategoryById(req.params.categoryId);
 
       return res.json({ success: true, data: category });
     } catch (error) {
@@ -26,7 +24,7 @@ export default class CategoryController implements ICategoryController {
 
   listCategories: ListCategories = async (_req, res, next) => {
     try {
-      const categories = await this.inventoryService.categoryService.listCategories();
+      const categories = await this.inventoryService.category.listCategories();
 
       return res.json({ success: true, data: categories });
     } catch (error) {
@@ -36,7 +34,7 @@ export default class CategoryController implements ICategoryController {
 
   listCategoryProducts: GetCategoryProducts = async (req, res, next) => {
     try {
-      const products = await this.inventoryService.categoryService.listCategoryProducts(
+      const products = await this.inventoryService.category.listCategoryProducts(
         req.params.categoryId
       );
 
@@ -48,7 +46,7 @@ export default class CategoryController implements ICategoryController {
 
   createCategory: CreateCategory = async (req, res, next) => {
     try {
-      const category = await this.inventoryService.categoryService.createCategory(req.body);
+      const category = await this.inventoryService.category.createCategory(req.body);
 
       return res.status(201).json({ success: true, data: category });
     } catch (error) {
@@ -58,7 +56,7 @@ export default class CategoryController implements ICategoryController {
 
   updateCategory: UpdateCategory = async (req, res, next) => {
     try {
-      const category = await this.inventoryService.categoryService.updateCategory(
+      const category = await this.inventoryService.category.updateCategory(
         req.params.categoryId,
         req.body
       );
@@ -71,9 +69,7 @@ export default class CategoryController implements ICategoryController {
 
   deleteCategory: DeleteCategory = async (req, res, next) => {
     try {
-      const category = await this.inventoryService.categoryService.deleteCategory(
-        req.params.categoryId
-      );
+      const category = await this.inventoryService.category.deleteCategory(req.params.categoryId);
 
       return res.json({ success: true, data: category });
     } catch (error) {

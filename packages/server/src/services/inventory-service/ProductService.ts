@@ -13,7 +13,7 @@ import type CategoryService from './CategoryService.js';
 export default class ProductService {
   constructor(
     private readonly inventoryRepo: InventoryRepository,
-    private readonly categoryService: CategoryService
+    private readonly category: CategoryService
   ) {}
 
   async findProductById(id: number): Promise<GetProductResponse['data']> {
@@ -37,7 +37,7 @@ export default class ProductService {
   async createProduct(
     product: CreateProductRequest['body'] & { imageKey: string; imageUrl: string }
   ) {
-    await this.categoryService.findCategoryById(product.categoryId);
+    await this.category.findCategoryById(product.categoryId);
 
     const exist = await this.findProductByName(product.enName, product.arName);
     if (exist) {
@@ -60,7 +60,7 @@ export default class ProductService {
 
   async updateProduct(id: number, product: UpdateProductRequest['body']) {
     await this.findProductById(id);
-    await this.categoryService.findCategoryById(product.categoryId);
+    await this.category.findCategoryById(product.categoryId);
 
     const exist = await this.findProductByName(product.enName || '', product.arName || '');
     if (exist && exist.id !== id) {

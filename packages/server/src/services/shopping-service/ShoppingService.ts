@@ -45,7 +45,7 @@ export default class ShoppingService {
     userId: number,
     { stockId, quantity }: CreateCartRequest['body']
   ): Promise<GetCartResponse['data']> {
-    const stock = await this.inventoryService.stockService.findById(stockId);
+    const stock = await this.inventoryService.stock.findById(stockId);
 
     if (stock.quantity < quantity) {
       throw new NotFoundError('Not enough stock');
@@ -85,7 +85,7 @@ export default class ShoppingService {
     userId: number,
     productId: number
   ): Promise<GetWishlistResponse['data']> {
-    await this.inventoryService.productService.findProductById(productId);
+    await this.inventoryService.product.findProductById(productId);
 
     await this.shoppingRepo.wishlist.update({
       userId,

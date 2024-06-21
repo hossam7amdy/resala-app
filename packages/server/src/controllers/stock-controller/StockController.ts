@@ -17,7 +17,7 @@ export default class StockController {
 
   getStock: GetStock = async (req, res, next) => {
     try {
-      const stock = await this.inventoryService.stockService.findById(req.params.stockId);
+      const stock = await this.inventoryService.stock.findById(req.params.stockId);
 
       return res.json({ success: true, data: stock });
     } catch (error) {
@@ -27,7 +27,7 @@ export default class StockController {
 
   getStocksList: GetStocksList = async (req, res, next) => {
     try {
-      const { stocks, pagination } = await this.inventoryService.stockService.list(req.query);
+      const { stocks, pagination } = await this.inventoryService.stock.list(req.query);
 
       return res.json({
         success: true,
@@ -40,7 +40,7 @@ export default class StockController {
 
   createStock: CreateStock = async (req, res, next) => {
     try {
-      const stock = await this.inventoryService.stockService.create(req.body);
+      const stock = await this.inventoryService.stock.create(req.body);
 
       return res.json({ success: true, data: stock });
     } catch (error) {
@@ -50,7 +50,7 @@ export default class StockController {
 
   updateStock: UpdateStock = async (req, res, next) => {
     try {
-      const stock = await this.inventoryService.stockService.update(req.params.stockId, req.body);
+      const stock = await this.inventoryService.stock.update(req.params.stockId, req.body);
 
       return res.json({
         success: true,
@@ -63,7 +63,7 @@ export default class StockController {
 
   deleteStock: DeleteStock = async (req, res, next) => {
     try {
-      const stock = await this.inventoryService.stockService.delete(req.params.stockId);
+      const stock = await this.inventoryService.stock.delete(req.params.stockId);
 
       return res.json({ success: true, data: stock });
     } catch (error) {

@@ -12,7 +12,7 @@ export default class SizeController {
 
   getSize: GetSize = async (req, res, next) => {
     try {
-      const size = await this.inventoryService.sizeService.findSizeById(req.params.sizeId);
+      const size = await this.inventoryService.size.findSizeById(req.params.sizeId);
 
       return res.json({
         success: true,
@@ -25,7 +25,7 @@ export default class SizeController {
 
   getSizesList: GetSizesList = async (_, res, next) => {
     try {
-      const sizes = await this.inventoryService.sizeService.listSizes();
+      const sizes = await this.inventoryService.size.listSizes();
 
       return res.json({
         success: true,
@@ -38,7 +38,7 @@ export default class SizeController {
 
   createSize: CreateSize = async (req, res, next) => {
     try {
-      const size = await this.inventoryService.sizeService.createSize(req.body);
+      const size = await this.inventoryService.size.createSize(req.body);
 
       return res.status(201).json({
         success: true,
@@ -51,7 +51,7 @@ export default class SizeController {
 
   updateSize: UpdateSize = async (req, res, next) => {
     try {
-      const size = await this.inventoryService.sizeService.updateSize(req.params.sizeId, req.body);
+      const size = await this.inventoryService.size.updateSize(req.params.sizeId, req.body);
 
       return res.json({
         success: true,
@@ -64,7 +64,7 @@ export default class SizeController {
 
   deleteSize: DeleteSize = async (req, res, next) => {
     try {
-      const size = await this.inventoryService.sizeService.deleteSize(req.params.sizeId);
+      const size = await this.inventoryService.size.deleteSize(req.params.sizeId);
 
       return res.json({
         success: true,

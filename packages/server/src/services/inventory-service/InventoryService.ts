@@ -6,22 +6,17 @@ import SizeService from './SizeService.js';
 import StockService from './StockService.js';
 
 export default class InventoryService {
-  readonly productService: ProductService;
-  readonly colorService: ColorService;
-  readonly sizeService: SizeService;
-  readonly stockService: StockService;
-  readonly categoryService: CategoryService;
+  readonly category: CategoryService;
+  readonly product: ProductService;
+  readonly color: ColorService;
+  readonly size: SizeService;
+  readonly stock: StockService;
 
   constructor(inventoryRepo: InventoryRepository) {
-    this.categoryService = new CategoryService(inventoryRepo);
-    this.productService = new ProductService(inventoryRepo, this.categoryService);
-    this.colorService = new ColorService(inventoryRepo);
-    this.sizeService = new SizeService(inventoryRepo);
-    this.stockService = new StockService(
-      inventoryRepo,
-      this.productService,
-      this.colorService,
-      this.sizeService
-    );
+    this.category = new CategoryService(inventoryRepo);
+    this.product = new ProductService(inventoryRepo, this.category);
+    this.color = new ColorService(inventoryRepo);
+    this.size = new SizeService(inventoryRepo);
+    this.stock = new StockService(inventoryRepo, this.product, this.color, this.size);
   }
 }
