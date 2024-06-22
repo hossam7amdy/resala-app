@@ -25,13 +25,11 @@ export const updateOrderStatus = async (id: string | number, payload: { status: 
 
 export const deleteOrder = async (id: string | number) => {
   try {
-    const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
-      ENDPOINT_CONFIGS.deleteOrder,
-      { params: { orderId: Number(id) } }
-    );
+    await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(ENDPOINT_CONFIGS.deleteOrder, {
+      params: { orderId: Number(id) },
+    });
 
     revalidatePath(ROUTES.ORDERS);
-    return response.data;
   } catch (e) {
     const error = e as Error;
     return {

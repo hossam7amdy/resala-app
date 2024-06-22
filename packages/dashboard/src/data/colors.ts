@@ -14,7 +14,7 @@ export const listAllColors = async () => {
   noStore();
 
   const response = await callEndpoint<GetColorsListRequest, GetColorsListResponse>(
-    ENDPOINT_CONFIGS.getColorsList
+    ENDPOINT_CONFIGS.listColors
   );
 
   return response.data;

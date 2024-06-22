@@ -1,7 +1,6 @@
-import CreateForm from '@/components/categories/create-form';
-import BackButton from '@/components/ui/back-button';
-import FormSkeleton from '@/components/ui/form-skeleton';
-import { listAllCategories } from '@/data/category';
+import BackButton from '@/component/back-button';
+import FormSkeleton from '@/component/form-skeleton';
+import CreateForm from '@/feature/categories/create-form';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
@@ -23,18 +22,12 @@ const CreateCategoryPage = () => {
       <Col span={24}>
         <Card>
           <Suspense fallback={<FormSkeleton />}>
-            <CreateCategoryForm />
+            <CreateForm />
           </Suspense>
         </Card>
       </Col>
     </Row>
   );
-};
-
-const CreateCategoryForm = async () => {
-  const categories = await listAllCategories();
-
-  return <CreateForm categories={categories} />;
 };
 
 export default CreateCategoryPage;

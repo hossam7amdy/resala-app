@@ -1,11 +1,11 @@
 import { callEndpoint } from '@/lib/fetch';
-import {
-  ENDPOINT_CONFIGS,
-  type GetCategoriesListRequest,
-  type GetCategoriesListResponse,
-  type GetCategoryRequest,
-  type GetCategoryResponse,
+import type {
+  GetCategoriesListRequest,
+  GetCategoriesListResponse,
+  GetCategoryRequest,
+  GetCategoryResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const listAllCategories = async () => {

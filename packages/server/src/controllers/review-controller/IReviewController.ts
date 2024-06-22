@@ -3,11 +3,11 @@ import type {
   CreateReviewResponse,
   DeleteReviewRequest,
   DeleteReviewResponse,
+  GetProductReviewsListRequest,
   GetReviewRequest,
   GetReviewResponse,
-  ListProductReviewsRequest,
-  ListReviewsRequest,
-  ListReviewsResponse,
+  GetReviewsListRequest,
+  GetReviewsListResponse,
   UpdateReviewRequest,
   UpdateReviewResponse,
 } from '@resala/shared';
@@ -39,12 +39,12 @@ export interface GetReview
   extends ExpressHandlerWithParams<GetReviewRequest['params'], undefined, GetReviewResponse> {}
 
 export interface ListReviews
-  extends ExpressHandler<undefined, ListReviewsResponse, ListReviewsRequest['query']> {}
+  extends ExpressHandler<undefined, GetReviewsListResponse, GetReviewsListRequest['query']> {}
 
 export interface ListProductReviews
   extends ExpressHandlerWithParams<
-    ListProductReviewsRequest['params'],
+    GetProductReviewsListRequest['params'],
     undefined,
-    ListReviewsResponse,
-    ListReviewsRequest['query']
+    GetReviewsListResponse,
+    GetReviewsListRequest['query']
   > {}

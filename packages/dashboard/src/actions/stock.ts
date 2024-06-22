@@ -2,15 +2,15 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
-import {
-  type CreateStockRequest,
-  type CreateStockResponse,
-  type DeleteStockRequest,
-  type DeleteStockResponse,
-  ENDPOINT_CONFIGS,
-  type UpdateStockRequest,
-  type UpdateStockResponse,
+import type {
+  CreateStockRequest,
+  CreateStockResponse,
+  DeleteStockRequest,
+  DeleteStockResponse,
+  UpdateStockRequest,
+  UpdateStockResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -57,13 +57,9 @@ export const updateStock = async (stockId: string | number, stock: UpdateStockRe
 
 export const deleteStock = async (stockId: string | number) => {
   try {
-    console.log('Deleting stock', stockId);
-
     await callEndpoint<DeleteStockRequest, DeleteStockResponse>(ENDPOINT_CONFIGS.deleteStock, {
       params: { stockId: Number(stockId) },
     });
-
-    console.log('Stock deleted successfully');
 
     revalidatePath(ROUTES.STOCKS);
   } catch (e) {
