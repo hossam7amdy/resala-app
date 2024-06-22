@@ -1,4 +1,4 @@
-import CreateForm from '@/components/colors/form';
+import CreateForm from '@/feature/colors/form';
 import React from 'react';
 
 const CreateColorPage = () => {

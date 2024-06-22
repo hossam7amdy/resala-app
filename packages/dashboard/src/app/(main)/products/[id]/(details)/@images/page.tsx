@@ -1,6 +1,6 @@
-import { deleteProductImage } from '@/actions/product';
-import DeleteButton from '@/components/ui/delete-button';
-import { getProductImages } from '@/data/product';
+import { deleteProductImage } from '@/actions/image';
+import DeleteButton from '@/component/delete-button';
+import { listProductStocks } from '@/data/product';
 import { formatDate } from '@/lib/util';
 import { Card, Flex, Image } from 'antd';
 import type { Metadata } from 'next';
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 const ProductImagesPage = async ({ params }: { params: { id: string } }) => {
-  const images = await getProductImages(params.id);
+  const stocks = await listProductStocks(params.id);
+  const images = stocks.flatMap(stock => stock.images);
 
   return (
     <ul style={{ listStyle: 'none' }}>
@@ -24,7 +25,7 @@ const ProductImagesPage = async ({ params }: { params: { id: string } }) => {
                 <p key={`created-date-${image.id}`}>{formatDate(image.createdAt)}</p>,
                 <DeleteButton
                   key={`delete-${image.id}`}
-                  deleteAction={deleteProductImage.bind(null, params.id, String(image.id))}
+                  deleteAction={deleteProductImage.bind(null, params.id, image.id.toString())}
                 />,
               ]}
               hoverable

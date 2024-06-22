@@ -1,5 +1,5 @@
-import StocksTable from '@/components/stocks/table';
-import { Search } from '@/components/ui/search';
+import { Search } from '@/component/search';
+import StocksTable from '@/feature/stocks/table';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import Link from 'next/link';

@@ -11,9 +11,9 @@ import {
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
-import type { FileMetadata, IFileStorageService } from './index.js';
+import type { FileMetadata, IFileStorage } from '../../interfaces/index.js';
 
-export default class S3StorageService implements IFileStorageService {
+export default class S3StorageService implements IFileStorage {
   private readonly bucketName: string;
   private readonly client: S3Client;
 
@@ -52,11 +52,11 @@ export default class S3StorageService implements IFileStorageService {
     }
   }
 
-  downloadFile(key: string): Promise<Buffer> {
+  download(key: string): Promise<Buffer> {
     console.log('Downloading file', key);
     throw new Error('Method not implemented.');
   }
-  async uploadFile(fileBuffer: Buffer, key: string): Promise<string> {
+  async upload(fileBuffer: Buffer, key: string): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
@@ -67,7 +67,7 @@ export default class S3StorageService implements IFileStorageService {
     await this.client.send(command);
     return this.getPublicUrl(key);
   }
-  async deleteFile(path: string): Promise<void> {
+  async delete(path: string): Promise<void> {
     const key = this.getFilenameFromUrl(path);
 
     const command = new DeleteObjectCommand({
@@ -77,7 +77,7 @@ export default class S3StorageService implements IFileStorageService {
 
     await this.client.send(command);
   }
-  async listFiles(directory: string): Promise<string[]> {
+  async list(directory: string): Promise<string[]> {
     const command = new ListObjectsV2Command({
       Bucket: this.bucketName,
       Prefix: directory,
@@ -87,7 +87,7 @@ export default class S3StorageService implements IFileStorageService {
 
     return contents!.map(obj => obj.Key!);
   }
-  async getFileMetadata(path: string): Promise<FileMetadata> {
+  async getMetadata(path: string): Promise<FileMetadata> {
     const key = this.getFilenameFromUrl(path);
 
     const command = new HeadObjectCommand({
@@ -101,7 +101,7 @@ export default class S3StorageService implements IFileStorageService {
       lastModified: obj.LastModified!,
     };
   }
-  async deleteFiles(paths: string[]) {
+  async deleteMany(paths: string[]) {
     const command = new DeleteObjectsCommand({
       Bucket: this.bucketName,
       Delete: {

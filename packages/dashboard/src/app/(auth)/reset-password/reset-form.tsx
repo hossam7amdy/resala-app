@@ -1,7 +1,7 @@
 'use client';
 
 import { resetPassword } from '@/actions/auth';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { Button, Form, Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Text from 'antd/es/typography/Text';

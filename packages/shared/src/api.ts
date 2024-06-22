@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * @file This file contains all the types for the API requests and responses.
  *
@@ -10,14 +8,21 @@ import type { z } from 'zod';
 
 import type {
   Address,
+  Cart,
   Category,
+  Color,
+  Image,
   Order,
   OrderItem,
   Pagination,
   Payment,
   Product,
   Review,
+  Shipping,
+  Size,
+  Stock,
   User,
+  Wishlist,
 } from './types.js';
 import type {
   AdminDeleteUserSchema,
@@ -28,9 +33,9 @@ import type {
   CreateCartSchema,
   CreateCategorySchema,
   CreateColorSchema,
+  CreateImageSchema,
   CreateOrderSchema,
   CreatePaymentSchema,
-  CreateProductImageSchema,
   CreateProductSchema,
   CreateReviewSchema,
   CreateSizeSchema,
@@ -41,7 +46,7 @@ import type {
   DeleteCartSchema,
   DeleteCategorySchema,
   DeleteColorSchema,
-  DeleteProductImageSchema,
+  DeleteImageSchema,
   DeleteProductSchema,
   DeleteReviewSchema,
   DeleteSizeSchema,
@@ -51,10 +56,12 @@ import type {
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
-  GetProductImages,
+  GetProductSchema,
   GetReviewSchema,
   ListProductReviewsSchema,
   LoginSchema,
+  PatchImageSchema,
+  RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
   UpdateAddressSchema,
@@ -69,7 +76,6 @@ import type {
   VerifyEmailSchema,
 } from './validation-schema.js';
 
-export type DefaultRequestBody = { [key: string]: any };
 export type DefaultRequestQuery = {
   query: Partial<z.infer<typeof DefaultQuerySchema>['query']>;
 };
@@ -93,10 +99,19 @@ export type LoginResponse = DefaultResponseBody & {
 export type RegisterRequest = z.infer<typeof RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
 
+export type RefreshTokenRequest = z.infer<typeof RefreshTokenSchema>;
+export type RefreshTokenResponse = DefaultResponseBody & {
+  data: {
+    expiresAt: Date;
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
 export type VerifyEmailRequest = z.infer<typeof VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
 
-export type ResendVerificationEmailRequest = undefined; // No data needed
+export type ResendVerificationEmailRequest = undefined;
 export type ResendVerificationEmailResponse = DefaultResponseBody;
 
 export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordSchema>;
@@ -146,41 +161,29 @@ export type AdminDeleteUserRequest = z.infer<typeof AdminDeleteUserSchema>;
 export type AdminDeleteUserResponse = DefaultResponseBody;
 
 // Address types
-export type CreateAddressRequest = z.infer<typeof CreateAddressSchema>;
-export type CreateAddressResponse = DefaultResponseBody & {
+export type GetUserAddressRequest = undefined;
+export type GetUserAddressResponse = DefaultResponseBody & {
   data: Address;
 };
 
-export type UpdateAddressRequest = z.infer<typeof UpdateAddressSchema>;
-export type UpdateAddressResponse = CreateAddressResponse;
-
-export type GetUserAddressListRequest = undefined; // No data needed
+export type GetUserAddressListRequest = undefined;
 export type GetUserAddressListResponse = DefaultResponseBody & {
-  data: CreateAddressResponse['data'][];
+  data: GetUserAddressResponse['data'][];
 };
+
+export type CreateAddressRequest = z.infer<typeof CreateAddressSchema>;
+export type CreateAddressResponse = GetUserAddressResponse;
+
+export type UpdateAddressRequest = z.infer<typeof UpdateAddressSchema>;
+export type UpdateAddressResponse = GetUserAddressResponse;
 
 export type DeleteAddressRequest = z.infer<typeof DeleteAddressSchema>;
-export type DeleteAddressResponse = DefaultResponseBody & {
-  data: CreateAddressResponse['data'];
-};
+export type DeleteAddressResponse = GetUserAddressResponse;
 
 // Category types
-export type CreateCategoryRequest = z.infer<typeof CreateCategorySchema>;
-export type CreateCategoryResponse = DefaultResponseBody & {
-  data: Category;
-};
-
-export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
-export type UpdateCategoryResponse = CreateCategoryResponse;
-
-export type DeleteCategoryRequest = z.infer<typeof DeleteCategorySchema>;
-export type DeleteCategoryResponse = CreateCategoryResponse;
-
-export type GetCategoryRequest = DefaultRequestQuery & DeleteCategoryRequest;
+export type GetCategoryRequest = z.infer<typeof GetCategorySchema>;
 export type GetCategoryResponse = DefaultResponseBody & {
-  data: CreateCategoryResponse['data'] & {
-    subCategories: CreateCategoryResponse['data'][];
-  };
+  data: Category;
 };
 
 export type GetCategoriesListRequest = DefaultRequestQuery;
@@ -188,28 +191,25 @@ export type GetCategoriesListResponse = DefaultResponseBody & {
   data: GetCategoryResponse['data'][];
 };
 
+export type CreateCategoryRequest = z.infer<typeof CreateCategorySchema>;
+export type CreateCategoryResponse = GetCategoryResponse;
+
+export type UpdateCategoryRequest = z.infer<typeof UpdateCategorySchema>;
+export type UpdateCategoryResponse = GetCategoryResponse;
+
+export type DeleteCategoryRequest = z.infer<typeof DeleteCategorySchema>;
+export type DeleteCategoryResponse = GetCategoryResponse;
+
 export type GetCategoryProductsRequest = z.infer<typeof GetCategorySchema>;
 export type GetCategoryProductsResponse = DefaultResponseBody & {
-  data: CreateProductResponse['data'][];
+  data: GetProductResponse['data'][];
 };
 
 // Product types
-export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
-export type CreateProductResponse = DefaultResponseBody & {
-  data: Product;
-};
-
-export type UpdateProductRequest = z.infer<typeof UpdateProductSchema>;
-export type UpdateProductResponse = CreateProductResponse;
-
-export type DeleteProductRequest = z.infer<typeof DeleteProductSchema>;
-export type DeleteProductResponse = CreateProductResponse;
-
-export type GetProductRequest = DefaultRequestQuery & DeleteProductRequest;
+export type GetProductRequest = z.infer<typeof GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
-  data: CreateProductResponse['data'] & {
-    images: GetProductImagesResponse['data'];
-    category: CreateCategoryResponse['data'];
+  data: Product & {
+    category: Category;
   };
 };
 
@@ -221,100 +221,58 @@ export type GetProductsListResponse = DefaultResponseBody & {
   };
 };
 
-// Product images types
-export type CreateProductImageRequest = z.infer<typeof CreateProductImageSchema> & {
-  images: FormData;
-};
-export type CreateProductImageResponse = DefaultResponseBody;
-
-export type DeleteProductImageRequest = z.infer<typeof DeleteProductImageSchema>;
-export type DeleteProductImageResponse = DefaultResponseBody;
-
-export type GetProductImagesRequest = z.infer<typeof GetProductImages>;
-export type GetProductImagesResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    productId: number;
-    imageUrl: string;
-    createdAt: Date;
-  }[];
+export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
+export type CreateProductResponse = DefaultResponseBody & {
+  data: Product;
 };
 
-export type GetProductStocksRequest = z.infer<typeof GetProductImages>;
-export type GetProductStocksResponse = DefaultResponseBody & {
-  data: Pick<
-    GetStockResponse['data'],
-    'id' | 'quantity' | 'createdAt' | 'updatedAt' | 'color' | 'size'
-  >[];
-};
+export type UpdateProductRequest = z.infer<typeof UpdateProductSchema>;
+export type UpdateProductResponse = CreateProductResponse;
+
+export type DeleteProductRequest = z.infer<typeof DeleteProductSchema>;
+export type DeleteProductResponse = CreateProductResponse;
 
 // Colors types
-export type CreateColorRequest = z.infer<typeof CreateColorSchema>;
-export type CreateColorResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    code: string;
-    arName: string;
-    enName: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-};
-
-export type UpdateColorRequest = z.infer<typeof UpdateColorSchema>;
-export type UpdateColorResponse = CreateColorResponse;
-
-export type DeleteColorRequest = z.infer<typeof DeleteColorSchema>;
-export type DeleteColorResponse = CreateColorResponse;
-
 export type GetColorRequest = DeleteColorRequest;
-export type GetColorResponse = DeleteColorResponse;
+export type GetColorResponse = DefaultResponseBody & {
+  data: Color;
+};
 
 export type GetColorsListRequest = DefaultRequestQuery;
 export type GetColorsListResponse = DefaultResponseBody & {
-  data: CreateColorResponse['data'][];
+  data: GetColorResponse['data'][];
 };
+
+export type CreateColorRequest = z.infer<typeof CreateColorSchema>;
+export type CreateColorResponse = GetColorResponse;
+
+export type UpdateColorRequest = z.infer<typeof UpdateColorSchema>;
+export type UpdateColorResponse = GetColorResponse;
+
+export type DeleteColorRequest = z.infer<typeof DeleteColorSchema>;
+export type DeleteColorResponse = GetColorResponse;
 
 // Sizes types
-export type CreateSizeRequest = z.infer<typeof CreateSizeSchema>;
-export type CreateSizeResponse = DefaultResponseBody & {
-  data: { id: number; name: string; createdAt: Date; updatedAt: Date };
-};
-
-export type UpdateSizeRequest = z.infer<typeof UpdateSizeSchema>;
-export type UpdateSizeResponse = CreateSizeResponse;
-
-export type DeleteSizeRequest = z.infer<typeof DeleteSizeSchema>;
-export type DeleteSizeResponse = CreateSizeResponse;
-
 export type GetSizeRequest = DeleteSizeRequest;
-export type GetSizeResponse = DeleteSizeResponse;
+export type GetSizeResponse = DefaultResponseBody & {
+  data: Size;
+};
 
 export type GetSizesListRequest = DefaultRequestQuery;
 export type GetSizesListResponse = DefaultResponseBody & {
-  data: CreateSizeResponse['data'][];
+  data: GetSizeResponse['data'][];
 };
+
+export type CreateSizeRequest = z.infer<typeof CreateSizeSchema>;
+export type CreateSizeResponse = GetSizeResponse;
+
+export type UpdateSizeRequest = z.infer<typeof UpdateSizeSchema>;
+export type UpdateSizeResponse = GetSizeResponse;
+
+export type DeleteSizeRequest = z.infer<typeof DeleteSizeSchema>;
+export type DeleteSizeResponse = GetSizeResponse;
 
 // Stock types
-export type CreateStockRequest = z.infer<typeof CreateStockSchema>;
-export type CreateStockResponse = DefaultResponseBody & {
-  data: CreateStockRequest['body'] & {
-    id: number;
-    productId: number;
-    colorId: number;
-    sizeId: number;
-    quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-};
-
-export type UpdateStockRequest = z.infer<typeof UpdateStockSchema>;
-export type UpdateStockResponse = CreateStockResponse;
-
-export type DeleteStockRequest = z.infer<typeof DeleteStockSchema>;
-export type DeleteStockResponse = CreateStockResponse;
-
 export type GetStockRequest = DeleteStockRequest;
 export type GetStockResponse = DefaultResponseBody & {
   data: {
@@ -322,10 +280,16 @@ export type GetStockResponse = DefaultResponseBody & {
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
-    product: CreateProductResponse['data'];
-    color: CreateColorResponse['data'];
-    size: CreateSizeResponse['data'];
+    product: Product;
+    size: Size;
+    color: Color;
+    images: Omit<Image, 'colorId' | 'productId'>[];
   };
+};
+
+export type GetProductStocksRequest = z.infer<typeof GetProductSchema>;
+export type GetProductStocksResponse = DefaultResponseBody & {
+  data: Omit<GetStockResponse['data'], 'product'>[];
 };
 
 export type GetStocksListRequest = DefaultRequestQuery;
@@ -336,66 +300,79 @@ export type GetStocksListResponse = DefaultResponseBody & {
   };
 };
 
-// Shipping types
-export type CreateCartRequest = z.infer<typeof CreateCartSchema>;
-export type CreateCartResponse = DefaultResponseBody & {
-  data: {
-    userId: number;
-    quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
-    stock: {
-      id: number;
-      quantity: number;
-      product: CreateProductResponse['data'];
-      color: CreateColorResponse['data'];
-      size: CreateSizeResponse['data'];
-    };
-  }[];
+export type CreateStockRequest = z.infer<typeof CreateStockSchema>;
+export type CreateStockResponse = DefaultResponseBody & {
+  data: Stock;
 };
 
+export type UpdateStockRequest = z.infer<typeof UpdateStockSchema>;
+export type UpdateStockResponse = CreateStockResponse;
+
+export type DeleteStockRequest = z.infer<typeof DeleteStockSchema>;
+export type DeleteStockResponse = CreateStockResponse;
+
+// Image types
+export type CreateImageRequest = z.infer<typeof CreateImageSchema>;
+export type CreateImageResponse = DefaultResponseBody;
+
+export type PatchImageRequest = z.infer<typeof PatchImageSchema>;
+export type PatchImageResponse = DefaultResponseBody & {
+  data: Image;
+};
+
+export type DeleteImageRequest = z.infer<typeof DeleteImageSchema>;
+export type DeleteImageResponse = DefaultResponseBody & {
+  data: Image;
+};
+
+// Shipping types
 export type GetCartRequest = Record<string, never>;
-export type GetCartResponse = CreateCartResponse;
+export type GetCartResponse = DefaultResponseBody & {
+  data: (Omit<Cart, 'stockId'> & {
+    product: Product;
+    images: Omit<Image, 'colorId' | 'productId'>[];
+    stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+      color: Color;
+      size: Size;
+    };
+  })[];
+};
+
+export type CreateCartRequest = z.infer<typeof CreateCartSchema>;
+export type CreateCartResponse = GetCartResponse;
 
 export type DeleteCartRequest = z.infer<typeof DeleteCartSchema>;
-export type DeleteCartResponse = CreateCartResponse;
+export type DeleteCartResponse = GetCartResponse;
 
-export type CreateWishlistRequest = z.infer<typeof CreateWishlistSchema>;
-export type CreateWishlistResponse = DefaultResponseBody & {
-  data: CreateProductResponse['data'][];
+export type GetWishlistRequest = undefined;
+export type GetWishlistResponse = DefaultResponseBody & {
+  data: (Omit<Wishlist, 'productId'> & {
+    product: Product;
+  })[];
 };
 
-export type GetWishlistRequest = Record<string, never>;
-export type GetWishlistResponse = CreateWishlistResponse;
+export type CreateWishlistRequest = z.infer<typeof CreateWishlistSchema>;
+export type CreateWishlistResponse = GetWishlistResponse;
 
 export type DeleteWishlistRequest = z.infer<typeof DeleteWishlistSchema>;
-export type DeleteWishlistResponse = CreateWishlistResponse;
+export type DeleteWishlistResponse = GetWishlistResponse;
 
 // Order types
 export type CreateOrderRequest = z.infer<typeof CreateOrderSchema>;
 export type CreateOrderResponse = DefaultResponseBody & {
-  data: {
-    order: Order;
-    payment: {
-      token: string;
-      iframeUrl: string;
-    } | null;
+  data?: {
+    token: string;
+    iframeUrl: string;
   };
 };
 
 export type GetOrderRequest = z.infer<typeof GetOrderSchema>;
 export type GetOrderResponse = DefaultResponseBody & {
-  data: CreateOrderResponse['data']['order'] & {
-    user: GetProfileResponse['data'] | null;
+  data: Order & {
+    user: User | null;
     orderItems: OrderItem[];
     paymentDetails: Payment | null;
-    shippingDetails: {
-      id: number;
-      address: Address;
-      cost: number | unknown; // Decimal;
-      createdAt: Date;
-      updatedAt: Date;
-    } | null;
+    shippingDetails: (Omit<Shipping, 'addressId' | 'orderId'> & { address: Address }) | null;
   };
 };
 
@@ -403,7 +380,7 @@ export type GetOrdersListRequest = DefaultRequestQuery;
 export type GetOrdersListResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
-    orders: CreateOrderResponse['data']['order'][];
+    orders: GetOrderResponse['data'][];
   };
 };
 
@@ -411,48 +388,27 @@ export type AdminGetOrdersListRequest = DefaultRequestQuery;
 export type AdminGetOrdersListResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
-    orders: Omit<GetOrderResponse['data'], 'orderItems' | 'paymentDetails' | 'shippingDetails'>[];
+    orders: GetOrderResponse['data'][];
   };
 };
 
 export type UpdateOrderRequest = z.infer<typeof UpdateOrderStatusSchema>;
-export type UpdateOrderResponse = DefaultResponseBody & {
-  data: CreateOrderResponse['data']['order'];
-};
+export type UpdateOrderResponse = DefaultResponseBody;
 
 export type DeleteOrderRequest = GetOrderRequest;
-export type DeleteOrderResponse = DefaultResponseBody & {
-  data: CreateOrderResponse['data']['order'];
-};
+export type DeleteOrderResponse = DefaultResponseBody;
 
 // Payment types
 export type CreatePaymentRequest = {
   query: z.infer<typeof CreatePaymentSchema>['query'];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: { [key: string]: any };
 };
-export type CreatePaymentResponse = Record<string, never>;
+export type CreatePaymentResponse = DefaultResponseBody;
 
 export type GetPaymentRequest = z.infer<typeof GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
-  data: {
-    id: number;
-    orderId: number;
-    transactionId: number;
-    transactionOrderId: number;
-    pending: boolean;
-    success: boolean;
-    isAuth: boolean;
-    isCapture: boolean;
-    amountCents: any; // Decimal;
-    isVoided: boolean;
-    isRefunded: boolean;
-    is3DSecure: boolean;
-    integrationId: number;
-    deliveryNeeded: boolean;
-    currency: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  data: Payment;
 };
 
 export type GetPaymentsListRequest = DefaultRequestQuery;
@@ -472,16 +428,16 @@ export type GetReviewResponse = DefaultResponseBody & {
   };
 };
 
-export type ListReviewsRequest = DefaultRequestQuery;
-export type ListReviewsResponse = DefaultResponseBody & {
+export type GetReviewsListRequest = DefaultRequestQuery;
+export type GetReviewsListResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
     reviews: Omit<GetReviewResponse['data'], 'product'>[];
   };
 };
 
-export type ListProductReviewsRequest = z.infer<typeof ListProductReviewsSchema>;
-export type ListProductReviewsResponse = DefaultResponseBody & {
+export type GetProductReviewsListRequest = z.infer<typeof ListProductReviewsSchema>;
+export type GetProductReviewsListResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
     reviews: Omit<GetReviewResponse['data'], 'product'>[];
@@ -489,12 +445,14 @@ export type ListProductReviewsResponse = DefaultResponseBody & {
 };
 
 export type CreateReviewRequest = z.infer<typeof CreateReviewSchema>;
-export type CreateReviewResponse = GetReviewResponse;
+export type CreateReviewResponse = DefaultResponseBody & {
+  data: Review;
+};
 
 export type UpdateReviewRequest = z.infer<typeof UpdateReviewSchema>;
-export type UpdateReviewResponse = GetReviewResponse;
+export type UpdateReviewResponse = CreateReviewResponse;
 
 export type DeleteReviewRequest = z.infer<typeof DeleteReviewSchema>;
-export type DeleteReviewResponse = DefaultResponseBody;
+export type DeleteReviewResponse = CreateReviewResponse;
 
 // Notification types

@@ -1,4 +1,4 @@
-import { Logo } from '@/components/ui/logo';
+import { Logo } from '@/component/logo';
 import ROUTES from '@/lib/routes';
 import { Flex } from 'antd';
 import Link from 'antd/es/typography/Link';

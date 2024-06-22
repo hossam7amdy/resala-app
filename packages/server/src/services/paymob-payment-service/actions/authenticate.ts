@@ -1,0 +1,25 @@
+import { axiosInstance } from '../config/axiosInstance.js';
+
+const PAYMOB_API_TOKEN = process.env.PAYMOB_API_TOKEN;
+
+export interface AuthenticateResponse {
+  token: string;
+}
+
+/**
+ * Authenticate with Paymob API and get the token to use in the next requests
+ * @returns {Promise<AuthenticateResponse>}
+ *
+ * @see https://docs.paymob.com/docs/accept-standard-redirect#1-authentication-request
+ */
+export const authenticate = async (): Promise<AuthenticateResponse> => {
+  try {
+    const response = await axiosInstance.post<AuthenticateResponse>('/auth/tokens', {
+      api_key: PAYMOB_API_TOKEN,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to authenticate with Paymob API');
+  }
+};

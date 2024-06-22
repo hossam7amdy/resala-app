@@ -23,6 +23,7 @@ export enum Endpoints {
   // auth endpoints
   login = 'login',
   register = 'register',
+  refresh = 'refresh',
   forgotPassword = 'forgotPassword',
   resetPassword = 'resetPassword',
   changePassword = 'changePassword',
@@ -33,13 +34,13 @@ export enum Endpoints {
   getCurrentUser = 'getCurrentUser',
   updateCurrentUser = 'updateCurrentUser',
   adminGetUser = 'adminGetUser',
-  adminGetUsersList = 'adminGetUsersList',
+  adminListUsers = 'adminListUsers',
   adminUpdateUser = 'adminUpdateUser',
   adminDeleteUser = 'adminDeleteUser',
 
   // address endpoints
   createAddress = 'createAddress',
-  getAddressList = 'getAddressList',
+  listAddress = 'listAddress',
   updateAddress = 'updateAddress',
   deleteAddress = 'deleteAddress',
 
@@ -53,32 +54,34 @@ export enum Endpoints {
 
   // product endpoints
   getProduct = 'getProduct',
-  getProductsList = 'getProductsList',
+  listProducts = 'listProducts',
+  listProductStocks = 'listProductStocks',
   createProduct = 'createProduct',
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
-  addProductImages = 'addProductImages',
-  getProductStocks = 'getProductStocks',
-  listProductImages = 'listProductImages',
-  deleteProductImage = 'deleteProductImage',
+
+  // images endpoints
+  addImages = 'addImages',
+  deleteImage = 'deleteImage',
+  updateImage = 'updateImage',
 
   // stock endpoints
   addStock = 'addStock',
   getStock = 'getStock',
-  getStocksList = 'getStocksList',
+  listStocks = 'listStocks',
   updateStock = 'updateStock',
   deleteStock = 'deleteStock',
 
   // color endpoints
   getColor = 'getColor',
-  getColorsList = 'getColorsList',
+  listColors = 'listColors',
   createColor = 'createColor',
   updateColor = 'updateColor',
   deleteColor = 'deleteColor',
 
   // size endpoints
   getSize = 'getSize',
-  getSizesList = 'getSizesList',
+  listSizes = 'listSizes',
   createSize = 'createSize',
   updateSize = 'updateSize',
   deleteSize = 'deleteSize',
@@ -96,20 +99,20 @@ export enum Endpoints {
   // order endpoints
   createOrder = 'createOrder',
   getOrder = 'getOrder',
-  getOrdersList = 'getOrdersList',
+  listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',
   adminGetOrder = 'adminGetOrder',
-  adminGetOrdersList = 'adminGetOrdersList',
+  adminListOrders = 'adminListOrders',
   adminDeleteOrder = 'adminDeleteOrder',
   adminUpdateOrderStatus = 'adminUpdateOrderStatus',
 
   // payment endpoints
   createPayment = 'createPayment',
   getPayment = 'getPayment',
-  getPaymentsList = 'getPaymentsList',
+  listPayments = 'listPayments',
   paymentResponse = 'paymentResponse',
 
-  // product reviews endpoints
+  // reviews endpoints
   getReview = 'getReview',
   listReviews = 'listReviews',
   createReview = 'createReview',
@@ -174,6 +177,11 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/auth/register',
     sensitive: true,
   },
+  [Endpoints.refresh]: {
+    method: 'post',
+    url: '/api/v1/auth/refresh',
+    sensitive: true,
+  },
   [Endpoints.forgotPassword]: {
     method: 'post',
     url: '/api/v1/auth/forgot-password',
@@ -223,7 +231,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/users/:userId',
     auth: true,
   },
-  [Endpoints.adminGetUsersList]: {
+  [Endpoints.adminListUsers]: {
     method: 'get',
     url: '/api/v1/users',
     auth: true,
@@ -240,7 +248,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'post',
     auth: true,
   },
-  [Endpoints.getAddressList]: {
+  [Endpoints.listAddress]: {
     url: '/api/v1/users/self/addresses',
     method: 'get',
     auth: true,
@@ -290,7 +298,11 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/products/:productId',
     method: 'get',
   },
-  [Endpoints.getProductsList]: {
+  [Endpoints.listProductStocks]: {
+    url: '/api/v1/products/:productId/stocks',
+    method: 'get',
+  },
+  [Endpoints.listProducts]: {
     url: '/api/v1/products',
     method: 'get',
   },
@@ -311,23 +323,20 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // product images endpoints
-  [Endpoints.addProductImages]: {
-    url: '/api/v1/products/images',
+  [Endpoints.addImages]: {
+    url: '/api/v1/images',
     method: 'post',
     auth: true,
   },
-  [Endpoints.listProductImages]: {
-    url: '/api/v1/products/:productId/images',
-    method: 'get',
-  },
-  [Endpoints.deleteProductImage]: {
-    url: '/api/v1/products/:productId/images/:imageId',
-    method: 'delete',
+  [Endpoints.updateImage]: {
+    url: '/api/v1/images/:imageId',
+    method: 'patch',
     auth: true,
   },
-  [Endpoints.getProductStocks]: {
-    url: '/api/v1/products/:productId/stocks',
-    method: 'get',
+  [Endpoints.deleteImage]: {
+    url: '/api/v1/images/:imageId',
+    method: 'delete',
+    auth: true,
   },
 
   // stock endpoints
@@ -340,7 +349,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/stocks/:stockId',
     method: 'get',
   },
-  [Endpoints.getStocksList]: {
+  [Endpoints.listStocks]: {
     url: '/api/v1/stocks',
     method: 'get',
   },
@@ -360,7 +369,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/colors/:colorId',
     method: 'get',
   },
-  [Endpoints.getColorsList]: {
+  [Endpoints.listColors]: {
     url: '/api/v1/colors',
     method: 'get',
   },
@@ -385,7 +394,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/sizes/:sizeId',
     method: 'get',
   },
-  [Endpoints.getSizesList]: {
+  [Endpoints.listSizes]: {
     url: '/api/v1/sizes',
     method: 'get',
   },
@@ -459,7 +468,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'get',
     auth: true,
   },
-  [Endpoints.getOrdersList]: {
+  [Endpoints.listOrders]: {
     url: '/api/v1/orders',
     method: 'get',
     auth: true,
@@ -474,7 +483,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'get',
     auth: true,
   },
-  [Endpoints.adminGetOrdersList]: {
+  [Endpoints.adminListOrders]: {
     url: '/api/v1/admin/orders',
     method: 'get',
     auth: true,
@@ -504,7 +513,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/payments/response',
     method: 'get',
   },
-  [Endpoints.getPaymentsList]: {
+  [Endpoints.listPayments]: {
     url: '/api/v1/payments',
     method: 'get',
     auth: true,

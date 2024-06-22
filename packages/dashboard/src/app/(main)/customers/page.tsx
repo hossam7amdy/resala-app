@@ -1,6 +1,6 @@
-import CustomersTable from '@/components/customers/table';
-import { Search } from '@/components/ui/search';
-import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
+import { Search } from '@/component/search';
+import CustomersTable from '@/feature/customers/table';
+import { Breadcrumb, Col, Row, Table } from 'antd';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -24,10 +24,7 @@ const CustomerPage = async ({
       </Col>
 
       <Col span={24}>
-        <Flex gap={10}>
-          <Search placeholder="Search customers" />
-          <Button type="primary">Add Customer</Button>
-        </Flex>
+        <Search placeholder="Search customers" />
       </Col>
 
       <Col span={24}>
