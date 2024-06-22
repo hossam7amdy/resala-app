@@ -14,7 +14,7 @@ export const listAllSizes = async () => {
   noStore();
 
   const response = await callEndpoint<GetSizesListRequest, GetSizesListResponse>(
-    ENDPOINT_CONFIGS.getSizesList
+    ENDPOINT_CONFIGS.listSizes
   );
 
   return response.data;

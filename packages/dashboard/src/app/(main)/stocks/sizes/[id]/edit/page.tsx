@@ -1,5 +1,5 @@
-import EditForm from '@/components/sizes/form';
 import { findSizeById } from '@/data/sizes';
+import EditForm from '@/feature/sizes/form';
 import React from 'react';
 
 const EditSizePage = async ({ params }: { params: { id: string } }) => {

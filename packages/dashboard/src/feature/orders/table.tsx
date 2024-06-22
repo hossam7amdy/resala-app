@@ -1,12 +1,12 @@
 import { deleteOrder } from '@/actions/order';
-import { getOrdersList } from '@/data/orders';
+import { listOrders } from '@/data/orders';
 import { formatCurrency, formatDateTime } from '@/lib/util';
 import { EyeFilled } from '@ant-design/icons';
 import { Table as AntTable, Flex, Space } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from '../ui/delete-button';
-import Pagination from '../ui/pagination';
+import DeleteButton from '../../component/delete-button';
+import Pagination from '../../component/pagination';
 import OrderStatus from './order-status';
 import PaymentStatus from './payment-status';
 
@@ -16,7 +16,7 @@ interface TableProps {
   query: string;
 }
 const Table = async ({ page, limit, query }: TableProps) => {
-  const { pagination, orders } = await getOrdersList({ page, limit, query });
+  const { pagination, orders } = await listOrders({ page, limit, query });
 
   return (
     <Flex vertical gap={10}>

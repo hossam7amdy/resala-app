@@ -2,7 +2,7 @@ import { listUsersPaginated } from '@/data/user';
 import { formatDate } from '@/lib/util';
 import { Flex, Table, Tag } from 'antd';
 
-import Pagination from '../ui/pagination';
+import Pagination from '../../component/pagination';
 
 interface TableProps {
   page: number;

@@ -1,4 +1,4 @@
-import StockColor from '@/components/ui/stock-color';
+import StockColor from '@/component/stock-color';
 import { listAllColors } from '@/data/colors';
 import ROUTES from '@/lib/routes';
 import { Button, Flex, Select } from 'antd';

@@ -1,6 +1,6 @@
 'use client';
 
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/component/back-button';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';
 import Link from 'next/link';

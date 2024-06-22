@@ -1,25 +1,16 @@
 'use client';
 
 import { updateCategory } from '@/actions/category';
-import useSubmitForm from '@/hooks/use-submit-form';
-import {
-  type GetCategoriesListResponse,
-  type GetCategoryResponse,
-  validationPatterns,
-} from '@resala/shared';
-import { Button, Flex, Form, Input, Select } from 'antd';
+import useSubmitForm from '@/hooks/useSubmitForm';
+import { type GetCategoryResponse, validationPatterns } from '@resala/shared';
+import { Button, Flex, Form, Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
-import ErrorMessage from '../ui/error-message';
+import ErrorMessage from '../../component/error-message';
 
-const EditForm = ({
-  category,
-  categories,
-}: {
-  category: GetCategoryResponse['data'];
-  categories: GetCategoriesListResponse['data'];
-}) => {
+const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ category }) => {
   const router = useRouter();
   const update = updateCategory.bind(null, String(category.id));
   const { error, pending, dispatch } = useSubmitForm(update);
@@ -31,26 +22,10 @@ const EditForm = ({
       layout="vertical"
       onFinish={dispatch}
       initialValues={{
-        categoryId: category.categoryId ? category.categoryId : undefined,
         enName: category.enName,
         arName: category.arName,
       }}
     >
-      <FormItem name="categoryId" label="Main Category">
-        <Select
-          allowClear
-          placeholder="Select main category"
-          options={categories.map(category => ({
-            label: `${category.enName} - ${category.arName}`,
-            value: category.id,
-          }))}
-          showSearch
-          filterOption={(input, option) =>
-            !option?.label.toLowerCase().indexOf(input.toLowerCase())
-          }
-        />
-      </FormItem>
-
       <Flex gap={10}>
         <FormItem
           required

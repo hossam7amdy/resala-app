@@ -1,7 +1,7 @@
 'use client';
 
 import { createColor, updateColor } from '@/actions/color';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { type GetColorResponse, validationPatterns } from '@resala/shared';
 import { Button, ColorPicker, Flex, Form, Input } from 'antd';
 import { ColorFactory } from 'antd/es/color-picker/color';
@@ -10,7 +10,7 @@ import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import ErrorMessage from '../ui/error-message';
+import ErrorMessage from '../../component/error-message';
 
 interface FormValues {
   enName: string;

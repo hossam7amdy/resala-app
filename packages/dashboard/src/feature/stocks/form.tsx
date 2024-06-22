@@ -1,14 +1,14 @@
 'use client';
 
 import { createStock, updateStock } from '@/actions/stock';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { Button, Flex, Form, InputNumber } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import ErrorMessage from '../ui/error-message';
+import ErrorMessage from '../../component/error-message';
 
 interface EditFormProps {
   stock: Partial<{

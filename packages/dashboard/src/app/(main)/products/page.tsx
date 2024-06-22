@@ -1,5 +1,5 @@
-import { ProductTable } from '@/components/products/product-table';
-import { Search } from '@/components/ui/search';
+import { Search } from '@/component/search';
+import { ProductTable } from '@/feature/products/product-table';
 import ROUTES from '@/lib/routes';
 import type { DefaultRequestQuery } from '@resala/shared';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';

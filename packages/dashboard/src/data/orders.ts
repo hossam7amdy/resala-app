@@ -21,11 +21,11 @@ export const findOrderById = async (id: string | number) => {
   return response.data;
 };
 
-export const getOrdersList = async (query: { page: number; limit: number; query: string }) => {
+export const listOrders = async (query: { page: number; limit: number; query: string }) => {
   noStore();
 
   const response = await callEndpoint<AdminGetOrdersListRequest, AdminGetOrdersListResponse>(
-    ENDPOINT_CONFIGS.adminGetOrdersList,
+    ENDPOINT_CONFIGS.adminListOrders,
     { query }
   );
 

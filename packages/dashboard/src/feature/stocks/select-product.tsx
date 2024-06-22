@@ -1,6 +1,6 @@
 'use client';
 
-import { DebounceSelect } from '@/components/ui/debounce-select';
+import { DebounceSelect } from '@/component/debounce-select';
 import { listProductsPaginated } from '@/data/product';
 import FormItem from 'antd/es/form/FormItem';
 

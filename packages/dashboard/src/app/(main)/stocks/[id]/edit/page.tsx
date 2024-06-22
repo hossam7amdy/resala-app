@@ -1,10 +1,10 @@
-import EditForm from '@/components/stocks/form';
-import FormSkeleton from '@/components/stocks/form-skeleton';
-import SelectColor from '@/components/stocks/select-color';
-import SelectProduct from '@/components/stocks/select-product';
-import SelectSize from '@/components/stocks/select-size';
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/component/back-button';
 import { findStockById } from '@/data/stocks';
+import EditForm from '@/feature/stocks/form';
+import FormSkeleton from '@/feature/stocks/form-skeleton';
+import SelectColor from '@/feature/stocks/select-color';
+import SelectProduct from '@/feature/stocks/select-product';
+import SelectSize from '@/feature/stocks/select-size';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';

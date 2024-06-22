@@ -2,15 +2,15 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
-import {
-  type CreateCategoryRequest,
-  type CreateCategoryResponse,
-  type DeleteCategoryRequest,
-  type DeleteCategoryResponse,
-  ENDPOINT_CONFIGS,
-  type UpdateCategoryRequest,
-  type UpdateCategoryResponse,
+import type {
+  CreateCategoryRequest,
+  CreateCategoryResponse,
+  DeleteCategoryRequest,
+  DeleteCategoryResponse,
+  UpdateCategoryRequest,
+  UpdateCategoryResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
