@@ -8,10 +8,13 @@
 
 .main-img {
   padding: 10px 120px;
+
 }
 
-.main-img > img {
+.main-img>img {
   margin-bottom: 24px;
+  width: 265.33px;
+  height: 450px;
 }
 
 .price {
@@ -33,13 +36,14 @@
   position: relative;
   /* width: 100%;
   height: 100%; */
-  width: 200px;
+  width: 132.7px;
+  height: 198.83px;
   padding: 0;
 }
 
-.img-content .w-100 {
-  height: 300px !important;
-}
+/* .img-content .w-100 {
+  height: 150px !important;
+} */
 
 /* NGXowl carowsel all cat*/
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
@@ -148,6 +152,7 @@
 
 .counter {
   padding: 5px 10px;
+  text-align: center;
 }
 
 .counter .min-counter-btn,
@@ -164,9 +169,7 @@
 .counter .counter-text {
   background-color: #fff;
   color: #016373;
-  text-align: center;
-  padding-left: 21%;
-  width: 50%;
+
 }
 
 .add-cart-btn button {
@@ -179,15 +182,22 @@
 }
 
 .add-cart-btn button:hover,
-.add-cart-btn button:active {
-  padding: 10px 0;
+.add-cart-btn button:active,
+.add-cart-btn button:disabled {
+
   color: #016373;
   font-weight: 500;
   background-color: #fff;
   border: 1px solid #ccc;
 }
 
-.btn-check:checked + .btn {
+.add-cart-btn button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+
+}
+
+.btn-check:checked+.btn {
   border: 0;
 }
 
