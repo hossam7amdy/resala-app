@@ -37,55 +37,56 @@ export default class ProductService {
     };
   }
 
-  async createProduct(product: CreateProductRequest['body'] & { file: Express.Multer.File }) {
-    await this.category.findCategoryById(product.categoryId);
+  async createProduct(payload: CreateProductRequest['body'] & { file: Express.Multer.File }) {
+    await this.category.findCategoryById(payload.categoryId);
 
-    const exist = await this.findProductByName(product.enName, product.arName);
+    const exist = await this.findProductByName(payload.enName, payload.arName);
     if (exist) {
       throw new ConflictError('Product already exists');
     }
 
-    const { key, url } = await this.fileService.uploadFile(product.file);
+    const { key, url } = await this.fileService.uploadFile(payload.file);
 
-    return await this.inventoryRepo.product.create({
-      categoryId: product.categoryId,
-      arName: product.arName,
-      enName: product.enName,
-      arDescription: product.arDescription,
-      enDescription: product.enDescription,
-      price: product.price,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    const product: Omit<Product, 'id'> = {
+      categoryId: payload.categoryId,
+      arName: payload.arName,
+      enName: payload.enName,
+      arDescription: payload.arDescription,
+      enDescription: payload.enDescription,
+      price: payload.price,
       imageKey: key,
       imageUrl: url,
-    });
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return await this.inventoryRepo.product.create(product);
   }
 
   async updateProduct(
     id: number,
-    data: UpdateProductRequest['body'] & { file?: Express.Multer.File }
+    payload: UpdateProductRequest['body'] & { file?: Express.Multer.File }
   ) {
     const oldProduct = await this.findProductById(id);
-    data.categoryId && (await this.category.findCategoryById(data.categoryId));
+    payload.categoryId && (await this.category.findCategoryById(payload.categoryId));
 
-    const exist = await this.findProductByName(data.enName, data.arName);
+    const exist = await this.findProductByName(payload.enName, payload.arName);
     if (exist && exist.id !== id) {
       throw new ConflictError('Product already exists');
     }
 
     let product: Partial<Product> = {
-      categoryId: data.categoryId || oldProduct.categoryId,
-      arName: data.arName || oldProduct.arName,
-      enName: data.enName || oldProduct.enName,
-      arDescription: data.arDescription || oldProduct.arDescription,
-      enDescription: data.enDescription || oldProduct.enDescription,
-      price: data.price || oldProduct.price,
+      categoryId: payload.categoryId || oldProduct.categoryId,
+      arName: payload.arName || oldProduct.arName,
+      enName: payload.enName || oldProduct.enName,
+      arDescription: payload.arDescription || oldProduct.arDescription,
+      enDescription: payload.enDescription || oldProduct.enDescription,
+      price: payload.price || oldProduct.price,
       updatedAt: new Date(),
     };
 
-    if (data.file) {
+    if (payload.file) {
       await this.fileService.deleteFile(oldProduct.imageKey);
-      const { key, url } = await this.fileService.uploadFile(data.file);
+      const { key, url } = await this.fileService.uploadFile(payload.file);
       product = { ...product, imageKey: key, imageUrl: url };
     }
 
@@ -93,8 +94,16 @@ export default class ProductService {
   }
 
   async deleteProduct(id: number) {
-    const product = await this.findProductById(id);
-    await this.fileService.deleteFile(product.imageKey);
+    const [product, stockImages] = await Promise.all([
+      this.findProductById(id),
+      this._getProductStockImages(id),
+    ]);
+
+    await Promise.all([
+      this.fileService.deleteFile(product.imageKey),
+      this.fileService.deleteFiles(stockImages.map(img => img.imageKey)),
+    ]);
+
     return await this.inventoryRepo.product.delete(id);
   }
 
@@ -103,5 +112,11 @@ export default class ProductService {
       (await this.inventoryRepo.product.findByName(enName)) ||
       (await this.inventoryRepo.product.findByName(arName))
     );
+  }
+
+  async _getProductStockImages(productId: number) {
+    const stocks = await this.inventoryRepo.stock.findByProduct(productId);
+    const stockImages = stocks.map(stock => stock.color.images);
+    return stockImages.flat();
   }
 }

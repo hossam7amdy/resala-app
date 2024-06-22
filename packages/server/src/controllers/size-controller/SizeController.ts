@@ -23,7 +23,7 @@ export default class SizeController {
     }
   };
 
-  getSizesList: GetSizesList = async (_, res, next) => {
+  listSizes: GetSizesList = async (_, res, next) => {
     try {
       const sizes = await this.inventoryService.size.listSizes();
 

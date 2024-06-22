@@ -1,5 +1,5 @@
 import { Decimal } from '@prisma/client/runtime/library';
-import type { Category, ProductImage, User } from '@resala/shared';
+import type { Category, Image, User } from '@resala/shared';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock, mockClear } from 'vitest-mock-extended';
 
@@ -21,7 +21,7 @@ const userMock: User = {
   lastLogin: new Date(),
 };
 
-const productMock: ProductImage = {
+const productMock: Image = {
   id: 1,
   categoryId: 10,
   arName: 'اسم المنتج',

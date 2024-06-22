@@ -1,6 +1,28 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { DefaultFilters, Stock } from '@resala/shared';
 
+const SELECT_STOCK_ATTRIBUTES = {
+  id: true,
+  quantity: true,
+  createdAt: true,
+  updatedAt: true,
+  product: true,
+  size: true,
+  color: {
+    include: {
+      images: {
+        select: {
+          id: true,
+          imageKey: true,
+          imageUrl: true,
+          isPrimary: true,
+          createdAt: true,
+        },
+      },
+    },
+  },
+};
+
 export default class StockRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -10,26 +32,7 @@ export default class StockRepository {
 
   async findById(id: number) {
     return await this.prisma.stock.findUnique({
-      select: {
-        id: true,
-        quantity: true,
-        createdAt: true,
-        updatedAt: true,
-        product: true,
-        size: true,
-        color: {
-          include: {
-            images: {
-              select: {
-                id: true,
-                imageKey: true,
-                imageUrl: true,
-                createdAt: true,
-              },
-            },
-          },
-        },
-      },
+      select: SELECT_STOCK_ATTRIBUTES,
       where: { id },
     });
   }
@@ -48,26 +51,7 @@ export default class StockRepository {
     const [total, stocks] = await this.prisma.$transaction([
       this.prisma.stock.count({ where: filters }),
       this.prisma.stock.findMany({
-        select: {
-          id: true,
-          quantity: true,
-          createdAt: true,
-          updatedAt: true,
-          product: true,
-          size: true,
-          color: {
-            include: {
-              images: {
-                select: {
-                  id: true,
-                  imageKey: true,
-                  imageUrl: true,
-                  createdAt: true,
-                },
-              },
-            },
-          },
-        },
+        select: SELECT_STOCK_ATTRIBUTES,
         where: filters,
         skip: (page - 1) * limit,
         take: limit,
@@ -88,26 +72,7 @@ export default class StockRepository {
 
   async findByProduct(productId: number) {
     return await this.prisma.stock.findMany({
-      select: {
-        id: true,
-        quantity: true,
-        createdAt: true,
-        updatedAt: true,
-        product: true,
-        size: true,
-        color: {
-          include: {
-            images: {
-              select: {
-                id: true,
-                imageKey: true,
-                imageUrl: true,
-                createdAt: true,
-              },
-            },
-          },
-        },
-      },
+      select: SELECT_STOCK_ATTRIBUTES,
       where: { productId },
       orderBy: { updatedAt: 'desc' },
     });

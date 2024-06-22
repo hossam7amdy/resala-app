@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
-import type { Category, DefaultFilters, Product, ProductImage } from '@resala/shared';
+import type { Category, DefaultFilters, Product } from '@resala/shared';
 
 export default class ProductRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -59,18 +59,6 @@ export default class ProductRepository {
     return await this.prisma.product.findFirst({
       include: { category: true },
       where: { OR: [{ arName: name }, { enName: name }] },
-    });
-  }
-
-  async addImages(images: Omit<ProductImage, 'id'>[]) {
-    return await this.prisma.productImage.createMany({
-      data: images,
-    });
-  }
-
-  async deleteImage(imageId: number) {
-    return await this.prisma.productImage.delete({
-      where: { id: imageId },
     });
   }
 }

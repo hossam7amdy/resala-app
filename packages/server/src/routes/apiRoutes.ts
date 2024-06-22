@@ -8,6 +8,7 @@ import {
   CreateCartSchema,
   CreateCategorySchema,
   CreateColorSchema,
+  CreateImageSchema,
   CreateOrderSchema,
   CreatePaymentSchema,
   CreateProductSchema,
@@ -20,20 +21,24 @@ import {
   DeleteCartSchema,
   DeleteCategorySchema,
   DeleteColorSchema,
+  DeleteImageSchema,
   DeleteProductSchema,
   DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
+  DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
   ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
+  GetProductSchema,
   GetReviewSchema,
   ListProductReviewsSchema,
   ListReviewsSchema,
   LoginSchema,
+  PatchImageSchema,
   RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
@@ -55,6 +60,7 @@ import {
   AuthController,
   CategoryCtrl,
   ColorController,
+  ImageController,
   OrderController,
   PaymentController,
   ProductController,
@@ -68,9 +74,8 @@ import {
   AuthMiddleware,
   errHandler,
   loggerMiddleware,
-  uploadMultiple,
-  uploadSingle,
-  validate,
+  uploadMiddleware,
+  validateMiddleware,
 } from '../middlewares/index.js';
 import {
   InventoryRepository,
@@ -127,7 +132,8 @@ export const createExpressRouter = (legRequests: boolean) => {
   const productCtrl = new ProductController(inventoryService);
   const colorCtrl = new ColorController(inventoryService);
   const sizeCtrl = new SizeController(inventoryService);
-  const stockCtrl = new StockController(inventoryService, fileService);
+  const stockCtrl = new StockController(inventoryService);
+  const imageCtrl = new ImageController(inventoryService);
   const shoppingCtrl = new ShoppingController(shoppingService);
   const paymentCtrl = new PaymentController(paymentService, orderService);
   const orderCtrl = new OrderController(orderService, paymentService, notificationService);
@@ -142,220 +148,254 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
     // auth endpoints
-    [Endpoints.login]: [validate(LoginSchema), authCtrl.login],
-    [Endpoints.register]: [validate(RegisterSchema), authCtrl.register],
-    [Endpoints.refresh]: [validate(RefreshTokenSchema), authCtrl.refresh],
-    [Endpoints.verifyEmail]: [validate(VerifyEmailSchema), authCtrl.verifyEmail],
-    [Endpoints.forgotPassword]: [validate(ForgotPasswordSchema), authCtrl.forgotPassword],
-    [Endpoints.resetPassword]: [validate(ResetPasswordSchema), authCtrl.resetPassword],
-    [Endpoints.changePassword]: [validate(ChangePasswordSchema), authCtrl.changePassword],
+    [Endpoints.login]: [validateMiddleware(LoginSchema), authCtrl.login],
+    [Endpoints.register]: [validateMiddleware(RegisterSchema), authCtrl.register],
+    [Endpoints.refresh]: [validateMiddleware(RefreshTokenSchema), authCtrl.refresh],
+    [Endpoints.verifyEmail]: [validateMiddleware(VerifyEmailSchema), authCtrl.verifyEmail],
+    [Endpoints.forgotPassword]: [validateMiddleware(ForgotPasswordSchema), authCtrl.forgotPassword],
+    [Endpoints.resetPassword]: [validateMiddleware(ResetPasswordSchema), authCtrl.resetPassword],
+    [Endpoints.changePassword]: [validateMiddleware(ChangePasswordSchema), authCtrl.changePassword],
     [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
 
     // user endpoints
     [Endpoints.getCurrentUser]: [userCtrl.getProfile],
-    [Endpoints.updateCurrentUser]: [validate(UpdateProfileSchema), userCtrl.updateProfile],
+    [Endpoints.updateCurrentUser]: [
+      validateMiddleware(UpdateProfileSchema),
+      userCtrl.updateProfile,
+    ],
 
     // admin user endpoints
     [Endpoints.adminGetUser]: [
-      validate(AdminGetUserSchema),
+      validateMiddleware(AdminGetUserSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       userCtrl.adminGetUser,
     ],
-    [Endpoints.adminGetUsersList]: [
-      validate(DefaultQuerySchema),
+    [Endpoints.adminListUsers]: [
+      validateMiddleware(DefaultQuerySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      userCtrl.adminGetUsersList,
+      userCtrl.adminListUsers,
     ],
     [Endpoints.adminUpdateUser]: [
-      validate(AdminUpdateUserSchema),
+      validateMiddleware(AdminUpdateUserSchema),
       authMiddleware.authorizeUser(['ADMIN']),
       userCtrl.adminUpdateUser,
     ],
     [Endpoints.adminDeleteUser]: [
-      validate(AdminDeleteUserSchema),
+      validateMiddleware(AdminDeleteUserSchema),
       authMiddleware.authorizeUser(['ADMIN']),
       userCtrl.adminDeleteUser,
     ],
 
     // user address endpoints
-    [Endpoints.createAddress]: [validate(CreateAddressSchema), userCtrl.createUserAddress],
-    [Endpoints.updateAddress]: [validate(UpdateAddressSchema), userCtrl.updateUserAddress],
-    [Endpoints.deleteAddress]: [validate(DeleteAddressSchema), userCtrl.deleteUserAddress],
-    [Endpoints.getAddressList]: [validate(DefaultQuerySchema), userCtrl.getUserAddressList],
+    [Endpoints.createAddress]: [
+      validateMiddleware(CreateAddressSchema),
+      userCtrl.createUserAddress,
+    ],
+    [Endpoints.updateAddress]: [
+      validateMiddleware(UpdateAddressSchema),
+      userCtrl.updateUserAddress,
+    ],
+    [Endpoints.deleteAddress]: [
+      validateMiddleware(DeleteAddressSchema),
+      userCtrl.deleteUserAddress,
+    ],
+    [Endpoints.listAddress]: [validateMiddleware(DefaultQuerySchema), userCtrl.getUserAddressList],
 
     // category endpoints
-    [Endpoints.getCategory]: [validate(GetCategorySchema), categoryCtrl.getCategory],
-    [Endpoints.listCategories]: [validate(DefaultQuerySchema), categoryCtrl.listCategories],
+    [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],
+    [Endpoints.listCategories]: [
+      validateMiddleware(DefaultQuerySchema),
+      categoryCtrl.listCategories,
+    ],
     [Endpoints.listCategoryProducts]: [
-      validate(GetCategorySchema),
+      validateMiddleware(GetCategorySchema),
       categoryCtrl.listCategoryProducts,
     ],
     [Endpoints.createCategory]: [
-      validate(CreateCategorySchema),
+      validateMiddleware(CreateCategorySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.createCategory,
     ],
     [Endpoints.updateCategory]: [
-      validate(UpdateCategorySchema),
+      validateMiddleware(UpdateCategorySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.updateCategory,
     ],
     [Endpoints.deleteCategory]: [
-      validate(DeleteCategorySchema),
+      validateMiddleware(DeleteCategorySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       categoryCtrl.deleteCategory,
     ],
 
     // product endpoints
-    [Endpoints.getProduct]: [validate(DeleteProductSchema), productCtrl.getProduct],
-    [Endpoints.getProductsList]: [validate(DefaultQuerySchema), productCtrl.getProductsList],
+    [Endpoints.getProduct]: [validateMiddleware(GetProductSchema), productCtrl.getProduct],
+    [Endpoints.listProducts]: [validateMiddleware(DefaultQuerySchema), productCtrl.listProducts],
+    [Endpoints.listProductStocks]: [
+      validateMiddleware(GetProductSchema),
+      productCtrl.listProductStocks,
+    ],
+
     [Endpoints.createProduct]: [
-      uploadSingle('image'),
-      validate(CreateProductSchema),
+      uploadMiddleware.single('image'),
+      validateMiddleware(CreateProductSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.createProduct,
     ],
     [Endpoints.updateProduct]: [
-      uploadSingle('image'),
-      validate(UpdateProductSchema),
+      uploadMiddleware.single('image'),
+      validateMiddleware(UpdateProductSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.updateProduct,
     ],
     [Endpoints.deleteProduct]: [
-      validate(DeleteProductSchema),
+      validateMiddleware(DeleteProductSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProduct,
     ],
-    [Endpoints.listProductImages]: [validate(DeleteProductSchema)],
-    [Endpoints.getProductStocks]: [validate(DeleteProductSchema), productCtrl.listProductStocks],
-    [Endpoints.addProductImages]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      uploadMultiple('images'),
-    ],
-    [Endpoints.deleteProductImage]: [authMiddleware.authorizeUser(['ADMIN', 'MODERATOR'])],
 
     // stock endpoints
-    [Endpoints.getStock]: [validate(DeleteStockSchema), stockCtrl.getStock],
-    [Endpoints.getStocksList]: [validate(DefaultQuerySchema), stockCtrl.getStocksList],
+    [Endpoints.getStock]: [validateMiddleware(DeleteStockSchema), stockCtrl.getStock],
+    [Endpoints.listStocks]: [validateMiddleware(DefaultQuerySchema), stockCtrl.listStocks],
     [Endpoints.addStock]: [
-      validate(CreateStockSchema),
+      validateMiddleware(CreateStockSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.createStock,
     ],
     [Endpoints.updateStock]: [
-      validate(UpdateStockSchema),
+      validateMiddleware(UpdateStockSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.updateStock,
     ],
     [Endpoints.deleteStock]: [
-      validate(DeleteStockSchema),
+      validateMiddleware(DeleteStockSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       stockCtrl.deleteStock,
     ],
 
     // color endpoints
-    [Endpoints.getColor]: [validate(DeleteColorSchema), colorCtrl.getColor],
-    [Endpoints.getColorsList]: [colorCtrl.getColorsList],
+    [Endpoints.getColor]: [validateMiddleware(DeleteColorSchema), colorCtrl.getColor],
+    [Endpoints.listColors]: [colorCtrl.listColors],
     [Endpoints.createColor]: [
-      validate(CreateColorSchema),
+      validateMiddleware(CreateColorSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.createColor,
     ],
     [Endpoints.updateColor]: [
-      validate(UpdateColorSchema),
+      validateMiddleware(UpdateColorSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.updateColor,
     ],
     [Endpoints.deleteColor]: [
-      validate(DeleteColorSchema),
+      validateMiddleware(DeleteColorSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       colorCtrl.deleteColor,
     ],
 
     // size endpoints
-    [Endpoints.getSize]: [validate(DeleteSizeSchema), sizeCtrl.getSize],
-    [Endpoints.getSizesList]: [sizeCtrl.getSizesList],
+    [Endpoints.getSize]: [validateMiddleware(DeleteSizeSchema), sizeCtrl.getSize],
+    [Endpoints.listSizes]: [sizeCtrl.listSizes],
     [Endpoints.createSize]: [
-      validate(CreateSizeSchema),
+      validateMiddleware(CreateSizeSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.createSize,
     ],
     [Endpoints.updateSize]: [
-      validate(UpdateSizeSchema),
+      validateMiddleware(UpdateSizeSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.updateSize,
     ],
     [Endpoints.deleteSize]: [
-      validate(DeleteSizeSchema),
+      validateMiddleware(DeleteSizeSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       sizeCtrl.deleteSize,
     ],
 
+    // image endpoints
+    [Endpoints.addImages]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      uploadMiddleware.array('images', 5),
+      validateMiddleware(CreateImageSchema),
+      imageCtrl.createImages,
+    ],
+    [Endpoints.updateImage]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      validateMiddleware(PatchImageSchema),
+      imageCtrl.updateImage,
+    ],
+    [Endpoints.deleteImage]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      validateMiddleware(DeleteImageSchema),
+      imageCtrl.deleteImage,
+    ],
+
     // shopping endpoints
-    [Endpoints.addItemToCart]: [validate(CreateCartSchema), shoppingCtrl.addItemToCart],
-    [Endpoints.removeItemFromCart]: [validate(DeleteCartSchema), shoppingCtrl.removeItemFromCart],
+    [Endpoints.addItemToCart]: [validateMiddleware(CreateCartSchema), shoppingCtrl.addItemToCart],
+    [Endpoints.removeItemFromCart]: [
+      validateMiddleware(DeleteCartSchema),
+      shoppingCtrl.removeItemFromCart,
+    ],
     [Endpoints.getUserCart]: [shoppingCtrl.getUserCart],
     [Endpoints.removeUserCart]: [shoppingCtrl.removeUserCart],
 
     [Endpoints.addProductToWishlist]: [
-      validate(CreateWishlistSchema),
+      validateMiddleware(CreateWishlistSchema),
       shoppingCtrl.addProductToWishlist,
     ],
     [Endpoints.removeProductFromWishlist]: [
-      validate(CreateWishlistSchema),
+      validateMiddleware(DeleteWishlistSchema),
       shoppingCtrl.removeProductFromWishlist,
     ],
     [Endpoints.getUserWishlist]: [shoppingCtrl.getUserWishlist],
     [Endpoints.removeUserWishlist]: [shoppingCtrl.removeUserWishlist],
 
     // order endpoints
-    [Endpoints.createOrder]: [validate(CreateOrderSchema), orderCtrl.createOrder],
-    [Endpoints.getOrder]: [validate(GetOrderSchema), orderCtrl.getOrder],
-    [Endpoints.getOrdersList]: [validate(DefaultQuerySchema), orderCtrl.getOrdersList],
-    [Endpoints.deleteOrder]: [validate(GetOrderSchema), orderCtrl.deleteOrder],
+    [Endpoints.createOrder]: [validateMiddleware(CreateOrderSchema), orderCtrl.createOrder],
+    [Endpoints.getOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.getOrder],
+    [Endpoints.listOrders]: [validateMiddleware(DefaultQuerySchema), orderCtrl.listOrders],
+    [Endpoints.deleteOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.deleteOrder],
     [Endpoints.adminGetOrder]: [
-      validate(GetOrderSchema),
+      validateMiddleware(GetOrderSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminGetOrder,
     ],
-    [Endpoints.adminGetOrdersList]: [
-      validate(DefaultQuerySchema),
+    [Endpoints.adminListOrders]: [
+      validateMiddleware(DefaultQuerySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminGetOrdersList,
+      orderCtrl.adminListOrders,
     ],
     [Endpoints.adminUpdateOrderStatus]: [
-      validate(UpdateOrderStatusSchema),
+      validateMiddleware(UpdateOrderStatusSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.updateOrderStatus,
     ],
     [Endpoints.adminDeleteOrder]: [
-      validate(GetOrderSchema),
+      validateMiddleware(GetOrderSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.adminDeleteOrder,
     ],
 
     // payment endpoints
-    [Endpoints.createPayment]: [validate(CreatePaymentSchema), paymentCtrl.createPayment],
+    [Endpoints.createPayment]: [validateMiddleware(CreatePaymentSchema), paymentCtrl.createPayment],
     [Endpoints.paymentResponse]: [paymentCtrl.paymentResponse],
     [Endpoints.getPayment]: [
-      validate(GetPaymentSchema),
+      validateMiddleware(GetPaymentSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPayment,
     ],
-    [Endpoints.getPaymentsList]: [
-      validate(DefaultQuerySchema),
+    [Endpoints.listPayments]: [
+      validateMiddleware(DefaultQuerySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPaymentList,
     ],
 
     // review endpoints
-    [Endpoints.createReview]: [validate(CreateReviewSchema), reviewCtrl.createReview],
-    [Endpoints.updateReview]: [validate(UpdateReviewSchema), reviewCtrl.updateReview],
-    [Endpoints.deleteReview]: [validate(DeleteReviewSchema), reviewCtrl.deleteReview],
-    [Endpoints.getReview]: [validate(GetReviewSchema), reviewCtrl.getReview],
-    [Endpoints.listReviews]: [validate(ListReviewsSchema), reviewCtrl.listReviews],
+    [Endpoints.createReview]: [validateMiddleware(CreateReviewSchema), reviewCtrl.createReview],
+    [Endpoints.updateReview]: [validateMiddleware(UpdateReviewSchema), reviewCtrl.updateReview],
+    [Endpoints.deleteReview]: [validateMiddleware(DeleteReviewSchema), reviewCtrl.deleteReview],
+    [Endpoints.getReview]: [validateMiddleware(GetReviewSchema), reviewCtrl.getReview],
+    [Endpoints.listReviews]: [validateMiddleware(ListReviewsSchema), reviewCtrl.listReviews],
     [Endpoints.listProductReviews]: [
-      validate(ListProductReviewsSchema),
+      validateMiddleware(ListProductReviewsSchema),
       reviewCtrl.listProductReviews,
     ],
   };

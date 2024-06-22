@@ -43,7 +43,7 @@ export type DeleteSize = ExpressHandlerWithParams<
 
 export default interface ISizeController {
   getSize: GetSize;
-  getSizesList: GetSizesList;
+  listSizes: GetSizesList;
   createSize: CreateSize;
   updateSize: UpdateSize;
   deleteSize: DeleteSize;

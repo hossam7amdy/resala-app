@@ -240,7 +240,7 @@ describe('inventoryService - [ Product ]', () => {
     });
   });
 
-  describe('addProductImages', () => {
+  describe('addImages', () => {
     it('should add product images', async () => {
       const urls = [
         { url: 'url1', key: 'key1' },
@@ -249,7 +249,7 @@ describe('inventoryService - [ Product ]', () => {
       prismaMock.product.findUnique.mockResolvedValue(PRODUCT_OUTPUT as any);
       prismaMock.productImage.createMany.mockResolvedValue(urls as any);
 
-      const product = await inventoryService.addProductImages(4, urls);
+      const product = await inventoryService.addImages(4, urls);
 
       expect(product).toEqual(PRODUCT_OUTPUT);
       expect(prismaMock.product.findUnique).toHaveBeenCalledTimes(1);
@@ -260,7 +260,7 @@ describe('inventoryService - [ Product ]', () => {
       prismaMock.product.createMany.mockRejectedValue(new NotFoundError('Product not found'));
 
       try {
-        await inventoryService.addProductImages(4, [
+        await inventoryService.addImages(4, [
           { url: 'url1', key: 'key1' },
           { url: 'url2', key: 'key2' },
         ]);
@@ -272,11 +272,11 @@ describe('inventoryService - [ Product ]', () => {
     });
   });
 
-  describe('deleteProductImage', () => {
+  describe('deleteImage', () => {
     it('should delete product image', async () => {
       prismaMock.productImage.delete.mockResolvedValue(PRODUCT_OUTPUT.images[0]);
 
-      const image = await inventoryService.deleteProductImage(1, 4);
+      const image = await inventoryService.deleteImage(1, 4);
 
       expect(image).toEqual(undefined);
       expect(prismaMock.productImage.delete).toHaveBeenCalledTimes(1);
@@ -286,7 +286,7 @@ describe('inventoryService - [ Product ]', () => {
       prismaMock.productImage.delete.mockRejectedValue(new NotFoundError());
 
       try {
-        await inventoryService.deleteProductImage(1, 3);
+        await inventoryService.deleteImage(1, 3);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundError);
         expect(prismaMock.productImage.delete).toHaveBeenCalledTimes(1);

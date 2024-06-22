@@ -43,7 +43,7 @@ export type DeleteColor = ExpressHandlerWithParams<
 
 export default interface IColorController {
   getColor: GetColor;
-  getColorsList: GetColorsList;
+  listColors: GetColorsList;
   createColor: CreateColor;
   updateColor: UpdateColor;
   deleteColor: DeleteColor;

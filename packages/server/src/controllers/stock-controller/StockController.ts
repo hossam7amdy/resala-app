@@ -1,4 +1,4 @@
-import type { FileService, InventoryService } from '../../services/index.js';
+import type { InventoryService } from '../../services/index.js';
 import type {
   CreateStock,
   DeleteStock,
@@ -8,12 +8,7 @@ import type {
 } from './IStockController.js';
 
 export default class StockController {
-  constructor(
-    private readonly inventoryService: InventoryService,
-    private readonly fileService: FileService
-  ) {
-    console.log(this.fileService.uploadFile);
-  }
+  constructor(private readonly inventoryService: InventoryService) {}
 
   getStock: GetStock = async (req, res, next) => {
     try {
@@ -25,7 +20,7 @@ export default class StockController {
     }
   };
 
-  getStocksList: GetStocksList = async (req, res, next) => {
+  listStocks: GetStocksList = async (req, res, next) => {
     try {
       const { stocks, pagination } = await this.inventoryService.stock.list(req.query);
 
