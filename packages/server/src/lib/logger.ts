@@ -12,6 +12,9 @@ const logger = createLogger({
   format: combine(timestamp(), json(), errors({ stack: true })),
 
   transports: [
+    new transports.Console({
+      format: combine(logFormat, colorize({ all: true })),
+    }),
     new DailyRotateFile({
       filename: 'logs/combined-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
@@ -32,13 +35,5 @@ const logger = createLogger({
   exceptionHandlers: [new transports.File({ filename: 'logs/exceptions.log' })],
   rejectionHandlers: [new transports.File({ filename: 'logs/rejections.log' })],
 });
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new transports.Console({
-      format: combine(logFormat, colorize({ all: true })),
-    })
-  );
-}
 
 export { logger };
