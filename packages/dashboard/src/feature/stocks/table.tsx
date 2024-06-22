@@ -8,10 +8,10 @@ import { Button, Flex, Space, Table } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
-import DeleteButton from '../ui/delete-button';
-import Pagination from '../ui/pagination';
-import StockColor from '../ui/stock-color';
-import StockQuantity from '../ui/stock-quantity';
+import DeleteButton from '../../component/delete-button';
+import Pagination from '../../component/pagination';
+import StockColor from '../../component/stock-color';
+import StockQuantity from '../../component/stock-quantity';
 
 interface StocksTableProps {
   searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;

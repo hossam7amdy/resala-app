@@ -1,7 +1,7 @@
 'use client';
 
 import { updateOrderStatus } from '@/actions/order';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
 import type { GetOrderResponse } from '@resala/shared';
 import { Button, Flex, Form, Select, Tag } from 'antd';

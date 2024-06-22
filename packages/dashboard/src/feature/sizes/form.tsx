@@ -1,14 +1,14 @@
 'use client';
 
 import { createSize, updateSize } from '@/actions/size';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { type GetSizeResponse, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 
-import ErrorMessage from '../ui/error-message';
+import ErrorMessage from '../../component/error-message';
 
 interface SizeFormProps {
   size?: GetSizeResponse['data'];

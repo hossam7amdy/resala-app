@@ -26,7 +26,7 @@ export const listUsersPaginated = async (searchParams: {
   noStore();
 
   const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
-    ENDPOINT_CONFIGS.adminGetUsersList,
+    ENDPOINT_CONFIGS.adminListUsers,
     {
       query: {
         page: Number(searchParams.page),

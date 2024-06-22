@@ -1,14 +1,35 @@
 'use client';
 
 import { addProduct, updateProduct } from '@/actions/product';
-import useSubmitForm from '@/hooks/use-submit-form';
+import useSubmitForm from '@/hooks/useSubmitForm';
+import { InboxOutlined } from '@ant-design/icons';
 import { type Category, type Product, validationPatterns } from '@resala/shared';
-import { Form as AntForm, Button, Flex, Input, InputNumber, Select } from 'antd';
+import {
+  Form as AntForm,
+  Button,
+  Flex,
+  Input,
+  InputNumber,
+  Select,
+  Upload,
+  type UploadFile,
+} from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import TextArea from 'antd/es/input/TextArea';
 import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+
+type FormValues = {
+  categoryId: string;
+  enName: string;
+  arName: string;
+  enDescription: string;
+  arDescription: string;
+  price: number;
+  image: UploadFile[];
+};
 
 const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product, categories }) => {
   const router = useRouter();
@@ -17,7 +38,23 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
   const isEdit = !!product;
   const submit = isEdit ? updateProduct.bind(null, product.id) : addProduct;
 
-  const { error, pending, dispatch } = useSubmitForm(submit, form);
+  const handleFinish = useCallback(
+    (values: FormValues) => {
+      const { image, ...rest } = values;
+
+      const formData = new FormData();
+      image[0]?.originFileObj && formData.append('image', image[0].originFileObj);
+
+      Object.entries(rest).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+
+      return submit(formData);
+    },
+    [submit]
+  );
+
+  const { error, pending, dispatch } = useSubmitForm(handleFinish, form);
 
   return (
     <AntForm
@@ -26,7 +63,12 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
       layout="vertical"
       onFinish={dispatch}
       size="large"
-      initialValues={{ ...product }}
+      initialValues={{
+        ...product,
+        image: product?.imageUrl
+          ? [{ uid: product.id, name: product.enName, url: product.imageUrl, status: 'done' }]
+          : [],
+      }}
     >
       <FormItem name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select
@@ -108,6 +150,39 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
         </FormItem>
         <div style={{ flex: 1 }}></div>
       </Flex>
+
+      <FormItem
+        required
+        name="image"
+        valuePropName="fileList"
+        rules={[{ required: true }]}
+        label="Product Image"
+        getValueFromEvent={args => {
+          if (Array.isArray(args)) {
+            return args;
+          }
+
+          return args?.fileList;
+        }}
+      >
+        <Upload.Dragger
+          maxCount={1}
+          name="images"
+          accept="image/*"
+          listType="picture"
+          onPreview={() => null}
+          beforeUpload={() => false}
+          showUploadList={{
+            showRemoveIcon: true,
+            showPreviewIcon: false,
+          }}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Click or drag file to this area to upload</p>
+        </Upload.Dragger>
+      </FormItem>
 
       {error?.message && <Text type="danger">{error.message}</Text>}
 

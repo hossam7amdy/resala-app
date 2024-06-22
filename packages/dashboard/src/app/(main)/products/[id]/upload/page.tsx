@@ -1,9 +1,14 @@
-import UploadForm from '@/components/products/upload-form';
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/component/back-button';
+import { listProductStocks } from '@/data/product';
+import UploadForm from '@/feature/products/upload-form';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
+import React from 'react';
 
-const UploadImagesPage = ({ params }: { params: { id: string } }) => {
+const UploadImagesPage: React.FC<{ params: { id: string } }> = async ({ params }) => {
+  const stocks = await listProductStocks(params.id);
+  const colors = stocks.map(stock => stock.color);
+
   return (
     <Row gutter={[10, 20]} style={{ padding: 20 }}>
       <Col span={24}>
@@ -17,7 +22,7 @@ const UploadImagesPage = ({ params }: { params: { id: string } }) => {
       </Col>
       <Col span={24}>
         <Card>
-          <UploadForm id={params.id} />
+          <UploadForm id={params.id} colors={colors} />
         </Card>
       </Col>
     </Row>

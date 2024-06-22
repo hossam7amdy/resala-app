@@ -6,7 +6,7 @@ import type { GetSizesListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from '../ui/delete-button';
+import DeleteButton from '../../component/delete-button';
 
 const Table = ({ sizes }: { sizes: GetSizesListResponse['data'] }) => {
   return (

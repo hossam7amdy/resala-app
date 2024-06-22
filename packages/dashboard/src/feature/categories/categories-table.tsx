@@ -7,8 +7,7 @@ import { type GetCategoryResponse } from '@resala/shared';
 import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from '../ui/delete-button';
-import DisableButton from './disable-button';
+import DeleteButton from '../../component/delete-button';
 
 export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();
@@ -17,13 +16,6 @@ export const CategoryTable = async ({ query }: { query: string }) => {
     // filter category and sub category by query
     if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
     if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
-
-    return category.subCategories.some(subCategory => {
-      if (subCategory.enName.toLowerCase().includes(query.toLowerCase())) return true;
-      if (subCategory.arName.toLowerCase().includes(query.toLowerCase())) return true;
-
-      return false;
-    });
   });
 
   return (
@@ -33,17 +25,10 @@ export const CategoryTable = async ({ query }: { query: string }) => {
       columns={[
         { title: 'English', dataIndex: 'enName' },
         { title: 'Arabic', dataIndex: 'arName' },
-        { title: '# of Sub-Categories', dataIndex: 'subCategories' },
-        { title: 'Is Active', dataIndex: 'deletedAt' },
         { title: 'Create Date', dataIndex: 'createdAt' },
         { title: 'Action', dataIndex: 'action' },
       ]}
-      dataSource={filteredCategories.map(category => ({
-        ...renderRow(category),
-        children: category.subCategories.map(subCategory =>
-          renderRow({ ...subCategory, mainCategory: null, subCategories: [] })
-        ),
-      }))}
+      dataSource={filteredCategories.map(renderRow)}
     />
   );
 };
@@ -53,8 +38,6 @@ const renderRow = (category: GetCategoryResponse['data']) => {
     key: category.id,
     enName: category.enName,
     arName: category.arName,
-    subCategories: category.subCategories.length || null,
-    deletedAt: <DisableButton category={category} />,
     createdAt: formatDate(new Date(category.createdAt)),
     action: (
       <Flex>

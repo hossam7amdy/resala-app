@@ -1,8 +1,8 @@
 'use server';
 
 import { deleteProduct } from '@/actions/product';
-import { DeleteButton } from '@/components/ui/delete-button';
-import Pagination from '@/components/ui/pagination';
+import { DeleteButton } from '@/component/delete-button';
+import Pagination from '@/component/pagination';
 import { listProductsPaginated } from '@/data/product';
 import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
@@ -10,8 +10,6 @@ import { EditFilled, EyeFilled, UploadOutlined } from '@ant-design/icons';
 import { type DefaultRequestQuery } from '@resala/shared';
 import { Button, Flex, Space, Table } from 'antd';
 import Link from 'next/link';
-
-import DisableButton from './disable-button';
 
 interface ProductTableProps {
   searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
@@ -29,7 +27,6 @@ export const ProductTable = async ({ searchParams }: ProductTableProps) => {
           { title: 'Arabic', dataIndex: 'arName' },
           { title: 'Category', dataIndex: 'category' },
           { title: 'Price', dataIndex: 'price' },
-          { title: 'Is Active', dataIndex: 'deletedAt' },
           { title: 'Create Date', dataIndex: 'createdAt' },
           { title: 'Actions', dataIndex: 'actions', align: 'center' },
         ]}
@@ -39,7 +36,6 @@ export const ProductTable = async ({ searchParams }: ProductTableProps) => {
           arName: product.arName,
           category: product.category.arName,
           price: formatCurrency(product.price),
-          deletedAt: <DisableButton product={product} />,
           createdAt: formatDate(product.createdAt),
           actions: (
             <Space size="small">

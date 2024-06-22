@@ -1,5 +1,5 @@
-import { CategoryTable } from '@/components/categories/categories-table';
-import { Search } from '@/components/ui/search';
+import { Search } from '@/component/search';
+import { CategoryTable } from '@/feature/categories/categories-table';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';

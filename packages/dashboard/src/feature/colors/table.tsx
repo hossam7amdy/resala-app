@@ -6,8 +6,8 @@ import type { GetColorsListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from '../ui/delete-button';
-import StockColor from '../ui/stock-color';
+import DeleteButton from '../../component/delete-button';
+import StockColor from '../../component/stock-color';
 
 const Table = ({ colors }: { colors: GetColorsListResponse['data'] }) => {
   return (

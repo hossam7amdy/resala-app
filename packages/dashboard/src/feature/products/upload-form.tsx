@@ -1,23 +1,29 @@
 'use client';
 
-import { uploadProductImages } from '@/actions/product';
-import useSubmitForm from '@/hooks/use-submit-form';
+import { uploadProductImages } from '@/actions/image';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { InboxOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, type UploadFile } from 'antd';
+import type { Color } from '@resala/shared';
+import { Button, Flex, Form, Input, Select, type UploadFile } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import Text from 'antd/es/typography/Text';
 import Dragger from 'antd/es/upload/Dragger';
 import { useRouter } from 'next/navigation';
 
-const UploadForm = ({ id }: { id: string }) => {
+interface UploadFormProps {
+  id: string;
+  colors: Color[];
+}
+const UploadForm: React.FC<UploadFormProps> = ({ id, colors }) => {
   const [form] = useForm();
   const router = useRouter();
   const { pending, error, dispatch } = useSubmitForm(uploadProductImages, form);
 
-  const handleFinish = (values: { productId: string; images: UploadFile[] }) => {
+  const handleFinish = (values: { productId: string; colorId: string; images: UploadFile[] }) => {
     const formData = new FormData();
 
+    formData.append('colorId', values.colorId);
     formData.append('productId', values.productId);
     values.images.forEach(image => {
       formData.append('images', image.originFileObj!);
@@ -31,6 +37,19 @@ const UploadForm = ({ id }: { id: string }) => {
       <FormItem rules={[{ required: true }]} name="productId" initialValue={id} noStyle>
         <Input type="hidden" value={id} />
       </FormItem>
+
+      <FormItem rules={[{ required: true }]} name="colorId" label="Color">
+        <Select
+          showSearch
+          allowClear
+          placeholder="Select Color"
+          options={colors.map(({ id, enName }) => ({ label: enName, value: id }))}
+          filterOption={(input, option) =>
+            !option?.label.toLowerCase().indexOf(input.toLowerCase())
+          }
+        />
+      </FormItem>
+
       <Form.Item label="Upload Product Images" noStyle>
         <FormItem
           required
