@@ -679,23 +679,6 @@ export declare const DeleteProductSchema: z.ZodObject<{
         productId: number;
     };
 }>;
-export declare const GetProductImages: z.ZodObject<{
-    params: z.ZodObject<{
-        productId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        productId: number;
-    }, {
-        productId: number;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    params: {
-        productId: number;
-    };
-}, {
-    params: {
-        productId: number;
-    };
-}>;
 export declare const CreateStockSchema: z.ZodObject<{
     body: z.ZodObject<{
         productId: z.ZodNumber;
@@ -936,6 +919,75 @@ export declare const DeleteSizeSchema: z.ZodObject<{
 }, {
     params: {
         sizeId: number;
+    };
+}>;
+export declare const CreateImageSchema: z.ZodObject<{
+    body: z.ZodObject<{
+        productId: z.ZodNumber;
+        colorId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        productId: number;
+        colorId: number;
+    }, {
+        productId: number;
+        colorId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    body: {
+        productId: number;
+        colorId: number;
+    };
+}, {
+    body: {
+        productId: number;
+        colorId: number;
+    };
+}>;
+export declare const PatchImageSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        imageId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        imageId: number;
+    }, {
+        imageId: number;
+    }>;
+    body: z.ZodObject<{
+        isPrimary: z.ZodOptional<z.ZodBoolean>;
+    }, "strip", z.ZodTypeAny, {
+        isPrimary?: boolean | undefined;
+    }, {
+        isPrimary?: boolean | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        imageId: number;
+    };
+    body: {
+        isPrimary?: boolean | undefined;
+    };
+}, {
+    params: {
+        imageId: number;
+    };
+    body: {
+        isPrimary?: boolean | undefined;
+    };
+}>;
+export declare const DeleteImageSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        imageId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        imageId: number;
+    }, {
+        imageId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        imageId: number;
+    };
+}, {
+    params: {
+        imageId: number;
     };
 }>;
 export declare const CreateCartSchema: z.ZodObject<{

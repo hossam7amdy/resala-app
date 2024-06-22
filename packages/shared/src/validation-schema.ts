@@ -211,12 +211,6 @@ export const DeleteProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
 
-export const GetProductImages = z.object({
-  params: z.object({
-    productId: z.coerce.number().positive(),
-  }),
-});
-
 // Stock Schemas
 export const CreateStockSchema = z.object({
   body: z.object({
@@ -276,6 +270,29 @@ export const UpdateSizeSchema = z.object({
 
 export const DeleteSizeSchema = z.object({
   params: UpdateSizeSchema.shape.params,
+});
+
+// Image Schemas
+export const CreateImageSchema = z.object({
+  body: z.object({
+    productId: z.coerce.number().positive(),
+    colorId: z.coerce.number().positive(),
+  }),
+});
+
+export const PatchImageSchema = z.object({
+  params: z.object({
+    imageId: z.coerce.number().positive(),
+  }),
+  body: z.object({
+    isPrimary: z.coerce.boolean().optional(),
+  }),
+});
+
+export const DeleteImageSchema = z.object({
+  params: z.object({
+    imageId: z.coerce.number().positive(),
+  }),
 });
 
 // Cart Schemas
