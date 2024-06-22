@@ -72,7 +72,7 @@ describe('TEST /users endpoint', () => {
   });
 
   it('it should get users list', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUsersList;
+    const { method, url } = ENDPOINT_CONFIGS.adminListUsers;
 
     await client[method](url)
       .set(await getAuthToken())
@@ -138,7 +138,7 @@ describe('TEST /users endpoint', () => {
   };
 
   const getLastUser = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUsersList;
+    const { method, url } = ENDPOINT_CONFIGS.adminListUsers;
 
     const res = await client[method](url).set(await getAuthToken());
 

@@ -24,6 +24,7 @@ export default class ShoppingService {
           id: img.id,
           imageKey: img.imageKey,
           imageUrl: img.imageUrl,
+          isPrimary: img.isPrimary,
           createdAt: img.createdAt,
         })),
         stock: {

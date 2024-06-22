@@ -41,7 +41,7 @@ export default class PaymentController implements IPaymentController {
     try {
       const { limit, page } = req.query;
 
-      const { payments, pagination } = await this.paymentService.getPaymentsList({ page, limit });
+      const { payments, pagination } = await this.paymentService.listPayments({ page, limit });
 
       return res.json({
         success: true,

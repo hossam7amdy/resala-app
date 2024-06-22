@@ -52,7 +52,7 @@ export type ListProductStocks = ExpressHandlerWithParams<
 
 export default interface IProductController {
   getProduct: GetProduct;
-  getProductsList: GetProductsList;
+  listProducts: GetProductsList;
   createProduct: CreateProduct;
   updateProduct: UpdateProduct;
   deleteProduct: DeleteProduct;

@@ -9,3 +9,4 @@ export { default as ColorController } from './color-controller/ColorController.j
 export { default as StockController } from './stock-controller/StockController.js';
 export { default as ShoppingController } from './shopping-controller/ShoppingController.js';
 export { default as PaymentController } from './payment-controller/PaymentController.js';
+export { default as ImageController } from './image-controller/ImageController.js';

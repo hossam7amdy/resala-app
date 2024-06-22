@@ -111,13 +111,13 @@ describe('Payment Service', () => {
     });
   });
 
-  describe('getPaymentsList', () => {
+  describe('listPayments', () => {
     it('should get a list of payments', async () => {
       const filters = { page: 1, limit: 10, query: '' };
 
       prismaMock.$transaction.mockResolvedValue([1, [MOCK_PAYMENT]]);
 
-      const result = await paymentService.getPaymentsList(filters);
+      const result = await paymentService.listPayments(filters);
 
       expect(result).toEqual({ total: 1, payments: [MOCK_PAYMENT] });
       expect(prismaMock.payment.count).toHaveBeenCalledTimes(1);

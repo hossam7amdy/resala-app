@@ -57,7 +57,7 @@ export default class OrderController implements IOrderController {
     }
   };
 
-  getOrdersList: GetOrdersList = async (req, res, next) => {
+  listOrders: GetOrdersList = async (req, res, next) => {
     try {
       const user = res.locals.user;
       const { page, limit } = req.query;
@@ -113,7 +113,7 @@ export default class OrderController implements IOrderController {
     }
   };
 
-  adminGetOrdersList: GetOrdersList = async (req, res, next) => {
+  adminListOrders: GetOrdersList = async (req, res, next) => {
     try {
       const { page, limit, query } = req.query;
 

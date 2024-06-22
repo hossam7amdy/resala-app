@@ -57,7 +57,7 @@ export default class UserController implements IUserController {
     }
   };
 
-  adminGetUsersList: AdminGetUsersList = async (req, res, next) => {
+  adminListUsers: AdminGetUsersList = async (req, res, next) => {
     try {
       const { users, pagination } = await this.userService.listUsersPaginated(req.query);
 

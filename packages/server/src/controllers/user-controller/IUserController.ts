@@ -101,7 +101,7 @@ export default interface IUserController {
   updateProfile: UpdateProfile;
   adminGetUser: AdminGetUser;
   adminUpdateUser: AdminUpdateUser;
-  adminGetUsersList: AdminGetUsersList;
+  adminListUsers: AdminGetUsersList;
   adminDeleteUser: AdminDeleteUser;
   createUserAddress: CreateUserAddress;
   updateUserAddress: UpdateUserAddress;

@@ -9,6 +9,7 @@ import type {
 
 import type { InventoryRepository } from '../../repositories/index.js';
 import { NotFoundError } from '../../utils/ApiErrors.js';
+import type { PromiseReturnType } from '../../utils/PromiseReturnType.js';
 import type ColorService from './ColorService.js';
 import type ProductService from './ProductService.js';
 import type SizeService from './SizeService.js';
@@ -28,7 +29,7 @@ export default class StockService {
       throw new NotFoundError('Stock not found');
     }
 
-    return stock;
+    return this._formatStock(stock);
   }
 
   async list(filters: DefaultFilters): Promise<GetStocksListResponse['data']> {
@@ -36,14 +37,16 @@ export default class StockService {
 
     return {
       pagination: { page: filters.page, limit: filters.limit, total },
-      stocks,
+      stocks: stocks.map(this._formatStock),
     };
   }
 
   async getByProduct(productId: number): Promise<GetProductStocksResponse['data']> {
     await this.product.findProductById(productId);
 
-    return await this.inventoryRepo.stock.findByProduct(productId);
+    const stocks = await this.inventoryRepo.stock.findByProduct(productId);
+
+    return stocks.map(this._formatStock);
   }
 
   async create(stock: CreateStockRequest['body']) {
@@ -83,5 +86,15 @@ export default class StockService {
   async delete(stockId: number) {
     await this.findById(stockId);
     return await this.inventoryRepo.stock.delete(stockId);
+  }
+  _formatStock(stock: PromiseReturnType<typeof this.inventoryRepo.stock.list>['stocks'][0]) {
+    const { color, ...stockData } = stock;
+    const { images, ...colorData } = color;
+
+    return {
+      ...stockData,
+      color: colorData,
+      images,
+    };
   }
 }

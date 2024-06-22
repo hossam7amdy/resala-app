@@ -54,7 +54,7 @@ export type DeleteOrder = ExpressHandlerWithParams<
 export default interface IOrderController {
   createOrder: CreateOrder;
   getOrder: GetOrder;
-  getOrdersList: GetOrdersList;
+  listOrders: GetOrdersList;
   updateOrderStatus: UpdateOrderStatus;
   deleteOrder: DeleteOrder;
 }

@@ -130,7 +130,7 @@ export default class PaymentService {
     return payment;
   }
 
-  async getPaymentsList({
+  async listPayments({
     page,
     limit,
   }: Omit<DefaultFilters, 'query'>): Promise<GetPaymentsListResponse['data']> {

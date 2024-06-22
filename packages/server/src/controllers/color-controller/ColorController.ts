@@ -20,7 +20,7 @@ export default class ColorController {
     }
   };
 
-  getColorsList: GetColorsList = async (_, res, next) => {
+  listColors: GetColorsList = async (_, res, next) => {
     try {
       const colors = await this.inventoryService.color.getColors();
 

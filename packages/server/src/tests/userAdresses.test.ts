@@ -87,7 +87,7 @@ describe('TEST /users/self/addresses endpoint', () => {
   });
 
   it('should get user address list', async () => {
-    const res = await client.get(ENDPOINT_CONFIGS.getAddressList.url).set(await getAuthToken());
+    const res = await client.get(ENDPOINT_CONFIGS.listAddress.url).set(await getAuthToken());
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ success: true, data: expect.arrayContaining([addressAssertions]) });
@@ -144,7 +144,7 @@ describe('TEST /users/self/addresses endpoint', () => {
   };
 
   const getLastAddress = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.getAddressList;
+    const { method, url } = ENDPOINT_CONFIGS.listAddress;
 
     const res = await client[method](url).set(await getAuthToken());
 

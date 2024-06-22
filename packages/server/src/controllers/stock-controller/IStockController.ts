@@ -43,7 +43,7 @@ export type DeleteStock = ExpressHandlerWithParams<
 
 export default interface IStockController {
   getStock: GetStock;
-  getStocksList: GetStocksList;
+  listStocks: GetStocksList;
   createStock: CreateStock;
   updateStock: UpdateStock;
   deleteStock: DeleteStock;

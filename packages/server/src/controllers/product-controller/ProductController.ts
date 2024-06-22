@@ -22,7 +22,7 @@ export default class ProductController implements IProductController {
     }
   };
 
-  getProductsList: GetProductsList = async (req, res, next) => {
+  listProducts: GetProductsList = async (req, res, next) => {
     try {
       const { products, pagination } = await this.inventoryService.product.listProductsPaginated(
         req.query
