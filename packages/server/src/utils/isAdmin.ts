@@ -1,3 +1,4 @@
-import { Role } from '@resala/shared';
+import { Role, type User } from '@resala/shared';
 
-export const checkIsAdmin = (role: string) => [Role.ADMIN, Role.MODERATOR].includes(role as Role);
+export const checkIsAdmin = (user?: User) =>
+  [Role.ADMIN, Role.MODERATOR].includes(user?.role as Role);

@@ -211,7 +211,6 @@ const AdminUpdateUserSchema = zod.z.object({
     body: UpdateProfileSchema.shape.body.extend({
         role: UserSchema.shape.role,
         isVerified: UserSchema.shape.isVerified,
-        deletedAt: zod.z.date().optional(),
     }),
 });
 const AdminDeleteUserSchema = zod.z.object({
@@ -245,7 +244,6 @@ const DeleteAddressSchema = zod.z.object({
 // Category Schemas
 const CreateCategorySchema = zod.z.object({
     body: zod.z.object({
-        categoryId: zod.z.coerce.number().positive().optional(),
         arName: zod.z.string().min(2).max(100),
         enName: zod.z.string().min(2).max(100),
     }),
@@ -254,9 +252,7 @@ const UpdateCategorySchema = zod.z.object({
     params: zod.z.object({
         categoryId: zod.z.coerce.number().positive(),
     }),
-    body: CreateCategorySchema.shape.body.extend({
-        deletedAt: zod.z.coerce.date().optional(),
-    }),
+    body: CreateCategorySchema.shape.body,
 });
 const GetCategorySchema = zod.z.object({
     params: UpdateCategorySchema.shape.params,
@@ -267,7 +263,6 @@ const DeleteCategorySchema = zod.z.object({
 // Product Schemas
 const CreateProductSchema = zod.z.object({
     body: zod.z.object({
-        id: zod.z.coerce.number().positive().optional(),
         categoryId: zod.z.coerce.number().positive(),
         arName: zod.z.string().min(2).max(100),
         enName: zod.z.string().min(2).max(100),
@@ -280,28 +275,13 @@ const UpdateProductSchema = zod.z.object({
     params: zod.z.object({
         productId: zod.z.coerce.number().positive(),
     }),
-    body: CreateProductSchema.shape.body.extend({
-        deletedAt: zod.z.coerce.date().optional(),
-    }),
+    body: CreateProductSchema.shape.body,
+});
+const GetProductSchema = zod.z.object({
+    params: UpdateProductSchema.shape.params,
 });
 const DeleteProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
-});
-const GetProductImages = zod.z.object({
-    params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-    }),
-});
-const CreateProductImageSchema = zod.z.object({
-    body: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-    }),
-});
-const DeleteProductImageSchema = zod.z.object({
-    params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-        imageId: zod.z.coerce.number().positive(),
-    }),
 });
 // Stock Schemas
 const CreateStockSchema = zod.z.object({
@@ -354,6 +334,26 @@ const UpdateSizeSchema = zod.z.object({
 });
 const DeleteSizeSchema = zod.z.object({
     params: UpdateSizeSchema.shape.params,
+});
+// Image Schemas
+const CreateImageSchema = zod.z.object({
+    body: zod.z.object({
+        productId: zod.z.coerce.number().positive(),
+        colorId: zod.z.coerce.number().positive(),
+    }),
+});
+const PatchImageSchema = zod.z.object({
+    params: zod.z.object({
+        imageId: zod.z.coerce.number().positive(),
+    }),
+    body: zod.z.object({
+        isPrimary: zod.z.coerce.boolean().optional(),
+    }),
+});
+const DeleteImageSchema = zod.z.object({
+    params: zod.z.object({
+        imageId: zod.z.coerce.number().positive(),
+    }),
 });
 // Cart Schemas
 const CreateCartSchema = zod.z.object({
@@ -463,12 +463,12 @@ exports.Endpoints = void 0;
     Endpoints["getCurrentUser"] = "getCurrentUser";
     Endpoints["updateCurrentUser"] = "updateCurrentUser";
     Endpoints["adminGetUser"] = "adminGetUser";
-    Endpoints["adminGetUsersList"] = "adminGetUsersList";
+    Endpoints["adminListUsers"] = "adminListUsers";
     Endpoints["adminUpdateUser"] = "adminUpdateUser";
     Endpoints["adminDeleteUser"] = "adminDeleteUser";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
-    Endpoints["getAddressList"] = "getAddressList";
+    Endpoints["listAddress"] = "listAddress";
     Endpoints["updateAddress"] = "updateAddress";
     Endpoints["deleteAddress"] = "deleteAddress";
     // category endpoints
@@ -480,29 +480,30 @@ exports.Endpoints = void 0;
     Endpoints["deleteCategory"] = "deleteCategory";
     // product endpoints
     Endpoints["getProduct"] = "getProduct";
-    Endpoints["getProductsList"] = "getProductsList";
+    Endpoints["listProducts"] = "listProducts";
+    Endpoints["listProductStocks"] = "listProductStocks";
     Endpoints["createProduct"] = "createProduct";
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
-    Endpoints["addProductImages"] = "addProductImages";
-    Endpoints["getProductStocks"] = "getProductStocks";
-    Endpoints["listProductImages"] = "listProductImages";
-    Endpoints["deleteProductImage"] = "deleteProductImage";
+    // images endpoints
+    Endpoints["addImages"] = "addImages";
+    Endpoints["deleteImage"] = "deleteImage";
+    Endpoints["updateImage"] = "updateImage";
     // stock endpoints
     Endpoints["addStock"] = "addStock";
     Endpoints["getStock"] = "getStock";
-    Endpoints["getStocksList"] = "getStocksList";
+    Endpoints["listStocks"] = "listStocks";
     Endpoints["updateStock"] = "updateStock";
     Endpoints["deleteStock"] = "deleteStock";
     // color endpoints
     Endpoints["getColor"] = "getColor";
-    Endpoints["getColorsList"] = "getColorsList";
+    Endpoints["listColors"] = "listColors";
     Endpoints["createColor"] = "createColor";
     Endpoints["updateColor"] = "updateColor";
     Endpoints["deleteColor"] = "deleteColor";
     // size endpoints
     Endpoints["getSize"] = "getSize";
-    Endpoints["getSizesList"] = "getSizesList";
+    Endpoints["listSizes"] = "listSizes";
     Endpoints["createSize"] = "createSize";
     Endpoints["updateSize"] = "updateSize";
     Endpoints["deleteSize"] = "deleteSize";
@@ -518,18 +519,18 @@ exports.Endpoints = void 0;
     // order endpoints
     Endpoints["createOrder"] = "createOrder";
     Endpoints["getOrder"] = "getOrder";
-    Endpoints["getOrdersList"] = "getOrdersList";
+    Endpoints["listOrders"] = "listOrders";
     Endpoints["deleteOrder"] = "deleteOrder";
     Endpoints["adminGetOrder"] = "adminGetOrder";
-    Endpoints["adminGetOrdersList"] = "adminGetOrdersList";
+    Endpoints["adminListOrders"] = "adminListOrders";
     Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
     Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
     // payment endpoints
     Endpoints["createPayment"] = "createPayment";
     Endpoints["getPayment"] = "getPayment";
-    Endpoints["getPaymentsList"] = "getPaymentsList";
+    Endpoints["listPayments"] = "listPayments";
     Endpoints["paymentResponse"] = "paymentResponse";
-    // product reviews endpoints
+    // reviews endpoints
     Endpoints["getReview"] = "getReview";
     Endpoints["listReviews"] = "listReviews";
     Endpoints["createReview"] = "createReview";
@@ -594,6 +595,7 @@ const ENDPOINT_CONFIGS = {
     [exports.Endpoints.refresh]: {
         method: 'post',
         url: '/api/v1/auth/refresh',
+        sensitive: true,
     },
     [exports.Endpoints.forgotPassword]: {
         method: 'post',
@@ -642,7 +644,7 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/users/:userId',
         auth: true,
     },
-    [exports.Endpoints.adminGetUsersList]: {
+    [exports.Endpoints.adminListUsers]: {
         method: 'get',
         url: '/api/v1/users',
         auth: true,
@@ -658,7 +660,7 @@ const ENDPOINT_CONFIGS = {
         method: 'post',
         auth: true,
     },
-    [exports.Endpoints.getAddressList]: {
+    [exports.Endpoints.listAddress]: {
         url: '/api/v1/users/self/addresses',
         method: 'get',
         auth: true,
@@ -706,7 +708,11 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/products/:productId',
         method: 'get',
     },
-    [exports.Endpoints.getProductsList]: {
+    [exports.Endpoints.listProductStocks]: {
+        url: '/api/v1/products/:productId/stocks',
+        method: 'get',
+    },
+    [exports.Endpoints.listProducts]: {
         url: '/api/v1/products',
         method: 'get',
     },
@@ -726,23 +732,20 @@ const ENDPOINT_CONFIGS = {
         auth: true,
     },
     // product images endpoints
-    [exports.Endpoints.addProductImages]: {
-        url: '/api/v1/products/images',
+    [exports.Endpoints.addImages]: {
+        url: '/api/v1/images',
         method: 'post',
         auth: true,
     },
-    [exports.Endpoints.listProductImages]: {
-        url: '/api/v1/products/:productId/images',
-        method: 'get',
-    },
-    [exports.Endpoints.deleteProductImage]: {
-        url: '/api/v1/products/:productId/images/:imageId',
-        method: 'delete',
+    [exports.Endpoints.updateImage]: {
+        url: '/api/v1/images/:imageId',
+        method: 'patch',
         auth: true,
     },
-    [exports.Endpoints.getProductStocks]: {
-        url: '/api/v1/products/:productId/stocks',
-        method: 'get',
+    [exports.Endpoints.deleteImage]: {
+        url: '/api/v1/images/:imageId',
+        method: 'delete',
+        auth: true,
     },
     // stock endpoints
     [exports.Endpoints.addStock]: {
@@ -754,7 +757,7 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/stocks/:stockId',
         method: 'get',
     },
-    [exports.Endpoints.getStocksList]: {
+    [exports.Endpoints.listStocks]: {
         url: '/api/v1/stocks',
         method: 'get',
     },
@@ -773,7 +776,7 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/colors/:colorId',
         method: 'get',
     },
-    [exports.Endpoints.getColorsList]: {
+    [exports.Endpoints.listColors]: {
         url: '/api/v1/colors',
         method: 'get',
     },
@@ -797,7 +800,7 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/sizes/:sizeId',
         method: 'get',
     },
-    [exports.Endpoints.getSizesList]: {
+    [exports.Endpoints.listSizes]: {
         url: '/api/v1/sizes',
         method: 'get',
     },
@@ -868,7 +871,7 @@ const ENDPOINT_CONFIGS = {
         method: 'get',
         auth: true,
     },
-    [exports.Endpoints.getOrdersList]: {
+    [exports.Endpoints.listOrders]: {
         url: '/api/v1/orders',
         method: 'get',
         auth: true,
@@ -883,7 +886,7 @@ const ENDPOINT_CONFIGS = {
         method: 'get',
         auth: true,
     },
-    [exports.Endpoints.adminGetOrdersList]: {
+    [exports.Endpoints.adminListOrders]: {
         url: '/api/v1/admin/orders',
         method: 'get',
         auth: true,
@@ -912,7 +915,7 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/payments/response',
         method: 'get',
     },
-    [exports.Endpoints.getPaymentsList]: {
+    [exports.Endpoints.listPayments]: {
         url: '/api/v1/payments',
         method: 'get',
         auth: true,
@@ -955,9 +958,9 @@ exports.CreateAddressSchema = CreateAddressSchema;
 exports.CreateCartSchema = CreateCartSchema;
 exports.CreateCategorySchema = CreateCategorySchema;
 exports.CreateColorSchema = CreateColorSchema;
+exports.CreateImageSchema = CreateImageSchema;
 exports.CreateOrderSchema = CreateOrderSchema;
 exports.CreatePaymentSchema = CreatePaymentSchema;
-exports.CreateProductImageSchema = CreateProductImageSchema;
 exports.CreateProductSchema = CreateProductSchema;
 exports.CreateReviewSchema = CreateReviewSchema;
 exports.CreateSizeSchema = CreateSizeSchema;
@@ -968,7 +971,7 @@ exports.DeleteAddressSchema = DeleteAddressSchema;
 exports.DeleteCartSchema = DeleteCartSchema;
 exports.DeleteCategorySchema = DeleteCategorySchema;
 exports.DeleteColorSchema = DeleteColorSchema;
-exports.DeleteProductImageSchema = DeleteProductImageSchema;
+exports.DeleteImageSchema = DeleteImageSchema;
 exports.DeleteProductSchema = DeleteProductSchema;
 exports.DeleteReviewSchema = DeleteReviewSchema;
 exports.DeleteSizeSchema = DeleteSizeSchema;
@@ -979,11 +982,12 @@ exports.ForgotPasswordSchema = ForgotPasswordSchema;
 exports.GetCategorySchema = GetCategorySchema;
 exports.GetOrderSchema = GetOrderSchema;
 exports.GetPaymentSchema = GetPaymentSchema;
-exports.GetProductImages = GetProductImages;
+exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;
+exports.PatchImageSchema = PatchImageSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RegisterSchema = RegisterSchema;
 exports.ResetPasswordSchema = ResetPasswordSchema;

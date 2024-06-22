@@ -1,8 +1,8 @@
 import { deleteStock } from '@/actions/stock';
-import DeleteButton from '@/components/ui/delete-button';
-import StockColor from '@/components/ui/stock-color';
-import StockQuantity from '@/components/ui/stock-quantity';
-import { getProductStocks } from '@/data/product';
+import DeleteButton from '@/component/delete-button';
+import StockColor from '@/component/stock-color';
+import StockQuantity from '@/component/stock-quantity';
+import { listProductStocks } from '@/data/product';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
-  const stocks = await getProductStocks(params.id);
+  const stocks = await listProductStocks(params.id);
 
   return (
     <Table

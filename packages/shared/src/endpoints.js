@@ -22,12 +22,12 @@ export var Endpoints;
     Endpoints["getCurrentUser"] = "getCurrentUser";
     Endpoints["updateCurrentUser"] = "updateCurrentUser";
     Endpoints["adminGetUser"] = "adminGetUser";
-    Endpoints["adminGetUsersList"] = "adminGetUsersList";
+    Endpoints["adminListUsers"] = "adminListUsers";
     Endpoints["adminUpdateUser"] = "adminUpdateUser";
     Endpoints["adminDeleteUser"] = "adminDeleteUser";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
-    Endpoints["getAddressList"] = "getAddressList";
+    Endpoints["listAddress"] = "listAddress";
     Endpoints["updateAddress"] = "updateAddress";
     Endpoints["deleteAddress"] = "deleteAddress";
     // category endpoints
@@ -39,29 +39,30 @@ export var Endpoints;
     Endpoints["deleteCategory"] = "deleteCategory";
     // product endpoints
     Endpoints["getProduct"] = "getProduct";
-    Endpoints["getProductsList"] = "getProductsList";
+    Endpoints["listProducts"] = "listProducts";
+    Endpoints["listProductStocks"] = "listProductStocks";
     Endpoints["createProduct"] = "createProduct";
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
-    Endpoints["addProductImages"] = "addProductImages";
-    Endpoints["getProductStocks"] = "getProductStocks";
-    Endpoints["listProductImages"] = "listProductImages";
-    Endpoints["deleteProductImage"] = "deleteProductImage";
+    // images endpoints
+    Endpoints["addImages"] = "addImages";
+    Endpoints["deleteImage"] = "deleteImage";
+    Endpoints["updateImage"] = "updateImage";
     // stock endpoints
     Endpoints["addStock"] = "addStock";
     Endpoints["getStock"] = "getStock";
-    Endpoints["getStocksList"] = "getStocksList";
+    Endpoints["listStocks"] = "listStocks";
     Endpoints["updateStock"] = "updateStock";
     Endpoints["deleteStock"] = "deleteStock";
     // color endpoints
     Endpoints["getColor"] = "getColor";
-    Endpoints["getColorsList"] = "getColorsList";
+    Endpoints["listColors"] = "listColors";
     Endpoints["createColor"] = "createColor";
     Endpoints["updateColor"] = "updateColor";
     Endpoints["deleteColor"] = "deleteColor";
     // size endpoints
     Endpoints["getSize"] = "getSize";
-    Endpoints["getSizesList"] = "getSizesList";
+    Endpoints["listSizes"] = "listSizes";
     Endpoints["createSize"] = "createSize";
     Endpoints["updateSize"] = "updateSize";
     Endpoints["deleteSize"] = "deleteSize";
@@ -77,18 +78,18 @@ export var Endpoints;
     // order endpoints
     Endpoints["createOrder"] = "createOrder";
     Endpoints["getOrder"] = "getOrder";
-    Endpoints["getOrdersList"] = "getOrdersList";
+    Endpoints["listOrders"] = "listOrders";
     Endpoints["deleteOrder"] = "deleteOrder";
     Endpoints["adminGetOrder"] = "adminGetOrder";
-    Endpoints["adminGetOrdersList"] = "adminGetOrdersList";
+    Endpoints["adminListOrders"] = "adminListOrders";
     Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
     Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
     // payment endpoints
     Endpoints["createPayment"] = "createPayment";
     Endpoints["getPayment"] = "getPayment";
-    Endpoints["getPaymentsList"] = "getPaymentsList";
+    Endpoints["listPayments"] = "listPayments";
     Endpoints["paymentResponse"] = "paymentResponse";
-    // product reviews endpoints
+    // reviews endpoints
     Endpoints["getReview"] = "getReview";
     Endpoints["listReviews"] = "listReviews";
     Endpoints["createReview"] = "createReview";
@@ -153,6 +154,7 @@ export const ENDPOINT_CONFIGS = {
     [Endpoints.refresh]: {
         method: 'post',
         url: '/api/v1/auth/refresh',
+        sensitive: true,
     },
     [Endpoints.forgotPassword]: {
         method: 'post',
@@ -201,7 +203,7 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/users/:userId',
         auth: true,
     },
-    [Endpoints.adminGetUsersList]: {
+    [Endpoints.adminListUsers]: {
         method: 'get',
         url: '/api/v1/users',
         auth: true,
@@ -217,7 +219,7 @@ export const ENDPOINT_CONFIGS = {
         method: 'post',
         auth: true,
     },
-    [Endpoints.getAddressList]: {
+    [Endpoints.listAddress]: {
         url: '/api/v1/users/self/addresses',
         method: 'get',
         auth: true,
@@ -265,7 +267,11 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/products/:productId',
         method: 'get',
     },
-    [Endpoints.getProductsList]: {
+    [Endpoints.listProductStocks]: {
+        url: '/api/v1/products/:productId/stocks',
+        method: 'get',
+    },
+    [Endpoints.listProducts]: {
         url: '/api/v1/products',
         method: 'get',
     },
@@ -285,23 +291,20 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     // product images endpoints
-    [Endpoints.addProductImages]: {
-        url: '/api/v1/products/images',
+    [Endpoints.addImages]: {
+        url: '/api/v1/images',
         method: 'post',
         auth: true,
     },
-    [Endpoints.listProductImages]: {
-        url: '/api/v1/products/:productId/images',
-        method: 'get',
-    },
-    [Endpoints.deleteProductImage]: {
-        url: '/api/v1/products/:productId/images/:imageId',
-        method: 'delete',
+    [Endpoints.updateImage]: {
+        url: '/api/v1/images/:imageId',
+        method: 'patch',
         auth: true,
     },
-    [Endpoints.getProductStocks]: {
-        url: '/api/v1/products/:productId/stocks',
-        method: 'get',
+    [Endpoints.deleteImage]: {
+        url: '/api/v1/images/:imageId',
+        method: 'delete',
+        auth: true,
     },
     // stock endpoints
     [Endpoints.addStock]: {
@@ -313,7 +316,7 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/stocks/:stockId',
         method: 'get',
     },
-    [Endpoints.getStocksList]: {
+    [Endpoints.listStocks]: {
         url: '/api/v1/stocks',
         method: 'get',
     },
@@ -332,7 +335,7 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/colors/:colorId',
         method: 'get',
     },
-    [Endpoints.getColorsList]: {
+    [Endpoints.listColors]: {
         url: '/api/v1/colors',
         method: 'get',
     },
@@ -356,7 +359,7 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/sizes/:sizeId',
         method: 'get',
     },
-    [Endpoints.getSizesList]: {
+    [Endpoints.listSizes]: {
         url: '/api/v1/sizes',
         method: 'get',
     },
@@ -427,7 +430,7 @@ export const ENDPOINT_CONFIGS = {
         method: 'get',
         auth: true,
     },
-    [Endpoints.getOrdersList]: {
+    [Endpoints.listOrders]: {
         url: '/api/v1/orders',
         method: 'get',
         auth: true,
@@ -442,7 +445,7 @@ export const ENDPOINT_CONFIGS = {
         method: 'get',
         auth: true,
     },
-    [Endpoints.adminGetOrdersList]: {
+    [Endpoints.adminListOrders]: {
         url: '/api/v1/admin/orders',
         method: 'get',
         auth: true,
@@ -471,7 +474,7 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/payments/response',
         method: 'get',
     },
-    [Endpoints.getPaymentsList]: {
+    [Endpoints.listPayments]: {
         url: '/api/v1/payments',
         method: 'get',
         auth: true,

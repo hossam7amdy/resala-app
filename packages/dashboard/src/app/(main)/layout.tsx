@@ -1,4 +1,4 @@
-import { SideNav } from '@/components/ui/side-nav';
+import { SideNav } from '@/component/side-nav';
 import { Layout as AppLayout } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';

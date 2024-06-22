@@ -1,7 +1,7 @@
-import EditForm from '@/components/categories/edit-form';
-import BackButton from '@/components/ui/back-button';
-import FormSkeleton from '@/components/ui/form-skeleton';
-import { findCategoryById, listAllCategories } from '@/data/category';
+import BackButton from '@/component/back-button';
+import FormSkeleton from '@/component/form-skeleton';
+import { findCategoryById } from '@/data/category';
+import EditForm from '@/feature/categories/edit-form';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
@@ -32,13 +32,13 @@ const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
 };
 
 const EditCategoryForm = async ({ id }: { id: string }) => {
-  const [categories, category] = await Promise.all([listAllCategories(), findCategoryById(id)]);
+  const category = await findCategoryById(id);
 
   if (!category) {
     notFound();
   }
 
-  return <EditForm category={category} categories={categories} />;
+  return <EditForm category={category} />;
 };
 
 export default EditCategoryPage;

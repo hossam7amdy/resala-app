@@ -1,8 +1,11 @@
+import type { z } from 'zod';
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
+import type { DefaultQuerySchema } from './validation-schema.js';
 export type RoleType = keyof typeof Role;
 export type OrderStatusType = keyof typeof OrderStatus;
 export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
+export type DefaultFilters = z.infer<typeof DefaultQuerySchema>['query'];
 export type Pagination = {
     page: number;
     limit: number;
@@ -19,7 +22,6 @@ export type User = {
     lastLogin: null | Date;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
 export type UserAddress = {
     userId: number;
@@ -27,12 +29,10 @@ export type UserAddress = {
 };
 export type Category = {
     id: number;
-    categoryId: null | number;
     arName: string;
     enName: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
 export type Product = {
     id: number;
@@ -42,13 +42,16 @@ export type Product = {
     arDescription: string;
     enDescription: string;
     price: number | any;
+    imageKey: string;
+    imageUrl: string;
     createdAt: Date;
     updatedAt: Date;
-    deletedAt: null | Date;
 };
-export type ProductImage = {
+export type Image = {
     id: number;
+    colorId: number;
     productId: number;
+    isPrimary: boolean;
     imageKey: string;
     imageUrl: string;
     createdAt: Date;
@@ -116,14 +119,14 @@ export type Shipping = {
     id: number;
     orderId: number;
     addressId: number;
-    cost: number;
+    cost: number | any;
     createdAt: Date;
     updatedAt: Date;
 };
 export type Payment = {
     id: number;
     orderId: number;
-    transactionId: string | number;
+    transactionId: number;
     transactionOrderId: number;
     pending: boolean;
     success: boolean;

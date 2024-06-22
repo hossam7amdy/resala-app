@@ -11,7 +11,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { S3FileStorageService } from './index.js';
+import { S3FileStorageService } from '../index.js';
 
 vi.mock('@aws-sdk/client-s3', () => {
   const mS3Client = {
@@ -75,7 +75,7 @@ describe('S3FileStorageService', () => {
     it('should upload the file and return the public URL', async () => {
       s3Client.send.mockResolvedValueOnce({});
 
-      const result = await s3ClientWrapper.uploadFile(mockFileBuffer, mockFilename);
+      const result = await s3ClientWrapper.upload(mockFileBuffer, mockFilename);
       expect(result).toBe(`${mockS3BaseUrl}/${mockFilename}`);
       expect(PutObjectCommand).toHaveBeenCalledWith({
         Bucket: mockBucketName,
@@ -90,7 +90,7 @@ describe('S3FileStorageService', () => {
     it('should delete the specified file', async () => {
       s3Client.send.mockResolvedValueOnce({});
 
-      await s3ClientWrapper.deleteFile(mockPath);
+      await s3ClientWrapper.delete(mockPath);
       expect(DeleteObjectCommand).toHaveBeenCalledWith({
         Bucket: mockBucketName,
         Key: mockFilename,
@@ -103,7 +103,7 @@ describe('S3FileStorageService', () => {
       const mockFiles = [{ Key: 'file1.txt' }, { Key: 'file2.txt' }];
       s3Client.send.mockResolvedValueOnce({ Contents: mockFiles });
 
-      const result = await s3ClientWrapper.listFiles('directory');
+      const result = await s3ClientWrapper.list('directory');
       expect(result).toEqual(['file1.txt', 'file2.txt']);
       expect(ListObjectsV2Command).toHaveBeenCalledWith({
         Bucket: mockBucketName,
@@ -120,7 +120,7 @@ describe('S3FileStorageService', () => {
       };
       s3Client.send.mockResolvedValueOnce(mockMetadata);
 
-      const result = await s3ClientWrapper.getFileMetadata(mockPath);
+      const result = await s3ClientWrapper.getMetadata(mockPath);
       expect(result).toEqual({
         size: mockMetadata.ContentLength,
         lastModified: mockMetadata.LastModified,
@@ -137,7 +137,7 @@ describe('S3FileStorageService', () => {
       const paths = ['file1.txt', 'file2.txt'];
       s3Client.send.mockResolvedValueOnce({});
 
-      await s3ClientWrapper.deleteFiles(paths);
+      await s3ClientWrapper.deleteMany(paths);
       expect(DeleteObjectsCommand).toHaveBeenCalledWith({
         Bucket: mockBucketName,
         Delete: {
