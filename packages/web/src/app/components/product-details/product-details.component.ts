@@ -1,32 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ProductDetails } from 'src/app/core/interfaces/product-details';
+
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-
 import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
   imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet],
 
-
-
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
 export class ProductDetailsComponent implements OnInit {
+  static productId: any;
+
   constructor(
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
     private spinner: NgxSpinnerService,
     private _CartService: CartService,
     private _toaster: ToastrService,
+    private _Renderer2: Renderer2,
     private _Router: Router
   ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
@@ -36,10 +37,15 @@ export class ProductDetailsComponent implements OnInit {
 
   productDetails: any = null; // this property to take value of object 'respons.data'
   productImages: any = null;
+  selectedIimage: string = '';
   productStock: any = [];
   productStockColor: any = [];
   productStockSize: any = [];
   reboColor: any = [];
+
+  cartDetails: any = {};
+  //property navigate from login to product details id
+  endPointProductId: string = '';
 
   //color option variable
   selectedColor: string = '';
@@ -61,6 +67,16 @@ export class ProductDetailsComponent implements OnInit {
     this.spinner.show();
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
+
+    this._CartService.getCartUser().subscribe({
+      next: response => {
+        console.log(response);
+        this.cartDetails = response.data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
   }
 
   getProductDetails(id: any) {
@@ -69,11 +85,18 @@ export class ProductDetailsComponent implements OnInit {
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
         console.log('productdetails', res.data);
+
+
       },
       error: err => console.log(err),
       complete: () => this.getProductStock(id),
     });
+
   }
+  changeimage(image: string) {
+    this.selectedIimage = image;
+  }
+
 
   getProductStock(id: any) {
     this._HomeProductsService.getProductStock(id).subscribe({
@@ -111,11 +134,12 @@ export class ProductDetailsComponent implements OnInit {
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
-    dots: true,
+    dots: false,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
     nav: false,
+
   };
 
   // carousel mini images
@@ -135,10 +159,10 @@ export class ProductDetailsComponent implements OnInit {
         items: 2,
       },
       740: {
-        items: 3,
+        items: 2,
       },
       940: {
-        items: 8,
+        items: 2,
       },
     },
     nav: true,
@@ -162,8 +186,9 @@ export class ProductDetailsComponent implements OnInit {
     this.selectedSize = event?.size?.name;
     this.currentSize = event?.size?.id;
     this.stockIdSize = event?.id;
-    this.quantity = event?.quantity;
-    console.log(this.selectedSize);
+    this.quantity = event?.quantity
+    console.log(this.selectedSize, this.stockIdSize);
+
   }
 
   setActiveClass() {
@@ -180,23 +205,32 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.counterQuantity = 1;
     }
+
   }
 
-  addProduct(productId: string, quantity: any) {
+  addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
     if (this.isChooseColor && this.isChooseSize === true) {
+      this._Renderer2.setAttribute(element, 'disabled', 'true')
+
       this._CartService.addToCart(productId, quantity).subscribe({
         next: res => {
           console.log(res);
-          this._toaster.success('added product successfuly');
+          this._CartService.cartNumber.next(res.data.length)
+          console.log('cart number :' + this._CartService.cartNumber);
+          this._toaster.success('added one product successfuly');
         },
         error: err => {
-          this._toaster.info('Should be Login');
-          this._Router.navigate(['/login']);
+          localStorage.setItem('productId', '1');
+          this._toaster.error('Should be Login');
+          this._Router.navigate(['/login'])
         }
       });
 
     } else {
-      this._toaster.error('please choose color & size');
+      this._toaster.info('should be choose color and size');
     }
+
+    this._Renderer2.removeAttribute(element, 'disabled')
   }
+
 }
