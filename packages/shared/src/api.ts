@@ -11,12 +11,12 @@ import type {
   Cart,
   Category,
   Color,
+  Image,
   Order,
   OrderItem,
   Pagination,
   Payment,
   Product,
-  ProductImage,
   Review,
   Shipping,
   Size,
@@ -33,6 +33,7 @@ import type {
   CreateCartSchema,
   CreateCategorySchema,
   CreateColorSchema,
+  CreateImageSchema,
   CreateOrderSchema,
   CreatePaymentSchema,
   CreateProductSchema,
@@ -45,6 +46,7 @@ import type {
   DeleteCartSchema,
   DeleteCategorySchema,
   DeleteColorSchema,
+  DeleteImageSchema,
   DeleteProductSchema,
   DeleteReviewSchema,
   DeleteSizeSchema,
@@ -54,11 +56,11 @@ import type {
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
-  GetProductImages,
   GetProductSchema,
   GetReviewSchema,
   ListProductReviewsSchema,
   LoginSchema,
+  PatchImageSchema,
   RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
@@ -219,11 +221,6 @@ export type GetProductsListResponse = DefaultResponseBody & {
   };
 };
 
-export type GetProductStocksRequest = z.infer<typeof GetProductImages>;
-export type GetProductStocksResponse = DefaultResponseBody & {
-  data: GetStockResponse['data'][];
-};
-
 export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
 export type CreateProductResponse = DefaultResponseBody & {
   data: Product;
@@ -285,10 +282,14 @@ export type GetStockResponse = DefaultResponseBody & {
     updatedAt: Date;
     product: Product;
     size: Size;
-    color: Color & {
-      images: Pick<ProductImage, 'id' | 'imageKey' | 'imageUrl' | 'createdAt'>[];
-    };
+    color: Color;
+    images: Omit<Image, 'colorId' | 'productId'>[];
   };
+};
+
+export type GetProductStocksRequest = z.infer<typeof GetProductSchema>;
+export type GetProductStocksResponse = DefaultResponseBody & {
+  data: Omit<GetStockResponse['data'], 'product'>[];
 };
 
 export type GetStocksListRequest = DefaultRequestQuery;
@@ -310,12 +311,26 @@ export type UpdateStockResponse = CreateStockResponse;
 export type DeleteStockRequest = z.infer<typeof DeleteStockSchema>;
 export type DeleteStockResponse = CreateStockResponse;
 
+// Image types
+export type CreateImageRequest = z.infer<typeof CreateImageSchema>;
+export type CreateImageResponse = DefaultResponseBody;
+
+export type PatchImageRequest = z.infer<typeof PatchImageSchema>;
+export type PatchImageResponse = DefaultResponseBody & {
+  data: Image;
+};
+
+export type DeleteImageRequest = z.infer<typeof DeleteImageSchema>;
+export type DeleteImageResponse = DefaultResponseBody & {
+  data: Image;
+};
+
 // Shipping types
 export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = DefaultResponseBody & {
   data: (Omit<Cart, 'stockId'> & {
     product: Product;
-    images: Pick<ProductImage, 'id' | 'imageKey' | 'imageUrl' | 'createdAt'>[];
+    images: Omit<Image, 'colorId' | 'productId'>[];
     stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
       color: Color;
       size: Size;

@@ -47,10 +47,11 @@ export type Product = {
     createdAt: Date;
     updatedAt: Date;
 };
-export type ProductImage = {
+export type Image = {
     id: number;
     colorId: number;
     productId: number;
+    isPrimary: boolean;
     imageKey: string;
     imageUrl: string;
     createdAt: Date;

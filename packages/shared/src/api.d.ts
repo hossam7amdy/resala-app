@@ -5,8 +5,8 @@
  * It is also used by the API service to generate the API client.
  */
 import type { z } from 'zod';
-import type { Address, Cart, Category, Color, Order, OrderItem, Pagination, Payment, Product, ProductImage, Review, Shipping, Size, Stock, User, Wishlist } from './types.js';
-import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductSchema, CreateReviewSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteProductSchema, DeleteReviewSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductImages, GetProductSchema, GetReviewSchema, ListProductReviewsSchema, LoginSchema, RefreshTokenSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateOrderStatusSchema, UpdateProductSchema, UpdateProfileSchema, UpdateReviewSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
+import type { Address, Cart, Category, Color, Image, Order, OrderItem, Pagination, Payment, Product, Review, Shipping, Size, Stock, User, Wishlist } from './types.js';
+import type { AdminDeleteUserSchema, AdminGetUserSchema, AdminUpdateUserSchema, ChangePasswordSchema, CreateAddressSchema, CreateCartSchema, CreateCategorySchema, CreateColorSchema, CreateImageSchema, CreateOrderSchema, CreatePaymentSchema, CreateProductSchema, CreateReviewSchema, CreateSizeSchema, CreateStockSchema, CreateWishlistSchema, DefaultQuerySchema, DeleteAddressSchema, DeleteCartSchema, DeleteCategorySchema, DeleteColorSchema, DeleteImageSchema, DeleteProductSchema, DeleteReviewSchema, DeleteSizeSchema, DeleteStockSchema, DeleteWishlistSchema, ForgotPasswordSchema, GetCategorySchema, GetOrderSchema, GetPaymentSchema, GetProductSchema, GetReviewSchema, ListProductReviewsSchema, LoginSchema, PatchImageSchema, RefreshTokenSchema, RegisterSchema, ResetPasswordSchema, UpdateAddressSchema, UpdateCategorySchema, UpdateColorSchema, UpdateOrderStatusSchema, UpdateProductSchema, UpdateProfileSchema, UpdateReviewSchema, UpdateSizeSchema, UpdateStockSchema, VerifyEmailSchema } from './validation-schema.js';
 export type DefaultRequestQuery = {
     query: Partial<z.infer<typeof DefaultQuerySchema>['query']>;
 };
@@ -118,10 +118,6 @@ export type GetProductsListResponse = DefaultResponseBody & {
         products: GetProductResponse['data'][];
     };
 };
-export type GetProductStocksRequest = z.infer<typeof GetProductImages>;
-export type GetProductStocksResponse = DefaultResponseBody & {
-    data: GetStockResponse['data'][];
-};
 export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
 export type CreateProductResponse = DefaultResponseBody & {
     data: Product;
@@ -167,10 +163,13 @@ export type GetStockResponse = DefaultResponseBody & {
         updatedAt: Date;
         product: Product;
         size: Size;
-        color: Color & {
-            images: Pick<ProductImage, 'id' | 'imageKey' | 'imageUrl' | 'createdAt'>[];
-        };
+        color: Color;
+        images: Omit<Image, 'colorId' | 'productId'>[];
     };
+};
+export type GetProductStocksRequest = z.infer<typeof GetProductSchema>;
+export type GetProductStocksResponse = DefaultResponseBody & {
+    data: Omit<GetStockResponse['data'], 'product'>[];
 };
 export type GetStocksListRequest = DefaultRequestQuery;
 export type GetStocksListResponse = DefaultResponseBody & {
@@ -187,11 +186,21 @@ export type UpdateStockRequest = z.infer<typeof UpdateStockSchema>;
 export type UpdateStockResponse = CreateStockResponse;
 export type DeleteStockRequest = z.infer<typeof DeleteStockSchema>;
 export type DeleteStockResponse = CreateStockResponse;
+export type CreateImageRequest = z.infer<typeof CreateImageSchema>;
+export type CreateImageResponse = DefaultResponseBody;
+export type PatchImageRequest = z.infer<typeof PatchImageSchema>;
+export type PatchImageResponse = DefaultResponseBody & {
+    data: Image;
+};
+export type DeleteImageRequest = z.infer<typeof DeleteImageSchema>;
+export type DeleteImageResponse = DefaultResponseBody & {
+    data: Image;
+};
 export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = DefaultResponseBody & {
     data: (Omit<Cart, 'stockId'> & {
         product: Product;
-        images: Pick<ProductImage, 'id' | 'imageKey' | 'imageUrl' | 'createdAt'>[];
+        images: Omit<Image, 'colorId' | 'productId'>[];
         stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
             color: Color;
             size: Size;
