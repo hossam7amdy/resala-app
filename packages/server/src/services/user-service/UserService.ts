@@ -54,6 +54,11 @@ export default class UserService {
   }
 
   async createUserAddress(userId: number, payload: CreateAddressRequest['body']) {
+    const addressList = await this.getUserAddressList(userId);
+    if (addressList.length >= 5) {
+      throw new ConflictError('User can not have more than 5 addresses');
+    }
+
     const address = {
       phone: payload.phone,
       firstName: payload.firstName,
@@ -68,7 +73,6 @@ export default class UserService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
     return await this.userRepo.address.create(userId, address);
   }
 
