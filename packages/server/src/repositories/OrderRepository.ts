@@ -16,7 +16,6 @@ const ORDER_ATTRIBUTES = {
       lastLogin: true,
       createdAt: true,
       updatedAt: true,
-      deletedAt: true,
     },
   },
   shippingDetails: {
@@ -32,7 +31,7 @@ const ORDER_ATTRIBUTES = {
 
 interface CreateOrderInput {
   userId: number;
-  address: Omit<Address, 'id' | 'createdAt' | 'updatedAt'>;
+  address: Omit<Address, 'id'>;
   paymentMethod: Order['paymentMethod'];
   items: Pick<OrderItem, 'name' | 'price' | 'quantity' | 'color' | 'size'>[];
   shipping: number;
