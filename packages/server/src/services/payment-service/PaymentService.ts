@@ -3,7 +3,9 @@ import type {
   DefaultFilters,
   GetPaymentResponse,
   GetPaymentsListResponse,
+  Order,
   OrderItem,
+  User,
 } from '@resala/shared';
 
 import type { PaymentRepository } from '../../repositories/index.js';
@@ -18,10 +20,9 @@ export default class PaymentService {
   ) {}
 
   async createPaymentRequest(payload: {
-    email: string;
-    orderId: number;
-    amount: number;
-    shipping: Address;
+    user: User;
+    order: Order;
+    shipping: Omit<Address, 'id'>;
     items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
   }) {
     const { token } = await this.paymobService.authenticate();
@@ -29,8 +30,8 @@ export default class PaymentService {
     const { id } = await this.paymobService.createOrder({
       auth_token: token,
       delivery_needed: false,
-      amount_cents: payload.amount * 100,
-      merchant_order_id: payload.orderId,
+      amount_cents: payload.order.total * 100,
+      merchant_order_id: payload.order.id,
       items: payload.items.map(item => ({
         name: item.name,
         amount_cents: item.price * 100,
@@ -45,7 +46,7 @@ export default class PaymentService {
       billing_data: {
         first_name: payload.shipping.firstName,
         last_name: payload.shipping.lastName,
-        email: payload.email,
+        email: payload.user.email,
         phone_number: payload.shipping.phone,
         country: payload.shipping.country,
         state: payload.shipping.state,
@@ -58,7 +59,7 @@ export default class PaymentService {
         shipping_method: 'COURIER',
       },
       expiration: 3600,
-      amount_cents: payload.amount,
+      amount_cents: payload.order.total * 100,
       lock_order_when_paid: true,
     });
   }
