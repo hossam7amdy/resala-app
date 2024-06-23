@@ -1,24 +1,24 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { Address, DefaultFilters, Order, OrderItem } from '@resala/shared';
 
+const USER_ATTRIBUTES = {
+  select: {
+    id: true,
+    email: true,
+    isVerified: true,
+    phone: true,
+    firstName: true,
+    lastName: true,
+    role: true,
+    lastLogin: true,
+    createdAt: true,
+    updatedAt: true,
+  },
+};
+
 const ORDER_ATTRIBUTES = {
   orderItems: true,
   paymentDetails: true,
-  user: {
-    select: {
-      id: true,
-      email: true,
-      isVerified: true,
-      phone: true,
-      firstName: true,
-      lastName: true,
-      role: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-      deletedAt: true,
-    },
-  },
   shippingDetails: {
     select: {
       id: true,
@@ -103,7 +103,7 @@ export default class OrderRepository {
     const [count, orders] = await this.prisma.$transaction([
       this.prisma.order.count({ where: filters }),
       this.prisma.order.findMany({
-        include: ORDER_ATTRIBUTES,
+        include: { user: USER_ATTRIBUTES, ...ORDER_ATTRIBUTES },
         where: filters,
         take: limit,
         skip: (page - 1) * limit,
