@@ -18,14 +18,14 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
         scroll={{ x: 768, y: 500 }}
         pagination={false}
         columns={[
-          { title: 'First Name', dataIndex: 'firstName' },
-          { title: 'Last Name', dataIndex: 'lastName' },
+          { title: 'First name', dataIndex: 'firstName' },
+          { title: 'Last name', dataIndex: 'lastName' },
           { title: 'Phone', dataIndex: 'phone' },
           { title: 'Email', dataIndex: 'email' },
           { title: 'Role', dataIndex: 'role' },
-          { title: 'Email Verified', dataIndex: 'isVerified' },
-          { title: 'Last Login', dataIndex: 'lastLogin' },
-          { title: 'Created At', dataIndex: 'createdAt' },
+          { title: 'Verified', dataIndex: 'isVerified' },
+          { title: 'Last login', dataIndex: 'lastLogin' },
+          { title: 'Joined', dataIndex: 'createdAt' },
         ]}
         dataSource={users.users.map(user => ({
           ...user,
