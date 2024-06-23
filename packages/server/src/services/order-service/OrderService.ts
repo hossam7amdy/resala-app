@@ -22,7 +22,8 @@ export default class OrderService {
 
   async createOrder(userId: number, order: CreateOrderRequest['body']) {
     const userCart = await this.shoppingService.getUserCart(userId);
-    const address = await this.userService.findUserAddress(userId, order.addressId);
+    // eslint-disable-next-line no-unused-vars
+    const { id: _, ...address } = await this.userService.findUserAddress(userId, order.addressId);
 
     const subtotal = userCart.reduce(
       (acc, item) => acc + Number(item.product.price) * item.quantity,
