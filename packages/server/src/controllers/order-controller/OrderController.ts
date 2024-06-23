@@ -20,7 +20,7 @@ export default class OrderController implements IOrderController {
       const user = res.locals.user;
       const { addressId, paymentMethod, note } = req.body;
 
-      const order = await this.orderService.createOrder(user.id, {
+      const { address, items, ...order } = await this.orderService.createOrder(user.id, {
         addressId,
         paymentMethod,
         note,
@@ -30,11 +30,10 @@ export default class OrderController implements IOrderController {
       if (paymentMethod === 'CARD') {
         // create payment
         payment = await this.paymentService.createPaymentRequest({
-          orderId: order.id,
-          email: user.email,
-          amount: Number(order.total) * 100,
-          shipping: order.address,
-          items: order.items,
+          user: user,
+          order: order,
+          items: items,
+          shipping: address,
         });
       }
 
