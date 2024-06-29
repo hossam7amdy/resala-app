@@ -8,7 +8,7 @@ import type {
 } from '@resala/shared';
 
 import type { InventoryRepository } from '../../repositories/index.js';
-import { NotFoundError } from '../../utils/ApiErrors.js';
+import { ConflictError, NotFoundError } from '../../utils/ApiErrors.js';
 import type { PromiseReturnType } from '../../utils/PromiseReturnType.js';
 import type ColorService from './ColorService.js';
 import type ProductService from './ProductService.js';
@@ -37,7 +37,7 @@ export default class StockService {
 
     return {
       pagination: { page: filters.page, limit: filters.limit, total },
-      stocks: stocks.map(this._formatStock),
+      stocks: this._groupByColor(stocks),
     };
   }
 
@@ -46,7 +46,7 @@ export default class StockService {
 
     const stocks = await this.inventoryRepo.stock.findByProduct(productId);
 
-    return stocks.map(this._formatStock);
+    return this._groupByColor(stocks);
   }
 
   async create(stock: CreateStockRequest['body']) {
@@ -56,14 +56,18 @@ export default class StockService {
       this.size.findSizeById(stock.sizeId),
     ]);
 
-    return await this.inventoryRepo.stock.create({
-      productId: stock.productId,
-      colorId: stock.colorId,
-      sizeId: stock.sizeId,
-      quantity: stock.quantity,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    try {
+      return await this.inventoryRepo.stock.create({
+        productId: stock.productId,
+        colorId: stock.colorId,
+        sizeId: stock.sizeId,
+        quantity: stock.quantity,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    } catch (e) {
+      throw new ConflictError('Stock already exists');
+    }
   }
 
   async update(stockId: number, stock: UpdateStockRequest['body']) {
@@ -74,19 +78,24 @@ export default class StockService {
       this.findById(stockId),
     ]);
 
-    return await this.inventoryRepo.stock.update(stockId, {
-      productId: stock.productId,
-      colorId: stock.colorId,
-      sizeId: stock.sizeId,
-      quantity: stock.quantity,
-      updatedAt: new Date(),
-    });
+    try {
+      return await this.inventoryRepo.stock.update(stockId, {
+        productId: stock.productId,
+        colorId: stock.colorId,
+        sizeId: stock.sizeId,
+        quantity: stock.quantity,
+        updatedAt: new Date(),
+      });
+    } catch (e) {
+      throw new ConflictError('Stock already exists');
+    }
   }
 
   async delete(stockId: number) {
     await this.findById(stockId);
     return await this.inventoryRepo.stock.delete(stockId);
   }
+
   _formatStock(stock: PromiseReturnType<typeof this.inventoryRepo.stock.list>['stocks'][0]) {
     const { color, ...stockData } = stock;
     const { images, ...colorData } = color;
@@ -96,5 +105,34 @@ export default class StockService {
       color: colorData,
       images,
     };
+  }
+
+  _groupByColor(
+    stocks: PromiseReturnType<typeof this.inventoryRepo.stock.list>['stocks']
+  ): GetStocksListResponse['data']['stocks'] {
+    const stocksByColor: Record<number, GetStocksListResponse['data']['stocks'][0]> = {};
+
+    stocks.forEach(stock => {
+      if (!stocksByColor[stock.color.id]) {
+        const { size, color: stockColor, ...rest } = stock;
+        const { images, ...color } = stockColor;
+
+        stocksByColor[stock.color.id] = {
+          ...rest,
+          color,
+          images,
+          sizes: [size],
+        };
+      } else {
+        const { sizes } = stocksByColor[stock.color.id];
+        const sizeExist = sizes.some(size => size.id === stock.size.id);
+
+        if (!sizeExist) {
+          stocksByColor[stock.color.id].sizes.push(stock.size);
+        }
+      }
+    });
+
+    return Object.values(stocksByColor);
   }
 }

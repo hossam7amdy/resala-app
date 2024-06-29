@@ -25,10 +25,7 @@ export default class OrderService {
     // eslint-disable-next-line no-unused-vars
     const { id: _, ...address } = await this.userService.findUserAddress(userId, order.addressId);
 
-    const subtotal = userCart.reduce(
-      (acc, item) => acc + Number(item.product.price) * item.quantity,
-      0
-    );
+    const subtotal = userCart.totalPrice;
 
     const orderPayload = {
       userId,
@@ -38,7 +35,7 @@ export default class OrderService {
       total: SHIPPING + subtotal,
       subtotal,
       note: '',
-      items: userCart.map(item => ({
+      items: userCart.items.map(item => ({
         name: item.product.enName,
         price: item.product.price,
         color: item.stock.color.enName,
