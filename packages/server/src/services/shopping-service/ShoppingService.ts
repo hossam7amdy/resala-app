@@ -14,7 +14,7 @@ export default class ShoppingService {
     try {
       const cart = await this.shoppingRepo.cart.list(userId);
 
-      return cart.map(item => ({
+      const cartItems = cart.map(item => ({
         userId: item.userId,
         quantity: item.quantity,
         createdAt: item.stock.createdAt,
@@ -36,6 +36,18 @@ export default class ShoppingService {
           size: item.stock.size,
         },
       }));
+
+      const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+      const totalPrice = cartItems.reduce(
+        (acc, item) => acc + Number(item.product.price) * item.quantity,
+        0
+      );
+
+      return {
+        totalQuantity,
+        totalPrice,
+        items: cartItems,
+      };
     } catch (error) {
       console.log(error);
       throw new NotFoundError('User not found');
