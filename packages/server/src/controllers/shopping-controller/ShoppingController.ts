@@ -51,7 +51,14 @@ export default class ShoppingController implements IShoppingController {
       const userId = res.locals.user.id;
       await this.shoppingService.clearUserCart(userId);
 
-      return res.json({ success: true, data: [] });
+      return res.json({
+        success: true,
+        data: {
+          totalQuantity: 0,
+          totalPrice: 0,
+          items: [],
+        },
+      });
     } catch (error) {
       next(error);
     }

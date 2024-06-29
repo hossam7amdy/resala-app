@@ -11,9 +11,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import React from 'react';
 
-export const metadata: Metadata = {
-  title: 'Product Stocks',
-};
+export const metadata: Metadata = { title: 'Product Stocks' };
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
   const stocks = await listProductStocks(params.id);
@@ -32,7 +30,7 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
         updatedAt: formatDate(stock.updatedAt),
         color: <StockColor color={stock.color.code} />,
         colorName: `${stock.color.enName} | ${stock.color.arName}`,
-        size: stock.size.name,
+        sizes: stock.sizes.length,
         actions: (
           <Space size="small">
             <Button size="small" type="link">
@@ -46,37 +44,12 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
         ),
       }))}
       columns={[
-        {
-          title: 'Color',
-          dataIndex: 'color',
-          key: 'color',
-        },
-        {
-          title: 'Color Name',
-          dataIndex: 'colorName',
-          key: 'colorName',
-        },
-        {
-          title: 'Size',
-          dataIndex: 'size',
-          key: 'size',
-        },
-        {
-          title: 'Quantity',
-          dataIndex: 'quantity',
-          key: 'quantity',
-        },
-        {
-          title: 'Updated At',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt',
-        },
-        {
-          title: 'Actions',
-          dataIndex: 'actions',
-          key: 'actions',
-          align: 'center',
-        },
+        { title: 'Color', dataIndex: 'color', key: 'color' },
+        { title: 'Color Name', dataIndex: 'colorName', key: 'colorName' },
+        { title: 'Sizes', dataIndex: 'sizes', key: 'sizes' },
+        { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
+        { title: 'Updated At', dataIndex: 'updatedAt', key: 'updatedAt' },
+        { title: 'Actions', dataIndex: 'actions', key: 'actions', align: 'center' },
       ]}
     />
   );

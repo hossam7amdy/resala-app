@@ -169,13 +169,30 @@ export type GetStockResponse = DefaultResponseBody & {
 };
 export type GetProductStocksRequest = z.infer<typeof GetProductSchema>;
 export type GetProductStocksResponse = DefaultResponseBody & {
-    data: Omit<GetStockResponse['data'], 'product'>[];
+    data: {
+        id: number;
+        quantity: number;
+        createdAt: Date;
+        updatedAt: Date;
+        sizes: Size[];
+        color: Color;
+        images: Omit<Image, 'colorId' | 'productId'>[];
+    }[];
 };
 export type GetStocksListRequest = DefaultRequestQuery;
 export type GetStocksListResponse = DefaultResponseBody & {
     data: {
         pagination: Pagination;
-        stocks: GetStockResponse['data'][];
+        stocks: {
+            id: number;
+            quantity: number;
+            createdAt: Date;
+            updatedAt: Date;
+            product: Product;
+            sizes: Size[];
+            color: Color;
+            images: Omit<Image, 'colorId' | 'productId'>[];
+        }[];
     };
 };
 export type CreateStockRequest = z.infer<typeof CreateStockSchema>;
@@ -198,14 +215,18 @@ export type DeleteImageResponse = DefaultResponseBody & {
 };
 export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = DefaultResponseBody & {
-    data: (Omit<Cart, 'stockId'> & {
-        product: Product;
-        images: Omit<Image, 'colorId' | 'productId'>[];
-        stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
-            color: Color;
-            size: Size;
-        };
-    })[];
+    data: {
+        totalQuantity: number;
+        totalPrice: number;
+        items: (Omit<Cart, 'stockId'> & {
+            product: Product;
+            images: Omit<Image, 'colorId' | 'productId'>[];
+            stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+                color: Color;
+                size: Size;
+            };
+        })[];
+    };
 };
 export type CreateCartRequest = z.infer<typeof CreateCartSchema>;
 export type CreateCartResponse = GetCartResponse;
