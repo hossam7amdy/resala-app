@@ -12,6 +12,7 @@ import DeleteButton from '../../component/delete-button';
 import Pagination from '../../component/pagination';
 import StockColor from '../../component/stock-color';
 import StockQuantity from '../../component/stock-quantity';
+import { SizesPopover } from './sizes-popover';
 
 interface StocksTableProps {
   searchParams: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>;
@@ -39,7 +40,7 @@ const StocksTable = async ({ searchParams }: StocksTableProps) => {
           updatedAt: formatDate(stock.updatedAt),
           color: <StockColor color={stock.color.code} />,
           colorName: `${stock.color.enName} | ${stock.color.arName}`,
-          size: stock.size.name,
+          size: <SizesPopover sizes={stock.sizes} />,
           quantity: <StockQuantity quantity={stock.quantity} />,
           actions: (
             <Space size="small">
