@@ -4,7 +4,7 @@ import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
 import { EditFilled, EyeFilled, UploadOutlined } from '@ant-design/icons';
 import type { GetProductsListResponse } from '@resala/shared';
-import { Button, Space, Table } from 'antd';
+import { Button, Image, Space, Table } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
@@ -16,6 +16,7 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
       scroll={{ x: 768, y: 500 }}
       pagination={false}
       columns={[
+        { title: 'Image', dataIndex: 'imageUrl' },
         { title: 'English', dataIndex: 'enName' },
         { title: 'Arabic', dataIndex: 'arName' },
         { title: 'Category', dataIndex: 'category' },
@@ -25,6 +26,7 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
       ]}
       dataSource={products.map(product => ({
         key: product.id,
+        imageUrl: <Image src={product.imageUrl} width={50} alt={product.enDescription} />,
         enName: product.enName,
         arName: product.arName,
         category: product.category.arName,
