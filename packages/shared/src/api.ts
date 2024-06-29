@@ -345,14 +345,18 @@ export type DeleteImageResponse = DefaultResponseBody & {
 // Shipping types
 export type GetCartRequest = Record<string, never>;
 export type GetCartResponse = DefaultResponseBody & {
-  data: (Omit<Cart, 'stockId'> & {
-    product: Product;
-    images: Omit<Image, 'colorId' | 'productId'>[];
-    stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
-      color: Color;
-      size: Size;
-    };
-  })[];
+  data: {
+    totalQuantity: number;
+    totalPrice: number;
+    items: (Omit<Cart, 'stockId'> & {
+      product: Product;
+      images: Omit<Image, 'colorId' | 'productId'>[];
+      stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+        color: Color;
+        size: Size;
+      };
+    })[];
+  };
 };
 
 export type CreateCartRequest = z.infer<typeof CreateCartSchema>;
