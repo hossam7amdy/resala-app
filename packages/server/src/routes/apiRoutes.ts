@@ -90,12 +90,12 @@ import {
   EmailNotificationService,
   FileService,
   InventoryService,
-  LocalFileStorageService,
   NotificationService,
   OrderService,
   PaymentService,
   PaymobPaymentService,
   ReviewService,
+  S3FileStorageService,
   ShoppingService,
   UserService,
 } from '../services/index.js';
@@ -117,7 +117,7 @@ export const createExpressRouter = (legRequests: boolean) => {
   // services
   const authService = new AuthService(userRepository);
   const userService = new UserService(userRepository);
-  const fileService = new FileService(new LocalFileStorageService());
+  const fileService = new FileService(new S3FileStorageService());
   const inventoryService = new InventoryService(inventoryRepository, fileService);
   const notificationService = new NotificationService(new EmailNotificationService());
   const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
