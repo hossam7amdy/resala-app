@@ -52,8 +52,8 @@ export default class S3StorageService implements IFileStorage {
     }
   }
 
-  download(key: string): Promise<Buffer> {
-    console.log('Downloading file', key);
+  // eslint-disable-next-line no-unused-vars
+  download(_key: string): Promise<Buffer> {
     throw new Error('Method not implemented.');
   }
   async upload(fileBuffer: Buffer, key: string): Promise<string> {
