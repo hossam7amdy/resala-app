@@ -1,4 +1,5 @@
 export interface Product {
+  imageUrl: any;
   enName: string;
   price: string;
   category: CategoryProduct;

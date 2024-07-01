@@ -47,12 +47,13 @@ export class ProductDetailsComponent implements OnInit {
   //property navigate from login to product details id
   endPointProductId: string = '';
 
-  //color option variable
+  //color option property
   selectedColor: string = '';
   currentColor: string = '';
   isChooseColor: boolean = false;
+  stockIndex: any;
 
-  //size Btn variable
+  //size Btn property
   statusClassSizeBtn = 'btn-not-active';
   selectedSize: string = '';
   currentSize: string = '';
@@ -93,9 +94,7 @@ export class ProductDetailsComponent implements OnInit {
     });
 
   }
-  changeimage(image: string) {
-    this.selectedIimage = image;
-  }
+
 
 
   getProductStock(id: any) {
@@ -107,7 +106,7 @@ export class ProductDetailsComponent implements OnInit {
 
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
-          if (!a.find(data => data.colorId == b.colorId)) {
+          if (!a.find(data => data.color.id == b.colorId)) {
             a.push(b);
           }
           return a;
@@ -129,8 +128,8 @@ export class ProductDetailsComponent implements OnInit {
   //   console.log('after filter', this.productStockColor);
   // }
 
-  productDetailsOption: OwlOptions = {
-    loop: true,
+  mainImage: OwlOptions = {
+    loop: false,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
@@ -144,7 +143,7 @@ export class ProductDetailsComponent implements OnInit {
 
   // carousel mini images
   miniImgCarousel: OwlOptions = {
-    loop: true,
+    loop: false,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,
@@ -162,18 +161,23 @@ export class ProductDetailsComponent implements OnInit {
         items: 2,
       },
       940: {
-        items: 2,
+        items: 4,
       },
     },
     nav: true,
   };
   // show products after delete repeated products method
 
-  onColorChange(event: any) {
+  changeimage(image: string) {
+    this.selectedIimage = image;
+  }
+
+  onColorChange(event: any, index: number) {
     this.selectedColor = event?.color?.enName;
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
-    console.log(this.selectedColor);
+    this.stockIndex = index;
+    console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
     this.isChooseColor = true;
@@ -183,8 +187,8 @@ export class ProductDetailsComponent implements OnInit {
     this.isChooseSize = true;
   }
   onSizeChange(event: any) {
-    this.selectedSize = event?.size?.name;
-    this.currentSize = event?.size?.id;
+    this.selectedSize = event?.name;
+    this.currentSize = event?.id;
     this.stockIdSize = event?.id;
     this.quantity = event?.quantity
     console.log(this.selectedSize, this.stockIdSize);
@@ -215,14 +219,15 @@ export class ProductDetailsComponent implements OnInit {
       this._CartService.addToCart(productId, quantity).subscribe({
         next: res => {
           console.log(res);
-          this._CartService.cartNumber.next(res.data.length)
+          this._CartService.cartNumber.next(res.data.totalQuantity)
           console.log('cart number :' + this._CartService.cartNumber);
           this._toaster.success('added one product successfuly');
         },
         error: err => {
-          localStorage.setItem('productId', '1');
-          this._toaster.error('Should be Login');
-          this._Router.navigate(['/login'])
+          // localStorage.setItem('productId', '1');
+          // this._toaster.error('Should be Login');
+          // this._Router.navigate(['/login'])
+          console.log('response', productId, quantity, err);
         }
       });
 
