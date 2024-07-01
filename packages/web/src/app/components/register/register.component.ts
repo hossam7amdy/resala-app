@@ -78,6 +78,7 @@ export class RegisterComponent {
     this.isLoading = true;
 
     const userData = this.registerForm.value;
+    console.log(userData);
 
     if (this.registerForm.valid === true) {
       console.log(userData);

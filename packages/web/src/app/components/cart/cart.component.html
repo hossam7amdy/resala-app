@@ -1,6 +1,6 @@
-<section *ngIf="cartDetails.length != 0;else emptyCart">
+<section *ngIf="cartDetails.totalQuantity != 0;else emptyCart">
     <div class="container">
-        <h2 class="cartTitle h2">My Cart {{cartDetails.length}} product</h2>
+        <h2 class="cartTitle h2">My Cart {{cartDetails.totalQuantity}} product</h2>
     </div>
     <div class="container">
 
@@ -45,17 +45,17 @@
 
                 </div>
                 <div class="card mb-4">
-                    <div class="row g-0" *ngFor="let item of cartDetails">
+                    <div class="row g-0" *ngFor="let item of cartDetailsItems">
                         <div class="col-sm-2">
-                            <img src="../../../assets/products/1.jpg" class="img-fluid w-100" alt="...">
+                            <img [src]="item.images[0].imageUrl" class="img-fluid w-100" alt="...">
                         </div>
                         <div class="col-sm-7">
                             <div class="card-body">
                                 <p class="">{{item.stock.quantity}} IN STOCK</p>
-                                <h5 class="card-title">{{item.stock.product.enName}}</h5>
+                                <h5 class="card-title">{{item.product.enName}}</h5>
                                 <span class="text-uppercase">{{item.stock.color.enName}}</span>
                                 <span class=""> - Size : <i class="bold small">{{item.stock.size.name}}</i></span>
-                                <p class="fw-bold">{{item.stock.product.price}} EGP</p>
+                                <p class="fw-bold">{{item.product.price}} EGP</p>
                                 <button class="btn mt-2">
                                     <i (click)="removeItem(item.stock.id, remove)" #remove
                                         class="fa-solid fa-trash"></i>
@@ -89,7 +89,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Check Out Summary</h5>
-                        <p class="card-text">Total Products Price 1500 EGP</p>
+                        <p class="card-text">Total Products Price {{cartDetails.totalPrice}} EGP</p>
                         <a href="" class="btn order-btn w-100">Order Now</a>
                     </div>
 
