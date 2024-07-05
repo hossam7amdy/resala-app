@@ -63,12 +63,10 @@ white
   font-weight: 400;
 }
 
-.body {
-  margin-top: 50px;
-}
-
 body {
   overflow-x: hidden;
+  margin-top: 110px;
+
 }
 
 .h1 {

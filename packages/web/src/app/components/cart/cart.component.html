@@ -89,8 +89,9 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5 class="card-title">Check Out Summary</h5>
-                        <p class="card-text">Total Products Price {{cartDetails.totalPrice}} EGP</p>
-                        <a href="" class="btn order-btn w-100">Order Now</a>
+                        <p class="card-text">Total Products Price <span class="total-price">{{cartDetails.totalPrice}}
+                                EGP</span></p>
+                        <a href="" routerLink="/payment" class="btn order-btn w-100">Order Now</a>
                     </div>
 
                 </div>

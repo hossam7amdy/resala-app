@@ -22,6 +22,11 @@
     border-radius: 0;
 }
 
+.card .total-price {
+    color: #fbb935;
+    font-weight: bold;
+}
+
 .card>.row {
 
     border-bottom: 1px solid #eee;
