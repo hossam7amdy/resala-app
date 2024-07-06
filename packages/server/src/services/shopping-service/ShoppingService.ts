@@ -60,7 +60,7 @@ export default class ShoppingService {
   ): Promise<GetCartResponse['data']> {
     const stock = await this.inventoryService.stock.findById(stockId);
 
-    if (stock.quantity < quantity) {
+    if (stock.sizes[0].quantity < quantity) {
       throw new NotFoundError('Not enough stock');
     }
 
