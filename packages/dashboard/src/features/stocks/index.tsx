@@ -1,0 +1,10 @@
+export { default as StockForm } from './stock-form';
+export { default as StockFormSkeleton } from './stock-form-skeleton';
+export { default as StockColorImages } from './stock-color-images';
+export { default as StocksTable } from './stocks-table';
+export { default as SelectProduct } from './select-product';
+export { default as SelectColor } from './select-color';
+export { default as SelectSize } from './select-size';
+export { default as StockSizes } from './stock-sizes';
+export { default as StockQuantity } from './stock-quantity';
+export { default as StockColor } from './stock-color';

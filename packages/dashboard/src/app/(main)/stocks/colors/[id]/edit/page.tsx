@@ -1,5 +1,5 @@
 import { findColorById } from '@/data/colors';
-import EditForm from '@/feature/colors/form';
+import EditForm from '@/features/colors/form';
 import React from 'react';
 
 const EditColorPage = async ({ params }: { params: { id: string } }) => {

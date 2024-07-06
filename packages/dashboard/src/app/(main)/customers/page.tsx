@@ -1,5 +1,5 @@
-import { Search } from '@/component/search';
-import CustomersTable from '@/feature/customers/table';
+import { Search } from '@/components';
+import CustomersTable from '@/features/customers/table';
 import { Breadcrumb, Col, Row, Table } from 'antd';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';

@@ -27,21 +27,29 @@ export const listProductsPaginated = async (query: DefaultRequestQuery['query'])
 export const listProductStocks = async (id: string) => {
   noStore();
 
-  const response = await callEndpoint<GetProductStocksRequest, GetProductStocksResponse>(
-    ENDPOINT_CONFIGS.listProductStocks,
-    { params: { productId: Number(id) } }
-  );
+  try {
+    const response = await callEndpoint<GetProductStocksRequest, GetProductStocksResponse>(
+      ENDPOINT_CONFIGS.listProductStocks,
+      { params: { productId: Number(id) } }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (e) {
+    return null;
+  }
 };
 
 export const findProductById = async (id: string | number) => {
   noStore();
 
-  const response = await callEndpoint<GetProductRequest, GetProductResponse>(
-    ENDPOINT_CONFIGS.getProduct,
-    { params: { productId: Number(id) } }
-  );
+  try {
+    const response = await callEndpoint<GetProductRequest, GetProductResponse>(
+      ENDPOINT_CONFIGS.getProduct,
+      { params: { productId: Number(id) } }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (e) {
+    return null;
+  }
 };
