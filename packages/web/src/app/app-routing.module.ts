@@ -58,7 +58,14 @@ const routes: Routes = [
           import('./components/product-details/product-details.component').then(
             m => m.ProductDetailsComponent
           ),
-        title: 'Product',
+        title: 'Product Details',
+      },
+
+      {
+        path: 'payment',
+        loadComponent: () =>
+          import('./components/payment/payment.component').then(m => m.PaymentComponent),
+        title: 'Payment',
       },
     ],
   },
@@ -110,4 +117,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

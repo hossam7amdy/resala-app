@@ -6,15 +6,21 @@
   width: 100%;
 }
 
-.main-img {
-  padding: 10px 120px;
 
-}
+/* .owl-item,
+.ng-tns-c556756694-3,
+.ng-trigger,
+.ng-trigger-autoHeight,
+.active,
+.ng-star-inserted {
+  width: 200px !important;
+} */
 
 .main-img>img {
-  margin-bottom: 24px;
-  width: 265.33px;
-  height: 450px;
+  margin-bottom: 0;
+  /* width: 265.33px;
+  height: 450px; */
+  height: 800px;
 }
 
 .price {
@@ -32,13 +38,16 @@
   background-size: cover;
 }
 
+
+
 .img-content {
-  position: relative;
-  /* width: 100%;
-  height: 100%; */
-  width: 132.7px;
-  height: 198.83px;
+
+  width: 100%;
+  height: 100%;
+  /* width: 132.7px;
+  height: 198.83px; */
   padding: 0;
+  cursor: pointer;
 }
 
 /* .img-content .w-100 {
