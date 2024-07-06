@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, Role } from './enums.js';
+import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;

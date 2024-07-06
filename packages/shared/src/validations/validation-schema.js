@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, Role } from './enums.js';
-import { validationPatterns } from './validation-patterns.js';
+import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
+import { validationPatterns } from '../patterns/index.js';
 const UserSchema = z.object({
     email: z.string().min(5).max(128).email(),
     isVerified: z.boolean().optional(),

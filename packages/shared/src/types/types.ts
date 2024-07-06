@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 
-import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from './enums.js';
-import type { DefaultQuerySchema } from './validation-schema.js';
+import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
+import type { DefaultQuerySchema } from '../validations/index.js';
 
 export type RoleType = keyof typeof Role;
 
