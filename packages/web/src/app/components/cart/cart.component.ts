@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/core/services/cart.service';
 
@@ -8,15 +8,18 @@ import { CartService } from 'src/app/core/services/cart.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
 
-  cartDetails: any = [];
+  cartDetails: any = {};
+  cartDetailsItems: any = [];
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
+
+
 
   // quantity attr
   counterQuantity: number = 1;
@@ -35,11 +38,15 @@ export class CartComponent implements OnInit {
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
+        this.cartDetailsItems = response.data.items;
+
       },
       error: err => {
         console.log(err);
       }
     })
+
+
   }
 
   // Quantity Fun
@@ -64,7 +71,9 @@ export class CartComponent implements OnInit {
       this._CartService.addToCart(stockId, count).subscribe({
         next: (response) => {
           this.cartDetails = response.data;
-          this._CartService.cartNumber.next(response.data.length);
+          this._CartService.cartNumber.next(response.data.totalQuantity);
+          this.cartDetailsItems = response.data.items;
+
           console.log(this.cartDetails)
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
@@ -89,8 +98,9 @@ export class CartComponent implements OnInit {
     this._CartService.removeCartItem(itemId).subscribe({
       next: res => {
         this.cartDetails = res.data;
+        this.cartDetailsItems = res.data.items;
         this._Renderer.removeAttribute(element, 'disabled');
-        this._CartService.cartNumber.next(res.data.length);
+        this._CartService.cartNumber.next(res.data.totalQuantity);
         this._toaster.success('Removed Your Item Successfuly');
       },
       error: err => {
@@ -108,6 +118,7 @@ export class CartComponent implements OnInit {
   }
   cancelDelete() {
     this.checkedDeleteAll = false;
+
   }
   // Clear Cart
   clearAllItems(element: HTMLElement): void {
@@ -117,7 +128,7 @@ export class CartComponent implements OnInit {
         next: response => {
           this._toaster.success('Your Cart Is Empty');
           this.cartDetails = response.data;
-          this._CartService.cartNumber.next(response.data.length);
+          this._CartService.cartNumber.next(response.data.totalQuantity);
         },
         error: err => {
           this._toaster.info('Your Items are Not Deleted !!')

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService
-  ) {}
+  ) { }
 
   // interfaces
   products: Product[] = [];
@@ -45,30 +45,32 @@ export class HomeComponent implements OnInit {
   }
 
   // categories slider
-  categoryOptions: OwlOptions = {
-    loop: true,
-    mouseDrag: false,
-    touchDrag: false,
-    pullDrag: false,
-    dots: false,
-    navSpeed: 700,
-    navText: ['', ''],
-    responsive: {
-      0: {
-        items: 1,
-      },
-      400: {
-        items: 2,
-      },
-      740: {
-        items: 3,
-      },
-      940: {
-        items: 4,
-      },
-    },
-    nav: false,
-  };
+  // categoryOptions: OwlOptions = {
+  //   loop: true,
+  //   mouseDrag: false,
+  //   touchDrag: false,
+  //   pullDrag: false,
+  //   dots: false,
+  //   autoWidth: true,
+  //   margin: 10,
+  //   navSpeed: 700,
+  //   navText: ['', ''],
+  //   responsive: {
+  //     0: {
+  //       items: 1,
+  //     },
+  //     400: {
+  //       items: 2,
+  //     },
+  //     740: {
+  //       items: 3,
+  //     },
+  //     940: {
+  //       items: 4,
+  //     },
+  //   },
+  //   nav: false,
+  // };
 
   // main slider
   mainSliderOptions: OwlOptions = {
@@ -116,6 +118,7 @@ export class HomeComponent implements OnInit {
     dots: true,
     center: true,
     margin: 5,
+    autoWidth: true,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
@@ -126,13 +129,16 @@ export class HomeComponent implements OnInit {
         items: 2,
       },
       740: {
-        items: 3,
+        items: 4,
       },
       940: {
-        items: 5,
+        items: 8,
+      },
+      1150: {
+        items: 6,
       },
     },
     nav: true,
-    autoWidth: false,
+
   };
 }

@@ -1,5 +1,5 @@
-import { Search } from '@/component/search';
-import OrdersTable from '@/feature/orders/table';
+import { Search } from '@/components';
+import OrdersTable from '@/features/orders/table';
 import { Breadcrumb, Col, Row, Table } from 'antd';
 import { Suspense } from 'react';
 

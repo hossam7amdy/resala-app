@@ -1,6 +1,6 @@
-import BackButton from '@/component/back-button';
-import FormSkeleton from '@/component/form-skeleton';
-import CreateForm from '@/feature/categories/create-form';
+import BackButton from '@/components/back-button';
+import FormSkeleton from '@/components/form-skeleton';
+import CreateForm from '@/features/categories/create-form';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';

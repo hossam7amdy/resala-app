@@ -1,4 +1,4 @@
-import BackButton from '@/component/back-button';
+import BackButton from '@/components/back-button';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';

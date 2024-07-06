@@ -44,6 +44,10 @@ body {
   margin-left: 30px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;

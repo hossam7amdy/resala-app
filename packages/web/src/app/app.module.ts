@@ -33,10 +33,10 @@ import { ToastrModule } from 'ngx-toastr';
     NgxSpinnerModule,
 
     ToastrModule.forRoot(), // ToastrModule added
-
+    //...httpInterceptors
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [...httpInterceptors],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
