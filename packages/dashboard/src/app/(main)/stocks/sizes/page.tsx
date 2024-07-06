@@ -1,6 +1,6 @@
-import BackButton from '@/component/back-button';
+import BackButton from '@/components/back-button';
 import { listAllSizes } from '@/data/sizes';
-import Table from '@/feature/sizes/table';
+import Table from '@/features/sizes/table';
 import ROUTES from '@/lib/routes';
 import { Table as AntTable, Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';

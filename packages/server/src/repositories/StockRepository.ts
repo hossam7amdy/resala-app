@@ -1,27 +1,7 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { DefaultFilters, Stock } from '@resala/shared';
 
-const SELECT_STOCK_ATTRIBUTES = {
-  id: true,
-  quantity: true,
-  createdAt: true,
-  updatedAt: true,
-  product: true,
-  size: true,
-  color: {
-    include: {
-      images: {
-        select: {
-          id: true,
-          imageKey: true,
-          imageUrl: true,
-          isPrimary: true,
-          createdAt: true,
-        },
-      },
-    },
-  },
-};
+import type { PromiseReturnType } from '../utils/PromiseReturnType.js';
 
 export default class StockRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -30,11 +10,32 @@ export default class StockRepository {
     return await this.prisma.stock.create({ data });
   }
 
+  async update(id: number, data: Partial<Stock>) {
+    return await this.prisma.stock.update({ where: { id }, data });
+  }
+
+  async delete(id: number) {
+    return await this.prisma.stock.delete({ where: { id } });
+  }
+
   async findById(id: number) {
-    return await this.prisma.stock.findUnique({
-      select: SELECT_STOCK_ATTRIBUTES,
+    const stocks = await this.prisma.stock.findUnique({
+      include: {
+        product: true,
+        size: true,
+        color: {
+          include: {
+            images: true,
+          },
+        },
+      },
       where: { id },
     });
+
+    if (!stocks) return null;
+
+    this._filterImages([stocks]);
+    return stocks;
   }
 
   async list({ page, limit, query }: DefaultFilters) {
@@ -51,7 +52,15 @@ export default class StockRepository {
     const [total, stocks] = await this.prisma.$transaction([
       this.prisma.stock.count({ where: filters }),
       this.prisma.stock.findMany({
-        select: SELECT_STOCK_ATTRIBUTES,
+        include: {
+          product: true,
+          size: true,
+          color: {
+            include: {
+              images: true,
+            },
+          },
+        },
         where: filters,
         skip: (page - 1) * limit,
         take: limit,
@@ -59,22 +68,29 @@ export default class StockRepository {
       }),
     ]);
 
+    this._filterImages(stocks);
     return { total, stocks };
-  }
-
-  async update(id: number, data: Partial<Stock>) {
-    return await this.prisma.stock.update({ where: { id }, data });
-  }
-
-  async delete(id: number) {
-    return await this.prisma.stock.delete({ where: { id } });
   }
 
   async findByProduct(productId: number) {
     return await this.prisma.stock.findMany({
-      select: SELECT_STOCK_ATTRIBUTES,
+      include: {
+        size: true,
+        color: {
+          include: {
+            images: {
+              where: { productId },
+            },
+          },
+        },
+      },
       where: { productId },
-      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  private _filterImages(stocks: PromiseReturnType<StockRepository['list']>['stocks']) {
+    stocks.forEach(stock => {
+      stock.color.images = stock.color.images.filter(img => img.productId === stock.productId);
     });
   }
 }

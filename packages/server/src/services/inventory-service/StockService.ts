@@ -14,6 +14,8 @@ import type ColorService from './ColorService.js';
 import type ProductService from './ProductService.js';
 import type SizeService from './SizeService.js';
 
+type StockReturnType = PromiseReturnType<InventoryRepository['stock']['list']>['stocks'][0];
+
 export default class StockService {
   constructor(
     private readonly inventoryRepo: InventoryRepository,
@@ -42,11 +44,12 @@ export default class StockService {
   }
 
   async getByProduct(productId: number): Promise<GetProductStocksResponse['data']> {
-    await this.product.findProductById(productId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    const { category, ...product } = await this.product.findProductById(productId);
 
     const stocks = await this.inventoryRepo.stock.findByProduct(productId);
 
-    return this._groupByColor(stocks);
+    return this._groupByColor(stocks.map(stock => ({ ...stock, product })));
   }
 
   async create(stock: CreateStockRequest['body']) {
@@ -93,46 +96,48 @@ export default class StockService {
 
   async delete(stockId: number) {
     await this.findById(stockId);
+
     return await this.inventoryRepo.stock.delete(stockId);
   }
 
-  _formatStock(stock: PromiseReturnType<typeof this.inventoryRepo.stock.list>['stocks'][0]) {
-    const { color, ...stockData } = stock;
+  private _formatStock(stock: StockReturnType): GetStockResponse['data'] {
+    const { color, product, size, ...stockData } = stock;
     const { images, ...colorData } = color;
 
     return {
-      ...stockData,
+      product,
       color: colorData,
-      images,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      images: images.map(({ colorId, productId, ...rest }) => ({ ...rest })),
+      sizes: [
+        {
+          stockId: stockData.id,
+          quantity: stockData.quantity,
+          createdAt: stockData.createdAt,
+          updatedAt: stockData.updatedAt,
+          sizeId: size.id,
+          size: size.name,
+        },
+      ],
     };
   }
 
-  _groupByColor(
-    stocks: PromiseReturnType<typeof this.inventoryRepo.stock.list>['stocks']
-  ): GetStocksListResponse['data']['stocks'] {
-    const stocksByColor: Record<number, GetStocksListResponse['data']['stocks'][0]> = {};
+  private _groupByColor(stocksList: StockReturnType[]): GetStockResponse['data'][] {
+    const stocks = stocksList.reduce(
+      (acc, stock) => {
+        const stockDataFormatted = this._formatStock(stock);
 
-    stocks.forEach(stock => {
-      if (!stocksByColor[stock.color.id]) {
-        const { size, color: stockColor, ...rest } = stock;
-        const { images, ...color } = stockColor;
-
-        stocksByColor[stock.color.id] = {
-          ...rest,
-          color,
-          images,
-          sizes: [size],
-        };
-      } else {
-        const { sizes } = stocksByColor[stock.color.id];
-        const sizeExist = sizes.some(size => size.id === stock.size.id);
-
-        if (!sizeExist) {
-          stocksByColor[stock.color.id].sizes.push(stock.size);
+        if (acc[stock.productId]) {
+          acc[stock.productId].sizes.push(stockDataFormatted.sizes[0]);
+        } else {
+          acc[stock.productId] = stockDataFormatted;
         }
-      }
-    });
 
-    return Object.values(stocksByColor);
+        return acc;
+      },
+      {} as Record<number, GetStockResponse['data']>
+    );
+
+    return Object.values(stocks);
   }
 }

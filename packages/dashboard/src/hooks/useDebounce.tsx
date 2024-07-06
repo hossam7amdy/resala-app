@@ -8,7 +8,7 @@ import { useCallback, useRef } from 'react';
  * @returns Debounced function
  */
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-export const useDebounce = (fn: (args?: any) => void, delay: number) => {
+const useDebounce = (fn: (args?: any) => void, delay: number) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   return useCallback(
@@ -24,3 +24,5 @@ export const useDebounce = (fn: (args?: any) => void, delay: number) => {
     [fn, delay]
   );
 };
+
+export default useDebounce;
