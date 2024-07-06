@@ -1,6 +1,6 @@
 'use client';
 
-import ResalaTooltip from '@/component/tooltip';
+import ResalaTooltip from '@/components/tooltip';
 import { Collapse, Input, Result } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import Text from 'antd/es/typography/Text';

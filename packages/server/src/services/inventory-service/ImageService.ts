@@ -35,6 +35,8 @@ export default class ImageService {
       this._validateImagesLimit(image.productId, image.colorId, image.files.length),
     ]);
 
+    const productImages = await this.imageRepository.image.listByProduct(image.productId);
+
     // Upload image to cloud storage
     const uploadedImages = await this.fileService.uploadFiles(image.files);
 
@@ -44,7 +46,7 @@ export default class ImageService {
       colorId: image.colorId,
       imageUrl: url,
       imageKey: key,
-      isPrimary: index === 0,
+      isPrimary: productImages.length === 0 && index === 0,
       createdAt: new Date(),
     }));
     await this.imageRepository.image.createMany(images);

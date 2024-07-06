@@ -1,4 +1,4 @@
-import CreateForm from '@/feature/sizes/form';
+import CreateForm from '@/features/sizes/form';
 import React from 'react';
 
 const CreateSizePage = () => {
