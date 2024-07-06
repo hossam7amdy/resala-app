@@ -7,14 +7,14 @@ import type { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HomeProductsService {
-  constructor(private _HttpClient: HttpClient) {}
+  constructor(private _HttpClient: HttpClient) { }
 
-  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app`;
   //base url =
 
   // Products
   getProducts(): Observable<any> {
-    return this._HttpClient.get(this.baseURL + 'api/v1/products?page=1&limit=10&query=');
+    return this._HttpClient.get(this.baseURL + '/api/v1/products?page=1&limit=10&query=');
   }
 
   //Product Details

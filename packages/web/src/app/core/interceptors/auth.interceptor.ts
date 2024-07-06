@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   excludedExtensionsUrls = ['.svg', '.json'];
-  constructor() {}
+  constructor() { }
 
   checkExExtensionsUrls(url: string): boolean {
     const listCheck: boolean[] = [];

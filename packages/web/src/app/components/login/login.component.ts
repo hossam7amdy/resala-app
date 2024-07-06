@@ -83,16 +83,21 @@ export class LoginComponent {
             this._AuthService.decodeUser();
             this.successMsg = 'Logged already';
             this.isLoading = false;
-            // this._Router.navigate(['/home']);
-            const productId = localStorage.getItem('productId');
-            if (productId == null) {
-              this._Router.navigate(['/home']);
-              console.log('product id' + productId);
-            } else {
-              console.log('product id' + productId);
 
-              this._Router.navigate([productId])
-            }
+            this._Router.navigate(['/home']);
+
+            // can use Redirect 
+
+            // this._Router.navigate(['/home']);
+            // const productId = localStorage.getItem('productId');
+            // if (productId == null) {
+            //   this._Router.navigate(['/home']);
+            //   console.log('product id' + productId);
+            // } else {
+            //   console.log('product id' + productId);
+
+            //   this._Router.navigate([productId])
+            // }
 
           }
         },
