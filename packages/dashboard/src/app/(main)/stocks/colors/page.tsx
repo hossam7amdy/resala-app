@@ -1,6 +1,6 @@
-import BackButton from '@/component/back-button';
+import BackButton from '@/components/back-button';
 import { listAllColors } from '@/data/colors';
-import Table from '@/feature/colors/table';
+import Table from '@/features/colors/table';
 import ROUTES from '@/lib/routes';
 import { Table as AntList, Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';
