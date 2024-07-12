@@ -16,7 +16,7 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Edit Product' },
+            { title: 'Edit' },
           ]}
         />
       </Col>
