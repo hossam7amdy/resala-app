@@ -1,4 +1,5 @@
 import { deleteCategory } from '@/actions/category';
+import { Tooltip } from '@/components';
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -13,7 +14,6 @@ export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();
 
   const filteredCategories = categories.filter(category => {
-    // filter category and sub category by query
     if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
     if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
   });
@@ -25,7 +25,7 @@ export const CategoryTable = async ({ query }: { query: string }) => {
       columns={[
         { title: 'English', dataIndex: 'enName' },
         { title: 'Arabic', dataIndex: 'arName' },
-        { title: 'Create Date', dataIndex: 'createdAt' },
+        { title: 'Created Date', dataIndex: 'createdAt' },
         { title: 'Action', dataIndex: 'action' },
       ]}
       dataSource={filteredCategories.map(renderRow)}
@@ -44,9 +44,11 @@ const renderRow = (category: GetCategoryResponse['data']) => {
         <Button
           type="link"
           icon={
-            <Link href={ROUTES.EDIT_CATEGORY(category.id)}>
-              <EditFilled />
-            </Link>
+            <Tooltip title="Edit">
+              <Link href={ROUTES.EDIT_CATEGORY(category.id)}>
+                <EditFilled />
+              </Link>
+            </Tooltip>
           }
         />
         <DeleteButton deleteAction={deleteCategory.bind(null, String(category.id))} />

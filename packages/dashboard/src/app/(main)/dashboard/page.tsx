@@ -1,4 +1,4 @@
-import { Breadcrumb, Card, Col, Row } from 'antd';
+import { Breadcrumb, Card, Col, Row, Statistic } from 'antd';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,16 +13,24 @@ const DashboardPage = () => {
       </Col>
 
       <Col span={6}>
-        <Card style={{ height: 200 }} />
+        <Card style={{ height: 200 }}>
+          <Statistic title="Active Users" />
+        </Card>
       </Col>
       <Col span={6}>
-        <Card style={{ height: 200 }} />
+        <Card style={{ height: 200 }}>
+          <Statistic title="Total Sales" />
+        </Card>
       </Col>
       <Col span={6}>
-        <Card style={{ height: 200 }} />
+        <Card style={{ height: 200 }}>
+          <Statistic title="Total Orders" />
+        </Card>
       </Col>
       <Col span={6}>
-        <Card style={{ height: 200 }} />
+        <Card style={{ height: 200 }}>
+          <Statistic title="Total Products" />
+        </Card>
       </Col>
 
       <Col span={12}>

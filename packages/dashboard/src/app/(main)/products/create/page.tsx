@@ -15,7 +15,7 @@ const CreateProductPage = () => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Create New Product' },
+            { title: 'New' },
           ]}
         />
       </Col>

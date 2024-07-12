@@ -10,4 +10,5 @@ export { default as SideNav } from './side-nav';
 export { default as SubmitButton } from './submit-button';
 export { default as Tooltip } from './tooltip';
 export { default as DeleteButton } from './delete-button';
+export { default as ErrorMessage } from './error-message';
 export { default as DebounceSelect } from './debounce-select';

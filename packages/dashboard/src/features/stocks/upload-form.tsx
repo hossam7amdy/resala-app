@@ -3,28 +3,26 @@
 import { uploadProductImages } from '@/actions/image';
 import useSubmitForm from '@/hooks/useSubmitForm';
 import { InboxOutlined } from '@ant-design/icons';
-import type { Color } from '@resala/shared';
-import { Button, Flex, Form, Input, Select, type UploadFile } from 'antd';
+import { Button, Flex, Form, type UploadFile } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import Text from 'antd/es/typography/Text';
 import Dragger from 'antd/es/upload/Dragger';
-import { useRouter } from 'next/navigation';
 
 interface UploadFormProps {
   id: string;
-  colors: Color[];
+  colorId: string;
+  onCancel: () => void;
 }
-const UploadForm: React.FC<UploadFormProps> = ({ id, colors }) => {
+const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
   const [form] = useForm();
-  const router = useRouter();
   const { pending, error, dispatch } = useSubmitForm(uploadProductImages, form);
 
-  const handleFinish = (values: { productId: string; colorId: string; images: UploadFile[] }) => {
+  const handleFinish = (values: { images: UploadFile[] }) => {
     const formData = new FormData();
 
-    formData.append('colorId', values.colorId);
-    formData.append('productId', values.productId);
+    formData.append('productId', id);
+    formData.append('colorId', colorId);
     values.images.forEach(image => {
       formData.append('images', image.originFileObj!);
     });
@@ -33,23 +31,13 @@ const UploadForm: React.FC<UploadFormProps> = ({ id, colors }) => {
   };
 
   return (
-    <Form form={form} name="upload-form" onFinish={handleFinish} layout="vertical" size="large">
-      <FormItem rules={[{ required: true }]} name="productId" initialValue={id} noStyle>
-        <Input type="hidden" value={id} />
-      </FormItem>
-
-      <FormItem rules={[{ required: true }]} name="colorId" label="Color">
-        <Select
-          showSearch
-          allowClear
-          placeholder="Select Color"
-          options={colors.map(({ id, enName }) => ({ label: enName, value: id }))}
-          filterOption={(input, option) =>
-            !option?.label.toLowerCase().indexOf(input.toLowerCase())
-          }
-        />
-      </FormItem>
-
+    <Form
+      form={form}
+      name={`upload-form-${colorId}`}
+      onFinish={handleFinish}
+      layout="vertical"
+      size="large"
+    >
       <Form.Item label="Upload Product Images" noStyle>
         <FormItem
           required
@@ -96,7 +84,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ id, colors }) => {
           <Button block type="primary" htmlType="submit" loading={pending}>
             Upload
           </Button>
-          <Button block onClick={router.back} disabled={pending}>
+          <Button block onClick={onCancel} disabled={pending}>
             Cancel
           </Button>
         </Flex>
