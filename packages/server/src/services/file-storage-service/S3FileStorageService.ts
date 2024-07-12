@@ -101,11 +101,11 @@ export default class S3StorageService implements IFileStorage {
       lastModified: obj.LastModified!,
     };
   }
-  async deleteMany(paths: string[]) {
+  async deleteMany(keys: string[]) {
     const command = new DeleteObjectsCommand({
       Bucket: this.bucketName,
       Delete: {
-        Objects: paths.map(path => ({ Key: this.getFilenameFromUrl(path) })),
+        Objects: keys.map(key => ({ Key: key })),
       },
     });
 

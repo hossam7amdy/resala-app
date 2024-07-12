@@ -101,7 +101,7 @@ export default class ProductService {
 
     await Promise.all([
       this.fileService.deleteFile(product.imageKey),
-      this.fileService.deleteFiles(stockImages.map(img => img.imageKey)),
+      stockImages.length && this.fileService.deleteFiles(stockImages.map(img => img.imageKey)),
     ]);
 
     return await this.inventoryRepo.product.delete(id);
