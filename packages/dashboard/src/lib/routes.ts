@@ -32,7 +32,9 @@ export const ROUTES = {
   EDIT_SIZE: (id: string | number) => `/stocks/sizes/${id}/edit`,
 
   ORDERS: '/orders',
+
   CUSTOMERS: '/customers',
+  EDIT_CUSTOMER: (id: string | number) => `/customers/${id}/edit`,
 };
 
 export default ROUTES;
