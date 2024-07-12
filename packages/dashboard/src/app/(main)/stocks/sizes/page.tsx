@@ -23,7 +23,7 @@ const SizesPage = () => {
         <Flex gap={10} justify="space-between">
           <div></div>
           <Link href={ROUTES.CREATE_SIZE}>
-            <Button type="primary">Add New</Button>
+            <Button type="primary">Add Size</Button>
           </Link>
         </Flex>
       </Col>

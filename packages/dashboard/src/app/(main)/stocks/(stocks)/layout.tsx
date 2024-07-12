@@ -19,7 +19,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Flex gap={10}>
           <Search />
           <Link href={ROUTES.CREATE_STOCK('')}>
-            <Button type="primary">Create New Stock</Button>
+            <Button type="primary">Add Stock</Button>
           </Link>
         </Flex>
       </Col>
