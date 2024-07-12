@@ -36,6 +36,9 @@ export default class ImageService {
     ]);
 
     const productImages = await this.imageRepository.image.listByProduct(image.productId);
+    const colorHasPrimaryImage = productImages.some(
+      img => img.colorId === image.colorId && img.isPrimary
+    );
 
     // Upload image to cloud storage
     const uploadedImages = await this.fileService.uploadFiles(image.files);
@@ -46,7 +49,7 @@ export default class ImageService {
       colorId: image.colorId,
       imageUrl: url,
       imageKey: key,
-      isPrimary: productImages.length === 0 && index === 0,
+      isPrimary: !colorHasPrimaryImage && index === 0,
       createdAt: new Date(),
     }));
     await this.imageRepository.image.createMany(images);
