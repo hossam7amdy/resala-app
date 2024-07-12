@@ -2,11 +2,12 @@
 
 import { deleteProduct } from '@/actions/product';
 import { DeleteButton } from '@/components';
+import { Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
-import { EditFilled, UploadOutlined } from '@ant-design/icons';
-import type { GetProductsListResponse } from '@resala/shared';
-import { Button, Image, Space, Table, Tooltip } from 'antd';
+import { EditFilled } from '@ant-design/icons';
+import type { Category, GetProductsListResponse, Product } from '@resala/shared';
+import { Button, Image, Space, Table } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -18,11 +19,12 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
 
   return (
     <Table
+      rowKey={record => record.id}
       onRow={record => {
         return {
           style: { cursor: 'pointer' },
           onClick: () => {
-            router.push(ROUTES.PRODUCT_DETAILS(record.key));
+            router.push(ROUTES.PRODUCT_DETAILS(record.id));
           },
         };
       }}
@@ -35,12 +37,27 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
           onCell: () => ({
             onClick: e => e.stopPropagation(),
           }),
+          render: (imageUrl: string, product: Product) => (
+            <Image src={imageUrl} width={50} alt={product.enDescription} />
+          ),
         },
         { title: 'English', dataIndex: 'enName' },
         { title: 'Arabic', dataIndex: 'arName' },
-        { title: 'Category', dataIndex: 'category' },
-        { title: 'Price', dataIndex: 'price' },
-        { title: 'Date', dataIndex: 'createdAt' },
+        {
+          title: 'Category',
+          dataIndex: 'category',
+          render: (category: Category) => category.arName,
+        },
+        {
+          title: 'Price',
+          dataIndex: 'price',
+          render: (price: number) => formatCurrency(price),
+        },
+        {
+          title: 'Date',
+          dataIndex: 'createdAt',
+          render: (date: string) => formatDate(new Date(date)),
+        },
         {
           title: 'Actions',
           dataIndex: 'actions',
@@ -48,34 +65,22 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
           onCell: () => ({
             onClick: e => e.stopPropagation(),
           }),
+          render: (_, product) => (
+            <Space size="small">
+              <Tooltip title="Edit">
+                <Button size="small" type="link">
+                  <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
+                    <EditFilled />
+                  </Link>
+                </Button>
+              </Tooltip>
+
+              <DeleteButton deleteAction={deleteProduct.bind(null, product.id)} />
+            </Space>
+          ),
         },
       ]}
-      dataSource={products.map(product => ({
-        key: product.id,
-        imageUrl: <Image src={product.imageUrl} width={50} alt={product.enDescription} />,
-        enName: <Tooltip title={product.enDescription}>{product.enName}</Tooltip>,
-        arName: <Tooltip title={product.arDescription}>{product.arName}</Tooltip>,
-        category: product.category.arName,
-        price: formatCurrency(product.price),
-        createdAt: formatDate(product.createdAt),
-        actions: (
-          <Space size="small">
-            <Button size="small" type="link">
-              <Link href={ROUTES.UPLOAD_IMAGES(product.id)}>
-                <UploadOutlined />
-              </Link>
-            </Button>
-
-            <Button size="small" type="link">
-              <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
-                <EditFilled />
-              </Link>
-            </Button>
-
-            <DeleteButton deleteAction={deleteProduct.bind(null, product.id)} />
-          </Space>
-        ),
-      }))}
+      dataSource={products}
     />
   );
 };

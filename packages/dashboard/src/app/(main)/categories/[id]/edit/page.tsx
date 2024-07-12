@@ -16,7 +16,7 @@ const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.CATEGORIES}>Categories</Link> },
-            { title: 'Edit Category' },
+            { title: 'Edit' },
           ]}
         />
       </Col>

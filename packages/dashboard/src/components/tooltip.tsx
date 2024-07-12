@@ -6,7 +6,7 @@ const ResalaTooltip: React.FC<TooltipProps> = props => {
   const { children, ...rest } = props;
 
   return (
-    <Tooltip destroyTooltipOnHide={{ keepParent: false }} mouseLeaveDelay={0} {...rest}>
+    <Tooltip destroyTooltipOnHide={true} mouseLeaveDelay={0} {...rest}>
       {children}
     </Tooltip>
   );

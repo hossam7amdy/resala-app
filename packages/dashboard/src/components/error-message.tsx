@@ -1,10 +1,7 @@
 import Text from 'antd/es/typography/Text';
 import React from 'react';
 
-interface ErrorMessageProps {
-  message: string;
-}
-const ErrorMessage = ({ message }: ErrorMessageProps) => {
+const ErrorMessage: React.FC<{ message: string }> = ({ message }) => {
   return (
     <div style={{ margin: '5px 0' }}>
       <Text type="danger">{message}</Text>
