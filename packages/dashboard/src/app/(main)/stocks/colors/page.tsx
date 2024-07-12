@@ -17,7 +17,7 @@ const ColorsPage = () => {
         <Flex gap={10} justify="space-between">
           <div></div>
           <Link href={ROUTES.CREATE_COLOR}>
-            <Button type="primary">Add New</Button>
+            <Button type="primary">Add Color</Button>
           </Link>
         </Flex>
       </Col>

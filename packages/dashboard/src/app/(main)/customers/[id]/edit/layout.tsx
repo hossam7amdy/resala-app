@@ -1,26 +1,26 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Edit Color',
+  title: 'Edit Customer',
 };
 
-const EditColorLayout = ({ children }: { children: React.ReactNode }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 50]} style={{ padding: 20 }}>
       <Col span={24}>
         <Breadcrumb
           items={[
             { title: <BackButton /> },
-            { title: <Link href={ROUTES.COLORS}>Colors</Link> },
+            { title: <Link href={ROUTES.CUSTOMERS}>Customers</Link> },
             { title: 'Edit' },
           ]}
         />
       </Col>
-
       <Col span={24}>
         <Card>{children}</Card>
       </Col>
@@ -28,4 +28,4 @@ const EditColorLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default EditColorLayout;
+export default Layout;

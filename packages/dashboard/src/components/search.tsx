@@ -24,6 +24,7 @@ const SearchComponent: React.FC<SearchProps> = props => {
   const defaultValue = params.get('query') || '';
   return (
     <AntSearch
+      allowClear
       defaultValue={defaultValue}
       onChange={e => handleSearch(e.target.value)}
       placeholder="Search"

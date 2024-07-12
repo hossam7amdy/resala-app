@@ -2,8 +2,11 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import type {
+  AdminGetUserRequest,
+  AdminGetUserResponse,
   AdminGetUsersListRequest,
   AdminGetUsersListResponse,
+  DefaultRequestQuery,
   GetProfileRequest,
   GetProfileResponse,
 } from '@resala/shared';
@@ -20,20 +23,32 @@ export const getProfile = async () => {
   return response.data;
 };
 
-export const listUsersPaginated = async (searchParams: {
-  page: number;
-  limit: number;
-  query: string;
-}) => {
+export const getUserById = async (id: number | string) => {
+  noStore();
+
+  try {
+    const response = await callEndpoint<AdminGetUserRequest, AdminGetUserResponse>(
+      ENDPOINT_CONFIGS.adminGetUser,
+      { params: { userId: Number(id) } }
+    );
+
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+export const listUsersPaginated = async (params: DefaultRequestQuery['query']) => {
   noStore();
 
   const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
     ENDPOINT_CONFIGS.adminListUsers,
     {
       query: {
-        page: Number(searchParams.page),
-        limit: Number(searchParams.limit),
-        query: searchParams?.query || '',
+        page: Number(params.page),
+        limit: Number(params.limit),
+        query: params?.query || '',
       },
     }
   );

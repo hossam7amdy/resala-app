@@ -25,7 +25,7 @@ export const updateOrderStatus = async (id: string | number, payload: { status: 
 
 export const deleteOrder = async (id: string | number) => {
   try {
-    await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(ENDPOINT_CONFIGS.deleteOrder, {
+    await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(ENDPOINT_CONFIGS.adminDeleteOrder, {
       params: { orderId: Number(id) },
     });
 

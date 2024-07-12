@@ -1,9 +1,7 @@
 import { deleteOrder } from '@/actions/order';
 import { listOrders } from '@/data/orders';
 import { formatCurrency, formatDateTime } from '@/lib/util';
-import { EyeFilled } from '@ant-design/icons';
-import { Table as AntTable, Flex, Space } from 'antd';
-import Link from 'next/link';
+import { Table as AntTable, Flex } from 'antd';
 
 import DeleteButton from '../../components/delete-button';
 import Pagination from '../../components/pagination';
@@ -43,19 +41,14 @@ const Table = async ({ page, limit, query }: TableProps) => {
           orderStatus: <OrderStatus id={order.id} status={order.orderStatus} />,
           createdAt: formatDateTime(order.createdAt),
           actions: (
-            <Space>
-              <Link href={''}>
-                <EyeFilled />
-              </Link>
-              <DeleteButton
-                deleteAction={deleteOrder.bind(null, order.id)}
-                disabled={
-                  order.orderStatus === 'CANCELLED' ||
-                  order.paymentStatus === 'VOIDED' ||
-                  order.paymentStatus === 'REFUNDED'
-                }
-              />
-            </Space>
+            <DeleteButton
+              deleteAction={deleteOrder.bind(null, order.id)}
+              disabled={
+                order.orderStatus === 'CANCELLED' ||
+                order.paymentStatus === 'VOIDED' ||
+                order.paymentStatus === 'REFUNDED'
+              }
+            />
           ),
         }))}
       />
