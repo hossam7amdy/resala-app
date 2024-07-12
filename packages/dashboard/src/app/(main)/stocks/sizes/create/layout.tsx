@@ -1,8 +1,13 @@
 import BackButton from '@/components/back-button';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'New Size',
+};
 
 const CreateLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,7 +17,7 @@ const CreateLayout = ({ children }: { children: React.ReactNode }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.SIZES}>Sizes</Link> },
-            { title: 'Create New' },
+            { title: 'New' },
           ]}
         />
       </Col>
