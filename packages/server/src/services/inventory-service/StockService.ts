@@ -127,10 +127,10 @@ export default class StockService {
       (acc, stock) => {
         const stockDataFormatted = this._formatStock(stock);
 
-        if (acc[stock.productId]) {
-          acc[stock.productId].sizes.push(stockDataFormatted.sizes[0]);
+        if (acc[stock.colorId]) {
+          acc[stock.colorId].sizes.push(stockDataFormatted.sizes[0]);
         } else {
-          acc[stock.productId] = stockDataFormatted;
+          acc[stock.colorId] = stockDataFormatted;
         }
 
         return acc;
