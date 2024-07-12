@@ -1,9 +1,13 @@
 'use client';
 
-import { Pagination } from '@/components';
+import { deleteUser } from '@/actions/user';
+import { DeleteButton, Pagination, Tooltip } from '@/components';
+import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
+import { EditFilled } from '@ant-design/icons';
 import type { AdminGetUsersListResponse } from '@resala/shared';
-import { Flex, Table, Tag } from 'antd';
+import { Button, Flex, Space, Table, Tag } from 'antd';
+import Link from 'next/link';
 
 const CustomersTable: React.FC<AdminGetUsersListResponse['data']> = ({ users, pagination }) => {
   return (
@@ -21,6 +25,7 @@ const CustomersTable: React.FC<AdminGetUsersListResponse['data']> = ({ users, pa
           { title: 'Verified', dataIndex: 'isVerified' },
           { title: 'Last login', dataIndex: 'lastLogin' },
           { title: 'Joined Date', dataIndex: 'createdAt' },
+          { title: 'Actions', dataIndex: 'actions' },
         ]}
         dataSource={users.map(user => ({
           ...user,
@@ -31,6 +36,19 @@ const CustomersTable: React.FC<AdminGetUsersListResponse['data']> = ({ users, pa
           ),
           lastLogin: user.lastLogin ? formatDate(user.lastLogin) : <Tag color="warning">Never</Tag>,
           createdAt: formatDate(user.createdAt),
+          actions: (
+            <Space>
+              <Tooltip title="Edit">
+                <Button type="link" size="small">
+                  <Link href={ROUTES.EDIT_CUSTOMER(user.id)}>
+                    <EditFilled />
+                  </Link>
+                </Button>
+              </Tooltip>
+
+              <DeleteButton deleteAction={deleteUser.bind(null, user.id)} />
+            </Space>
+          ),
         }))}
       />
       <Flex justify="center">
