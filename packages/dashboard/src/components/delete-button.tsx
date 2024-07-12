@@ -5,6 +5,7 @@ import { Button, type ButtonProps, Flex, Popover } from 'antd';
 import React, { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
+import { Tooltip } from '.';
 import ErrorMessage from './error-message';
 
 interface DeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
@@ -38,14 +39,16 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ deleteAction, ...props }) =
       open={open}
       onOpenChange={handleOpenChange}
     >
-      <Button
-        size="small"
-        danger
-        type="link"
-        onClick={() => setOpen(true)}
-        icon={<DeleteFilled />}
-        {...props}
-      />
+      <Tooltip title="Delete">
+        <Button
+          size="small"
+          danger
+          type="link"
+          onClick={() => setOpen(true)}
+          icon={<DeleteFilled />}
+          {...props}
+        />
+      </Tooltip>
     </Popover>
   );
 };

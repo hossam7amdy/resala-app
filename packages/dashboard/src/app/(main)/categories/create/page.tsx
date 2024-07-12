@@ -14,7 +14,7 @@ const CreateCategoryPage = () => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.CATEGORIES}>Categories</Link> },
-            { title: 'Create New Category' },
+            { title: 'New' },
           ]}
         />
       </Col>

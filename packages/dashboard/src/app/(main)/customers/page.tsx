@@ -1,12 +1,5 @@
-import { Search } from '@/components';
-import CustomersTable from '@/features/customers/table';
-import { Breadcrumb, Col, Row, Table } from 'antd';
-import type { Metadata } from 'next';
-import { Suspense } from 'react';
-
-export const metadata: Metadata = {
-  title: 'Customers',
-};
+import { listUsersPaginated } from '@/data/user';
+import { CustomersTable } from '@/features/customers';
 
 const CustomerPage = async ({
   searchParams,
@@ -17,23 +10,9 @@ const CustomerPage = async ({
   const limit = Number(searchParams?.limit) || 10;
   const query = searchParams?.query || '';
 
-  return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
-      <Col span={24}>
-        <Breadcrumb items={[{ title: 'Customers' }]} />
-      </Col>
+  const { users, pagination } = await listUsersPaginated({ page, limit, query });
 
-      <Col span={24}>
-        <Search placeholder="Search customers" />
-      </Col>
-
-      <Col span={24}>
-        <Suspense fallback={<Table loading />}>
-          <CustomersTable page={page} limit={limit} query={query} />
-        </Suspense>
-      </Col>
-    </Row>
-  );
+  return <CustomersTable users={users} pagination={pagination} />;
 };
 
 export default CustomerPage;

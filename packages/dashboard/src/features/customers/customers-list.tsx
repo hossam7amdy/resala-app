@@ -1,20 +1,15 @@
-import { listUsersPaginated } from '@/data/user';
+'use client';
+
+import { Pagination } from '@/components';
 import { formatDate } from '@/lib/util';
+import type { AdminGetUsersListResponse } from '@resala/shared';
 import { Flex, Table, Tag } from 'antd';
 
-import Pagination from '../../components/pagination';
-
-interface TableProps {
-  page: number;
-  limit: number;
-  query: string;
-}
-const CustomersTable = async ({ page, limit, query }: TableProps) => {
-  const users = await listUsersPaginated({ page, limit, query });
-
+const CustomersTable: React.FC<AdminGetUsersListResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
       <Table
+        rowKey={record => record.id}
         scroll={{ x: true, y: 500 }}
         pagination={false}
         columns={[
@@ -25,11 +20,10 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
           { title: 'Role', dataIndex: 'role' },
           { title: 'Verified', dataIndex: 'isVerified' },
           { title: 'Last login', dataIndex: 'lastLogin' },
-          { title: 'Joined', dataIndex: 'createdAt' },
+          { title: 'Joined Date', dataIndex: 'createdAt' },
         ]}
-        dataSource={users.users.map(user => ({
+        dataSource={users.map(user => ({
           ...user,
-          key: user.id,
           isVerified: (
             <Tag color={user.isVerified ? 'success' : 'error'}>
               {user.isVerified ? 'Yes' : 'No'}
@@ -40,7 +34,7 @@ const CustomersTable = async ({ page, limit, query }: TableProps) => {
         }))}
       />
       <Flex justify="center">
-        <Pagination totalPages={users.pagination.total} />
+        <Pagination totalPages={pagination.total} />
       </Flex>
     </Flex>
   );

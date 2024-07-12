@@ -1,34 +1,27 @@
 'use client';
 
-import { Pagination } from '@/components';
+import { deleteStock } from '@/actions/stock';
+import { DeleteButton, Pagination } from '@/components';
 import type { GetStocksListResponse } from '@resala/shared';
-import { Flex, Table } from 'antd';
-import React, { useState } from 'react';
+import { Flex, Space, Table } from 'antd';
+import React from 'react';
 
 import { StockColor, StockColorImages, StockQuantity, StockSizes } from '.';
+import UploadModal from './upload-modal';
 
 const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stocks }) => {
-  const [viewImages, setViewImages] = useState(false);
-
   return (
     <Flex vertical gap={10}>
       <Table
         rowClassName={() => 'cursor-pointer'}
         bordered
-        rowKey={stock => stock.product.id}
+        rowKey={s => s.color.id}
         scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={stocks}
         expandable={{
           expandRowByClick: true,
-          expandedRowRender: stock =>
-            !viewImages ? (
-              <StockSizes sizes={stock.sizes} />
-            ) : (
-              <StockColorImages
-                images={stock.images.map(img => ({ ...img, productId: stock.product.id }))}
-              />
-            ),
+          expandedRowRender: stock => <StockSizes sizes={stock.sizes} />,
         }}
         columns={[
           {
@@ -61,10 +54,10 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
             key: 'images',
             width: 120,
             align: 'center',
-            render: images => `${images.length}`,
+            render: (_, stock) => <StockColorImages stock={stock} />,
             onCell: () => ({
-              onClick: () => {
-                setViewImages(true);
+              onClick: e => {
+                e.stopPropagation();
               },
             }),
           },
@@ -76,11 +69,6 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
             width: 240,
             render: (sizes: { size: string }[]) =>
               sizes.length ? `${sizes.map(s => s.size).join(', ')}` : 'No Sizes',
-            onCell: () => ({
-              onClick: () => {
-                setViewImages(false);
-              },
-            }),
           },
           {
             title: 'Total Qty',
@@ -91,9 +79,20 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
             render: (sizes: { quantity: number }[]) => (
               <StockQuantity quantity={sizes.reduce((acc, size) => acc + size.quantity, 0)} />
             ),
+          },
+          {
+            title: 'Actions',
+            width: 100,
+            align: 'center',
+            render: (_, stock) => (
+              <Space>
+                <UploadModal productId={stock.product.id} colorId={stock.color.id} />
+                <DeleteButton deleteAction={deleteStock.bind(null, stock.sizes[0].stockId)} />
+              </Space>
+            ),
             onCell: () => ({
-              onClick: () => {
-                setViewImages(false);
+              onClick: e => {
+                e.stopPropagation();
               },
             }),
           },

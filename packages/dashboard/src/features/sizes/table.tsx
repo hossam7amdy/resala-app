@@ -1,4 +1,7 @@
+'use client';
+
 import { deleteSize } from '@/actions/size';
+import { DeleteButton, Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -6,9 +9,7 @@ import type { GetSizesListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
 
-import DeleteButton from '../../components/delete-button';
-
-const Table = ({ sizes }: { sizes: GetSizesListResponse['data'] }) => {
+const Table: React.FC<{ sizes: GetSizesListResponse['data'] }> = ({ sizes }) => {
   return (
     <AntTable
       pagination={{
@@ -20,22 +21,29 @@ const Table = ({ sizes }: { sizes: GetSizesListResponse['data'] }) => {
       scroll={{ x: true, y: 500 }}
       rowKey="id"
       columns={[
-        { title: 'Size', dataIndex: 'name', key: 'name' },
-        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
-        { title: 'Actions', dataIndex: 'actions', key: 'actions' },
+        { title: 'Size', dataIndex: 'name' },
+        {
+          title: 'Created At',
+          dataIndex: 'createdAt',
+          render: (date: string) => formatDate(new Date(date)),
+        },
+        {
+          title: 'Actions',
+          dataIndex: 'id',
+          align: 'center',
+          render: (id: number) => (
+            <Space>
+              <Tooltip title="Edit">
+                <Link href={ROUTES.EDIT_SIZE(id)}>
+                  <EditFilled />
+                </Link>
+              </Tooltip>
+              <DeleteButton deleteAction={deleteSize.bind(null, id)} />
+            </Space>
+          ),
+        },
       ]}
-      dataSource={sizes.map(size => ({
-        ...size,
-        actions: (
-          <Space>
-            <Link href={ROUTES.EDIT_SIZE(size.id)}>
-              <EditFilled />
-            </Link>
-            <DeleteButton deleteAction={deleteSize.bind(null, size.id)} />
-          </Space>
-        ),
-        createdAt: formatDate(size.createdAt),
-      }))}
+      dataSource={sizes}
     />
   );
 };
