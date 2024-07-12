@@ -56,10 +56,10 @@ export default class UserRepository {
   async list({ page, limit, query }: DefaultFilters) {
     const filters: Prisma.UserWhereInput = {
       OR: [
-        { firstName: { startsWith: query } },
-        { lastName: { startsWith: query } },
-        { email: { startsWith: query } },
-        { phone: { startsWith: query } },
+        { firstName: { startsWith: query.split(' ')[0], mode: 'insensitive' } },
+        { lastName: { startsWith: query.split(' ')[1], mode: 'insensitive' } },
+        { email: { startsWith: query.split(' ')[0], mode: 'insensitive' } },
+        { phone: { startsWith: query.split(' ')[0], mode: 'insensitive' } },
       ],
     };
 
