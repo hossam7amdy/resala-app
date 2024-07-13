@@ -86,7 +86,7 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
             align: 'center',
             render: (_, stock) => (
               <Space>
-                <UploadModal productId={stock.product.id} colorId={stock.color.id} />
+                <UploadModal stock={stock} />
                 <DeleteButton deleteAction={deleteStock.bind(null, stock.sizes[0].stockId)} />
               </Space>
             ),

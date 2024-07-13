@@ -1,17 +1,26 @@
 import { Tooltip } from '@/components';
 import { UploadOutlined } from '@ant-design/icons';
+import type { GetStocksListResponse } from '@resala/shared';
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
 import UploadForm from './upload-form';
 
-const UploadModal: React.FC<{ productId: number; colorId: number }> = ({ productId, colorId }) => {
+const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
+  stock,
+}) => {
   const [open, setOpen] = useState(false);
 
+  const moreThanFiveImages = stock.images.length >= 5;
   return (
     <>
-      <Tooltip title="Upload">
-        <Button onClick={() => setOpen(true)} type="link" icon={<UploadOutlined />} />
+      <Tooltip title={moreThanFiveImages ? 'Color has 5 images' : 'Upload'}>
+        <Button
+          disabled={moreThanFiveImages}
+          onClick={() => setOpen(true)}
+          type="link"
+          icon={<UploadOutlined />}
+        />
       </Tooltip>
 
       <Modal
@@ -22,8 +31,8 @@ const UploadModal: React.FC<{ productId: number; colorId: number }> = ({ product
         footer={null}
       >
         <UploadForm
-          id={productId.toString()}
-          colorId={colorId.toString()}
+          id={stock.product.id.toString()}
+          colorId={stock.color.id.toString()}
           onCancel={() => setOpen(false)}
         />
       </Modal>
