@@ -18,9 +18,7 @@ export const createStock = async (stock: CreateStockRequest['body']) => {
   try {
     const response = await callEndpoint<CreateStockRequest, CreateStockResponse>(
       ENDPOINT_CONFIGS.addStock,
-      {
-        body: stock,
-      }
+      { body: stock }
     );
 
     revalidatePath(ROUTES.STOCKS);
