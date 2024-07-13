@@ -1,59 +1,64 @@
-import { deleteOrder } from '@/actions/order';
-import { listOrders } from '@/data/orders';
-import { formatCurrency, formatDateTime } from '@/lib/util';
+'use client';
+
+import { TableColumn } from '@/components';
+import { formatCurrency, formatDate, formatTime } from '@/lib/util';
+import type { GetOrdersListResponse } from '@resala/shared';
 import { Table as AntTable, Flex } from 'antd';
 
-import DeleteButton from '../../components/delete-button';
 import Pagination from '../../components/pagination';
+import CancelOrder from './cancel-order';
 import OrderStatus from './order-status';
 import PaymentStatus from './payment-status';
 
 interface TableProps {
-  page: number;
-  limit: number;
-  query: string;
+  total: number;
+  orders: GetOrdersListResponse['data']['orders'];
 }
-const Table = async ({ page, limit, query }: TableProps) => {
-  const { pagination, orders } = await listOrders({ page, limit, query });
-
+const Table: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
       <AntTable
+        rowKey={record => record.id}
         scroll={{ x: true, y: 500 }}
         pagination={false}
-        columns={[
-          { title: 'ID', dataIndex: 'id' },
-          { title: 'Client Name', dataIndex: 'clientName' },
-          { title: 'Amount', dataIndex: 'amount' },
-          { title: 'Payment Method', dataIndex: 'paymentMethod' },
-          { title: 'Payment Status', dataIndex: 'paymentStatus' },
-          { title: 'Order Status', dataIndex: 'orderStatus' },
-          { title: 'Created At', dataIndex: 'createdAt' },
-          { title: 'Actions', dataIndex: 'actions' },
-        ]}
-        dataSource={orders.map(order => ({
-          key: order.id,
-          id: order.id,
-          clientName: `${order.user?.firstName} ${order.user?.lastName}`,
-          amount: formatCurrency(order.total),
-          paymentMethod: order.paymentMethod,
-          paymentStatus: <PaymentStatus status={order.paymentStatus} />,
-          orderStatus: <OrderStatus id={order.id} status={order.orderStatus} />,
-          createdAt: formatDateTime(order.createdAt),
-          actions: (
-            <DeleteButton
-              deleteAction={deleteOrder.bind(null, order.id)}
-              disabled={
-                order.orderStatus === 'CANCELLED' ||
-                order.paymentStatus === 'VOIDED' ||
-                order.paymentStatus === 'REFUNDED'
-              }
-            />
-          ),
-        }))}
-      />
+        dataSource={orders}
+      >
+        <TableColumn title="ID" dataIndex="id" />
+        <TableColumn
+          title="client"
+          dataIndex="user"
+          render={user => (
+            <Flex vertical gap={5}>
+              <span>{user.firstName}</span>
+              <span>{user.lastName}</span>
+            </Flex>
+          )}
+        />
+        <TableColumn title="Amount" dataIndex="total" render={amount => formatCurrency(amount)} />
+        <TableColumn width={100} title="Method" dataIndex="paymentMethod" />
+        <TableColumn
+          title="Payment Status"
+          dataIndex="paymentStatus"
+          render={status => <PaymentStatus status={status} />}
+        />
+        <TableColumn
+          title="Order Status"
+          render={order => <OrderStatus id={order.id} status={order.orderStatus} />}
+        />
+        <TableColumn
+          title="Created Time"
+          dataIndex="createdAt"
+          render={date => (
+            <Flex vertical>
+              <span>{formatDate(date)}</span>
+              <span>{formatTime(date)}</span>
+            </Flex>
+          )}
+        />
+        <TableColumn title="Actions" render={order => <CancelOrder order={order} />} />
+      </AntTable>
       <Flex justify="center">
-        <Pagination totalPages={pagination.total} />
+        <Pagination totalPages={total} />
       </Flex>
     </Flex>
   );

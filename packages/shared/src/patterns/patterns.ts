@@ -83,11 +83,11 @@ export const validationPatterns = {
   },
 
   validateArabicCharacters: {
-    pattern: /^[\u0600-\u06FF\s0-9]+$/,
+    pattern: /^[\u0600-\u06FF\s0-9.,!?'"-]+$/,
     message: 'فقط الحروف العربية مسموح بها',
   },
   validateEnglishCharacters: {
-    pattern: /^[a-zA-Z\s0-9]+$/,
-    message: 'Only English characters are allowed',
+    pattern: /^[a-zA-Z\s0-9.,!?'"-]+$/,
+    message: 'Only English characters and common punctuation marks are allowed',
   },
 };

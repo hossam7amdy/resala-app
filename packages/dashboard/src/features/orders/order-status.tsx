@@ -1,56 +1,69 @@
 'use client';
 
 import { updateOrderStatus } from '@/actions/order';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation } from '@/hooks';
 import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
 import type { GetOrderResponse } from '@resala/shared';
-import { Button, Flex, Form, Select, Tag } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
-import useMessage from 'antd/lib/message/useMessage';
-import { useEffect, useState } from 'react';
+import { OrderStatus as OrderStatusEnum } from '@resala/shared';
+import { App, Button, Flex, Form, Select, Tag } from 'antd';
+import { useState } from 'react';
 
 interface OrderStatusProps {
   id: string | number;
   status: GetOrderResponse['data']['orderStatus'];
 }
-const OrderStatus = ({ status }: OrderStatusProps) => {
-  const [messageApi, contextHolder] = useMessage();
+const OrderStatus: React.FC<OrderStatusProps> = ({ id, status }) => {
+  const { notification } = App.useApp();
   const [editMode, setEditMode] = useState(false);
-  const { pending, error, dispatch } = useSubmitForm(updateOrderStatus.bind(null, status));
-
-  useEffect(() => {
-    if (error.message) {
-      messageApi.error(error.message);
-    }
-  }, [error?.message, messageApi]);
+  const { isLoading, mutate } = useMutation({
+    mutationFn: updateOrderStatus.bind(null, id),
+    onSuccess: () => {
+      notification.success({
+        message: 'Success',
+        description: 'Order status has been updated successfully',
+      });
+      setEditMode(false);
+    },
+    onError: error => {
+      notification.error({
+        message: 'Error',
+        description: error.message,
+      });
+    },
+  });
 
   if (editMode) {
     return (
-      <>
-        {contextHolder}
-        <Form size="small" name="order-status" onFinish={dispatch} initialValues={{ status }}>
-          <FormItem name="status" noStyle>
-            <Select
-              options={[
-                { label: 'Pending', value: 'PENDING', disabled: true },
-                { label: 'Fulfilled', value: 'FULFILLED' },
-              ]}
-            />
-          </FormItem>
+      <Form size="small" name="order-status" onFinish={mutate} initialValues={{ status }}>
+        <Form.Item name="status" noStyle>
+          <Select
+            options={[
+              {
+                label: 'Pending',
+                value: OrderStatusEnum.PENDING,
+                disabled: status === 'PENDING',
+              },
+              {
+                label: 'Fulfilled',
+                value: OrderStatusEnum.FULFILLED,
+                disabled: status === 'FULFILLED',
+              },
+            ]}
+          />
+        </Form.Item>
 
-          <FormItem noStyle>
-            <Flex gap={5}>
-              <Button icon={<CheckOutlined />} type="text" htmlType="submit" loading={pending} />
-              <Button
-                icon={<CloseOutlined />}
-                type="text"
-                onClick={() => setEditMode(false)}
-                disabled={pending}
-              />
-            </Flex>
-          </FormItem>
-        </Form>
-      </>
+        <Form.Item noStyle>
+          <Flex gap={5}>
+            <Button icon={<CheckOutlined />} type="text" htmlType="submit" loading={isLoading} />
+            <Button
+              icon={<CloseOutlined />}
+              type="text"
+              onClick={() => setEditMode(false)}
+              disabled={isLoading}
+            />
+          </Flex>
+        </Form.Item>
+      </Form>
     );
   }
 
@@ -62,7 +75,7 @@ const OrderStatus = ({ status }: OrderStatusProps) => {
         type="text"
         icon={<FormOutlined />}
         onClick={() => setEditMode(true)}
-        disabled={status !== 'PENDING'}
+        disabled={isLoading || status === 'CANCELLED'}
       />
     </Flex>
   );
@@ -84,7 +97,7 @@ const Status = ({ status }: Pick<OrderStatusProps, 'status'>) => {
   }
 
   return (
-    <Tag style={{ fontWeight: 500 }} color={color}>
+    <Tag style={{ fontWeight: 500 }} color={color} bordered={false}>
       {status}
     </Tag>
   );

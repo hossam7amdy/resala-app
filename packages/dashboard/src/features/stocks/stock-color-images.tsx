@@ -4,7 +4,7 @@ import { formatDate } from '@/lib/util';
 import { FolderOutlined } from '@ant-design/icons';
 import type { GetStocksListResponse } from '@resala/shared';
 import { Image as AntImage, Button, List, Modal, Tag } from 'antd';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import MoreMenu from './more-menu';
 
@@ -12,6 +12,16 @@ const StockColorImages: React.FC<{
   stock: GetStocksListResponse['data']['stocks'][0];
 }> = ({ stock }) => {
   const [open, setOpen] = useState(false);
+
+  const sortedImages = useMemo(() => {
+    return stock.images.sort((a, b) => {
+      // Primary image should be first
+      if (a.isPrimary) return -1;
+      if (b.isPrimary) return 1;
+      // otherwise sort by createdAt
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [stock.images]);
 
   return (
     <>
@@ -25,9 +35,15 @@ const StockColorImages: React.FC<{
         {' '}
         {stock.images.length}
       </Button>
-      <Modal footer={null} open={open} onCancel={() => setOpen(false)} maskClosable={false}>
+      <Modal
+        destroyOnClose
+        footer={null}
+        open={open}
+        onCancel={() => setOpen(false)}
+        maskClosable={false}
+      >
         <List
-          dataSource={stock.images}
+          dataSource={sortedImages}
           renderItem={image => (
             <List.Item extra={<MoreMenu image={{ ...image, productId: stock.product.id }} />}>
               <List.Item.Meta

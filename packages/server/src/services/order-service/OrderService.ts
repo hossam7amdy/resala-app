@@ -22,6 +22,11 @@ export default class OrderService {
 
   async createOrder(userId: number, order: CreateOrderRequest['body']) {
     const userCart = await this.shoppingService.getUserCart(userId);
+
+    if (userCart.items.length === 0) {
+      throw new BadRequestError('Cart is empty');
+    }
+
     // eslint-disable-next-line no-unused-vars
     const { id: _, ...address } = await this.userService.findUserAddress(userId, order.addressId);
 
@@ -101,10 +106,10 @@ export default class OrderService {
   }
 
   async updateOrderStatus(id: number, status: Order['orderStatus']) {
-    // only allow to update order status to 'FULFILLED' or 'CANCELLED'
-    if (!['FULFILLED', 'CANCELLED'].includes(status)) {
-      throw new BadRequestError('Invalid order status');
-    }
+    // TODO: only allow to update order status to 'FULFILLED' or 'CANCELLED'
+    // if (!['FULFILLED', 'CANCELLED'].includes(status)) {
+    //   throw new BadRequestError('Invalid order status');
+    // }
 
     await this.updateOrder(id, { orderStatus: status });
 
