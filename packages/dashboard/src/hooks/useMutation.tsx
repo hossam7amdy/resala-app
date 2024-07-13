@@ -47,6 +47,7 @@ function useMutation<Data, Variables, Context = unknown>({
         // Return the context to be used in onSuccess
         context = onMutate(variables);
         const result = await mutationFn(variables);
+
         setData(result);
         setIsSuccess(true);
         onSuccess(result, variables, context);

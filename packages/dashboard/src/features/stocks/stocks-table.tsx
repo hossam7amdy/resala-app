@@ -15,7 +15,7 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
       <Table
         rowClassName={() => 'cursor-pointer'}
         bordered
-        rowKey={s => s.color.id}
+        rowKey={s => `${s.product.id}-${s.color.id}`}
         scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={stocks}
