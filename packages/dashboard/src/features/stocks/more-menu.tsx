@@ -46,7 +46,11 @@ const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
   ];
 
   return (
-    <Dropdown trigger={['click']} menu={{ items }}>
+    <Dropdown
+      open={loading === 'primary' || loading === 'delete' ? true : undefined}
+      trigger={['click']}
+      menu={{ items }}
+    >
       <Tooltip title="More">
         <Button type="link" size="large" icon={<MoreOutlined />} />
       </Tooltip>
