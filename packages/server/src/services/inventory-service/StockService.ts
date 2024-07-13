@@ -127,18 +127,19 @@ export default class StockService {
       (acc, stock) => {
         const stockDataFormatted = this._formatStock(stock);
 
-        if (acc[stock.colorId]) {
-          acc[stock.colorId].sizes.push(stockDataFormatted.sizes[0]);
+        const key = `${stockDataFormatted.product.id}-${stockDataFormatted.color.id}`;
+        if (acc[key]) {
+          acc[key].sizes.push(stockDataFormatted.sizes[0]);
         } else {
-          acc[stock.colorId] = stockDataFormatted;
+          acc[key] = stockDataFormatted;
         }
 
         return acc;
       },
-      {} as Record<number, GetStockResponse['data']>
+      {} as Record<string, GetStockResponse['data']>
     );
 
-    return Object.values(stocks).sort(
+    return Object.values(stocks).toSorted(
       (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
     );
   }

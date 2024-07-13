@@ -54,6 +54,14 @@ export default class PaymentController implements IPaymentController {
 
   paymentResponse: RequestHandler = async (req, res) => {
     try {
+      const bodyObj = req.body['obj'];
+
+      const status = await this.paymentService.createPayment(req.query.hmac as string, bodyObj);
+
+      await this.orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
+        paymentStatus: status as PaymentStatusType,
+      });
+
       const success = req.query.success === 'true';
 
       if (!success) {
