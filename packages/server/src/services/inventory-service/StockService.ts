@@ -138,6 +138,8 @@ export default class StockService {
       {} as Record<number, GetStockResponse['data']>
     );
 
-    return Object.values(stocks);
+    return Object.values(stocks).sort(
+      (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
+    );
   }
 }
