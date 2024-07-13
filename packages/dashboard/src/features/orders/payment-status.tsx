@@ -20,7 +20,7 @@ const PaymentStatus = ({ status }: PaymentStatusProps) => {
   }
 
   return (
-    <Tag style={{ fontWeight: 500 }} color={color}>
+    <Tag style={{ fontWeight: 500 }} color={color} bordered={false}>
       {status}
     </Tag>
   );

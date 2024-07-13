@@ -11,4 +11,5 @@ export { default as SubmitButton } from './submit-button';
 export { default as Tooltip } from './tooltip';
 export { default as DeleteButton } from './delete-button';
 export { default as ErrorMessage } from './error-message';
+export { default as TableColumn } from './table-column';
 export { default as DebounceSelect } from './debounce-select';

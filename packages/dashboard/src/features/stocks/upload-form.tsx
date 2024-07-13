@@ -1,13 +1,12 @@
 'use client';
 
 import { uploadProductImages } from '@/actions/image';
-import useSubmitForm from '@/hooks/useSubmitForm';
-import { InboxOutlined } from '@ant-design/icons';
+import { ErrorMessage } from '@/components';
+import { useMutation } from '@/hooks';
 import { Button, Flex, Form, type UploadFile } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
-import Text from 'antd/es/typography/Text';
-import Dragger from 'antd/es/upload/Dragger';
+
+import { DraggerFormItem } from './dragger-form-item';
 
 interface UploadFormProps {
   id: string;
@@ -16,7 +15,13 @@ interface UploadFormProps {
 }
 const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
   const [form] = useForm();
-  const { pending, error, dispatch } = useSubmitForm(uploadProductImages, form);
+  const { isLoading, error, mutate } = useMutation({
+    mutationFn: uploadProductImages,
+    onSuccess: () => {
+      form.resetFields();
+      onCancel();
+    },
+  });
 
   const handleFinish = (values: { images: UploadFile[] }) => {
     const formData = new FormData();
@@ -27,7 +32,7 @@ const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
       formData.append('images', image.originFileObj!);
     });
 
-    return dispatch(formData);
+    return mutate(formData);
   };
 
   return (
@@ -38,57 +43,20 @@ const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
       layout="vertical"
       size="large"
     >
-      <Form.Item label="Upload Product Images" noStyle>
-        <FormItem
-          required
-          name="images"
-          valuePropName="fileList"
-          rules={[{ required: true }]}
-          getValueFromEvent={args => {
-            if (Array.isArray(args)) {
-              return args;
-            }
+      <DraggerFormItem />
 
-            return args?.fileList;
-          }}
-        >
-          <Dragger
-            multiple
-            maxCount={5}
-            name="images"
-            accept="image/*"
-            listType="picture"
-            onPreview={() => null}
-            beforeUpload={() => false}
-            showUploadList={{
-              showRemoveIcon: true,
-              showPreviewIcon: false,
-            }}
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload. Strictly prohibited from uploading company data
-              or other banned files.
-            </p>
-          </Dragger>
-        </FormItem>
-      </Form.Item>
+      <Form.Item noStyle>{error?.message && <ErrorMessage message={error.message} />}</Form.Item>
 
-      <FormItem noStyle>{error?.message && <Text type="danger">{error.message}</Text>}</FormItem>
-
-      <FormItem noStyle>
+      <Form.Item noStyle>
         <Flex gap={10}>
-          <Button block type="primary" htmlType="submit" loading={pending}>
+          <Button block type="primary" htmlType="submit" loading={isLoading}>
             Upload
           </Button>
-          <Button block onClick={onCancel} disabled={pending}>
+          <Button block onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
         </Flex>
-      </FormItem>
+      </Form.Item>
     </Form>
   );
 };

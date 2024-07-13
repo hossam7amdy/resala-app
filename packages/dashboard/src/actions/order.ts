@@ -2,25 +2,18 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
-import { sleep } from '@/lib/util';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { DeleteOrderRequest, DeleteOrderResponse } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export const updateOrderStatus = async (id: string | number, payload: { status: string }) => {
-  try {
-    console.log('updateOrderStatus', id, payload);
-    await sleep(2000);
-    revalidatePath(ROUTES.ORDERS);
-  } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
-  redirect(ROUTES.ORDERS);
+  const response = await callEndpoint(ENDPOINT_CONFIGS.adminUpdateOrderStatus, {
+    params: { orderId: Number(id) },
+    body: payload,
+  });
+
+  revalidatePath(ROUTES.ORDERS);
+  return response;
 };
 
 export const deleteOrder = async (id: string | number) => {

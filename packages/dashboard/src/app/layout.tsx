@@ -1,12 +1,11 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider } from 'antd';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import React from 'react';
 
 import StyledComponentsRegistry from './antd-registry';
+import AppConfigProvider from './app-config-provider';
 import './globals.css';
-import theme from './theme.config';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
       <body className={inter.className}>
         <StyledComponentsRegistry>
           <AntdRegistry>
-            <ConfigProvider theme={theme}>{children}</ConfigProvider>
+            <AppConfigProvider>{children}</AppConfigProvider>
           </AntdRegistry>
         </StyledComponentsRegistry>
       </body>

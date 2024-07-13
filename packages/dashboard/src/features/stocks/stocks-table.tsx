@@ -15,7 +15,7 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
       <Table
         rowClassName={() => 'cursor-pointer'}
         bordered
-        rowKey={s => s.color.id}
+        rowKey={s => `${s.product.id}-${s.color.id}`}
         scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={stocks}
@@ -86,7 +86,7 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
             align: 'center',
             render: (_, stock) => (
               <Space>
-                <UploadModal productId={stock.product.id} colorId={stock.color.id} />
+                <UploadModal stock={stock} />
                 <DeleteButton deleteAction={deleteStock.bind(null, stock.sizes[0].stockId)} />
               </Space>
             ),
