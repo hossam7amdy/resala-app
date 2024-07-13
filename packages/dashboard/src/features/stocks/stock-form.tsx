@@ -2,7 +2,7 @@
 
 import { createStock, updateStock } from '@/actions/stock';
 import { useMutation } from '@/hooks';
-import { Button, Flex, Form, InputNumber, type UploadFile } from 'antd';
+import { App, Button, Flex, Form, InputNumber, type UploadFile } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
@@ -33,6 +33,7 @@ interface StockFormProps {
 const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, selectProduct }) => {
   const router = useRouter();
   const [form] = useForm<FormValues>();
+  const { notification } = App.useApp();
 
   const isCreate = !stock?.id;
   const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
@@ -40,6 +41,12 @@ const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, s
     mutationFn: submit,
     onSuccess: () => {
       form.resetFields();
+      // message.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
+      notification.success({
+        message: 'Success',
+        description: `Stock has been ${isCreate ? 'created' : 'updated'} successfully`,
+      });
+      !isCreate && router.back(); // Redirect to the previous page if it's an update
     },
   });
 
