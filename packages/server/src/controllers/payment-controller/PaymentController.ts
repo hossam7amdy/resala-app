@@ -53,25 +53,20 @@ export default class PaymentController implements IPaymentController {
   };
 
   paymentResponse: RequestHandler = async (req, res) => {
-    try {
-      const bodyObj = req.body['obj'];
+    const bodyObj = req.body['obj'];
 
-      const status = await this.paymentService.createPayment(req.query.hmac as string, bodyObj);
+    const status = await this.paymentService.createPayment(req.query.hmac as string, bodyObj);
 
-      await this.orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
-        paymentStatus: status as PaymentStatusType,
-      });
+    await this.orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
+      paymentStatus: status as PaymentStatusType,
+    });
 
-      const success = req.query.success === 'true';
+    const success = req.query.success === 'true';
 
-      if (!success) {
-        throw new Error('Payment failed');
-      }
-
-      return res.sendStatus(200);
-    } catch (error) {
-      const msg = (error as Error).message;
-      return res.status(400).json({ message: msg });
+    if (!success) {
+      throw new Error('Payment failed');
     }
+
+    return res.redirect(process.env.FRONTEND_URL as string);
   };
 }
