@@ -1,4 +1,4 @@
-import type { PaymentStatusType } from '@resala/shared';
+import { PaymentStatus, type PaymentStatusType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
 import type { OrderService, PaymentService } from '../../services/index.js';
@@ -53,15 +53,11 @@ export default class PaymentController implements IPaymentController {
   };
 
   paymentResponse: RequestHandler = async (req, res) => {
-    const bodyObj = req.body['obj'];
-
-    const status = await this.paymentService.createPayment(req.query.hmac as string, bodyObj);
-
-    await this.orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
-      paymentStatus: status as PaymentStatusType,
-    });
-
     const success = req.query.success === 'true';
+
+    await this.orderService.updateOrder(Number(req.query.merchant_order_id), {
+      paymentStatus: success ? PaymentStatus.PAID : undefined,
+    });
 
     if (!success) {
       throw new Error('Payment failed');
