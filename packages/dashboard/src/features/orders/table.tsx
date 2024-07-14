@@ -1,12 +1,12 @@
 'use client';
 
-import { TableColumn } from '@/components';
+import { Pagination, TableColumn } from '@/components';
 import { formatCurrency, formatDate, formatTime } from '@/lib/util';
 import type { GetOrdersListResponse } from '@resala/shared';
 import { Table as AntTable, Flex } from 'antd';
 
-import Pagination from '../../components/pagination';
 import CancelOrder from './cancel-order';
+import { OrderDetails } from './order-details';
 import OrderStatus from './order-status';
 import PaymentStatus from './payment-status';
 
@@ -18,10 +18,15 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
       <AntTable
+        className="cursor-pointer"
         rowKey={record => record.id}
         scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={orders}
+        expandable={{
+          expandRowByClick: true,
+          expandedRowRender: order => <OrderDetails order={order} />,
+        }}
       >
         <TableColumn title="ID" dataIndex="id" />
         <TableColumn
@@ -44,6 +49,9 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
         <TableColumn
           title="Order Status"
           render={order => <OrderStatus id={order.id} status={order.orderStatus} />}
+          onCell={() => ({
+            onClick: e => e.stopPropagation(),
+          })}
         />
         <TableColumn
           title="Created Time"
@@ -55,7 +63,13 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
             </Flex>
           )}
         />
-        <TableColumn title="Actions" render={order => <CancelOrder order={order} />} />
+        <TableColumn
+          title="Actions"
+          render={order => <CancelOrder order={order} />}
+          onCell={() => ({
+            onClick: e => e.stopPropagation(),
+          })}
+        />
       </AntTable>
       <Flex justify="center">
         <Pagination totalPages={total} />

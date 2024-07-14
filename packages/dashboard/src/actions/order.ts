@@ -17,17 +17,11 @@ export const updateOrderStatus = async (id: string | number, payload: { status: 
 };
 
 export const deleteOrder = async (id: string | number) => {
-  try {
-    await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(ENDPOINT_CONFIGS.adminDeleteOrder, {
-      params: { orderId: Number(id) },
-    });
+  const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
+    ENDPOINT_CONFIGS.adminDeleteOrder,
+    { params: { orderId: Number(id) } }
+  );
 
-    revalidatePath(ROUTES.ORDERS);
-  } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
+  revalidatePath(ROUTES.ORDERS);
+  return response;
 };
