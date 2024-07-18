@@ -32,6 +32,9 @@ export class NavBlankComponent implements OnInit {
     this._CartService.getCartUser().subscribe({
       next: (response) => {
         this.cartNum = response.data.totalQuantity;
+      },
+      error: err => {
+
       }
     })
   }
