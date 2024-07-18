@@ -349,7 +349,7 @@ export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody;
 
 // Payment types
-export type CreatePaymentRequest = {
+export type checkout = {
   query: z.infer<typeof Schemas.CreatePaymentSchema>['query'];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: { [key: string]: any };

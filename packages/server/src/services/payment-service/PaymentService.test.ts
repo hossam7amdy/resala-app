@@ -74,9 +74,9 @@ describe('Payment Service', () => {
     vi.clearAllMocks();
   });
 
-  describe('createPaymentRequest', () => {
+  describe('checkout', () => {
     it('should create a payment request', async () => {
-      const result = await paymentService.createPaymentRequest(MOCK_CREATE_PAYMENT);
+      const result = await paymentService.checkout(MOCK_CREATE_PAYMENT);
 
       expect(result).toEqual(CHECKOUT_RESPONSE);
     });

@@ -26,18 +26,18 @@ export default class OrderController implements IOrderController {
         note,
       });
 
-      let payment;
       if (paymentMethod === 'CARD') {
-        // create payment
-        payment = await this.paymentService.createPaymentRequest({
+        const { paymentUrl } = await this.paymentService.checkout({
           user: user,
           order: order,
           items: items,
           shipping: address,
         });
+
+        return res.redirect(paymentUrl);
       }
 
-      return res.status(201).json({ success: true, data: payment });
+      return res.status(201).json({ success: true });
     } catch (error) {
       next(error);
     }
@@ -85,7 +85,7 @@ export default class OrderController implements IOrderController {
 
       // void payment
       if (order.paymentMethod === 'CARD') {
-        await this.paymentService.voidPayment(order.id);
+        await this.paymentService.void(order.id);
       }
 
       // notify user with order cancellation
@@ -134,7 +134,7 @@ export default class OrderController implements IOrderController {
 
       // Refund payment if paid by card
       if (order.paymentMethod === 'CARD' && order.paymentDetails) {
-        await this.paymentService.refundPayment(order.paymentDetails.id);
+        await this.paymentService.refund(order.paymentDetails.id);
       }
 
       // Notify user with order cancellation

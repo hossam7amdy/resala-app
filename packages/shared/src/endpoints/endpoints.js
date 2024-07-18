@@ -462,7 +462,7 @@ export const ENDPOINT_CONFIGS = {
     },
     // payment endpoints
     [Endpoints.createPayment]: {
-        url: '/api/v1/payments',
+        url: '/api/v1/payments/:orderId',
         method: 'post',
     },
     [Endpoints.getPayment]: {
@@ -471,7 +471,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.paymentResponse]: {
-        url: '/api/v1/payments/response',
+        url: '/api/v1/payments/:orderId',
         method: 'get',
     },
     [Endpoints.listPayments]: {
