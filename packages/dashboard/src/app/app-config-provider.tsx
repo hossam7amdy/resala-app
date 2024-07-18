@@ -6,7 +6,7 @@ import theme from './theme.config';
 const AppConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <AntConfigProvider theme={theme}>
-      <App>{children}</App>
+      <App style={{ width: '100%', height: '100%' }}>{children}</App>
     </AntConfigProvider>
   );
 };

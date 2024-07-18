@@ -11,7 +11,7 @@ import type {
 import type { PaymentRepository } from '../../repositories/index.js';
 import { NotFoundError } from '../../utils/ApiErrors.js';
 import type PaymobPaymentService from '../paymob-payment-service/PaymobPaymentService.js';
-import type Response from '../paymob-payment-service/data/response.json';
+import type { TransactionObject } from '../paymob-payment-service/types.js';
 
 export default class PaymentService {
   constructor(
@@ -19,97 +19,53 @@ export default class PaymentService {
     private readonly paymobService: PaymobPaymentService
   ) {}
 
-  async createPaymentRequest(payload: {
+  async checkout(payload: {
     user: User;
     order: Order;
     shipping: Omit<Address, 'id'>;
     items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
-  }) {
-    const { token } = await this.paymobService.authenticate();
+  }): Promise<{ paymentUrl: string }> {
+    return this.paymobService.checkout(payload);
+  }
 
-    const { id } = await this.paymobService.createOrder({
-      auth_token: token,
-      delivery_needed: false,
-      amount_cents: payload.order.total * 100,
-      merchant_order_id: payload.order.id,
-      items: payload.items.map(item => ({
-        name: item.name,
-        amount_cents: item.price * 100,
-        description: `${item.color}, ${item.size}`,
-        quantity: item.quantity,
-      })),
-    });
+  async void(transactionId: number) {
+    await this.paymobService.void(transactionId);
 
-    return await this.paymobService.checkout({
-      order_id: id,
-      auth_token: token,
-      billing_data: {
-        first_name: payload.shipping.firstName,
-        last_name: payload.shipping.lastName,
-        email: payload.user.email,
-        phone_number: payload.shipping.phone,
-        country: payload.shipping.country,
-        state: payload.shipping.state,
-        city: payload.shipping.city,
-        street: payload.shipping.street || payload.shipping.address || 'NA',
-        building: payload.shipping.building || 'NA',
-        floor: `${payload.shipping.floor}` || 'NA',
-        apartment: 'NA',
-        postal_code: 'NA',
-        shipping_method: 'COURIER',
-      },
-      expiration: 3600,
-      amount_cents: payload.order.total * 100,
-      lock_order_when_paid: true,
+    return this.paymentRepo.update(transactionId, {
+      isVoided: true,
     });
   }
 
-  async voidPayment(orderId: number) {
-    const order = await this.findPaymentByOrderId(orderId);
+  async refund(transactionId: number) {
+    const transaction = await this.paymobService.retrieve(transactionId);
 
-    const { token } = await this.paymobService.authenticate();
-
-    return await this.paymobService.voidTransaction({
-      transaction_id: order.transactionId,
-      access_token: token,
-    });
+    await this.paymobService.refund(transactionId, transaction.amount_cents);
   }
 
-  async refundPayment(orderId: number) {
-    const order = await this.findPaymentByOrderId(orderId);
+  async createPayment(hmac: string, payload: TransactionObject) {
+    const verified = this.paymobService.verify(hmac, payload);
 
-    const { token } = await this.paymobService.authenticate();
-
-    return await this.paymobService.refundTransaction({
-      transaction_id: order.transactionId,
-      amount_cents: Number(order.amountCents) * 100,
-      auth_token: token,
-    });
-  }
-
-  async createPayment(hmac: string, payload: (typeof Response)['obj']) {
-    const authenticated = await this.paymobService.authenticateCallback(hmac, payload);
-
-    if (!authenticated) {
+    if (!verified) {
       throw new Error('Unauthorized request');
     }
 
+    const { obj } = payload;
     const payment = {
-      orderId: Number(payload.order.merchant_order_id),
-      transactionId: payload.id,
-      transactionOrderId: payload.order.id,
-      pending: payload.pending,
-      success: payload.success,
-      isAuth: payload.is_auth,
-      isVoided: payload.is_voided,
-      isCapture: payload.is_capture,
-      isRefunded: payload.is_refunded,
-      is3DSecure: payload.is_3d_secure,
-      integrationId: payload.integration_id,
-      deliveryNeeded: payload.order.delivery_needed,
-      amountCents: payload.amount_cents,
-      currency: payload.currency,
-      createdAt: new Date(payload.created_at),
+      orderId: Number(obj.order.merchant_order_id),
+      transactionId: obj.id,
+      transactionOrderId: obj.order.id,
+      pending: obj.pending,
+      success: obj.success,
+      isAuth: obj.is_auth,
+      isVoided: obj.is_voided,
+      isCapture: obj.is_capture,
+      isRefunded: obj.is_refunded,
+      is3DSecure: obj.is_3d_secure,
+      integrationId: obj.integration_id,
+      deliveryNeeded: obj.order.delivery_needed,
+      amountCents: obj.amount_cents,
+      currency: obj.currency,
+      createdAt: new Date(obj.created_at),
     };
 
     await this.paymentRepo.create({
@@ -117,8 +73,6 @@ export default class PaymentService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    return 'Payment created';
   }
 
   async getPayment(paymentId: number): Promise<GetPaymentResponse['data']> {
@@ -153,14 +107,14 @@ export default class PaymentService {
     return payment;
   }
 
-  _getPaymentStatus(payment: (typeof Response)['obj']) {
-    if (payment.pending) {
+  _getPaymentStatus({ obj }: TransactionObject) {
+    if (obj.pending) {
       return 'UNPAID';
-    } else if (payment.is_voided) {
+    } else if (obj.is_voided) {
       return 'VOIDED';
-    } else if (payment.is_refunded) {
+    } else if (obj.is_refunded) {
       return 'REFUNDED';
-    } else if (payment.success) {
+    } else if (obj.success) {
       return 'PAID';
     } else {
       return 'FAILED';

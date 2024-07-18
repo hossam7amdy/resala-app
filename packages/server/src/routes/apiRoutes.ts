@@ -375,8 +375,11 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
 
     // payment endpoints
-    [Endpoints.createPayment]: [validateMiddleware(CreatePaymentSchema), paymentCtrl.createPayment],
-    [Endpoints.paymentResponse]: [paymentCtrl.paymentResponse],
+    [Endpoints.createPayment]: [
+      validateMiddleware(CreatePaymentSchema),
+      paymentCtrl.transactionProcessedCb,
+    ],
+    [Endpoints.paymentResponse]: [paymentCtrl.transactionResponseCb],
     [Endpoints.getPayment]: [
       validateMiddleware(GetPaymentSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
