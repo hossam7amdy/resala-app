@@ -21,6 +21,7 @@ export default class PaymentRepository {
 
   async findById(id: number) {
     return await this.prisma.payment.findUnique({
+      include: { order: true },
       where: { id },
     });
   }
