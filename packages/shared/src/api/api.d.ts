@@ -260,7 +260,7 @@ export type UpdateOrderRequest = z.infer<typeof Schemas.UpdateOrderStatusSchema>
 export type UpdateOrderResponse = DefaultResponseBody;
 export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody;
-export type CreatePaymentRequest = {
+export type checkout = {
     query: z.infer<typeof Schemas.CreatePaymentSchema>['query'];
     body: {
         [key: string]: any;

@@ -1,8 +1,7 @@
-import { PaymentStatus, type PaymentStatusType } from '@resala/shared';
-import type { RequestHandler } from 'express';
+import { PaymentStatus } from '@resala/shared';
 
 import type { OrderService, PaymentService } from '../../services/index.js';
-import type { CreatePayment, GetPayment, GetPaymentList } from './IPaymentController.js';
+import type { GetPayment, GetPaymentList, TransactionCallback } from './IPaymentController.js';
 import type IPaymentController from './IPaymentController.js';
 
 export default class PaymentController implements IPaymentController {
@@ -10,22 +9,6 @@ export default class PaymentController implements IPaymentController {
     private readonly paymentService: PaymentService,
     private readonly orderService: OrderService
   ) {}
-
-  createPayment: CreatePayment = async (req, res, next) => {
-    try {
-      const bodyObj = req.body['obj'];
-
-      const status = await this.paymentService.createPayment(req.query.hmac, bodyObj);
-
-      await this.orderService.updateOrder(Number(bodyObj.order.merchant_order_id), {
-        paymentStatus: status as PaymentStatusType,
-      });
-
-      return res.sendStatus(200);
-    } catch (error) {
-      next(error);
-    }
-  };
 
   getPayment: GetPayment = async (req, res, next) => {
     try {
@@ -52,16 +35,36 @@ export default class PaymentController implements IPaymentController {
     }
   };
 
-  paymentResponse: RequestHandler = async (req, res) => {
-    const success = req.query.success === 'true';
+  transactionProcessedCb: TransactionCallback = async (req, res, next) => {
+    try {
+      req.body.obj.order.merchant_order_id = req.params;
 
-    await this.orderService.updateOrder(Number(req.query.merchant_order_id), {
-      paymentStatus: success ? PaymentStatus.PAID : undefined,
-    });
+      await this.paymentService.createPayment(req.query.hmac as string, req.body);
 
-    if (!success) {
-      throw new Error('Payment failed');
+      return res.sendStatus(200);
+    } catch (error) {
+      next(error);
     }
+  };
+
+  transactionResponseCb: TransactionCallback = async (req, res) => {
+    const orderId = req.params;
+
+    const status = () => {
+      if (req.query.success === 'true') {
+        return PaymentStatus.PAID;
+      }
+
+      if (req.query.error_occured === 'true') {
+        return PaymentStatus.FAILED;
+      }
+
+      return PaymentStatus.UNPAID;
+    };
+
+    await this.orderService.updateOrder(+orderId, {
+      paymentStatus: status(),
+    });
 
     return res.redirect(process.env.FRONTEND_URL as string);
   };

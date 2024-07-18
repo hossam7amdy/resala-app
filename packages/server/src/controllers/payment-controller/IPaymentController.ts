@@ -1,6 +1,4 @@
 import type {
-  CreatePaymentRequest,
-  CreatePaymentResponse,
   GetPaymentRequest,
   GetPaymentResponse,
   GetPaymentsListRequest,
@@ -8,12 +6,6 @@ import type {
 } from '@resala/shared';
 
 import type { ExpressHandler, ExpressHandlerWithParams } from '../../types/index.js';
-
-export type CreatePayment = ExpressHandler<
-  CreatePaymentRequest['body'],
-  CreatePaymentResponse,
-  CreatePaymentRequest['query']
->;
 
 export type GetPayment = ExpressHandlerWithParams<
   GetPaymentRequest['params'],
@@ -27,8 +19,12 @@ export type GetPaymentList = ExpressHandler<
   Required<GetPaymentsListRequest['query']>
 >;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TransactionCallback = ExpressHandlerWithParams<{ orderId: string }, any, any, any>;
+
 export default interface IPaymentController {
-  createPayment: CreatePayment;
   getPayment: GetPayment;
   getPaymentList: GetPaymentList;
+  transactionResponseCb: TransactionCallback;
+  transactionProcessedCb: TransactionCallback;
 }
