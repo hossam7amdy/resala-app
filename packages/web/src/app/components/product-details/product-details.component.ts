@@ -33,7 +33,7 @@ export class ProductDetailsComponent implements OnInit {
 
   counterQuantity: number = 1;
 
-  productId!: string | null; // '!' to add initial value Undefined to this property 'productId'
+  productId!: any; // '!' to add initial value Undefined to this property 'productId'
 
   productDetails: any = null; // this property to take value of object 'respons.data'
   productImages: any = null;
@@ -187,9 +187,9 @@ export class ProductDetailsComponent implements OnInit {
     this.isChooseSize = true;
   }
   onSizeChange(event: any) {
-    this.selectedSize = event?.name;
-    this.currentSize = event?.id;
-    this.stockIdSize = event?.id;
+    this.selectedSize = event?.size;
+    this.currentSize = event?.sizeId;
+    this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity
     console.log(this.selectedSize, this.stockIdSize);
 
@@ -224,9 +224,9 @@ export class ProductDetailsComponent implements OnInit {
           this._toaster.success('added one product successfuly');
         },
         error: err => {
-          // localStorage.setItem('productId', '1');
-          // this._toaster.error('Should be Login');
-          // this._Router.navigate(['/login'])
+          localStorage.setItem('productId', this.productId);
+          this._toaster.error('Should be Login');
+          this._Router.navigate(['/login'])
           console.log('response', productId, quantity, err);
         }
       });
