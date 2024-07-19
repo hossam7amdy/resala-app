@@ -26,18 +26,17 @@ export default class OrderController implements IOrderController {
         note,
       });
 
+      let payment;
       if (paymentMethod === 'CARD') {
-        const { paymentUrl } = await this.paymentService.checkout({
+        payment = await this.paymentService.checkout({
           user: user,
           order: order,
           items: items,
           shipping: address,
         });
-
-        return res.redirect(paymentUrl);
       }
 
-      return res.status(201).json({ success: true });
+      return res.status(201).json({ success: true, data: payment });
     } catch (error) {
       next(error);
     }

@@ -74,18 +74,27 @@ export default class PaymobPaymentService {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };
 
+    const orderItems = items.map(item => ({
+      name: item.name,
+      amount: item.price * 100,
+      description: `${item.color}, ${item.size}`,
+      quantity: item.quantity,
+    }));
+
+    orderItems.push({
+      name: 'Shipping',
+      amount: (order.total - order.subtotal) * 100,
+      description: 'Shipping fees',
+      quantity: 1,
+    });
+
     const body = {
       currency: 'EGP',
       amount: order.total * 100,
       notification_url: `${process.env.APP_URL}/api/v1/payments/${order.id}`,
       redirection_url: `${process.env.APP_URL}/api/v1/payments/${order.id}`,
-      payment_methods: [process.env.PAYMOB_INTEGRATION_ID],
-      items: items.map(item => ({
-        name: item.name,
-        amount: item.price * 100,
-        description: `${item.color}, ${item.size}`,
-        quantity: item.quantity,
-      })),
+      payment_methods: [+process.env.PAYMOB_INTEGRATION_ID],
+      items: orderItems,
       billing_data: {
         first_name: user.firstName,
         last_name: user.lastName,
@@ -107,7 +116,7 @@ export default class PaymobPaymentService {
     };
 
     const { client_secret } = await this.api.post<unknown, CheckoutApiResponse>(
-      '/v1/intention',
+      '/v1/intention/',
       body,
       { headers }
     );
