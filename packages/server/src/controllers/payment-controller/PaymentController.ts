@@ -48,24 +48,26 @@ export default class PaymentController implements IPaymentController {
   };
 
   transactionResponseCb: TransactionCallback = async (req, res) => {
-    const orderId = req.params.orderId;
+    try {
+      const orderId = req.params.orderId;
 
-    const status = () => {
-      if (req.query.success === 'true') {
-        return PaymentStatus.PAID;
-      }
+      const status = () => {
+        if (req.query.success === 'true') {
+          return PaymentStatus.PAID;
+        }
 
-      if (req.query.error_occured === 'true') {
-        return PaymentStatus.FAILED;
-      }
+        if (req.query.error_occured === 'true') {
+          return PaymentStatus.FAILED;
+        }
 
-      return PaymentStatus.UNPAID;
-    };
+        return PaymentStatus.UNPAID;
+      };
 
-    await this.orderService.updateOrder(+orderId, {
-      paymentStatus: status(),
-    });
-
-    return res.redirect(process.env.FRONTEND_URL as string);
+      await this.orderService.updateOrder(+orderId, {
+        paymentStatus: status(),
+      });
+    } finally {
+      res.redirect(process.env.FRONTEND_URL as string);
+    }
   };
 }
