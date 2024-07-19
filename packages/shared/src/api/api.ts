@@ -311,8 +311,7 @@ export type DeleteWishlistResponse = GetWishlistResponse;
 export type CreateOrderRequest = z.infer<typeof Schemas.CreateOrderSchema>;
 export type CreateOrderResponse = DefaultResponseBody & {
   data?: {
-    token: string;
-    iframeUrl: string;
+    paymentUrl: string;
   };
 };
 
