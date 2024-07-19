@@ -2,3 +2,62 @@
     border-top: 4px solid #fbb935;
     display: inline;
 }
+
+.address-field {
+    border-bottom: .5px solid #ddd;
+    margin: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+
+}
+
+.check-address-lbl {
+    color: #fbb935;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.form-check-input {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+    --bs-form-check-bg: var(--bs-body-bg);
+    flex-shrink: 0;
+    width: 2em;
+    height: 2em;
+    margin-top: .25em;
+    vertical-align: top;
+    appearance: none;
+    background-color: var(--bs-form-check-bg);
+    background-image: var(--bs-form-check-bg-image);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.pay-btn button {
+    padding: 10px 0;
+    color: #fff;
+    font-weight: 500;
+    background-color: #fbb935;
+    border: 1px solid #fbb935;
+    transition: all 0.3s ease-in-out;
+}
+
+.pay-btn button:hover,
+.pay-btn button:active,
+.pay-btn button:disabled {
+
+    color: #016373;
+    font-weight: 500;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.pay-btn button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+}

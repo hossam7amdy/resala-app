@@ -15,6 +15,9 @@ import { ToastrService } from 'ngx-toastr';
 export class PaymentComponent implements OnInit {
   constructor(private _PaymentServices: PaymentService, private _Renderer2: Renderer2, private _Toaster: ToastrService) { }
 
+  isEdit: boolean = false;
+  editIndex: any;
+  isSelectesAddress: boolean = false;
   isRegisterd: boolean = false;
 
   errMsg: string = '';
@@ -47,7 +50,7 @@ export class PaymentComponent implements OnInit {
     this._PaymentServices.getUserAddress().subscribe({
       next: response => {
         this.getUserAddress = response.data;
-        this.addressId = this.getUserAddress[0].id;
+        // this.addressId = this.getUserAddress[0].id;
         console.log('user address id', this.addressId);
       },
       error: err => {
@@ -64,6 +67,17 @@ export class PaymentComponent implements OnInit {
     })
   }
 
+  selectedAddressMethod(value: string): void {
+    this.addressId = value;
+    this.isSelectesAddress = true;
+    console.log('address id', this.addressId)
+
+  }
+
+  editAddressForm(index: any): void {
+    this.isEdit = true;
+    this.editIndex = index;
+  }
 
 
   addressForm: FormGroup = new FormGroup({
@@ -98,7 +112,6 @@ export class PaymentComponent implements OnInit {
 
     building: new FormControl(''),  //optional
     floor: new FormControl('', [Validators.pattern('^[1-9][0-9]?$'), Validators.required]),
-    // [1-9][0-9]*
     address: new FormControl(''), //optional
 
   })
@@ -181,7 +194,7 @@ export class PaymentComponent implements OnInit {
     this.isLoading = true;
     const payData = this.payForm.value;
 
-    //if (this.payForm.valid) {
+    // if (this.payForm.valid) {
     console.log(payData, this.addressId);
     this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
       next: (response) => {
