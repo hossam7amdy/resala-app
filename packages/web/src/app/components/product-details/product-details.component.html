@@ -40,13 +40,13 @@
             </ng-container>
           </ng-container>
         </owl-carousel-o> -->
-        <div class="row p-3 pt-0 mini-images">
+        <div class="d-flex flex-wrap p-3 pt-0 mini-images">
 
-          <div class="col-6" *ngFor="let product of productStock">
-            <div class="row">
-              <div class="col-6" *ngFor="let image of product.images let i=index">
+          <div class="d-flex" *ngFor="let product of productStock">
+            <div class=" d-flex flex-wrap ">
+              <div class="d-flex " *ngFor="let image of product.images let i=index">
 
-                <div class="img-content d-flex justify-content-center" (click)="owlCar.to(image.imageUrl)"
+                <div class="img-content mb-1 d-flex  mx-1 justify-content-center" (click)="owlCar.to(image.imageUrl)"
                   (change)="changeimage(image.imageUrl+i)">
 
                   <img [src]="image?.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
