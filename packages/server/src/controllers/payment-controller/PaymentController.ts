@@ -37,7 +37,7 @@ export default class PaymentController implements IPaymentController {
 
   transactionProcessedCb: TransactionCallback = async (req, res, next) => {
     try {
-      req.body.obj.order.merchant_order_id = req.params;
+      req.body.obj.order.merchant_order_id = req.params.orderId;
 
       await this.paymentService.createPayment(req.query.hmac as string, req.body);
 
@@ -48,7 +48,7 @@ export default class PaymentController implements IPaymentController {
   };
 
   transactionResponseCb: TransactionCallback = async (req, res) => {
-    const orderId = req.params;
+    const orderId = req.params.orderId;
 
     const status = () => {
       if (req.query.success === 'true') {
