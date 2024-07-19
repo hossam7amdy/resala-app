@@ -1,5 +1,5 @@
 # Use node alpine image as base
-FROM node:22-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -22,10 +22,10 @@ RUN yarn build:shared
 RUN yarn build:server
 
 # Remove development dependencies
-RUN npm prune --omit=dev
+RUN yarn --production
 
 # Use node alpine image as base
-FROM node:22-alpine
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
