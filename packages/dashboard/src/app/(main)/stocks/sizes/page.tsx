@@ -1,6 +1,6 @@
-import Table from '@/components/sizes/table';
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/components/back-button';
 import { listAllSizes } from '@/data/sizes';
+import Table from '@/features/sizes/table';
 import ROUTES from '@/lib/routes';
 import { Table as AntTable, Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';
@@ -23,7 +23,7 @@ const SizesPage = () => {
         <Flex gap={10} justify="space-between">
           <div></div>
           <Link href={ROUTES.CREATE_SIZE}>
-            <Button type="primary">Add New</Button>
+            <Button type="primary">Add Size</Button>
           </Link>
         </Flex>
       </Col>

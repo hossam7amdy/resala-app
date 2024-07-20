@@ -1,6 +1,6 @@
-import Table from '@/components/colors/table';
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/components/back-button';
 import { listAllColors } from '@/data/colors';
+import Table from '@/features/colors/table';
 import ROUTES from '@/lib/routes';
 import { Table as AntList, Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ const ColorsPage = () => {
         <Flex gap={10} justify="space-between">
           <div></div>
           <Link href={ROUTES.CREATE_COLOR}>
-            <Button type="primary">Add New</Button>
+            <Button type="primary">Add Color</Button>
           </Link>
         </Flex>
       </Col>

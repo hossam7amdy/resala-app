@@ -1,3 +1,5 @@
+'use server';
+
 import { callEndpoint } from '@/lib/fetch';
 import type {
   DefaultRequestQuery,
@@ -17,7 +19,7 @@ export const listStocksPaginated = async ({
   noStore();
 
   const response = await callEndpoint<GetStocksListRequest, GetStocksListResponse>(
-    ENDPOINT_CONFIGS.getStocksList,
+    ENDPOINT_CONFIGS.listStocks,
     { query: { page: Number(page), limit: Number(limit), query } }
   );
 
