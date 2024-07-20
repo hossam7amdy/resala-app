@@ -48,7 +48,11 @@ export default class OrderService {
         quantity: item.quantity,
       })),
     };
-    const newOrder = await this.orderRepo.create(orderPayload);
+
+    const [newOrder] = await Promise.all([
+      this.orderRepo.create(orderPayload),
+      this.shoppingService.clearUserCart(userId),
+    ]);
 
     return { ...newOrder, ...orderPayload };
   }

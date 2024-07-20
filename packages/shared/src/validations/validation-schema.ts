@@ -346,12 +346,6 @@ export const GetOrderSchema = z.object({
 });
 
 // Payment Schemas
-export const CreatePaymentSchema = z.object({
-  query: z.object({
-    hmac: z.string(),
-  }),
-});
-
 export const GetPaymentSchema = z.object({
   params: z.object({
     paymentId: z.coerce.number().positive(),

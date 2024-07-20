@@ -4,7 +4,7 @@ import type { DefaultFilters, Payment } from '@resala/shared';
 export default class PaymentRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async create(payment: Omit<Payment, 'id'>) {
+  async create(payment: Payment) {
     return await this.prisma.payment.upsert({
       create: payment,
       update: payment,
@@ -12,17 +12,10 @@ export default class PaymentRepository {
     });
   }
 
-  async update(id: number, payment: Partial<Payment>) {
+  async update(orderId: number, payment: Partial<Payment>) {
     return await this.prisma.payment.update({
       data: payment,
-      where: { id },
-    });
-  }
-
-  async findById(id: number) {
-    return await this.prisma.payment.findUnique({
-      include: { order: true },
-      where: { id },
+      where: { orderId },
     });
   }
 
@@ -38,7 +31,7 @@ export default class PaymentRepository {
       this.prisma.payment.findMany({
         take: limit,
         skip: (page - 1) * limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { orderId: 'desc' },
       }),
     ]);
 

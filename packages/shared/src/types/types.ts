@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
@@ -52,8 +54,7 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  price: number | any; // Decimal
+  price: number | Decimal | string | any;
   imageKey: string;
   imageUrl: string;
   createdAt: Date;
@@ -114,12 +115,9 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  subtotal: number | any; // Decimal
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  discount: number | any; // Decimal
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  total: number | any; // Decimal;
+  subtotal: number | Decimal | string | any;
+  discount: number | Decimal | string | any;
+  total: number | Decimal | string | any;
   orderStatus: OrderStatusType;
   paymentMethod: PaymentMethodType;
   paymentStatus: PaymentStatusType;
@@ -133,8 +131,7 @@ export type OrderItem = {
   name: string;
   color: string;
   size: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  price: number | any; // Decimal
+  price: number | Decimal | string | any;
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -144,31 +141,16 @@ export type Shipping = {
   id: number;
   orderId: number;
   addressId: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cost: number | any; // Decimal
+  cost: number | Decimal | string | any;
   createdAt: Date;
   updatedAt: Date;
 };
 
 export type Payment = {
-  id: number;
   orderId: number;
-  transactionId: number;
-  transactionOrderId: number;
-  pending: boolean;
-  success: boolean;
-  isAuth: boolean;
-  isCapture: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  amountCents: number | any; // Decimal
-  isVoided: boolean;
-  isRefunded: boolean;
-  is3DSecure: boolean;
-  integrationId: number;
-  deliveryNeeded: boolean;
-  currency: string;
-  createdAt: Date;
-  updatedAt: Date;
+  orderRef: number | null;
+  paymentUrl: string | null;
+  transactionRef: number | null;
 };
 
 export type Review = {

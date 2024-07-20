@@ -215,24 +215,11 @@ model Shipping {
 }
 
 model Payment {
-  id                 Int      @id @default(autoincrement()) @db.Integer
-  orderId            Int      @unique @map("order_id") @db.Integer
-  transactionId      Int      @map("transaction_id") @db.Integer
-  transactionOrderId Int      @map("transaction_order_id") @db.Integer
-  pending            Boolean
-  success            Boolean
-  isAuth             Boolean  @map("is_auth")
-  isCapture          Boolean  @map("is_capture")
-  amountCents        Decimal  @map("amount_cents") @db.Decimal(9, 2)
-  isVoided           Boolean  @map("is_voided")
-  isRefunded         Boolean  @map("is_refunded")
-  is3DSecure         Boolean  @map("is_3d_secure")
-  integrationId      Int      @map("integration_id") @db.Integer
-  deliveryNeeded     Boolean  @map("delivery_needed")
-  currency           String   @default("EGP") @db.Char(3)
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
-  order              Order    @relation(fields: [orderId], references: [id])
+  orderId        Int     @id @map("order_id") @db.Integer
+  paymentUrl     String? @map("payment_url") @db.VarChar(500)
+  orderRef       Int?    @map("order_ref") @db.Integer
+  transactionRef Int?    @map("transaction_ref") @db.Integer
+  order          Order   @relation(fields: [orderId], references: [id])
 
   @@map("payment")
 }

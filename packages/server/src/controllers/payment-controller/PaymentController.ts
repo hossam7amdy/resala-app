@@ -1,7 +1,10 @@
-import { PaymentStatus } from '@resala/shared';
-
 import type { OrderService, PaymentService } from '../../services/index.js';
-import type { GetPayment, GetPaymentList, TransactionCallback } from './IPaymentController.js';
+import type {
+  GetPayment,
+  GetPaymentList,
+  TransactionProcessedCallback,
+  TransactionResponseCallback,
+} from './IPaymentController.js';
 import type IPaymentController from './IPaymentController.js';
 
 export default class PaymentController implements IPaymentController {
@@ -12,7 +15,7 @@ export default class PaymentController implements IPaymentController {
 
   getPayment: GetPayment = async (req, res, next) => {
     try {
-      const payment = await this.paymentService.getPayment(req.params.paymentId);
+      const payment = await this.paymentService.findPayment(req.params.paymentId);
 
       return res.json({ success: true, data: payment });
     } catch (error) {
@@ -35,39 +38,35 @@ export default class PaymentController implements IPaymentController {
     }
   };
 
-  transactionProcessedCb: TransactionCallback = async (req, res, next) => {
+  transactionResponseCallback: TransactionResponseCallback = async (req, res) => {
     try {
-      req.body.obj.order.merchant_order_id = req.params.orderId;
+      const orderId = +req.params.orderId;
+      const hmac = req.query.hmac as string;
 
-      await this.paymentService.createPayment(req.query.hmac as string, req.body);
+      const status = await this.paymentService.handleResponseCb(orderId, hmac, req.query);
+
+      await this.orderService.updateOrder(+orderId, {
+        paymentStatus: status,
+      });
+    } finally {
+      res.redirect(process.env.FRONTEND_URL as string);
+    }
+  };
+
+  transactionProcessedCallback: TransactionProcessedCallback = async (req, res, next) => {
+    try {
+      const orderId = +req.params.orderId;
+      const hmac = req.query.hmac;
+
+      const status = await this.paymentService.handleProcessedCb(orderId, hmac, req.body);
+
+      await this.orderService.updateOrder(+orderId, {
+        paymentStatus: status,
+      });
 
       return res.sendStatus(200);
     } catch (error) {
       next(error);
-    }
-  };
-
-  transactionResponseCb: TransactionCallback = async (req, res) => {
-    try {
-      const orderId = req.params.orderId;
-
-      const status = () => {
-        if (req.query.success === 'true') {
-          return PaymentStatus.PAID;
-        }
-
-        if (req.query.error_occured === 'true') {
-          return PaymentStatus.FAILED;
-        }
-
-        return PaymentStatus.UNPAID;
-      };
-
-      await this.orderService.updateOrder(+orderId, {
-        paymentStatus: status(),
-      });
-    } finally {
-      res.redirect(process.env.FRONTEND_URL as string);
     }
   };
 }
