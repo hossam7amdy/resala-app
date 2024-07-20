@@ -79,6 +79,16 @@ export default class PaymentService {
     return { ...payment, metadata };
   }
 
+  async findPaymentByTransactionRef(transactionRef: number): Promise<GetPaymentResponse['data']> {
+    const payment = await this.paymentRepo.findByTransactionRef(transactionRef);
+
+    if (!payment) {
+      throw new NotFoundError('Payment not found');
+    }
+
+    return payment;
+  }
+
   async listPayments({
     page,
     limit,

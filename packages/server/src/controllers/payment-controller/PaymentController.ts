@@ -1,3 +1,4 @@
+import { logger } from '../../lib/logger.js';
 import type { OrderService, PaymentService } from '../../services/index.js';
 import type {
   GetPayment,
@@ -55,12 +56,14 @@ export default class PaymentController implements IPaymentController {
 
   transactionProcessedCallback: TransactionProcessedCallback = async (req, res, next) => {
     try {
-      const orderId = +req.params.orderId;
       const hmac = req.query.hmac;
 
-      const status = await this.paymentService.handleProcessedCb(orderId, hmac, req.body);
+      logger.info('Processed Callback', req.body);
 
-      await this.orderService.updateOrder(+orderId, {
+      const payment = await this.paymentService.findPaymentByTransactionRef(+req.body.obj.id);
+      const status = await this.paymentService.handleProcessedCb(payment.orderId, hmac, req.body);
+
+      await this.orderService.updateOrder(payment.orderId, {
         paymentStatus: status,
       });
 
