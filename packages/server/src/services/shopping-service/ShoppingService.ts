@@ -39,7 +39,7 @@ export default class ShoppingService {
 
       const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
       const totalPrice = cartItems.reduce(
-        (acc, item) => acc + Number(item.product.price) * item.quantity,
+        (acc, item) => acc + item.product.price.mul(item.quantity).toDecimalPlaces(2).toNumber(),
         0
       );
 
