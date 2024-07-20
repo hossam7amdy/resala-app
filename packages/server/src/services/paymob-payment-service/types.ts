@@ -102,6 +102,7 @@ export interface ProcessedCallbackObject {
     integration_id: number;
     profile_id: number;
     has_parent_transaction: boolean;
+    created_at: string;
     order: {
       id: number;
       created_at: string;
@@ -163,7 +164,6 @@ export interface ProcessedCallbackObject {
       api_source: string;
       data: Record<string, unknown>;
     };
-    created_at: string;
     transaction_processed_callback_responses: any[];
     currency: string;
     source_data: {
