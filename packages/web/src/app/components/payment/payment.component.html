@@ -8,8 +8,8 @@
         <div class="row justify-content-center ">
             <div *ngFor="let userAddress of getUserAddress let i = index" class="col-11  address-field">
                 <div class="m-3">
-                    <input class="form-check-input" type="radio" name="paymentMethod" id="method"
-                        [(ngModel)]="paymentSelected" value={{userAddress.id}} formControlName="paymentMethod"
+                    <input class="form-check-input" type="radio" name="address" id="method"
+                        [(ngModel)]="paymentSelected" value={{userAddress.id}} formControlName="address"
                         (change)="selectedAddressMethod(userAddress.id)">
                     <label class="form-check-label check-address-lbl p-2 " for="method">please choose Address</label>
                 </div>
@@ -18,24 +18,27 @@
                     <div class="row">
                         <div class="mb-3 col-3">
                             <label for="first-name" class="form-label">First Name</label>
-                            <input type="text" id="first-name" class="form-control"
-                                [placeholder]="userAddress.firstName">
+                            <input type="text" id="first-name" class="form-control" formControlName="firstName"
+                                name="firstName" [placeholder]="userAddress.firstName">
                         </div>
 
                         <div class="mb-3 col-3">
                             <label for="last-name" class="form-label">Last Name</label>
-                            <input type="text" id="last-name" class="form-control" [placeholder]="userAddress.lastName">
+                            <input type="text" id="last-name" class="form-control" [placeholder]="userAddress.lastName"
+                                formControlName="lastName" name="lastName">
                         </div>
 
                         <div class="mb-3 col-3">
                             <label for="phone" class="form-label">Contact Number</label>
-                            <input type="text" id="phone" class="form-control" [placeholder]="userAddress.phone">
+                            <input type="text" id="phone" class="form-control" [placeholder]="userAddress.phone"
+                                formControlName="phone" name="phone">
                         </div>
 
 
                         <div *ngIf="i != editIndex" class="mb-3 col-3">
                             <label for="country" class="form-label">Country</label>
-                            <input type="text" id="country" class="form-control" [placeholder]="userAddress.country">
+                            <input type="text" id="country" class="form-control" [placeholder]="userAddress.country"
+                                formControlName="state" name="state">
                         </div>
 
                         <div *ngIf="i == editIndex" class="mb-3 col-3">
@@ -61,16 +64,18 @@
                     <div class="row">
                         <div *ngIf="i != editIndex" class="mb-3 col-3">
                             <label for="state" class="form-label">State</label>
-                            <input type="text" id="state" class="form-control" [placeholder]="userAddress.state">
+                            <input type="text" id="state" class="form-control" [placeholder]="userAddress.state"
+                                formControlName="city" name="city">
                         </div>
 
                         <div *ngIf="i != editIndex" class="mb-3 col-3">
                             <label for="city" class="form-label">City</label>
-                            <input type="text" id="city" class="form-control" [placeholder]="userAddress.city">
+                            <input type="text" id="city" class="form-control" [placeholder]="userAddress.city"
+                                formControlName="city" name="city">
                         </div>
                         <div *ngIf="i == editIndex" class="mb-3 col-3">
                             <label for="city" class="form-label">City</label>
-                            <select class="form-select" id="state" formControlName="city">
+                            <select class="form-select" id="state" name="city" formControlName="city">
 
                                 <option selected>{{userAddress.city}}</option>
 
@@ -86,24 +91,27 @@
 
                         <div class="mb-3 col-3">
                             <label for="street" class="form-label">Street</label>
-                            <input type="text" id="street" class="form-control" [placeholder]="userAddress.street">
+                            <input type="text" id="street" class="form-control" [placeholder]="userAddress.street"
+                                formControlName="street" name="street">
                         </div>
 
                         <div class="mb-3 col-3">
                             <label for="building" class="form-label">Building</label>
-                            <input type="text" id="building" class="form-control" [placeholder]="userAddress.building">
+                            <input type="text" id="building" class="form-control" [placeholder]="userAddress.building"
+                                formControlName="building" name="building">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label for="floor" class="form-label">Floor</label>
-                            <input type="text" id="floor" class="form-control" [placeholder]="userAddress.floor">
+                            <input type="text" id="floor" class="form-control" [placeholder]="userAddress.floor"
+                                formControlName="floor" name="floor">
                         </div>
 
                         <div class="mb-3 col-6">
                             <label for="address-details" class="form-label">Address Details</label>
                             <input type="text" id="address-details" class="form-control"
-                                [placeholder]="userAddress.address">
+                                [placeholder]="userAddress.address" formControlName="address" name="address">
                         </div>
                     </div>
                 </fieldset>
@@ -275,7 +283,7 @@
 
         <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
 
-            <input class="form-check-input" type="radio" name="paymen-tMethod" id="method" [(ngModel)]="paymentSelected"
+            <input class="form-check-input" type="radio" name="paymentMethod" id="method" [(ngModel)]="paymentSelected"
                 value={{method}} (change)="paymentSelectedMethod(method)" formControlName="paymentMethod">
             <label class="form-check-label check-address-lbl p-2" for="method">{{method}}</label>
 
