@@ -7,7 +7,7 @@ import type { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HomeProductsService {
-  constructor(private _HttpClient: HttpClient) { }
+  constructor(private _HttpClient: HttpClient) {}
 
   baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app`;
   //base url =

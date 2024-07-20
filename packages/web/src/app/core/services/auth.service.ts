@@ -7,7 +7,7 @@ import type { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private _HttpClient: HttpClient) { }
+  constructor(private _HttpClient: HttpClient) {}
 
   signOut: boolean = false;
   userInfo: any;

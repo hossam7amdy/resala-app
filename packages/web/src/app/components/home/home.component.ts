@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService
-  ) { }
+  ) {}
 
   // interfaces
   products: Product[] = [];
@@ -52,7 +52,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.onClick = true;
     }, 20000);
-
   }
   closeOverlay() {
     this.onClick = false;
@@ -153,6 +152,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     },
     nav: true,
-
   };
 }
