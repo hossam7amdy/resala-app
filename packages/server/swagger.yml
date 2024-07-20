@@ -486,7 +486,7 @@ components:
           description: 'Soft delete timestamp (null if not deleted), also used for deactivation'
       xml:
         name: product
-    ProductImage:
+    Image:
       type: object
       properties:
         id:

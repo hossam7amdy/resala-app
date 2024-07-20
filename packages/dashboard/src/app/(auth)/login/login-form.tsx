@@ -1,8 +1,8 @@
 'use client';
 
 import { login } from '@/actions/auth';
-import ErrorMessage from '@/components/ui/error-message';
-import useSubmitForm from '@/hooks/use-submit-form';
+import ErrorMessage from '@/components/error-message';
+import useSubmitForm from '@/hooks/useSubmitForm';
 import { Button, Form, Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Password from 'antd/es/input/Password';

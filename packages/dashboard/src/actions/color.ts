@@ -2,15 +2,15 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
-import {
-  type CreateColorRequest,
-  type CreateColorResponse,
-  type DeleteColorRequest,
-  type DeleteColorResponse,
-  ENDPOINT_CONFIGS,
-  type UpdateColorRequest,
-  type UpdateColorResponse,
+import type {
+  CreateColorRequest,
+  CreateColorResponse,
+  DeleteColorRequest,
+  DeleteColorResponse,
+  UpdateColorRequest,
+  UpdateColorResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 

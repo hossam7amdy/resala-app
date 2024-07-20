@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type DefaultRequestQuery, ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
+import type { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +13,6 @@ export class HomeProductsService {
   //base url =
 
   // Products
-
   getProducts(): Observable<any> {
     return this._HttpClient.get(this.baseURL + '/api/v1/products?page=1&limit=10&query=');
   }
@@ -26,7 +24,7 @@ export class HomeProductsService {
   }
 
   getProductStock(id: string | null): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getProductStocks], id + '');
+    const { url } = withParams(ENDPOINT_CONFIGS.listProductStocks, id + '');
     return this._HttpClient.get(this.baseURL + url);
   }
 }

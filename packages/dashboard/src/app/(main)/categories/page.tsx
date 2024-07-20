@@ -1,5 +1,5 @@
-import { CategoryTable } from '@/components/categories/categories-table';
-import { Search } from '@/components/ui/search';
+import { Search } from '@/components';
+import { CategoryTable } from '@/features/categories/categories-table';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
@@ -22,7 +22,7 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
         <Flex gap={10}>
           <Search placeholder="Find category" />
           <Link href={ROUTES.CREATE_CATEGORY}>
-            <Button type="primary">Create New Category</Button>
+            <Button type="primary">Add Category</Button>
           </Link>
         </Flex>
       </Col>

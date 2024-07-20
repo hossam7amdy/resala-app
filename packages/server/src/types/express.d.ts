@@ -1,31 +1,17 @@
-import type { User } from '@prisma/client';
+import type { User } from '@resala/shared';
 import type { DefaultResponseBody } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
-// Local User Interface
 export interface LocalUser {
-  user: Pick<
-    User,
-    | 'id'
-    | 'email'
-    | 'firstName'
-    | 'lastName'
-    | 'isVerified'
-    | 'phone'
-    | 'role'
-    | 'createdAt'
-    | 'updatedAt'
-    | 'deletedAt'
-  >;
+  user: User;
 }
 
-// Express Types
 export type ExpressHandler<
-  ReqBody = undefined,
+  ReqBody = undefine,
   ResBody = DefaultResponseBody,
   ReqQuery = undefined,
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
-  Locals extends Record<string, any> = {},
+  Locals extends Record<string, any> = undefined,
 > = RequestHandler<object, ResBody, ReqBody, ReqQuery, Locals>;
 
 export type ExpressHandlerWithParams<

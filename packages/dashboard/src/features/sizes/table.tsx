@@ -1,0 +1,51 @@
+'use client';
+
+import { deleteSize } from '@/actions/size';
+import { DeleteButton, Tooltip } from '@/components';
+import ROUTES from '@/lib/routes';
+import { formatDate } from '@/lib/util';
+import { EditFilled } from '@ant-design/icons';
+import type { GetSizesListResponse } from '@resala/shared';
+import { Table as AntTable, Space } from 'antd';
+import Link from 'next/link';
+
+const Table: React.FC<{ sizes: GetSizesListResponse['data'] }> = ({ sizes }) => {
+  return (
+    <AntTable
+      pagination={{
+        current: 1,
+        pageSize: 10,
+        total: sizes.length,
+        position: ['bottomCenter'],
+      }}
+      scroll={{ x: true, y: 500 }}
+      rowKey="id"
+      columns={[
+        { title: 'Size', dataIndex: 'name' },
+        {
+          title: 'Created At',
+          dataIndex: 'createdAt',
+          render: (date: string) => formatDate(new Date(date)),
+        },
+        {
+          title: 'Actions',
+          dataIndex: 'id',
+          align: 'center',
+          render: (id: number) => (
+            <Space>
+              <Tooltip title="Edit">
+                <Link href={ROUTES.EDIT_SIZE(id)}>
+                  <EditFilled />
+                </Link>
+              </Tooltip>
+              <DeleteButton deleteAction={deleteSize.bind(null, id)} />
+            </Space>
+          ),
+        },
+      ]}
+      dataSource={sizes}
+    />
+  );
+};
+
+export default Table;

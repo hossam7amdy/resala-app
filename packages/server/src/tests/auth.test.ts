@@ -1,17 +1,10 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { beforeEach } from 'node:test';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { getTestServer } from './testserver.js';
-
-vi.mock('../service/communication-service.js', () => ({
-  __esModule: true, // this property makes it work;
-  sendVerificationEmail: vi.fn(),
-  sendResetPasswordEmail: vi.fn(),
-  sendResetConfirmationEmail: vi.fn(),
-}));
+import { userAssertions } from './helpers/customAssertions.js';
+import { getTestServer } from './helpers/testServer.js';
 
 const ADMIN_USER = {
   email: 'admin@resala.com',
@@ -39,10 +32,6 @@ describe('TEST /auth endpoints', () => {
 
   beforeAll(async () => {
     client = await getTestServer();
-  }, 10000);
-
-  beforeEach(() => {
-    vi.resetAllMocks();
   });
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
@@ -54,7 +43,12 @@ describe('TEST /auth endpoints', () => {
         email: randUser.email,
         password: randUser.password,
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it(`should able to register a new user with complete data`, async () => {
@@ -62,7 +56,11 @@ describe('TEST /auth endpoints', () => {
       const res = await client[method](url).send({
         ...genRandomUser(),
       });
+
       expect(res.statusCode).toBe(201);
+      expect(res.body).toEqual({
+        success: true,
+      });
     });
 
     it('should fail to register an already exist email', async () => {
@@ -71,7 +69,12 @@ describe('TEST /auth endpoints', () => {
         ...genRandomUser(),
         email: CUSTOMER_USER.email,
       });
+
       expect(res.statusCode).toBe(409);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail to register an already exist phone', async () => {
@@ -80,7 +83,12 @@ describe('TEST /auth endpoints', () => {
         ...genRandomUser(),
         phone: CUSTOMER_USER.phone,
       });
+
       expect(res.statusCode).toBe(409);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail to register with wrong data (short password)', async () => {
@@ -89,7 +97,12 @@ describe('TEST /auth endpoints', () => {
         ...genRandomUser(),
         password: 'abc', // short password
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail to register with wrong data (no capital character)', async () => {
@@ -98,7 +111,12 @@ describe('TEST /auth endpoints', () => {
         ...genRandomUser(),
         password: 'password',
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail to register with wrong data (invalid email)', async () => {
@@ -107,7 +125,12 @@ describe('TEST /auth endpoints', () => {
         ...genRandomUser(),
         email: 'email', // invalid email
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
   });
 
@@ -118,7 +141,17 @@ describe('TEST /auth endpoints', () => {
         sign: CUSTOMER_USER.email,
         password: CUSTOMER_USER.password,
       });
+
       expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({
+        success: true,
+        data: {
+          user: userAssertions,
+          expiresAt: expect.any(String),
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        },
+      });
     });
 
     it('should fail to login with non-existent user', async () => {
@@ -127,7 +160,12 @@ describe('TEST /auth endpoints', () => {
         sign: `notfound_${CUSTOMER_USER.email}`,
         password: CUSTOMER_USER.password,
       });
+
       expect(res.statusCode).toBe(404);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail to login without sign property (email/phone)', async () => {
@@ -135,7 +173,12 @@ describe('TEST /auth endpoints', () => {
       const res = await client[method](url).send({
         password: CUSTOMER_USER.password,
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
   });
 
@@ -148,7 +191,11 @@ describe('TEST /auth endpoints', () => {
           oldPassword: ADMIN_USER.password,
           newPassword: ADMIN_USER.password,
         });
+
       expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({
+        success: true,
+      });
     });
 
     it('should fail to change password with incomplete data', async () => {
@@ -158,7 +205,12 @@ describe('TEST /auth endpoints', () => {
         .send({
           oldPassword: CUSTOMER_USER.password,
         });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail change password with wrong data', async () => {
@@ -169,7 +221,12 @@ describe('TEST /auth endpoints', () => {
           oldPassword: CUSTOMER_USER.password,
           newPassword: 'password', // doesn't meet the requirements
         });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
   });
 
@@ -177,19 +234,37 @@ describe('TEST /auth endpoints', () => {
     it('should forgot password with complete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.forgotPassword;
       const res = await client[method](url).send({ email: CUSTOMER_USER.email });
+
       expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({
+        success: true,
+        data: {
+          expiresAt: expect.any(String),
+          resetToken: expect.any(String),
+        },
+      });
     });
 
     it('should fail forgot password with incomplete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.forgotPassword;
       const res = await client[method](url).send({});
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should fail forgot password with wrong data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.forgotPassword;
       const res = await client[method](url).send({ email: 'email' });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
   });
 
@@ -200,7 +275,12 @@ describe('TEST /auth endpoints', () => {
         email: CUSTOMER_USER.email,
         password: CUSTOMER_USER.password,
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
 
     it('should reset password with wrong data', async () => {
@@ -210,7 +290,12 @@ describe('TEST /auth endpoints', () => {
         code: 'code',
         password: CUSTOMER_USER.password,
       });
+
       expect(res.statusCode).toBe(400);
+      expect(res.body).toEqual({
+        success: false,
+        message: expect.any(String),
+      });
     });
   });
 

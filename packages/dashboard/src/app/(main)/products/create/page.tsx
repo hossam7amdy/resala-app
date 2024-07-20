@@ -1,9 +1,8 @@
-import Form from '@/components/products/create-form';
-import BackButton from '@/components/ui/back-button';
-import FormSkeleton from '@/components/ui/form-skeleton';
+import BackButton from '@/components/back-button';
+import FormSkeleton from '@/components/form-skeleton';
 import { listAllCategories } from '@/data/category';
+import Form from '@/features/products/create-form';
 import ROUTES from '@/lib/routes';
-import { type GetCategoryResponse } from '@resala/shared';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -16,7 +15,7 @@ const CreateProductPage = () => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Create New Product' },
+            { title: 'New' },
           ]}
         />
       </Col>
@@ -34,19 +33,7 @@ const CreateProductPage = () => {
 const CreateProductForm = async () => {
   const categories = await listAllCategories();
 
-  const flatCategories: Omit<GetCategoryResponse['data'], 'subCategories'>[] = [];
-  categories.forEach(category => {
-    const { subCategories, ...main } = category;
-    flatCategories.push(main);
-
-    if (subCategories.length > 0) {
-      subCategories.forEach(sub => {
-        flatCategories.push(sub);
-      });
-    }
-  });
-
-  return <Form categories={flatCategories} />;
+  return <Form categories={categories} />;
 };
 
 export default CreateProductPage;

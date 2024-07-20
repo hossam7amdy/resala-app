@@ -1,7 +1,12 @@
-import BackButton from '@/components/ui/back-button';
+import BackButton from '@/components/back-button';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Edit Color',
+};
 
 const EditColorLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -11,7 +16,7 @@ const EditColorLayout = ({ children }: { children: React.ReactNode }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.COLORS}>Colors</Link> },
-            { title: 'Edit Color' },
+            { title: 'Edit' },
           ]}
         />
       </Col>
