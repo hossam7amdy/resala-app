@@ -1,19 +1,29 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, PatternValidator, ReactiveFormsModule, Validators, } from '@angular/forms';
-import { PaymentService } from 'src/app/core/services/payment.service';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  PatternValidator,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
+import { PaymentService } from 'src/app/core/services/payment.service';
 
 @Component({
   selector: 'app-payment',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.css']
+  styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
-  constructor(private _PaymentServices: PaymentService, private _Renderer2: Renderer2, private _Toaster: ToastrService) { }
+  constructor(
+    private _PaymentServices: PaymentService,
+    private _Renderer2: Renderer2,
+    private _Toaster: ToastrService
+  ) {}
 
   isEdit: boolean = false;
   editIndex: any;
@@ -39,12 +49,8 @@ export class PaymentComponent implements OnInit {
 
   // payment form
 
-  paymentDataMethod: any = [
-    'CASH',
-    'CARD'
-  ]
+  paymentDataMethod: any = ['CASH', 'CARD'];
   paymentSelected: string = '';
-
 
   ngOnInit(): void {
     this._PaymentServices.getUserAddress().subscribe({
@@ -55,23 +61,22 @@ export class PaymentComponent implements OnInit {
       },
       error: err => {
         console.log(err);
-      }
-    })
+      },
+    });
 
     this._PaymentServices.getAllCountries().subscribe({
-      next: (response) => {
+      next: response => {
         this.allCountries = response.data;
 
         console.log(this.allCountries);
-      }
-    })
+      },
+    });
   }
 
   selectedAddressMethod(value: string): void {
     this.addressId = value;
     this.isSelectesAddress = true;
-    console.log('address id', this.addressId)
-
+    console.log('address id', this.addressId);
   }
 
   editAddressForm(index: any): void {
@@ -79,23 +84,12 @@ export class PaymentComponent implements OnInit {
     this.editIndex = index;
   }
 
-
   addressForm: FormGroup = new FormGroup({
+    state: new FormControl('', [Validators.required]),
+    city: new FormControl('', [Validators.required]),
+    street: new FormControl('', [Validators.required]),
 
-    state: new FormControl('', [
-      Validators.required
-    ]),
-    city: new FormControl('', [
-      Validators.required
-    ]),
-    street: new FormControl('', [
-      Validators.required
-    ]),
-
-    phone: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^01[0125][0-9]{8}$/)
-    ]),
+    phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
 
     firstName: new FormControl('', [
       Validators.required,
@@ -111,28 +105,25 @@ export class PaymentComponent implements OnInit {
       Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
     ]),
 
-    building: new FormControl(''),  //optional
+    building: new FormControl(''), //optional
     floor: new FormControl('', [Validators.pattern('^[1-9][0-9]?$'), Validators.required]),
     address: new FormControl(''), //optional
-
-  })
+  });
 
   onSelected(value: string): void {
     this.selectedCountry = value;
 
     this._PaymentServices.getAllCities(value).subscribe({
-      next: (response) => {
-        this.allCities = response.data
+      next: response => {
+        this.allCities = response.data;
         console.log('Cities', this.allCities);
-      }
-    })
+      },
+    });
   }
   countryIndexFun(index: number): void {
     this.countryIndex = index;
     console.log('index:', this.countryIndex);
-
   }
-
 
   handleForm(userAddress: FormGroup, btn: HTMLButtonElement): void {
     this.isLoading = true;
@@ -146,27 +137,22 @@ export class PaymentComponent implements OnInit {
         next: response => {
           if (response.success == true) {
             // this.successMsg = 'Registration successfuly';
-            this._Toaster.success("Registration successfuly")
+            this._Toaster.success('Registration successfuly');
             this.isLoading = false;
-            this._Renderer2.setAttribute(btn, 'disabled', 'true')
-
+            this._Renderer2.setAttribute(btn, 'disabled', 'true');
           }
         },
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
-          console.log(err)
+          console.log(err);
           this.isLoading = false;
-
         },
       });
-
     }
-
-
   }
 
-  // is registerd method 
+  // is registerd method
   isRegisterdFun(): void {
     this.isRegisterd = true;
   }
@@ -178,18 +164,14 @@ export class PaymentComponent implements OnInit {
 
   paymentSelectedMethod(event: any) {
     this.paymentSelected = event;
-    console.log(this.paymentSelected)
+    console.log(this.paymentSelected);
   }
 
   payForm: FormGroup = new FormGroup({
-    paymentMethod: new FormControl('', [
-      Validators.required,
-
-    ]),
+    paymentMethod: new FormControl('', [Validators.required]),
 
     note: new FormControl(''),
-  })
-
+  });
 
   creatOrder(btn: HTMLButtonElement) {
     this.isLoading = true;
@@ -198,27 +180,23 @@ export class PaymentComponent implements OnInit {
     // if (this.payForm.valid) {
     console.log(payData, this.addressId);
     this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
-      next: (response) => {
+      next: response => {
         if (response.success == true) {
           console.log('dataPay', this.addressId, this.paymentSelected, this.note);
           console.log(response);
-          this._Toaster.success("Data successfuly")
+          this._Toaster.success('Data successfuly');
           this.isLoading = false;
           window.open(response.data.paymentUrl, '_self');
           this._Renderer2.setAttribute(btn, 'disabled', 'true');
-
-
         }
       },
       error: err => {
         this.errMsg = err.error.message;
         this._Toaster.error(this.errMsg);
-        console.log(err)
+        console.log(err);
         this.isLoading = false;
-
       },
-    })
+    });
     //}
   }
-
 }
