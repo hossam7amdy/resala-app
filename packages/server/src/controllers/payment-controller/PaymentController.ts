@@ -55,12 +55,12 @@ export default class PaymentController implements IPaymentController {
 
   transactionProcessedCallback: TransactionProcessedCallback = async (req, res, next) => {
     try {
-      const orderId = +req.params.orderId;
       const hmac = req.query.hmac;
 
-      const status = await this.paymentService.handleProcessedCb(orderId, hmac, req.body);
+      const payment = await this.paymentService.findPaymentByTransactionRef(+req.body.obj.id);
+      const status = await this.paymentService.handleProcessedCb(payment.orderId, hmac, req.body);
 
-      await this.orderService.updateOrder(+orderId, {
+      await this.orderService.updateOrder(payment.orderId, {
         paymentStatus: status,
       });
 

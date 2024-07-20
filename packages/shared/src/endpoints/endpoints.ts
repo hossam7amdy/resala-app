@@ -501,11 +501,11 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
 
   // payment endpoints
   [Endpoints.paymentProcessedCallback]: {
-    url: '/api/v1/payments/:orderId',
+    url: '/post_pay',
     method: 'post',
   },
   [Endpoints.paymentResponseCallback]: {
-    url: '/api/v1/payments/:orderId',
+    url: '/post_pay/:orderId',
     method: 'get',
   },
   [Endpoints.getPayment]: {

@@ -28,7 +28,7 @@ export type TransactionResponseCallback = ExpressHandlerWithParams<
 >;
 
 export type TransactionProcessedCallback = ExpressHandlerWithParams<
-  { orderId: string },
+  { orderId?: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
   unknown,
