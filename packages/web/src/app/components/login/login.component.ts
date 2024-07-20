@@ -9,7 +9,9 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
+
 import { ProductDetailsComponent } from '../product-details/product-details.component';
+
 // import { ProductDetailsComponent } from '../product-details/product-details.component';
 
 @Component({
@@ -22,9 +24,9 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
 export class LoginComponent {
   constructor(
     private _AuthService: AuthService,
-    private _Router: Router,
+    private _Router: Router
     // private _productDetailsComponent: ProductDetailsComponent
-  ) { }
+  ) {}
 
   //show password
   showPW: any;
@@ -37,8 +39,6 @@ export class LoginComponent {
   isLoading: boolean = false;
 
   //properity => Return to product details page after login
-
-
 
   // can use FormBulder instead of  new FormGroup (lookup leson 9)
 
@@ -86,7 +86,7 @@ export class LoginComponent {
 
             // this._Router.navigate(['/home']);
 
-            // // can use Redirect 
+            // // can use Redirect
 
             // this._Router.navigate(['/home']);
             const productId = localStorage.getItem('productId');
@@ -96,10 +96,11 @@ export class LoginComponent {
             } else {
               console.log('product id' + productId);
 
-              this._Router.navigate(['product-details/', productId]).then(() => { window.location.reload() });
+              this._Router.navigate(['product-details/', productId]).then(() => {
+                window.location.reload();
+              });
               localStorage.removeItem('productId');
             }
-
           }
         },
         error: err => {
