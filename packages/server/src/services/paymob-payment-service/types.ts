@@ -3,7 +3,7 @@ import type { Address, Order, OrderItem, User } from '@resala/shared';
 
 export interface CheckoutDto {
   user: User;
-  order: Order;
+  order: Order & { shipping: number };
   shipping: Omit<Address, 'id'>;
   items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
 }
