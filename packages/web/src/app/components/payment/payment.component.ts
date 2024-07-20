@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css']
 })
@@ -81,6 +81,7 @@ export class PaymentComponent implements OnInit {
 
 
   addressForm: FormGroup = new FormGroup({
+
     state: new FormControl('', [
       Validators.required
     ]),
@@ -201,9 +202,11 @@ export class PaymentComponent implements OnInit {
         if (response.success == true) {
           console.log('dataPay', this.addressId, this.paymentSelected, this.note);
           console.log(response);
-          this._Toaster.success("Registration successfuly")
+          this._Toaster.success("Data successfuly")
           this.isLoading = false;
-          this._Renderer2.setAttribute(btn, 'disabled', 'true')
+          window.open(response.data.paymentUrl, '_self');
+          this._Renderer2.setAttribute(btn, 'disabled', 'true');
+
 
         }
       },

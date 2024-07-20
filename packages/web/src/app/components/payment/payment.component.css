@@ -37,6 +37,11 @@
     print-color-adjust: exact;
 }
 
+.form-check-input,
+.form-check-label {
+    cursor: pointer;
+}
+
 .pay-btn button {
     padding: 10px 0;
     color: #fff;
