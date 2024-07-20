@@ -466,11 +466,11 @@ const ENDPOINT_CONFIGS = {
     },
     // payment endpoints
     [exports.Endpoints.paymentProcessedCallback]: {
-        url: '/api/v1/payments/:orderId',
+        url: '/post_pay',
         method: 'post',
     },
     [exports.Endpoints.paymentResponseCallback]: {
-        url: '/api/v1/payments/:orderId',
+        url: '/post_pay/:orderId',
         method: 'get',
     },
     [exports.Endpoints.getPayment]: {
