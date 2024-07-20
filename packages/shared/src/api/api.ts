@@ -365,6 +365,7 @@ export type GetPaymentResponse = DefaultResponseBody & {
       integration_id: number;
       profile_id: number;
       has_parent_transaction: boolean;
+      created_at: string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     };

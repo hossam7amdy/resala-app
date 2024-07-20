@@ -23,8 +23,12 @@ export default class PaymobPaymentService {
     });
 
     this.api.interceptors.response.use(
-      response => response.data,
-      error => error.response.data
+      response => {
+        return response.data;
+      },
+      error => {
+        throw error.response.data;
+      }
     );
   }
 
@@ -146,7 +150,7 @@ export default class PaymobPaymentService {
     });
   }
 
-  async void(trxId: number): Promise<void> {
+  async void(trxId: number): Promise<ProcessedCallbackObject> {
     const { token } = await this.authenticate();
 
     const headers = {
@@ -157,10 +161,10 @@ export default class PaymobPaymentService {
       transaction_id: trxId,
     };
 
-    await this.api.post('/api/acceptance/void_refund/void', body, { headers });
+    return await this.api.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
-  async refund(trxId: number, amount: number): Promise<void> {
+  async refund(trxId: number, amount: number): Promise<ProcessedCallbackObject> {
     const headers = {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };
@@ -170,7 +174,7 @@ export default class PaymobPaymentService {
       amount_cents: amount * 100,
     };
 
-    await this.api.post('/api/acceptance/void_refund/refund', body, {
+    return await this.api.post('/api/acceptance/void_refund/refund', body, {
       headers,
     });
   }
