@@ -11,7 +11,7 @@ import type {
 } from '@resala/shared';
 
 import type { PaymentRepository } from '../../repositories/index.js';
-import { NotFoundError } from '../../utils/ApiErrors.js';
+import { BadRequestError, NotFoundError } from '../../utils/ApiErrors.js';
 import type PaymobPaymentService from '../paymob-payment-service/PaymobPaymentService.js';
 import type {
   ProcessedCallbackObject,
@@ -43,20 +43,34 @@ export default class PaymentService {
     return { paymentUrl };
   }
 
-  async void(orderId: number) {
+  async void(orderId: number): Promise<void> {
     const payment = await this.findPayment(orderId);
 
-    return await this.paymobService.void(payment.transactionRef!);
+    const now = Date.now();
+    const paymentDate = new Date(payment.metadata?.created_at || now).getTime();
+
+    if (now - paymentDate > 86400000) {
+      throw new BadRequestError('Cannot void payment after 24 hours. Please contact support');
+    }
+
+    try {
+      await this.paymobService.void(payment.transactionRef!);
+    } catch (e) {
+      throw new BadRequestError((e as Error).message);
+    }
   }
 
-  async refund(orderId: number) {
+  async refund(orderId: number): Promise<void> {
     const payment = await this.findPayment(orderId);
 
     if (!payment.metadata?.amount_cents) {
       throw new NotFoundError('Payment not found');
     }
-
-    return await this.paymobService.refund(orderId, payment.metadata.amount_cents);
+    try {
+      await this.paymobService.refund(orderId, payment.metadata.amount_cents);
+    } catch (e) {
+      throw new BadRequestError((e as Error).message);
+    }
   }
 
   async paymentProcessedCallback(payload: Payment) {
