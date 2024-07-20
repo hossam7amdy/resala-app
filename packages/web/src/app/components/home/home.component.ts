@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Injectable, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Injectable, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { Category } from 'src/app/core/interfaces/category';
@@ -14,7 +14,7 @@ import { HomeProductsService } from 'src/app/core/services/home-products.service
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService
@@ -25,6 +25,9 @@ export class HomeComponent implements OnInit {
   category: Category[] = [];
 
   imgPlaceHolder: string = '';
+
+  // overlay
+  onClick: boolean = false;
 
   ngOnInit(): void {
     //  products
@@ -42,6 +45,17 @@ export class HomeComponent implements OnInit {
         console.log('categories', response.data);
       },
     });
+  }
+
+  // overlay
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.onClick = true;
+    }, 20000);
+
+  }
+  closeOverlay() {
+    this.onClick = false;
   }
 
   // categories slider

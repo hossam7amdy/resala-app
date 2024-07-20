@@ -1,11 +1,15 @@
-<section *ngIf="productDetails" class="product-details">
+<h1 *ngIf="productStock.length == 0">Sorry !! this product not found stock ...</h1>
+<section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
     <div class="row img-product">
       <div class="col-sm-12 col-md-8 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
+
           <ng-container *ngFor="let product of productStock let j = index">
+
             <ng-container *ngFor="let image of product.images">
 
+              <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div class="main-img p-3">
                   <img [src]="image.imageUrl" class="image-products" [alt]="productDetails.enName"
@@ -36,16 +40,16 @@
             </ng-container>
           </ng-container>
         </owl-carousel-o> -->
-        <div class="row p-3 pt-0 mini-images">
+        <div class="d-flex flex-wrap p-3 pt-0 mini-images">
 
-          <div class="col-6" *ngFor="let product of productStock">
-            <div class="row">
-              <div class="col-6" *ngFor="let image of product.images let i=index">
+          <div class="d-flex" *ngFor="let product of productStock">
+            <div class=" d-flex flex-wrap ">
+              <div class="d-flex " *ngFor="let image of product.images let i=index">
 
-                <div class="img-content d-flex justify-content-center" (click)="owlCar.to(image.imageUrl)"
+                <div class="img-content mb-1 d-flex  mx-1 justify-content-center" (click)="owlCar.to(image.imageUrl)"
                   (change)="changeimage(image.imageUrl+i)">
 
-                  <img [src]="image.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
+                  <img [src]="image?.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
                     [title]="productDetails.enName" />
                 </div>
               </div>
@@ -68,7 +72,7 @@
               <input [(ngModel)]="selectedColor" type="radio" class="btn-check" name="color-option" id="btncolor"
                 [value]="selectedColor" />
               <label
-                (click)="[onColorChange(product,i),isChooseColorFun(),owlCar.to(productStock[i].images[0].imageUrl)]"
+                (click)="[onColorChange(product,i),isChooseColorFun(),owlCar.to(productStock[i].images[0]?.imageUrl)]"
                 for="btncolor">
                 {{ product.color.enName }}
               </label>
@@ -97,13 +101,13 @@
           <ng-container *ngFor="let product of productStock let i =index">
             <div *ngFor="let size of product.sizes">
               <div *ngIf="i == stockIndex">
-                <div [ngClass]="{ active: currentSize === size?.id }" class="size-option">
+                <div [ngClass]="{ active: currentSize === size?.sizeId }" class="size-option">
                   <input [(ngModel)]="selectedSize" type="radio" class="btn-check" name="size-option" id="btnsize"
                     [value]="selectedSize" />
 
 
                   <label (click)="[onSizeChange(size),isChooseSizeFun()]" for="btnsize">
-                    {{ size.name }}
+                    {{ size.size }}
                   </label>
                 </div>
               </div>
@@ -157,7 +161,7 @@
         </section>
 
         <div class="add-cart-btn">
-          <button (click)="addProduct(stockIdColor, counterQuantity, addToCartBtn)" #addToCartBtn class="w-100">ADD TO
+          <button (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)" #addToCartBtn class="w-100">ADD TO
             CART</button>
           <label for="">product id : {{ productDetails.id }} quantity{{counterQuantity}}</label>
 

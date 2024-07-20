@@ -1,7 +1,141 @@
-<section *ngIf="getUserAddress.Lenght == 0" class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
+<!-- && isEdit == false -->
+<!--  -->
+<section *ngIf="getUserAddress.length >= 1 && isSelectesAddress == false "
+    class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
     <h1 class="h2 step-one">Step One ... </h1>
     <h3 class="h3 mt-0">Information Delivery</h3>
+    <form [formGroup]="addressForm" action="">
+        <div class="row justify-content-center ">
+            <div *ngFor="let userAddress of getUserAddress let i = index" class="col-11  address-field">
+                <div class="m-3">
+                    <input class="form-check-input" type="radio" name="address" id="method"
+                        [(ngModel)]="paymentSelected" value={{userAddress.id}} formControlName="address"
+                        (change)="selectedAddressMethod(userAddress.id)">
+                    <label class="form-check-label check-address-lbl p-2 " for="method">please choose Address</label>
+                </div>
+                <fieldset class="" [disabled]=" i != editIndex">
 
+                    <div class="row">
+                        <div class="mb-3 col-3">
+                            <label for="first-name" class="form-label">First Name</label>
+                            <input type="text" id="first-name" class="form-control" formControlName="firstName"
+                                name="firstName" [placeholder]="userAddress.firstName">
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label for="last-name" class="form-label">Last Name</label>
+                            <input type="text" id="last-name" class="form-control" [placeholder]="userAddress.lastName"
+                                formControlName="lastName" name="lastName">
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label for="phone" class="form-label">Contact Number</label>
+                            <input type="text" id="phone" class="form-control" [placeholder]="userAddress.phone"
+                                formControlName="phone" name="phone">
+                        </div>
+
+
+                        <div *ngIf="i != editIndex" class="mb-3 col-3">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" id="country" class="form-control" [placeholder]="userAddress.country"
+                                formControlName="state" name="state">
+                        </div>
+
+                        <div *ngIf="i == editIndex" class="mb-3 col-3">
+                            <label for="state" class="form-label">Country</label>
+                            <select #selectedValue (change)="onSelected(selectedValue.value)" formControlName="state"
+                                class="form-select" id="state">
+                                <option selected>{{userAddress.country}}</option>
+                                <option *ngFor="let countries of allCountries let i =index"
+                                    (click)="countryIndexFun(i)">
+                                    {{countries.country}}</option>
+
+                            </select>
+
+                            <p>{{selectedCountry}}{{countryIndex}}</p>
+                            <div *ngIf="addressForm.get('state')?.errors != null && addressForm.get('state')?.touched"
+                                class="alert text-danger">
+                                <p *ngIf="addressForm.get('state')?.getError('required')">this field is required !!!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div *ngIf="i != editIndex" class="mb-3 col-3">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" id="state" class="form-control" [placeholder]="userAddress.state"
+                                formControlName="city" name="city">
+                        </div>
+
+                        <div *ngIf="i != editIndex" class="mb-3 col-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" id="city" class="form-control" [placeholder]="userAddress.city"
+                                formControlName="city" name="city">
+                        </div>
+                        <div *ngIf="i == editIndex" class="mb-3 col-3">
+                            <label for="city" class="form-label">City</label>
+                            <select class="form-select" id="state" name="city" formControlName="city">
+
+                                <option selected>{{userAddress.city}}</option>
+
+                                <option *ngFor="let cities of allCities">{{cities}}</option>
+
+                            </select>
+                            <div *ngIf="addressForm.get('city')?.errors != null && addressForm.get('city')?.touched"
+                                class="alert text-danger">
+                                <p *ngIf="addressForm.get('city')?.getError('required')">this field is required !!!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label for="street" class="form-label">Street</label>
+                            <input type="text" id="street" class="form-control" [placeholder]="userAddress.street"
+                                formControlName="street" name="street">
+                        </div>
+
+                        <div class="mb-3 col-3">
+                            <label for="building" class="form-label">Building</label>
+                            <input type="text" id="building" class="form-control" [placeholder]="userAddress.building"
+                                formControlName="building" name="building">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="floor" class="form-label">Floor</label>
+                            <input type="text" id="floor" class="form-control" [placeholder]="userAddress.floor"
+                                formControlName="floor" name="floor">
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="address-details" class="form-label">Address Details</label>
+                            <input type="text" id="address-details" class="form-control"
+                                [placeholder]="userAddress.address" formControlName="address" name="address">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="d-grid gap-2 d-md-block">
+                    <button *ngIf="getUserAddress.length < 1  " class="btn btn-primary" type="button">Add New
+                        Delviery Address</button>
+                    <button (click)="editAddressForm(i)" [disabled]="i == editIndex" class="btn btn-primary"
+                        type="button">Edit On
+                        Address</button>
+                    <button class="btn btn-primary" type="button">Delete</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</section>
+
+
+
+<section *ngIf="isEdit == true" class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
+    <h1 class="h2 step-one">Step One ... </h1>
+    <h3 class="h3 mt-0">Information Delivery</h3>
+    <!-- *ngIf="getUserAddress.Lenght == 0" -->
     <form [formGroup]="addressForm" (ngSubmit)="handleForm(addressForm , btn)" class="row g-3 px-5">
         <div class="form-item col-4">
             <label for="firstName">First Name</label>
@@ -41,14 +175,17 @@
             </div>
         </div>
 
-        <div class="form-item col-3">
-            <label for="state" class="form-label">State</label>
-            <select class="form-select" id="state" formControlName="state">
-                <option selected disabled value=""></option>
-                <option>Egypt</option>
-                <option>Germany</option>
-                <option>France</option>
+        <div class="form-item col-4">
+            <label for="state" class="form-label">Country</label>
+            <select #selectedValue (change)="onSelected(selectedValue.value)" formControlName="state"
+                class="form-select" id="state">
+                <option selected disabled>Select Your Country</option>
+                <option *ngFor="let countries of allCountries let i =index" (click)="countryIndexFun(i)">
+                    {{countries.country}}</option>
+
             </select>
+
+            <p>{{selectedCountry}}{{countryIndex}}</p>
             <div *ngIf="addressForm.get('state')?.errors != null && addressForm.get('state')?.touched"
                 class="alert text-danger">
                 <p *ngIf="addressForm.get('state')?.getError('required')">this field is required !!!</p>
@@ -56,20 +193,25 @@
 
         </div>
 
-
-
-        <div class="form-item col-3">
+        <div class="form-item col-4">
             <label for="city" class="form-label">City</label>
-            <select class="form-select" id="city" formControlName="city">
-                <option selected disabled value=""></option>
-                <option>Cairo</option>
-                <option>Giza</option>
+            <select class="form-select" id="state" formControlName="city">
+
+                <option selected disabled>Select Your State</option>
+
+                <option *ngFor="let cities of allCities">{{cities}}</option>
+
             </select>
-            <div *ngIf="addressForm.get('state')?.errors != null && addressForm.get('state')?.touched"
+            <div *ngIf="addressForm.get('city')?.errors != null && addressForm.get('city')?.touched"
                 class="alert text-danger">
-                <p *ngIf="addressForm.get('state')?.getError('required')">this field is required !!!</p>
+                <p *ngIf="addressForm.get('city')?.getError('required')">this field is required !!!</p>
             </div>
+
         </div>
+
+
+
+
 
         <div class="form-item col-6">
             <label for="street" class="form-label">Street</label>
@@ -104,7 +246,7 @@
 
 
         <div class="col-12">
-            <button [disabled]="addressForm.invalid" #btn type="submit" class="submit mt-3">
+            <button [disabled]="addressForm.invalid" (click)="isRegisterdFun()" #btn type="submit" class="submit mt-3">
                 Register
                 <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
             </button>
@@ -115,13 +257,15 @@
         </div>
     </form>
 </section>
-
-<section *ngIf="getUserAddress.length > 0" class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
-    <h1 class="h2">Step Two ... </h1>
+<!-- *ngIf="getUserAddress.length > 0" -->
+<!-- *ngIf="isRegisterd == true" -->
+<section *ngIf="addressId != '' " class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
+    <h1 class="h2 step-one">Step Two ... </h1>
     <h3 class="h3 mt-0">Payment Method</h3>
     <form [formGroup]="payForm" class="row g-3 px-5">
 
-        <div class="form-item col-3">
+
+        <!-- <div class="form-item col-3">
             <label for="paymentMethod" class="form-label">Payment Method</label>
             <select class="form-select" id="paymentMethod" [(ngModel)]="selectPayMethod" [value]="selectPayMethod"
                 formControlName="paymentMethod">
@@ -134,6 +278,24 @@
                 <p *ngIf="payForm.get('paymentMethod')?.getError('required')">this field is required !!!</p>
             </div>
         </div>
+        <div>
+            <h3>Payment Method</h3> -->
+
+        <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
+
+            <input class="form-check-input" type="radio" name="paymentMethod" id="method" [(ngModel)]="paymentSelected"
+                value={{method}} (change)="paymentSelectedMethod(method)" formControlName="paymentMethod">
+            <label class="form-check-label check-address-lbl p-2" for="method">{{method}}</label>
+
+            <!-- <div *ngIf="payForm.get('paymentMethod')?.errors != null && payForm.get('paymentMethod')?.touched"
+                class="alert text-danger">
+                <p *ngIf="payForm.get('paymentMethod')?.getError('required')">Please Check Your Payment Method !!!</p>
+            </div> -->
+        </div>
+        <p>payment method{{paymentSelected}}</p>
+
+
+        <!-- </div> -->
 
         <div class="form-item col-9">
             <label for="note" class="form-label">Note</label>
@@ -141,11 +303,13 @@
 
         </div>
 
-        <div class="col-12">
-            <button [disabled]="payForm.invalid" (click)="creatOrder(btn)" #btn type="submit" class="submit mt-3">
+        <div class="pay-btn col-12">
+
+            <button [disabled]="payForm.invalid" (click)="creatOrder(btn)" #btn type="submit" class="w-100 submit mt-3">
                 Submit
                 <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
             </button>
+
         </div>
     </form>
 </section>
