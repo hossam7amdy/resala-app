@@ -10,7 +10,6 @@ import {
   CreateColorSchema,
   CreateImageSchema,
   CreateOrderSchema,
-  CreatePaymentSchema,
   CreateProductSchema,
   CreateReviewSchema,
   CreateSizeSchema,
@@ -375,11 +374,8 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
 
     // payment endpoints
-    [Endpoints.createPayment]: [
-      validateMiddleware(CreatePaymentSchema),
-      paymentCtrl.transactionProcessedCb,
-    ],
-    [Endpoints.paymentResponse]: [paymentCtrl.transactionResponseCb],
+    [Endpoints.paymentProcessedCallback]: [paymentCtrl.transactionProcessedCallback],
+    [Endpoints.paymentResponseCallback]: [paymentCtrl.transactionResponseCallback],
     [Endpoints.getPayment]: [
       validateMiddleware(GetPaymentSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),

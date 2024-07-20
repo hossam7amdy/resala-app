@@ -7,7 +7,8 @@ import type {
   AuthenticateApiResponse,
   CheckoutApiResponse,
   CheckoutDto,
-  TransactionObject,
+  ProcessedCallbackObject,
+  VerifyDto,
 } from './types.js';
 
 export default class PaymobPaymentService {
@@ -40,34 +41,36 @@ export default class PaymobPaymentService {
     return { token };
   }
 
-  verify(hmac: string, { obj }: TransactionObject): boolean {
-    const lexicographical =
-      obj.amount_cents +
-      obj.created_at +
-      obj.currency +
-      obj.error_occured +
-      obj.has_parent_transaction +
-      obj.id +
-      obj.integration_id +
-      obj.is_3d_secure +
-      obj.is_auth +
-      obj.is_capture +
-      obj.is_refunded +
-      obj.is_standalone_payment +
-      obj.is_voided +
-      obj.order.id +
-      obj.owner +
-      obj.pending +
-      obj.source_data.pan +
-      obj.source_data.sub_type +
-      obj.source_data.type +
-      obj.success;
+  async verify(hmac: string, verifyDto: VerifyDto): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const lexicographical =
+        verifyDto.amount_cents +
+        verifyDto.created_at +
+        verifyDto.currency +
+        verifyDto.error_occured +
+        verifyDto.has_parent_transaction +
+        verifyDto.id +
+        verifyDto.integration_id +
+        verifyDto.is_3d_secure +
+        verifyDto.is_auth +
+        verifyDto.is_capture +
+        verifyDto.is_refunded +
+        verifyDto.is_standalone_payment +
+        verifyDto.is_voided +
+        verifyDto.orderId +
+        verifyDto.owner +
+        verifyDto.pending +
+        verifyDto.sourceDataPan +
+        verifyDto.sourceDataSubType +
+        verifyDto.sourceDataType +
+        verifyDto.success;
 
-    const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
-      .update(lexicographical)
-      .digest('hex');
+      const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
+        .update(lexicographical)
+        .digest('hex');
 
-    return hash === hmac;
+      return hash === hmac ? resolve() : reject();
+    });
   }
 
   async checkout({ user, order, shipping, items }: CheckoutDto): Promise<{ paymentUrl: string }> {
@@ -131,7 +134,7 @@ export default class PaymobPaymentService {
     return { paymentUrl };
   }
 
-  async retrieve(trxId: number): Promise<TransactionObject['obj']> {
+  async retrieve(trxId: number): Promise<ProcessedCallbackObject['obj']> {
     const { token } = await this.authenticate();
 
     const headers = {
