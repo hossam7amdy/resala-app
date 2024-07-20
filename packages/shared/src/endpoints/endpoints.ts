@@ -107,10 +107,10 @@ export enum Endpoints {
   adminUpdateOrderStatus = 'adminUpdateOrderStatus',
 
   // payment endpoints
-  createPayment = 'createPayment',
   getPayment = 'getPayment',
   listPayments = 'listPayments',
-  paymentResponse = 'paymentResponse',
+  paymentResponseCallback = 'paymentResponseCallback',
+  paymentProcessedCallback = 'paymentProcessedCallback',
 
   // reviews endpoints
   getReview = 'getReview',
@@ -500,18 +500,18 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // payment endpoints
-  [Endpoints.createPayment]: {
+  [Endpoints.paymentProcessedCallback]: {
     url: '/api/v1/payments/:orderId',
     method: 'post',
+  },
+  [Endpoints.paymentResponseCallback]: {
+    url: '/api/v1/payments/:orderId',
+    method: 'get',
   },
   [Endpoints.getPayment]: {
     url: '/api/v1/payments/:paymentId',
     method: 'get',
     auth: true,
-  },
-  [Endpoints.paymentResponse]: {
-    url: '/api/v1/payments/:orderId',
-    method: 'get',
   },
   [Endpoints.listPayments]: {
     url: '/api/v1/payments',

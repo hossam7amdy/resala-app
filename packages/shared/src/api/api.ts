@@ -348,16 +348,27 @@ export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody;
 
 // Payment types
-export type checkout = {
-  query: z.infer<typeof Schemas.CreatePaymentSchema>['query'];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: { [key: string]: any };
-};
-export type CreatePaymentResponse = DefaultResponseBody;
-
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
-  data: Payment;
+  data: Payment & {
+    metadata?: {
+      id: number;
+      pending: boolean;
+      amount_cents: number;
+      success: boolean;
+      is_auth: boolean;
+      is_capture: boolean;
+      is_standalone_payment: boolean;
+      is_voided: boolean;
+      is_refunded: boolean;
+      is_3d_secure: boolean;
+      integration_id: number;
+      profile_id: number;
+      has_parent_transaction: boolean;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [key: string]: any;
+    };
+  };
 };
 
 export type GetPaymentsListRequest = DefaultRequestQuery;

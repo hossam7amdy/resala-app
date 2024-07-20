@@ -133,7 +133,7 @@ export default class OrderController implements IOrderController {
 
       // Refund payment if paid by card
       if (order.paymentMethod === 'CARD' && order.paymentDetails) {
-        await this.paymentService.refund(order.paymentDetails.id);
+        await this.paymentService.refund(order.id);
       }
 
       // Notify user with order cancellation
