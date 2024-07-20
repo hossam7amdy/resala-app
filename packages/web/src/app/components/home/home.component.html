@@ -16,7 +16,6 @@
   </div>
 </section>
 
-
 <!-- section slider  -->
 
 <section class="slider">
@@ -34,8 +33,12 @@
         </div>
       </div>
     </ng-template>
-    <ng-template carouselSlide><img class="vh-100" src="./assets/main-slider/2.jpg" alt="Slide2" /></ng-template>
-    <ng-template carouselSlide><img class="vh-100" src="./assets/main-slider/3.jpg" alt="Slide3" /></ng-template>
+    <ng-template carouselSlide
+      ><img class="vh-100" src="./assets/main-slider/2.jpg" alt="Slide2"
+    /></ng-template>
+    <ng-template carouselSlide
+      ><img class="vh-100" src="./assets/main-slider/3.jpg" alt="Slide3"
+    /></ng-template>
   </owl-carousel-o>
 </section>
 
@@ -87,8 +90,12 @@
 </section>
 
 <!-- section products -->
-<div *ngIf="products.length < 1" class="spinner-border text-warning justify-content-center text-center"
-  style="width: 3rem; height: 3rem; top: 50px" role="status">
+<div
+  *ngIf="products.length < 1"
+  class="spinner-border text-warning justify-content-center text-center"
+  style="width: 3rem; height: 3rem; top: 50px"
+  role="status"
+>
   <span class="visually-hidden">Loading...</span>
 </div>
 <section *ngIf="products.length > 0" class="">
@@ -96,8 +103,10 @@
     <h2 class="h1">Pobular Products</h2>
 
     <div class="row justify-content-center text-center">
-      <div *ngFor="let product of products"
-        class="row col-sm-6 col-md-6 col-lg-4 col-xl-3 product justify-content-center text-center">
+      <div
+        *ngFor="let product of products"
+        class="row col-sm-6 col-md-6 col-lg-4 col-xl-3 product justify-content-center text-center"
+      >
         <div>
           <!-- *ngIf="product.images.length !== 0" -->
           <!-- <p>{{product.category.enName}}</p>     -->
@@ -119,9 +128,12 @@
             <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
               <p class="offer">discount<span> 20%</span></p>
 
-
-              <img class="w-100 image-products" [src]="product.imageUrl" [alt]="product.enName"
-                [title]="product.enName" />
+              <img
+                class="w-100 image-products"
+                [src]="product.imageUrl"
+                [alt]="product.enName"
+                [title]="product.enName"
+              />
             </div>
             <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
               <i class="fa-solid fa-bag-shopping shopping-icon"></i>
@@ -129,7 +141,9 @@
           </div>
           <!--  -->
           <div class="descrp">
-            <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">{{ product.enName }}</h6>
+            <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
+              {{ product.enName }}
+            </h6>
 
             <div class="rating">
               <i class="fa-solid fa-star"></i>
@@ -147,7 +161,10 @@
     <div class="container-fluid">
       <h2 class="h1">All Categories</h2>
 
-      <owl-carousel-o [options]="pobularProducts" class="justify-content-center text-center product">
+      <owl-carousel-o
+        [options]="pobularProducts"
+        class="justify-content-center text-center product"
+      >
         <ng-container *ngFor="let product of products">
           <ng-template carouselSlide>
             <!-- *ngIf="product.images.length !== 0" -->
@@ -156,11 +173,19 @@
                 <i class="fa-regular fa-heart favourit-icon"></i>
               </header>
 
-              <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
+              <div
+                class="img-content"
+                [routerLink]="['/product-details/', product.id]"
+                role="button"
+              >
                 <p class="offer">discount<span> 20%</span></p>
 
-                <img class="w-100 image-products" [src]="product.imageUrl" [alt]="product.enName"
-                  [title]="product.enName" />
+                <img
+                  class="w-100 image-products"
+                  [src]="product.imageUrl"
+                  [alt]="product.enName"
+                  [title]="product.enName"
+                />
               </div>
 
               <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
@@ -169,7 +194,9 @@
             </div>
 
             <div class="descrp px-2">
-              <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">{{ product.enName }}</h6>
+              <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
+                {{ product.enName }}
+              </h6>
               <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
               <div class="rating">
                 <i class="fa-solid fa-star"></i>

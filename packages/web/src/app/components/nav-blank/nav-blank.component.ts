@@ -16,34 +16,28 @@ export class NavBlankComponent implements OnInit {
     private _AuthService: AuthService,
     private _Router: Router,
     private _CartService: CartService
-  ) { }
+  ) {}
 
   cartNum: number = 0;
   ngOnInit(): void {
-
     this._CartService.cartNumber.subscribe({
-      next: (response) => {
-
-        console.log('cart number', response)
+      next: response => {
+        console.log('cart number', response);
         this.cartNum = response;
-      }
-    })
+      },
+    });
 
     this._CartService.getCartUser().subscribe({
-      next: (response) => {
+      next: response => {
         this.cartNum = response.data.totalQuantity;
       },
-      error: err => {
-
-      }
-    })
+      error: err => {},
+    });
   }
   signOut: boolean = this._AuthService.signOut;
-
 
   removeTokenSignOut(): void {
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
   }
-
 }
