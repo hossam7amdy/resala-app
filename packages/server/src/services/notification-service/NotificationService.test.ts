@@ -1,72 +1,77 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { mock, mockClear } from 'vitest-mock-extended';
 
-import { sendEmail } from '../../lib/mailer/index.js';
-import {
-  sendOrderCancellationEmail,
-  sendOrderConfirmationEmail,
-  sendResetConfirmationEmail,
-  sendResetPasswordEmail,
-  sendVerificationEmail,
-} from './NotificationService.js';
+import type EmailNotificationService from '../email-notification-service/EmailNotificationService';
+import NotificationService from './NotificationService';
 
-vi.mock('lib/mailer/index.js');
+describe('Notification Service', () => {
+  let emailNotificationService: EmailNotificationService;
+  let notificationService: NotificationService;
 
-describe('Communication Service', () => {
+  beforeAll(() => {
+    emailNotificationService = mock<EmailNotificationService>();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    mockClear(emailNotificationService);
+
+    notificationService = new NotificationService(emailNotificationService);
   });
 
   it('should send a verification email', async () => {
     const email = 'test@example.com';
     const token = '123456';
-    await sendVerificationEmail(email, token);
-    expect(sendEmail).toHaveBeenCalledWith({
-      to: email,
-      subject: 'Email Verification',
-      html: expect.stringContaining(token),
-    });
+    await notificationService.sendVerificationEmail(email, token);
+    expect(emailNotificationService.send).toHaveBeenCalledWith(
+      email,
+      'Email Verification',
+      `<p>Click <a href="http://localhost:5000/api/v1/auth/verify-email?token=123456&email=test@example.com" target="_blank">here</a> to verify your email</p>`
+    );
   });
 
   it('should send a reset password email', async () => {
     const email = 'test@example.com';
     const resetCode = '123456';
-    await sendResetPasswordEmail(email, resetCode);
-    expect(sendEmail).toHaveBeenCalledWith({
-      to: email,
-      subject: 'Reset your password',
-      text: `Your reset code is: ${resetCode}`,
-    });
+    await notificationService.sendResetPasswordEmail(email, resetCode);
+    expect(emailNotificationService.send).toHaveBeenCalledWith(
+      email,
+      'Reset your password',
+      `Your reset code is: ${resetCode}`
+    );
   });
 
   it('should send a reset confirmation email', async () => {
     const email = 'test@example.com';
-    await sendResetConfirmationEmail(email);
-    expect(sendEmail).toHaveBeenCalledWith({
-      to: email,
-      subject: 'Password reset successful',
-      text: 'Your password has been reset successfully',
-    });
+    await notificationService.sendResetConfirmationEmail(email);
+    expect(emailNotificationService.send).toHaveBeenCalledWith(
+      email,
+      'Password reset successful',
+      'Your password has been reset successfully'
+    );
   });
 
   it('should send an order confirmation email', async () => {
     const email = 'test@example.com';
     const orderId = 123;
-    await sendOrderConfirmationEmail(email, orderId);
-    expect(sendEmail).toHaveBeenCalledWith({
-      to: email,
-      subject: 'Order Confirmation',
-      text: `Your order with id ${orderId} has been confirmed`,
-    });
+    await notificationService.sendOrderConfirmationEmail(email, orderId);
+    expect(emailNotificationService.send).toHaveBeenCalledWith(
+      email,
+      'Order Confirmation',
+      `Your order with id ${orderId} has been confirmed`
+    );
   });
 
   it('should send an order cancellation email', async () => {
     const email = 'test@example.com';
     const orderId = 123;
-    await sendOrderCancellationEmail(email, orderId);
-    expect(sendEmail).toHaveBeenCalledWith({
-      to: email,
-      subject: 'Order Cancellation',
-      text: `Your order with id ${orderId} has been cancelled`,
-    });
+
+    await notificationService.sendOrderCancellationEmail(email, orderId);
+
+    expect(emailNotificationService.send).toHaveBeenCalledWith(
+      email,
+      'Order Cancellation',
+      `Your order with id ${orderId} has been cancelled`
+    );
   });
 });
