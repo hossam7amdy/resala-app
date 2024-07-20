@@ -25,6 +25,12 @@ export default class PaymentRepository {
     });
   }
 
+  async findByTransactionRef(transactionRef: number) {
+    return await this.prisma.payment.findFirst({
+      where: { transactionRef },
+    });
+  }
+
   async list({ page, limit }: Omit<DefaultFilters, 'query'>) {
     const [total, payments] = await this.prisma.$transaction([
       this.prisma.payment.count(),
