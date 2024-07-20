@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { createHmac } from 'crypto';
+import { Decimal } from 'decimal.js';
 
 import type {
   AuthenticateApiResponse,
@@ -76,21 +77,21 @@ export default class PaymobPaymentService {
 
     const orderItems = items.map(item => ({
       name: item.name,
-      amount: item.price * 100,
+      amount: +item.price * 100,
       description: `${item.color}, ${item.size}`,
       quantity: item.quantity,
     }));
 
     orderItems.push({
       name: 'Shipping',
-      amount: (order.total - order.subtotal) * 100,
+      amount: +order.shipping * 100,
       description: 'Shipping fees',
       quantity: 1,
     });
 
     const body = {
       currency: 'EGP',
-      amount: order.total * 100,
+      amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
       notification_url: `${process.env.APP_URL}/api/v1/payments/${order.id}`,
       redirection_url: `${process.env.APP_URL}/api/v1/payments/${order.id}`,
       payment_methods: [+process.env.PAYMOB_INTEGRATION_ID],
@@ -120,6 +121,10 @@ export default class PaymobPaymentService {
       body,
       { headers }
     );
+
+    if (!client_secret) {
+      throw new Error('Invalid response from Paymob');
+    }
 
     const paymentUrl = `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${client_secret}`;
 
