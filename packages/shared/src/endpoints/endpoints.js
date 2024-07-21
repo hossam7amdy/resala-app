@@ -78,10 +78,7 @@ export var Endpoints;
     Endpoints["getOrder"] = "getOrder";
     Endpoints["listOrders"] = "listOrders";
     Endpoints["deleteOrder"] = "deleteOrder";
-    Endpoints["adminGetOrder"] = "adminGetOrder";
-    Endpoints["adminListOrders"] = "adminListOrders";
-    Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
-    Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
+    Endpoints["updateOrderStatus"] = "updateOrderStatus";
     // payment endpoints
     Endpoints["getPayment"] = "getPayment";
     Endpoints["listPayments"] = "listPayments";
@@ -426,23 +423,8 @@ export const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
-    [Endpoints.adminGetOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'get',
-        auth: true,
-    },
-    [Endpoints.adminListOrders]: {
-        url: '/api/v1/admin/orders',
-        method: 'get',
-        auth: true,
-    },
-    [Endpoints.adminDeleteOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'delete',
-        auth: true,
-    },
-    [Endpoints.adminUpdateOrderStatus]: {
-        url: '/api/v1/admin/orders/:orderId',
+    [Endpoints.updateOrderStatus]: {
+        url: '/api/v1/orders/:orderId',
         method: 'patch',
         auth: true,
     },
