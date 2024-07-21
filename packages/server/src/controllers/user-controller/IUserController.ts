@@ -5,10 +5,10 @@ import type {
   DeleteAddressResponse,
   DeleteUserRequest,
   DeleteUserResponse,
-  GetUserAddressListRequest,
-  GetUserAddressListResponse,
   GetUserRequest,
   GetUserResponse,
+  ListAddressRequest,
+  ListAddressResponse,
   ListUsersRequest,
   ListUsersResponse,
   UpdateAddressRequest,
@@ -48,7 +48,8 @@ export type DeleteUser = ExpressHandlerWithParams<
   LocalUser
 >;
 
-export type CreateUserAddress = ExpressHandler<
+export type CreateUserAddress = ExpressHandlerWithParams<
+  CreateAddressRequest['params'],
   CreateAddressRequest['body'],
   CreateAddressResponse,
   undefined,
@@ -71,9 +72,10 @@ export type DeleteUserAddress = ExpressHandlerWithParams<
   LocalUser
 >;
 
-export type GetUserAddressList = ExpressHandler<
-  GetUserAddressListRequest,
-  GetUserAddressListResponse,
+export type GetUserAddressList = ExpressHandlerWithParams<
+  ListAddressRequest['params'],
+  ListAddressRequest,
+  ListAddressResponse,
   undefined,
   LocalUser
 >;

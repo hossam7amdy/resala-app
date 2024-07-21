@@ -276,6 +276,13 @@ export declare const DeleteUserSchema: z.ZodObject<{
     };
 }>;
 export declare const CreateAddressSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
     body: z.ZodObject<{
         firstName: z.ZodString;
         lastName: z.ZodString;
@@ -311,6 +318,9 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
+    params: {
+        userId: number;
+    };
     body: {
         phone: string;
         firstName: string;
@@ -324,6 +334,9 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     };
 }, {
+    params: {
+        userId: number;
+    };
     body: {
         phone: string;
         firstName: string;
@@ -337,12 +350,32 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     };
 }>;
+export declare const ListAddressSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        userId: number;
+    };
+}, {
+    params: {
+        userId: number;
+    };
+}>;
 export declare const UpdateAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
+        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         addressId: number;
     }, {
+        userId: number;
         addressId: number;
     }>;
     body: z.ZodObject<{
@@ -381,6 +414,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
+        userId: number;
         addressId: number;
     };
     body: {
@@ -397,6 +431,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     };
 }, {
     params: {
+        userId: number;
         addressId: number;
     };
     body: {
@@ -414,18 +449,23 @@ export declare const UpdateAddressSchema: z.ZodObject<{
 }>;
 export declare const DeleteAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
+        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         addressId: number;
     }, {
+        userId: number;
         addressId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
+        userId: number;
         addressId: number;
     };
 }, {
     params: {
+        userId: number;
         addressId: number;
     };
 }>;

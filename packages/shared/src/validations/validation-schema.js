@@ -108,6 +108,9 @@ export const DeleteUserSchema = z.object({
     }),
 });
 export const CreateAddressSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
     body: z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
@@ -121,8 +124,14 @@ export const CreateAddressSchema = z.object({
         address: z.string().max(500).optional(),
     }),
 });
+export const ListAddressSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
+});
 export const UpdateAddressSchema = z.object({
     params: z.object({
+        userId: z.coerce.number().positive(),
         addressId: z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
