@@ -1,72 +1,55 @@
 import type {
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse,
-  AdminGetUserRequest,
-  AdminGetUserResponse,
-  AdminGetUsersListRequest,
-  AdminGetUsersListResponse,
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse,
   CreateAddressRequest,
   CreateAddressResponse,
   DeleteAddressRequest,
   DeleteAddressResponse,
-  GetProfileRequest,
-  GetProfileResponse,
-  GetUserAddressListRequest,
-  GetUserAddressListResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
+  GetUserRequest,
+  GetUserResponse,
+  ListAddressRequest,
+  ListAddressResponse,
+  ListUsersRequest,
+  ListUsersResponse,
   UpdateAddressRequest,
   UpdateAddressResponse,
-  UpdateProfileRequest,
-  UpdateProfileResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
 } from '@resala/shared';
 
 import type { ExpressHandler, ExpressHandlerWithParams, LocalUser } from '../../types/index.js';
 
-export type GetProfile = ExpressHandler<
-  GetProfileRequest,
-  GetProfileResponse,
+export type GetUser = ExpressHandlerWithParams<
+  GetUserRequest['params'],
+  undefined,
+  GetUserResponse,
   undefined,
   LocalUser
 >;
 
-export type UpdateProfile = ExpressHandler<
-  UpdateProfileRequest['body'],
-  UpdateProfileResponse,
+export type UpdateUser = ExpressHandlerWithParams<
+  UpdateUserRequest['params'],
+  UpdateUserRequest['body'],
+  UpdateUserResponse
+>;
+
+export type ListUsers = ExpressHandler<
+  undefined,
+  ListUsersResponse,
+  ListUsersRequest['query'],
+  LocalUser
+>;
+
+export type DeleteUser = ExpressHandlerWithParams<
+  DeleteUserRequest['params'],
+  undefined,
+  DeleteUserResponse,
   undefined,
   LocalUser
 >;
 
-export type AdminGetUser = ExpressHandlerWithParams<
-  AdminGetUserRequest['params'],
-  undefined,
-  AdminGetUserResponse,
-  undefined,
-  LocalUser
->;
-
-export type AdminUpdateUser = ExpressHandlerWithParams<
-  AdminUpdateUserRequest['params'],
-  AdminUpdateUserRequest['body'],
-  AdminUpdateUserResponse
->;
-
-export type AdminGetUsersList = ExpressHandler<
-  undefined,
-  AdminGetUsersListResponse,
-  AdminGetUsersListRequest['query'],
-  LocalUser
->;
-
-export type AdminDeleteUser = ExpressHandlerWithParams<
-  AdminDeleteUserRequest['params'],
-  undefined,
-  AdminDeleteUserResponse,
-  undefined,
-  LocalUser
->;
-
-export type CreateUserAddress = ExpressHandler<
+export type CreateUserAddress = ExpressHandlerWithParams<
+  CreateAddressRequest['params'],
   CreateAddressRequest['body'],
   CreateAddressResponse,
   undefined,
@@ -89,20 +72,19 @@ export type DeleteUserAddress = ExpressHandlerWithParams<
   LocalUser
 >;
 
-export type GetUserAddressList = ExpressHandler<
-  GetUserAddressListRequest,
-  GetUserAddressListResponse,
+export type GetUserAddressList = ExpressHandlerWithParams<
+  ListAddressRequest['params'],
+  ListAddressRequest,
+  ListAddressResponse,
   undefined,
   LocalUser
 >;
 
 export default interface IUserController {
-  getProfile: GetProfile;
-  updateProfile: UpdateProfile;
-  adminGetUser: AdminGetUser;
-  adminUpdateUser: AdminUpdateUser;
-  adminListUsers: AdminGetUsersList;
-  adminDeleteUser: AdminDeleteUser;
+  getUser: GetUser;
+  updateUser: UpdateUser;
+  listUsers: ListUsers;
+  deleteUser: DeleteUser;
   createUserAddress: CreateUserAddress;
   updateUserAddress: UpdateUserAddress;
   deleteUserAddress: DeleteUserAddress;

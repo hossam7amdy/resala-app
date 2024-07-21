@@ -5,11 +5,11 @@ import { DeleteButton, Pagination, Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
-import type { AdminGetUsersListResponse } from '@resala/shared';
+import type { ListUsersResponse } from '@resala/shared';
 import { Button, Flex, Space, Table, Tag } from 'antd';
 import Link from 'next/link';
 
-const CustomersTable: React.FC<AdminGetUsersListResponse['data']> = ({ users, pagination }) => {
+const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
       <Table

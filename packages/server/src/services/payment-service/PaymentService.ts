@@ -1,11 +1,8 @@
 import type {
   Address,
-  DefaultFilters,
   GetPaymentResponse,
-  GetPaymentsListResponse,
   Order,
   OrderItem,
-  Payment,
   PaymentStatusType,
   User,
 } from '@resala/shared';
@@ -13,11 +10,7 @@ import type {
 import type { PaymentRepository } from '../../repositories/index.js';
 import { BadRequestError, NotFoundError } from '../../utils/ApiErrors.js';
 import type PaymobPaymentService from '../paymob-payment-service/PaymobPaymentService.js';
-import type {
-  ProcessedCallbackObject,
-  ResponseCallbackObject,
-  VerifyDto,
-} from '../paymob-payment-service/types.js';
+import type { PostPayCallbackObject, VerifyDto } from '../paymob-payment-service/types.js';
 
 export default class PaymentService {
   constructor(
@@ -33,7 +26,7 @@ export default class PaymentService {
   }): Promise<{ paymentUrl: string }> {
     const { paymentUrl } = await this.paymobService.checkout(payload);
 
-    await this.paymentProcessedCallback({
+    await this.paymentRepo.create({
       paymentUrl,
       orderId: payload.order.id,
       orderRef: null,
@@ -43,119 +36,38 @@ export default class PaymentService {
     return { paymentUrl };
   }
 
-  async void(orderId: number): Promise<void> {
-    const payment = await this.findPayment(orderId);
-
-    const now = Date.now();
-    const paymentDate = new Date(payment.metadata?.created_at || now).getTime();
-
-    if (now - paymentDate > 86400000) {
-      throw new BadRequestError('Cannot void payment after 24 hours. Please contact support');
-    }
-
+  async void(paymentId: number): Promise<void> {
     try {
-      await this.paymobService.void(payment.transactionRef!);
+      await this.retrieve(paymentId);
+
+      await this.paymobService.void(paymentId);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
   }
 
-  async refund(orderId: number): Promise<void> {
-    const payment = await this.findPayment(orderId);
-
-    if (!payment.metadata?.amount_cents) {
-      throw new NotFoundError('Payment not found');
-    }
+  async refund(paymentId: number): Promise<void> {
     try {
-      await this.paymobService.refund(orderId, payment.metadata.amount_cents);
+      const payment = await this.retrieve(paymentId);
+
+      await this.paymobService.refund(paymentId, payment.amount_cents);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
   }
 
-  async paymentProcessedCallback(payload: Payment) {
-    return await this.paymentRepo.create(payload);
-  }
-
-  async updatePayment(orderId: number, payload: Partial<Payment>) {
-    return await this.paymentRepo.update(orderId, payload);
-  }
-
-  async findPayment(orderId: number): Promise<GetPaymentResponse['data']> {
-    const payment = await this.paymentRepo.findByOrderId(orderId);
-    const metadata =
-      payment?.transactionRef && (await this.paymobService.retrieve(payment.transactionRef));
-
-    if (!metadata) {
-      throw new NotFoundError('Payment not found');
+  async retrieve(paymentId: number): Promise<GetPaymentResponse['data']> {
+    try {
+      return await this.paymobService.retrieve(paymentId);
+    } catch (e) {
+      throw new NotFoundError((e as Error).message);
     }
-
-    return { ...payment, metadata };
   }
 
-  async findPaymentByTransactionRef(transactionRef: number): Promise<GetPaymentResponse['data']> {
-    const payment = await this.paymentRepo.findByTransactionRef(transactionRef);
-
-    if (!payment) {
-      throw new NotFoundError('Payment not found');
-    }
-
-    return payment;
-  }
-
-  async listPayments({
-    page,
-    limit,
-  }: Omit<DefaultFilters, 'query'>): Promise<GetPaymentsListResponse['data']> {
-    const { total, payments } = await this.paymentRepo.list({ page, limit });
-
-    return {
-      pagination: { total, page, limit },
-      payments,
-    };
-  }
-
-  async handleResponseCb(
+  async postPayCallback(
     orderId: number,
     hmac: string,
-    obj: ResponseCallbackObject
-  ): Promise<PaymentStatusType> {
-    const verifyDto: VerifyDto = {
-      orderId: obj.order,
-      sourceDataPan: obj['source_data.pan'],
-      sourceDataSubType: obj['source_data.sub_type'],
-      sourceDataType: obj['source_data.type'],
-      amount_cents: obj.amount_cents,
-      created_at: obj.created_at,
-      currency: obj.currency,
-      error_occured: obj.error_occured,
-      has_parent_transaction: obj.has_parent_transaction,
-      id: obj.id,
-      integration_id: obj.integration_id,
-      is_3d_secure: obj.is_3d_secure,
-      is_auth: obj.is_auth,
-      is_capture: obj.is_capture,
-      is_refunded: obj.is_refunded,
-      is_standalone_payment: obj.is_standalone_payment,
-      is_voided: obj.is_voided,
-      owner: obj.owner,
-      pending: obj.pending,
-      success: obj.success,
-    };
-
-    await this.paymobService.verify(hmac, verifyDto);
-    await this.updatePayment(orderId, {
-      orderRef: +verifyDto.orderId,
-      transactionRef: +verifyDto.id,
-    });
-
-    return this._status(verifyDto);
-  }
-
-  async handleProcessedCb(
-    orderId: number,
-    hmac: string,
-    { obj }: ProcessedCallbackObject
+    { obj }: PostPayCallbackObject
   ): Promise<PaymentStatusType> {
     const verifyDto: VerifyDto = {
       amount_cents: obj.amount_cents.toString(),
@@ -181,7 +93,8 @@ export default class PaymentService {
     };
 
     await this.paymobService.verify(hmac, verifyDto);
-    await this.updatePayment(orderId, {
+
+    await this.paymentRepo.update(orderId, {
       orderRef: +verifyDto.orderId,
       transactionRef: +verifyDto.id,
     });

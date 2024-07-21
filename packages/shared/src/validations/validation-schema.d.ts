@@ -191,77 +191,49 @@ export declare const ForgotPasswordSchema: z.ZodObject<{
         email: string;
     };
 }>;
-export declare const UpdateProfileSchema: z.ZodObject<{
+export declare const GetUserSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        userId: number;
+    };
+}, {
+    params: {
+        userId: number;
+    };
+}>;
+export declare const UpdateUserSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
     body: z.ZodObject<{
         firstName: z.ZodString;
         lastName: z.ZodString;
         phone: z.ZodString;
+        role: z.ZodOptional<z.ZodEnum<[Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]>>;
+        isVerified: z.ZodOptional<z.ZodOptional<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
         phone: string;
         firstName: string;
         lastName: string;
-    }, {
-        phone: string;
-        firstName: string;
-        lastName: string;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    body: {
-        phone: string;
-        firstName: string;
-        lastName: string;
-    };
-}, {
-    body: {
-        phone: string;
-        firstName: string;
-        lastName: string;
-    };
-}>;
-export declare const AdminGetUserSchema: z.ZodObject<{
-    params: z.ZodObject<{
-        userId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        userId: number;
-    }, {
-        userId: number;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    params: {
-        userId: number;
-    };
-}, {
-    params: {
-        userId: number;
-    };
-}>;
-export declare const AdminUpdateUserSchema: z.ZodObject<{
-    params: z.ZodObject<{
-        userId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        userId: number;
-    }, {
-        userId: number;
-    }>;
-    body: z.ZodObject<z.objectUtil.extendShape<{
-        firstName: z.ZodString;
-        lastName: z.ZodString;
-        phone: z.ZodString;
-    }, {
-        role: z.ZodEnum<[Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]>;
-        isVerified: z.ZodOptional<z.ZodBoolean>;
-    }>, "strip", z.ZodTypeAny, {
-        phone: string;
-        firstName: string;
-        lastName: string;
-        role: Role;
         isVerified?: boolean | undefined;
+        role?: Role | undefined;
     }, {
         phone: string;
         firstName: string;
         lastName: string;
-        role: Role;
         isVerified?: boolean | undefined;
+        role?: Role | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
@@ -271,8 +243,8 @@ export declare const AdminUpdateUserSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
-        role: Role;
         isVerified?: boolean | undefined;
+        role?: Role | undefined;
     };
 }, {
     params: {
@@ -282,11 +254,11 @@ export declare const AdminUpdateUserSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
-        role: Role;
         isVerified?: boolean | undefined;
+        role?: Role | undefined;
     };
 }>;
-export declare const AdminDeleteUserSchema: z.ZodObject<{
+export declare const DeleteUserSchema: z.ZodObject<{
     params: z.ZodObject<{
         userId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
@@ -304,6 +276,13 @@ export declare const AdminDeleteUserSchema: z.ZodObject<{
     };
 }>;
 export declare const CreateAddressSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
     body: z.ZodObject<{
         firstName: z.ZodString;
         lastName: z.ZodString;
@@ -339,6 +318,9 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
+    params: {
+        userId: number;
+    };
     body: {
         phone: string;
         firstName: string;
@@ -352,6 +334,9 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     };
 }, {
+    params: {
+        userId: number;
+    };
     body: {
         phone: string;
         firstName: string;
@@ -365,12 +350,32 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     };
 }>;
+export declare const ListAddressSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        userId: number;
+    };
+}, {
+    params: {
+        userId: number;
+    };
+}>;
 export declare const UpdateAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
+        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         addressId: number;
     }, {
+        userId: number;
         addressId: number;
     }>;
     body: z.ZodObject<{
@@ -409,6 +414,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
+        userId: number;
         addressId: number;
     };
     body: {
@@ -425,6 +431,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     };
 }, {
     params: {
+        userId: number;
         addressId: number;
     };
     body: {
@@ -442,18 +449,23 @@ export declare const UpdateAddressSchema: z.ZodObject<{
 }>;
 export declare const DeleteAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
+        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         addressId: number;
     }, {
+        userId: number;
         addressId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
+        userId: number;
         addressId: number;
     };
 }, {
     params: {
+        userId: number;
         addressId: number;
     };
 }>;

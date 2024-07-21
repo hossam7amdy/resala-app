@@ -1,3 +1,5 @@
+import { Role } from '@resala/shared';
+import type { RoleType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
 import type { AuthService, UserService } from '../services/index.js';
@@ -37,13 +39,13 @@ export default class AuthMiddleware {
     }
   };
 
-  authorizeUser = (roles: string[]): RequestHandler => {
+  authorizeUser = (roles: RoleType[]): RequestHandler => {
     return (_req, res, next) => {
       try {
         const user = res.locals.user;
 
         if (!roles.includes(user?.role)) {
-          throw new ForbiddenError("You don't have permission to access this resource");
+          throw new ForbiddenError();
         }
 
         next();
@@ -51,5 +53,40 @@ export default class AuthMiddleware {
         next(error);
       }
     };
+  };
+
+  authorizeSelf = (roles?: RoleType[]): RequestHandler => {
+    return (req, res, next) => {
+      try {
+        const user = res.locals.user;
+
+        if (req.params.userId === 'self') {
+          req.params.userId = user?.id.toString();
+        }
+
+        if (!roles?.includes(user?.role) && req.params.userId !== user?.id.toString()) {
+          throw new ForbiddenError();
+        }
+
+        next();
+      } catch (error) {
+        next(error);
+      }
+    };
+  };
+
+  authorizeRoleChange: RequestHandler = (req, res, next) => {
+    try {
+      const user = res.locals.user;
+      const role = req.body.role as RoleType;
+
+      if (role && user?.role !== Role.ADMIN) {
+        throw new ForbiddenError();
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
   };
 }

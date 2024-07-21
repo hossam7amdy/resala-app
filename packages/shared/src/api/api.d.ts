@@ -48,37 +48,29 @@ export type ResetPasswordRequest = z.infer<typeof Schemas.ResetPasswordSchema>;
 export type ResetPasswordResponse = DefaultResponseBody;
 export type ChangePasswordRequest = z.infer<typeof Schemas.ChangePasswordSchema>;
 export type ChangePasswordResponse = DefaultResponseBody;
-export type GetProfileRequest = undefined;
-export type GetProfileResponse = DefaultResponseBody & {
+export type GetUserRequest = z.infer<typeof Schemas.GetUserSchema>;
+export type GetUserResponse = DefaultResponseBody & {
     data: User;
 };
-export type UpdateProfileRequest = z.infer<typeof Schemas.UpdateProfileSchema>;
-export type UpdateProfileResponse = DefaultResponseBody & {
-    data: GetProfileResponse['data'];
-};
-export type AdminGetUserRequest = z.infer<typeof Schemas.AdminGetUserSchema>;
-export type AdminGetUserResponse = DefaultResponseBody & {
-    data: GetProfileResponse['data'];
-};
-export type AdminGetUsersListRequest = z.infer<typeof Schemas.DefaultQuerySchema>;
-export type AdminGetUsersListResponse = DefaultResponseBody & {
+export type ListUsersRequest = z.infer<typeof Schemas.DefaultQuerySchema>;
+export type ListUsersResponse = DefaultResponseBody & {
     data: {
         pagination: Pagination;
-        users: GetProfileResponse['data'][];
+        users: User[];
     };
 };
-export type AdminUpdateUserRequest = z.infer<typeof Schemas.AdminUpdateUserSchema>;
-export type AdminUpdateUserResponse = DefaultResponseBody & {
-    data: GetProfileResponse['data'];
+export type UpdateUserRequest = z.infer<typeof Schemas.UpdateUserSchema>;
+export type UpdateUserResponse = DefaultResponseBody & {
+    data: User;
 };
-export type AdminDeleteUserRequest = z.infer<typeof Schemas.AdminDeleteUserSchema>;
-export type AdminDeleteUserResponse = DefaultResponseBody;
+export type DeleteUserRequest = z.infer<typeof Schemas.DeleteUserSchema>;
+export type DeleteUserResponse = DefaultResponseBody;
 export type GetUserAddressRequest = undefined;
 export type GetUserAddressResponse = DefaultResponseBody & {
     data: Address;
 };
-export type GetUserAddressListRequest = undefined;
-export type GetUserAddressListResponse = DefaultResponseBody & {
+export type ListAddressRequest = z.infer<typeof Schemas.ListAddressSchema>;
+export type ListAddressResponse = DefaultResponseBody & {
     data: GetUserAddressResponse['data'][];
 };
 export type CreateAddressRequest = z.infer<typeof Schemas.CreateAddressSchema>;
@@ -261,30 +253,22 @@ export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody;
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
-    data: Payment & {
-        metadata?: {
-            id: number;
-            pending: boolean;
-            amount_cents: number;
-            success: boolean;
-            is_auth: boolean;
-            is_capture: boolean;
-            is_standalone_payment: boolean;
-            is_voided: boolean;
-            is_refunded: boolean;
-            is_3d_secure: boolean;
-            integration_id: number;
-            profile_id: number;
-            has_parent_transaction: boolean;
-            [key: string]: any;
-        };
-    };
-};
-export type GetPaymentsListRequest = DefaultRequestQuery;
-export type GetPaymentsListResponse = DefaultResponseBody & {
     data: {
-        pagination: Pagination;
-        payments: GetPaymentResponse['data'][];
+        id: number;
+        pending: boolean;
+        amount_cents: number;
+        success: boolean;
+        is_auth: boolean;
+        is_capture: boolean;
+        is_standalone_payment: boolean;
+        is_voided: boolean;
+        is_refunded: boolean;
+        is_3d_secure: boolean;
+        integration_id: number;
+        profile_id: number;
+        has_parent_transaction: boolean;
+        created_at: string;
+        [key: string]: any;
     };
 };
 export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;

@@ -49,44 +49,7 @@ export interface VerifyDto {
   success: string;
 }
 
-export interface ResponseCallbackObject {
-  id: string;
-  pending: string;
-  amount_cents: string;
-  success: string;
-  is_auth: string;
-  is_capture: string;
-  is_standalone_payment: string;
-  is_voided: string;
-  is_refunded: string;
-  is_3d_secure: string;
-  integration_id: string;
-  profile_id: string;
-  has_parent_transaction: string;
-  order: string;
-  created_at: string;
-  currency: string;
-  merchant_commission: string;
-  discount_details: string;
-  is_void: string;
-  is_refund: string;
-  error_occured: string;
-  refunded_amount_cents: string;
-  captured_amount: string;
-  updated_at: string;
-  is_settled: string;
-  bill_balanced: string;
-  is_bill: string;
-  owner: string;
-  'data.message': string;
-  'source_data.type': string;
-  'source_data.pan': string;
-  'source_data.sub_type': string;
-  acq_response_code: string;
-  txn_response_code: string;
-}
-
-export interface ProcessedCallbackObject {
+export interface PostPayCallbackObject {
   type: string;
   obj: {
     id: number;
@@ -173,7 +136,7 @@ export interface ProcessedCallbackObject {
       sub_type: string;
     };
     api_source: string;
-    terminal_id: any;
+    terminal_id: string;
     merchant_commission: number;
     installment: any;
     discount_details: any[];
@@ -239,9 +202,7 @@ export interface ProcessedCallbackObject {
     };
     is_hidden: boolean;
     payment_key_claims: {
-      exp: number;
       extra: Record<string, unknown>;
-      pmk_ip: string;
       user_id: number;
       currency: string;
       order_id: number;
@@ -261,13 +222,15 @@ export interface ProcessedCallbackObject {
         phone_number: string;
         extra_description: string;
       };
+      redirect_url: string;
       integration_id: number;
       lock_order_when_paid: boolean;
+      next_payment_intention: string;
       single_payment_attempt: boolean;
     };
     error_occured: boolean;
     is_live: boolean;
-    other_endpoint_reference: any;
+    other_endpoint_reference: string;
     refunded_amount_cents: number;
     source_id: number;
     is_captured: boolean;
@@ -278,8 +241,8 @@ export interface ProcessedCallbackObject {
     bill_balanced: boolean;
     is_bill: boolean;
     owner: number;
-    parent_transaction: any;
+    parent_transaction: string;
   };
-  issuer_bank: any;
+  issuer_bank: string;
   transaction_processed_callback_responses: string;
 }
