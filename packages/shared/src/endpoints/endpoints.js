@@ -81,9 +81,9 @@ export var Endpoints;
     Endpoints["updateOrderStatus"] = "updateOrderStatus";
     // payment endpoints
     Endpoints["getPayment"] = "getPayment";
-    Endpoints["listPayments"] = "listPayments";
-    Endpoints["paymentResponseCallback"] = "paymentResponseCallback";
-    Endpoints["paymentProcessedCallback"] = "paymentProcessedCallback";
+    Endpoints["voidPayment"] = "voidPayment";
+    Endpoints["refundPayment"] = "refundPayment";
+    Endpoints["postPayCallback"] = "postPayCallback";
     // reviews endpoints
     Endpoints["getReview"] = "getReview";
     Endpoints["listReviews"] = "listReviews";
@@ -429,23 +429,24 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     // payment endpoints
-    [Endpoints.paymentProcessedCallback]: {
-        url: '/post_pay',
-        method: 'post',
-    },
-    [Endpoints.paymentResponseCallback]: {
-        url: '/post_pay/:orderId',
-        method: 'get',
-    },
     [Endpoints.getPayment]: {
         url: '/api/v1/payments/:paymentId',
         method: 'get',
         auth: true,
     },
-    [Endpoints.listPayments]: {
-        url: '/api/v1/payments',
-        method: 'get',
+    [Endpoints.voidPayment]: {
+        url: '/api/v1/payments/void',
+        method: 'post',
         auth: true,
+    },
+    [Endpoints.refundPayment]: {
+        url: '/api/v1/payments/refund',
+        method: 'post',
+        auth: true,
+    },
+    [Endpoints.postPayCallback]: {
+        url: '/post_pay/:orderId',
+        method: 'post',
     },
     // product reviews endpoints
     [Endpoints.createReview]: {

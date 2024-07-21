@@ -372,17 +372,19 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
 
     // payment endpoints
-    [Endpoints.paymentProcessedCallback]: [paymentCtrl.transactionProcessedCallback],
-    [Endpoints.paymentResponseCallback]: [paymentCtrl.transactionResponseCallback],
+    [Endpoints.postPayCallback]: [paymentCtrl.postPayCallback],
     [Endpoints.getPayment]: [
       validateMiddleware(GetPaymentSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPayment,
     ],
-    [Endpoints.listPayments]: [
-      validateMiddleware(DefaultQuerySchema),
+    [Endpoints.voidPayment]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      paymentCtrl.getPaymentList,
+      paymentCtrl.voidPayment,
+    ],
+    [Endpoints.refundPayment]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      paymentCtrl.refundPayment,
     ],
 
     // review endpoints

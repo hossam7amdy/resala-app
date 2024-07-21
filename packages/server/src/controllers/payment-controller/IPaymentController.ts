@@ -1,9 +1,4 @@
-import type {
-  GetPaymentRequest,
-  GetPaymentResponse,
-  GetPaymentsListRequest,
-  GetPaymentsListResponse,
-} from '@resala/shared';
+import type { GetPaymentRequest, GetPaymentResponse } from '@resala/shared';
 
 import type { ExpressHandler, ExpressHandlerWithParams } from '../../types/index.js';
 
@@ -13,21 +8,11 @@ export type GetPayment = ExpressHandlerWithParams<
   GetPaymentResponse
 >;
 
-export type GetPaymentList = ExpressHandler<
-  undefined,
-  GetPaymentsListResponse,
-  Required<GetPaymentsListRequest['query']>
->;
+export type VoidPayment = ExpressHandler;
 
-export type TransactionResponseCallback = ExpressHandlerWithParams<
-  { orderId: string },
-  unknown,
-  unknown,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
->;
+export type RefundPayment = ExpressHandler;
 
-export type TransactionProcessedCallback = ExpressHandlerWithParams<
+export type PostPayCallback = ExpressHandlerWithParams<
   { orderId?: string },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
@@ -37,7 +22,7 @@ export type TransactionProcessedCallback = ExpressHandlerWithParams<
 
 export default interface IPaymentController {
   getPayment: GetPayment;
-  getPaymentList: GetPaymentList;
-  transactionResponseCallback: TransactionResponseCallback;
-  transactionProcessedCallback: TransactionProcessedCallback;
+  voidPayment: VoidPayment;
+  refundPayment: RefundPayment;
+  postPayCallback: PostPayCallback;
 }
