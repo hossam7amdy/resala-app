@@ -18,8 +18,8 @@ export const updateOrderStatus = async (id: string | number, payload: { status: 
 
 export const deleteOrder = async (id: string | number) => {
   const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
-    ENDPOINT_CONFIGS.adminDeleteOrder,
-    { params: { orderId: Number(id) } }
+    ENDPOINT_CONFIGS.deleteOrder,
+    { params: { orderId: +id } }
   );
 
   revalidatePath(ROUTES.ORDERS);

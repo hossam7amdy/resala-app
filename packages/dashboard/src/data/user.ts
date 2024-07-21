@@ -3,8 +3,6 @@
 import { callEndpoint } from '@/lib/fetch';
 import type {
   DefaultRequestQuery,
-  GetProfileRequest,
-  GetProfileResponse,
   GetUserRequest,
   GetUserResponse,
   ListUsersRequest,
@@ -16,9 +14,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const getProfile = async () => {
   noStore();
 
-  const response = await callEndpoint<GetProfileRequest, GetProfileResponse>(
-    ENDPOINT_CONFIGS.getCurrentUser
-  );
+  const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser);
 
   return response.data;
 };
