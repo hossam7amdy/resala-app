@@ -1,8 +1,4 @@
-import type {
-  GetCategoryResponse,
-  GetProfileResponse,
-  GetUserAddressListResponse,
-} from '@resala/shared';
+import type { GetCategoryResponse, GetProfileResponse, ListAddressResponse } from '@resala/shared';
 import { expect } from 'vitest';
 
 export const userAssertions: GetProfileResponse['data'] = {
@@ -19,7 +15,7 @@ export const userAssertions: GetProfileResponse['data'] = {
   updatedAt: expect.any(String),
 };
 
-export const addressAssertions: GetUserAddressListResponse['data'][0] = {
+export const addressAssertions: ListAddressResponse['data'][0] = {
   id: expect.any(Number),
   state: expect.any(String),
   city: expect.any(String),

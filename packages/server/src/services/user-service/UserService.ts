@@ -9,6 +9,8 @@ import type { UserRepository } from '../../repositories/index.js';
 import { ConflictError, NotFoundError } from '../../utils/ApiErrors.js';
 
 export default class UserService {
+  private readonly maxAddressCount = 3;
+
   constructor(private readonly userRepo: UserRepository) {}
 
   async updateUser(id: number, payload: Partial<UpdateUserRequest['body']>) {
@@ -54,9 +56,13 @@ export default class UserService {
   }
 
   async createUserAddress(userId: number, payload: CreateAddressRequest['body']) {
-    const addressList = await this.getUserAddressList(userId);
-    if (addressList.length >= 5) {
-      throw new ConflictError('User can not have more than 5 addresses');
+    const [addressList] = await Promise.all([
+      this.getUserAddressList(userId),
+      this.findUserById(userId),
+    ]);
+
+    if (addressList.length >= this.maxAddressCount) {
+      throw new ConflictError(`User can not have more than ${this.maxAddressCount} addresses`);
     }
 
     const address = {
@@ -66,7 +72,7 @@ export default class UserService {
       state: payload.state,
       city: payload.city,
       street: payload.street,
-      country: 'Egypt',
+      country: payload.country || 'Egypt',
       building: payload.building || null,
       floor: payload.floor || null,
       address: payload.address || null,

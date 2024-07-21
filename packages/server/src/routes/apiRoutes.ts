@@ -33,6 +33,7 @@ import {
   GetProductSchema,
   GetReviewSchema,
   GetUserSchema,
+  ListAddressSchema,
   ListProductReviewsSchema,
   ListReviewsSchema,
   LoginSchema,
@@ -180,18 +181,25 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // user address endpoints
     [Endpoints.createAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(CreateAddressSchema),
       userCtrl.createUserAddress,
     ],
     [Endpoints.updateAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(UpdateAddressSchema),
       userCtrl.updateUserAddress,
     ],
     [Endpoints.deleteAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(DeleteAddressSchema),
       userCtrl.deleteUserAddress,
     ],
-    [Endpoints.listAddress]: [validateMiddleware(DefaultQuerySchema), userCtrl.getUserAddressList],
+    [Endpoints.listAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      validateMiddleware(ListAddressSchema),
+      userCtrl.getUserAddressList,
+    ],
 
     // category endpoints
     [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],

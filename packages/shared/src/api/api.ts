@@ -106,8 +106,8 @@ export type GetUserAddressResponse = DefaultResponseBody & {
   data: Address;
 };
 
-export type GetUserAddressListRequest = undefined;
-export type GetUserAddressListResponse = DefaultResponseBody & {
+export type ListAddressRequest = z.infer<typeof Schemas.ListAddressSchema>;
+export type ListAddressResponse = DefaultResponseBody & {
   data: GetUserAddressResponse['data'][];
 };
 

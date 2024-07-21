@@ -712,6 +712,9 @@ const DeleteUserSchema = zod.z.object({
     }),
 });
 const CreateAddressSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
     body: zod.z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
@@ -725,8 +728,14 @@ const CreateAddressSchema = zod.z.object({
         address: zod.z.string().max(500).optional(),
     }),
 });
+const ListAddressSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
+});
 const UpdateAddressSchema = zod.z.object({
     params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         addressId: zod.z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
@@ -959,6 +968,7 @@ exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
+exports.ListAddressSchema = ListAddressSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;

@@ -74,8 +74,8 @@ export default class UserController implements IUserController {
     }
   };
 
-  getUserAddressList: GetUserAddressList = async (_, res, next) => {
-    const userId = res.locals.user.id;
+  getUserAddressList: GetUserAddressList = async (req, res, next) => {
+    const userId = req.params.userId;
 
     try {
       const addresses = await this.userService.getUserAddressList(userId);
@@ -90,7 +90,7 @@ export default class UserController implements IUserController {
   };
 
   createUserAddress: CreateUserAddress = async (req, res, next) => {
-    const userId = res.locals.user.id;
+    const userId = req.params.userId;
 
     try {
       const address = await this.userService.createUserAddress(userId, req.body);
@@ -102,7 +102,7 @@ export default class UserController implements IUserController {
   };
 
   updateUserAddress: UpdateUserAddress = async (req, res, next) => {
-    const userId = res.locals.user.id;
+    const userId = req.params.userId;
     const addressId = req.params.addressId;
 
     try {
@@ -118,7 +118,7 @@ export default class UserController implements IUserController {
   };
 
   deleteUserAddress: DeleteUserAddress = async (req, res, next) => {
-    const userId = res.locals.user.id;
+    const userId = req.params.userId;
     const addressId = req.params.addressId;
 
     try {
