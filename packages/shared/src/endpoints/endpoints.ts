@@ -103,9 +103,9 @@ export enum Endpoints {
 
   // payment endpoints
   getPayment = 'getPayment',
-  listPayments = 'listPayments',
-  paymentResponseCallback = 'paymentResponseCallback',
-  paymentProcessedCallback = 'paymentProcessedCallback',
+  voidPayment = 'voidPayment',
+  refundPayment = 'refundPayment',
+  postPayCallback = 'postPayCallback',
 
   // reviews endpoints
   getReview = 'getReview',
@@ -467,23 +467,24 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // payment endpoints
-  [Endpoints.paymentProcessedCallback]: {
-    url: '/post_pay',
-    method: 'post',
-  },
-  [Endpoints.paymentResponseCallback]: {
-    url: '/post_pay/:orderId',
-    method: 'get',
-  },
   [Endpoints.getPayment]: {
     url: '/api/v1/payments/:paymentId',
     method: 'get',
     auth: true,
   },
-  [Endpoints.listPayments]: {
-    url: '/api/v1/payments',
-    method: 'get',
+  [Endpoints.voidPayment]: {
+    url: '/api/v1/payments/void',
+    method: 'post',
     auth: true,
+  },
+  [Endpoints.refundPayment]: {
+    url: '/api/v1/payments/refund',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.postPayCallback]: {
+    url: '/post_pay/:orderId',
+    method: 'post',
   },
 
   // product reviews endpoints

@@ -7,7 +7,7 @@ import type {
   AuthenticateApiResponse,
   CheckoutApiResponse,
   CheckoutDto,
-  ProcessedCallbackObject,
+  PostPayCallbackObject,
   VerifyDto,
 } from './types.js';
 
@@ -99,8 +99,8 @@ export default class PaymobPaymentService {
     const body = {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
+      redirection_url: `${process.env.FRONTEND_URL}`,
       notification_url: `${process.env.APP_URL}/post_pay/${order.id}`,
-      redirection_url: `${process.env.APP_URL}/post_pay/${order.id}`,
       payment_methods: [+process.env.PAYMOB_INTEGRATION_ID],
       items: orderItems,
       billing_data: {
@@ -138,7 +138,7 @@ export default class PaymobPaymentService {
     return { paymentUrl };
   }
 
-  async retrieve(trxId: number): Promise<ProcessedCallbackObject['obj']> {
+  async retrieve(trxId: number): Promise<PostPayCallbackObject['obj']> {
     const { token } = await this.authenticate();
 
     const headers = {
@@ -150,7 +150,7 @@ export default class PaymobPaymentService {
     });
   }
 
-  async void(trxId: number): Promise<ProcessedCallbackObject> {
+  async void(trxId: number): Promise<PostPayCallbackObject> {
     const { token } = await this.authenticate();
 
     const headers = {
@@ -164,7 +164,7 @@ export default class PaymobPaymentService {
     return await this.api.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
-  async refund(trxId: number, amount: number): Promise<ProcessedCallbackObject> {
+  async refund(trxId: number, amount: number): Promise<PostPayCallbackObject> {
     const headers = {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };

@@ -253,31 +253,22 @@ export type DeleteOrderRequest = GetOrderRequest;
 export type DeleteOrderResponse = DefaultResponseBody;
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
-    data: Payment & {
-        metadata?: {
-            id: number;
-            pending: boolean;
-            amount_cents: number;
-            success: boolean;
-            is_auth: boolean;
-            is_capture: boolean;
-            is_standalone_payment: boolean;
-            is_voided: boolean;
-            is_refunded: boolean;
-            is_3d_secure: boolean;
-            integration_id: number;
-            profile_id: number;
-            has_parent_transaction: boolean;
-            created_at: string;
-            [key: string]: any;
-        };
-    };
-};
-export type GetPaymentsListRequest = DefaultRequestQuery;
-export type GetPaymentsListResponse = DefaultResponseBody & {
     data: {
-        pagination: Pagination;
-        payments: GetPaymentResponse['data'][];
+        id: number;
+        pending: boolean;
+        amount_cents: number;
+        success: boolean;
+        is_auth: boolean;
+        is_capture: boolean;
+        is_standalone_payment: boolean;
+        is_voided: boolean;
+        is_refunded: boolean;
+        is_3d_secure: boolean;
+        integration_id: number;
+        profile_id: number;
+        has_parent_transaction: boolean;
+        created_at: string;
+        [key: string]: any;
     };
 };
 export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;
