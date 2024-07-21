@@ -99,10 +99,7 @@ export enum Endpoints {
   getOrder = 'getOrder',
   listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',
-  adminGetOrder = 'adminGetOrder',
-  adminListOrders = 'adminListOrders',
-  adminDeleteOrder = 'adminDeleteOrder',
-  adminUpdateOrderStatus = 'adminUpdateOrderStatus',
+  updateOrderStatus = 'updateOrderStatus',
 
   // payment endpoints
   getPayment = 'getPayment',
@@ -463,23 +460,8 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.adminGetOrder]: {
-    url: '/api/v1/admin/orders/:orderId',
-    method: 'get',
-    auth: true,
-  },
-  [Endpoints.adminListOrders]: {
-    url: '/api/v1/admin/orders',
-    method: 'get',
-    auth: true,
-  },
-  [Endpoints.adminDeleteOrder]: {
-    url: '/api/v1/admin/orders/:orderId',
-    method: 'delete',
-    auth: true,
-  },
-  [Endpoints.adminUpdateOrderStatus]: {
-    url: '/api/v1/admin/orders/:orderId',
+  [Endpoints.updateOrderStatus]: {
+    url: '/api/v1/orders/:orderId',
     method: 'patch',
     auth: true,
   },

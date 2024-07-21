@@ -82,10 +82,7 @@ exports.Endpoints = void 0;
     Endpoints["getOrder"] = "getOrder";
     Endpoints["listOrders"] = "listOrders";
     Endpoints["deleteOrder"] = "deleteOrder";
-    Endpoints["adminGetOrder"] = "adminGetOrder";
-    Endpoints["adminListOrders"] = "adminListOrders";
-    Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
-    Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
+    Endpoints["updateOrderStatus"] = "updateOrderStatus";
     // payment endpoints
     Endpoints["getPayment"] = "getPayment";
     Endpoints["listPayments"] = "listPayments";
@@ -430,23 +427,8 @@ const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
-    [exports.Endpoints.adminGetOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'get',
-        auth: true,
-    },
-    [exports.Endpoints.adminListOrders]: {
-        url: '/api/v1/admin/orders',
-        method: 'get',
-        auth: true,
-    },
-    [exports.Endpoints.adminDeleteOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'delete',
-        auth: true,
-    },
-    [exports.Endpoints.adminUpdateOrderStatus]: {
-        url: '/api/v1/admin/orders/:orderId',
+    [exports.Endpoints.updateOrderStatus]: {
+        url: '/api/v1/orders/:orderId',
         method: 'patch',
         auth: true,
     },

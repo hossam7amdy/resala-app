@@ -98,55 +98,6 @@ export default class OrderController implements IOrderController {
     }
   };
 
-  adminGetOrder: GetOrder = async (req, res, next) => {
-    try {
-      const order = await this.orderService.findOrderById(req.params.orderId);
-
-      return res.json({
-        success: true,
-        data: order,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  adminListOrders: GetOrdersList = async (req, res, next) => {
-    try {
-      const { page, limit, query } = req.query;
-
-      const { orders, pagination } = await this.orderService.listOrders({ page, limit, query });
-
-      return res.json({
-        success: true,
-        data: { pagination, orders },
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  adminDeleteOrder: DeleteOrder = async (req, res, next) => {
-    try {
-      // Cancel order
-      const order = await this.orderService.adminCancelOrder(req.params.orderId);
-
-      // Refund payment if paid by card
-      if (order.paymentMethod === 'CARD' && order.paymentDetails) {
-        await this.paymentService.refund(order.id);
-      }
-
-      // Notify user with order cancellation
-      if (order.user?.email) {
-        await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
-      }
-
-      return res.json({ success: true, message: 'Order canceled' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   updateOrderStatus: UpdateOrderStatus = async (req, res, next) => {
     try {
       const { status } = req.body;

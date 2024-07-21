@@ -121,18 +121,13 @@ export default class OrderService {
   }
 
   async cancelUserOrder(id: number, userId: number) {
+    const user = await this.userService.findUserById(userId);
     const order = await this.findUserOrderById(id, userId);
 
     const isToday = new Date(order.createdAt).toDateString() === new Date().toDateString();
-    if (!isToday) {
+    if (!isToday && user.role !== 'ADMIN') {
       throw new BadRequestError("You can't cancel this order. Please contact support");
     }
-
-    return await this.cancelOrder(id);
-  }
-
-  async adminCancelOrder(id: number) {
-    await this.findOrderById(id);
 
     return await this.cancelOrder(id);
   }

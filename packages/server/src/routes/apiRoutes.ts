@@ -350,28 +350,25 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // order endpoints
     [Endpoints.createOrder]: [validateMiddleware(CreateOrderSchema), orderCtrl.createOrder],
-    [Endpoints.getOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.getOrder],
-    [Endpoints.listOrders]: [validateMiddleware(DefaultQuerySchema), orderCtrl.listOrders],
-    [Endpoints.deleteOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.deleteOrder],
-    [Endpoints.adminGetOrder]: [
+    [Endpoints.getOrder]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       validateMiddleware(GetOrderSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminGetOrder,
+      orderCtrl.getOrder,
     ],
-    [Endpoints.adminListOrders]: [
+    [Endpoints.listOrders]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       validateMiddleware(DefaultQuerySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminListOrders,
+      orderCtrl.listOrders,
     ],
-    [Endpoints.adminUpdateOrderStatus]: [
+    [Endpoints.deleteOrder]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      validateMiddleware(GetOrderSchema),
+      orderCtrl.deleteOrder,
+    ],
+    [Endpoints.updateOrderStatus]: [
       validateMiddleware(UpdateOrderStatusSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.updateOrderStatus,
-    ],
-    [Endpoints.adminDeleteOrder]: [
-      validateMiddleware(GetOrderSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminDeleteOrder,
     ],
 
     // payment endpoints
