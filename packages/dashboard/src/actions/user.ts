@@ -3,18 +3,18 @@
 import { callEndpoint } from '@/lib/fetch';
 import ROUTES from '@/lib/routes';
 import type {
-  AdminDeleteUserRequest,
-  AdminDeleteUserResponse,
-  AdminUpdateUserRequest,
-  AdminUpdateUserResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
-export const updateUser = async (id: string | number, payload: AdminUpdateUserRequest['body']) => {
+export const updateUser = async (id: string | number, payload: UpdateUserRequest['body']) => {
   try {
-    const response = await callEndpoint<AdminUpdateUserRequest, AdminUpdateUserResponse>(
-      ENDPOINT_CONFIGS.adminUpdateUser,
+    const response = await callEndpoint<UpdateUserRequest, UpdateUserResponse>(
+      ENDPOINT_CONFIGS.updateUser,
       { params: { userId: Number(id) }, body: payload }
     );
 
@@ -31,10 +31,9 @@ export const updateUser = async (id: string | number, payload: AdminUpdateUserRe
 
 export const deleteUser = async (id: string | number) => {
   try {
-    await callEndpoint<AdminDeleteUserRequest, AdminDeleteUserResponse>(
-      ENDPOINT_CONFIGS.adminDeleteUser,
-      { params: { userId: Number(id) } }
-    );
+    await callEndpoint<DeleteUserRequest, DeleteUserResponse>(ENDPOINT_CONFIGS.deleteUser, {
+      params: { userId: Number(id) },
+    });
 
     revalidatePath(ROUTES.CUSTOMERS);
   } catch (e) {

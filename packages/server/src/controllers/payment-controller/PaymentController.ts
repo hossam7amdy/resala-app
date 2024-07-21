@@ -1,9 +1,9 @@
 import type { OrderService, PaymentService } from '../../services/index.js';
 import type {
   GetPayment,
-  GetPaymentList,
-  TransactionProcessedCallback,
-  TransactionResponseCallback,
+  PostPayCallback,
+  RefundPayment,
+  VoidPayment,
 } from './IPaymentController.js';
 import type IPaymentController from './IPaymentController.js';
 
@@ -15,7 +15,7 @@ export default class PaymentController implements IPaymentController {
 
   getPayment: GetPayment = async (req, res, next) => {
     try {
-      const payment = await this.paymentService.findPayment(req.params.paymentId);
+      const payment = await this.paymentService.retrieve(req.params.paymentId);
 
       return res.json({ success: true, data: payment });
     } catch (error) {
@@ -23,49 +23,40 @@ export default class PaymentController implements IPaymentController {
     }
   };
 
-  getPaymentList: GetPaymentList = async (req, res, next) => {
+  voidPayment: VoidPayment = async (req, res, next) => {
     try {
-      const { limit, page } = req.query;
+      const transactionId = req.body.transactionId;
 
-      const { payments, pagination } = await this.paymentService.listPayments({ page, limit });
+      await this.paymentService.void(transactionId);
 
-      return res.json({
-        success: true,
-        data: { pagination, payments },
-      });
+      return res.json({ success: true });
     } catch (error) {
       next(error);
     }
   };
 
-  transactionResponseCallback: TransactionResponseCallback = async (req, res) => {
+  refundPayment: RefundPayment = async (req, res, next) => {
     try {
-      const orderId = +req.params.orderId;
-      const hmac = req.query.hmac as string;
+      const transactionId = req.body.transactionId;
 
-      const status = await this.paymentService.handleResponseCb(orderId, hmac, req.query);
+      await this.paymentService.refund(transactionId);
 
-      await this.orderService.updateOrder(+orderId, {
-        paymentStatus: status,
-      });
-    } catch (e) {
-      console.log(e);
-    } finally {
-      res.redirect(process.env.FRONTEND_URL as string);
+      return res.json({ success: true });
+    } catch (error) {
+      next(error);
     }
   };
 
-  transactionProcessedCallback: TransactionProcessedCallback = async (req, res, next) => {
+  postPayCallback: PostPayCallback = async (req, res, next) => {
     try {
       const hmac = req.query.hmac;
-      let orderId = req.params.orderId;
+      const orderId = parseInt(req.params.orderId || '');
 
       if (!orderId) {
-        const payment = await this.paymentService.findPaymentByTransactionRef(+req.body.obj.id);
-        orderId = payment.orderId.toString();
+        return res.sendStatus(400);
       }
 
-      const status = await this.paymentService.handleProcessedCb(+orderId, hmac, req.body);
+      const status = await this.paymentService.postPayCallback(orderId, hmac, req.body);
 
       await this.orderService.updateOrder(+orderId, {
         paymentStatus: status,

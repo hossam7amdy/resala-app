@@ -1,8 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import {
-  AdminDeleteUserSchema,
-  AdminGetUserSchema,
-  AdminUpdateUserSchema,
   ChangePasswordSchema,
   CreateAddressSchema,
   CreateCartSchema,
@@ -25,6 +22,7 @@ import {
   DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
+  DeleteUserSchema,
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
@@ -34,6 +32,8 @@ import {
   GetPaymentSchema,
   GetProductSchema,
   GetReviewSchema,
+  GetUserSchema,
+  ListAddressSchema,
   ListProductReviewsSchema,
   ListReviewsSchema,
   LoginSchema,
@@ -46,10 +46,10 @@ import {
   UpdateColorSchema,
   UpdateOrderStatusSchema,
   UpdateProductSchema,
-  UpdateProfileSchema,
   UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
+  UpdateUserSchema,
   VerifyEmailSchema,
 } from '@resala/shared';
 import type { Request, RequestHandler, Response } from 'express';
@@ -157,48 +157,49 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
 
     // user endpoints
-    [Endpoints.getCurrentUser]: [userCtrl.getProfile],
-    [Endpoints.updateCurrentUser]: [
-      validateMiddleware(UpdateProfileSchema),
-      userCtrl.updateProfile,
+    [Endpoints.getUser]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      validateMiddleware(GetUserSchema),
+      userCtrl.getUser,
     ],
-
-    // admin user endpoints
-    [Endpoints.adminGetUser]: [
-      validateMiddleware(AdminGetUserSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      userCtrl.adminGetUser,
-    ],
-    [Endpoints.adminListUsers]: [
+    [Endpoints.listUsers]: [
       validateMiddleware(DefaultQuerySchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      userCtrl.adminListUsers,
+      userCtrl.listUsers,
     ],
-    [Endpoints.adminUpdateUser]: [
-      validateMiddleware(AdminUpdateUserSchema),
-      authMiddleware.authorizeUser(['ADMIN']),
-      userCtrl.adminUpdateUser,
+    [Endpoints.updateUser]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRoleChange,
+      validateMiddleware(UpdateUserSchema),
+      userCtrl.updateUser,
     ],
-    [Endpoints.adminDeleteUser]: [
-      validateMiddleware(AdminDeleteUserSchema),
+    [Endpoints.deleteUser]: [
+      validateMiddleware(DeleteUserSchema),
       authMiddleware.authorizeUser(['ADMIN']),
-      userCtrl.adminDeleteUser,
+      userCtrl.deleteUser,
     ],
 
     // user address endpoints
     [Endpoints.createAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(CreateAddressSchema),
       userCtrl.createUserAddress,
     ],
     [Endpoints.updateAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(UpdateAddressSchema),
       userCtrl.updateUserAddress,
     ],
     [Endpoints.deleteAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(DeleteAddressSchema),
       userCtrl.deleteUserAddress,
     ],
-    [Endpoints.listAddress]: [validateMiddleware(DefaultQuerySchema), userCtrl.getUserAddressList],
+    [Endpoints.listAddress]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      validateMiddleware(ListAddressSchema),
+      userCtrl.getUserAddressList,
+    ],
 
     // category endpoints
     [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],
@@ -349,42 +350,41 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // order endpoints
     [Endpoints.createOrder]: [validateMiddleware(CreateOrderSchema), orderCtrl.createOrder],
-    [Endpoints.getOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.getOrder],
-    [Endpoints.listOrders]: [validateMiddleware(DefaultQuerySchema), orderCtrl.listOrders],
-    [Endpoints.deleteOrder]: [validateMiddleware(GetOrderSchema), orderCtrl.deleteOrder],
-    [Endpoints.adminGetOrder]: [
+    [Endpoints.getOrder]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       validateMiddleware(GetOrderSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminGetOrder,
+      orderCtrl.getOrder,
     ],
-    [Endpoints.adminListOrders]: [
+    [Endpoints.listOrders]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       validateMiddleware(DefaultQuerySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminListOrders,
+      orderCtrl.listOrders,
     ],
-    [Endpoints.adminUpdateOrderStatus]: [
+    [Endpoints.deleteOrder]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      validateMiddleware(GetOrderSchema),
+      orderCtrl.deleteOrder,
+    ],
+    [Endpoints.updateOrderStatus]: [
       validateMiddleware(UpdateOrderStatusSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       orderCtrl.updateOrderStatus,
     ],
-    [Endpoints.adminDeleteOrder]: [
-      validateMiddleware(GetOrderSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      orderCtrl.adminDeleteOrder,
-    ],
 
     // payment endpoints
-    [Endpoints.paymentProcessedCallback]: [paymentCtrl.transactionProcessedCallback],
-    [Endpoints.paymentResponseCallback]: [paymentCtrl.transactionResponseCallback],
+    [Endpoints.postPayCallback]: [paymentCtrl.postPayCallback],
     [Endpoints.getPayment]: [
       validateMiddleware(GetPaymentSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPayment,
     ],
-    [Endpoints.listPayments]: [
-      validateMiddleware(DefaultQuerySchema),
+    [Endpoints.voidPayment]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      paymentCtrl.getPaymentList,
+      paymentCtrl.voidPayment,
+    ],
+    [Endpoints.refundPayment]: [
+      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      paymentCtrl.refundPayment,
     ],
 
     // review endpoints

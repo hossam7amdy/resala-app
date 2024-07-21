@@ -25,7 +25,7 @@ export const listOrders = async (query: { page: number; limit: number; query: st
   noStore();
 
   const response = await callEndpoint<AdminGetOrdersListRequest, AdminGetOrdersListResponse>(
-    ENDPOINT_CONFIGS.adminListOrders,
+    ENDPOINT_CONFIGS.listOrders,
     { query }
   );
 

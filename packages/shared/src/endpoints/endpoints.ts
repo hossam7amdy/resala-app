@@ -31,12 +31,10 @@ export enum Endpoints {
   resendEmailVerification = 'resendEmailVerification',
 
   // user endpoints
-  getCurrentUser = 'getCurrentUser',
-  updateCurrentUser = 'updateCurrentUser',
-  adminGetUser = 'adminGetUser',
-  adminListUsers = 'adminListUsers',
-  adminUpdateUser = 'adminUpdateUser',
-  adminDeleteUser = 'adminDeleteUser',
+  getUser = 'getUser',
+  listUsers = 'listUsers',
+  updateUser = 'updateUser',
+  deleteUser = 'deleteUser',
 
   // address endpoints
   createAddress = 'createAddress',
@@ -101,16 +99,13 @@ export enum Endpoints {
   getOrder = 'getOrder',
   listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',
-  adminGetOrder = 'adminGetOrder',
-  adminListOrders = 'adminListOrders',
-  adminDeleteOrder = 'adminDeleteOrder',
-  adminUpdateOrderStatus = 'adminUpdateOrderStatus',
+  updateOrderStatus = 'updateOrderStatus',
 
   // payment endpoints
   getPayment = 'getPayment',
-  listPayments = 'listPayments',
-  paymentResponseCallback = 'paymentResponseCallback',
-  paymentProcessedCallback = 'paymentProcessedCallback',
+  voidPayment = 'voidPayment',
+  refundPayment = 'refundPayment',
+  postPayCallback = 'postPayCallback',
 
   // reviews endpoints
   getReview = 'getReview',
@@ -132,7 +127,7 @@ export enum Endpoints {
  * withParams(ENDPOINT_CONFIGS.getProduct, '123')
  * // returns { url: '/api/v1/products/123', method: 'get' }
  *
- * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
+ * withParams(ENDPOINT_CONFIGS.getUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
 export const withParams = (endpoint: EndpointConfig, ...params: string[]): EndpointConfig => {
@@ -208,35 +203,22 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
 
-  // user endpoints
-  [Endpoints.getCurrentUser]: {
-    method: 'get',
-    url: '/api/v1/users/self',
-    auth: true,
-  },
-  [Endpoints.updateCurrentUser]: {
-    method: 'put',
-    url: '/api/v1/users/self',
-    auth: true,
-  },
-
-  // admin user endpoints
-  [Endpoints.adminUpdateUser]: {
-    method: 'put',
-    url: '/api/v1/users/:userId',
-    auth: true,
-  },
-  [Endpoints.adminGetUser]: {
-    method: 'get',
-    url: '/api/v1/users/:userId',
-    auth: true,
-  },
-  [Endpoints.adminListUsers]: {
+  [Endpoints.listUsers]: {
     method: 'get',
     url: '/api/v1/users',
     auth: true,
   },
-  [Endpoints.adminDeleteUser]: {
+  [Endpoints.getUser]: {
+    method: 'get',
+    url: '/api/v1/users/:userId',
+    auth: true,
+  },
+  [Endpoints.updateUser]: {
+    method: 'put',
+    url: '/api/v1/users/:userId',
+    auth: true,
+  },
+  [Endpoints.deleteUser]: {
     method: 'delete',
     url: '/api/v1/users/:userId',
     auth: true,
@@ -244,22 +226,22 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
 
   // address endpoints
   [Endpoints.createAddress]: {
-    url: '/api/v1/users/self/addresses',
+    url: '/api/v1/users/:userId/addresses',
     method: 'post',
     auth: true,
   },
   [Endpoints.listAddress]: {
-    url: '/api/v1/users/self/addresses',
+    url: '/api/v1/users/:userId/addresses',
     method: 'get',
     auth: true,
   },
   [Endpoints.updateAddress]: {
-    url: '/api/v1/users/self/addresses/:addressId',
+    url: '/api/v1/users/:userId/addresses/:addressId',
     method: 'put',
     auth: true,
   },
   [Endpoints.deleteAddress]: {
-    url: '/api/v1/users/self/addresses/:addressId',
+    url: '/api/v1/users/:userId/addresses/:addressId',
     method: 'delete',
     auth: true,
   },
@@ -478,45 +460,31 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.adminGetOrder]: {
-    url: '/api/v1/admin/orders/:orderId',
-    method: 'get',
-    auth: true,
-  },
-  [Endpoints.adminListOrders]: {
-    url: '/api/v1/admin/orders',
-    method: 'get',
-    auth: true,
-  },
-  [Endpoints.adminDeleteOrder]: {
-    url: '/api/v1/admin/orders/:orderId',
-    method: 'delete',
-    auth: true,
-  },
-  [Endpoints.adminUpdateOrderStatus]: {
-    url: '/api/v1/admin/orders/:orderId',
+  [Endpoints.updateOrderStatus]: {
+    url: '/api/v1/orders/:orderId',
     method: 'patch',
     auth: true,
   },
 
   // payment endpoints
-  [Endpoints.paymentProcessedCallback]: {
-    url: '/post_pay',
-    method: 'post',
-  },
-  [Endpoints.paymentResponseCallback]: {
-    url: '/post_pay/:orderId',
-    method: 'get',
-  },
   [Endpoints.getPayment]: {
     url: '/api/v1/payments/:paymentId',
     method: 'get',
     auth: true,
   },
-  [Endpoints.listPayments]: {
-    url: '/api/v1/payments',
-    method: 'get',
+  [Endpoints.voidPayment]: {
+    url: '/api/v1/payments/void',
+    method: 'post',
     auth: true,
+  },
+  [Endpoints.refundPayment]: {
+    url: '/api/v1/payments/refund',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.postPayCallback]: {
+    url: '/post_pay/:orderId',
+    method: 'post',
   },
 
   // product reviews endpoints

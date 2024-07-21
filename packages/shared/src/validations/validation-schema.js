@@ -85,33 +85,32 @@ export const ForgotPasswordSchema = z.object({
     }),
 });
 // User Schemas
-export const UpdateProfileSchema = z.object({
+export const GetUserSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
+});
+export const UpdateUserSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
     body: z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
         phone: UserSchema.shape.phone,
+        role: UserSchema.shape.role.optional(),
+        isVerified: UserSchema.shape.isVerified.optional(),
     }),
 });
-export const AdminGetUserSchema = z.object({
-    params: z.object({
-        userId: z.coerce.number().positive(),
-    }),
-});
-export const AdminUpdateUserSchema = z.object({
-    params: z.object({
-        userId: z.coerce.number().positive(),
-    }),
-    body: UpdateProfileSchema.shape.body.extend({
-        role: UserSchema.shape.role,
-        isVerified: UserSchema.shape.isVerified,
-    }),
-});
-export const AdminDeleteUserSchema = z.object({
+export const DeleteUserSchema = z.object({
     params: z.object({
         userId: z.coerce.number().positive(),
     }),
 });
 export const CreateAddressSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
     body: z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
@@ -125,8 +124,14 @@ export const CreateAddressSchema = z.object({
         address: z.string().max(500).optional(),
     }),
 });
+export const ListAddressSchema = z.object({
+    params: z.object({
+        userId: z.coerce.number().positive(),
+    }),
+});
 export const UpdateAddressSchema = z.object({
     params: z.object({
+        userId: z.coerce.number().positive(),
         addressId: z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,

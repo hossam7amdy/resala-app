@@ -23,12 +23,10 @@ exports.Endpoints = void 0;
     Endpoints["verifyEmail"] = "verifyEmail";
     Endpoints["resendEmailVerification"] = "resendEmailVerification";
     // user endpoints
-    Endpoints["getCurrentUser"] = "getCurrentUser";
-    Endpoints["updateCurrentUser"] = "updateCurrentUser";
-    Endpoints["adminGetUser"] = "adminGetUser";
-    Endpoints["adminListUsers"] = "adminListUsers";
-    Endpoints["adminUpdateUser"] = "adminUpdateUser";
-    Endpoints["adminDeleteUser"] = "adminDeleteUser";
+    Endpoints["getUser"] = "getUser";
+    Endpoints["listUsers"] = "listUsers";
+    Endpoints["updateUser"] = "updateUser";
+    Endpoints["deleteUser"] = "deleteUser";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -84,15 +82,12 @@ exports.Endpoints = void 0;
     Endpoints["getOrder"] = "getOrder";
     Endpoints["listOrders"] = "listOrders";
     Endpoints["deleteOrder"] = "deleteOrder";
-    Endpoints["adminGetOrder"] = "adminGetOrder";
-    Endpoints["adminListOrders"] = "adminListOrders";
-    Endpoints["adminDeleteOrder"] = "adminDeleteOrder";
-    Endpoints["adminUpdateOrderStatus"] = "adminUpdateOrderStatus";
+    Endpoints["updateOrderStatus"] = "updateOrderStatus";
     // payment endpoints
     Endpoints["getPayment"] = "getPayment";
-    Endpoints["listPayments"] = "listPayments";
-    Endpoints["paymentResponseCallback"] = "paymentResponseCallback";
-    Endpoints["paymentProcessedCallback"] = "paymentProcessedCallback";
+    Endpoints["voidPayment"] = "voidPayment";
+    Endpoints["refundPayment"] = "refundPayment";
+    Endpoints["postPayCallback"] = "postPayCallback";
     // reviews endpoints
     Endpoints["getReview"] = "getReview";
     Endpoints["listReviews"] = "listReviews";
@@ -112,7 +107,7 @@ exports.Endpoints = void 0;
  * withParams(ENDPOINT_CONFIGS.getProduct, '123')
  * // returns { url: '/api/v1/products/123', method: 'get' }
  *
- * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
+ * withParams(ENDPOINT_CONFIGS.getUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
 const withParams = (endpoint, ...params) => {
@@ -185,56 +180,44 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/auth/resend-email-verification',
         auth: true,
     },
-    // user endpoints
-    [exports.Endpoints.getCurrentUser]: {
-        method: 'get',
-        url: '/api/v1/users/self',
-        auth: true,
-    },
-    [exports.Endpoints.updateCurrentUser]: {
-        method: 'put',
-        url: '/api/v1/users/self',
-        auth: true,
-    },
-    // admin user endpoints
-    [exports.Endpoints.adminUpdateUser]: {
-        method: 'put',
-        url: '/api/v1/users/:userId',
-        auth: true,
-    },
-    [exports.Endpoints.adminGetUser]: {
-        method: 'get',
-        url: '/api/v1/users/:userId',
-        auth: true,
-    },
-    [exports.Endpoints.adminListUsers]: {
+    [exports.Endpoints.listUsers]: {
         method: 'get',
         url: '/api/v1/users',
         auth: true,
     },
-    [exports.Endpoints.adminDeleteUser]: {
+    [exports.Endpoints.getUser]: {
+        method: 'get',
+        url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [exports.Endpoints.updateUser]: {
+        method: 'put',
+        url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [exports.Endpoints.deleteUser]: {
         method: 'delete',
         url: '/api/v1/users/:userId',
         auth: true,
     },
     // address endpoints
     [exports.Endpoints.createAddress]: {
-        url: '/api/v1/users/self/addresses',
+        url: '/api/v1/users/:userId/addresses',
         method: 'post',
         auth: true,
     },
     [exports.Endpoints.listAddress]: {
-        url: '/api/v1/users/self/addresses',
+        url: '/api/v1/users/:userId/addresses',
         method: 'get',
         auth: true,
     },
     [exports.Endpoints.updateAddress]: {
-        url: '/api/v1/users/self/addresses/:addressId',
+        url: '/api/v1/users/:userId/addresses/:addressId',
         method: 'put',
         auth: true,
     },
     [exports.Endpoints.deleteAddress]: {
-        url: '/api/v1/users/self/addresses/:addressId',
+        url: '/api/v1/users/:userId/addresses/:addressId',
         method: 'delete',
         auth: true,
     },
@@ -444,44 +427,30 @@ const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
-    [exports.Endpoints.adminGetOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'get',
-        auth: true,
-    },
-    [exports.Endpoints.adminListOrders]: {
-        url: '/api/v1/admin/orders',
-        method: 'get',
-        auth: true,
-    },
-    [exports.Endpoints.adminDeleteOrder]: {
-        url: '/api/v1/admin/orders/:orderId',
-        method: 'delete',
-        auth: true,
-    },
-    [exports.Endpoints.adminUpdateOrderStatus]: {
-        url: '/api/v1/admin/orders/:orderId',
+    [exports.Endpoints.updateOrderStatus]: {
+        url: '/api/v1/orders/:orderId',
         method: 'patch',
         auth: true,
     },
     // payment endpoints
-    [exports.Endpoints.paymentProcessedCallback]: {
-        url: '/post_pay',
-        method: 'post',
-    },
-    [exports.Endpoints.paymentResponseCallback]: {
-        url: '/post_pay/:orderId',
-        method: 'get',
-    },
     [exports.Endpoints.getPayment]: {
         url: '/api/v1/payments/:paymentId',
         method: 'get',
         auth: true,
     },
-    [exports.Endpoints.listPayments]: {
-        url: '/api/v1/payments',
-        method: 'get',
+    [exports.Endpoints.voidPayment]: {
+        url: '/api/v1/payments/void',
+        method: 'post',
         auth: true,
+    },
+    [exports.Endpoints.refundPayment]: {
+        url: '/api/v1/payments/refund',
+        method: 'post',
+        auth: true,
+    },
+    [exports.Endpoints.postPayCallback]: {
+        url: '/post_pay/:orderId',
+        method: 'post',
     },
     // product reviews endpoints
     [exports.Endpoints.createReview]: {
@@ -703,33 +672,32 @@ const ForgotPasswordSchema = zod.z.object({
     }),
 });
 // User Schemas
-const UpdateProfileSchema = zod.z.object({
+const GetUserSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
+});
+const UpdateUserSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
     body: zod.z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
         phone: UserSchema.shape.phone,
+        role: UserSchema.shape.role.optional(),
+        isVerified: UserSchema.shape.isVerified.optional(),
     }),
 });
-const AdminGetUserSchema = zod.z.object({
-    params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
-    }),
-});
-const AdminUpdateUserSchema = zod.z.object({
-    params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
-    }),
-    body: UpdateProfileSchema.shape.body.extend({
-        role: UserSchema.shape.role,
-        isVerified: UserSchema.shape.isVerified,
-    }),
-});
-const AdminDeleteUserSchema = zod.z.object({
+const DeleteUserSchema = zod.z.object({
     params: zod.z.object({
         userId: zod.z.coerce.number().positive(),
     }),
 });
 const CreateAddressSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
     body: zod.z.object({
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
@@ -743,8 +711,14 @@ const CreateAddressSchema = zod.z.object({
         address: zod.z.string().max(500).optional(),
     }),
 });
+const ListAddressSchema = zod.z.object({
+    params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
+});
 const UpdateAddressSchema = zod.z.object({
     params: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         addressId: zod.z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
@@ -945,9 +919,6 @@ const DeleteReviewSchema = zod.z.object({
     params: GetReviewSchema.shape.params,
 });
 
-exports.AdminDeleteUserSchema = AdminDeleteUserSchema;
-exports.AdminGetUserSchema = AdminGetUserSchema;
-exports.AdminUpdateUserSchema = AdminUpdateUserSchema;
 exports.ChangePasswordSchema = ChangePasswordSchema;
 exports.CreateAddressSchema = CreateAddressSchema;
 exports.CreateCartSchema = CreateCartSchema;
@@ -970,6 +941,7 @@ exports.DeleteProductSchema = DeleteProductSchema;
 exports.DeleteReviewSchema = DeleteReviewSchema;
 exports.DeleteSizeSchema = DeleteSizeSchema;
 exports.DeleteStockSchema = DeleteStockSchema;
+exports.DeleteUserSchema = DeleteUserSchema;
 exports.DeleteWishlistSchema = DeleteWishlistSchema;
 exports.ENDPOINT_CONFIGS = ENDPOINT_CONFIGS;
 exports.ForgotPasswordSchema = ForgotPasswordSchema;
@@ -978,6 +950,8 @@ exports.GetOrderSchema = GetOrderSchema;
 exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
+exports.GetUserSchema = GetUserSchema;
+exports.ListAddressSchema = ListAddressSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;
@@ -990,10 +964,10 @@ exports.UpdateCategorySchema = UpdateCategorySchema;
 exports.UpdateColorSchema = UpdateColorSchema;
 exports.UpdateOrderStatusSchema = UpdateOrderStatusSchema;
 exports.UpdateProductSchema = UpdateProductSchema;
-exports.UpdateProfileSchema = UpdateProfileSchema;
 exports.UpdateReviewSchema = UpdateReviewSchema;
 exports.UpdateSizeSchema = UpdateSizeSchema;
 exports.UpdateStockSchema = UpdateStockSchema;
+exports.UpdateUserSchema = UpdateUserSchema;
 exports.VerifyEmailSchema = VerifyEmailSchema;
 exports.validationPatterns = validationPatterns;
 exports.withParams = withParams;

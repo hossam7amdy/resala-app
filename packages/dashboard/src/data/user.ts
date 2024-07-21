@@ -2,13 +2,11 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import type {
-  AdminGetUserRequest,
-  AdminGetUserResponse,
-  AdminGetUsersListRequest,
-  AdminGetUsersListResponse,
   DefaultRequestQuery,
-  GetProfileRequest,
-  GetProfileResponse,
+  GetUserRequest,
+  GetUserResponse,
+  ListUsersRequest,
+  ListUsersResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -16,9 +14,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const getProfile = async () => {
   noStore();
 
-  const response = await callEndpoint<GetProfileRequest, GetProfileResponse>(
-    ENDPOINT_CONFIGS.getCurrentUser
-  );
+  const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser);
 
   return response.data;
 };
@@ -27,10 +23,9 @@ export const getUserById = async (id: number | string) => {
   noStore();
 
   try {
-    const response = await callEndpoint<AdminGetUserRequest, AdminGetUserResponse>(
-      ENDPOINT_CONFIGS.adminGetUser,
-      { params: { userId: Number(id) } }
-    );
+    const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
+      params: { userId: Number(id) },
+    });
 
     return response.data;
   } catch (e) {
@@ -42,8 +37,8 @@ export const getUserById = async (id: number | string) => {
 export const listUsersPaginated = async (params: DefaultRequestQuery['query']) => {
   noStore();
 
-  const response = await callEndpoint<AdminGetUsersListRequest, AdminGetUsersListResponse>(
-    ENDPOINT_CONFIGS.adminListUsers,
+  const response = await callEndpoint<ListUsersRequest, ListUsersResponse>(
+    ENDPOINT_CONFIGS.listUsers,
     {
       query: {
         page: Number(params.page),

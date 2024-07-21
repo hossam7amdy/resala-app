@@ -25,12 +25,10 @@ export declare enum Endpoints {
     changePassword = "changePassword",
     verifyEmail = "verifyEmail",
     resendEmailVerification = "resendEmailVerification",
-    getCurrentUser = "getCurrentUser",
-    updateCurrentUser = "updateCurrentUser",
-    adminGetUser = "adminGetUser",
-    adminListUsers = "adminListUsers",
-    adminUpdateUser = "adminUpdateUser",
-    adminDeleteUser = "adminDeleteUser",
+    getUser = "getUser",
+    listUsers = "listUsers",
+    updateUser = "updateUser",
+    deleteUser = "deleteUser",
     createAddress = "createAddress",
     listAddress = "listAddress",
     updateAddress = "updateAddress",
@@ -77,14 +75,11 @@ export declare enum Endpoints {
     getOrder = "getOrder",
     listOrders = "listOrders",
     deleteOrder = "deleteOrder",
-    adminGetOrder = "adminGetOrder",
-    adminListOrders = "adminListOrders",
-    adminDeleteOrder = "adminDeleteOrder",
-    adminUpdateOrderStatus = "adminUpdateOrderStatus",
+    updateOrderStatus = "updateOrderStatus",
     getPayment = "getPayment",
-    listPayments = "listPayments",
-    paymentResponseCallback = "paymentResponseCallback",
-    paymentProcessedCallback = "paymentProcessedCallback",
+    voidPayment = "voidPayment",
+    refundPayment = "refundPayment",
+    postPayCallback = "postPayCallback",
     getReview = "getReview",
     listReviews = "listReviews",
     createReview = "createReview",
@@ -103,7 +98,7 @@ export declare enum Endpoints {
  * withParams(ENDPOINT_CONFIGS.getProduct, '123')
  * // returns { url: '/api/v1/products/123', method: 'get' }
  *
- * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
+ * withParams(ENDPOINT_CONFIGS.getUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
 export declare const withParams: (endpoint: EndpointConfig, ...params: string[]) => EndpointConfig;

@@ -63,7 +63,7 @@ describe('TEST /users endpoint', () => {
 
   it("it should get a user by it's id", async () => {
     const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminGetUser;
+    const { method, url } = ENDPOINT_CONFIGS.getUser;
 
     const res = await client[method](url.replace(':userId', user.id)).set(await getAuthToken());
 
@@ -72,7 +72,7 @@ describe('TEST /users endpoint', () => {
   });
 
   it('it should get users list', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminListUsers;
+    const { method, url } = ENDPOINT_CONFIGS.listUsers;
 
     await client[method](url)
       .set(await getAuthToken())
@@ -81,7 +81,7 @@ describe('TEST /users endpoint', () => {
 
   it("it should update a user by it's id", async () => {
     const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminUpdateUser;
+    const { method, url } = ENDPOINT_CONFIGS.updateUser;
 
     const res = await client[method](url.replace(':userId', user.id))
       .set(await getAuthToken())
@@ -93,7 +93,7 @@ describe('TEST /users endpoint', () => {
 
   it("it should delete a user by it's id", async () => {
     const user = await getLastUser();
-    const { method, url } = ENDPOINT_CONFIGS.adminDeleteUser;
+    const { method, url } = ENDPOINT_CONFIGS.deleteUser;
 
     await client[method](url.replace(':userId', user.id))
       .set(await getAuthToken())
@@ -138,7 +138,7 @@ describe('TEST /users endpoint', () => {
   };
 
   const getLastUser = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.adminListUsers;
+    const { method, url } = ENDPOINT_CONFIGS.listUsers;
 
     const res = await client[method](url).set(await getAuthToken());
 
