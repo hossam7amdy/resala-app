@@ -1,14 +1,12 @@
 import type { UserService } from '../../services/index.js';
 import type {
-  AdminDeleteUser,
-  AdminGetUser,
-  AdminGetUsersList,
-  AdminUpdateUser,
   CreateUserAddress,
+  DeleteUser,
   DeleteUserAddress,
-  GetProfile,
+  GetUser,
   GetUserAddressList,
-  UpdateProfile,
+  ListUsers,
+  UpdateUser,
   UpdateUserAddress,
 } from './IUserController.js';
 import type IUserController from './IUserController.js';
@@ -16,35 +14,7 @@ import type IUserController from './IUserController.js';
 export default class UserController implements IUserController {
   constructor(private readonly userService: UserService) {}
 
-  getProfile: GetProfile = async (_, res, next) => {
-    const userId = res.locals.user.id;
-    try {
-      const user = await this.userService.findUserById(userId);
-
-      return res.json({ success: true, data: user });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateProfile: UpdateProfile = async (req, res, next) => {
-    const userId = res.locals.user.id;
-    const { firstName, lastName, phone } = req.body;
-
-    try {
-      const user = await this.userService.updateUser(userId, {
-        firstName,
-        lastName,
-        phone,
-      });
-
-      return res.json({ success: true, data: user });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  adminGetUser: AdminGetUser = async (req, res, next) => {
+  getUser: GetUser = async (req, res, next) => {
     try {
       const user = await this.userService.findUserById(req.params.userId);
 
@@ -57,7 +27,7 @@ export default class UserController implements IUserController {
     }
   };
 
-  adminListUsers: AdminGetUsersList = async (req, res, next) => {
+  listUsers: ListUsers = async (req, res, next) => {
     try {
       const { users, pagination } = await this.userService.listUsersPaginated(req.query);
 
@@ -73,7 +43,7 @@ export default class UserController implements IUserController {
     }
   };
 
-  adminDeleteUser: AdminDeleteUser = async (req, res, next) => {
+  deleteUser: DeleteUser = async (req, res, next) => {
     try {
       await this.userService.deleteUser(req.params.userId);
 
@@ -86,13 +56,13 @@ export default class UserController implements IUserController {
     }
   };
 
-  adminUpdateUser: AdminUpdateUser = async (req, res, next) => {
+  updateUser: UpdateUser = async (req, res, next) => {
     try {
       const user = await this.userService.updateUser(req.params.userId, {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        role: req.body.role,
         phone: req.body.phone,
+        role: req.body.role,
       });
 
       return res.json({

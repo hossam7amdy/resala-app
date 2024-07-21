@@ -43,7 +43,7 @@ export default class AuthMiddleware {
         const user = res.locals.user;
 
         if (!roles.includes(user?.role)) {
-          throw new ForbiddenError("You don't have permission to access this resource");
+          throw new ForbiddenError();
         }
 
         next();
@@ -51,5 +51,40 @@ export default class AuthMiddleware {
         next(error);
       }
     };
+  };
+
+  authorizeSelf = (roles: string[]): RequestHandler => {
+    return (req, res, next) => {
+      try {
+        const user = res.locals.user;
+
+        if (req.params.userId === 'self') {
+          req.params.userId = user?.id.toString();
+        }
+
+        if (!roles.includes(user?.role) && req.params.userId !== user?.id.toString()) {
+          throw new ForbiddenError();
+        }
+
+        next();
+      } catch (error) {
+        next(error);
+      }
+    };
+  };
+
+  authorizeRoleChange: RequestHandler = (req, res, next) => {
+    try {
+      const user = res.locals.user;
+      const role = req.body.role;
+
+      if (role && user?.role !== 'ADMIN') {
+        throw new ForbiddenError();
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
   };
 }
