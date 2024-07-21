@@ -1,8 +1,8 @@
 import type {
-  AdminUpdateUserRequest,
   CreateAddressRequest,
   DefaultFilters,
   UpdateAddressRequest,
+  UpdateUserRequest,
 } from '@resala/shared';
 
 import type { UserRepository } from '../../repositories/index.js';
@@ -11,7 +11,7 @@ import { ConflictError, NotFoundError } from '../../utils/ApiErrors.js';
 export default class UserService {
   constructor(private readonly userRepo: UserRepository) {}
 
-  async updateUser(id: number, payload: Partial<AdminUpdateUserRequest['body']>) {
+  async updateUser(id: number, payload: Partial<UpdateUserRequest['body']>) {
     await this.findUserById(id);
 
     const duplicate = payload.phone && (await this.userRepo.findByPhone(payload.phone));

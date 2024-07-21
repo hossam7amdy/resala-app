@@ -19,12 +19,10 @@ export var Endpoints;
     Endpoints["verifyEmail"] = "verifyEmail";
     Endpoints["resendEmailVerification"] = "resendEmailVerification";
     // user endpoints
-    Endpoints["getCurrentUser"] = "getCurrentUser";
-    Endpoints["updateCurrentUser"] = "updateCurrentUser";
-    Endpoints["adminGetUser"] = "adminGetUser";
-    Endpoints["adminListUsers"] = "adminListUsers";
-    Endpoints["adminUpdateUser"] = "adminUpdateUser";
-    Endpoints["adminDeleteUser"] = "adminDeleteUser";
+    Endpoints["getUser"] = "getUser";
+    Endpoints["listUsers"] = "listUsers";
+    Endpoints["updateUser"] = "updateUser";
+    Endpoints["deleteUser"] = "deleteUser";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -108,7 +106,7 @@ export var Endpoints;
  * withParams(ENDPOINT_CONFIGS.getProduct, '123')
  * // returns { url: '/api/v1/products/123', method: 'get' }
  *
- * withParams(ENDPOINT_CONFIGS.adminGetUser, '123')
+ * withParams(ENDPOINT_CONFIGS.getUser, '123')
  * // returns { url: '/api/v1/users/123', method: 'get' }
  */
 export const withParams = (endpoint, ...params) => {
@@ -181,56 +179,44 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/auth/resend-email-verification',
         auth: true,
     },
-    // user endpoints
-    [Endpoints.getCurrentUser]: {
-        method: 'get',
-        url: '/api/v1/users/self',
-        auth: true,
-    },
-    [Endpoints.updateCurrentUser]: {
-        method: 'put',
-        url: '/api/v1/users/self',
-        auth: true,
-    },
-    // admin user endpoints
-    [Endpoints.adminUpdateUser]: {
-        method: 'put',
-        url: '/api/v1/users/:userId',
-        auth: true,
-    },
-    [Endpoints.adminGetUser]: {
-        method: 'get',
-        url: '/api/v1/users/:userId',
-        auth: true,
-    },
-    [Endpoints.adminListUsers]: {
+    [Endpoints.listUsers]: {
         method: 'get',
         url: '/api/v1/users',
         auth: true,
     },
-    [Endpoints.adminDeleteUser]: {
+    [Endpoints.getUser]: {
+        method: 'get',
+        url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [Endpoints.updateUser]: {
+        method: 'put',
+        url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [Endpoints.deleteUser]: {
         method: 'delete',
         url: '/api/v1/users/:userId',
         auth: true,
     },
     // address endpoints
     [Endpoints.createAddress]: {
-        url: '/api/v1/users/self/addresses',
+        url: '/api/v1/users/:userId/addresses',
         method: 'post',
         auth: true,
     },
     [Endpoints.listAddress]: {
-        url: '/api/v1/users/self/addresses',
+        url: '/api/v1/users/:userId/addresses',
         method: 'get',
         auth: true,
     },
     [Endpoints.updateAddress]: {
-        url: '/api/v1/users/self/addresses/:addressId',
+        url: '/api/v1/users/:userId/addresses/:addressId',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteAddress]: {
-        url: '/api/v1/users/self/addresses/:addressId',
+        url: '/api/v1/users/:userId/addresses/:addressId',
         method: 'delete',
         auth: true,
     },
