@@ -1,3 +1,5 @@
+import { Role } from '@resala/shared';
+import type { RoleType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
 import type { AuthService, UserService } from '../services/index.js';
@@ -37,7 +39,7 @@ export default class AuthMiddleware {
     }
   };
 
-  authorizeUser = (roles: string[]): RequestHandler => {
+  authorizeUser = (roles: RoleType[]): RequestHandler => {
     return (_req, res, next) => {
       try {
         const user = res.locals.user;
@@ -53,7 +55,7 @@ export default class AuthMiddleware {
     };
   };
 
-  authorizeSelf = (roles: string[]): RequestHandler => {
+  authorizeSelf = (roles?: RoleType[]): RequestHandler => {
     return (req, res, next) => {
       try {
         const user = res.locals.user;
@@ -62,7 +64,7 @@ export default class AuthMiddleware {
           req.params.userId = user?.id.toString();
         }
 
-        if (!roles.includes(user?.role) && req.params.userId !== user?.id.toString()) {
+        if (!roles?.includes(user?.role) && req.params.userId !== user?.id.toString()) {
           throw new ForbiddenError();
         }
 
@@ -76,9 +78,9 @@ export default class AuthMiddleware {
   authorizeRoleChange: RequestHandler = (req, res, next) => {
     try {
       const user = res.locals.user;
-      const role = req.body.role;
+      const role = req.body.role as RoleType;
 
-      if (role && user?.role !== 'ADMIN') {
+      if (role && user?.role !== Role.ADMIN) {
         throw new ForbiddenError();
       }
 
