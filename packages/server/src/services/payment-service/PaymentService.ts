@@ -66,30 +66,29 @@ export default class PaymentService {
 
   async postPayCallback(
     orderId: number,
-    hmac: string,
-    { obj }: PostPayCallbackObject
-  ): Promise<PaymentStatusType> {
+    { transaction, hmac }: PostPayCallbackObject
+  ): Promise<PaymentStatusType | undefined> {
     const verifyDto: VerifyDto = {
-      amount_cents: obj.amount_cents.toString(),
-      created_at: obj.created_at,
-      currency: obj.currency,
-      error_occured: obj.error_occured.toString(),
-      has_parent_transaction: obj.has_parent_transaction.toString(),
-      id: obj.id.toString(),
-      integration_id: obj.integration_id.toString(),
-      is_3d_secure: obj.is_3d_secure.toString(),
-      is_auth: obj.is_auth.toString(),
-      is_capture: obj.is_capture.toString(),
-      is_refunded: obj.is_refunded.toString(),
-      is_standalone_payment: obj.is_standalone_payment.toString(),
-      is_voided: obj.is_voided.toString(),
-      orderId: obj.order.toString(),
-      owner: obj.owner.toString(),
-      pending: obj.pending.toString(),
-      sourceDataPan: obj.source_data.pan,
-      sourceDataSubType: obj.source_data.sub_type,
-      sourceDataType: obj.source_data.type,
-      success: obj.success.toString(),
+      amount_cents: transaction.amount_cents.toString(),
+      created_at: transaction.created_at,
+      currency: transaction.currency,
+      error_occured: transaction.error_occured.toString(),
+      has_parent_transaction: transaction.has_parent_transaction.toString(),
+      id: transaction.id.toString(),
+      integration_id: transaction.integration_id.toString(),
+      is_3d_secure: transaction.is_3d_secure.toString(),
+      is_auth: transaction.is_auth.toString(),
+      is_capture: transaction.is_capture.toString(),
+      is_refunded: transaction.is_refunded.toString(),
+      is_standalone_payment: transaction.is_standalone_payment.toString(),
+      is_voided: transaction.is_voided.toString(),
+      orderId: transaction.order.toString(),
+      owner: transaction.owner.toString(),
+      pending: transaction.pending.toString(),
+      sourceDataPan: transaction.source_data.pan,
+      sourceDataSubType: transaction.source_data.sub_type,
+      sourceDataType: transaction.source_data.type,
+      success: transaction.success.toString(),
     };
 
     await this.paymobService.verify(hmac, verifyDto);
@@ -102,11 +101,11 @@ export default class PaymentService {
     return this._status(verifyDto);
   }
 
-  _status(obj: VerifyDto): PaymentStatusType {
-    if (obj.is_refunded === 'true') return 'REFUNDED';
-    if (obj.is_voided === 'true') return 'VOIDED';
-    if (obj.error_occured === 'true') return 'FAILED';
-    if (obj.success === 'true') return 'PAID';
-    return 'UNPAID';
+  _status(verifyDto: VerifyDto): PaymentStatusType | undefined {
+    if (verifyDto.is_voided === 'true') return 'VOIDED';
+    if (verifyDto.is_refunded === 'true') return 'REFUNDED';
+    if (verifyDto.error_occured === 'true') return 'FAILED';
+    if (verifyDto.success === 'true') return 'PAID';
+    if (verifyDto.pending === 'true') return 'UNPAID';
   }
 }

@@ -49,14 +49,13 @@ export default class PaymentController implements IPaymentController {
 
   postPayCallback: PostPayCallback = async (req, res, next) => {
     try {
-      const hmac = req.query.hmac;
       const orderId = parseInt(req.params.orderId || '');
 
       if (!orderId) {
         return res.sendStatus(400);
       }
 
-      const status = await this.paymentService.postPayCallback(orderId, hmac, req.body);
+      const status = await this.paymentService.postPayCallback(orderId, req.body);
 
       await this.orderService.updateOrder(+orderId, {
         paymentStatus: status,
