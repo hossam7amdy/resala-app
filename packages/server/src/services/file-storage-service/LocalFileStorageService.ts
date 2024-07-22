@@ -16,7 +16,7 @@ export default class LocalStorage implements IFileStorage {
   private readonly rootDirectory: string;
 
   constructor(options?: LocalStorageOptions) {
-    this.baseUrl = options?.baseUrl ?? process.env.APP_URL;
+    this.baseUrl = options?.baseUrl ?? process.env.SERVER_URL;
     this.rootDirectory = options?.rootDirectory ?? 'uploads'; // Default rootDirectory
   }
 
