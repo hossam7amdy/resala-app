@@ -4,7 +4,7 @@ export default class NotificationService {
   constructor(private readonly mailer: INotification) {}
 
   async sendVerificationEmail(email: string, token: string) {
-    const href = `${process.env.APP_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
+    const href = `${process.env.SERVER_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
 
     return await this.mailer.send(
       email,
