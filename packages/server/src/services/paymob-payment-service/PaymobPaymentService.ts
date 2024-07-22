@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { createHmac } from 'crypto';
@@ -7,7 +8,6 @@ import type {
   AuthenticateApiResponse,
   CheckoutApiResponse,
   CheckoutDto,
-  PostPayCallbackObject,
   VerifyDto,
 } from './types.js';
 
@@ -138,7 +138,7 @@ export default class PaymobPaymentService {
     return { paymentUrl };
   }
 
-  async retrieve(trxId: number): Promise<PostPayCallbackObject['obj']> {
+  async retrieve(trxId: number): Promise<any> {
     const { token } = await this.authenticate();
 
     const headers = {
@@ -150,7 +150,7 @@ export default class PaymobPaymentService {
     });
   }
 
-  async void(trxId: number): Promise<PostPayCallbackObject> {
+  async void(trxId: number): Promise<any> {
     const { token } = await this.authenticate();
 
     const headers = {
@@ -164,7 +164,7 @@ export default class PaymobPaymentService {
     return await this.api.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
-  async refund(trxId: number, amount: number): Promise<PostPayCallbackObject> {
+  async refund(trxId: number, amount: number): Promise<any> {
     const headers = {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };
