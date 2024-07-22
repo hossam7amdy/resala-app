@@ -72,7 +72,7 @@ const main = async () => {
   //       enDescription: 'Long Evening Dress',
   //       price: 100,
   //       imageKey: 'evening-dress.jpg',
-  //       imageUrl: `${process.env.APP_URL}/uploads/evening-dress.jpg`,
+  //       imageUrl: `${process.env.SERVER_URL}/uploads/evening-dress.jpg`,
   //     },
   //     {
   //       categoryId: categories[0].id,
@@ -82,7 +82,7 @@ const main = async () => {
   //       enDescription: 'Long Wedding Dress',
   //       price: 200,
   //       imageKey: 'wedding-dress.jpg',
-  //       imageUrl: `${process.env.APP_URL}/uploads/wedding-dress.jpg`,
+  //       imageUrl: `${process.env.SERVER_URL}/uploads/wedding-dress.jpg`,
   //     },
   //     {
   //       categoryId: categories[1].id,
@@ -92,7 +92,7 @@ const main = async () => {
   //       enDescription: 'Cotton Blouse',
   //       price: 400,
   //       imageKey: 'cotton-blouse.jpg',
-  //       imageUrl: `${process.env.APP_URL}/uploads/cotton-blouse.jpg`,
+  //       imageUrl: `${process.env.SERVER_URL}/uploads/cotton-blouse.jpg`,
   //     },
   //   ],
   // });

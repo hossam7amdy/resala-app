@@ -8,7 +8,7 @@ on:
 env:
   PORT: 5000
   NODE_ENV: test
-  APP_URL: http://localhost:5000
+  SERVER_URL: http://localhost:5000
   JWT_SECRET: jwt_secret
   JWT_REFRESH: jwt_refresh
   JWT_RESET: jwt_reset

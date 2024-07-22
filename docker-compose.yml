@@ -47,7 +47,7 @@ services:
     environment:
       - PORT=5000
       - NODE_ENV=test
-      - APP_URL=http://localhost:5000
+      - SERVER_URL=http://localhost:5000
       - FRONTEND_URL=http://localhost:3000
       - JWT_SECRET=test_secret
       - JWT_REFRESH=test_refresh
