@@ -17,7 +17,7 @@ export type PostPayCallback = ExpressHandlerWithParams<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
   unknown,
-  { hmac: string }
+  unknown
 >;
 
 export default interface IPaymentController {
