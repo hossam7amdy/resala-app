@@ -49,200 +49,84 @@ export interface VerifyDto {
   success: string;
 }
 
-export interface PostPayCallbackObject {
+type IntentionDetailItem = {
+  name: string;
+  amount: number;
+  description: string;
+  quantity: number;
+};
+
+type IntentionDetail = {
+  amount: number;
+  items: IntentionDetailItem[];
+  currency: string;
+};
+
+type PaymentMethod = {
+  integration_id: number;
+  alias: any | null;
+  name: string;
+  method_type: string;
+  currency: string;
+  live: boolean;
+  use_cvc_with_moto: boolean;
+};
+
+type Extras = {
+  creation_extras: any | null;
+  confirmation_extras: any | null;
+};
+
+type Intention = {
+  id: string;
+  intention_detail: IntentionDetail;
+  client_secret: string;
+  payment_methods: PaymentMethod[];
+  special_reference: any | null;
+  extras: Extras;
+  confirmed: boolean;
+  status: string;
+  created: string;
+  card_detail: any | null;
+  card_tokens: any[];
+  object: string;
+};
+
+type TransactionOrder = {
+  id: number;
+};
+
+type SourceData = {
+  pan: string;
+  sub_type: string;
   type: string;
-  obj: {
-    id: number;
-    pending: boolean;
-    amount_cents: number;
-    success: boolean;
-    is_auth: boolean;
-    is_capture: boolean;
-    is_standalone_payment: boolean;
-    is_voided: boolean;
-    is_refunded: boolean;
-    is_3d_secure: boolean;
-    integration_id: number;
-    profile_id: number;
-    has_parent_transaction: boolean;
-    created_at: string;
-    order: {
-      id: number;
-      created_at: string;
-      delivery_needed: boolean;
-      merchant: {
-        id: number;
-        created_at: string;
-        phones: string[];
-        company_emails: string[];
-        company_name: string;
-        state: string;
-        country: string;
-        city: string;
-        postal_code: string;
-        street: string;
-      };
-      collector: any;
-      amount_cents: number;
-      shipping_data: {
-        id: number;
-        first_name: string;
-        last_name: string;
-        street: string;
-        building: string;
-        floor: string;
-        apartment: string;
-        city: string;
-        state: string;
-        country: string;
-        email: string;
-        phone_number: string;
-        postal_code: string;
-        extra_description: string;
-        shipping_method: string;
-        order_id: number;
-        order: number;
-      };
-      currency: string;
-      is_payment_locked: boolean;
-      is_return: boolean;
-      is_cancel: boolean;
-      is_returned: boolean;
-      is_canceled: boolean;
-      merchant_order_id: string;
-      wallet_notification: any;
-      paid_amount_cents: number;
-      notify_user_with_email: boolean;
-      items: {
-        name: string;
-        amount_cents: number;
-        quantity: number;
-      }[];
-      order_url: string;
-      commission_fees: number;
-      delivery_fees_cents: number;
-      delivery_vat_cents: number;
-      payment_method: string;
-      merchant_staff_tag: any;
-      api_source: string;
-      data: Record<string, unknown>;
-    };
-    transaction_processed_callback_responses: any[];
-    currency: string;
-    source_data: {
-      pan: string;
-      type: string;
-      tenure: any;
-      sub_type: string;
-    };
-    api_source: string;
-    terminal_id: string;
-    merchant_commission: number;
-    installment: any;
-    discount_details: any[];
-    is_void: boolean;
-    is_refund: boolean;
-    data: {
-      gateway_integration_pk: number;
-      klass: string;
-      created_at: string;
-      amount: number;
-      currency: string;
-      migs_order: {
-        acceptPartialAmount: boolean;
-        amount: number;
-        creationTime: string;
-        currency: string;
-        id: string;
-        status: string;
-        totalAuthorizedAmount: number;
-        totalCapturedAmount: number;
-        totalRefundedAmount: number;
-      };
-      merchant: string;
-      migs_result: string;
-      migs_transaction: {
-        acquirer: {
-          batch: number;
-          date: string;
-          id: string;
-          merchantId: string;
-          settlementDate: string;
-          timeZone: string;
-          transactionId: string;
-        };
-        amount: number;
-        authorizationCode: string;
-        currency: string;
-        frequency: string;
-        id: string;
-        receipt: string;
-        source: string;
-        terminal: string;
-        type: string;
-      };
-      txn_response_code: string;
-      acq_response_code: string;
-      message: string;
-      merchant_txn_ref: string;
-      order_info: string;
-      receipt_no: string;
-      transaction_no: string;
-      batch_no: number;
-      authorize_id: string;
-      card_type: string;
-      card_num: string;
-      secure_hash: string;
-      avs_result_code: string;
-      avs_acq_response_code: string;
-      captured_amount: number;
-      authorised_amount: number;
-      refunded_amount: number;
-      acs_eci: string;
-    };
-    is_hidden: boolean;
-    payment_key_claims: {
-      extra: Record<string, unknown>;
-      user_id: number;
-      currency: string;
-      order_id: number;
-      amount_cents: number;
-      billing_data: {
-        city: string;
-        email: string;
-        floor: string;
-        state: string;
-        street: string;
-        country: string;
-        building: string;
-        apartment: string;
-        last_name: string;
-        first_name: string;
-        postal_code: string;
-        phone_number: string;
-        extra_description: string;
-      };
-      redirect_url: string;
-      integration_id: number;
-      lock_order_when_paid: boolean;
-      next_payment_intention: string;
-      single_payment_attempt: boolean;
-    };
-    error_occured: boolean;
-    is_live: boolean;
-    other_endpoint_reference: string;
-    refunded_amount_cents: number;
-    source_id: number;
-    is_captured: boolean;
-    captured_amount: number;
-    merchant_staff_tag: any;
-    updated_at: string;
-    is_settled: boolean;
-    bill_balanced: boolean;
-    is_bill: boolean;
-    owner: number;
-    parent_transaction: string;
-  };
-  issuer_bank: string;
-  transaction_processed_callback_responses: string;
-}
+};
+
+type Transaction = {
+  amount_cents: number;
+  created_at: string;
+  currency: string;
+  error_occured: boolean;
+  has_parent_transaction: boolean;
+  id: number;
+  integration_id: number;
+  is_3d_secure: boolean;
+  is_auth: boolean;
+  is_capture: boolean;
+  is_refunded: boolean;
+  is_standalone_payment: boolean;
+  is_voided: boolean;
+  order: TransactionOrder;
+  owner: number;
+  pending: boolean;
+  source_data: SourceData;
+  success: boolean;
+  receipt: string;
+};
+
+export type PostPayCallbackObject = {
+  paymob_request_id: any | null;
+  intention: Intention;
+  hmac: string;
+  transaction: Transaction;
+};
