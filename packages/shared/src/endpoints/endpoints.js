@@ -23,6 +23,7 @@ export var Endpoints;
     Endpoints["listUsers"] = "listUsers";
     Endpoints["updateUser"] = "updateUser";
     Endpoints["deleteUser"] = "deleteUser";
+    Endpoints["listUserOrders"] = "listUserOrders";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -194,6 +195,11 @@ export const ENDPOINT_CONFIGS = {
     [Endpoints.deleteUser]: {
         method: 'delete',
         url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [Endpoints.listUserOrders]: {
+        method: 'get',
+        url: '/api/v1/users/:userId/orders',
         auth: true,
     },
     // address endpoints

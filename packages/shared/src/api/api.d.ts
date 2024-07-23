@@ -233,15 +233,8 @@ export type GetOrderResponse = DefaultResponseBody & {
         }) | null;
     };
 };
-export type GetOrdersListRequest = DefaultRequestQuery;
-export type GetOrdersListResponse = DefaultResponseBody & {
-    data: {
-        pagination: Pagination;
-        orders: GetOrderResponse['data'][];
-    };
-};
-export type AdminGetOrdersListRequest = DefaultRequestQuery;
-export type AdminGetOrdersListResponse = DefaultResponseBody & {
+export type ListOrdersRequest = DefaultRequestQuery;
+export type ListOrdersResponse = DefaultResponseBody & {
     data: {
         pagination: Pagination;
         orders: GetOrderResponse['data'][];

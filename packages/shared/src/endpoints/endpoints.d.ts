@@ -29,6 +29,7 @@ export declare enum Endpoints {
     listUsers = "listUsers",
     updateUser = "updateUser",
     deleteUser = "deleteUser",
+    listUserOrders = "listUserOrders",
     createAddress = "createAddress",
     listAddress = "listAddress",
     updateAddress = "updateAddress",
