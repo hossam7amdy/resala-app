@@ -178,6 +178,11 @@ export const createExpressRouter = (legRequests: boolean) => {
       authMiddleware.authorizeUser(['ADMIN']),
       userCtrl.deleteUser,
     ],
+    [Endpoints.listUserOrders]: [
+      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      validateMiddleware(DefaultQuerySchema),
+      orderCtrl.listUserOrders,
+    ],
 
     // user address endpoints
     [Endpoints.createAddress]: [

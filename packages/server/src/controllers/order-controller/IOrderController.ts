@@ -5,8 +5,8 @@ import type {
   DeleteOrderResponse,
   GetOrderRequest,
   GetOrderResponse,
-  GetOrdersListRequest,
-  GetOrdersListResponse,
+  ListOrdersRequest,
+  ListOrdersResponse,
   UpdateOrderRequest,
   UpdateOrderResponse,
 } from '@resala/shared';
@@ -30,8 +30,8 @@ export type GetOrder = ExpressHandlerWithParams<
 
 export type GetOrdersList = ExpressHandler<
   undefined,
-  GetOrdersListResponse,
-  Required<GetOrdersListRequest['query']>,
+  ListOrdersResponse,
+  Required<ListOrdersRequest['query']>,
   LocalUser
 >;
 
