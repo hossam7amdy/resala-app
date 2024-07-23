@@ -2,10 +2,10 @@
 
 import { callEndpoint } from '@/lib/fetch';
 import type {
-  AdminGetOrdersListRequest,
-  AdminGetOrdersListResponse,
   GetOrderRequest,
   GetOrderResponse,
+  ListOrdersRequest,
+  ListOrdersResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -24,7 +24,7 @@ export const findOrderById = async (id: string | number) => {
 export const listOrders = async (query: { page: number; limit: number; query: string }) => {
   noStore();
 
-  const response = await callEndpoint<AdminGetOrdersListRequest, AdminGetOrdersListResponse>(
+  const response = await callEndpoint<ListOrdersRequest, ListOrdersResponse>(
     ENDPOINT_CONFIGS.listOrders,
     { query }
   );

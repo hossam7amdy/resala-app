@@ -57,13 +57,22 @@ export default class OrderController implements IOrderController {
 
   listOrders: GetOrdersList = async (req, res, next) => {
     try {
-      const user = res.locals.user;
-      const { page, limit } = req.query;
+      const { orders, pagination } = await this.orderService.listOrders(req.query);
 
-      const { orders, pagination } = await this.orderService.getUserOrders(user.id, {
-        page,
-        limit,
+      return res.status(200).json({
+        success: true,
+        data: { pagination, orders },
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  listUserOrders: GetOrdersList = async (req, res, next) => {
+    try {
+      const user = res.locals.user;
+
+      const { orders, pagination } = await this.orderService.listUserOrders(user.id, req.query);
 
       return res.status(200).json({
         success: true,
