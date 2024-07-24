@@ -1,9 +1,8 @@
 import type {
-  AdminGetOrdersListResponse,
   CreateOrderRequest,
   DefaultFilters,
   GetOrderResponse,
-  GetOrdersListResponse,
+  ListOrdersResponse,
   Order,
 } from '@resala/shared';
 
@@ -57,7 +56,7 @@ export default class OrderService {
     return { ...newOrder, ...orderPayload };
   }
 
-  async listOrders({ limit, page, query }: DefaultFilters): Promise<GetOrdersListResponse['data']> {
+  async listOrders({ limit, page, query }: DefaultFilters): Promise<ListOrdersResponse['data']> {
     const { orders, total } = await this.orderRepo.list({ limit, page, query });
 
     return {
@@ -86,10 +85,10 @@ export default class OrderService {
     return order;
   }
 
-  async getUserOrders(
+  async listUserOrders(
     userId: number,
     { limit, page }: Omit<DefaultFilters, 'query'>
-  ): Promise<AdminGetOrdersListResponse['data']> {
+  ): Promise<ListOrdersResponse['data']> {
     const { total, orders } = await this.orderRepo.listByUser(userId, { limit, page });
 
     return {

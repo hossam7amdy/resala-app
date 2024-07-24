@@ -10,7 +10,7 @@ import type {
 import type { PaymentRepository } from '../../repositories/index.js';
 import { BadRequestError, NotFoundError } from '../../utils/ApiErrors.js';
 import type PaymobPaymentService from '../paymob-payment-service/PaymobPaymentService.js';
-import type { PostPayCallbackObject, VerifyDto } from '../paymob-payment-service/types.js';
+import type { PostPayCallbackObject, Transaction } from '../paymob-payment-service/types.js';
 
 export default class PaymentService {
   constructor(
@@ -66,46 +66,25 @@ export default class PaymentService {
 
   async postPayCallback(
     orderId: number,
-    { transaction, hmac }: PostPayCallbackObject
+    postPayObj: PostPayCallbackObject
   ): Promise<PaymentStatusType | undefined> {
-    const verifyDto: VerifyDto = {
-      amount_cents: transaction.amount_cents.toString(),
-      created_at: transaction.created_at,
-      currency: transaction.currency,
-      error_occured: transaction.error_occured.toString(),
-      has_parent_transaction: transaction.has_parent_transaction.toString(),
-      id: transaction.id.toString(),
-      integration_id: transaction.integration_id.toString(),
-      is_3d_secure: transaction.is_3d_secure.toString(),
-      is_auth: transaction.is_auth.toString(),
-      is_capture: transaction.is_capture.toString(),
-      is_refunded: transaction.is_refunded.toString(),
-      is_standalone_payment: transaction.is_standalone_payment.toString(),
-      is_voided: transaction.is_voided.toString(),
-      orderId: transaction.order.toString(),
-      owner: transaction.owner.toString(),
-      pending: transaction.pending.toString(),
-      sourceDataPan: transaction.source_data.pan,
-      sourceDataSubType: transaction.source_data.sub_type,
-      sourceDataType: transaction.source_data.type,
-      success: transaction.success.toString(),
-    };
+    this.paymobService.verify(postPayObj).catch(console.error);
 
-    await this.paymobService.verify(hmac, verifyDto);
+    const transaction = postPayObj.transaction;
 
     await this.paymentRepo.update(orderId, {
-      orderRef: +verifyDto.orderId,
-      transactionRef: +verifyDto.id,
+      orderRef: transaction.order.id,
+      transactionRef: transaction.id,
     });
 
-    return this._status(verifyDto);
+    return this._status(transaction);
   }
 
-  _status(verifyDto: VerifyDto): PaymentStatusType | undefined {
-    if (verifyDto.is_voided === 'true') return 'VOIDED';
-    if (verifyDto.is_refunded === 'true') return 'REFUNDED';
-    if (verifyDto.error_occured === 'true') return 'FAILED';
-    if (verifyDto.success === 'true') return 'PAID';
-    if (verifyDto.pending === 'true') return 'UNPAID';
+  _status(transaction: Transaction): PaymentStatusType | undefined {
+    if (transaction.is_voided) return 'VOIDED';
+    if (transaction.is_refunded) return 'REFUNDED';
+    if (transaction.error_occured) return 'FAILED';
+    if (transaction.success) return 'PAID';
+    if (transaction.pending) return 'UNPAID';
   }
 }
