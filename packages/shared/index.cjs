@@ -27,6 +27,7 @@ exports.Endpoints = void 0;
     Endpoints["listUsers"] = "listUsers";
     Endpoints["updateUser"] = "updateUser";
     Endpoints["deleteUser"] = "deleteUser";
+    Endpoints["listUserOrders"] = "listUserOrders";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -198,6 +199,11 @@ const ENDPOINT_CONFIGS = {
     [exports.Endpoints.deleteUser]: {
         method: 'delete',
         url: '/api/v1/users/:userId',
+        auth: true,
+    },
+    [exports.Endpoints.listUserOrders]: {
+        method: 'get',
+        url: '/api/v1/users/:userId/orders',
         auth: true,
     },
     // address endpoints

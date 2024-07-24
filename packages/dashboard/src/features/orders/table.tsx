@@ -2,7 +2,7 @@
 
 import { Pagination, TableColumn } from '@/components';
 import { formatCurrency, formatDate, formatTime } from '@/lib/util';
-import type { GetOrdersListResponse } from '@resala/shared';
+import type { ListOrdersResponse } from '@resala/shared';
 import { Table as AntTable, Flex } from 'antd';
 
 import CancelOrder from './cancel-order';
@@ -12,7 +12,7 @@ import PaymentStatus from './payment-status';
 
 interface TableProps {
   total: number;
-  orders: GetOrdersListResponse['data']['orders'];
+  orders: ListOrdersResponse['data']['orders'];
 }
 const Table: React.FC<TableProps> = ({ orders, total }) => {
   return (
