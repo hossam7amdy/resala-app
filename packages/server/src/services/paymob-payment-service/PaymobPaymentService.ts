@@ -8,7 +8,7 @@ import type {
   AuthenticateApiResponse,
   CheckoutApiResponse,
   CheckoutDto,
-  VerifyDto,
+  PostPayCallbackObject,
 } from './types.js';
 
 export default class PaymobPaymentService {
@@ -45,35 +45,35 @@ export default class PaymobPaymentService {
     return { token };
   }
 
-  async verify(hmac: string, verifyDto: VerifyDto): Promise<void> {
+  async verify({ hmac, transaction }: PostPayCallbackObject): Promise<void> {
     return new Promise((resolve, reject) => {
       const lexicographical =
-        verifyDto.amount_cents +
-        verifyDto.created_at +
-        verifyDto.currency +
-        verifyDto.error_occured +
-        verifyDto.has_parent_transaction +
-        verifyDto.id +
-        verifyDto.integration_id +
-        verifyDto.is_3d_secure +
-        verifyDto.is_auth +
-        verifyDto.is_capture +
-        verifyDto.is_refunded +
-        verifyDto.is_standalone_payment +
-        verifyDto.is_voided +
-        verifyDto.orderId +
-        verifyDto.owner +
-        verifyDto.pending +
-        verifyDto.sourceDataPan +
-        verifyDto.sourceDataSubType +
-        verifyDto.sourceDataType +
-        verifyDto.success;
+        transaction.amount_cents +
+        transaction.created_at +
+        transaction.currency +
+        transaction.error_occured +
+        transaction.has_parent_transaction +
+        transaction.id +
+        transaction.integration_id +
+        transaction.is_3d_secure +
+        transaction.is_auth +
+        transaction.is_capture +
+        transaction.is_refunded +
+        transaction.is_standalone_payment +
+        transaction.is_voided +
+        transaction.order.id +
+        transaction.owner +
+        transaction.pending +
+        transaction.source_data.pan +
+        transaction.source_data.sub_type +
+        transaction.source_data.type +
+        transaction.success;
 
       const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
         .update(lexicographical)
         .digest('hex');
 
-      return hash === hmac ? resolve() : reject();
+      return hash === hmac ? resolve() : reject("HMAC doesn't match");
     });
   }
 

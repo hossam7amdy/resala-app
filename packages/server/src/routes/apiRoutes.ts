@@ -71,7 +71,7 @@ import {
 } from '../controllers/index.js';
 import {
   AuthMiddleware,
-  errHandler,
+  asyncHandler,
   loggerMiddleware,
   uploadMiddleware,
   validateMiddleware,
@@ -417,8 +417,7 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     handlers = [authMiddleware.jwtParseMiddleware, ...handlers];
 
-    const withErrorHandler = handlers.map(handler => errHandler(handler));
-    router[method](url, ...withErrorHandler);
+    router[method](url, ...handlers.map(handler => asyncHandler(handler)));
   });
 
   return router;
