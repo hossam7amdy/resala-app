@@ -9,13 +9,18 @@ import { APPError } from '../utils/ApiErrors.js';
  * @param {RequestHandler} fn - async function
  * @returns {RequestHandler} - function that catches errors
  */
-export const errHandler = (fn: RequestHandler): RequestHandler => {
+export const asyncHandler = (fn: RequestHandler): RequestHandler => {
   return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 };
 
 /** @description error middleware */
-// eslint-disable-next-line no-unused-vars
-export const errMiddleware = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
+export const errorMiddleware = (
+  error: Error,
+  _req: Request,
+  res: Response,
+  // eslint-disable-next-line no-unused-vars
+  _next: NextFunction
+) => {
   if (error instanceof APPError) {
     return res.status(error.statusCode).json({
       success: false,
@@ -33,6 +38,6 @@ export const errMiddleware = (error: Error, _req: Request, res: Response, _next:
   logger.error(error);
   return res.status(500).json({
     success: false,
-    message: 'Oops, an unexpected error occurred, please try again.',
+    message: 'Unexpected error occurred, please try again.',
   });
 };
