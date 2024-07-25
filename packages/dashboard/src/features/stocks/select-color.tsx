@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { StockColor } from '.';
 
-const SelectColor: React.FC = async () => {
+export const SelectColor: React.FC = async () => {
   const colors = await listAllColors();
 
   return (
@@ -41,5 +41,3 @@ const SelectColor: React.FC = async () => {
     </Flex>
   );
 };
-
-export default SelectColor;

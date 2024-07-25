@@ -1,13 +1,12 @@
 import { deleteColor } from '@/actions/color';
+import { DeleteButton } from '@/components';
+import { StockColor } from '@/features/stocks';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
 import type { GetColorsListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
-
-import DeleteButton from '../../components/delete-button';
-import StockColor from '../stocks/stock-color';
 
 const Table = ({ colors }: { colors: GetColorsListResponse['data'] }) => {
   return (

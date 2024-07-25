@@ -1,4 +1,4 @@
-import { deleteProductImage, setDefaultImage } from '@/actions/image';
+import { deleteImage, setDefaultImage } from '@/actions/image';
 import { Tooltip } from '@/components';
 import { DeleteOutlined, LoadingOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import type { Image } from '@resala/shared';
@@ -6,7 +6,7 @@ import { Button, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import React from 'react';
 
-const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
+export const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
   const [loading, setLoading] = React.useState<'primary' | 'delete' | undefined>();
 
   const items: MenuProps['items'] = [
@@ -18,7 +18,7 @@ const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
       onClick: async () => {
         try {
           setLoading('primary');
-          await setDefaultImage(image.id.toString());
+          await setDefaultImage(image.id.toString(), image.productId.toString());
         } catch (e) {
           console.log(e);
         } finally {
@@ -35,7 +35,7 @@ const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
       onClick: async () => {
         try {
           setLoading('delete');
-          await deleteProductImage(image.productId.toString(), image.id.toString());
+          await deleteImage(image.id.toString(), image.productId.toString());
         } catch (e) {
           console.log(e);
         } finally {
@@ -57,5 +57,3 @@ const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
     </Dropdown>
   );
 };
-
-export default MoreMenu;

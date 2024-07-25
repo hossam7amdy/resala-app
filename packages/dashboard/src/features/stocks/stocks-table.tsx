@@ -7,9 +7,9 @@ import { Flex, Space, Table } from 'antd';
 import React from 'react';
 
 import { StockColor, StockColorImages, StockQuantity, StockSizes } from '.';
-import UploadModal from './upload-modal';
+import { UploadModal } from './upload-modal';
 
-const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stocks }) => {
+export const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stocks }) => {
   return (
     <Flex vertical gap={10}>
       <Table
@@ -104,5 +104,3 @@ const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stoc
     </Flex>
   );
 };
-
-export default StocksTable;

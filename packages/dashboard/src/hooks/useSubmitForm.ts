@@ -12,7 +12,7 @@ import { useState, useTransition } from 'react';
  * @param form The antd form instance
  * @returns An object containing the dispatch function, pending state, and error message
  */
-const useSubmitForm = <Payload>(
+export const useSubmitForm = <Payload>(
   submit: (payload: Payload) => Promise<DefaultResponseBody>,
   form?: FormInstance
 ) => {
