@@ -1,6 +1,8 @@
 import type {
   CreateImageRequest,
   CreateImageResponse,
+  FindImagesRequest,
+  FindImagesResponse,
   PatchImageRequest,
   PatchImageResponse,
 } from '@resala/shared';
@@ -30,8 +32,16 @@ export type DeleteImage = ExpressHandlerWithParams<
   LocalUser
 >;
 
+export type FindImages = ExpressHandler<
+  undefined,
+  FindImagesResponse,
+  FindImagesRequest['query'],
+  LocalUser
+>;
+
 export default interface IImageController {
   createImages: CreateImage;
   updateImage: UpdateImage;
   deleteImage: DeleteImage;
+  findImages: FindImages;
 }

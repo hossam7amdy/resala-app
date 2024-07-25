@@ -4,7 +4,7 @@ import { Button, Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Link from 'next/link';
 
-const SelectSize: React.FC = async () => {
+export const SelectSize: React.FC = async () => {
   const sizes = await listAllSizes();
 
   return (
@@ -32,5 +32,3 @@ const SelectSize: React.FC = async () => {
     </Flex>
   );
 };
-
-export default SelectSize;

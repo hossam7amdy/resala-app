@@ -1,58 +1,83 @@
-'use client';
+import { uploadImages } from '@/actions/image';
+import { useMutation, useNotifications } from '@/hooks';
+import type { Image } from '@resala/shared';
+import { Button, Flex, Form } from 'antd';
+import type { UploadFile } from 'antd';
+import React, { useState } from 'react';
 
-import { uploadProductImages } from '@/actions/image';
-import { ErrorMessage } from '@/components';
-import { useMutation } from '@/hooks';
-import { Button, Flex, Form, type UploadFile } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-
-import { DraggerFormItem } from './dragger-form-item';
+import { ImageCropUpload } from './image-crop-dragger';
 
 interface UploadFormProps {
-  id: string;
-  colorId: string;
+  colorId: number;
+  productId: number;
+  images: Omit<Image, 'productId' | 'colorId'>[];
   onCancel: () => void;
 }
-const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
-  const [form] = useForm();
-  const { isLoading, error, mutate } = useMutation({
-    mutationFn: uploadProductImages,
+export const UploadForm: React.FC<UploadFormProps> = ({ images, colorId, productId, onCancel }) => {
+  const [form] = Form.useForm();
+  const notification = useNotifications();
+  const [fileList, setFileList] = useState<UploadFile[]>(
+    images.map(img => ({
+      uid: img.imageKey,
+      url: img.imageUrl,
+      name: img.imageKey,
+      status: 'removed',
+    }))
+  );
+  const { mutate, isLoading } = useMutation({
+    mutationFn: uploadImages,
     onSuccess: () => {
       form.resetFields();
-      onCancel();
+      notification.success('Images uploaded successfully.');
+      return onCancel();
+    },
+    onError: error => {
+      notification.error(error.message);
     },
   });
 
-  const handleFinish = (values: { images: UploadFile[] }) => {
+  const handleUpload = () => {
     const formData = new FormData();
 
-    formData.append('productId', id);
-    formData.append('colorId', colorId);
-    values.images.forEach(image => {
-      formData.append('images', image.originFileObj!);
+    fileList.forEach(file => {
+      if (file.status !== 'removed') {
+        formData.append('images', file.originFileObj!);
+      }
     });
 
-    return mutate(formData);
+    formData.append('productId', productId.toString());
+    formData.append('colorId', colorId.toString());
+
+    mutate(formData);
   };
 
   return (
-    <Form
-      form={form}
-      name={`upload-form-${colorId}`}
-      onFinish={handleFinish}
-      layout="vertical"
-      size="large"
-    >
-      <DraggerFormItem />
-
-      <Form.Item noStyle>{error?.message && <ErrorMessage message={error.message} />}</Form.Item>
+    <Form form={form} name={`upload-form-${colorId}`} layout="vertical">
+      <Form.Item>
+        <ImageCropUpload
+          disabled={isLoading}
+          fileList={fileList}
+          onChange={({ fileList }) => {
+            setFileList(fileList);
+          }}
+        />
+      </Form.Item>
 
       <Form.Item noStyle>
-        <Flex gap={10}>
-          <Button block type="primary" htmlType="submit" loading={isLoading}>
+        <Flex gap={5}>
+          <Button
+            size="large"
+            block
+            type="primary"
+            htmlType="submit"
+            loading={isLoading}
+            disabled={!fileList.length}
+            onClick={handleUpload}
+          >
             Upload
           </Button>
-          <Button block onClick={onCancel} disabled={isLoading}>
+
+          <Button block size="large" htmlType="submit" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
         </Flex>
@@ -60,5 +85,3 @@ const UploadForm: React.FC<UploadFormProps> = ({ id, colorId, onCancel }) => {
     </Form>
   );
 };
-
-export default UploadForm;

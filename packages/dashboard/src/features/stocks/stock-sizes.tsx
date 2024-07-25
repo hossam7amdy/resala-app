@@ -1,7 +1,6 @@
 import { deleteStock } from '@/actions/stock';
 import { Tooltip } from '@/components';
 import DeleteButton from '@/components/delete-button';
-import StockQuantity from '@/features/stocks/stock-quantity';
 import ROUTES from '@/lib/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { GetStockResponse } from '@resala/shared';
@@ -9,7 +8,9 @@ import { Button, Space, Table } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
-const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> = ({ sizes }) => (
+import { StockQuantity } from '.';
+
+export const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> = ({ sizes }) => (
   <Table
     bordered
     pagination={false}
@@ -52,5 +53,3 @@ const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> = ({ si
     ]}
   />
 );
-
-export default StockSizes;
