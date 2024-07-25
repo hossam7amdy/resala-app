@@ -289,6 +289,8 @@ enum Role {
 enum OrderStatus {
   PENDING
   FULFILLED
+  SHIPPED
+  DELIVERED
   CANCELLED
 
   @@map("order_status")
