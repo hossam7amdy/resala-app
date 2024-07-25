@@ -8,6 +8,8 @@ export var OrderStatus;
 (function (OrderStatus) {
     OrderStatus["PENDING"] = "PENDING";
     OrderStatus["FULFILLED"] = "FULFILLED";
+    OrderStatus["SHIPPED"] = "SHIPPED";
+    OrderStatus["DELIVERED"] = "DELIVERED";
     OrderStatus["CANCELLED"] = "CANCELLED";
 })(OrderStatus || (OrderStatus = {}));
 export var PaymentStatus;
