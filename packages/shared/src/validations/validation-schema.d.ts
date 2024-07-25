@@ -933,6 +933,28 @@ export declare const DeleteSizeSchema: z.ZodObject<{
         sizeId: number;
     };
 }>;
+export declare const FindImagesSchema: z.ZodObject<{
+    query: z.ZodObject<{
+        productId: z.ZodNumber;
+        colorId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        productId: number;
+        colorId: number;
+    }, {
+        productId: number;
+        colorId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query: {
+        productId: number;
+        colorId: number;
+    };
+}, {
+    query: {
+        productId: number;
+        colorId: number;
+    };
+}>;
 export declare const CreateImageSchema: z.ZodObject<{
     body: z.ZodObject<{
         productId: z.ZodNumber;

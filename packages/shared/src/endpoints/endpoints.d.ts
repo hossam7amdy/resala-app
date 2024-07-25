@@ -46,6 +46,7 @@ export declare enum Endpoints {
     createProduct = "createProduct",
     updateProduct = "updateProduct",
     deleteProduct = "deleteProduct",
+    findImages = "findImages",
     addImages = "addImages",
     deleteImage = "deleteImage",
     updateImage = "updateImage",
