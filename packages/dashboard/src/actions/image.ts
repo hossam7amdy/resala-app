@@ -10,11 +10,17 @@ import {
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
-export const uploadProductImages = async (formData: FormData) => {
+const revalidateCache = (productId: string) => {
+  revalidatePath(ROUTES.STOCKS);
+  revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
+};
+
+export const uploadImages = async (formData: FormData) => {
   try {
     const images = formData.getAll('images') || [];
-    const optimizedImages = await optimizeImages(images as File[]);
     formData.delete('images');
+
+    const optimizedImages = await optimizeImages(images as File[]);
 
     optimizedImages.forEach(optimizedImage => {
       formData.append('images', optimizedImage);
@@ -22,7 +28,8 @@ export const uploadProductImages = async (formData: FormData) => {
 
     const response = await callEndpoint(ENDPOINT_CONFIGS.addImages, { body: formData });
 
-    revalidatePath(ROUTES.PRODUCT_IMAGES(formData.get('productId') as string));
+    revalidateCache(formData.get('productId') as string);
+
     return response;
   } catch (e) {
     const error = e as Error;
@@ -33,13 +40,14 @@ export const uploadProductImages = async (formData: FormData) => {
   }
 };
 
-export const setDefaultImage = async (imageId: string) => {
+export const setDefaultImage = async (imageId: string, productId: string) => {
   try {
     const response = await callEndpoint(ENDPOINT_CONFIGS.updateImage, {
       params: { imageId: Number(imageId) },
     });
 
-    revalidatePath(ROUTES.PRODUCTS);
+    revalidateCache(productId);
+
     return response;
   } catch (e) {
     const error = e as Error;
@@ -50,14 +58,15 @@ export const setDefaultImage = async (imageId: string) => {
   }
 };
 
-export const deleteProductImage = async (productId: string, imageId: string) => {
+export const deleteImage = async (imageId: string, productId: string) => {
   try {
     const response = await callEndpoint<DeleteImageRequest, DeleteImageResponse>(
       ENDPOINT_CONFIGS.deleteImage,
       { params: { imageId: Number(imageId) } }
     );
 
-    revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
+    revalidateCache(productId);
+
     return response;
   } catch (e) {
     const error = e as Error;

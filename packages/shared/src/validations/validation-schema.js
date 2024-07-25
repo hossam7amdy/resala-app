@@ -234,6 +234,12 @@ export const DeleteSizeSchema = z.object({
     params: UpdateSizeSchema.shape.params,
 });
 // Image Schemas
+export const FindImagesSchema = z.object({
+    query: z.object({
+        productId: z.coerce.number().positive(),
+        colorId: z.coerce.number().positive(),
+    }),
+});
 export const CreateImageSchema = z.object({
     body: z.object({
         productId: z.coerce.number().positive(),

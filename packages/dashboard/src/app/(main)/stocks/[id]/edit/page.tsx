@@ -1,12 +1,6 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import { findStockById } from '@/data/stocks';
-import {
-  SelectColor,
-  SelectProduct,
-  SelectSize,
-  StockForm,
-  StockFormSkeleton,
-} from '@/features/stocks/index';
+import { FormSkeleton, SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
@@ -28,7 +22,7 @@ const EditStockPage = ({ params }: { params: { id: string } }) => {
 
       <Col span={24}>
         <Card>
-          <Suspense fallback={<StockFormSkeleton />}>
+          <Suspense fallback={<FormSkeleton />}>
             <Form id={params.id} />
           </Suspense>
         </Card>

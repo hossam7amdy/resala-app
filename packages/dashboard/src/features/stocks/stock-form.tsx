@@ -1,21 +1,22 @@
 'use client';
 
+import { uploadImages } from '@/actions/image';
 import { createStock, updateStock } from '@/actions/stock';
-import { useMutation } from '@/hooks';
-import { App, Button, Flex, Form, InputNumber, type UploadFile } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
+import { listImages } from '@/data/images';
+import { useMutation, useNotifications } from '@/hooks';
+import type { Image } from '@resala/shared';
+import { Button, Flex, Form, InputNumber } from 'antd';
+import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import ErrorMessage from '../../components/error-message';
+import { ImageCropUpload } from './image-crop-dragger';
 
 type FormValues = {
   productId: number;
   colorId: number;
   sizeId: number;
   quantity: number;
-  images?: UploadFile[];
 };
 
 interface StockFormProps {
@@ -30,23 +31,71 @@ interface StockFormProps {
   selectColor: React.ReactNode;
   selectProduct: React.ReactNode;
 }
-const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, selectProduct }) => {
+export const StockForm: React.FC<StockFormProps> = ({
+  stock,
+  selectColor,
+  selectSize,
+  selectProduct,
+}) => {
   const router = useRouter();
-  const [form] = useForm<FormValues>();
-  const { notification } = App.useApp();
+  const [form] = Form.useForm<FormValues>();
+  const notification = useNotifications();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  const colorId = Form.useWatch('colorId', form);
+  const productId = Form.useWatch('productId', form);
+
+  useEffect(() => {
+    if (!colorId || !productId) return;
+
+    listImages(productId, colorId).then(imagesList => {
+      setFileList(
+        imagesList.map((image: Image) => ({
+          url: image.imageUrl,
+          uid: image.id.toString(),
+          name: image.imageKey,
+          status: 'removed',
+        }))
+      );
+    });
+  }, [colorId, productId]);
 
   const isCreate = !stock?.id;
-  const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
-  const { error, isLoading, mutate } = useMutation({
-    mutationFn: submit,
-    onSuccess: () => {
-      form.resetFields();
-      // message.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
-      notification.success({
-        message: 'Success',
-        description: `Stock has been ${isCreate ? 'created' : 'updated'} successfully`,
+
+  const handleSubmit = (values: FormValues) => {
+    const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
+
+    const promiseAll: Promise<unknown>[] = [submit(values)];
+
+    if (fileList.length) {
+      const formData = new FormData();
+
+      formData.append('colorId', colorId.toString());
+      formData.append('productId', productId.toString());
+      fileList.forEach(file => {
+        if (file.status !== 'removed') {
+          formData.append('images', file.originFileObj!);
+        }
       });
+
+      promiseAll.push(uploadImages(formData));
+    }
+
+    return Promise.all(promiseAll);
+  };
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: handleSubmit,
+    onSuccess: () => {
+      setFileList([]);
+      form.resetFields();
+
+      notification.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
+
       !isCreate && router.back(); // Redirect to the previous page if it's an update
+    },
+    onError: error => {
+      notification.error(error.message);
     },
   });
 
@@ -55,7 +104,6 @@ const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, s
       form={form}
       name="stock-form"
       layout="vertical"
-      // eslint-disable-next-line no-unused-vars
       onFinish={mutate}
       size="large"
       initialValues={{ ...stock }}
@@ -66,13 +114,21 @@ const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, s
 
       {selectSize}
 
-      <FormItem required rules={[{ required: true }]} hasFeedback name="quantity" label="Quantity">
+      <Form.Item required rules={[{ required: true }]} hasFeedback name="quantity" label="Quantity">
         <InputNumber placeholder="Enter quantity" min={0} max={100000} style={{ width: '100%' }} />
-      </FormItem>
+      </Form.Item>
 
-      {error?.message && <ErrorMessage message={error.message} />}
+      <Form.Item label="Stock Images">
+        <ImageCropUpload
+          disabled={isLoading || !productId || !colorId}
+          fileList={fileList}
+          onChange={({ fileList }) => {
+            setFileList(fileList);
+          }}
+        />
+      </Form.Item>
 
-      <FormItem noStyle>
+      <Form.Item noStyle>
         <Flex gap={10}>
           <Button type="primary" htmlType="submit" block loading={isLoading}>
             Submit
@@ -81,9 +137,7 @@ const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize, s
             Cancel
           </Button>
         </Flex>
-      </FormItem>
+      </Form.Item>
     </Form>
   );
 };
-
-export default StockForm;

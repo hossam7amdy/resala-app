@@ -1,6 +1,6 @@
 import Text from 'antd/lib/typography/Text';
 
-const StockQuantity: React.FC<{ quantity: number }> = ({ quantity }) => {
+export const StockQuantity: React.FC<{ quantity: number }> = ({ quantity }) => {
   return (
     <Text type={textType(quantity)} style={{ fontWeight: 'bold' }}>
       {quantity}
@@ -17,5 +17,3 @@ const textType = (quantity: number) => {
   }
   return 'success';
 };
-
-export default StockQuantity;

@@ -20,7 +20,7 @@ type MutationResult<Data, Variables> = {
 
 // Actual Hook Implementation
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-function useMutation<Data, Variables, Context = unknown>({
+export function useMutation<Data, Variables, Context = unknown>({
   mutationFn,
   onMutate = () => ({}) as Context,
   onError = () => {},
@@ -71,5 +71,3 @@ function useMutation<Data, Variables, Context = unknown>({
     error,
   };
 }
-
-export default useMutation;

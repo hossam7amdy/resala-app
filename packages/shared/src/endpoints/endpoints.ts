@@ -60,6 +60,7 @@ export enum Endpoints {
   deleteProduct = 'deleteProduct',
 
   // images endpoints
+  findImages = 'findImages',
   addImages = 'addImages',
   deleteImage = 'deleteImage',
   updateImage = 'updateImage',
@@ -311,6 +312,11 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // product images endpoints
+  [Endpoints.findImages]: {
+    url: '/api/v1/images',
+    method: 'get',
+  },
+
   [Endpoints.addImages]: {
     url: '/api/v1/images',
     method: 'post',

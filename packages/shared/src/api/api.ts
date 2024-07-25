@@ -251,6 +251,11 @@ export type DeleteStockResponse = CreateStockResponse;
 export type CreateImageRequest = z.infer<typeof Schemas.CreateImageSchema>;
 export type CreateImageResponse = DefaultResponseBody;
 
+export type FindImagesRequest = z.infer<typeof Schemas.FindImagesSchema>;
+export type FindImagesResponse = DefaultResponseBody & {
+  data: Image[];
+};
+
 export type PatchImageRequest = z.infer<typeof Schemas.PatchImageSchema>;
 export type PatchImageResponse = DefaultResponseBody & {
   data: Image;

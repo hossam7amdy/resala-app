@@ -46,14 +46,14 @@ services:
       - '5000:5000'
     environment:
       - PORT=5000
-      - NODE_ENV=test
+      - NODE_ENV=development
       - SERVER_URL=http://localhost:5000
       - FRONTEND_URL=http://localhost:3000
       - JWT_SECRET=test_secret
       - JWT_REFRESH=test_refresh
       - JWT_RESET=test_reset
       - JWT_VERIFY=test_verify
-      - DATABASE_URL=postgres://postgres:postgres@localhost:54320/postgres
+      - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
       - MAIL_USER=mail_user
       - MAIL_PASS=mail_pass
       - TWILIO_ACCOUNT_SID=twilio_account_sid

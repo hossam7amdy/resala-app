@@ -37,4 +37,10 @@ export default class ImageRepository {
       where: { productId },
     });
   }
+
+  async listByProductAndColor(productId: number, colorId: number): Promise<Image[]> {
+    return await this.prisma.image.findMany({
+      where: { productId, colorId },
+    });
+  }
 }

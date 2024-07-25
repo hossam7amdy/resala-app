@@ -24,7 +24,7 @@ type Req =
       params?: Record<string, string | number>;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       body?: { [key: string]: any };
-      query?: DefaultRequestQuery['query'];
+      query?: DefaultRequestQuery['query'] | { [key: string]: string | number };
     }
   | undefined;
 type Res = DefaultResponseBody;

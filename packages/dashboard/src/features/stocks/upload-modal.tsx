@@ -4,9 +4,9 @@ import type { GetStocksListResponse } from '@resala/shared';
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
-import UploadForm from './upload-form';
+import { UploadForm } from './upload-form';
 
-const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
+export const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
   stock,
 }) => {
   const [open, setOpen] = useState(false);
@@ -27,17 +27,20 @@ const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] 
         open={open}
         destroyOnClose
         title="Upload Images"
+        maskClosable={false}
         onCancel={() => setOpen(false)}
         footer={null}
+        width={600}
       >
-        <UploadForm
-          id={stock.product.id.toString()}
-          colorId={stock.color.id.toString()}
-          onCancel={() => setOpen(false)}
-        />
+        {!moreThanFiveImages && (
+          <UploadForm
+            images={stock.images}
+            colorId={stock.color.id}
+            productId={stock.product.id}
+            onCancel={() => setOpen(false)}
+          />
+        )}
       </Modal>
     </>
   );
 };
-
-export default UploadModal;

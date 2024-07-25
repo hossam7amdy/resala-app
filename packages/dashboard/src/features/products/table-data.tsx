@@ -24,7 +24,7 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
         return {
           style: { cursor: 'pointer' },
           onClick: () => {
-            router.push(ROUTES.PRODUCT_DETAILS(record.id));
+            router.push(ROUTES.PRODUCT_STOCKS(record.id));
           },
         };
       }}

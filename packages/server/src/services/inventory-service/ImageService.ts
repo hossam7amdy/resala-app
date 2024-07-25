@@ -2,6 +2,7 @@ import type {
   CreateImageRequest,
   CreateImageResponse,
   DeleteImageResponse,
+  FindImagesRequest,
   Image,
   PatchImageResponse,
 } from '@resala/shared';
@@ -98,6 +99,10 @@ export default class ImageService {
     }
 
     return image;
+  }
+
+  async findImages({ colorId, productId }: FindImagesRequest['query']): Promise<Image[]> {
+    return await this.imageRepository.image.listByProductAndColor(productId, colorId);
   }
 
   async _validateStock(productId: number, colorId: number) {

@@ -12,12 +12,9 @@ export const ROUTES = {
   EDIT_CATEGORY: (id: string | number) => `/categories/${id}/edit`,
 
   PRODUCTS: '/products',
-  PRODUCT_DETAILS: (id: string | number) => `/products/${id}`,
   CREATE_PRODUCT: '/products/create',
   EDIT_PRODUCT: (id: string | number) => `/products/${id}/edit`,
-  PRODUCT_IMAGES: (id: string | number) => `/products/${id}?tab=images`,
-  UPLOAD_IMAGES: (id: string | number) => `/products/${id}/upload`,
-  PRODUCT_STOCKS: (id: string | number) => `/products/${id}?tab=stocks`,
+  PRODUCT_STOCKS: (id: string | number) => `/products/${id}`,
 
   STOCKS: '/stocks',
   CREATE_STOCK: (id?: string | number) => `/stocks/create?productId=${id}`,

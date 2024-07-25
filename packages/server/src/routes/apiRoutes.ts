@@ -26,6 +26,7 @@ import {
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
+  FindImagesSchema,
   ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
@@ -316,6 +317,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
 
     // image endpoints
+    [Endpoints.findImages]: [validateMiddleware(FindImagesSchema), imageCtrl.findImages],
     [Endpoints.addImages]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMiddleware.array('images', 5),
