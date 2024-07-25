@@ -36,7 +36,7 @@ describe('TEST /users endpoint', () => {
   });
 
   it('should get current logged in user', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
+    const { method, url } = ENDPOINT_CONFIGS.getUser;
 
     const res = await client[method](url).set(await getAuthToken());
 
@@ -48,7 +48,7 @@ describe('TEST /users endpoint', () => {
   });
 
   it('should update current logged in user', async () => {
-    const { method, url } = ENDPOINT_CONFIGS.updateCurrentUser;
+    const { method, url } = ENDPOINT_CONFIGS.updateUser;
 
     const res = await client[method](url)
       .set(await getAuthToken())
@@ -122,7 +122,7 @@ describe('TEST /users endpoint', () => {
   };
 
   const makeUserAdmin = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
+    const { method, url } = ENDPOINT_CONFIGS.getUser;
     const res = await client[method](url).set(await getAuthToken());
 
     // make him admin

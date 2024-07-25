@@ -6,13 +6,19 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import InventoryRepository from '../repositories/InventoryRepository.js';
 import UserRepository from '../repositories/UserRepository.js';
-import { InventoryService, UserService } from '../services/index.js';
+import {
+  FileService,
+  InventoryService,
+  S3FileStorageService,
+  UserService,
+} from '../services/index.js';
 import { categoryAssertion, productAssertion } from './helpers/customAssertions.js';
 import { getTestServer } from './helpers/testServer.js';
 
 describe('TEST /categories', () => {
   let client: TestAgent<superset.Test>;
   let userService: UserService;
+  let fileService: FileService;
   let inventoryService: InventoryService;
 
   const testUser = {
@@ -26,8 +32,9 @@ describe('TEST /categories', () => {
   beforeAll(async () => {
     const prisma = new PrismaClient();
 
+    fileService = new FileService(new S3FileStorageService());
     userService = new UserService(new UserRepository(prisma));
-    inventoryService = new InventoryService(new InventoryRepository(prisma));
+    inventoryService = new InventoryService(new InventoryRepository(prisma), fileService);
 
     client = await getTestServer();
 
@@ -174,7 +181,7 @@ describe('TEST /categories', () => {
   };
 
   const makeUserAdmin = async () => {
-    const { method, url } = ENDPOINT_CONFIGS.getCurrentUser;
+    const { method, url } = ENDPOINT_CONFIGS.getUser;
     const res = await client[method](url).set(await getAccessToken());
 
     return await userService.updateUser(res.body.data.id, { role: 'ADMIN' as Role });
