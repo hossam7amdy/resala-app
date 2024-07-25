@@ -2,10 +2,10 @@ import { uploadImages } from '@/actions/image';
 import { useMutation, useNotifications } from '@/hooks';
 import type { Image } from '@resala/shared';
 import { Button, Flex, Form } from 'antd';
-import { UploadFile } from 'antd/lib';
+import type { UploadFile } from 'antd';
 import React, { useState } from 'react';
 
-import { ImageCropDragger } from './image-crop-dragger';
+import { ImageCropUpload } from './image-crop-dragger';
 
 interface UploadFormProps {
   colorId: number;
@@ -16,12 +16,20 @@ interface UploadFormProps {
 export const UploadForm: React.FC<UploadFormProps> = ({ images, colorId, productId, onCancel }) => {
   const [form] = Form.useForm();
   const notification = useNotifications();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>(
+    images.map(img => ({
+      uid: img.imageKey,
+      url: img.imageUrl,
+      name: img.imageKey,
+      status: 'removed',
+    }))
+  );
   const { mutate, isLoading } = useMutation({
     mutationFn: uploadImages,
     onSuccess: () => {
       form.resetFields();
-      setFileList([]);
+      notification.success('Images uploaded successfully.');
+      return onCancel();
     },
     onError: error => {
       notification.error(error.message);
@@ -32,7 +40,9 @@ export const UploadForm: React.FC<UploadFormProps> = ({ images, colorId, product
     const formData = new FormData();
 
     fileList.forEach(file => {
-      formData.append('images', file.originFileObj!);
+      if (file.status !== 'removed') {
+        formData.append('images', file.originFileObj!);
+      }
     });
 
     formData.append('productId', productId.toString());
@@ -42,17 +52,11 @@ export const UploadForm: React.FC<UploadFormProps> = ({ images, colorId, product
   };
 
   return (
-    <Form
-      form={form}
-      name={`upload-form-${colorId}`}
-      layout="vertical"
-      initialValues={{ images: [] }}
-    >
+    <Form form={form} name={`upload-form-${colorId}`} layout="vertical">
       <Form.Item>
-        <ImageCropDragger
-          curCount={fileList.length + images.length}
+        <ImageCropUpload
           disabled={isLoading}
-          fileList={fileList || []}
+          fileList={fileList}
           onChange={({ fileList }) => {
             setFileList(fileList);
           }}

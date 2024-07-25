@@ -1,10 +1,9 @@
 import { Tooltip } from '@/components';
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetStocksListResponse } from '@resala/shared';
-import { Button, Divider, Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
-import { ImagesList } from './images-list';
 import { UploadForm } from './upload-form';
 
 export const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
@@ -33,18 +32,6 @@ export const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stock
         footer={null}
         width={600}
       >
-        {stock.images.length ? (
-          <ImagesList
-            images={stock.images.map(img => ({
-              ...img,
-              colorId: stock.color.id,
-              productId: stock.product.id,
-            }))}
-          />
-        ) : null}
-
-        {stock.images.length && !moreThanFiveImages ? <Divider /> : null}
-
         {!moreThanFiveImages && (
           <UploadForm
             images={stock.images}
