@@ -66,15 +66,16 @@ CREATE TABLE "product" (
 );
 
 -- CreateTable
-CREATE TABLE "product_image" (
+CREATE TABLE "image" (
     "id" SERIAL NOT NULL,
     "color_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
+    "is_primary" BOOLEAN NOT NULL DEFAULT false,
     "image_key" VARCHAR(50) NOT NULL,
     "image_url" VARCHAR(500) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "product_image_pkey" PRIMARY KEY ("id","product_id")
+    CONSTRAINT "image_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -177,25 +178,12 @@ CREATE TABLE "shipping" (
 
 -- CreateTable
 CREATE TABLE "payment" (
-    "id" SERIAL NOT NULL,
     "order_id" INTEGER NOT NULL,
-    "transaction_id" INTEGER NOT NULL,
-    "transaction_order_id" INTEGER NOT NULL,
-    "pending" BOOLEAN NOT NULL,
-    "success" BOOLEAN NOT NULL,
-    "is_auth" BOOLEAN NOT NULL,
-    "is_capture" BOOLEAN NOT NULL,
-    "amount_cents" DECIMAL(9,2) NOT NULL,
-    "is_voided" BOOLEAN NOT NULL,
-    "is_refunded" BOOLEAN NOT NULL,
-    "is_3d_secure" BOOLEAN NOT NULL,
-    "integration_id" INTEGER NOT NULL,
-    "delivery_needed" BOOLEAN NOT NULL,
-    "currency" CHAR(3) NOT NULL DEFAULT 'EGP',
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "payment_url" VARCHAR(500),
+    "order_ref" INTEGER,
+    "transaction_ref" INTEGER,
 
-    CONSTRAINT "payment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "payment_pkey" PRIMARY KEY ("order_id")
 );
 
 -- CreateTable
@@ -243,48 +231,6 @@ CREATE TABLE "address" (
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
 );
 
--- AlterSequence
-ALTER SEQUENCE user_id_seq RESTART WITH 200;
-
--- AlterSequence
-ALTER SEQUENCE category_id_seq RESTART WITH 300;
-
--- AlterSequence
-ALTER SEQUENCE product_id_seq RESTART WITH 400;
-
--- AlterSequence
-ALTER SEQUENCE product_image_id_seq RESTART WITH 500;
-
--- AlterSequence
-ALTER SEQUENCE stock_id_seq RESTART WITH 600;
-
--- AlterSequence
-ALTER SEQUENCE color_id_seq RESTART WITH 700;
-
--- AlterSequence
-ALTER SEQUENCE size_id_seq RESTART WITH 800;
-
--- AlterSequence
-ALTER SEQUENCE order_id_seq RESTART WITH 1000;
-
--- AlterSequence
-ALTER SEQUENCE order_item_id_seq RESTART WITH 1100;
-
--- AlterSequence
-ALTER SEQUENCE shipping_id_seq RESTART WITH 1200;
-
--- AlterSequence
-ALTER SEQUENCE payment_id_seq RESTART WITH 1300;
-
--- AlterSequence
-ALTER SEQUENCE review_id_seq RESTART WITH 1400;
-
--- AlterSequence
-ALTER SEQUENCE notification_id_seq RESTART WITH 1500;
-
--- AlterSequence
-ALTER SEQUENCE address_id_seq RESTART WITH 1600;
-
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
@@ -305,6 +251,9 @@ CREATE UNIQUE INDEX "product_ar_name_key" ON "product"("ar_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "product_en_name_key" ON "product"("en_name");
+
+-- CreateIndex
+CREATE INDEX "image_product_id_color_id_idx" ON "image"("product_id", "color_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "stock_product_id_color_id_size_id_key" ON "stock"("product_id", "color_id", "size_id");
@@ -330,9 +279,6 @@ CREATE UNIQUE INDEX "shipping_order_id_key" ON "shipping"("order_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "shipping_address_id_key" ON "shipping"("address_id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "payment_order_id_key" ON "payment"("order_id");
-
 -- AddForeignKey
 ALTER TABLE "user_address" ADD CONSTRAINT "user_address_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -343,7 +289,10 @@ ALTER TABLE "user_address" ADD CONSTRAINT "user_address_address_id_fkey" FOREIGN
 ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product_image" ADD CONSTRAINT "product_image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "image" ADD CONSTRAINT "image_color_id_fkey" FOREIGN KEY ("color_id") REFERENCES "color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "image" ADD CONSTRAINT "image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stock" ADD CONSTRAINT "stock_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
