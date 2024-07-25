@@ -44,6 +44,7 @@ export var Endpoints;
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
     // images endpoints
+    Endpoints["findImages"] = "findImages";
     Endpoints["addImages"] = "addImages";
     Endpoints["deleteImage"] = "deleteImage";
     Endpoints["updateImage"] = "updateImage";
@@ -280,6 +281,10 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     // product images endpoints
+    [Endpoints.findImages]: {
+        url: '/api/v1/images',
+        method: 'get',
+    },
     [Endpoints.addImages]: {
         url: '/api/v1/images',
         method: 'post',

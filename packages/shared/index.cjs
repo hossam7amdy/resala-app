@@ -48,6 +48,7 @@ exports.Endpoints = void 0;
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
     // images endpoints
+    Endpoints["findImages"] = "findImages";
     Endpoints["addImages"] = "addImages";
     Endpoints["deleteImage"] = "deleteImage";
     Endpoints["updateImage"] = "updateImage";
@@ -284,6 +285,10 @@ const ENDPOINT_CONFIGS = {
         auth: true,
     },
     // product images endpoints
+    [exports.Endpoints.findImages]: {
+        url: '/api/v1/images',
+        method: 'get',
+    },
     [exports.Endpoints.addImages]: {
         url: '/api/v1/images',
         method: 'post',
@@ -829,6 +834,12 @@ const DeleteSizeSchema = zod.z.object({
     params: UpdateSizeSchema.shape.params,
 });
 // Image Schemas
+const FindImagesSchema = zod.z.object({
+    query: zod.z.object({
+        productId: zod.z.coerce.number().positive(),
+        colorId: zod.z.coerce.number().positive(),
+    }),
+});
 const CreateImageSchema = zod.z.object({
     body: zod.z.object({
         productId: zod.z.coerce.number().positive(),
@@ -952,6 +963,7 @@ exports.DeleteStockSchema = DeleteStockSchema;
 exports.DeleteUserSchema = DeleteUserSchema;
 exports.DeleteWishlistSchema = DeleteWishlistSchema;
 exports.ENDPOINT_CONFIGS = ENDPOINT_CONFIGS;
+exports.FindImagesSchema = FindImagesSchema;
 exports.ForgotPasswordSchema = ForgotPasswordSchema;
 exports.GetCategorySchema = GetCategorySchema;
 exports.GetOrderSchema = GetOrderSchema;
