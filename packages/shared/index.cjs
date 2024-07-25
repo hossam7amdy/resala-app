@@ -498,6 +498,8 @@ exports.OrderStatus = void 0;
 (function (OrderStatus) {
     OrderStatus["PENDING"] = "PENDING";
     OrderStatus["FULFILLED"] = "FULFILLED";
+    OrderStatus["SHIPPED"] = "SHIPPED";
+    OrderStatus["DELIVERED"] = "DELIVERED";
     OrderStatus["CANCELLED"] = "CANCELLED";
 })(exports.OrderStatus || (exports.OrderStatus = {}));
 exports.PaymentStatus = void 0;

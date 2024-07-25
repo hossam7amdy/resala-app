@@ -6,6 +6,8 @@ export declare enum Role {
 export declare enum OrderStatus {
     PENDING = "PENDING",
     FULFILLED = "FULFILLED",
+    SHIPPED = "SHIPPED",
+    DELIVERED = "DELIVERED",
     CANCELLED = "CANCELLED"
 }
 export declare enum PaymentStatus {
