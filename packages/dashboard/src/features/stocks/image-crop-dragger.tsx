@@ -1,37 +1,38 @@
 'use client';
 
-import { Upload } from 'antd';
+import { MAX_UPLOAD_IMAGE_COUNT } from '@/lib/constants';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Upload } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { useRef } from 'react';
 
-const MAX_COUNT = 5;
-
-interface UploadFormProps extends UploadProps {
-  curCount: number;
+interface ImageCropUploadProps extends UploadProps {
   fileList: UploadFile[];
 }
-export const ImageCropDragger: React.FC<UploadFormProps> = ({ curCount, fileList, ...props }) => {
-  const maxCountRef = useRef(MAX_COUNT - curCount);
-
-  const displayUpload = curCount < MAX_COUNT;
+export const ImageCropUpload: React.FC<ImageCropUploadProps> = ({ fileList, ...props }) => {
+  const displayUpload = fileList.length < MAX_UPLOAD_IMAGE_COUNT;
   return (
     <ImgCrop aspect={4 / 5}>
       <Upload
         disabled
-        maxCount={maxCountRef.current}
         name="images"
         accept="image/*"
         listType="picture-card"
         onPreview={() => null}
         fileList={fileList}
+        maxCount={MAX_UPLOAD_IMAGE_COUNT}
         showUploadList={{
           showRemoveIcon: true,
           showPreviewIcon: false,
+          removeIcon: file => {
+            return (
+              <Button type="link" icon={<DeleteOutlined />} disabled={file.status === 'removed'} />
+            );
+          },
         }}
         {...props}
       >
-        {displayUpload && `Upload (${curCount}/${MAX_COUNT})`}
+        {displayUpload && `Upload (${fileList.length}/${MAX_UPLOAD_IMAGE_COUNT})`}
       </Upload>
     </ImgCrop>
   );
