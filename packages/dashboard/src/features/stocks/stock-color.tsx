@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StockColor: React.FC<{ color: string }> = ({ color }) => {
+export const StockColor: React.FC<{ color: string }> = ({ color }) => {
   return (
     <div
       style={{
@@ -15,5 +15,3 @@ const StockColor: React.FC<{ color: string }> = ({ color }) => {
     />
   );
 };
-
-export default StockColor;

@@ -1,25 +1,19 @@
 import { deleteOrder } from '@/actions/order';
-import { useMutation } from '@/hooks';
+import { useMutation, useNotifications } from '@/hooks';
 import type { GetOrderResponse } from '@resala/shared';
-import { App, Button, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import React from 'react';
 
 const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ order }) => {
-  const { notification } = App.useApp();
+  const notification = useNotifications();
 
   const { mutate } = useMutation({
     mutationFn: deleteOrder,
     onSuccess: () => {
-      notification.success({
-        message: 'Success',
-        description: 'Ordered cancelled successfully',
-      });
+      notification.success('Ordered cancelled successfully');
     },
     onError: error => {
-      notification.error({
-        message: error.name,
-        description: error.message,
-      });
+      notification.error(error.message);
     },
   });
 

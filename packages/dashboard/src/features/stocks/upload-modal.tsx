@@ -1,12 +1,13 @@
 import { Tooltip } from '@/components';
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetStocksListResponse } from '@resala/shared';
-import { Button, Modal } from 'antd';
+import { Button, Divider, Modal } from 'antd';
 import React, { useState } from 'react';
 
-import UploadForm from './upload-form';
+import { ImagesList } from './images-list';
+import { UploadForm } from './upload-form';
 
-const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
+export const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] }> = ({
   stock,
 }) => {
   const [open, setOpen] = useState(false);
@@ -27,17 +28,32 @@ const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stocks'][0] 
         open={open}
         destroyOnClose
         title="Upload Images"
+        maskClosable={false}
         onCancel={() => setOpen(false)}
         footer={null}
+        width={600}
       >
-        <UploadForm
-          id={stock.product.id.toString()}
-          colorId={stock.color.id.toString()}
-          onCancel={() => setOpen(false)}
-        />
+        {stock.images.length ? (
+          <ImagesList
+            images={stock.images.map(img => ({
+              ...img,
+              colorId: stock.color.id,
+              productId: stock.product.id,
+            }))}
+          />
+        ) : null}
+
+        {stock.images.length && !moreThanFiveImages ? <Divider /> : null}
+
+        {!moreThanFiveImages && (
+          <UploadForm
+            images={stock.images}
+            colorId={stock.color.id}
+            productId={stock.product.id}
+            onCancel={() => setOpen(false)}
+          />
+        )}
       </Modal>
     </>
   );
 };
-
-export default UploadModal;

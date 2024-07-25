@@ -1,11 +1,11 @@
 'use client';
 
 import { updateOrderStatus } from '@/actions/order';
-import { useMutation } from '@/hooks';
+import { useMutation, useNotifications } from '@/hooks';
 import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
 import type { GetOrderResponse } from '@resala/shared';
 import { OrderStatus as OrderStatusEnum } from '@resala/shared';
-import { App, Button, Flex, Form, Select, Tag } from 'antd';
+import { Button, Flex, Form, Select, Tag } from 'antd';
 import { useState } from 'react';
 
 interface OrderStatusProps {
@@ -13,22 +13,16 @@ interface OrderStatusProps {
   status: GetOrderResponse['data']['orderStatus'];
 }
 const OrderStatus: React.FC<OrderStatusProps> = ({ id, status }) => {
-  const { notification } = App.useApp();
+  const notifications = useNotifications();
   const [editMode, setEditMode] = useState(false);
   const { isLoading, mutate } = useMutation({
     mutationFn: updateOrderStatus.bind(null, id),
     onSuccess: () => {
-      notification.success({
-        message: 'Success',
-        description: 'Order status has been updated successfully',
-      });
+      notifications.success('Order status has been updated successfully');
       setEditMode(false);
     },
     onError: error => {
-      notification.error({
-        message: 'Error',
-        description: error.message,
-      });
+      notifications.error(error.message);
     },
   });
 

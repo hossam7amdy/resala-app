@@ -4,7 +4,7 @@ import { DebounceSelect } from '@/components';
 import { listProductsPaginated } from '@/data/product';
 import FormItem from 'antd/es/form/FormItem';
 
-const SelectProduct: React.FC = () => {
+export const SelectProduct: React.FC = () => {
   return (
     <FormItem required name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
       <DebounceSelect
@@ -22,5 +22,3 @@ const SelectProduct: React.FC = () => {
     </FormItem>
   );
 };
-
-export default SelectProduct;
