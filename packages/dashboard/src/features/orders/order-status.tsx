@@ -1,7 +1,7 @@
 'use client';
 
 import { updateOrderStatus } from '@/actions/order';
-import { useMutation, useNotifications } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import { CheckOutlined, CloseOutlined, FormOutlined } from '@ant-design/icons';
 import type { GetOrderResponse } from '@resala/shared';
 import { OrderStatus as OrderStatusEnum } from '@resala/shared';
@@ -13,7 +13,7 @@ interface OrderStatusProps {
   status: GetOrderResponse['data']['orderStatus'];
 }
 const OrderStatus: React.FC<OrderStatusProps> = ({ id, status }) => {
-  const notifications = useNotifications();
+  const notifications = useNotification();
   const [editMode, setEditMode] = useState(false);
   const { isLoading, mutate } = useMutation({
     mutationFn: updateOrderStatus.bind(null, id),
@@ -41,6 +41,16 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ id, status }) => {
                 label: 'Fulfilled',
                 value: OrderStatusEnum.FULFILLED,
                 disabled: status === 'FULFILLED',
+              },
+              {
+                label: 'Shipped',
+                value: OrderStatusEnum.SHIPPED,
+                disabled: status === 'SHIPPED',
+              },
+              {
+                label: 'Delivered',
+                value: OrderStatusEnum.DELIVERED,
+                disabled: status === 'DELIVERED',
               },
             ]}
           />

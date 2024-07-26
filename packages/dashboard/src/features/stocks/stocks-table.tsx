@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteStock } from '@/actions/stock';
-import { DeleteButton, Pagination } from '@/components';
+import { Pagination, PopconfirmDeleteButton } from '@/components';
 import type { GetStocksListResponse } from '@resala/shared';
 import { Flex, Space, Table } from 'antd';
 import React from 'react';
@@ -87,7 +87,9 @@ export const StocksTable: React.FC<GetStocksListResponse['data']> = ({ paginatio
             render: (_, stock) => (
               <Space>
                 <UploadModal stock={stock} />
-                <DeleteButton deleteAction={deleteStock.bind(null, stock.sizes[0].stockId)} />
+                <PopconfirmDeleteButton
+                  onConfirmDelete={() =>deleteStock(stock.sizes[0].stockId)}
+                />
               </Space>
             ),
             onCell: () => ({

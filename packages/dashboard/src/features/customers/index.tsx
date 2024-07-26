@@ -1,2 +1,2 @@
-export { default as CustomersTable } from './customers-table';
-export { default as EditForm } from './edit-form';
+export * from './edit-form';
+export * from './customers-table';

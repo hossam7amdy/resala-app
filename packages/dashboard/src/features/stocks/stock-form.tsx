@@ -3,7 +3,7 @@
 import { uploadImages } from '@/actions/image';
 import { createStock, updateStock } from '@/actions/stock';
 import { listImages } from '@/data/images';
-import { useMutation, useNotifications } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import type { Image } from '@resala/shared';
 import { Button, Flex, Form, InputNumber } from 'antd';
 import type { UploadFile } from 'antd';
@@ -38,8 +38,11 @@ export const StockForm: React.FC<StockFormProps> = ({
   selectProduct,
 }) => {
   const router = useRouter();
+
   const [form] = Form.useForm<FormValues>();
-  const notification = useNotifications();
+
+  const notification = useNotification();
+
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const colorId = Form.useWatch('colorId', form);
@@ -67,15 +70,15 @@ export const StockForm: React.FC<StockFormProps> = ({
 
     const promiseAll: Promise<unknown>[] = [submit(values)];
 
-    if (fileList.length) {
+    const newFiles = fileList.filter(file => file.status === 'done' && !file.url);
+
+    if (newFiles.length) {
       const formData = new FormData();
 
       formData.append('colorId', colorId.toString());
       formData.append('productId', productId.toString());
-      fileList.forEach(file => {
-        if (file.status !== 'removed') {
-          formData.append('images', file.originFileObj!);
-        }
+      newFiles.forEach(file => {
+        formData.append('images', file.originFileObj!);
       });
 
       promiseAll.push(uploadImages(formData));
@@ -88,11 +91,12 @@ export const StockForm: React.FC<StockFormProps> = ({
     mutationFn: handleSubmit,
     onSuccess: () => {
       setFileList([]);
+
       form.resetFields();
 
-      notification.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
-
       !isCreate && router.back(); // Redirect to the previous page if it's an update
+
+      notification.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
     },
     onError: error => {
       notification.error(error.message);

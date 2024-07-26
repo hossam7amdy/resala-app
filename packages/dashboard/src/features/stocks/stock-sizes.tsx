@@ -1,6 +1,6 @@
 import { deleteStock } from '@/actions/stock';
 import { Tooltip } from '@/components';
-import DeleteButton from '@/components/delete-button';
+import { PopconfirmDeleteButton } from '@/components';
 import ROUTES from '@/lib/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { GetStockResponse } from '@resala/shared';
@@ -46,7 +46,7 @@ export const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> 
               </Button>
             </Tooltip>
 
-            <DeleteButton deleteAction={deleteStock.bind(null, stockId)} />
+            <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stockId)} />
           </Space>
         ),
       },

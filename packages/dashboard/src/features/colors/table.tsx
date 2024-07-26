@@ -1,5 +1,5 @@
 import { deleteColor } from '@/actions/color';
-import { DeleteButton } from '@/components';
+import { PopconfirmDeleteButton } from '@/components';
 import { StockColor } from '@/features/stocks';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -33,7 +33,7 @@ const Table = ({ colors }: { colors: GetColorsListResponse['data'] }) => {
             <Link href={ROUTES.EDIT_COLOR(color.id)}>
               <EditFilled />
             </Link>
-            <DeleteButton deleteAction={deleteColor.bind(null, color.id)} />
+            <PopconfirmDeleteButton onConfirmDelete={() => deleteColor(color.id)} />
           </Space>
         ),
         createdAt: formatDate(color.createdAt),

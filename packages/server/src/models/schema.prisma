@@ -194,6 +194,7 @@ model OrderItem {
   size      String   @db.VarChar(5)
   quantity  Int
   price     Decimal  @map("unit_price") @db.Decimal(9, 2)
+  imageUrl  String?  @map("image_url") @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   order     Order    @relation(fields: [orderId], references: [id])
