@@ -1,20 +1,26 @@
 'use client';
 
 import { forgotPassword } from '@/actions/auth';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { Button, Form, Input } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import Text from 'antd/es/typography/Text';
 
 const EmailForm = () => {
-  const { error, pending, dispatch } = useSubmitForm(forgotPassword);
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: forgotPassword,
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
       size="large"
       name="forgot-password"
       layout="vertical"
-      onFinish={dispatch}
+      onFinish={mutate}
       autoComplete="off"
     >
       <FormItem
@@ -25,9 +31,8 @@ const EmailForm = () => {
       >
         <Input placeholder="Enter your email" autoFocus />
       </FormItem>
-      {error?.message && <Text type="danger">{error.message}</Text>}
       <FormItem noStyle>
-        <Button type="primary" block htmlType="submit" loading={pending}>
+        <Button type="primary" block htmlType="submit" loading={isLoading}>
           Reset Password
         </Button>
       </FormItem>

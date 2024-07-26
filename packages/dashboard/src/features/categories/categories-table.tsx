@@ -1,5 +1,5 @@
 import { deleteCategory } from '@/actions/category';
-import { Tooltip } from '@/components';
+import { DeleteButton, Tooltip } from '@/components';
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -7,8 +7,6 @@ import { EditFilled } from '@ant-design/icons';
 import { type GetCategoryResponse } from '@resala/shared';
 import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
-
-import DeleteButton from '../../components/delete-button';
 
 export const CategoryTable = async ({ query }: { query: string }) => {
   const categories = await listAllCategories();

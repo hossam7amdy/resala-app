@@ -1,12 +1,10 @@
 'use client';
 
 import { createSize, updateSize } from '@/actions/size';
-import { ErrorMessage } from '@/components';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { type GetSizeResponse, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 
 interface SizeFormProps {
@@ -17,8 +15,24 @@ const SizeForm = ({ size }: SizeFormProps) => {
   const submit = isEdit ? updateSize.bind(null, size.id) : createSize;
 
   const [form] = useForm();
+
   const router = useRouter();
-  const { error, pending, dispatch } = useSubmitForm(submit, form);
+
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: submit,
+    onSuccess: () => {
+      form.resetFields();
+
+      notification.success('Customer updated successfully');
+
+      isEdit ? router.back() : null;
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
@@ -27,9 +41,9 @@ const SizeForm = ({ size }: SizeFormProps) => {
       size="large"
       layout="vertical"
       initialValues={size}
-      onFinish={dispatch}
+      onFinish={mutate}
     >
-      <FormItem
+      <Form.Item
         validateFirst
         name="name"
         label="Size Name"
@@ -42,20 +56,18 @@ const SizeForm = ({ size }: SizeFormProps) => {
         ]}
       >
         <Input placeholder="XXL" />
-      </FormItem>
+      </Form.Item>
 
-      {error?.message && <ErrorMessage message={error.message} />}
-
-      <FormItem>
+      <Form.Item>
         <Flex gap={10}>
-          <Button type="primary" htmlType="submit" block loading={pending}>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             {isEdit ? 'Update' : 'Create'}
           </Button>
-          <Button type="default" onClick={router.back} block disabled={pending}>
+          <Button type="default" onClick={router.back} block disabled={isLoading}>
             Cancel
           </Button>
         </Flex>
-      </FormItem>
+      </Form.Item>
     </Form>
   );
 };
