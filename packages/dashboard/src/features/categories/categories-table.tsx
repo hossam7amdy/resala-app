@@ -1,5 +1,5 @@
 import { deleteCategory } from '@/actions/category';
-import { DeleteButton, Tooltip } from '@/components';
+import { PopconfirmDeleteButton, Tooltip } from '@/components';
 import { listAllCategories } from '@/data/category';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
@@ -49,7 +49,7 @@ const renderRow = (category: GetCategoryResponse['data']) => {
             </Tooltip>
           }
         />
-        <DeleteButton deleteAction={deleteCategory.bind(null, String(category.id))} />
+        <PopconfirmDeleteButton onConfirmDelete={() => deleteCategory(String(category.id))} />
       </Flex>
     ),
   };

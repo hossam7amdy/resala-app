@@ -2,71 +2,45 @@
 
 import { useMutation, useNotification } from '@/hooks';
 import { DeleteFilled } from '@ant-design/icons';
-import { Button, type ButtonProps, Flex, Form, Popover } from 'antd';
-import React, { useState } from 'react';
+import { Button, type ButtonProps, Popconfirm } from 'antd';
+import React from 'react';
 
 import { Tooltip } from '.';
 
-interface DeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  deleteAction: () => Promise<any>;
+interface PopconfirmDeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
+  onConfirmDelete: () => Promise<void>;
 }
 
-export const DeleteButton: React.FC<DeleteButtonProps> = ({ deleteAction, ...props }) => {
-  const [open, setOpen] = useState(false);
-
+export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
+  onConfirmDelete,
+  ...props
+}) => {
   const notification = useNotification();
 
-  const hide = () => {
-    setOpen(false);
-  };
-
   const { mutate, isLoading } = useMutation({
-    mutationFn: deleteAction,
-    onSuccess: hide,
+    mutationFn: onConfirmDelete,
+    onSuccess: () => {
+      notification.success('Deleted successfully');
+    },
     onError: error => {
       notification.error(error.message);
     },
   });
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-  };
-
-  const DeleteForm = (
-    <Form name="delete-form" onFinish={mutate}>
-      <Form.Item>
-        <Flex gap={5} justify="flex-end">
-          <Button size="small" onClick={hide} disabled={isLoading}>
-            Cancel
-          </Button>
-          <Button size="small" htmlType="submit" type="primary" danger loading={isLoading}>
-            Delete
-          </Button>
-        </Flex>
-      </Form.Item>
-    </Form>
-  );
-
   return (
-    <Popover
+    <Popconfirm
+      open={isLoading || undefined}
       placement="topLeft"
-      content={DeleteForm}
       title="Are you sure?"
       trigger="click"
-      open={open}
-      onOpenChange={handleOpenChange}
+      onConfirm={mutate}
+      okText="Yes"
+      okButtonProps={{ danger: true, loading: isLoading }}
+      cancelButtonProps={{ disabled: isLoading }}
     >
       <Tooltip title="Delete">
-        <Button
-          size="small"
-          danger
-          type="link"
-          onClick={() => setOpen(true)}
-          icon={<DeleteFilled />}
-          {...props}
-        />
+        <Button size="small" danger type="link" icon={<DeleteFilled />} {...props} />
       </Tooltip>
-    </Popover>
+    </Popconfirm>
   );
 };

@@ -16,63 +16,39 @@ const revalidateCache = (productId: string) => {
 };
 
 export const uploadImages = async (formData: FormData) => {
-  try {
-    const images = formData.getAll('images') || [];
-    formData.delete('images');
+  const images = formData.getAll('images') || [];
+  formData.delete('images');
 
-    const optimizedImages = await optimizeImages(images as File[]);
+  const optimizedImages = await optimizeImages(images as File[]);
 
-    optimizedImages.forEach(optimizedImage => {
-      formData.append('images', optimizedImage);
-    });
+  optimizedImages.forEach(optimizedImage => {
+    formData.append('images', optimizedImage);
+  });
 
-    const response = await callEndpoint(ENDPOINT_CONFIGS.addImages, { body: formData });
+  const response = await callEndpoint(ENDPOINT_CONFIGS.addImages, { body: formData });
 
-    revalidateCache(formData.get('productId') as string);
+  revalidateCache(formData.get('productId') as string);
 
-    return response;
-  } catch (e) {
-    const error = e as Error;
-    return {
-      message: error.message,
-      success: false,
-    };
-  }
+  return response;
 };
 
 export const setDefaultImage = async (imageId: string, productId: string) => {
-  try {
-    const response = await callEndpoint(ENDPOINT_CONFIGS.updateImage, {
-      params: { imageId: Number(imageId) },
-    });
+  const response = await callEndpoint(ENDPOINT_CONFIGS.updateImage, {
+    params: { imageId: Number(imageId) },
+  });
 
-    revalidateCache(productId);
+  revalidateCache(productId);
 
-    return response;
-  } catch (e) {
-    const error = e as Error;
-    return {
-      message: error.message,
-      success: false,
-    };
-  }
+  return response;
 };
 
 export const deleteImage = async (imageId: string, productId: string) => {
-  try {
-    const response = await callEndpoint<DeleteImageRequest, DeleteImageResponse>(
-      ENDPOINT_CONFIGS.deleteImage,
-      { params: { imageId: Number(imageId) } }
-    );
+  const response = await callEndpoint<DeleteImageRequest, DeleteImageResponse>(
+    ENDPOINT_CONFIGS.deleteImage,
+    { params: { imageId: Number(imageId) } }
+  );
 
-    revalidateCache(productId);
+  revalidateCache(productId);
 
-    return response;
-  } catch (e) {
-    const error = e as Error;
-    return {
-      message: error.message,
-      success: false,
-    };
-  }
+  return response;
 };

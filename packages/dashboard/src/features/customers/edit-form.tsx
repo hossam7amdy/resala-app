@@ -105,6 +105,7 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
       >
         <Select
           placeholder="Select Role"
+          disabled={customer.role === Role.ADMIN}
           options={[
             { label: 'Admin', value: Role.ADMIN },
             { label: 'Moderator', value: Role.MODERATOR },

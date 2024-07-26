@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteProduct } from '@/actions/product';
-import { DeleteButton } from '@/components';
+import { PopconfirmDeleteButton } from '@/components';
 import { Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
@@ -75,7 +75,7 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
                 </Button>
               </Tooltip>
 
-              <DeleteButton deleteAction={deleteProduct.bind(null, product.id)} />
+              <PopconfirmDeleteButton onConfirmDelete={() => deleteProduct(product.id)} />
             </Space>
           ),
         },
