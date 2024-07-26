@@ -146,10 +146,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         items: 4,
       },
       940: {
-        items: 8,
+        items: 4,
       },
       1150: {
-        items: 6,
+        items: 4,
       },
     },
     nav: true,
