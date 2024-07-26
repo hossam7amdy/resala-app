@@ -347,7 +347,13 @@ export const UpdateOrderStatusSchema = z.object({
     orderId: z.coerce.number().positive(),
   }),
   body: z.object({
-    status: z.enum([OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.CANCELLED]),
+    status: z.enum([
+      OrderStatus.PENDING,
+      OrderStatus.FULFILLED,
+      OrderStatus.SHIPPED,
+      OrderStatus.DELIVERED,
+      OrderStatus.CANCELLED,
+    ]),
   }),
 });
 
