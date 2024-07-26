@@ -132,10 +132,10 @@
 
 
 
-<section *ngIf="isEdit == true" class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
+<section *ngIf="getUserAddress.length == 0 " class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
     <h1 class="h2 step-one">Step One ... </h1>
     <h3 class="h3 mt-0">Information Delivery</h3>
-    <!-- *ngIf="getUserAddress.Lenght == 0" -->
+
     <form [formGroup]="addressForm" (ngSubmit)="handleForm(addressForm , btn)" class="row g-3 px-5">
         <div class="form-item col-4">
             <label for="firstName">First Name</label>
@@ -259,7 +259,7 @@
 </section>
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
-<section *ngIf="addressId != '' " class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
+<section *ngIf="addressId != '' || isRegisterd  " class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
     <h1 class="h2 step-one">Step Two ... </h1>
     <h3 class="h3 mt-0">Payment Method</h3>
     <form [formGroup]="payForm" class="row g-3 px-5">

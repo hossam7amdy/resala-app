@@ -203,11 +203,12 @@ section .overlay {
 
 .parent-img-content {
   position: relative;
+  width: 300px;
 }
 
 .img-content {
   position: relative;
-  width: 100%;
+  width: 300px;
   height: 100%;
   padding: 0;
 }
