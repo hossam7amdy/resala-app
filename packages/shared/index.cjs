@@ -894,7 +894,13 @@ const UpdateOrderStatusSchema = zod.z.object({
         orderId: zod.z.coerce.number().positive(),
     }),
     body: zod.z.object({
-        status: zod.z.enum([exports.OrderStatus.PENDING, exports.OrderStatus.FULFILLED, exports.OrderStatus.CANCELLED]),
+        status: zod.z.enum([
+            exports.OrderStatus.PENDING,
+            exports.OrderStatus.FULFILLED,
+            exports.OrderStatus.SHIPPED,
+            exports.OrderStatus.DELIVERED,
+            exports.OrderStatus.CANCELLED,
+        ]),
     }),
 });
 const GetOrderSchema = zod.z.object({

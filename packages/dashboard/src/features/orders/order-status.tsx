@@ -42,6 +42,16 @@ const OrderStatus: React.FC<OrderStatusProps> = ({ id, status }) => {
                 value: OrderStatusEnum.FULFILLED,
                 disabled: status === 'FULFILLED',
               },
+              {
+                label: 'Shipped',
+                value: OrderStatusEnum.SHIPPED,
+                disabled: status === 'SHIPPED',
+              },
+              {
+                label: 'Delivered',
+                value: OrderStatusEnum.DELIVERED,
+                disabled: status === 'DELIVERED',
+              },
             ]}
           />
         </Form.Item>
