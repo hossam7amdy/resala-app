@@ -1,4 +1,5 @@
 import { Search } from '@/components';
+import { listAllCategories } from '@/data/category';
 import { CategoryTable } from '@/features/categories/categories-table';
 import ROUTES from '@/lib/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 const CategoryPage = async ({ searchParams }: { searchParams: { query?: string } }) => {
   const query = searchParams.query || '';
+  const categories = await listAllCategories()
 
   return (
     <Row gutter={[10, 30]} style={{ padding: 20 }}>
@@ -28,7 +30,7 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
       </Col>
       <Col span={24}>
         <Suspense fallback={<Table loading />}>
-          <CategoryTable query={query} />
+          <CategoryTable query={query} categories={categories}/>
         </Suspense>
       </Col>
     </Row>

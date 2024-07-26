@@ -1,8 +1,8 @@
 import type {
   CreateCategoryRequest,
-  GetCategoriesListResponse,
   GetCategoryProductsResponse,
   GetCategoryResponse,
+  ListCategoriesResponse,
   UpdateCategoryRequest,
 } from '@resala/shared';
 
@@ -47,7 +47,7 @@ export default class CategoryService {
     return category;
   }
 
-  async listCategories(): Promise<GetCategoriesListResponse['data']> {
+  async listCategories(): Promise<ListCategoriesResponse['data']> {
     return await this.inventoryRepo.category.list();
   }
 

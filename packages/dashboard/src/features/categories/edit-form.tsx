@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ category }) => {
+  const [form] = Form.useForm();
   const router = useRouter();
 
   const notification = useNotification();
@@ -15,7 +16,10 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
   const { isLoading, mutate } = useMutation({
     mutationFn: updateCategory.bind(null, String(category.id)),
     onSuccess: () => {
+      form.resetFields();
+
       notification.success('Category updated successfully');
+
       router.back();
     },
     onError: error => {
@@ -25,6 +29,7 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
 
   return (
     <Form
+      form={form}
       size="large"
       name="create-category"
       layout="vertical"

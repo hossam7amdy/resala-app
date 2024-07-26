@@ -6,7 +6,6 @@ import ROUTES from '@/lib/routes';
 import type { DeleteProductRequest, DeleteProductResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export const addProduct = async (formData: FormData) => {
   const image = formData.get('image');
@@ -34,13 +33,13 @@ export const updateProduct = async (id: number | string, formData: FormData) => 
     formData.append('image', optimizedImage[0]);
   }
 
-  await callEndpoint(ENDPOINT_CONFIGS.updateProduct, {
+  const response = await callEndpoint(ENDPOINT_CONFIGS.updateProduct, {
     params: { productId: +id },
     body: formData,
   });
 
   revalidatePath(ROUTES.PRODUCTS);
-  redirect(ROUTES.PRODUCTS);
+  return response;
 };
 
 export const deleteProduct = async (id: number | string) => {
