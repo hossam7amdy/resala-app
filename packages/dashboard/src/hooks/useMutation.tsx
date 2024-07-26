@@ -6,6 +6,7 @@ type MutationOptions<Data, Variables, Context = unknown> = {
   onMutate?: (variables: Variables) => Context;
   onError?: (error: Error) => void;
   onSuccess?: (data: Data, variables: Variables, context: Context) => void;
+  onFinally?: () => void;
 };
 
 // Output of the hook
@@ -19,13 +20,13 @@ type MutationResult<Data, Variables> = {
 };
 
 // Actual Hook Implementation
-// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function useMutation<Data, Variables, Context = unknown>({
+export const useMutation = <Data, Variables, Context = unknown>({
   mutationFn,
   onMutate = () => ({}) as Context,
   onError = () => {},
   onSuccess = () => {},
-}: MutationOptions<Data, Variables, Context>): MutationResult<Data, Variables> {
+  onFinally = () => {},
+}: MutationOptions<Data, Variables, Context>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -57,9 +58,10 @@ export function useMutation<Data, Variables, Context = unknown>({
         onError(error as Error);
       } finally {
         setIsLoading(false);
+        onFinally();
       }
     },
-    [mutationFn, onMutate, onError, onSuccess]
+    [onMutate, mutationFn, onSuccess, onError, onFinally]
   );
 
   return {
@@ -70,4 +72,4 @@ export function useMutation<Data, Variables, Context = unknown>({
     data,
     error,
   };
-}
+};

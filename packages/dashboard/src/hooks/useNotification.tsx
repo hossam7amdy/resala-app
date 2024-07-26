@@ -1,6 +1,6 @@
 import { App } from 'antd';
 
-export const useNotifications = () => {
+export const useNotification = () => {
   const { notification } = App.useApp();
 
   return {
