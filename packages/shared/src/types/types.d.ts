@@ -112,6 +112,7 @@ export type OrderItem = {
     color: string;
     size: string;
     price: number | Decimal | string | any;
+    imageUrl: string | null;
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
