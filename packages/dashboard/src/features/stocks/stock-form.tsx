@@ -3,7 +3,7 @@
 import { uploadImages } from '@/actions/image';
 import { createStock, updateStock } from '@/actions/stock';
 import { listImages } from '@/data/images';
-import { useMutation, useNotifications } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import type { Image } from '@resala/shared';
 import { Button, Flex, Form, InputNumber } from 'antd';
 import type { UploadFile } from 'antd';
@@ -39,7 +39,7 @@ export const StockForm: React.FC<StockFormProps> = ({
 }) => {
   const router = useRouter();
   const [form] = Form.useForm<FormValues>();
-  const notification = useNotifications();
+  const notification = useNotification();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const colorId = Form.useWatch('colorId', form);

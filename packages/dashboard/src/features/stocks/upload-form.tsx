@@ -1,5 +1,5 @@
 import { uploadImages } from '@/actions/image';
-import { useMutation, useNotifications } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import type { Image } from '@resala/shared';
 import { Button, Flex, Form } from 'antd';
 import type { UploadFile } from 'antd';
@@ -15,7 +15,7 @@ interface UploadFormProps {
 }
 export const UploadForm: React.FC<UploadFormProps> = ({ images, colorId, productId, onCancel }) => {
   const [form] = Form.useForm();
-  const notification = useNotifications();
+  const notification = useNotification();
   const [fileList, setFileList] = useState<UploadFile[]>(
     images.map(img => ({
       uid: img.imageKey,
