@@ -1,20 +1,29 @@
 'use client';
 
 import { createCategory } from '@/actions/category';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { validationPatterns } from '@resala/shared';
 import type { Category } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 
-import ErrorMessage from '../../components/error-message';
-
-const CreateForm = ({ category }: { category?: Category }) => {
+export const CreateForm = ({ category }: { category?: Category }) => {
   const router = useRouter();
+
   const [form] = Form.useForm();
 
-  const { error, pending, dispatch } = useSubmitForm(createCategory, form);
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: createCategory,
+    onSuccess: () => {
+      form.resetFields();
+      notification.success('Category created successfully');
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
@@ -22,13 +31,13 @@ const CreateForm = ({ category }: { category?: Category }) => {
       size="large"
       name="create-category"
       layout="vertical"
-      onFinish={dispatch}
+      onFinish={mutate}
       initialValues={{
         enName: category?.enName,
         arName: category?.arName,
       }}
     >
-      <FormItem
+      <Form.Item
         required
         rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
         name="enName"
@@ -36,8 +45,8 @@ const CreateForm = ({ category }: { category?: Category }) => {
         style={{ flex: 1 }}
       >
         <Input placeholder="Enter English name" autoFocus />
-      </FormItem>
-      <FormItem
+      </Form.Item>
+      <Form.Item
         required
         rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
         name="arName"
@@ -45,21 +54,19 @@ const CreateForm = ({ category }: { category?: Category }) => {
         style={{ direction: 'rtl', flex: 1 }}
       >
         <Input placeholder="أكتب الأسم بالعربية" min={3} max={10} />
-      </FormItem>
-
-      {error?.message && <ErrorMessage message={error.message} />}
+      </Form.Item>
 
       <Flex gap={10}>
-        <FormItem noStyle>
-          <Button type="primary" block htmlType="submit" loading={pending}>
+        <Form.Item noStyle>
+          <Button type="primary" block htmlType="submit" loading={isLoading}>
             Create
           </Button>
-        </FormItem>
-        <FormItem noStyle>
-          <Button block disabled={pending} onClick={() => router.back()}>
+        </Form.Item>
+        <Form.Item noStyle>
+          <Button block disabled={isLoading} onClick={() => router.back()}>
             Cancel
           </Button>
-        </FormItem>
+        </Form.Item>
       </Flex>
     </Form>
   );

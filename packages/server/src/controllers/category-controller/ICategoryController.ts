@@ -3,11 +3,11 @@ import type {
   CreateCategoryResponse,
   DeleteCategoryRequest,
   DeleteCategoryResponse,
-  GetCategoriesListRequest,
-  GetCategoriesListResponse,
   GetCategoryProductsResponse,
   GetCategoryRequest,
   GetCategoryResponse,
+  ListCategoriesRequest,
+  ListCategoriesResponse,
   UpdateCategoryRequest,
   UpdateCategoryResponse,
 } from '@resala/shared';
@@ -24,8 +24,8 @@ export type GetCategory = ExpressHandlerWithParams<
 
 export type ListCategories = ExpressHandler<
   undefined,
-  GetCategoriesListResponse,
-  GetCategoriesListRequest['query'],
+  ListCategoriesResponse,
+  ListCategoriesRequest['query'],
   LocalUser
 >;
 

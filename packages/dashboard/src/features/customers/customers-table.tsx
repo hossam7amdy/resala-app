@@ -1,15 +1,15 @@
 'use client';
 
 import { deleteUser } from '@/actions/user';
-import { DeleteButton, Pagination, Tooltip } from '@/components';
+import { Pagination, PopconfirmDeleteButton, Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
-import { formatDate } from '@/lib/util';
+import { formatDate, formatTime } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
 import type { ListUsersResponse } from '@resala/shared';
 import { Button, Flex, Space, Table, Tag } from 'antd';
 import Link from 'next/link';
 
-const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
+export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
       <Table
@@ -34,7 +34,14 @@ const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination
               {user.isVerified ? 'Yes' : 'No'}
             </Tag>
           ),
-          lastLogin: user.lastLogin ? formatDate(user.lastLogin) : <Tag color="warning">Never</Tag>,
+          lastLogin: user.lastLogin ? (
+            <Flex vertical>
+              <span>{formatDate(user.lastLogin)}</span>
+              <span>{formatTime(user.lastLogin)}</span>
+            </Flex>
+          ) : (
+            <Tag color="warning">Never</Tag>
+          ),
           createdAt: formatDate(user.createdAt),
           actions: (
             <Space>
@@ -46,7 +53,10 @@ const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination
                 </Button>
               </Tooltip>
 
-              <DeleteButton deleteAction={deleteUser.bind(null, user.id)} />
+              <PopconfirmDeleteButton
+                onConfirmDelete={() => deleteUser(user.id)}
+                disabled={user.role === 'ADMIN'}
+              />
             </Space>
           ),
         }))}
@@ -57,5 +67,3 @@ const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination
     </Flex>
   );
 };
-
-export default CustomersTable;

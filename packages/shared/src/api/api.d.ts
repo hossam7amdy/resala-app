@@ -83,8 +83,8 @@ export type GetCategoryRequest = z.infer<typeof Schemas.GetCategorySchema>;
 export type GetCategoryResponse = DefaultResponseBody & {
     data: Category;
 };
-export type GetCategoriesListRequest = DefaultRequestQuery;
-export type GetCategoriesListResponse = DefaultResponseBody & {
+export type ListCategoriesRequest = DefaultRequestQuery;
+export type ListCategoriesResponse = DefaultResponseBody & {
     data: GetCategoryResponse['data'][];
 };
 export type CreateCategoryRequest = z.infer<typeof Schemas.CreateCategorySchema>;

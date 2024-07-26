@@ -1,28 +1,36 @@
 'use client';
 
 import { updateUser } from '@/actions/user';
-import { ErrorMessage } from '@/components';
-import { useSubmitForm } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import { Role, type User, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 interface EditFormProps {
   customer: Partial<User>;
 }
 
-const EditForm: React.FC<EditFormProps> = ({ customer }) => {
-  const [form] = Form.useForm();
+export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
   const router = useRouter();
-  const submit = updateUser.bind(null, customer.id!);
-  const { isSuccess, error, pending, dispatch } = useSubmitForm(submit, form);
 
-  useEffect(() => {
-    if (isSuccess) {
+  const [form] = Form.useForm();
+
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: updateUser.bind(null, customer.id!),
+    onSuccess: () => {
+      notification.success('Customer updated successfully');
+
+      form.resetFields();
+
       router.back();
-    }
-  }, [isSuccess, router]);
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
@@ -31,7 +39,7 @@ const EditForm: React.FC<EditFormProps> = ({ customer }) => {
       size="large"
       layout="vertical"
       initialValues={{ ...customer }}
-      onFinish={dispatch}
+      onFinish={mutate}
     >
       <Flex gap={10}>
         <Form.Item
@@ -97,6 +105,7 @@ const EditForm: React.FC<EditFormProps> = ({ customer }) => {
       >
         <Select
           placeholder="Select Role"
+          disabled={customer.role === Role.ADMIN}
           options={[
             { label: 'Admin', value: Role.ADMIN },
             { label: 'Moderator', value: Role.MODERATOR },
@@ -105,14 +114,12 @@ const EditForm: React.FC<EditFormProps> = ({ customer }) => {
         />
       </Form.Item>
 
-      {error?.message && <ErrorMessage message={error.message} />}
-
       <Form.Item>
         <Flex gap={10}>
-          <Button type="primary" htmlType="submit" block loading={pending}>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             Update
           </Button>
-          <Button type="default" onClick={router.back} block disabled={pending}>
+          <Button type="default" onClick={router.back} block disabled={isLoading}>
             Cancel
           </Button>
         </Flex>
@@ -120,5 +127,3 @@ const EditForm: React.FC<EditFormProps> = ({ customer }) => {
     </Form>
   );
 };
-
-export default EditForm;

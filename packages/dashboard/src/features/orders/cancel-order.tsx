@@ -1,11 +1,11 @@
 import { deleteOrder } from '@/actions/order';
-import { useMutation, useNotifications } from '@/hooks';
+import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse } from '@resala/shared';
 import { Button, Popconfirm } from 'antd';
 import React from 'react';
 
 const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ order }) => {
-  const notification = useNotifications();
+  const notification = useNotification();
 
   const { mutate } = useMutation({
     mutationFn: deleteOrder,

@@ -1133,25 +1133,25 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
         orderId: number;
     }>;
     body: z.ZodObject<{
-        status: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.CANCELLED]>;
+        status: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
     }, "strip", z.ZodTypeAny, {
-        status: OrderStatus.PENDING | OrderStatus.FULFILLED | OrderStatus.CANCELLED;
+        status: OrderStatus;
     }, {
-        status: OrderStatus.PENDING | OrderStatus.FULFILLED | OrderStatus.CANCELLED;
+        status: OrderStatus;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         orderId: number;
     };
     body: {
-        status: OrderStatus.PENDING | OrderStatus.FULFILLED | OrderStatus.CANCELLED;
+        status: OrderStatus;
     };
 }, {
     params: {
         orderId: number;
     };
     body: {
-        status: OrderStatus.PENDING | OrderStatus.FULFILLED | OrderStatus.CANCELLED;
+        status: OrderStatus;
     };
 }>;
 export declare const GetOrderSchema: z.ZodObject<{

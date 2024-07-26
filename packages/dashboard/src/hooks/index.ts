@@ -1,4 +1,3 @@
 export * from './useDebounce';
-export * from './useSubmitForm';
 export * from './useMutation';
-export * from './useNotifications';
+export * from './useNotification';

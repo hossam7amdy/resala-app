@@ -1,33 +1,46 @@
 'use client';
 
 import { updateCategory } from '@/actions/category';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { type GetCategoryResponse, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import ErrorMessage from '../../components/error-message';
-
 const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ category }) => {
+  const [form] = Form.useForm();
   const router = useRouter();
-  const update = updateCategory.bind(null, String(category.id));
-  const { error, pending, dispatch } = useSubmitForm(update);
+
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: updateCategory.bind(null, String(category.id)),
+    onSuccess: () => {
+      form.resetFields();
+
+      notification.success('Category updated successfully');
+
+      router.back();
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
+      form={form}
       size="large"
       name="create-category"
       layout="vertical"
-      onFinish={dispatch}
+      onFinish={mutate}
       initialValues={{
         enName: category.enName,
         arName: category.arName,
       }}
     >
       <Flex gap={10}>
-        <FormItem
+        <Form.Item
           required
           rules={[{ required: true }]}
           name="enName"
@@ -35,8 +48,8 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
           style={{ flex: 1 }}
         >
           <Input placeholder="Enter English name" autoFocus />
-        </FormItem>
-        <FormItem
+        </Form.Item>
+        <Form.Item
           required
           rules={[
             {
@@ -49,22 +62,20 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
           style={{ direction: 'rtl', flex: 1 }}
         >
           <Input placeholder="أكتب الأسم بالعربية" min={3} max={10} />
-        </FormItem>
+        </Form.Item>
       </Flex>
 
-      {error?.message && <ErrorMessage message={error.message} />}
-
       <Flex gap={10}>
-        <FormItem noStyle>
-          <Button type="primary" block htmlType="submit" loading={pending}>
+        <Form.Item noStyle>
+          <Button type="primary" block htmlType="submit" loading={isLoading}>
             Update
           </Button>
-        </FormItem>
-        <FormItem noStyle>
-          <Button block disabled={pending} onClick={() => router.back()}>
+        </Form.Item>
+        <Form.Item noStyle>
+          <Button block disabled={isLoading} onClick={() => router.back()}>
             Cancel
           </Button>
-        </FormItem>
+        </Form.Item>
       </Flex>
     </Form>
   );
