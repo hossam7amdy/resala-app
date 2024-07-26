@@ -12,7 +12,6 @@ import type {
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export const createCategory = async (payload: CreateCategoryRequest['body']) => {
   const response = await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
@@ -25,13 +24,13 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
 };
 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
-  await callEndpoint<UpdateCategoryRequest, UpdateCategoryResponse>(
+  const response = await callEndpoint<UpdateCategoryRequest, UpdateCategoryResponse>(
     ENDPOINT_CONFIGS.updateCategory,
     { params: { categoryId: Number(id) }, body: payload }
   );
 
   revalidatePath(ROUTES.CATEGORIES);
-  redirect(ROUTES.CATEGORIES);
+  return response;
 };
 
 export const deleteCategory = async (id: string) => {

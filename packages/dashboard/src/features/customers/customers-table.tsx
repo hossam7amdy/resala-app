@@ -9,7 +9,7 @@ import type { ListUsersResponse } from '@resala/shared';
 import { Button, Flex, Space, Table, Tag } from 'antd';
 import Link from 'next/link';
 
-const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
+export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
       <Table
@@ -67,5 +67,3 @@ const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination
     </Flex>
   );
 };
-
-export default CustomersTable;
