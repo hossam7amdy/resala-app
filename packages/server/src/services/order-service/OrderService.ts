@@ -45,7 +45,7 @@ export default class OrderService {
         color: item.stock.color.enName,
         size: item.stock.size.name,
         quantity: item.quantity,
-        imageUrl: item.images.find(img => img.isPrimary)?.imageUrl,
+        imageUrl: item.images.find(img => img.isPrimary)?.imageUrl || null,
       })),
     };
 
