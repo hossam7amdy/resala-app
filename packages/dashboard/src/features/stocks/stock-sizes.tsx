@@ -1,6 +1,6 @@
 import { deleteStock } from '@/actions/stock';
 import { Tooltip } from '@/components';
-import DeleteButton from '@/components/delete-button';
+import { DeleteButton } from '@/components';
 import ROUTES from '@/lib/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { GetStockResponse } from '@resala/shared';

@@ -1,7 +1,7 @@
 'use client';
 
 import { addProduct, updateProduct } from '@/actions/product';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { InboxOutlined } from '@ant-design/icons';
 import { type Category, type Product, validationPatterns } from '@resala/shared';
 import {
@@ -14,10 +14,6 @@ import {
   Upload,
   type UploadFile,
 } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
-import TextArea from 'antd/es/input/TextArea';
-import Text from 'antd/es/typography/Text';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -31,9 +27,15 @@ type FormValues = {
   image: UploadFile[];
 };
 
-const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product, categories }) => {
+export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
+  product,
+  categories,
+}) => {
+  const [form] = AntForm.useForm();
+
   const router = useRouter();
-  const [form] = useForm();
+
+  const notification = useNotification();
 
   const isEdit = !!product;
   const submit = isEdit ? updateProduct.bind(null, product.id) : addProduct;
@@ -54,14 +56,26 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
     [submit]
   );
 
-  const { error, pending, dispatch } = useSubmitForm(handleFinish, form);
+  const { isLoading, mutate } = useMutation({
+    mutationFn: handleFinish,
+    onSuccess: () => {
+      form.resetFields();
+
+      notification.success('Product updated successfully');
+
+      isEdit ? router.back() : null;
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <AntForm
       form={form}
       name="product-form"
       layout="vertical"
-      onFinish={dispatch}
+      onFinish={mutate}
       size="large"
       initialValues={{
         ...product,
@@ -70,7 +84,7 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
           : [],
       }}
     >
-      <FormItem name="categoryId" label="Category" rules={[{ required: true }]}>
+      <AntForm.Item name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select
           autoFocus
           allowClear
@@ -84,10 +98,10 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
             !option?.label.toLowerCase().indexOf(input.toLowerCase())
           }
         />
-      </FormItem>
+      </AntForm.Item>
 
       <Flex gap={10}>
-        <FormItem
+        <AntForm.Item
           required
           rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
           name="enName"
@@ -95,8 +109,8 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
           style={{ flex: 1 }}
         >
           <Input placeholder="Enter English name" minLength={2} maxLength={100} />
-        </FormItem>
-        <FormItem
+        </AntForm.Item>
+        <AntForm.Item
           required
           rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
           name="arName"
@@ -104,42 +118,42 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
           style={{ direction: 'rtl', flex: 1 }}
         >
           <Input placeholder="أكتب الأسم بالعربية" minLength={2} maxLength={100} />
-        </FormItem>
+        </AntForm.Item>
       </Flex>
 
       <Flex gap={10}>
-        <FormItem
+        <AntForm.Item
           required
           rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
           name="enDescription"
           label="English Description"
           style={{ flex: 1 }}
         >
-          <TextArea
+          <Input.TextArea
             minLength={5}
             maxLength={500}
             placeholder="Enter English description"
             autoSize={{ minRows: 5, maxRows: 10 }}
           />
-        </FormItem>
-        <FormItem
+        </AntForm.Item>
+        <AntForm.Item
           required
           rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
           name="arDescription"
           label="الوصف بالعربية"
           style={{ direction: 'rtl', flex: 1 }}
         >
-          <TextArea
+          <Input.TextArea
             minLength={5}
             maxLength={500}
             placeholder="أكتب الوصف بالعربية"
             autoSize={{ minRows: 5, maxRows: 10 }}
           />
-        </FormItem>
+        </AntForm.Item>
       </Flex>
 
       <Flex gap={10}>
-        <FormItem
+        <AntForm.Item
           required
           rules={[{ required: true }]}
           name="price"
@@ -147,11 +161,11 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
           style={{ flex: 1 }}
         >
           <InputNumber placeholder="Enter price" style={{ width: '100%' }} min={0} />
-        </FormItem>
+        </AntForm.Item>
         <div style={{ flex: 1 }}></div>
       </Flex>
 
-      <FormItem
+      <AntForm.Item
         required
         name="image"
         valuePropName="fileList"
@@ -182,24 +196,20 @@ const Form: React.FC<{ product?: Product; categories: Category[] }> = ({ product
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
         </Upload.Dragger>
-      </FormItem>
-
-      {error?.message && <Text type="danger">{error.message}</Text>}
+      </AntForm.Item>
 
       <Flex gap={10}>
-        <FormItem noStyle>
-          <Button block type="primary" htmlType="submit" loading={pending}>
+        <AntForm.Item noStyle>
+          <Button block type="primary" htmlType="submit" loading={isLoading}>
             {isEdit ? 'Update' : 'Create'}
           </Button>
-        </FormItem>
-        <FormItem noStyle>
-          <Button block onClick={() => router.back()} disabled={pending}>
+        </AntForm.Item>
+        <AntForm.Item noStyle>
+          <Button block onClick={() => router.back()} disabled={isLoading}>
             Cancel
           </Button>
-        </FormItem>
+        </AntForm.Item>
       </Flex>
     </AntForm>
   );
 };
-
-export default Form;

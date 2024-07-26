@@ -1,16 +1,13 @@
 'use client';
 
 import { createColor, updateColor } from '@/actions/color';
-import useSubmitForm from '@/hooks/useSubmitForm';
+import { useMutation, useNotification } from '@/hooks';
 import { type GetColorResponse, validationPatterns } from '@resala/shared';
 import { Button, ColorPicker, Flex, Form, Input } from 'antd';
 import { ColorFactory } from 'antd/es/color-picker/color';
 import { useForm } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-
-import ErrorMessage from '../../components/error-message';
 
 interface FormValues {
   enName: string;
@@ -21,13 +18,26 @@ interface FormValues {
 interface ColorFormProps {
   color?: GetColorResponse['data'];
 }
-const ColorForm = ({ color }: ColorFormProps) => {
+export const ColorForm = ({ color }: ColorFormProps) => {
   const isEdit = color?.id !== undefined;
   const submit = isEdit ? updateColor.bind(null, color.id) : createColor;
 
   const [form] = useForm();
+
   const router = useRouter();
-  const { error, pending, dispatch } = useSubmitForm(submit, form);
+
+  const notification = useNotification();
+
+  const { isLoading, mutate } = useMutation({
+    mutationFn: submit,
+    onSuccess: () => {
+      notification.success('Category updated successfully');
+      router.back();
+    },
+    onError: error => {
+      notification.error(error.message);
+    },
+  });
 
   return (
     <Form
@@ -42,11 +52,11 @@ const ColorForm = ({ color }: ColorFormProps) => {
       }}
       onFinish={async (values: FormValues) => {
         const code = values.code.toHexString();
-        return dispatch({ ...values, code });
+        return mutate({ ...values, code });
       }}
     >
       <Flex gap={10}>
-        <FormItem
+        <Form.Item
           validateFirst
           style={{ flex: 1 }}
           name="enName"
@@ -60,8 +70,8 @@ const ColorForm = ({ color }: ColorFormProps) => {
           ]}
         >
           <Input placeholder="Blue" />
-        </FormItem>
-        <FormItem
+        </Form.Item>
+        <Form.Item
           validateFirst
           style={{ flex: 1, direction: 'rtl' }}
           name="arName"
@@ -75,10 +85,10 @@ const ColorForm = ({ color }: ColorFormProps) => {
           ]}
         >
           <Input placeholder="أزرق" />
-        </FormItem>
+        </Form.Item>
       </Flex>
 
-      <FormItem
+      <Form.Item
         labelCol={{ span: 12 }}
         wrapperCol={{ span: 12 }}
         name="code"
@@ -88,22 +98,18 @@ const ColorForm = ({ color }: ColorFormProps) => {
         rules={[{ required: true }]}
       >
         <ColorPicker size="large" showText format="hex" style={{ width: '100%' }} />
-      </FormItem>
+      </Form.Item>
 
-      {error?.message && <ErrorMessage message={error.message} />}
-
-      <FormItem>
+      <Form.Item>
         <Flex gap={10}>
-          <Button type="primary" htmlType="submit" block loading={pending}>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
             {isEdit ? 'Update' : 'Create'}
           </Button>
-          <Button type="default" onClick={router.back} block disabled={pending}>
+          <Button type="default" onClick={router.back} block disabled={isLoading}>
             Cancel
           </Button>
         </Flex>
-      </FormItem>
+      </Form.Item>
     </Form>
   );
 };
-
-export default ColorForm;
