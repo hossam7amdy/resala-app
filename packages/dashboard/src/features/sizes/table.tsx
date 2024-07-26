@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteSize } from '@/actions/size';
-import { DeleteButton, Tooltip } from '@/components';
+import { PopconfirmDeleteButton, Tooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -38,7 +38,7 @@ const Table: React.FC<{ sizes: GetSizesListResponse['data'] }> = ({ sizes }) => 
                   <EditFilled />
                 </Link>
               </Tooltip>
-              <DeleteButton deleteAction={deleteSize.bind(null, id)} />
+              <PopconfirmDeleteButton onConfirmDelete={() => deleteSize(id)} />
             </Space>
           ),
         },

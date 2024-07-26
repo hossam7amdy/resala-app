@@ -5,8 +5,6 @@ import { notFound } from 'next/navigation';
 const EditCustomerPage = async ({ params }: { params: { id: string } }) => {
   const user = await getUserById(params.id);
 
-  console.log(user);
-
   if (!user) {
     notFound();
   }
