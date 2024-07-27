@@ -50,7 +50,7 @@ export default class PaymentService {
     try {
       const payment = await this.retrieve(paymentId);
 
-      await this.paymobService.refund(paymentId, payment.amount_cents);
+      await this.paymobService.refund(payment.id, payment.amount_cents);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }

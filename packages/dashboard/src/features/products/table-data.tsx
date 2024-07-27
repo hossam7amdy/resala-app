@@ -2,7 +2,7 @@
 
 import { deleteProduct } from '@/actions/product';
 import { PopconfirmDeleteButton } from '@/components';
-import { Tooltip } from '@/components';
+import { ResalaTooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatCurrency, formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -67,13 +67,13 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
           }),
           render: (_, product) => (
             <Space size="small">
-              <Tooltip title="Edit">
+              <ResalaTooltip title="Edit">
                 <Button size="small" type="link">
                   <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
                     <EditFilled />
                   </Link>
                 </Button>
-              </Tooltip>
+              </ResalaTooltip>
 
               <PopconfirmDeleteButton onConfirmDelete={() => deleteProduct(product.id)} />
             </Space>

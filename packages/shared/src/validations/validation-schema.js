@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 import { validationPatterns } from '../patterns/index.js';
 const UserSchema = z.object({
     email: z.string().min(5).max(128).email(),
@@ -289,23 +289,39 @@ export const CreateOrderSchema = z.object({
         addressId: z.coerce.number().positive(),
     }),
 });
+export const GetOrderSchema = z.object({
+    params: z.object({
+        orderId: z.coerce.number().positive(),
+    }),
+});
+export const ListOrdersSchema = z.object({
+    query: DefaultQuerySchema.shape.query,
+});
 export const UpdateOrderStatusSchema = z.object({
     params: z.object({
         orderId: z.coerce.number().positive(),
     }),
     body: z.object({
-        status: z.enum([
+        orderStatus: z.enum([
             OrderStatus.PENDING,
             OrderStatus.FULFILLED,
             OrderStatus.SHIPPED,
             OrderStatus.DELIVERED,
             OrderStatus.CANCELLED,
         ]),
+        paymentStatus: z.enum([
+            PaymentStatus.UNPAID,
+            PaymentStatus.PAID,
+            PaymentStatus.FAILED,
+            PaymentStatus.VOIDED,
+            PaymentStatus.REFUNDED,
+        ]),
     }),
 });
-export const GetOrderSchema = z.object({
-    params: z.object({
-        orderId: z.coerce.number().positive(),
+export const DeleteOrderSchema = z.object({
+    params: GetOrderSchema.shape.params,
+    query: z.object({
+        userId: z.coerce.number().positive(),
     }),
 });
 // Payment Schemas

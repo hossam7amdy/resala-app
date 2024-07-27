@@ -18,6 +18,7 @@ import {
   DeleteCategorySchema,
   DeleteColorSchema,
   DeleteImageSchema,
+  DeleteOrderSchema,
   DeleteProductSchema,
   DeleteReviewSchema,
   DeleteSizeSchema,
@@ -35,6 +36,7 @@ import {
   GetReviewSchema,
   GetUserSchema,
   ListAddressSchema,
+  ListOrdersSchema,
   ListProductReviewsSchema,
   ListReviewsSchema,
   LoginSchema,
@@ -364,12 +366,12 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
     [Endpoints.listOrders]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      validateMiddleware(DefaultQuerySchema),
+      validateMiddleware(ListOrdersSchema),
       orderCtrl.listOrders,
     ],
     [Endpoints.deleteOrder]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      validateMiddleware(GetOrderSchema),
+      validateMiddleware(DeleteOrderSchema),
       orderCtrl.deleteOrder,
     ],
     [Endpoints.updateOrderStatus]: [

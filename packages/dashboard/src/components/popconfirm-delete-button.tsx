@@ -2,17 +2,22 @@
 
 import { useMutation, useNotification } from '@/hooks';
 import { DeleteFilled } from '@ant-design/icons';
-import { Button, type ButtonProps, Popconfirm } from 'antd';
+import { Button, Popconfirm } from 'antd';
+import type { PopconfirmProps } from 'antd';
 import React from 'react';
 
-import { Tooltip } from '.';
+import { ResalaTooltip } from '.';
 
-interface PopconfirmDeleteButtonProps extends Pick<ButtonProps, 'disabled'> {
+interface PopconfirmDeleteButtonProps extends Omit<PopconfirmProps, 'title'> {
+  title?: PopconfirmProps['title'];
   onConfirmDelete: () => Promise<void>;
 }
 
 export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
   onConfirmDelete,
+  title = 'Are you sure?',
+  description = 'This action cannot be undone.',
+  disabled,
   ...props
 }) => {
   const notification = useNotification();
@@ -31,16 +36,20 @@ export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
     <Popconfirm
       open={isLoading || undefined}
       placement="topLeft"
-      title="Are you sure?"
+      title={title}
+      description={description}
       trigger="click"
       onConfirm={mutate}
       okText="Yes"
+      cancelText="No"
       okButtonProps={{ danger: true, loading: isLoading }}
       cancelButtonProps={{ disabled: isLoading }}
+      disabled={disabled}
+      {...props}
     >
-      <Tooltip title="Delete">
-        <Button size="small" danger type="link" icon={<DeleteFilled />} {...props} />
-      </Tooltip>
+      <ResalaTooltip title="Delete">
+        <Button size="small" danger type="link" icon={<DeleteFilled />} disabled={disabled} />
+      </ResalaTooltip>
     </Popconfirm>
   );
 };

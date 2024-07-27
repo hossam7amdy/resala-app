@@ -25,11 +25,11 @@ export default class NotificationService {
     );
   }
 
-  async sendOrderConfirmationEmail(email: string, orderId: number) {
+  async sendOrderConfirmationEmail(email: string, orderId: number, status: string) {
     return await this.mailer.send(
       email,
       'Order Confirmation',
-      `Your order with id ${orderId} has been confirmed`
+      `Your order with ID: ${orderId} has been updated to ${status}`
     );
   }
 
