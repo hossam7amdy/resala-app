@@ -2,7 +2,7 @@ import { Tooltip } from 'antd';
 import type { TooltipProps } from 'antd';
 import React from 'react';
 
-const ResalaTooltip: React.FC<TooltipProps> = props => {
+export const ResalaTooltip: React.FC<TooltipProps> = props => {
   const { children, ...rest } = props;
 
   return (
@@ -11,5 +11,3 @@ const ResalaTooltip: React.FC<TooltipProps> = props => {
     </Tooltip>
   );
 };
-
-export default ResalaTooltip;

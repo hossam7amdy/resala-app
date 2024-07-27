@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
@@ -1124,36 +1124,6 @@ export declare const CreateOrderSchema: z.ZodObject<{
         note?: string | undefined;
     };
 }>;
-export declare const UpdateOrderStatusSchema: z.ZodObject<{
-    params: z.ZodObject<{
-        orderId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        orderId: number;
-    }, {
-        orderId: number;
-    }>;
-    body: z.ZodObject<{
-        status: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
-    }, "strip", z.ZodTypeAny, {
-        status: OrderStatus;
-    }, {
-        status: OrderStatus;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    params: {
-        orderId: number;
-    };
-    body: {
-        status: OrderStatus;
-    };
-}, {
-    params: {
-        orderId: number;
-    };
-    body: {
-        status: OrderStatus;
-    };
-}>;
 export declare const GetOrderSchema: z.ZodObject<{
     params: z.ZodObject<{
         orderId: z.ZodNumber;
@@ -1169,6 +1139,98 @@ export declare const GetOrderSchema: z.ZodObject<{
 }, {
     params: {
         orderId: number;
+    };
+}>;
+export declare const ListOrdersSchema: z.ZodObject<{
+    query: z.ZodObject<{
+        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+    }, "strip", z.ZodTypeAny, {
+        query: string;
+        page: number;
+        limit: number;
+    }, {
+        query?: string | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query: {
+        query: string;
+        page: number;
+        limit: number;
+    };
+}, {
+    query: {
+        query?: string | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+    };
+}>;
+export declare const UpdateOrderStatusSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        orderId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        orderId: number;
+    }, {
+        orderId: number;
+    }>;
+    body: z.ZodObject<{
+        orderStatus: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
+        paymentStatus: z.ZodEnum<[PaymentStatus.UNPAID, PaymentStatus.PAID, PaymentStatus.FAILED, PaymentStatus.VOIDED, PaymentStatus.REFUNDED]>;
+    }, "strip", z.ZodTypeAny, {
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
+    }, {
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        orderId: number;
+    };
+    body: {
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
+    };
+}, {
+    params: {
+        orderId: number;
+    };
+    body: {
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
+    };
+}>;
+export declare const DeleteOrderSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        orderId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        orderId: number;
+    }, {
+        orderId: number;
+    }>;
+    query: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        orderId: number;
+    };
+    query: {
+        userId: number;
+    };
+}, {
+    params: {
+        orderId: number;
+    };
+    query: {
+        userId: number;
     };
 }>;
 export declare const GetPaymentSchema: z.ZodObject<{

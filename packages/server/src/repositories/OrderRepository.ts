@@ -33,7 +33,7 @@ interface CreateOrderInput {
   userId: number;
   address: Omit<Address, 'id'>;
   paymentMethod: Order['paymentMethod'];
-  items: Pick<OrderItem, 'name' | 'price' | 'quantity' | 'color' | 'size'>[];
+  items: Pick<OrderItem, 'name' | 'price' | 'quantity' | 'color' | 'size' | 'imageUrl'>[];
   shipping: number;
   total: number;
   subtotal: number;
@@ -62,6 +62,7 @@ export default class OrderRepository {
           quantity: item.quantity,
           color: item.color,
           size: item.size,
+          imageUrl: item.imageUrl,
         })),
       });
       const { id: addressId } = await tx.address.create({

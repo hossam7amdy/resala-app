@@ -4,6 +4,7 @@ import type {
   GetOrderResponse,
   ListOrdersResponse,
   Order,
+  UpdateOrderRequest,
 } from '@resala/shared';
 
 import type { OrderRepository } from '../../repositories/index.js';
@@ -109,27 +110,19 @@ export default class OrderService {
     return await this.findOrderById(id);
   }
 
-  async updateOrderStatus(id: number, status: Order['orderStatus']) {
-    // TODO: only allow to update order status to 'FULFILLED' or 'CANCELLED'
-    // if (!['FULFILLED', 'CANCELLED'].includes(status)) {
-    //   throw new BadRequestError('Invalid order status');
-    // }
-
-    await this.updateOrder(id, { orderStatus: status });
+  async updateOrderStatus(id: number, { orderStatus, paymentStatus }: UpdateOrderRequest['body']) {
+    await this.updateOrder(id, { orderStatus, paymentStatus });
 
     return await this.findOrderById(id);
   }
 
-  async cancelUserOrder(id: number, userId: number) {
-    const user = await this.userService.findUserById(userId);
-    const order = await this.findUserOrderById(id, userId);
+  async cancelUserOrder(orderId: number, userId: number) {
+    await Promise.all([
+      this.userService.findUserById(userId),
+      this.findUserOrderById(orderId, userId),
+    ]);
 
-    const isToday = new Date(order.createdAt).toDateString() === new Date().toDateString();
-    if (!isToday && user.role !== 'ADMIN') {
-      throw new BadRequestError("You can't cancel this order. Please contact support");
-    }
-
-    return await this.cancelOrder(id);
+    return await this.cancelOrder(orderId);
   }
 
   async cancelOrder(id: number) {

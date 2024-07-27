@@ -47,7 +47,7 @@ export type DeleteOrder = ExpressHandlerWithParams<
   DeleteOrderRequest['params'],
   undefined,
   DeleteOrderResponse,
-  undefined,
+  DeleteOrderRequest['query'],
   LocalUser
 >;
 

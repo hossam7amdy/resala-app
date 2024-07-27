@@ -1,4 +1,4 @@
-import { Tooltip } from '@/components';
+import { ResalaTooltip } from '@/components';
 import { UploadOutlined } from '@ant-design/icons';
 import type { GetStocksListResponse } from '@resala/shared';
 import { Button, Modal } from 'antd';
@@ -14,14 +14,14 @@ export const UploadModal: React.FC<{ stock: GetStocksListResponse['data']['stock
   const moreThanFiveImages = stock.images.length >= 5;
   return (
     <>
-      <Tooltip title={moreThanFiveImages ? 'Color has 5 images' : 'Upload'}>
+      <ResalaTooltip title={moreThanFiveImages ? 'Color has 5 images' : 'Upload'}>
         <Button
           disabled={moreThanFiveImages}
           onClick={() => setOpen(true)}
           type="link"
           icon={<UploadOutlined />}
         />
-      </Tooltip>
+      </ResalaTooltip>
 
       <Modal
         open={open}

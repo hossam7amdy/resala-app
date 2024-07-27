@@ -85,23 +85,23 @@ export default class OrderController implements IOrderController {
 
   deleteOrder: DeleteOrder = async (req, res, next) => {
     try {
-      const user = res.locals.user;
+      const userId = req.query.userId;
       const orderId = req.params.orderId;
 
       // cancel order
-      const order = await this.orderService.cancelUserOrder(orderId, user.id);
+      const order = await this.orderService.cancelUserOrder(orderId, userId);
 
       // void payment
-      if (order.paymentMethod === 'CARD') {
-        await this.paymentService.void(order.id);
+      if (order.paymentMethod === 'CARD' && order.paymentDetails?.transactionRef) {
+        await this.paymentService.refund(order.paymentDetails.transactionRef);
       }
 
       // notify user with order cancellation
-      if (user.email) {
-        await this.notificationService.sendOrderCancellationEmail(user.email, order.id);
+      if (order.user?.email) {
+        await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
       }
 
-      return res.json({ success: true, message: 'Order canceled' });
+      return res.json({ success: true, data: order });
     } catch (error) {
       next(error);
     }
@@ -109,14 +109,18 @@ export default class OrderController implements IOrderController {
 
   updateOrderStatus: UpdateOrderStatus = async (req, res, next) => {
     try {
-      const { status } = req.body;
-      const order = await this.orderService.updateOrderStatus(req.params.orderId, status);
+      const { orderStatus } = req.body;
+      const order = await this.orderService.updateOrderStatus(req.params.orderId, req.body);
 
       if (order.user?.email) {
-        await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
+        await this.notificationService.sendOrderConfirmationEmail(
+          order.user.email,
+          order.id,
+          orderStatus
+        );
       }
 
-      return res.json({ success: true, message: 'Order status updated' });
+      return res.json({ success: true, data: order });
     } catch (error) {
       next(error);
     }
