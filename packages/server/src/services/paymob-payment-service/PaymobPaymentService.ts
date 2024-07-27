@@ -164,14 +164,14 @@ export default class PaymobPaymentService {
     return await this.api.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
-  async refund(trxId: number, amount: number): Promise<any> {
+  async refund(trxId: number, amountCents: number): Promise<any> {
     const headers = {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };
 
     const body = {
       transaction_id: trxId,
-      amount_cents: amount * 100,
+      amount_cents: amountCents,
     };
 
     return await this.api.post('/api/acceptance/void_refund/refund', body, {
