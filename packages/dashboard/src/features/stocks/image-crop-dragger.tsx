@@ -2,7 +2,7 @@
 
 import { MAX_UPLOAD_IMAGE_COUNT } from '@/lib/constants';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, Upload } from 'antd';
+import { Upload } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
@@ -25,11 +25,11 @@ export const ImageCropUpload: React.FC<ImageCropUploadProps> = ({ fileList, ...p
           showRemoveIcon: true,
           showPreviewIcon: false,
           removeIcon: file => {
-            return (
-              <Button type="link" icon={<DeleteOutlined />} disabled={file.status === 'removed'} />
-            );
+            const isRemoved = file.status === 'removed';
+            return <DeleteOutlined style={{ cursor: isRemoved ? 'not-allowed' : undefined }} />;
           },
         }}
+        onRemove={file => file.status !== 'removed'}
         {...props}
       >
         {displayUpload && `Upload (${fileList.length}/${MAX_UPLOAD_IMAGE_COUNT})`}
