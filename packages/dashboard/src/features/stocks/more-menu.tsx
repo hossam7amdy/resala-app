@@ -1,5 +1,5 @@
 import { deleteImage, setDefaultImage } from '@/actions/image';
-import { Tooltip } from '@/components';
+import { ResalaTooltip } from '@/components';
 import { DeleteOutlined, LoadingOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import type { Image } from '@resala/shared';
 import { Button, Dropdown } from 'antd';
@@ -51,9 +51,9 @@ export const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image })
       trigger={['click']}
       menu={{ items }}
     >
-      <Tooltip title="More">
+      <ResalaTooltip title="More">
         <Button type="link" size="large" icon={<MoreOutlined />} />
-      </Tooltip>
+      </ResalaTooltip>
     </Dropdown>
   );
 };

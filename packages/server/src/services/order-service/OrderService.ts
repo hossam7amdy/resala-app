@@ -4,6 +4,7 @@ import type {
   GetOrderResponse,
   ListOrdersResponse,
   Order,
+  UpdateOrderRequest,
 } from '@resala/shared';
 
 import type { OrderRepository } from '../../repositories/index.js';
@@ -109,13 +110,8 @@ export default class OrderService {
     return await this.findOrderById(id);
   }
 
-  async updateOrderStatus(id: number, status: Order['orderStatus']) {
-    // TODO: only allow to update order status to 'FULFILLED' or 'CANCELLED'
-    // if (!['FULFILLED', 'CANCELLED'].includes(status)) {
-    //   throw new BadRequestError('Invalid order status');
-    // }
-
-    await this.updateOrder(id, { orderStatus: status });
+  async updateOrderStatus(id: number, { orderStatus, paymentStatus }: UpdateOrderRequest['body']) {
+    await this.updateOrder(id, { orderStatus, paymentStatus });
 
     return await this.findOrderById(id);
   }

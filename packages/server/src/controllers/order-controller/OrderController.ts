@@ -109,14 +109,14 @@ export default class OrderController implements IOrderController {
 
   updateOrderStatus: UpdateOrderStatus = async (req, res, next) => {
     try {
-      const { status } = req.body;
-      const order = await this.orderService.updateOrderStatus(req.params.orderId, status);
+      const { orderStatus } = req.body;
+      const order = await this.orderService.updateOrderStatus(req.params.orderId, req.body);
 
       if (order.user?.email) {
         await this.notificationService.sendOrderConfirmationEmail(
           order.user.email,
           order.id,
-          status
+          orderStatus
         );
       }
 
