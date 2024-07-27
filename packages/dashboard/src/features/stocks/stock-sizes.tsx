@@ -1,5 +1,5 @@
 import { deleteStock } from '@/actions/stock';
-import { Tooltip } from '@/components';
+import { ResalaTooltip } from '@/components';
 import { PopconfirmDeleteButton } from '@/components';
 import ROUTES from '@/lib/routes';
 import { EditFilled } from '@ant-design/icons';
@@ -38,13 +38,13 @@ export const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> 
         align: 'center',
         render: (stockId: number) => (
           <Space size="small">
-            <Tooltip title="Edit">
+            <ResalaTooltip title="Edit">
               <Button size="small" type="link">
                 <Link href={ROUTES.EDIT_STOCK(stockId)}>
                   <EditFilled />
                 </Link>
               </Button>
-            </Tooltip>
+            </ResalaTooltip>
 
             <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stockId)} />
           </Space>

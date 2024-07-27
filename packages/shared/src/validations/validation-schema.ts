@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 import { validationPatterns } from '../patterns/index.js';
 
 const UserSchema = z.object({
@@ -357,12 +357,19 @@ export const UpdateOrderStatusSchema = z.object({
     orderId: z.coerce.number().positive(),
   }),
   body: z.object({
-    status: z.enum([
+    orderStatus: z.enum([
       OrderStatus.PENDING,
       OrderStatus.FULFILLED,
       OrderStatus.SHIPPED,
       OrderStatus.DELIVERED,
       OrderStatus.CANCELLED,
+    ]),
+    paymentStatus: z.enum([
+      PaymentStatus.UNPAID,
+      PaymentStatus.PAID,
+      PaymentStatus.FAILED,
+      PaymentStatus.VOIDED,
+      PaymentStatus.REFUNDED,
     ]),
   }),
 });

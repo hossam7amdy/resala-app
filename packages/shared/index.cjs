@@ -902,12 +902,19 @@ const UpdateOrderStatusSchema = zod.z.object({
         orderId: zod.z.coerce.number().positive(),
     }),
     body: zod.z.object({
-        status: zod.z.enum([
+        orderStatus: zod.z.enum([
             exports.OrderStatus.PENDING,
             exports.OrderStatus.FULFILLED,
             exports.OrderStatus.SHIPPED,
             exports.OrderStatus.DELIVERED,
             exports.OrderStatus.CANCELLED,
+        ]),
+        paymentStatus: zod.z.enum([
+            exports.PaymentStatus.UNPAID,
+            exports.PaymentStatus.PAID,
+            exports.PaymentStatus.FAILED,
+            exports.PaymentStatus.VOIDED,
+            exports.PaymentStatus.REFUNDED,
         ]),
     }),
 });

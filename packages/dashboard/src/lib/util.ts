@@ -29,10 +29,10 @@ export const formatDateTime = (date: number | string | Date) => {
   return `${formatDate(date)} at ${formatTime(date)}`;
 };
 
-export const formatCurrency = (amount: number) => {
+export const formatCurrency = (amount: number, currency: string = 'EGP') => {
   return new Intl.NumberFormat('en-EG', {
+    currency,
     style: 'currency',
-    currency: 'EGP',
   }).format(amount);
 };
 

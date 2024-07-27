@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
@@ -1177,25 +1177,30 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
         orderId: number;
     }>;
     body: z.ZodObject<{
-        status: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
+        orderStatus: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
+        paymentStatus: z.ZodEnum<[PaymentStatus.UNPAID, PaymentStatus.PAID, PaymentStatus.FAILED, PaymentStatus.VOIDED, PaymentStatus.REFUNDED]>;
     }, "strip", z.ZodTypeAny, {
-        status: OrderStatus;
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
     }, {
-        status: OrderStatus;
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         orderId: number;
     };
     body: {
-        status: OrderStatus;
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
     };
 }, {
     params: {
         orderId: number;
     };
     body: {
-        status: OrderStatus;
+        orderStatus: OrderStatus;
+        paymentStatus: PaymentStatus;
     };
 }>;
 export declare const DeleteOrderSchema: z.ZodObject<{

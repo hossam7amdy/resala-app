@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteCategory } from '@/actions/category';
-import { PopconfirmDeleteButton, Tooltip } from '@/components';
+import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatDate } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -38,11 +38,11 @@ export const CategoryTable: React.FC<{
             <Button
               type="link"
               icon={
-                <Tooltip title="Edit">
+                <ResalaTooltip title="Edit">
                   <Link href={ROUTES.EDIT_CATEGORY(category.id)}>
                     <EditFilled />
                   </Link>
-                </Tooltip>
+                </ResalaTooltip>
               }
             />
             <PopconfirmDeleteButton onConfirmDelete={() => deleteCategory(String(category.id))} />

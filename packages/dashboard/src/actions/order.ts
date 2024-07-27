@@ -6,7 +6,13 @@ import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { DeleteOrderRequest, DeleteOrderResponse } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
-export const updateOrderStatus = async (id: string | number, payload: { status: string }) => {
+export const updateOrderStatus = async (
+  id: string | number,
+  payload: {
+    paymentStatus: string;
+    orderStatus: string;
+  }
+) => {
   const response = await callEndpoint(ENDPOINT_CONFIGS.updateOrderStatus, {
     params: { orderId: Number(id) },
     body: payload,
@@ -16,10 +22,10 @@ export const updateOrderStatus = async (id: string | number, payload: { status: 
   return response;
 };
 
-export const deleteOrder = async (id: string | number) => {
+export const deleteOrder = async (orderId: string | number, userId: string | number) => {
   const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
     ENDPOINT_CONFIGS.deleteOrder,
-    { params: { orderId: +id } }
+    { params: { orderId: +orderId }, query: { userId: +userId } }
   );
 
   revalidatePath(ROUTES.ORDERS);

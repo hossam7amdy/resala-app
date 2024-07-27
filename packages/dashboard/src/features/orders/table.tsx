@@ -5,10 +5,10 @@ import { formatCurrency, formatDate, formatTime } from '@/lib/util';
 import type { ListOrdersResponse } from '@resala/shared';
 import { Table as AntTable, Flex } from 'antd';
 
-import CancelOrder from './cancel-order';
+import { CancelOrder } from './cancel-order';
 import { OrderDetails } from './order-details';
-import OrderStatus from './order-status';
-import PaymentStatus from './payment-status';
+import { OrderStatus } from './order-status';
+import { PaymentStatus } from './payment-status';
 
 interface TableProps {
   total: number;
@@ -28,9 +28,10 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="ID" dataIndex="id" />
+        <TableColumn title="ID" dataIndex="id" width="9%" />
         <TableColumn
-          title="client"
+          width="13%"
+          title="Client"
           dataIndex="user"
           render={user => (
             <Flex vertical gap={5}>
@@ -39,21 +40,31 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
             </Flex>
           )}
         />
-        <TableColumn title="Amount" dataIndex="total" render={amount => formatCurrency(amount)} />
-        <TableColumn width={100} title="Method" dataIndex="paymentMethod" />
         <TableColumn
-          title="Payment Status"
-          dataIndex="paymentStatus"
-          render={status => <PaymentStatus status={status} />}
+          width="13%"
+          title="Amount"
+          dataIndex="total"
+          render={amount => formatCurrency(amount)}
         />
+        <TableColumn width="13%" title="Method" dataIndex="paymentMethod" />
         <TableColumn
-          title="Order Status"
-          render={order => <OrderStatus id={order.id} status={order.orderStatus} />}
+          width="13%"
+          title="Payment Status"
+          render={order => <PaymentStatus order={order} />}
           onCell={() => ({
             onClick: e => e.stopPropagation(),
           })}
         />
         <TableColumn
+          width="13%"
+          title="Order Status"
+          render={order => <OrderStatus order={order} />}
+          onCell={() => ({
+            onClick: e => e.stopPropagation(),
+          })}
+        />
+        <TableColumn
+          width="13%"
           title="Created Time"
           dataIndex="createdAt"
           render={date => (
@@ -64,6 +75,7 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
           )}
         />
         <TableColumn
+          width="13%"
           title="Actions"
           render={order => <CancelOrder order={order} />}
           onCell={() => ({

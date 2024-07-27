@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteUser } from '@/actions/user';
-import { Pagination, PopconfirmDeleteButton, Tooltip } from '@/components';
+import { Pagination, PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import ROUTES from '@/lib/routes';
 import { formatDate, formatTime } from '@/lib/util';
 import { EditFilled } from '@ant-design/icons';
@@ -45,13 +45,13 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
           createdAt: formatDate(user.createdAt),
           actions: (
             <Space>
-              <Tooltip title="Edit">
+              <ResalaTooltip title="Edit">
                 <Button type="link" size="small">
                   <Link href={ROUTES.EDIT_CUSTOMER(user.id)}>
                     <EditFilled />
                   </Link>
                 </Button>
-              </Tooltip>
+              </ResalaTooltip>
 
               <PopconfirmDeleteButton
                 onConfirmDelete={() => deleteUser(user.id)}
