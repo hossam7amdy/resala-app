@@ -289,6 +289,14 @@ export const CreateOrderSchema = z.object({
         addressId: z.coerce.number().positive(),
     }),
 });
+export const GetOrderSchema = z.object({
+    params: z.object({
+        orderId: z.coerce.number().positive(),
+    }),
+});
+export const ListOrdersSchema = z.object({
+    query: DefaultQuerySchema.shape.query,
+});
 export const UpdateOrderStatusSchema = z.object({
     params: z.object({
         orderId: z.coerce.number().positive(),
@@ -303,9 +311,10 @@ export const UpdateOrderStatusSchema = z.object({
         ]),
     }),
 });
-export const GetOrderSchema = z.object({
-    params: z.object({
-        orderId: z.coerce.number().positive(),
+export const DeleteOrderSchema = z.object({
+    params: GetOrderSchema.shape.params,
+    query: z.object({
+        userId: z.coerce.number().positive(),
     }),
 });
 // Payment Schemas

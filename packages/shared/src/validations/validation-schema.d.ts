@@ -1124,6 +1124,50 @@ export declare const CreateOrderSchema: z.ZodObject<{
         note?: string | undefined;
     };
 }>;
+export declare const GetOrderSchema: z.ZodObject<{
+    params: z.ZodObject<{
+        orderId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        orderId: number;
+    }, {
+        orderId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    params: {
+        orderId: number;
+    };
+}, {
+    params: {
+        orderId: number;
+    };
+}>;
+export declare const ListOrdersSchema: z.ZodObject<{
+    query: z.ZodObject<{
+        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
+        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+    }, "strip", z.ZodTypeAny, {
+        query: string;
+        page: number;
+        limit: number;
+    }, {
+        query?: string | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query: {
+        query: string;
+        page: number;
+        limit: number;
+    };
+}, {
+    query: {
+        query?: string | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+    };
+}>;
 export declare const UpdateOrderStatusSchema: z.ZodObject<{
     params: z.ZodObject<{
         orderId: z.ZodNumber;
@@ -1154,7 +1198,7 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
         status: OrderStatus;
     };
 }>;
-export declare const GetOrderSchema: z.ZodObject<{
+export declare const DeleteOrderSchema: z.ZodObject<{
     params: z.ZodObject<{
         orderId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
@@ -1162,13 +1206,26 @@ export declare const GetOrderSchema: z.ZodObject<{
     }, {
         orderId: number;
     }>;
+    query: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         orderId: number;
     };
+    query: {
+        userId: number;
+    };
 }, {
     params: {
         orderId: number;
+    };
+    query: {
+        userId: number;
     };
 }>;
 export declare const GetPaymentSchema: z.ZodObject<{

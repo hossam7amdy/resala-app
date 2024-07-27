@@ -320,7 +320,7 @@ export type GetOrderResponse = DefaultResponseBody & {
   };
 };
 
-export type ListOrdersRequest = DefaultRequestQuery;
+export type ListOrdersRequest = z.infer<typeof Schemas.ListOrdersSchema>;
 export type ListOrdersResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
@@ -329,10 +329,14 @@ export type ListOrdersResponse = DefaultResponseBody & {
 };
 
 export type UpdateOrderRequest = z.infer<typeof Schemas.UpdateOrderStatusSchema>;
-export type UpdateOrderResponse = DefaultResponseBody;
+export type UpdateOrderResponse = DefaultResponseBody & {
+  data: Order;
+};
 
-export type DeleteOrderRequest = GetOrderRequest;
-export type DeleteOrderResponse = DefaultResponseBody;
+export type DeleteOrderRequest = z.infer<typeof Schemas.DeleteOrderSchema>;
+export type DeleteOrderResponse = DefaultResponseBody & {
+  data: Order;
+};
 
 // Payment types
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;

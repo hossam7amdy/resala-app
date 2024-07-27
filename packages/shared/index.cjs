@@ -889,6 +889,14 @@ const CreateOrderSchema = zod.z.object({
         addressId: zod.z.coerce.number().positive(),
     }),
 });
+const GetOrderSchema = zod.z.object({
+    params: zod.z.object({
+        orderId: zod.z.coerce.number().positive(),
+    }),
+});
+const ListOrdersSchema = zod.z.object({
+    query: DefaultQuerySchema.shape.query,
+});
 const UpdateOrderStatusSchema = zod.z.object({
     params: zod.z.object({
         orderId: zod.z.coerce.number().positive(),
@@ -903,9 +911,10 @@ const UpdateOrderStatusSchema = zod.z.object({
         ]),
     }),
 });
-const GetOrderSchema = zod.z.object({
-    params: zod.z.object({
-        orderId: zod.z.coerce.number().positive(),
+const DeleteOrderSchema = zod.z.object({
+    params: GetOrderSchema.shape.params,
+    query: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
     }),
 });
 // Payment Schemas
@@ -962,6 +971,7 @@ exports.DeleteCartSchema = DeleteCartSchema;
 exports.DeleteCategorySchema = DeleteCategorySchema;
 exports.DeleteColorSchema = DeleteColorSchema;
 exports.DeleteImageSchema = DeleteImageSchema;
+exports.DeleteOrderSchema = DeleteOrderSchema;
 exports.DeleteProductSchema = DeleteProductSchema;
 exports.DeleteReviewSchema = DeleteReviewSchema;
 exports.DeleteSizeSchema = DeleteSizeSchema;
@@ -978,6 +988,7 @@ exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
 exports.ListAddressSchema = ListAddressSchema;
+exports.ListOrdersSchema = ListOrdersSchema;
 exports.ListProductReviewsSchema = ListProductReviewsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;
