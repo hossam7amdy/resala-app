@@ -15,7 +15,7 @@ export default class PaymentController implements IPaymentController {
 
   getPayment: GetPayment = async (req, res, next) => {
     try {
-      const payment = await this.paymentService.retrieve(req.params.paymentId);
+      const payment = await this.paymentService.retrieve(req.params.transactionId);
 
       return res.json({ success: true, data: payment });
     } catch (error) {
@@ -37,9 +37,9 @@ export default class PaymentController implements IPaymentController {
 
   refundPayment: RefundPayment = async (req, res, next) => {
     try {
-      const transactionId = req.body.transactionId;
+      const { transactionId, amount } = req.body;
 
-      await this.paymentService.refund(transactionId);
+      await this.paymentService.refund(transactionId, amount);
 
       return res.json({ success: true });
     } catch (error) {

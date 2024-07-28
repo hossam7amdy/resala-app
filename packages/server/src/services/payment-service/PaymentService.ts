@@ -24,41 +24,39 @@ export default class PaymentService {
     shipping: Omit<Address, 'id'>;
     items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
   }): Promise<{ paymentUrl: string }> {
-    const { paymentUrl } = await this.paymobService.checkout(payload);
+    const { payment_link } = await this.paymobService.checkout(payload);
 
     await this.paymentRepo.create({
-      paymentUrl,
+      paymentLink: payment_link,
       orderId: payload.order.id,
-      orderRef: null,
-      transactionRef: null,
+      transactionId: null,
+      transactionOrderId: null,
     });
 
-    return { paymentUrl };
+    return { paymentUrl: payment_link };
   }
 
-  async void(paymentId: number): Promise<void> {
+  async void(transactionId: number): Promise<void> {
     try {
-      await this.retrieve(paymentId);
-
-      await this.paymobService.void(paymentId);
+      await this.paymobService.void(transactionId);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
   }
 
-  async refund(paymentId: number): Promise<void> {
+  async refund(transactionId: number, amount: number): Promise<void> {
     try {
-      const payment = await this.retrieve(paymentId);
+      const amountCents = amount * 100;
 
-      await this.paymobService.refund(payment.id, payment.amount_cents);
+      await this.paymobService.refund(transactionId, amountCents);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
   }
 
-  async retrieve(paymentId: number): Promise<GetPaymentResponse['data']> {
+  async retrieve(transactionId: number): Promise<GetPaymentResponse['data']> {
     try {
-      return await this.paymobService.retrieve(paymentId);
+      return this.paymobService.retrieve(transactionId);
     } catch (e) {
       throw new NotFoundError((e as Error).message);
     }
@@ -73,8 +71,8 @@ export default class PaymentService {
     const transaction = postPayObj.transaction;
 
     await this.paymentRepo.update(orderId, {
-      orderRef: transaction.order.id,
-      transactionRef: transaction.id,
+      transactionId: transaction.id,
+      transactionOrderId: transaction.order.id,
     });
 
     return this._status(transaction);

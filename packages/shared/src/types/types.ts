@@ -149,9 +149,9 @@ export type Shipping = {
 
 export type Payment = {
   orderId: number;
-  orderRef: number | null;
-  paymentUrl: string | null;
-  transactionRef: number | null;
+  paymentLink: string | null;
+  transactionId: number | null;
+  transactionOrderId: number | null;
 };
 
 export type Review = {
