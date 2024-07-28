@@ -3,7 +3,7 @@
 import { Pagination, TableColumn } from '@/components';
 import { formatCurrency, formatDate, formatTime } from '@/lib/util';
 import type { ListOrdersResponse } from '@resala/shared';
-import { Table as AntTable, Flex } from 'antd';
+import { Flex, Table } from 'antd';
 
 import { CancelOrder } from './cancel-order';
 import { OrderDetails } from './order-details';
@@ -14,10 +14,10 @@ interface TableProps {
   total: number;
   orders: ListOrdersResponse['data']['orders'];
 }
-const Table: React.FC<TableProps> = ({ orders, total }) => {
+export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
-      <AntTable
+      <Table
         className="cursor-pointer"
         rowKey={record => record.id}
         scroll={{ x: true, y: 500 }}
@@ -28,7 +28,7 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="ID" dataIndex="id" width="9%" />
+        <TableColumn title="Order ID" dataIndex="id" width="9%" />
         <TableColumn
           width="13%"
           title="Client"
@@ -82,12 +82,10 @@ const Table: React.FC<TableProps> = ({ orders, total }) => {
             onClick: e => e.stopPropagation(),
           })}
         />
-      </AntTable>
+      </Table>
       <Flex justify="center">
         <Pagination totalPages={total} />
       </Flex>
     </Flex>
   );
 };
-
-export default Table;

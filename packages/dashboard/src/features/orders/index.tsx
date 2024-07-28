@@ -1,1 +1,1 @@
-export { default as OrdersTable } from './table';
+export { OrdersTable } from './orders-table';
