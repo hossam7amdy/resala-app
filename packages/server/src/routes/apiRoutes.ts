@@ -125,7 +125,12 @@ export const createExpressRouter = (legRequests: boolean) => {
   const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
   const shoppingService = new ShoppingService(shoppingRepository, inventoryService);
   const paymentService = new PaymentService(paymentRepository, new PaymobPaymentService());
-  const orderService = new OrderService(orderRepository, shoppingService, userService);
+  const orderService = new OrderService(
+    orderRepository,
+    shoppingService,
+    userService,
+    inventoryService
+  );
 
   // controllers
   const authCtrl = new AuthController(authService, notificationService);
