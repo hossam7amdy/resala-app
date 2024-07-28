@@ -1235,19 +1235,61 @@ export declare const DeleteOrderSchema: z.ZodObject<{
 }>;
 export declare const GetPaymentSchema: z.ZodObject<{
     params: z.ZodObject<{
-        paymentId: z.ZodNumber;
+        transactionId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        paymentId: number;
+        transactionId: number;
     }, {
-        paymentId: number;
+        transactionId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        paymentId: number;
+        transactionId: number;
     };
 }, {
     params: {
-        paymentId: number;
+        transactionId: number;
+    };
+}>;
+export declare const VoidPaymentSchema: z.ZodObject<{
+    body: z.ZodObject<{
+        transactionId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        transactionId: number;
+    }, {
+        transactionId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    body: {
+        transactionId: number;
+    };
+}, {
+    body: {
+        transactionId: number;
+    };
+}>;
+export declare const RefundPaymentSchema: z.ZodObject<z.objectUtil.extendShape<{
+    body: z.ZodObject<{
+        transactionId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        transactionId: number;
+    }, {
+        transactionId: number;
+    }>;
+}, {
+    body: z.ZodObject<{
+        amount: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        amount: number;
+    }, {
+        amount: number;
+    }>;
+}>, "strip", z.ZodTypeAny, {
+    body: {
+        amount: number;
+    };
+}, {
+    body: {
+        amount: number;
     };
 }>;
 export declare const CreateReviewSchema: z.ZodObject<{

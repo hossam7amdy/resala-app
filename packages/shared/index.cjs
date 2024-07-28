@@ -445,7 +445,7 @@ const ENDPOINT_CONFIGS = {
     },
     // payment endpoints
     [exports.Endpoints.getPayment]: {
-        url: '/api/v1/payments/:paymentId',
+        url: '/api/v1/payments/:transactionId',
         method: 'get',
         auth: true,
     },
@@ -927,7 +927,17 @@ const DeleteOrderSchema = zod.z.object({
 // Payment Schemas
 const GetPaymentSchema = zod.z.object({
     params: zod.z.object({
-        paymentId: zod.z.coerce.number().positive(),
+        transactionId: zod.z.coerce.number().positive(),
+    }),
+});
+const VoidPaymentSchema = zod.z.object({
+    body: zod.z.object({
+        transactionId: zod.z.coerce.number().positive(),
+    }),
+});
+const RefundPaymentSchema = VoidPaymentSchema.extend({
+    body: zod.z.object({
+        amount: zod.z.coerce.number().positive(),
     }),
 });
 // Review Schemas
@@ -1001,6 +1011,7 @@ exports.ListReviewsSchema = ListReviewsSchema;
 exports.LoginSchema = LoginSchema;
 exports.PatchImageSchema = PatchImageSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
+exports.RefundPaymentSchema = RefundPaymentSchema;
 exports.RegisterSchema = RegisterSchema;
 exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;
@@ -1013,5 +1024,6 @@ exports.UpdateSizeSchema = UpdateSizeSchema;
 exports.UpdateStockSchema = UpdateStockSchema;
 exports.UpdateUserSchema = UpdateUserSchema;
 exports.VerifyEmailSchema = VerifyEmailSchema;
+exports.VoidPaymentSchema = VoidPaymentSchema;
 exports.validationPatterns = validationPatterns;
 exports.withParams = withParams;
