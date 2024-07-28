@@ -25,9 +25,9 @@ export default class PaymentRepository {
     });
   }
 
-  async findByTransactionRef(transactionRef: number) {
+  async findByTransactionId(transactionId: number) {
     return await this.prisma.payment.findFirst({
-      where: { transactionRef },
+      where: { transactionId },
     });
   }
 

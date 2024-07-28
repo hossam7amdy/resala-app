@@ -480,7 +480,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
 
   // payment endpoints
   [Endpoints.getPayment]: {
-    url: '/api/v1/payments/:paymentId',
+    url: '/api/v1/payments/:transactionId',
     method: 'get',
     auth: true,
   },
