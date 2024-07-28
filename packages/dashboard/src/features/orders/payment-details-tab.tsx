@@ -10,10 +10,10 @@ export const PaymentDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = 
   const [paymentDetails, setPaymentDetails] = useState<GetPaymentResponse['data']>();
 
   useEffect(() => {
-    if (!order.paymentDetails?.transactionRef) return;
+    if (!order.paymentDetails?.transactionId) return;
 
-    findPaymentById(order.paymentDetails.transactionRef).then(data => setPaymentDetails(data));
-  }, [order.paymentDetails?.transactionRef]);
+    findPaymentById(order.paymentDetails.transactionId).then(data => setPaymentDetails(data));
+  }, [order.paymentDetails?.transactionId]);
 
   if (!paymentDetails) {
     return (
@@ -108,7 +108,7 @@ export const PaymentDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = 
                 size="small"
                 type="primary"
                 target="_blank"
-                href={`${order.paymentDetails?.paymentUrl}`}
+                href={`${order.paymentDetails?.paymentLink}`}
               >
                 Preview
               </Button>
@@ -118,7 +118,7 @@ export const PaymentDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = 
                   type="text"
                   icon={<CopyOutlined />}
                   onClick={() => {
-                    navigator.clipboard.writeText(order.paymentDetails?.paymentUrl || '');
+                    navigator.clipboard.writeText(order.paymentDetails?.paymentLink || '');
                   }}
                 />
               </ResalaTooltip>

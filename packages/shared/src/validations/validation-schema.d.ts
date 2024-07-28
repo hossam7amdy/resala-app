@@ -1267,28 +1267,25 @@ export declare const VoidPaymentSchema: z.ZodObject<{
         transactionId: number;
     };
 }>;
-export declare const RefundPaymentSchema: z.ZodObject<z.objectUtil.extendShape<{
+export declare const RefundPaymentSchema: z.ZodObject<{
     body: z.ZodObject<{
         transactionId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        transactionId: number;
-    }, {
-        transactionId: number;
-    }>;
-}, {
-    body: z.ZodObject<{
         amount: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
+        transactionId: number;
         amount: number;
     }, {
+        transactionId: number;
         amount: number;
     }>;
-}>, "strip", z.ZodTypeAny, {
+}, "strip", z.ZodTypeAny, {
     body: {
+        transactionId: number;
         amount: number;
     };
 }, {
     body: {
+        transactionId: number;
         amount: number;
     };
 }>;
