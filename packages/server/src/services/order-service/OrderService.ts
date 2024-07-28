@@ -9,7 +9,7 @@ import type {
 
 import type { OrderRepository } from '../../repositories/index.js';
 import { BadRequestError, NotFoundError } from '../../utils/ApiErrors.js';
-import type { ShoppingService, UserService } from '../index.js';
+import type { InventoryService, ShoppingService, UserService } from '../index.js';
 
 const SHIPPING = 60;
 
@@ -17,7 +17,8 @@ export default class OrderService {
   constructor(
     private readonly orderRepo: OrderRepository,
     private readonly shoppingService: ShoppingService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly inventoryService: InventoryService
   ) {}
 
   async createOrder(userId: number, order: CreateOrderRequest['body']) {
@@ -29,6 +30,13 @@ export default class OrderService {
 
     // eslint-disable-next-line no-unused-vars
     const { id: _, ...address } = await this.userService.findUserAddress(userId, order.addressId);
+
+    await this.inventoryService.stock.decreaseStocks(
+      userCart.items.map(item => ({
+        stockId: item.stock.id,
+        quantity: item.quantity,
+      }))
+    );
 
     const subtotal = userCart.totalPrice;
 

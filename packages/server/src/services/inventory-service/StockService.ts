@@ -43,6 +43,10 @@ export default class StockService {
     };
   }
 
+  async decreaseStocks(stocks: { stockId: number; quantity: number }[]) {
+    return await this.inventoryRepo.stock.updateQuantities(stocks);
+  }
+
   async getByProduct(productId: number): Promise<GetProductStocksResponse['data']> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const { category, ...product } = await this.product.findProductById(productId);
@@ -51,6 +55,8 @@ export default class StockService {
 
     return this._groupByColor(stocks.map(stock => ({ ...stock, product })));
   }
+
+  // async decreaseStocks(stocks: { stockId: number; quantity: number }[]) {
 
   async create(stock: CreateStockRequest['body']) {
     await Promise.all([
