@@ -272,6 +272,10 @@ export type GetPaymentResponse = DefaultResponseBody & {
         [key: string]: any;
     };
 };
+export type VoidPaymentRequest = z.infer<typeof Schemas.VoidPaymentSchema>;
+export type VoidPaymentResponse = DefaultResponseBody;
+export type RefundPaymentRequest = z.infer<typeof Schemas.RefundPaymentSchema>;
+export type RefundPaymentResponse = DefaultResponseBody;
 export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;
 export type GetReviewResponse = DefaultResponseBody & {
     data: Pick<Review, 'id' | 'rating' | 'comment' | 'createdAt' | 'updatedAt'> & {

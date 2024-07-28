@@ -1,0 +1,32 @@
+'use server';
+
+import { callEndpoint } from '@/lib/fetch';
+import ROUTES from '@/lib/routes';
+import type {
+  RefundPaymentRequest,
+  RefundPaymentResponse,
+  VoidPaymentRequest,
+  VoidPaymentResponse,
+} from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { revalidatePath } from 'next/cache';
+
+export const voidPayment = async (data: VoidPaymentRequest['body']) => {
+  const response = await callEndpoint<VoidPaymentRequest, VoidPaymentResponse>(
+    ENDPOINT_CONFIGS.createSize,
+    { body: data }
+  );
+
+  revalidatePath(ROUTES.ORDERS);
+  return response;
+};
+
+export const refundPayment = async (payload: RefundPaymentRequest['body']) => {
+  const response = await callEndpoint<RefundPaymentRequest, RefundPaymentResponse>(
+    ENDPOINT_CONFIGS.updateSize,
+    { body: payload }
+  );
+
+  revalidatePath(ROUTES.ORDERS);
+  return response;
+};

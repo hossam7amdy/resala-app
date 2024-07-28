@@ -935,8 +935,9 @@ const VoidPaymentSchema = zod.z.object({
         transactionId: zod.z.coerce.number().positive(),
     }),
 });
-const RefundPaymentSchema = VoidPaymentSchema.extend({
+const RefundPaymentSchema = zod.z.object({
     body: zod.z.object({
+        transactionId: zod.z.coerce.number().positive(),
         amount: zod.z.coerce.number().positive(),
     }),
 });
