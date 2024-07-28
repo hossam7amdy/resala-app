@@ -14,6 +14,17 @@ export default class StockRepository {
     return await this.prisma.stock.update({ where: { id }, data });
   }
 
+  async updateQuantities(stocks: { stockId: number; quantity: number }[]) {
+    await this.prisma.$transaction(
+      stocks.map(stock => {
+        return this.prisma.stock.updateMany({
+          where: { id: stock.stockId },
+          data: { quantity: { increment: -stock.quantity } },
+        });
+      })
+    );
+  }
+
   async delete(id: number) {
     return await this.prisma.stock.delete({ where: { id } });
   }

@@ -91,11 +91,6 @@ export default class OrderController implements IOrderController {
       // cancel order
       const order = await this.orderService.cancelUserOrder(orderId, userId);
 
-      // void payment
-      if (order.paymentMethod === 'CARD' && order.paymentDetails?.transactionId) {
-        await this.paymentService.refund(order.paymentDetails.transactionId);
-      }
-
       // notify user with order cancellation
       if (order.user?.email) {
         await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
