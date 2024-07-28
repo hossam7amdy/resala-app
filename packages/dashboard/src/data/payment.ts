@@ -10,7 +10,7 @@ export const findPaymentById = async (id: string | number) => {
 
   const response = await callEndpoint<GetPaymentRequest, GetPaymentResponse>(
     ENDPOINT_CONFIGS.getPayment,
-    { params: { paymentId: Number(id) } }
+    { params: { transactionId: Number(id) } }
   );
 
   return response.data;
