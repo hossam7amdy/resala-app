@@ -216,11 +216,11 @@ model Shipping {
 }
 
 model Payment {
-  orderId        Int     @id @map("order_id") @db.Integer
-  paymentUrl     String? @map("payment_url") @db.VarChar(500)
-  orderRef       Int?    @map("order_ref") @db.Integer
-  transactionRef Int?    @map("transaction_ref") @db.Integer
-  order          Order   @relation(fields: [orderId], references: [id])
+  orderId            Int     @id @map("order_id") @db.Integer
+  paymentLink        String? @map("payment_link") @db.VarChar(500)
+  transactionId      Int?    @map("transaction_id") @db.Integer
+  transactionOrderId Int?    @map("transaction_order_id") @db.Integer
+  order              Order   @relation(fields: [orderId], references: [id])
 
   @@map("payment")
 }

@@ -77,7 +77,12 @@ export default class PaymobPaymentService {
     });
   }
 
-  async checkout({ user, order, shipping, items }: CheckoutDto): Promise<{ paymentUrl: string }> {
+  async checkout({
+    user,
+    order,
+    shipping,
+    items,
+  }: CheckoutDto): Promise<{ payment_link: string } & CheckoutApiResponse> {
     const headers = {
       Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
     };
@@ -123,7 +128,7 @@ export default class PaymobPaymentService {
       },
     };
 
-    const { client_secret } = await this.api.post<unknown, CheckoutApiResponse>(
+    const { client_secret, ...rest } = await this.api.post<unknown, CheckoutApiResponse>(
       '/v1/intention/',
       body,
       { headers }
@@ -133,9 +138,9 @@ export default class PaymobPaymentService {
       throw new Error('Invalid response from Paymob');
     }
 
-    const paymentUrl = `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${client_secret}`;
+    const payment_link = `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${client_secret}`;
 
-    return { paymentUrl };
+    return { payment_link, client_secret, ...rest };
   }
 
   async retrieve(trxId: number): Promise<any> {
