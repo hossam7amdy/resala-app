@@ -1,3 +1,5 @@
+'use client';
+
 import { deleteColor } from '@/actions/color';
 import { PopconfirmDeleteButton } from '@/components';
 import { StockColor } from '@/features/stocks';
@@ -8,7 +10,7 @@ import type { GetColorsListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 import Link from 'next/link';
 
-const Table = ({ colors }: { colors: GetColorsListResponse['data'] }) => {
+const Table: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) => {
   return (
     <AntTable
       pagination={{

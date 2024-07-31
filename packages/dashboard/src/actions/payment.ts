@@ -13,7 +13,7 @@ import { revalidatePath } from 'next/cache';
 
 export const voidPayment = async (data: VoidPaymentRequest['body']) => {
   const response = await callEndpoint<VoidPaymentRequest, VoidPaymentResponse>(
-    ENDPOINT_CONFIGS.createSize,
+    ENDPOINT_CONFIGS.voidPayment,
     { body: data }
   );
 
@@ -23,7 +23,7 @@ export const voidPayment = async (data: VoidPaymentRequest['body']) => {
 
 export const refundPayment = async (payload: RefundPaymentRequest['body']) => {
   const response = await callEndpoint<RefundPaymentRequest, RefundPaymentResponse>(
-    ENDPOINT_CONFIGS.updateSize,
+    ENDPOINT_CONFIGS.refundPayment,
     { body: payload }
   );
 
