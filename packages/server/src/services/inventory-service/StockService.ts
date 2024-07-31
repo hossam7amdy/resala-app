@@ -44,6 +44,20 @@ export default class StockService {
   }
 
   async decreaseStocks(stocks: { stockId: number; quantity: number }[]) {
+    const stocksData = await this.inventoryRepo.stock.findMany(stocks.map(stock => stock.stockId));
+
+    if (stocksData.length !== stocks.length) {
+      throw new NotFoundError('Stock not found');
+    }
+
+    stocksData.forEach(stock => {
+      const stockData = stocks.find(s => s.stockId === stock.id);
+
+      if (!stockData || stockData.quantity > stock.quantity) {
+        throw new ConflictError('Not enough stock');
+      }
+    });
+
     return await this.inventoryRepo.stock.updateQuantities(stocks);
   }
 
