@@ -16,7 +16,7 @@ const Endpoint = axios.create({
 });
 
 const isObject = (value: unknown): value is Record<string, unknown> => {
-  return typeof value === 'object' && value !== null;
+  return value !== null && typeof value === 'object';
 };
 
 type Req =

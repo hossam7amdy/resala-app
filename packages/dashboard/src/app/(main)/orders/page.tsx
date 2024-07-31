@@ -2,6 +2,8 @@ import { listOrders } from '@/data/orders';
 import { OrdersTable } from '@/features/orders';
 import type { DefaultRequestQuery } from '@resala/shared';
 
+export const revalidate = 1;
+
 const OrdersPage = async ({ searchParams }: { searchParams: DefaultRequestQuery['query'] }) => {
   const query = searchParams?.query || '';
   const page = Number(searchParams.page) || 1;

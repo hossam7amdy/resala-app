@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import React from 'react';
 
 import { OrderDetailsTab } from './order-details-tab';
+import { PaymentActionsButtons } from './payment-action-buttons';
 import { PaymentDetailsTab } from './payment-details-tab';
 import { ShippingDetailsTab } from './shipping-details-tab';
 
@@ -26,10 +27,20 @@ export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ or
           key: 'payment',
           tabKey: 'payment',
           label: 'Payment Details',
-          children: <PaymentDetailsTab order={order} />,
+          children: <PaymentDetailsTab payment={order.paymentDetails!} />,
           disabled: !order.paymentDetails,
         },
       ]}
+      tabBarExtraContent={
+        order.paymentDetails && (
+          <PaymentActionsButtons
+            payment={order.paymentDetails}
+            orderDate={`${order.createdAt}`}
+            orderAmount={order.total}
+            paymentStatus={order.paymentStatus}
+          />
+        )
+      }
     />
   );
 };
