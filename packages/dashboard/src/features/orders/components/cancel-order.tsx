@@ -29,15 +29,7 @@ export const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ ord
       cancelText="No"
       cancelButtonProps={{ type: 'primary', disabled: isLoading }}
     >
-      <Button
-        danger
-        type="link"
-        disabled={
-          order.orderStatus === 'CANCELLED' ||
-          order.paymentStatus === 'VOIDED' ||
-          order.paymentStatus === 'REFUNDED'
-        }
-      >
+      <Button danger type="link" disabled={order.orderStatus === 'CANCELLED'}>
         Cancel
       </Button>
     </Popconfirm>

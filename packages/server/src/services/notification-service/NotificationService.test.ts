@@ -54,11 +54,12 @@ describe('Notification Service', () => {
   it('should send an order confirmation email', async () => {
     const email = 'test@example.com';
     const orderId = 123;
-    await notificationService.sendOrderConfirmationEmail(email, orderId);
+    const status = 'confirmed';
+    await notificationService.sendOrderConfirmationEmail(email, orderId, status);
     expect(emailNotificationService.send).toHaveBeenCalledWith(
       email,
       'Order Confirmation',
-      `Your order with id ${orderId} has been confirmed`
+      `Your order with ID: ${orderId} has been updated to ${status}`
     );
   });
 
