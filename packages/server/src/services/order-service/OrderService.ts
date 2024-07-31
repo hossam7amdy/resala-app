@@ -31,15 +31,7 @@ export default class OrderService {
     // eslint-disable-next-line no-unused-vars
     const { id: _, ...address } = await this.userService.findUserAddress(userId, order.addressId);
 
-    await this.inventoryService.stock.decreaseStocks(
-      userCart.items.map(item => ({
-        stockId: item.stock.id,
-        quantity: item.quantity,
-      }))
-    );
-
     const subtotal = userCart.totalPrice;
-
     const orderPayload = {
       userId,
       address: address,
@@ -58,10 +50,16 @@ export default class OrderService {
       })),
     };
 
-    const [newOrder] = await Promise.all([
-      this.orderRepo.create(orderPayload),
-      this.shoppingService.clearUserCart(userId),
-    ]);
+    await this.shoppingService.clearUserCart(userId);
+
+    await this.inventoryService.stock.decreaseStocks(
+      userCart.items.map(item => ({
+        stockId: item.stock.id,
+        quantity: item.quantity,
+      }))
+    );
+
+    const newOrder = await this.orderRepo.create(orderPayload);
 
     return { ...newOrder, ...orderPayload };
   }
