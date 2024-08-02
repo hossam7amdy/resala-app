@@ -1,5 +1,5 @@
 import { logout } from '@/actions/auth';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';

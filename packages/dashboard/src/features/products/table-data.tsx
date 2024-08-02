@@ -3,8 +3,9 @@
 import { deleteProduct } from '@/actions/product';
 import { PopconfirmDeleteButton } from '@/components';
 import { ResalaTooltip } from '@/components';
-import ROUTES from '@/lib/routes';
-import { formatCurrency, formatDate } from '@/lib/util';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { formatDate } from '@/utils/date-time-formatter';
+import ROUTES from '@/utils/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { Category, GetProductsListResponse, Product } from '@resala/shared';
 import { Button, Image, Space, Table } from 'antd';

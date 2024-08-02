@@ -1,7 +1,8 @@
 'use client';
 
 import { Pagination, TableColumn } from '@/components';
-import { formatCurrency, formatDate, formatTime } from '@/lib/util';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import type { ListOrdersResponse } from '@resala/shared';
 import { Flex, Table } from 'antd';
 

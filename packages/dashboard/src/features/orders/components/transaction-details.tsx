@@ -1,6 +1,7 @@
 'use client';
 
-import { formatCurrency, formatDateTime } from '@/lib/util';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { formatDateTime } from '@/utils/date-time-formatter';
 import type { Payment } from '@resala/shared';
 import { Col, Divider, Flex, Row, Spin, Typography } from 'antd';
 import React from 'react';

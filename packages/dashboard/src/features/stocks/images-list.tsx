@@ -1,4 +1,4 @@
-import { formatDate } from '@/lib/util';
+import { formatDate } from '@/utils/date-time-formatter';
 import type { Image } from '@resala/shared';
 import { Image as AntImage, List, Tag } from 'antd';
 import React, { useMemo } from 'react';

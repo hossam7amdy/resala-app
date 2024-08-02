@@ -1,7 +1,7 @@
 import BackButton from '@/components/back-button';
 import { listAllColors } from '@/data/colors';
 import Table from '@/features/colors/table';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { Table as AntList, Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import Link from 'next/link';
 import React, { Suspense } from 'react';

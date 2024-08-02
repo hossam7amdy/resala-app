@@ -1,8 +1,9 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-import ROUTES from './lib/routes';
-import { getSession } from './lib/session';
+import { getCookie } from './utils/cookies';
+import { Token } from './utils/enums';
+import ROUTES from './utils/routes';
 
 const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
@@ -15,15 +16,11 @@ const PROTECTED_ROUTES = [
   ROUTES.CUSTOMERS,
 ];
 
-const checkIfProtectedRoute = (path: string) => {
-  return PROTECTED_ROUTES.some(route => path.startsWith(route));
-};
-
 const authMiddleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = checkIfProtectedRoute(path);
+  const isProtectedRoute = PROTECTED_ROUTES.some(route => path.startsWith(route));
 
-  const session = getSession();
+  const session = getCookie(Token.Access);
 
   if (!session && isProtectedRoute) {
     return NextResponse.redirect(new URL(ROUTES.LOGIN, req.nextUrl));
