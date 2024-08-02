@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/lib/fetch';
+import { callEndpoint } from '@/services/callEndpoint';
 import type { FindImagesRequest, FindImagesResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';

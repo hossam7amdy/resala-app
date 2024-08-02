@@ -1,5 +1,5 @@
 import { listAllColors } from '@/data/colors';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { Button, Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import Link from 'next/link';

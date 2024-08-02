@@ -1,6 +1,6 @@
 'use client';
 
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import {
   FileProtectOutlined,
   HomeOutlined,

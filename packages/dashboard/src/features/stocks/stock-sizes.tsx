@@ -1,7 +1,7 @@
 import { deleteStock } from '@/actions/stock';
 import { ResalaTooltip } from '@/components';
 import { PopconfirmDeleteButton } from '@/components';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { GetStockResponse } from '@resala/shared';
 import { Button, Space, Table } from 'antd';

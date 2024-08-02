@@ -2,8 +2,8 @@
 
 import { deleteUser } from '@/actions/user';
 import { Pagination, PopconfirmDeleteButton, ResalaTooltip, TableColumn } from '@/components';
-import ROUTES from '@/lib/routes';
-import { formatDate, formatTime } from '@/lib/util';
+import { formatDate, formatTime } from '@/utils/date-time-formatter';
+import ROUTES from '@/utils/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { ListUsersResponse, User } from '@resala/shared';
 import { Button, Flex, Space, Table, Tag } from 'antd';

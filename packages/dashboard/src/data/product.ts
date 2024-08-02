@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/lib/fetch';
+import { callEndpoint } from '@/services/callEndpoint';
 import type {
   DefaultRequestQuery,
   GetProductRequest,
