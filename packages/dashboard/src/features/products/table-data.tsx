@@ -19,10 +19,11 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
 
   return (
     <Table
+      dataSource={products}
       rowKey={record => record.id}
+      rowClassName={() => 'table-row-pointer'}
       onRow={record => {
         return {
-          style: { cursor: 'pointer' },
           onClick: () => {
             router.push(ROUTES.PRODUCT_STOCKS(record.id));
           },
@@ -80,7 +81,6 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
           ),
         },
       ]}
-      dataSource={products}
     />
   );
 };

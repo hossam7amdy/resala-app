@@ -13,7 +13,7 @@ export const StocksTable: React.FC<GetStocksListResponse['data']> = ({ paginatio
   return (
     <Flex vertical gap={10}>
       <Table
-        rowClassName={() => 'cursor-pointer'}
+        rowClassName={() => 'table-row-pointer'}
         bordered
         rowKey={s => `${s.product.id}-${s.color.id}`}
         scroll={{ x: true, y: 500 }}
@@ -88,7 +88,7 @@ export const StocksTable: React.FC<GetStocksListResponse['data']> = ({ paginatio
               <Space>
                 <UploadModal stock={stock} />
                 <PopconfirmDeleteButton
-                  onConfirmDelete={() =>deleteStock(stock.sizes[0].stockId)}
+                  onConfirmDelete={() => deleteStock(stock.sizes[0].stockId)}
                 />
               </Space>
             ),
