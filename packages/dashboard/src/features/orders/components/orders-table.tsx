@@ -18,7 +18,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
       <Table
-        className="cursor-pointer"
+        rowClassName={() => 'table-row-pointer'}
         rowKey={record => record.id}
         scroll={{ x: true, y: 500 }}
         pagination={false}
@@ -28,7 +28,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="Order ID" dataIndex="id" width="9%" />
+        <TableColumn title="ID" dataIndex="id" width="9%" />
         <TableColumn
           width="13%"
           title="Client"
