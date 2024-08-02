@@ -188,8 +188,7 @@ export default class AuthService {
   }
 
   get oneDayFromNow() {
-    // return new Date(Date.now() + 1000 * 60 * 60 * 24);
-    return new Date(Date.now() + 1000 * 30);
+    return new Date(Date.now() + 1000 * 60 * 60 * 24);
   }
 
   get oneHourFromNow() {
