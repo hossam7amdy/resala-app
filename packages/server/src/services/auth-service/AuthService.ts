@@ -45,7 +45,7 @@ export default class AuthService {
     });
 
     return {
-      expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
+      expiresAt: this.oneDayFromNow,
       accessToken: accessToken,
       refreshToken: refreshToken,
       user: user,
@@ -133,13 +133,16 @@ export default class AuthService {
     }
 
     // generate reset token
-    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
     const resetCode = generateRandomString(6).toUpperCase();
     const token = Jwt.signJwt({ id: user.id, email, resetCode }, process.env.JWT_RESET!, {
       expiresIn: '1h',
     });
 
-    return { expiresAt, token, resetCode };
+    return {
+      expiresAt: this.oneHourFromNow,
+      token,
+      resetCode,
+    };
   }
 
   async resetPassword(token: string, code: string, password: string) {
@@ -168,7 +171,7 @@ export default class AuthService {
       expiresIn: '1d',
     });
     return {
-      expiresAt: new Date(Date.now() + 60 * 60 * 24 * 1000), // 1 day
+      expiresAt: this.oneDayFromNow,
       accessToken: accessToken,
     };
   }
@@ -182,5 +185,14 @@ export default class AuthService {
       }
       throw new UnauthorizedError('Invalid token');
     }
+  }
+
+  get oneDayFromNow() {
+    // return new Date(Date.now() + 1000 * 60 * 60 * 24);
+    return new Date(Date.now() + 1000 * 30);
+  }
+
+  get oneHourFromNow() {
+    return new Date(Date.now() + 1000 * 60 * 60);
   }
 }

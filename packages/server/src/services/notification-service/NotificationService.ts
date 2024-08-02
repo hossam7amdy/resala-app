@@ -14,7 +14,11 @@ export default class NotificationService {
   }
 
   async sendResetPasswordEmail(email: string, resetCode: string) {
-    return await this.mailer.send(email, 'Reset your password', `Your reset code is: ${resetCode}`);
+    return await this.mailer.send(
+      email,
+      'Reset your password',
+      `Your reset code is: <b>${resetCode}</b>`
+    );
   }
 
   async sendResetConfirmationEmail(email: string) {
