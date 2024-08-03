@@ -1,23 +1,26 @@
 import { cookies } from 'next/headers';
 import 'server-only';
 
-export const setCookie = (
-  name: string,
-  { token, expireDate }: { token: string; expireDate?: string }
-) => {
+type CookieName = 'jwt' | 'refresh';
+type CookieOptions = {
+  token: string;
+  expireDate?: string;
+};
+
+export const setCookie = (name: CookieName = 'jwt', { token, expireDate }: CookieOptions) => {
   return cookies().set(name, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    expires: expireDate ? new Date(expireDate) : -1,
+    expires: expireDate ? new Date(expireDate) : undefined,
     sameSite: 'lax',
     path: '/',
   });
 };
 
-export const getCookie = (name: string) => {
+export const getCookie = (name: CookieName = 'jwt') => {
   return cookies().get(name);
 };
 
-export const deleteCookie = (name: string) => {
+export const deleteCookie = (name: CookieName = 'jwt') => {
   return cookies().delete(name);
 };
