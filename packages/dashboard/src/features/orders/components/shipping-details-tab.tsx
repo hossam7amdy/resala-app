@@ -1,4 +1,4 @@
-import { formatCurrency } from '@/lib/util';
+import { formatCurrency } from '@/utils/currency-formatter';
 import type { GetOrderResponse } from '@resala/shared';
 import { Col, Flex, Row, Typography } from 'antd';
 import React from 'react';

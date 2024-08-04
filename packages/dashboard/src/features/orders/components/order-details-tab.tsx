@@ -1,5 +1,5 @@
-import { FALLBACK_IMAGE } from '@/lib/constants';
-import { formatCurrency } from '@/lib/util';
+import { FALLBACK_IMAGE } from '@/utils/constants';
+import { formatCurrency } from '@/utils/currency-formatter';
 import type { GetOrderResponse } from '@resala/shared';
 import { Flex, Image, List, Typography } from 'antd';
 import React from 'react';
