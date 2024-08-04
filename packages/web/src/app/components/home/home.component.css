@@ -203,14 +203,21 @@ section .overlay {
 
 .parent-img-content {
   position: relative;
-  width: 300px;
+  width: 200px;
+
 }
 
 .img-content {
   position: relative;
-  width: 300px;
+  width: 100%;
   height: 100%;
   padding: 0;
+}
+
+@media (max-width: 576px) {
+  .col-xs-12 {
+    width: 51%;
+  }
 }
 
 .img-content .offer {
@@ -259,8 +266,14 @@ section .overlay {
   border-radius: 50%;
 }
 
-.favourit-icon:hover {
+/* .favourit-icon:hover {
   font-weight: bold;
+} */
+
+.header-product.active i {
+  /* background-color: #fbb935; */
+  font-weight: bold;
+
 }
 
 .shopping-icon {

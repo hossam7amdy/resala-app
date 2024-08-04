@@ -105,6 +105,10 @@ edit on bootstrap classes
   background-color: #016373;
 }
 
+.navbar.nav-right {
+  background-color: transparent;
+}
+
 .nav-link {
   color: #fff;
 }
