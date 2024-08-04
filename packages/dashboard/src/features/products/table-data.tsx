@@ -3,8 +3,9 @@
 import { deleteProduct } from '@/actions/product';
 import { PopconfirmDeleteButton } from '@/components';
 import { ResalaTooltip } from '@/components';
-import ROUTES from '@/lib/routes';
-import { formatCurrency, formatDate } from '@/lib/util';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { formatDate } from '@/utils/date-time-formatter';
+import ROUTES from '@/utils/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { Category, GetProductsListResponse, Product } from '@resala/shared';
 import { Button, Image, Space, Table } from 'antd';
@@ -19,10 +20,11 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
 
   return (
     <Table
+      dataSource={products}
       rowKey={record => record.id}
+      rowClassName={() => 'table-row-pointer'}
       onRow={record => {
         return {
-          style: { cursor: 'pointer' },
           onClick: () => {
             router.push(ROUTES.PRODUCT_STOCKS(record.id));
           },
@@ -80,7 +82,6 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
           ),
         },
       ]}
-      dataSource={products}
     />
   );
 };

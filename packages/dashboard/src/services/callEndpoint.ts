@@ -1,4 +1,5 @@
-import { logout } from '@/actions/auth';
+import { getCookie } from '@/utils/cookies';
+import { Token } from '@/utils/enums';
 import {
   type DefaultRequestQuery,
   type DefaultResponseBody,
@@ -8,8 +9,6 @@ import {
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import 'server-only';
-
-import { getSession } from './session';
 
 const Endpoint = axios.create({
   baseURL: process.env.API_HOST,
@@ -43,7 +42,7 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${getSession()?.value}` : undefined,
+        Authorization: isProtected ? `Bearer ${getCookie(Token.Access)?.value}` : undefined,
       },
     };
 
@@ -51,11 +50,9 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
 
     return response.data;
   } catch (e) {
-    const error = e as AxiosError<DefaultResponseBody>;
-    if (error.status === 401 || error.status === 403) {
-      return await logout();
-    }
-    const response = error.response?.data;
-    throw new Error(response?.message || 'Something went wrong');
+    const error = e as AxiosError<Error>;
+    const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+
+    throw new Error((errorMsg as string) || 'Something went wrong');
   }
 };

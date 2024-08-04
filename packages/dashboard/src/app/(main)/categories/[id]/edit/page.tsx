@@ -2,7 +2,7 @@ import BackButton from '@/components/back-button';
 import FormSkeleton from '@/components/form-skeleton';
 import { findCategoryById } from '@/data/category';
 import EditForm from '@/features/categories/edit-form';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

@@ -1,6 +1,6 @@
 import { BackButton } from '@/components';
 import { SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
-import ROUTES from '@/lib/routes';
+import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import Link from 'next/link';

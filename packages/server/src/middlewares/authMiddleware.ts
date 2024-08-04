@@ -3,7 +3,7 @@ import type { RoleType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
 import type { AuthService, UserService } from '../services/index.js';
-import { BadRequestError, ForbiddenError } from '../utils/ApiErrors.js';
+import { ForbiddenError, UnauthorizedError } from '../utils/ApiErrors.js';
 
 export default class AuthMiddleware {
   constructor(
@@ -30,7 +30,7 @@ export default class AuthMiddleware {
   enforceJwtMiddleware: RequestHandler = async (_, res, next) => {
     try {
       if (!res.locals?.user?.id) {
-        throw new BadRequestError('Token required');
+        throw new UnauthorizedError();
       }
 
       next();

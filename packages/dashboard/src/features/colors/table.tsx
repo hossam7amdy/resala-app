@@ -3,8 +3,8 @@
 import { deleteColor } from '@/actions/color';
 import { PopconfirmDeleteButton } from '@/components';
 import { StockColor } from '@/features/stocks';
-import ROUTES from '@/lib/routes';
-import { formatDate } from '@/lib/util';
+import { formatDate } from '@/utils/date-time-formatter';
+import ROUTES from '@/utils/routes';
 import { EditFilled } from '@ant-design/icons';
 import type { GetColorsListResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';

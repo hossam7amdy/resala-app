@@ -1,6 +1,6 @@
 'use client';
 
-import debounce from '@/lib/debounce';
+import debounce from '@/utils/debounce';
 import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
