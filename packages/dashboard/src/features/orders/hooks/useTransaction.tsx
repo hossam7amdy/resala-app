@@ -5,9 +5,8 @@ import { useQuery } from '@/hooks';
 
 export const useTransaction = (transactionId: number | null) => {
   const { isLoading, error, data, refetch } = useQuery({
-    queryFn: findPaymentById,
+    queryFn: () => findPaymentById(transactionId!),
     enabled: !!transactionId,
-    variables: transactionId!,
   });
 
   return {
