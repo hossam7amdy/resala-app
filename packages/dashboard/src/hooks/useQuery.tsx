@@ -1,52 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
 
-// Input of the hook
-type QueryOptions<Data, Variables> = {
-  queryFn: (variables: Variables) => Promise<Data>;
-  variables: Variables;
-  enabled?: boolean; // Whether to run the query immediately
+type QueryOptions<Data> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryFn: (...variables: any) => Promise<Data>;
+  enabled?: boolean;
 };
 
-// Output of the hook
 type QueryResult<Data> = {
-  data: Data | null;
+  data?: Data;
+  error?: Error;
   isLoading: boolean;
-  isError: boolean;
-  isSuccess: boolean;
-  error: Error | null;
   refetch: () => void;
 };
 
-// Actual Hook Implementation
-export const useQuery = <Data, Variables>({
+export const useQuery = <Data,>({
   queryFn,
-  variables,
   enabled = true,
-}: QueryOptions<Data, Variables>): QueryResult<Data> => {
+}: QueryOptions<Data>): QueryResult<Data> => {
+  const [data, setData] = useState<Data>();
+  const [error, setError] = useState<Error>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [data, setData] = useState<Data | null>(null);
-  const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
-    setIsError(false);
-    setIsSuccess(false);
-    setData(null);
-    setError(null);
+    setData(undefined);
+    setError(undefined);
 
     try {
-      const response = await queryFn(variables);
+      const response = await queryFn();
       setData(response);
-      setIsSuccess(true);
     } catch (error) {
       setError(error as Error);
-      setIsError(true);
     } finally {
       setIsLoading(false);
     }
-  }, [queryFn, variables]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (enabled) {
@@ -56,10 +45,8 @@ export const useQuery = <Data, Variables>({
 
   return {
     data,
-    isLoading,
-    isError,
-    isSuccess,
     error,
+    isLoading,
     refetch: fetchData,
   };
 };
