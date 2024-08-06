@@ -22,7 +22,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t hossam7amdy/resala-server . -f Dockerfile.server:${{ github.sha }} .
+          docker build -t hossam7amdy/resala-server . -f Dockerfile.server:${{ github.sha }}
           docker push hossam7amdy/resala-server:${{ github.sha }}
 
   deploy:
