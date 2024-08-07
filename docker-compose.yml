@@ -10,7 +10,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - 5432:5432
     networks:
       - resala-net
 
@@ -24,11 +24,11 @@ services:
     volumes:
       - s3-data:/mnt/data
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - 9000:9000
+      - 9001:9001
     networks:
       - resala-net
-    command: 'minio server /data --console-address :9001'
+    command: minio server /data --console-address :9001
 
   server:
     restart: always
@@ -43,7 +43,7 @@ services:
     volumes:
       - resala-uploads:/usr/src/app/packages/server/uploads
     ports:
-      - '5000:5000'
+      - 5000:5000
     environment:
       - PORT=5000
       - NODE_ENV=development
@@ -53,7 +53,7 @@ services:
       - JWT_REFRESH=test_refresh
       - JWT_RESET=test_reset
       - JWT_VERIFY=test_verify
-      - DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
       - MAIL_USER=mail_user
       - MAIL_PASS=mail_pass
       - TWILIO_ACCOUNT_SID=twilio_account_sid
@@ -62,15 +62,15 @@ services:
       - PAYMOB_INTEGRATION_ID=123456
       - PAYMOB_BASE_URL=https://accept.paymob.com
       - PAYMOB_HMAC_KEY=PAYMOB_HMAC_KEY
-      - PAYMOB_API_TOKEN="PAYMOB_API_TOKEN"
+      - PAYMOB_API_TOKEN=PAYMOB_API_TOKEN
       - PAYMOB_PUBLIC_KEY=egy_pk_test_abc
       - PAYMOB_SECRET_KEY=egy_sk_test_abc
       - AWS_ACCESS_KEY_ID=minio_key
       - AWS_SECRET_ACCESS_KEY=minio_secret
       - S3_REGION=s3_region
       - S3_BUCKET=resala-app
-      - S3_ENDPOINT='http://localhost:9000'
-      - S3_BASE_URL='http://localhost:9000/resala-app'
+      - S3_ENDPOINT=http://s3:9000
+      - S3_BASE_URL=http://s3:9000/resala-app
 
     networks:
       - resala-net
