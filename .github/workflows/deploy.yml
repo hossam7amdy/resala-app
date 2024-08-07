@@ -37,8 +37,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to AWS EC2
-        run: |
-          # Use AWS CLI or scripts to update your EC2 service (like using ECS or just a simple SSH command to pull the latest Docker image and restart the service)
-          ssh -v -o StrictHostKeyChecking=no ec2-user@ec2-16-170-205-145.eu-north-1.compute.amazonaws.com "docker pull hossam7amdy/resala-server:${{ github.sha }} && docker run --env-file .env -d -p 80:80 hossam7amdy/resala-server:${{ github.sha }}"
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          echo "$DEPLOY_KEY" > deploy_key.pem
+          chmod 600 deploy_key.pem
+          # Use AWS CLI or scripts to update your EC2 service (like using ECS or just a simple SSH command to pull the latest Docker image and restart the service)
+          ssh -v -o StrictHostKeyChecking=no ec2-user@ec2-16-170-205-145.eu-north-1.compute.amazonaws.com "docker pull hossam7amdy/resala-server:${{ github.sha }} && docker run --env-file .env -d -p 80:80 hossam7amdy/resala-server:${{ github.sha }}"
