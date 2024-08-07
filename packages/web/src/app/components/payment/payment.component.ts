@@ -1,19 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  PatternValidator,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { PaymentService } from 'src/app/core/services/payment.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
-import { CartService } from 'src/app/core/services/cart.service';
-
+import type { OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { Router } from '@angular/router';
+import type { ToastrService } from 'ngx-toastr';
+import type { CartService } from 'src/app/core/services/cart.service';
+import type { PaymentService } from 'src/app/core/services/payment.service';
 
 @Component({
   selector: 'app-payment',
@@ -28,7 +21,8 @@ export class PaymentComponent implements OnInit {
     private _Renderer2: Renderer2,
     private _Toaster: ToastrService,
     private _Router: Router,
-    private _CartService: CartService) { }
+    private _CartService: CartService
+  ) {}
 
   isEdit: boolean = false;
   editIndex: any;
@@ -160,7 +154,6 @@ export class PaymentComponent implements OnInit {
   // is registerd method
   isRegisterdFun(): void {
     this.isRegisterd = true;
-
   }
   // textTimer(txt:string): void {
   //   setTimeout(() => {
@@ -177,9 +170,7 @@ export class PaymentComponent implements OnInit {
     paymentMethod: new FormControl('', [Validators.required]),
 
     note: new FormControl(''),
-  })
-
-
+  });
 
   creatOrder(btn: HTMLButtonElement) {
     this.isLoading = true;
@@ -194,12 +185,12 @@ export class PaymentComponent implements OnInit {
           console.log(response);
 
           this.isLoading = false;
-          this._Toaster.success("Your Order Completed")
+          this._Toaster.success('Your Order Completed');
 
           if (this.paymentSelected == 'CARD') {
             window.open(response.data.paymentUrl, '_self');
           } else {
-            this._Router.navigate(['/home'])
+            this._Router.navigate(['/home']);
           }
           this._Renderer2.setAttribute(btn, 'disabled', 'true');
           this._CartService.cartNumber.next(0);

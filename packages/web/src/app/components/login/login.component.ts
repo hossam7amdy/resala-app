@@ -1,14 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  PatternValidator,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { Router } from '@angular/router';
+import type { AuthService } from 'src/app/core/services/auth.service';
 
 import { ProductDetailsComponent } from '../product-details/product-details.component';
 
@@ -29,6 +23,7 @@ export class LoginComponent {
   ) {}
 
   //show password
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   showPW: any;
   togglePW() {
     this.showPW = !this.showPW;
@@ -50,7 +45,7 @@ export class LoginComponent {
         Validators.pattern(/\d/),
         Validators.pattern(/[a-z]/),
         Validators.pattern(/[A-Z]/),
-        Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>\/?]/),
+        Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>/?]/),
         Validators.minLength(8),
       ])
     ),
@@ -66,6 +61,7 @@ export class LoginComponent {
   //|| Validators.pattern(/^(?:\d{10}|\w+@\w+\.\w{2,3})$/)
   // /^01[0125][0-9]{8}$/
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   handleForm(loginForm: FormGroup): void {
     this.isLoading = true;
 
@@ -91,7 +87,9 @@ export class LoginComponent {
             // this._Router.navigate(['/home']);
             const productId = localStorage.getItem('productId');
             if (productId == null) {
-              this._Router.navigate(['/home']).then(() => { window.location.reload() });
+              this._Router.navigate(['/home']).then(() => {
+                window.location.reload();
+              });
               console.log('product id' + productId);
             } else {
               console.log('product id' + productId);

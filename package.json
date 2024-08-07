@@ -27,7 +27,8 @@
     "start:web": "yarn workspace @resala/web ng serve --open",
     "start:server": "yarn workspace @resala/server dev",
     "start": "npm-run-all --parallel start:server start:dashboard start:web",
-    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
+    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server",
+    "pre-commit": "yarn checks:fix"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

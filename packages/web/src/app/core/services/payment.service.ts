@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpClient } from '@angular/common/http';
+import type { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ENDPOINT_CONFIGS, withParams } from '@resala/shared';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

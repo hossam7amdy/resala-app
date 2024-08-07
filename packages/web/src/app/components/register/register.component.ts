@@ -1,14 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  PatternValidator,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { Router } from '@angular/router';
+import type { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -66,7 +61,7 @@ export class RegisterComponent {
         Validators.pattern(/\d/),
         Validators.pattern(/[a-z]/),
         Validators.pattern(/[A-Z]/),
-        Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>\/?]/),
+        Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>/?]/),
         Validators.minLength(8),
       ])
     ),
@@ -74,6 +69,7 @@ export class RegisterComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   handleForm(registerForm: FormGroup): void {
     this.isLoading = true;
 
