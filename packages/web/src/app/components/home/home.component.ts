@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Injectable, OnInit, Renderer2 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
-import { ToastrService } from 'ngx-toastr';
-import { Category } from 'src/app/core/interfaces/category';
-import { Product } from 'src/app/core/interfaces/product';
-import { CategoriesService } from 'src/app/core/services/categories/categories.service';
-import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { WishListService } from 'src/app/core/services/wish-list.service';
+import type { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
+import type { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import type { OwlOptions } from 'ngx-owl-carousel-o';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import type { ToastrService } from 'ngx-toastr';
+import type { Category } from 'src/app/core/interfaces/category';
+import type { Product } from 'src/app/core/interfaces/product';
+import type { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import type { HomeProductsService } from 'src/app/core/services/home-products.service';
+import type { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +39,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   onClick: boolean = false;
 
   //favourit icons
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
 
   ngOnInit(): void {
@@ -67,7 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   //Add product in Wish list method
-  addPoductInWishList(id: any, element: HTMLElement): void {
+  addPoductInWishList(id: string | number, element: HTMLElement): void {
     this._Renderer.setStyle(element, 'font-weight', 'bold');
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {

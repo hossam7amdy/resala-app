@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import type { Observable } from 'rxjs';
