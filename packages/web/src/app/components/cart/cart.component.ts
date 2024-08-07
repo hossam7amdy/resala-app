@@ -60,6 +60,7 @@ export class CartComponent implements OnInit {
     element2: HTMLButtonElement
   ): void {
     if (count > 0) {
+
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
       this._CartService.addToCart(stockId, count).subscribe({
