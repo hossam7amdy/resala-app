@@ -10,6 +10,10 @@ import {
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PaymentService } from 'src/app/core/services/payment.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { CartService } from 'src/app/core/services/cart.service';
+
 
 @Component({
   selector: 'app-payment',
@@ -22,8 +26,9 @@ export class PaymentComponent implements OnInit {
   constructor(
     private _PaymentServices: PaymentService,
     private _Renderer2: Renderer2,
-    private _Toaster: ToastrService
-  ) {}
+    private _Toaster: ToastrService,
+    private _Router: Router,
+    private _CartService: CartService) { }
 
   isEdit: boolean = false;
   editIndex: any;
@@ -56,7 +61,7 @@ export class PaymentComponent implements OnInit {
     this._PaymentServices.getUserAddress().subscribe({
       next: response => {
         this.getUserAddress = response.data;
-        // this.addressId = this.getUserAddress[0].id;
+        this.addressId = this.getUserAddress[0].id;
         console.log('user address id', this.addressId);
       },
       error: err => {
@@ -155,6 +160,7 @@ export class PaymentComponent implements OnInit {
   // is registerd method
   isRegisterdFun(): void {
     this.isRegisterd = true;
+
   }
   // textTimer(txt:string): void {
   //   setTimeout(() => {
@@ -171,23 +177,32 @@ export class PaymentComponent implements OnInit {
     paymentMethod: new FormControl('', [Validators.required]),
 
     note: new FormControl(''),
-  });
+  })
+
+
 
   creatOrder(btn: HTMLButtonElement) {
     this.isLoading = true;
     const payData = this.payForm.value;
 
     // if (this.payForm.valid) {
-    console.log(payData, this.addressId);
+    console.log(payData, 'addres id', this.addressId);
     this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
       next: response => {
         if (response.success == true) {
           console.log('dataPay', this.addressId, this.paymentSelected, this.note);
           console.log(response);
-          this._Toaster.success('Data successfuly');
+
           this.isLoading = false;
-          window.open(response.data.paymentUrl, '_self');
+          this._Toaster.success("Your Order Completed")
+
+          if (this.paymentSelected == 'CARD') {
+            window.open(response.data.paymentUrl, '_self');
+          } else {
+            this._Router.navigate(['/home'])
+          }
           this._Renderer2.setAttribute(btn, 'disabled', 'true');
+          this._CartService.cartNumber.next(0);
         }
       },
       error: err => {
