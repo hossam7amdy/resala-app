@@ -170,6 +170,10 @@
   font-size: 12px;
 }
 
+.counter .min-counter-btn:disabled {
+  cursor: not-allowed;
+}
+
 .counter .counter-text {
   background-color: #fff;
   color: #016373;
@@ -185,8 +189,7 @@
 }
 
 .add-cart-btn button:hover,
-.add-cart-btn button:active,
-.add-cart-btn button:disabled {
+.add-cart-btn button:active {
   color: #016373;
   font-weight: 500;
   background-color: #fff;
