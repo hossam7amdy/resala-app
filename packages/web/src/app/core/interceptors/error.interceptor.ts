@@ -1,4 +1,4 @@
-import {
+import type {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -6,7 +6,8 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 // import { AuthService } from '@core/services/auth.service';

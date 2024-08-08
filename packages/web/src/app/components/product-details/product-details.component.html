@@ -165,7 +165,11 @@
         <h4 class="h4">Quantity</h4>
         <section class="quantity">
           <div class="counter">
-            <button class="min-counter-btn fw-bold" [disabled]="counterQuantity == 1" (click)="minCounterQuantity()">
+            <button
+              class="min-counter-btn fw-bold"
+              [disabled]="counterQuantity == 1"
+              (click)="minCounterQuantity()"
+            >
               <i class="fa-solid fa-minus"></i>
             </button>
             <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
