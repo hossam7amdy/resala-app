@@ -3,7 +3,7 @@ node_modules
 .npmrc
 
 # Keep environment variables out of version control
-.env.*
+.env*
 
 # Ignore the build directory
 dist
