@@ -1,4 +1,5 @@
 export interface Product {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   imageUrl: any;
   enName: string;
   price: string;
@@ -28,7 +29,6 @@ export interface Data {
   price: string
   createdAt: string
   updatedAt: string
-  deletedAt: any
   category: Category
   images: Image[]
 }
@@ -40,7 +40,6 @@ export interface Category {
   enName: string
   createdAt: string
   updatedAt: string
-  deletedAt: any
 }
 
 export interface Image {

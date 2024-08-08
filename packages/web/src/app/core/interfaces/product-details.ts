@@ -8,7 +8,6 @@ export interface ProductDetails {
   price: string;
   createdAt: string;
   updatedAt: string;
-  deletedAt: any;
   category: Category;
   images: Image[];
 }
@@ -19,7 +18,6 @@ export interface Category {
   enName: string;
   createdAt: string;
   updatedAt: string;
-  deletedAt: any;
 }
 
 export interface Image {

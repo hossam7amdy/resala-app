@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import type { Observable } from 'rxjs';

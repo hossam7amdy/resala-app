@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { CartService } from 'src/app/core/services/cart.service';
+import type { OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import type { Router } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import type { AuthService } from 'src/app/core/services/auth.service';
+import type { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-nav-blank',
@@ -31,7 +33,7 @@ export class NavBlankComponent implements OnInit {
       next: response => {
         this.cartNum = response.data.totalQuantity;
       },
-      error: err => {},
+      error: () => {},
     });
   }
   signOut: boolean = this._AuthService.signOut;

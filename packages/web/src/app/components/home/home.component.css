@@ -200,7 +200,6 @@ section .overlay {
 .parent-img-content {
   position: relative;
   width: 200px;
-
 }
 
 .img-content {
@@ -269,7 +268,6 @@ section .overlay {
 .header-product.active i {
   /* background-color: #fbb935; */
   font-weight: bold;
-
 }
 
 .shopping-icon {

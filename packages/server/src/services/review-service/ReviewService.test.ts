@@ -1,6 +1,6 @@
 import { Decimal } from '@prisma/client/runtime/library';
-import type { Category, DefaultFilters, Product, User } from '@resala/shared';
-import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { DefaultFilters, Product, User } from '@resala/shared';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type MockProxy, mock, mockClear, mockDeep } from 'vitest-mock-extended';
 
 import type { ReviewRepository } from '../../repositories/index.js';

@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { CartService } from 'src/app/core/services/cart.service';
+import type { OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
+import type { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import type { ToastrService } from 'ngx-toastr';
+import type { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -60,7 +63,6 @@ export class CartComponent implements OnInit {
     element2: HTMLButtonElement
   ): void {
     if (count > 0) {
-
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
       this._CartService.addToCart(stockId, count).subscribe({
@@ -96,7 +98,7 @@ export class CartComponent implements OnInit {
         this._CartService.cartNumber.next(res.data.totalQuantity);
         this._toaster.success('Removed Your Item Successfuly');
       },
-      error: err => {
+      error: () => {
         this._toaster.info('Your Item Not Removed');
       },
     });
@@ -122,7 +124,7 @@ export class CartComponent implements OnInit {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
         },
-        error: err => {
+        error: () => {
           this._toaster.info('Your Items are Not Deleted !!');
         },
       });
