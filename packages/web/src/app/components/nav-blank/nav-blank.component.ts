@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import type { OnInit } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
-import type { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import type { AuthService } from 'src/app/core/services/auth.service';
-import type { CartService } from 'src/app/core/services/cart.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-nav-blank',

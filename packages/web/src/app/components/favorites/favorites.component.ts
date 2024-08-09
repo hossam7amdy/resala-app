@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import type { OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import type { NgxSpinnerService } from 'ngx-spinner';
-import type { ToastrService } from 'ngx-toastr';
-import type { WishListService } from 'src/app/core/services/wish-list.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-favorites',

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import type { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
-import type { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import type { OwlOptions } from 'ngx-owl-carousel-o';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import type { ToastrService } from 'ngx-toastr';
-import type { Category } from 'src/app/core/interfaces/category';
-import type { Product } from 'src/app/core/interfaces/product';
-import type { CategoriesService } from 'src/app/core/services/categories/categories.service';
-import type { HomeProductsService } from 'src/app/core/services/home-products.service';
-import type { WishListService } from 'src/app/core/services/wish-list.service';
+import { ToastrService } from 'ngx-toastr';
+import { Category } from 'src/app/core/interfaces/category';
+import { Product } from 'src/app/core/interfaces/product';
+import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-home',
