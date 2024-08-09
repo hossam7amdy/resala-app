@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import type { OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
-import type { OwlOptions } from 'ngx-owl-carousel-o';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import type { NgxSpinnerService } from 'ngx-spinner';
-import type { ToastrService } from 'ngx-toastr';
-import type { CartService } from 'src/app/core/services/cart.service';
-import type { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { CartService } from 'src/app/core/services/cart.service';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
 
 @Component({
   selector: 'app-product-details',

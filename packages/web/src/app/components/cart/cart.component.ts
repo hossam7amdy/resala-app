@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import type { OnInit, Renderer2 } from '@angular/core';
+import  { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
-import type { Router } from '@angular/router';
+import  { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import type { ToastrService } from 'ngx-toastr';
-import type { CartService } from 'src/app/core/services/cart.service';
+import  { ToastrService } from 'ngx-toastr';
+import  { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
