@@ -3,6 +3,11 @@ services:
     image: postgres
     restart: always
     container_name: resala-db
+    healthcheck:
+      test: ['CMD', 'pg_isready -U postgres']
+      interval: 15s
+      timeout: 10s
+      retries: 5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -40,19 +45,19 @@ services:
     depends_on:
       - db
       - s3
-    volumes:
-      - resala-uploads:/usr/src/app/packages/server/uploads
     ports:
       - 5000:5000
+    environment:
+      S3_ENDPOINT: http://s3:9000 # Required for Minio
+      DATABASE_URL: postgres://postgres:postgres@db:5432/resala
     env_file:
-      - .env.docker
+      - packages/server/.env
     networks:
       - resala-net
 
 volumes:
   db-data:
   s3-data:
-  resala-uploads:
 
 networks:
   resala-net:
