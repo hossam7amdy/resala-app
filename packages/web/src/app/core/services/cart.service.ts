@@ -14,7 +14,7 @@ export class CartService {
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 
-  baseUrl: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com/`;
 
   // add item on cart
   addToCart(stockId: string, quantity: string): Observable<any> {
