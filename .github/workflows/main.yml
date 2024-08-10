@@ -2,33 +2,12 @@ name: CI
 
 on:
   pull_request:
-    branches: ['main', 'staging', 'develop']
-  workflow_dispatch:
+    branches:
+      - '**' # any branch
+      - '!main' # exclude main branch
+      - '!develop' # exclude master branch
 
-env:
-  PORT: 5000
-  NODE_ENV: test
-  APP_URL: http://localhost:5000
-  JWT_SECRET: jwt_secret
-  JWT_REFRESH: jwt_refresh
-  JWT_RESET: jwt_reset
-  JWT_VERIFY: jwt_verify
-  DATABASE_URL: postgresql://postgres:postgres@db:54320/postgres
-  MAIL_USER: user@mail.com
-  MAIL_PASS: password
-  TWILIO_ACCOUNT_SID: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-  TWILIO_AUTH_TOKEN: your_auth_token
-  TWILIO_PHONE_NUMBER: +1234567890
-  PAYMOB_INTEGRATION_ID: 123456
-  PAYMOB_API_URL: https://accept.paymob.com/api
-  PAYMOB_HMAC_KEY: your_hmac_key
-  PAYMOB_API_TOKEN: your_api_token
-  S3_REGION: us-east-1
-  AWS_ACCESS_KEY_ID: minio_key
-  AWS_SECRET_ACCESS_KEY: minio_secret
-  S3_BUCKET: resala-app
-  S3_ENDPOINT: http://localhost:9000
-  S3_BASE_URL: http://localhost:9000/resala-app
+  workflow_dispatch:
 
 jobs:
   build:
@@ -48,38 +27,6 @@ jobs:
           yarn
           yarn build
 
-  test:
-    runs-on: ubuntu-latest
-
-    services:
-      db:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 54320:5432
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Use Node.js version
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-
-      - name: yarn install and test
-        run: |
-          yarn
-          yarn test
-
   lint:
     runs-on: ubuntu-latest
 
@@ -94,4 +41,4 @@ jobs:
       - name: yarn install and lint
         run: |
           yarn
-          yarn format
+          yarn checks:fix

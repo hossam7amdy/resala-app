@@ -44,6 +44,14 @@ body {
   margin-left: 30px;
 }
 
+.table-row-pointer {
+  cursor: pointer;
+}
+
+.table-row-pointer:hover td {
+  background: var(--primary-color-light) !important;
+}
+
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;

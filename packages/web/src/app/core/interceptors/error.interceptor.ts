@@ -1,4 +1,4 @@
-import {
+import type {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -6,14 +6,15 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 // import { AuthService } from '@core/services/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor() { } // private authService: AuthService
+  constructor() {} // private authService: AuthService
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
@@ -21,7 +22,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (err.status === 401 || err.status === 403) {
           // this.authService.logout();
           console.log('NOT Authorized');
-
         }
         return throwError(() => err);
       })

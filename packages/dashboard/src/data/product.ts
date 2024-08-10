@@ -1,60 +1,55 @@
 'use server';
 
-import { callEndpoint } from '@/lib/fetch';
-import {
-  type DefaultRequestQuery,
-  ENDPOINT_CONFIGS,
-  type GetProductImagesRequest,
-  type GetProductImagesResponse,
-  type GetProductRequest,
-  type GetProductResponse,
-  type GetProductStocksRequest,
-  type GetProductStocksResponse,
-  type GetProductsListRequest,
-  type GetProductsListResponse,
+import { callEndpoint } from '@/services/callEndpoint';
+import type {
+  DefaultRequestQuery,
+  GetProductRequest,
+  GetProductResponse,
+  GetProductStocksRequest,
+  GetProductStocksResponse,
+  GetProductsListRequest,
+  GetProductsListResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const listProductsPaginated = async (query: DefaultRequestQuery['query']) => {
   noStore();
 
   const response = await callEndpoint<GetProductsListRequest, GetProductsListResponse>(
-    ENDPOINT_CONFIGS.getProductsList,
-    { query: { ...query, deleted: true } }
+    ENDPOINT_CONFIGS.listProducts,
+    { query }
   );
 
   return response.data;
 };
 
-export const getProductImages = async (id: string) => {
+export const listProductStocks = async (id: string) => {
   noStore();
 
-  const response = await callEndpoint<GetProductImagesRequest, GetProductImagesResponse>(
-    ENDPOINT_CONFIGS.listProductImages,
-    { params: { productId: Number(id) } }
-  );
+  try {
+    const response = await callEndpoint<GetProductStocksRequest, GetProductStocksResponse>(
+      ENDPOINT_CONFIGS.listProductStocks,
+      { params: { productId: Number(id) } }
+    );
 
-  return response.data;
-};
-
-export const getProductStocks = async (id: string) => {
-  noStore();
-
-  const response = await callEndpoint<GetProductStocksRequest, GetProductStocksResponse>(
-    ENDPOINT_CONFIGS.getProductStocks,
-    { params: { productId: Number(id) } }
-  );
-
-  return response.data;
+    return response.data;
+  } catch (e) {
+    return null;
+  }
 };
 
 export const findProductById = async (id: string | number) => {
   noStore();
 
-  const response = await callEndpoint<GetProductRequest, GetProductResponse>(
-    ENDPOINT_CONFIGS.getProduct,
-    { query: { deleted: true }, params: { productId: Number(id) } }
-  );
+  try {
+    const response = await callEndpoint<GetProductRequest, GetProductResponse>(
+      ENDPOINT_CONFIGS.getProduct,
+      { params: { productId: Number(id) } }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (e) {
+    return null;
+  }
 };

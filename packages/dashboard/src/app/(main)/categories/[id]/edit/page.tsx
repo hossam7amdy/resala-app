@@ -1,8 +1,8 @@
-import EditForm from '@/components/categories/edit-form';
-import BackButton from '@/components/ui/back-button';
-import FormSkeleton from '@/components/ui/form-skeleton';
-import { findCategoryById, listAllCategories } from '@/data/category';
-import ROUTES from '@/lib/routes';
+import BackButton from '@/components/back-button';
+import FormSkeleton from '@/components/form-skeleton';
+import { findCategoryById } from '@/data/category';
+import EditForm from '@/features/categories/edit-form';
+import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -16,7 +16,7 @@ const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.CATEGORIES}>Categories</Link> },
-            { title: 'Edit Category' },
+            { title: 'Edit' },
           ]}
         />
       </Col>
@@ -32,13 +32,13 @@ const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
 };
 
 const EditCategoryForm = async ({ id }: { id: string }) => {
-  const [categories, category] = await Promise.all([listAllCategories(), findCategoryById(id)]);
+  const category = await findCategoryById(id);
 
   if (!category) {
     notFound();
   }
 
-  return <EditForm category={category} categories={categories} />;
+  return <EditForm category={category} />;
 };
 
 export default EditCategoryPage;

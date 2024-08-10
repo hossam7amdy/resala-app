@@ -1,11 +1,15 @@
+import dotenv from 'dotenv';
 import { defineConfig } from 'vitest/config';
+
+dotenv.config({ path: '.env.test' });
 
 export default defineConfig({
   test: {
     name: 'resala/server - [ Integration Test ]',
     environment: 'node',
     include: ['src/tests/**/*.test.ts'],
-    setupFiles: ['src/tests/setup.ts'],
+    setupFiles: ['src/tests/setup/dbSeedAndReset.ts', 'src/tests/setup/customMatchers.ts'],
+    globalSetup: 'src/tests/setup/globalSetup.ts',
     fileParallelism: false,
   },
   resolve: {

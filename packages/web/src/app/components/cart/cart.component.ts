@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { CartService } from 'src/app/core/services/cart.service';
-
+import  { OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
+import  { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import  { ToastrService } from 'ngx-toastr';
+import  { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -13,13 +15,10 @@ import { CartService } from 'src/app/core/services/cart.service';
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
-
   cartDetails: any = {};
   cartDetailsItems: any = [];
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-
-
 
   // quantity attr
   counterQuantity: number = 1;
@@ -28,25 +27,19 @@ export class CartComponent implements OnInit {
     private _Renderer: Renderer2,
     private _toaster: ToastrService,
     private _Router: Router
-
-
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
-
       },
       error: err => {
         console.log(err);
-      }
-    })
-
-
+      },
+    });
   }
 
   // Quantity Fun
@@ -60,33 +53,34 @@ export class CartComponent implements OnInit {
     } else {
       this.counterQuantity = 1;
     }
-
   }
 
   // Adjust quantity
-  changeCount(count: any, stockId: string, element1: HTMLButtonElement, element2: HTMLButtonElement): void {
+  changeCount(
+    count: any,
+    stockId: string,
+    element1: HTMLButtonElement,
+    element2: HTMLButtonElement
+  ): void {
     if (count > 0) {
-
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
       this._CartService.addToCart(stockId, count).subscribe({
-        next: (response) => {
+        next: response => {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
           this.cartDetailsItems = response.data.items;
 
-          console.log(this.cartDetails)
+          console.log(this.cartDetails);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
-
         },
-        error: (err) => {
+        error: err => {
           console.log(err);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
-
-        }
-      })
+        },
+      });
     } else {
       count = 1;
     }
@@ -94,7 +88,7 @@ export class CartComponent implements OnInit {
 
   // Remove item
   removeItem(itemId: string, element: HTMLElement): void {
-    this._Renderer.setAttribute(element, 'disabled', 'true')
+    this._Renderer.setAttribute(element, 'disabled', 'true');
 
     this._CartService.removeCartItem(itemId).subscribe({
       next: res => {
@@ -104,10 +98,10 @@ export class CartComponent implements OnInit {
         this._CartService.cartNumber.next(res.data.totalQuantity);
         this._toaster.success('Removed Your Item Successfuly');
       },
-      error: err => {
+      error: () => {
         this._toaster.info('Your Item Not Removed');
-      }
-    })
+      },
+    });
   }
 
   // Delete Confirmation
@@ -119,7 +113,6 @@ export class CartComponent implements OnInit {
   }
   cancelDelete() {
     this.checkedDeleteAll = false;
-
   }
   // Clear Cart
   clearAllItems(element: HTMLElement): void {
@@ -131,12 +124,10 @@ export class CartComponent implements OnInit {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
         },
-        error: err => {
-          this._toaster.info('Your Items are Not Deleted !!')
-        }
-      })
+        error: () => {
+          this._toaster.info('Your Items are Not Deleted !!');
+        },
+      });
     }
-
   }
-
 }

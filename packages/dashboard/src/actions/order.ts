@@ -1,42 +1,33 @@
 'use server';
 
-import { callEndpoint } from '@/lib/fetch';
-import ROUTES from '@/lib/routes';
-import { sleep } from '@/lib/util';
+import { callEndpoint } from '@/services/callEndpoint';
+import ROUTES from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { DeleteOrderRequest, DeleteOrderResponse } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
-export const updateOrderStatus = async (id: string | number, payload: { status: string }) => {
-  try {
-    console.log('updateOrderStatus', id, payload);
-    await sleep(2000);
-    revalidatePath(ROUTES.ORDERS);
-  } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: error.message,
-    };
+export const updateOrderStatus = async (
+  id: string | number,
+  payload: {
+    paymentStatus: string;
+    orderStatus: string;
   }
-  redirect(ROUTES.ORDERS);
+) => {
+  const response = await callEndpoint(ENDPOINT_CONFIGS.updateOrderStatus, {
+    params: { orderId: Number(id) },
+    body: payload,
+  });
+
+  revalidatePath(ROUTES.ORDERS);
+  return response;
 };
 
-export const deleteOrder = async (id: string | number) => {
-  try {
-    const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
-      ENDPOINT_CONFIGS.deleteOrder,
-      { params: { orderId: Number(id) } }
-    );
+export const deleteOrder = async (orderId: string | number, userId: string | number) => {
+  const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
+    ENDPOINT_CONFIGS.deleteOrder,
+    { params: { orderId: +orderId }, query: { userId: +userId } }
+  );
 
-    revalidatePath(ROUTES.ORDERS);
-    return response.data;
-  } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
+  revalidatePath(ROUTES.ORDERS);
+  return response;
 };

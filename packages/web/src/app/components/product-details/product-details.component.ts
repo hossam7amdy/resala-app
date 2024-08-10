@@ -1,14 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
-
+import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { ToastrService } from 'ngx-toastr';
-
 
 @Component({
   selector: 'app-product-details',
@@ -29,7 +31,7 @@ export class ProductDetailsComponent implements OnInit {
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
     private _Router: Router
-  ) { } // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+  ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
 
@@ -76,8 +78,8 @@ export class ProductDetailsComponent implements OnInit {
       },
       error: err => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
   getProductDetails(id: any) {
@@ -86,16 +88,11 @@ export class ProductDetailsComponent implements OnInit {
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
         console.log('productdetails', res.data);
-
-
       },
       error: err => console.log(err),
       complete: () => this.getProductStock(id),
     });
-
   }
-
-
 
   getProductStock(id: any) {
     this._HomeProductsService.getProductStock(id).subscribe({
@@ -138,7 +135,6 @@ export class ProductDetailsComponent implements OnInit {
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
     nav: false,
-
   };
 
   // carousel mini images
@@ -190,9 +186,8 @@ export class ProductDetailsComponent implements OnInit {
     this.selectedSize = event?.size;
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
-    this.quantity = event?.quantity
+    this.quantity = event?.quantity;
     console.log(this.selectedSize, this.stockIdSize);
-
   }
 
   setActiveClass() {
@@ -209,33 +204,30 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.counterQuantity = 1;
     }
-
   }
 
   addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
     if (this.isChooseColor && this.isChooseSize === true) {
-      this._Renderer2.setAttribute(element, 'disabled', 'true')
+      this._Renderer2.setAttribute(element, 'disabled', 'true');
 
       this._CartService.addToCart(productId, quantity).subscribe({
         next: res => {
           console.log(res);
-          this._CartService.cartNumber.next(res.data.totalQuantity)
+          this._CartService.cartNumber.next(res.data.totalQuantity);
           console.log('cart number :' + this._CartService.cartNumber);
           this._toaster.success('added one product successfuly');
         },
         error: err => {
           localStorage.setItem('productId', this.productId);
           this._toaster.error('Should be Login');
-          this._Router.navigate(['/login'])
+          this._Router.navigate(['/login']);
           console.log('response', productId, quantity, err);
-        }
+        },
       });
-
     } else {
       this._toaster.info('should be choose color and size');
     }
 
-    this._Renderer2.removeAttribute(element, 'disabled')
+    this._Renderer2.removeAttribute(element, 'disabled');
   }
-
 }

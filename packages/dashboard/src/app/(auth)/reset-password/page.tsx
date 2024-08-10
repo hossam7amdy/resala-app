@@ -1,11 +1,11 @@
-import { Logo } from '@/components/ui/logo';
-import ROUTES from '@/lib/routes';
+import { Logo } from '@/components';
+import ROUTES from '@/utils/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
 import styles from './page.module.css';
-import EmailForm from './reset-form';
+import { ResetPasswordForm } from './reset-form';
 
 const ResetPasswordPage = () => {
   return (
@@ -14,7 +14,7 @@ const ResetPasswordPage = () => {
         <div style={{ alignSelf: 'center' }}>
           <Logo />
         </div>
-        <EmailForm />
+        <ResetPasswordForm />
         <Link href={ROUTES.LOGIN}>Back to Login</Link>
       </Flex>
     </div>

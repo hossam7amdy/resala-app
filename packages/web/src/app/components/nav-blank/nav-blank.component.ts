@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 
@@ -16,34 +18,28 @@ export class NavBlankComponent implements OnInit {
     private _AuthService: AuthService,
     private _Router: Router,
     private _CartService: CartService
-  ) { }
+  ) {}
 
   cartNum: number = 0;
   ngOnInit(): void {
-
     this._CartService.cartNumber.subscribe({
-      next: (response) => {
-
-        console.log('cart number', response)
+      next: response => {
+        console.log('cart number', response);
         this.cartNum = response;
-      }
-    })
+      },
+    });
 
     this._CartService.getCartUser().subscribe({
-      next: (response) => {
+      next: response => {
         this.cartNum = response.data.totalQuantity;
       },
-      error: err => {
-
-      }
-    })
+      error: () => {},
+    });
   }
   signOut: boolean = this._AuthService.signOut;
-
 
   removeTokenSignOut(): void {
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
   }
-
 }

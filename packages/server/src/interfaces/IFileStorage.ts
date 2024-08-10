@@ -1,10 +1,10 @@
-export interface IFileStorage {
-  uploadFile(buffer: Buffer, key: string): Promise<string>;
-  downloadFile(key: string): Promise<Buffer>;
-  deleteFile(key: string): Promise<void>;
-  deleteFiles(key: string[]): Promise<void>;
-  listFiles(key: string): Promise<string[]>;
-  getFileMetadata(key: string): Promise<FileMetadata>;
+export default interface IFileStorage {
+  upload(buffer: Buffer, key: string): Promise<string>;
+  download(key: string): Promise<Buffer>;
+  delete(key: string): Promise<void>;
+  deleteMany(key: string[]): Promise<void>;
+  list(key: string): Promise<string[]>;
+  getMetadata(key: string): Promise<FileMetadata>;
 }
 
 export interface FileMetadata {

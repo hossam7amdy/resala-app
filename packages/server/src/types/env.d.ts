@@ -3,7 +3,8 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production' | 'test';
       PORT: string;
-      APP_URL: string;
+      SERVER_URL: string;
+      FRONTEND_URL: string;
 
       JWT_SECRET: string;
       JWT_REFRESH: string;
@@ -23,6 +24,8 @@ declare global {
       PAYMOB_API_URL: string;
       PAYMOB_HMAC_KEY: string;
       PAYMOB_API_TOKEN: string;
+      PAYMOB_PUBLIC_KEY: string;
+      PAYMOB_SECRET_KEY: string;
 
       AWS_ACCESS_KEY_ID: string;
       AWS_SECRET_ACCESS_KEY: string;

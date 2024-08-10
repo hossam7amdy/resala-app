@@ -78,9 +78,6 @@ section .overlay {
   box-shadow: 0px 0px 10px #fff;
 }
 
-
-
-
 /* Slider*/
 .custom-owl .row,
 .custom-owl .row .col-6 {
@@ -101,7 +98,7 @@ section .overlay {
 }
 
 .custom-owl {
-  .owl-theme .owl-nav.disabled+.owl-dots {
+  .owl-theme .owl-nav.disabled + .owl-dots {
     position: absolute !important;
     bottom: 0% !important;
     left: 49% !important;
@@ -115,7 +112,6 @@ section .overlay {
 }
 
 .custom-owl {
-
   .owl-theme .owl-dots .owl-dot.active span,
   .owl-theme .owl-dots .owl-dot:hover span {
     background-color: #fbb935 !important;
@@ -204,7 +200,6 @@ section .overlay {
 .parent-img-content {
   position: relative;
   width: 200px;
-
 }
 
 .img-content {
@@ -273,7 +268,6 @@ section .overlay {
 .header-product.active i {
   /* background-color: #fbb935; */
   font-weight: bold;
-
 }
 
 .shopping-icon {
