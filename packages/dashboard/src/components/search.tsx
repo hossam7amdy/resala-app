@@ -33,10 +33,8 @@ const SearchComponent: React.FC<SearchProps> = props => {
   );
 };
 
-const Search: React.FC<SearchProps> = props => (
+export const Search: React.FC<SearchProps> = props => (
   <Suspense fallback={<SkeletonInput active block />}>
     <SearchComponent {...props} />
   </Suspense>
 );
-
-export default Search;

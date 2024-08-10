@@ -1,5 +1,4 @@
-import BackButton from '@/components/back-button';
-import FormSkeleton from '@/components/form-skeleton';
+import { BackButton, FormSkeleton } from '@/components';
 import { listAllCategories } from '@/data/category';
 import { findProductById } from '@/data/product';
 import { Form } from '@/features/products/create-form';

@@ -1,4 +1,4 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import { listAllSizes } from '@/data/sizes';
 import Table from '@/features/sizes/table';
 import ROUTES from '@/utils/routes';

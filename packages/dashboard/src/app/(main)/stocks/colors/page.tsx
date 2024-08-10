@@ -1,4 +1,4 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import { listAllColors } from '@/data/colors';
 import Table from '@/features/colors/table';
 import ROUTES from '@/utils/routes';
