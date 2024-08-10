@@ -3,7 +3,7 @@
 import { Pagination as AntPagination } from 'antd';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-const Pagination: React.FC<{ totalPages: number }> = ({ totalPages }) => {
+export const Pagination: React.FC<{ totalPages: number }> = ({ totalPages }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,5 +23,3 @@ const Pagination: React.FC<{ totalPages: number }> = ({ totalPages }) => {
     <AntPagination current={page} pageSize={limit} total={totalPages} onChange={createPageURL} />
   );
 };
-
-export default Pagination;
