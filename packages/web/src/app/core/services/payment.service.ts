@@ -12,7 +12,7 @@ export class PaymentService {
   constructor(
     private _HttpClient: HttpClient
   ) { }
-  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app`;
+  baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com/`;
   myToken: any = { 'Authorization': `Bearer ${localStorage.getItem('etoken')}` }
 
   // countries API 

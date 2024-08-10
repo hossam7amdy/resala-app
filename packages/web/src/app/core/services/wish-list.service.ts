@@ -11,7 +11,7 @@ export class WishListService {
   constructor(private _HttpClient: HttpClient) { }
 
   //base URL
-  baseUrl: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com/`;
 
 
   // My token
