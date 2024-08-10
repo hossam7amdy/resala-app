@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   //Add product in Wish list method
-  addPoductInWishList(id: string | number, element: HTMLElement): void {
+  addPoductInWishList(id: string | number | undefined, element: HTMLElement): void {
     this._Renderer.setStyle(element, 'font-weight', 'bold');
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
