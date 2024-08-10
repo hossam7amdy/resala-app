@@ -49,7 +49,7 @@ const items = [
 export const NavLinks: React.FC = () => {
   const pathname = usePathname();
 
-  const [, ...keys] = pathname.split('/');
+  const selectedKeys = pathname.split('/').map(path => `/${path}`);
 
-  return <Menu selectedKeys={[`/${keys.join('/')}`]} items={items} />;
+  return <Menu selectedKeys={selectedKeys} items={items} />;
 };
