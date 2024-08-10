@@ -1,7 +1,6 @@
 import Image from 'next/image';
 
-const Logo: React.FC = () => (
-  <Image src={'/logo.png'} alt="Resala Logo" height={60} width={116} priority />
-);
-
-export default Logo;
+export const Logo: React.FC<{ height?: number; width?: number }> = ({
+  height = 60,
+  width = 116,
+}) => <Image priority src="/logo.png" alt="Resala Logo" height={height} width={width} />;

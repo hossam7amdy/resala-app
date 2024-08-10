@@ -1,4 +1,4 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import type { Metadata } from 'next';

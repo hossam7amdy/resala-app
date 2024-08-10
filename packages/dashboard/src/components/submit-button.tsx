@@ -3,7 +3,7 @@
 import { Button, type ButtonProps } from 'antd';
 import { useFormStatus } from 'react-dom';
 
-const SubmitButton: React.FC<{ children: React.ReactNode } & ButtonProps> = ({
+export const SubmitButton: React.FC<{ children: React.ReactNode } & ButtonProps> = ({
   children,
   ...btnProps
 }) => {
@@ -15,5 +15,3 @@ const SubmitButton: React.FC<{ children: React.ReactNode } & ButtonProps> = ({
     </Button>
   );
 };
-
-export default SubmitButton;

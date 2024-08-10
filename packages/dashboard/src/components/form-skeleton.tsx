@@ -2,7 +2,7 @@ import { Col, Flex, Row } from 'antd';
 import SkeletonButton from 'antd/es/skeleton/Button';
 import SkeletonInput from 'antd/es/skeleton/Input';
 
-const FormSkeleton: React.FC = () => {
+export const FormSkeleton: React.FC = () => {
   return (
     <Row gutter={[10, 20]}>
       <Col span={24}>
@@ -25,5 +25,3 @@ const FormSkeleton: React.FC = () => {
     </Row>
   );
 };
-
-export default FormSkeleton;
