@@ -13,7 +13,7 @@ import type {
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
-export const listProductsPaginated = async (query: DefaultRequestQuery['query']) => {
+export const listProducts = async (query: DefaultRequestQuery['query']) => {
   noStore();
 
   const response = await callEndpoint<GetProductsListRequest, GetProductsListResponse>(
@@ -39,7 +39,7 @@ export const listProductStocks = async (id: string) => {
   }
 };
 
-export const findProductById = async (id: string | number) => {
+export const findProduct = async (id: string | number) => {
   noStore();
 
   try {
