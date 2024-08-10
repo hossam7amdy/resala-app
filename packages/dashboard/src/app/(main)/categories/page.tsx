@@ -16,7 +16,7 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
   const categories = await listAllCategories();
 
   return (
-    <Row gutter={[10, 30]} style={{ padding: 20 }}>
+    <Row gutter={[10, 30]}>
       <Col span={24}>
         <Breadcrumb items={[{ title: 'Categories' }]} />
       </Col>

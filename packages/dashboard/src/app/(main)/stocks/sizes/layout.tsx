@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Sizes',
+  title: 'Stocks / Sizes',
 };
 
 const ColorsLayout = ({ children }: { children: React.ReactNode }) => {

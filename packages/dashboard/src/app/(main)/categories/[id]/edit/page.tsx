@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 
 const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 50]} style={{ padding: 20 }}>
+    <Row gutter={[10, 50]}>
       <Col span={24}>
         <Breadcrumb
           items={[

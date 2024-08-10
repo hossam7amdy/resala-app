@@ -4,7 +4,7 @@ import { deleteCategory } from '@/actions/category';
 import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import { formatDate } from '@/utils/date-time-formatter';
 import ROUTES from '@/utils/routes';
-import { EditFilled } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { GetCategoryResponse, ListCategoriesResponse } from '@resala/shared';
 import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
@@ -40,7 +40,7 @@ export const CategoryTable: React.FC<{
               icon={
                 <ResalaTooltip title="Edit">
                   <Link href={ROUTES.EDIT_CATEGORY(category.id)}>
-                    <EditFilled />
+                    <EditOutlined />
                   </Link>
                 </ResalaTooltip>
               }
