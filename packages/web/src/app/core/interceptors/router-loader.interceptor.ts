@@ -1,14 +1,9 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  NavigationCancel,
-  NavigationEnd,
-  NavigationError,
-  NavigationStart,
-  Router,
-} from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Observable } from 'rxjs';
+import type { Router } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart } from '@angular/router';
+import type { NgxSpinnerService } from 'ngx-spinner';
+import type { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -18,6 +13,7 @@ export class RouterLoaderInterceptor implements HttpInterceptor {
     private spinnerService: NgxSpinnerService
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.router.events.pipe(map(evt => evt)).subscribe(event => {
       if (event instanceof NavigationStart) {

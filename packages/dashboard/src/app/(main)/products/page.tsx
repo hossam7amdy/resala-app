@@ -1,6 +1,6 @@
-import { ProductTable } from '@/components/products/product-table';
-import { Search } from '@/components/ui/search';
-import ROUTES from '@/lib/routes';
+import { Search } from '@/components';
+import { ProductTable } from '@/features/products/product-table';
+import ROUTES from '@/utils/routes';
 import type { DefaultRequestQuery } from '@resala/shared';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
@@ -30,7 +30,7 @@ const ProductPage = ({
         <Flex gap={10} align="center" justify="space-between">
           <Search placeholder="Find product" />
           <Link href={ROUTES.CREATE_PRODUCT}>
-            <Button type="primary">Create New Product</Button>
+            <Button type="primary">Add Product</Button>
           </Link>
         </Flex>
       </Col>

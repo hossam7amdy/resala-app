@@ -4,29 +4,26 @@
     <div class="row img-product">
       <div class="col-sm-12 col-md-8 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
-
-          <ng-container *ngFor="let product of productStock let j = index">
-
+          <ng-container *ngFor="let product of productStock; let j = index">
             <ng-container *ngFor="let image of product.images">
-
               <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div class="main-img p-3">
-                  <img [src]="image.imageUrl" class="image-products" [alt]="productDetails.enName"
-                    [title]="productDetails.enName" />
+                  <img
+                    [src]="image.imageUrl"
+                    class="image-products"
+                    [alt]="productDetails.enName"
+                    [title]="productDetails.enName"
+                  />
                 </div>
               </ng-template>
-
             </ng-container>
           </ng-container>
         </owl-carousel-o>
 
         <!-- test gallery -->
 
-
-
         <!-- test gallery -->
-
 
         <!-- <owl-carousel-o [options]="miniImgCarousel">
           <ng-container *ngFor="let product of productStock">
@@ -41,23 +38,25 @@
           </ng-container>
         </owl-carousel-o> -->
         <div class="d-flex flex-wrap p-3 pt-0 mini-images">
-
           <div class="d-flex" *ngFor="let product of productStock">
-            <div class=" d-flex flex-wrap ">
-              <div class="d-flex " *ngFor="let image of product.images let i=index">
-
-                <div class="img-content mb-1 d-flex  mx-1 justify-content-center" (click)="owlCar.to(image.imageUrl)"
-                  (change)="changeimage(image.imageUrl+i)">
-
-                  <img [src]="image?.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
-                    [title]="productDetails.enName" />
+            <div class="d-flex flex-wrap">
+              <div class="d-flex" *ngFor="let image of product.images; let i = index">
+                <div
+                  class="img-content mb-1 d-flex mx-1 justify-content-center"
+                  (click)="owlCar.to(image.imageUrl)"
+                  (change)="changeimage(image.imageUrl + i)"
+                >
+                  <img
+                    [src]="image?.imageUrl"
+                    class="w-100 image-products"
+                    [alt]="productDetails.enName"
+                    [title]="productDetails.enName"
+                  />
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
       <div class="col-sm-12 col-md-4">
         <h2 class="h2">{{ productDetails.enName }}</h2>
@@ -67,16 +66,28 @@
 
         <h3 class="h4">Color</h3>
         <div class="d-flex flex-wrap color-options-list">
-          <ng-container *ngFor="let product of productStockColor let i = index">
+          <ng-container *ngFor="let product of productStockColor; let i = index">
             <div [ngClass]="{ active: currentColor === product?.color?.id }" class="color-option">
-              <input [(ngModel)]="selectedColor" type="radio" class="btn-check" name="color-option" id="btncolor"
-                [value]="selectedColor" />
+              <input
+                [(ngModel)]="selectedColor"
+                type="radio"
+                class="btn-check"
+                name="color-option"
+                id="btncolor"
+                [value]="selectedColor"
+              />
               <label
-                (click)="[onColorChange(product,i),isChooseColorFun(),owlCar.to(productStock[i].images[0]?.imageUrl)]"
-                for="btncolor">
+                (click)="
+                  [
+                    onColorChange(product, i),
+                    isChooseColorFun(),
+                    owlCar.to(productStock[i].images[0]?.imageUrl)
+                  ]
+                "
+                for="btncolor"
+              >
                 {{ product.color.enName }}
               </label>
-
             </div>
           </ng-container>
         </div>
@@ -98,15 +109,20 @@
 
         <h3 class="h4">Size</h3>
         <div class="d-flex flex-wrap size-options-list">
-          <ng-container *ngFor="let product of productStock let i =index">
+          <ng-container *ngFor="let product of productStock; let i = index">
             <div *ngFor="let size of product.sizes">
               <div *ngIf="i == stockIndex">
                 <div [ngClass]="{ active: currentSize === size?.sizeId }" class="size-option">
-                  <input [(ngModel)]="selectedSize" type="radio" class="btn-check" name="size-option" id="btnsize"
-                    [value]="selectedSize" />
+                  <input
+                    [(ngModel)]="selectedSize"
+                    type="radio"
+                    class="btn-check"
+                    name="size-option"
+                    id="btnsize"
+                    [value]="selectedSize"
+                  />
 
-
-                  <label (click)="[onSizeChange(size),isChooseSizeFun()]" for="btnsize">
+                  <label (click)="[onSizeChange(size), isChooseSizeFun()]" for="btnsize">
                     {{ size.size }}
                   </label>
                 </div>
@@ -149,22 +165,31 @@
         <h4 class="h4">Quantity</h4>
         <section class="quantity">
           <div class="counter">
-            <button class="min-counter-btn fw-bold" [disabled]="counterQuantity == 1" (click)="minCounterQuantity()">
+            <button
+              class="min-counter-btn fw-bold"
+              [disabled]="counterQuantity == 1"
+              (click)="minCounterQuantity()"
+            >
               <i class="fa-solid fa-minus"></i>
             </button>
-            <span disabled min="1" data-min="1" class="fw-bold small px-4">{{counterQuantity}}</span>
+            <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
+              counterQuantity
+            }}</span>
             <button class="plus-counter-btn fw-bold" (click)="plusCounterQuantity()">
               <i class="fa-solid fa-plus"></i>
             </button>
-
           </div>
         </section>
 
         <div class="add-cart-btn">
-          <button (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)" #addToCartBtn class="w-100">ADD TO
-            CART</button>
-          <label for="">product id : {{ productDetails.id }} quantity{{counterQuantity}}</label>
-
+          <button
+            (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)"
+            #addToCartBtn
+            class="w-100"
+          >
+            ADD TO CART
+          </button>
+          <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label>
         </div>
       </div>
     </div>

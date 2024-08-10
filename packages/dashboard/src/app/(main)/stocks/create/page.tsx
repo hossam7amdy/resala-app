@@ -1,15 +1,12 @@
-import EditForm from '@/components/stocks/form';
-import SelectColor from '@/components/stocks/select-color';
-import SelectProduct from '@/components/stocks/select-product';
-import SelectSize from '@/components/stocks/select-size';
-import BackButton from '@/components/ui/back-button';
-import ROUTES from '@/lib/routes';
+import { BackButton } from '@/components';
+import { SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
+import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-const CreateStockPage = ({ searchParams }: { searchParams?: { productId?: string } }) => {
+const CreateStockPage: React.FC<{ searchParams?: { productId?: string } }> = ({ searchParams }) => {
   return (
     <Row gutter={[10, 20]} style={{ padding: 20 }}>
       <Col span={24}>
@@ -33,7 +30,7 @@ const CreateStockPage = ({ searchParams }: { searchParams?: { productId?: string
 
 const Form = async ({ productId }: { productId?: string }) => {
   return (
-    <EditForm
+    <StockForm
       stock={{ productId: Number(productId) || undefined }}
       selectSize={
         <Suspense fallback={<SkeletonInput active block size="large" />}>

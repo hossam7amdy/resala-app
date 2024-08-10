@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { NavAuthComponent } from 'src/app/components/nav-auth/nav-auth.component';
 

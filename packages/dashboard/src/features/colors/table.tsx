@@ -1,0 +1,48 @@
+'use client';
+
+import { deleteColor } from '@/actions/color';
+import { PopconfirmDeleteButton } from '@/components';
+import { StockColor } from '@/features/stocks';
+import { formatDate } from '@/utils/date-time-formatter';
+import ROUTES from '@/utils/routes';
+import { EditFilled } from '@ant-design/icons';
+import type { GetColorsListResponse } from '@resala/shared';
+import { Table as AntTable, Space } from 'antd';
+import Link from 'next/link';
+
+const Table: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) => {
+  return (
+    <AntTable
+      pagination={{
+        current: 1,
+        pageSize: 10,
+        total: colors.length,
+        position: ['bottomCenter'],
+      }}
+      scroll={{ x: true, y: 500 }}
+      rowKey="id"
+      columns={[
+        { title: 'Color', dataIndex: 'code', key: 'code' },
+        { title: 'English Name', dataIndex: 'enName', key: 'enName' },
+        { title: 'Arabic Name', dataIndex: 'arName', key: 'arName' },
+        { title: 'Created At', dataIndex: 'createdAt', key: 'createdAt' },
+        { title: 'Actions', dataIndex: 'actions', key: 'actions' },
+      ]}
+      dataSource={colors.map(color => ({
+        ...color,
+        actions: (
+          <Space>
+            <Link href={ROUTES.EDIT_COLOR(color.id)}>
+              <EditFilled />
+            </Link>
+            <PopconfirmDeleteButton onConfirmDelete={() => deleteColor(color.id)} />
+          </Space>
+        ),
+        createdAt: formatDate(color.createdAt),
+        code: <StockColor color={color.code} />,
+      }))}
+    />
+  );
+};
+
+export default Table;

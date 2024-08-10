@@ -1,7 +1,8 @@
 'use server';
 
-import ROUTES from '@/lib/routes';
-import { ENDPOINT_CONFIGS, ROLE } from '@resala/shared';
+import { Token } from '@/utils/enums';
+import ROUTES from '@/utils/routes';
+import { ENDPOINT_CONFIGS, Role } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
@@ -12,70 +13,56 @@ import type {
 } from '@resala/shared';
 import { RedirectType, redirect } from 'next/navigation';
 
-import { callEndpoint } from '../lib/fetch';
-import { createSession, deleteSession } from '../lib/session';
+import { callEndpoint } from '../services/callEndpoint';
+import { deleteCookie, setCookie } from '../utils/cookies';
 
 export const login = async (payload: LoginRequest['body']) => {
-  try {
-    const response = await callEndpoint<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
-      body: payload,
-    });
+  const { data } = await callEndpoint<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
+    body: payload,
+  });
 
-    if (![ROLE.ADMIN, ROLE.MODERATOR].includes(response.data.user.role as ROLE)) {
-      throw new Error('You are not authorized to access this page');
-    }
-
-    createSession(response.data.accessToken, new Date(response.data.expiresAt));
-  } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: error.message,
-    };
+  if (![Role.ADMIN, Role.MODERATOR].includes(data.user.role as Role)) {
+    throw new Error('You are not authorized to access this page');
   }
+
+  setCookie(Token.Access, {
+    token: data.accessToken,
+    expireDate: data.expiresAt.toString(),
+  });
+
+  setCookie(Token.Refresh, {
+    token: data.refreshToken,
+  });
 
   redirect(ROUTES.DASHBOARD, RedirectType.replace);
 };
 
 export const logout = async () => {
-  deleteSession();
+  deleteCookie(Token.Access);
+
   redirect(ROUTES.LOGIN, RedirectType.replace);
 };
 
 export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
-  try {
-    const response = await callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
-      ENDPOINT_CONFIGS.forgotPassword,
-      { body: payload }
-    );
+  const { data } = await callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
+    ENDPOINT_CONFIGS.forgotPassword,
+    { body: payload }
+  );
 
-    createSession(response.data.resetToken, new Date(response.data.expiresAt));
-  } catch (e) {
-    const error = e as Error;
-    return {
-      message: error.message,
-      success: false,
-    };
-  }
+  setCookie(Token.Access, {
+    token: data.resetToken,
+    expireDate: data.expiresAt.toString(),
+  });
 
   redirect(ROUTES.RESET_PASSWORD, RedirectType.replace);
 };
 
 export const resetPassword = async (payload: ResetPasswordRequest['body']) => {
-  try {
-    await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
-      ENDPOINT_CONFIGS.resetPassword,
-      { body: payload }
-    );
+  await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(ENDPOINT_CONFIGS.resetPassword, {
+    body: payload,
+  });
 
-    deleteSession();
-  } catch (e) {
-    const error = e as Error;
-    return {
-      message: error.message,
-      success: false,
-    };
-  }
+  deleteCookie(Token.Access);
 
   redirect(ROUTES.LOGIN, RedirectType.replace);
 };

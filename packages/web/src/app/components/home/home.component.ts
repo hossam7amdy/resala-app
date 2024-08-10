@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Injectable, OnInit, Renderer2 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
+import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ToastrService } from 'ngx-toastr';
 import { Category } from 'src/app/core/interfaces/category';
 import { Product } from 'src/app/core/interfaces/product';
@@ -24,7 +27,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2
-  ) { }
+  ) {}
 
   // interfaces
   products: Product[] = [];
@@ -36,6 +39,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   onClick: boolean = false;
 
   //favourit icons
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
 
   ngOnInit(): void {
@@ -61,31 +65,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.onClick = true;
     }, 20000);
-
   }
   closeOverlay() {
     this.onClick = false;
   }
 
   //Add product in Wish list method
-  addPoductInWishList(id: any, element: HTMLElement): void {
+  addPoductInWishList(id: string | number, element: HTMLElement): void {
     this._Renderer.setStyle(element, 'font-weight', 'bold');
     this._WishListService.postWishListItems(id).subscribe({
-      next: (response) => {
-
+      next: response => {
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
-
-      }, error: (err) => {
+      },
+      error: err => {
         if (err.error.message == 'Token expired') {
-          this._Toaster.error('Should be Login !!')
-          this._Router.navigate(['/login'])
+          this._Toaster.error('Should be Login !!');
+          this._Router.navigate(['/login']);
         } else {
           this._Toaster.error(err.message);
         }
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
   // categories slider
@@ -186,6 +188,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     },
     nav: true,
-
   };
 }

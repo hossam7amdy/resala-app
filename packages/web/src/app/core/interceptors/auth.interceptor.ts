@@ -1,13 +1,13 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 // import { environment as env } from 'environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   excludedExtensionsUrls = ['.svg', '.json'];
-  constructor() { }
+  constructor() {}
 
   checkExExtensionsUrls(url: string): boolean {
     const listCheck: boolean[] = [];

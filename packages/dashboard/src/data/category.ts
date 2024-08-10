@@ -1,19 +1,20 @@
-import { callEndpoint } from '@/lib/fetch';
-import {
-  ENDPOINT_CONFIGS,
-  type GetCategoriesListRequest,
-  type GetCategoriesListResponse,
-  type GetCategoryRequest,
-  type GetCategoryResponse,
+'use server';
+
+import { callEndpoint } from '@/services/callEndpoint';
+import type {
+  GetCategoryRequest,
+  GetCategoryResponse,
+  ListCategoriesRequest,
+  ListCategoriesResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const listAllCategories = async () => {
   noStore();
 
-  const response = await callEndpoint<GetCategoriesListRequest, GetCategoriesListResponse>(
-    ENDPOINT_CONFIGS.listCategories,
-    { query: { deleted: true } }
+  const response = await callEndpoint<ListCategoriesRequest, ListCategoriesResponse>(
+    ENDPOINT_CONFIGS.listCategories
   );
 
   return response.data;
@@ -24,7 +25,7 @@ export const findCategoryById = async (id: string) => {
 
   const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
     ENDPOINT_CONFIGS.getCategory,
-    { params: { categoryId: Number(id) }, query: { deleted: true } }
+    { params: { categoryId: Number(id) } }
   );
 
   return response.data;

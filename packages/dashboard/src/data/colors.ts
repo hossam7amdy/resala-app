@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/lib/fetch';
+import { callEndpoint } from '@/services/callEndpoint';
 import type {
   GetColorRequest,
   GetColorResponse,
@@ -14,7 +14,7 @@ export const listAllColors = async () => {
   noStore();
 
   const response = await callEndpoint<GetColorsListRequest, GetColorsListResponse>(
-    ENDPOINT_CONFIGS.getColorsList
+    ENDPOINT_CONFIGS.listColors
   );
 
   return response.data;

@@ -5,8 +5,8 @@ import fs from 'fs';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
-import { errMiddleware } from './middleware/error-middleware.js';
-import { createExpressRouter } from './router/index.js';
+import { errorMiddleware } from './middlewares/errorMiddleware.js';
+import { createExpressRouter } from './routes/index.js';
 
 const swaggerDocument = fs.readFileSync('swagger.yml', 'utf8');
 
@@ -37,7 +37,6 @@ export const createExpressApp = (logRequests: boolean = true) => {
     })
   );
 
-  // Routes
   app.use('/', createExpressRouter(logRequests));
 
   app.get('/uploads/*', (req: Request, res: Response) => {
@@ -57,7 +56,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
     res.status(404).send('Not found');
   });
 
-  app.use(errMiddleware);
+  app.use(errorMiddleware);
 
   return app;
 };

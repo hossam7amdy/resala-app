@@ -6,8 +6,6 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&family=Pacifico&family=Quicksand:wght@300..700&family=Titan+One&display=swap');
 
-
-
 .fixed-top {
   top: 30px;
 }
@@ -93,7 +91,7 @@ form .icon-search {
   justify-content: center;
 }
 
-.nav-link .mini-basket-count>span {
+.nav-link .mini-basket-count > span {
   font-weight: bolder;
   font-size: 10px;
 }
