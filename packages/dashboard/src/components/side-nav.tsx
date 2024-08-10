@@ -1,31 +1,39 @@
+'use client';
+
 import { logout } from '@/actions/auth';
 import ROUTES from '@/utils/routes';
 import { LogoutOutlined } from '@ant-design/icons';
-import { Button, Flex } from 'antd';
+import { Flex, Grid } from 'antd';
 import Link from 'next/link';
 
-import { Logo, NavLinks } from '.';
+import { Logo, Menu, NavLinks } from '.';
 
-const SideNav: React.FC = () => {
+export const SideNav: React.FC = () => {
+  const { lg } = Grid.useBreakpoint();
+
   return (
     <Flex vertical style={{ height: '100%' }}>
       <Link href={ROUTES.DASHBOARD}>
         <div style={{ textAlign: 'center', margin: '50px auto' }}>
-          <Logo />
+          <Logo width={!lg ? 58 : undefined} height={!lg ? 30 : undefined} />
         </div>
       </Link>
       <div style={{ flex: 1 }}>
         <NavLinks />
       </div>
-      <div style={{ alignSelf: 'center', marginBottom: 20 }}>
-        <form action={logout}>
-          <Button htmlType="submit" icon={<LogoutOutlined />}>
-            Logout
-          </Button>
-        </form>
+      <div style={{ marginBottom: 20 }}>
+        <Menu
+          items={[
+            {
+              danger: true,
+              key: 'logout',
+              icon: <LogoutOutlined />,
+              label: 'Logout',
+              onClick: () => logout(),
+            },
+          ]}
+        />
       </div>
     </Flex>
   );
 };
-
-export default SideNav;

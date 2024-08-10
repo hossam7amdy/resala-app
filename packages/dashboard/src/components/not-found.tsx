@@ -5,7 +5,7 @@ import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-const NotFound: React.FC<{ message: string }> = ({
+export const NotFound: React.FC<{ message: string }> = ({
   message = 'Sorry, the page you visited does not exist.',
 }) => {
   const router = useRouter();
@@ -28,5 +28,3 @@ const NotFound: React.FC<{ message: string }> = ({
     />
   );
 };
-
-export default NotFound;

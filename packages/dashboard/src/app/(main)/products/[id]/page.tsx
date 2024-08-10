@@ -1,4 +1,4 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import { listProductStocks } from '@/data/product';
 import { StocksTable } from '@/features/stocks';
 import ROUTES from '@/utils/routes';

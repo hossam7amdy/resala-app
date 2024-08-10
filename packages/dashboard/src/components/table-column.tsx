@@ -1,5 +1,3 @@
 import { Table } from 'antd';
 
-const TableColumn = Table.Column;
-
-export default TableColumn;
+export const TableColumn = Table.Column;

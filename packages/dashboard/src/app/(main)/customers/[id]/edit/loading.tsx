@@ -1,4 +1,4 @@
-import FormSkeleton from '@/components/form-skeleton';
+import { FormSkeleton } from '@/components';
 
 const Loading = () => <FormSkeleton />;
 

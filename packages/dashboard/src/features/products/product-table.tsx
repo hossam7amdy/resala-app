@@ -1,6 +1,6 @@
 'use server';
 
-import Pagination from '@/components/pagination';
+import { Pagination } from '@/components';
 import { listProductsPaginated } from '@/data/product';
 import type { DefaultRequestQuery } from '@resala/shared';
 import { Flex } from 'antd';
