@@ -8,7 +8,10 @@ export const Content: React.FC<LayoutProps> = ({ children, ...props }) => {
   const { lg } = Grid.useBreakpoint();
 
   return (
-    <Layout.Content style={{ marginLeft: lg ? 200 : 80, minHeight: '100vh' }} {...props}>
+    <Layout.Content
+      style={{ marginLeft: lg ? 200 : 80, minHeight: '100vh', padding: 20 }}
+      {...props}
+    >
       {children}
     </Layout.Content>
   );

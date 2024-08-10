@@ -5,7 +5,7 @@ import { createStock, updateStock } from '@/actions/stock';
 import { listImages } from '@/data/images';
 import { useMutation, useNotification } from '@/hooks';
 import type { Image } from '@resala/shared';
-import { Button, Flex, Form, InputNumber } from 'antd';
+import { Button, Flex, Form, InputNumber, Typography } from 'antd';
 import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -106,12 +106,14 @@ export const StockForm: React.FC<StockFormProps> = ({
   return (
     <Form
       form={form}
-      name="stock-form"
+      name={`stock-form-${stock.id}`}
       layout="vertical"
       onFinish={mutate}
       size="large"
       initialValues={{ ...stock }}
     >
+      <Typography.Title level={5}>{isCreate ? 'Create New Stock' : `Edit Stock`}</Typography.Title>
+
       {selectProduct}
 
       {selectColor}

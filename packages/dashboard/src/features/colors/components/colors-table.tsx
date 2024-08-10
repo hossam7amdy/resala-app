@@ -4,15 +4,15 @@ import { deleteColor } from '@/actions/color';
 import { PopconfirmDeleteButton } from '@/components';
 import { StockColor } from '@/features/stocks';
 import { formatDate } from '@/utils/date-time-formatter';
-import ROUTES from '@/utils/routes';
-import { EditFilled } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { GetColorsListResponse } from '@resala/shared';
-import { Table as AntTable, Space } from 'antd';
-import Link from 'next/link';
+import { Space, Table } from 'antd';
 
-const Table: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) => {
+import { ColorEditorModal } from './color-editor-modal';
+
+export const ColorsTable: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) => {
   return (
-    <AntTable
+    <Table
       pagination={{
         current: 1,
         pageSize: 10,
@@ -32,9 +32,9 @@ const Table: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) 
         ...color,
         actions: (
           <Space>
-            <Link href={ROUTES.EDIT_COLOR(color.id)}>
-              <EditFilled />
-            </Link>
+            <ColorEditorModal color={color} buttonProps={{ type: 'link' }}>
+              <EditOutlined />
+            </ColorEditorModal>
             <PopconfirmDeleteButton onConfirmDelete={() => deleteColor(color.id)} />
           </Space>
         ),
@@ -44,5 +44,3 @@ const Table: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) 
     />
   );
 };
-
-export default Table;

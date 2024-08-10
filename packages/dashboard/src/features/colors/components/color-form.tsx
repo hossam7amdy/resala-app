@@ -1,12 +1,11 @@
 'use client';
 
-import { createColor, updateColor } from '@/actions/color';
-import { useMutation, useNotification } from '@/hooks';
-import { type GetColorResponse, validationPatterns } from '@resala/shared';
+import { useCreateColor } from '@/features/colors';
+import { validationPatterns } from '@resala/shared';
+import type { Color } from '@resala/shared';
 import { Button, ColorPicker, Flex, Form, Input } from 'antd';
 import { ColorFactory } from 'antd/es/color-picker/color';
 import { useForm } from 'antd/es/form/Form';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 interface FormValues {
@@ -16,33 +15,20 @@ interface FormValues {
 }
 
 interface ColorFormProps {
-  color?: GetColorResponse['data'];
+  onCancel?: () => void;
+  color?: Color;
 }
-export const ColorForm = ({ color }: ColorFormProps) => {
-  const isEdit = color?.id !== undefined;
-  const submit = isEdit ? updateColor.bind(null, color.id) : createColor;
-
+export const ColorEditor = ({ color, onCancel }: ColorFormProps) => {
   const [form] = useForm();
 
-  const router = useRouter();
+  const { isLoading, mutate } = useCreateColor({ id: color?.id, onSuccess: onCancel });
 
-  const notification = useNotification();
-
-  const { isLoading, mutate } = useMutation({
-    mutationFn: submit,
-    onSuccess: () => {
-      notification.success('Category updated successfully');
-      router.back();
-    },
-    onError: error => {
-      notification.error(error.message);
-    },
-  });
+  const isEdit = !!color;
 
   return (
     <Form
       form={form}
-      name="color-form"
+      name={`color-form-${color?.id}`}
       size="large"
       layout="vertical"
       initialValues={{
@@ -102,11 +88,11 @@ export const ColorForm = ({ color }: ColorFormProps) => {
 
       <Form.Item>
         <Flex gap={10}>
+          <Button htmlType="reset" block disabled={isLoading} onClick={onCancel}>
+            Cancel
+          </Button>
           <Button type="primary" htmlType="submit" block loading={isLoading}>
             {isEdit ? 'Update' : 'Create'}
-          </Button>
-          <Button type="default" onClick={router.back} block disabled={isLoading}>
-            Cancel
           </Button>
         </Flex>
       </Form.Item>

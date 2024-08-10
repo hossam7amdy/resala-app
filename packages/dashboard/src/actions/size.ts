@@ -12,7 +12,6 @@ import type {
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export const createSize = async (data: CreateSizeRequest['body']) => {
   const response = await callEndpoint<CreateSizeRequest, CreateSizeResponse>(
@@ -25,14 +24,16 @@ export const createSize = async (data: CreateSizeRequest['body']) => {
 };
 
 export const updateSize = async (id: string | number, data: UpdateSizeRequest['body']) => {
-  await callEndpoint<UpdateSizeRequest, UpdateSizeResponse>(ENDPOINT_CONFIGS.updateSize, {
-    body: data,
-    params: { sizeId: Number(id) },
-  });
+  const response = await callEndpoint<UpdateSizeRequest, UpdateSizeResponse>(
+    ENDPOINT_CONFIGS.updateSize,
+    {
+      body: data,
+      params: { sizeId: Number(id) },
+    }
+  );
 
   revalidatePath(ROUTES.SIZES);
-
-  redirect(ROUTES.EDIT_SIZE(id));
+  return response;
 };
 
 export const deleteSize = async (id: string | number) => {

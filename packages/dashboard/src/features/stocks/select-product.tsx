@@ -1,7 +1,7 @@
 'use client';
 
 import { DebounceSelect } from '@/components';
-import { listProductsPaginated } from '@/data/product';
+import { listProducts } from '@/data/product';
 import FormItem from 'antd/es/form/FormItem';
 
 export const SelectProduct: React.FC = () => {
@@ -15,7 +15,7 @@ export const SelectProduct: React.FC = () => {
         filterOption={false}
         optionFilterProp="children"
         fetchOptions={async search => {
-          const data = await listProductsPaginated({ page: 1, limit: 10, query: search });
+          const data = await listProducts({ page: 1, limit: 10, query: search });
           return data.products.map(p => ({ label: p.enName, value: p.id }));
         }}
       />
