@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { getCookie } from './utils/cookies';
-import { Token } from './utils/enums';
 import ROUTES from './utils/routes';
 
 const PROTECTED_ROUTES = [
@@ -20,12 +19,12 @@ const middleware = async (request: NextRequest) => {
   const path = request.nextUrl.pathname;
   const isProtectedRoute = PROTECTED_ROUTES.some(route => path.startsWith(route));
 
-  const session = getCookie(Token.Access);
+  const cookies = await getCookie('jwt');
 
-  if (!session && isProtectedRoute) {
+  if (!cookies && isProtectedRoute) {
     return NextResponse.redirect(new URL(ROUTES.LOGIN, request.nextUrl));
   }
-  if (session && !isProtectedRoute) {
+  if (cookies && !isProtectedRoute) {
     return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.nextUrl));
   }
 
