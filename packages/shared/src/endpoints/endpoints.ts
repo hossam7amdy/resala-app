@@ -149,6 +149,29 @@ export const withParams = (endpoint: EndpointConfig, ...params: string[]): Endpo
 };
 
 /**
+ * Function to add query params to the endpoint url
+ *
+ * @param endpoint EndpointConfig
+ * @param query Record<string, string>
+ * @returns EndpointConfig
+ *
+ * @example
+ * withQueryParams(ENDPOINT_CONFIGS.listProducts, { page: '1', limit: '10' })
+ * // returns { url: '/api/v1/products?page=1&limit=10', method: 'get' }
+ */
+export const withQueryParams = (
+  endpoint: EndpointConfig,
+  query: Record<string, string>
+): EndpointConfig => {
+  const url = endpoint.url.concat('?', new URLSearchParams(query).toString());
+  return {
+    url: url.toString(),
+    method: endpoint.method,
+    auth: endpoint.auth,
+  } as EndpointConfig;
+};
+
+/**
  * Endpoint configuration for all the endpoints in the application.
  *
  * @example

@@ -1,5 +1,5 @@
 import { SideNav } from '@/components';
-import { Content, Sider } from '@/components';
+import { Main, Sider } from '@/components';
 import { Layout as AntLayout } from 'antd';
 import React from 'react';
 
@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Sider>
         <SideNav />
       </Sider>
-      <Content>{children}</Content>
+      <Main>{children}</Main>
     </AntLayout>
   );
 };

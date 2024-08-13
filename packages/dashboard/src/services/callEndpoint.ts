@@ -1,3 +1,5 @@
+'use server';
+
 import { getCookie } from '@/utils/cookies';
 import { Token } from '@/utils/enums';
 import {
@@ -8,7 +10,6 @@ import {
 } from '@resala/shared';
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import 'server-only';
 
 const Endpoint = axios.create({
   baseURL: process.env.API_HOST,
@@ -36,13 +37,15 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
     const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
     const { url, method, auth: isProtected } = withParams(endpoint, ...params);
 
+    const cookies = await getCookie(Token.Access);
+
     const config: AxiosRequestConfig = {
       url,
       method,
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${getCookie(Token.Access)?.value}` : undefined,
+        Authorization: isProtected ? `Bearer ${cookies?.value}` : undefined,
       },
     };
 
