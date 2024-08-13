@@ -1,4 +1,4 @@
-import Text from 'antd/lib/typography/Text';
+import Text from 'antd/es/typography/Text';
 
 export const StockQuantity: React.FC<{ quantity: number }> = ({ quantity }) => {
   return (

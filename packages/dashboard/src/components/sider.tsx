@@ -1,16 +1,12 @@
-'use client';
-
-import { Grid, Layout } from 'antd';
 import type { SiderProps } from 'antd';
+import AntSider from 'antd/es/layout/Sider';
 import React from 'react';
 
 import { boxShadow } from '../app/theme.config';
 
 export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
-  const { lg } = Grid.useBreakpoint();
-
   return (
-    <Layout.Sider
+    <AntSider
       style={{
         overflow: 'auto',
         height: '100vh',
@@ -20,10 +16,9 @@ export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
         bottom: 0,
         boxShadow: boxShadow,
       }}
-      collapsed={!lg}
       {...props}
     >
       {children}
-    </Layout.Sider>
+    </AntSider>
   );
 };
