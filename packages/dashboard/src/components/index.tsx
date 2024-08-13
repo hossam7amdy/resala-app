@@ -14,4 +14,4 @@ export { TableColumn } from './table-column';
 export { DebounceSelect, type DebounceSelectProps } from './debounce-select';
 export { PopconfirmDeleteButton } from './popconfirm-delete-button';
 export { Sider } from './sider';
-export { Content } from './content';
+export { Main } from './main';
