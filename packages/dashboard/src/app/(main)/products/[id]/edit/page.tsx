@@ -5,6 +5,7 @@ import { Form } from '@/features/products/create-form';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 const EditProductPage = ({ params }: { params: { id: string } }) => {
@@ -32,6 +33,10 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
 
 const EditProductForm = async ({ id }: { id: string }) => {
   const [categories, product] = await Promise.all([listAllCategories(), findProduct(id)]);
+
+  if (!product) {
+    return notFound();
+  }
 
   return <Form categories={categories} product={product!} />;
 };
