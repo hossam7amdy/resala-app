@@ -1,7 +1,7 @@
 'use server';
 
 import { callEndpoint } from '@/services/callEndpoint';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import type {
   DeleteUserRequest,
   DeleteUserResponse,

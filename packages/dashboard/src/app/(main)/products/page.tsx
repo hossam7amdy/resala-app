@@ -1,6 +1,6 @@
 import { Search } from '@/components';
 import { ProductTable } from '@/features/products/product-table';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import type { DefaultRequestQuery } from '@resala/shared';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
