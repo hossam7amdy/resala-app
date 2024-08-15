@@ -18,9 +18,10 @@ import { deleteCookie, setCookie } from '../utils/cookies';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
-    await signIn('credentials', payload);
-
-    return { success: true };
+    await signIn('credentials', {
+      ...payload,
+      redirectTo: ROUTES.DASHBOARD,
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error?.type) {
@@ -43,7 +44,7 @@ export const login = async (payload: LoginRequest['body']) => {
 export const logout = async () => {
   deleteCookie('refresh-token');
 
-  await signOut();
+  await signOut({ redirectTo: ROUTES.LOGIN });
 };
 
 export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {

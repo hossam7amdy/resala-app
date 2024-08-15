@@ -10,16 +10,13 @@ import {
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 
-export const Endpoint = axios.create({
+const apiClient = axios.create({
   baseURL: process.env.API_HOST,
 });
 
-Endpoint.interceptors.response.use(
+apiClient.interceptors.response.use(
   response => response.data,
   error => {
-    if (error.response?.status === 401) {
-      console.log('Unauthorized');
-    }
     return Promise.reject(error);
   }
 );
@@ -42,21 +39,21 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
   endpoint: EndpointConfig,
   request?: Request
 ): Promise<Response> => {
+  const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
+  const { url, method, auth: isProtected } = withParams(endpoint, ...params);
+
+  const config: AxiosRequestConfig = {
+    url,
+    method,
+    data: request?.body,
+    params: request?.query,
+    headers: {
+      Authorization: isProtected ? `Bearer ${(await auth())?.accessToken}` : undefined,
+    },
+  };
+
   try {
-    const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
-    const { url, method, auth: isProtected } = withParams(endpoint, ...params);
-
-    const config: AxiosRequestConfig = {
-      url,
-      method,
-      data: request?.body,
-      params: request?.query,
-      headers: {
-        Authorization: isProtected ? `Bearer ${(await auth())?.accessToken}` : undefined,
-      },
-    };
-
-    return Endpoint<Request, Response>(config);
+    return await apiClient<Request, Response>(config);
   } catch (e) {
     const error = e as AxiosError<Response>;
     let errorMsg = 'Something went wrong. Please try again later.';
