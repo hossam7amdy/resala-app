@@ -2,7 +2,7 @@
 
 import { callEndpoint } from '@/services/callEndpoint';
 import { optimizeImages } from '@/services/optimizeImages';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import type { DeleteProductRequest, DeleteProductResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';

@@ -1,7 +1,7 @@
 'use server';
 
 import { callEndpoint } from '@/services/callEndpoint';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { DeleteOrderRequest, DeleteOrderResponse } from '@resala/shared';
 import { revalidatePath } from 'next/cache';

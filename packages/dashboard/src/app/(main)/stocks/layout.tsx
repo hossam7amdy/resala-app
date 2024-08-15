@@ -1,4 +1,4 @@
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { Tabs } from 'antd';
 import { headers } from 'next/headers';
 import Link from 'next/link';

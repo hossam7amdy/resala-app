@@ -33,11 +33,18 @@ export const useMutation = <Data, Variables>({
       try {
         const result = await mutationFn(variables);
 
-        setData(result);
-        onSuccess(result, variables);
-      } catch (error) {
-        setError(error as Error);
-        onError(error as Error);
+        // @ts-expect-error - This is a valid check
+        if (result?.success === true) {
+          setData(result);
+          onSuccess(result, variables);
+          // @ts-expect-error - This is a valid check
+        } else if (result?.success === false) {
+          // @ts-expect-error - This is a valid check
+          const errorObj = new Error(result?.message || 'An error occurred');
+
+          setError(errorObj);
+          onError(errorObj);
+        }
       } finally {
         setIsLoading(false);
       }
