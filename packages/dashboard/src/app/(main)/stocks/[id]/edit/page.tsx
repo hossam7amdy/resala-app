@@ -1,38 +1,26 @@
-import { BackButton } from '@/components';
 import { findStockById } from '@/data/stocks';
 import { FormSkeleton, SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
-import { ROUTES } from '@/utils/routes';
-import { Breadcrumb, Card, Col, Row } from 'antd';
+import { Card } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import React, { Suspense } from 'react';
 
 const EditStockPage = ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 20]}>
-      <Col span={24}>
-        <Breadcrumb
-          items={[
-            { title: <BackButton /> },
-            { title: <Link href={ROUTES.STOCKS}>Stocks</Link> },
-            { title: 'Edit' },
-          ]}
-        />
-      </Col>
-
-      <Col span={24}>
-        <Card>
-          <Suspense fallback={<FormSkeleton />}>
-            <Form id={params.id} />
-          </Suspense>
-        </Card>
-      </Col>
-    </Row>
+    <Card>
+      <Suspense fallback={<FormSkeleton />}>
+        <Form id={params.id} />
+      </Suspense>
+    </Card>
   );
 };
 
 const Form = async ({ id }: { id: string }) => {
   const stock = await findStockById(id);
+
+  if (!stock) {
+    return notFound();
+  }
 
   return (
     <StockForm
