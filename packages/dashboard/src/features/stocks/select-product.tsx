@@ -2,11 +2,11 @@
 
 import { DebounceSelect } from '@/components';
 import { listProducts } from '@/data/product';
-import FormItem from 'antd/es/form/FormItem';
+import { Form } from 'antd';
 
 export const SelectProduct: React.FC = () => {
   return (
-    <FormItem required name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
+    <Form.Item required name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
       <DebounceSelect
         autoFocus
         allowClear
@@ -19,6 +19,6 @@ export const SelectProduct: React.FC = () => {
           return data.products.map(p => ({ label: p.enName, value: p.id }));
         }}
       />
-    </FormItem>
+    </Form.Item>
   );
 };

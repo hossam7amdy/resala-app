@@ -1,9 +1,9 @@
 'use client';
 
-import debounce from '@/utils/debounce';
+import { useDebounce } from '@/hooks';
 import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface DebounceSelectProps<ValueType>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
@@ -15,44 +15,40 @@ export const DebounceSelect = <
   ValueType extends { key?: string; label: React.ReactNode; value: string | number },
 >({
   fetchOptions,
-  debounceTimeout = 500,
+  debounceTimeout = 350,
   ...props
 }: DebounceSelectProps<ValueType>) => {
   const [fetching, setFetching] = useState(false);
   const [options, setOptions] = useState<ValueType[]>([]);
   const fetchRef = useRef(0);
 
-  const debounceFetcher = useCallback(() => {
-    const loadOptions = (value: string) => {
-      fetchRef.current += 1;
-      const fetchId = fetchRef.current;
-      setOptions([]);
-      setFetching(true);
+  const debounceFetcher = useDebounce((value: string) => {
+    fetchRef.current += 1;
+    const fetchId = fetchRef.current;
+    setOptions([]);
+    setFetching(true);
 
-      fetchOptions(value).then(newOptions => {
-        if (fetchId !== fetchRef.current) {
-          // for fetch callback order
-          return;
-        }
+    fetchOptions(value).then(newOptions => {
+      if (fetchId !== fetchRef.current) {
+        // for fetch callback order
+        return;
+      }
 
-        setOptions(newOptions);
-        setFetching(false);
-      });
-    };
+      setOptions(newOptions);
+      setFetching(false);
+    });
+  }, debounceTimeout);
 
-    return debounce(loadOptions, debounceTimeout);
-  }, [fetchOptions, debounceTimeout]);
-
-  useEffect(debounceFetcher, [debounceFetcher]); // fetch while init
+  useEffect(debounceFetcher, []); // fetch on mount
 
   return (
     <Select
       showSearch
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : null}
-      {...props}
       options={options}
       loading={fetching}
+      {...props}
     />
   );
 };
