@@ -9,6 +9,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+
 //@syncfusion/ej2-angular-navigations
 
 @NgModule({
@@ -20,6 +21,7 @@ import { AppComponent } from './app.component';
     HttpClientModule,
     BrowserAnimationsModule,
     NgxSpinnerModule,
+    
 
     ToastrModule.forRoot(), // ToastrModule added
     //...httpInterceptors

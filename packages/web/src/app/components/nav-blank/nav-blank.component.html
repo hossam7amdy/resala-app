@@ -20,7 +20,42 @@
         <li class="nav-item mx-2">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/home">Home</a>
         </li>
+        
+       
 
+        <li class="nav-item dropdown mx-2">
+          <a data-mdb-button-init
+            data-mdb-ripple-init data-mdb-dropdown-init class="nav-link dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-mdb-toggle="dropdown"
+            aria-expanded="false">
+            Products
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li  *ngFor="let category of categoryList" >
+              <a routerLinkActive="active-link" [routerLink]="['/products/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+            </li>
+            
+          </ul>
+        </li>
+
+
+        <!--
+        <li class=""><a class="dropdown-item" href="#">3abayat</a></li>
+            <li class=""><a class="dropdown-item" href="#">Scarf</a></li>
+
+            <li class=""><a class="dropdown-item" href="#">Dress</a></li>
+            <li class=""><a class="dropdown-item" href="#">Cab takm</a></li>
+            <li class=""><a class="dropdown-item" href="#">Ednaa</a></li>
+
+            <li class=""><a class="dropdown-item" href="#">3abaya Khalejee</a></li>
+        
+        
+        
+        
+        
         <li class="nav-item dropdown mx-2">
           <a
             class="nav-link dropdown-toggle"
@@ -44,16 +79,17 @@
 
             <li class="col-4"><a class="dropdown-item" href="#">3abaya Khalejee</a></li>
           </ul>
-        </li>
+        </li> -->
+
 
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/categories"
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection"
             >Latest Collection</a
           >
         </li>
 
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/brands">New Offers</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">New Offers</a>
         </li>
       </ul>
 
