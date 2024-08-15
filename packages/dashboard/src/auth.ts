@@ -1,4 +1,5 @@
-import { ENDPOINT_CONFIGS, LoginRequest, LoginResponse } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
+import type { LoginRequest, LoginResponse } from '@resala/shared';
 import NextAuth from 'next-auth';
 import credentials from 'next-auth/providers/credentials';
 
