@@ -27,6 +27,15 @@ export const ROUTES = {
 
   CUSTOMERS: '/customers',
   EDIT_CUSTOMER: (id: string | number) => `/customers/${id}/edit`,
-};
+} as const;
 
-export default ROUTES;
+export const PROTECTED_ROUTES = [
+  ROUTES.DASHBOARD,
+  ROUTES.CATEGORIES,
+  ROUTES.PRODUCTS,
+  ROUTES.STOCKS,
+  ROUTES.COLORS,
+  ROUTES.SIZES,
+  ROUTES.ORDERS,
+  ROUTES.CUSTOMERS,
+];

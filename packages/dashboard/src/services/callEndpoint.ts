@@ -1,7 +1,6 @@
 'use server';
 
-import { getCookie } from '@/utils/cookies';
-import { Token } from '@/utils/enums';
+import { auth } from '@/auth';
 import {
   type DefaultRequestQuery,
   type DefaultResponseBody,
@@ -9,11 +8,21 @@ import {
   withParams,
 } from '@resala/shared';
 import axios from 'axios';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosRequestConfig } from 'axios';
 
-const Endpoint = axios.create({
+export const Endpoint = axios.create({
   baseURL: process.env.API_HOST,
 });
+
+Endpoint.interceptors.response.use(
+  response => response.data,
+  error => {
+    if (error.response?.status === 401) {
+      console.log('Unauthorized');
+    }
+    return Promise.reject(error);
+  }
+);
 
 const isObject = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === 'object';
@@ -37,25 +46,29 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
     const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
     const { url, method, auth: isProtected } = withParams(endpoint, ...params);
 
-    const cookies = await getCookie(Token.Access);
-
     const config: AxiosRequestConfig = {
       url,
       method,
       data: request?.body,
       params: request?.query,
       headers: {
-        Authorization: isProtected ? `Bearer ${cookies?.value}` : undefined,
+        Authorization: isProtected ? `Bearer ${(await auth())?.accessToken}` : undefined,
       },
     };
 
-    const response = await Endpoint<Request, AxiosResponse<Response>>(config);
-
-    return response.data;
+    return Endpoint<Request, Response>(config);
   } catch (e) {
-    const error = e as AxiosError<Error>;
-    const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+    const error = e as AxiosError<Response>;
+    let errorMsg = 'Something went wrong. Please try again later.';
 
-    throw new Error((errorMsg as string) || 'Something went wrong');
+    if (error.response) {
+      errorMsg = error.response.data.message as string;
+    } else if (error.request) {
+      errorMsg = error.request.message || 'Request failed, please try again later.';
+    } else {
+      errorMsg = error.message;
+    }
+
+    return { success: false, message: errorMsg } as Response;
   }
 };

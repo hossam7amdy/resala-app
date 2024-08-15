@@ -2,7 +2,7 @@
 
 import { callEndpoint } from '@/services/callEndpoint';
 import { optimizeImages } from '@/services/optimizeImages';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import {
   type DeleteImageRequest,
   type DeleteImageResponse,
