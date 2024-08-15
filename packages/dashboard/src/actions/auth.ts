@@ -1,46 +1,49 @@
 'use server';
 
-import { Token } from '@/utils/enums';
-import ROUTES from '@/utils/routes';
-import { ENDPOINT_CONFIGS, Role } from '@resala/shared';
+import { signIn, signOut } from '@/auth';
+import { ROUTES } from '@/utils/routes';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
-  LoginResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
 } from '@resala/shared';
+import { AuthError } from 'next-auth';
 import { RedirectType, redirect } from 'next/navigation';
 
 import { callEndpoint } from '../services/callEndpoint';
 import { deleteCookie, setCookie } from '../utils/cookies';
 
 export const login = async (payload: LoginRequest['body']) => {
-  const { data } = await callEndpoint<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
-    body: payload,
-  });
+  try {
+    await signIn('credentials', payload);
 
-  if (![Role.ADMIN, Role.MODERATOR].includes(data.user.role as Role)) {
-    throw new Error('You are not authorized to access this page');
+    return { success: true };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error?.type) {
+        case 'CredentialsSignin':
+          return {
+            success: false,
+            message: 'Invalid phone/email or password',
+          };
+        default:
+          return {
+            success: false,
+            message: 'An error occurred while logging in',
+          };
+      }
+    }
+    throw error;
   }
-
-  setCookie(Token.Access, {
-    token: data.accessToken,
-    expireDate: data.expiresAt.toString(),
-  });
-
-  setCookie(Token.Refresh, {
-    token: data.refreshToken,
-  });
-
-  redirect(ROUTES.DASHBOARD, RedirectType.replace);
 };
 
 export const logout = async () => {
-  deleteCookie(Token.Access);
+  deleteCookie('refresh-token');
 
-  redirect(ROUTES.LOGIN, RedirectType.replace);
+  await signOut();
 };
 
 export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
@@ -49,7 +52,7 @@ export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => 
     { body: payload }
   );
 
-  setCookie(Token.Access, {
+  setCookie('jwt-token', {
     token: data.resetToken,
     expireDate: data.expiresAt.toString(),
   });
@@ -62,7 +65,7 @@ export const resetPassword = async (payload: ResetPasswordRequest['body']) => {
     body: payload,
   });
 
-  deleteCookie(Token.Access);
+  deleteCookie('jwt-token');
 
   redirect(ROUTES.LOGIN, RedirectType.replace);
 };

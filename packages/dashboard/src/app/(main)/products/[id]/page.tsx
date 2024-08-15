@@ -1,7 +1,7 @@
 import { BackButton } from '@/components';
 import { listProductStocks } from '@/data/product';
 import { StocksTable } from '@/features/stocks';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';

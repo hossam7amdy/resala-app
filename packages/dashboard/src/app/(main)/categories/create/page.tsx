@@ -1,6 +1,6 @@
 import { BackButton, FormSkeleton } from '@/components';
 import CreateForm from '@/features/categories/create-form';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';

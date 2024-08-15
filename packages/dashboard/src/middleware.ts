@@ -1,44 +1,10 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import NextAuth from 'next-auth';
 
-import { getCookie } from './utils/cookies';
-import ROUTES from './utils/routes';
-
-const PROTECTED_ROUTES = [
-  ROUTES.DASHBOARD,
-  ROUTES.CATEGORIES,
-  ROUTES.PRODUCTS,
-  ROUTES.STOCKS,
-  ROUTES.COLORS,
-  ROUTES.SIZES,
-  ROUTES.ORDERS,
-  ROUTES.CUSTOMERS,
-];
-
-const middleware = async (request: NextRequest) => {
-  const path = request.nextUrl.pathname;
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => path.startsWith(route));
-
-  const cookies = await getCookie('jwt');
-
-  if (!cookies && isProtectedRoute) {
-    return NextResponse.redirect(new URL(ROUTES.LOGIN, request.nextUrl));
-  }
-  if (cookies && !isProtectedRoute) {
-    return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.nextUrl));
-  }
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-pathname', request.nextUrl.pathname);
-
-  return NextResponse.next({
-    headers: requestHeaders,
-  });
-};
+import { authConfig } from './auth.config';
 
 export const config = {
   // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico).*)'],
 };
 
-export default middleware;
+export default NextAuth(authConfig).auth;

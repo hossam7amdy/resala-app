@@ -5,7 +5,7 @@ import { PopconfirmDeleteButton } from '@/components';
 import { ResalaTooltip } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { Category, GetProductsListResponse, Product } from '@resala/shared';
 import { Button, Image, Space, Table } from 'antd';

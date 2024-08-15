@@ -2,23 +2,26 @@
 
 import { cookies } from 'next/headers';
 
-export type CookieName = 'jwt' | 'refresh';
+type CookieName = 'jwt-token' | 'refresh-token';
 type CookieOptions = { token: string; expireDate?: string };
 
-export const setCookie = (name: CookieName = 'jwt', { token, expireDate }: CookieOptions) => {
-  return cookies().set(name, token, {
+const isProd = process.env.NODE_ENV === 'production';
+const prefix = isProd ? '' : '__Dev-xxx.';
+
+export const setCookie = (name: CookieName = 'jwt-token', { token, expireDate }: CookieOptions) => {
+  return cookies().set(`${prefix}${name}`, token, {
     httpOnly: false,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProd,
     expires: expireDate ? new Date(expireDate) : undefined,
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
   });
 };
 
-export const getCookie = async (name: CookieName = 'jwt') => {
-  return cookies().get(name);
+export const getCookie = async (name: CookieName = 'jwt-token') => {
+  return cookies().get(`${prefix}${name}`);
 };
 
-export const deleteCookie = (name: CookieName = 'jwt') => {
-  return cookies().delete(name);
+export const deleteCookie = (name: CookieName = 'jwt-token') => {
+  return cookies().delete(`${prefix}${name}`);
 };

@@ -1,5 +1,5 @@
 import { logout } from '@/actions/auth';
-import ROUTES from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
@@ -26,7 +26,12 @@ export const SideNav: React.FC = () => {
               icon: <LogoutOutlined />,
               label: (
                 <form action={logout}>
-                  <Button type="text" htmlType="submit">
+                  <Button
+                    danger
+                    type="link"
+                    htmlType="submit"
+                    style={{ padding: 0, fontWeight: 'inherit' }}
+                  >
                     Logout
                   </Button>
                 </form>
