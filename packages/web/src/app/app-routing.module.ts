@@ -20,21 +20,28 @@ const routes: Routes = [
       },
 
       {
-        path: 'brands',
+        path: 'new-offers',
         loadComponent: () =>
           import('./components/brands/brands.component').then(m => m.BrandsComponent),
-        title: 'Brands',
+        title: 'New Offers',
       },
 
       {
-        path: 'categories',
+        path: 'categories/:category-id',
         loadComponent: () =>
           import('./components/categories/categories.component').then(m => m.CategoriesComponent),
         title: 'Categories',
       },
 
       {
-        path: 'products',
+      path: 'latest-collection',
+      loadComponent: () =>
+        import('./components/latest-collection/latest-collection.component').then(m => m.LatestCollectionComponent),
+      title: 'Latest Collection',
+      },
+
+      {
+        path: 'products/:category-id',
         loadComponent: () =>
           import('./components/products/products.component').then(m => m.ProductsComponent),
         title: 'Products',

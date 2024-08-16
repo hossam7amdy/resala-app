@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../../shared';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +9,22 @@ import { Observable } from 'rxjs';
 export class CategoriesService {
   // baseurl = https://resala-app.onrender.com/
 
-  baseURL: string = `https://resala-app-6ba5cpyy5q-ey.a.run.app/`;
+  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
+
+  baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   constructor(private _HTTPClient: HttpClient) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   getCategories(): Observable<any> {
-    return this._HTTPClient.get(this.baseURL + 'api/v1/categories');
+    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.listCategories])
+    return this._HTTPClient.get(this.baseURL + url,);
   }
+
+  getCategoryProducts(id:any):Observable<any>{
+    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.listCategoryProducts], id +'');
+    return this._HTTPClient.get(this.baseURL + url);
+  }
+
+  
 }

@@ -1,11 +1,77 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
+
+
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
 })
-export class ProductsComponent {}
+export class ProductsComponent implements  OnInit {
+  constructor(
+    private route:ActivatedRoute,
+    private _Categories:CategoriesService,
+    private _WishListService: WishListService,
+    private _Toaster: ToastrService,
+    private _Router: Router,
+    private _Renderer: Renderer2,
+
+    
+
+  ){}
+  
+
+  allProductsCategory:any = [];
+  titleCategory:string = '';
+  categoryId!:any;  // '!' to add initial value Undefined to this property
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params =>(this.categoryId = params.get('category-id')));
+    this.allCategoryProducts(this.categoryId);
+  }
+
+
+  
+ 
+  allCategoryProducts(id:any):void{
+
+    this._Categories.getCategoryProducts(id).subscribe({
+      next:(response)=>{
+        this.allProductsCategory = response.data
+        this.titleCategory = response.data[0].category.enName;
+        console.log(response)
+      },error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  //Add product in Wish list method
+  addPoductInWishList(id: any, element: HTMLElement): void {
+    
+    this._WishListService.postWishListItems(id).subscribe({
+      next: response => {
+        this._Renderer.setStyle(element, 'font-weight', 'bold');
+        this._Toaster.success('Added in Your Favorite List');
+        console.log(response);
+      },
+      error: err => {
+        if (err.error.message == 'Token expired') {
+          this._Toaster.error('Should be Login !!');
+          this._Router.navigate(['/login']);
+        } else {
+          this._Toaster.error(err.message);
+        }
+        console.log(err);
+      },
+    });
+  }
+
+}
