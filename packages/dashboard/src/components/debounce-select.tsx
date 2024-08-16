@@ -11,7 +11,7 @@ export interface DebounceSelectProps<ValueType>
   debounceTimeout?: number;
 }
 
-const DebounceSelect = <
+export const DebounceSelect = <
   ValueType extends { key?: string; label: React.ReactNode; value: string | number },
 >({
   fetchOptions,
@@ -56,5 +56,3 @@ const DebounceSelect = <
     />
   );
 };
-
-export default DebounceSelect;

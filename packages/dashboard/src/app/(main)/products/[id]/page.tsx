@@ -1,4 +1,4 @@
-import BackButton from '@/components/back-button';
+import { BackButton } from '@/components';
 import { listProductStocks } from '@/data/product';
 import { StocksTable } from '@/features/stocks';
 import ROUTES from '@/utils/routes';
@@ -18,7 +18,7 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 20]}>
       <Col span={24}>
         <Breadcrumb
           items={[

@@ -128,6 +128,25 @@ const withParams = (endpoint, ...params) => {
     };
 };
 /**
+ * Function to add query params to the endpoint url
+ *
+ * @param endpoint EndpointConfig
+ * @param query Record<string, string>
+ * @returns EndpointConfig
+ *
+ * @example
+ * withQueryParams(ENDPOINT_CONFIGS.listProducts, { page: '1', limit: '10' })
+ * // returns { url: '/api/v1/products?page=1&limit=10', method: 'get' }
+ */
+const withQueryParams = (endpoint, query) => {
+    const url = endpoint.url.concat('?', new URLSearchParams(query).toString());
+    return {
+        url: url.toString(),
+        method: endpoint.method,
+        auth: endpoint.auth,
+    };
+};
+/**
  * Endpoint configuration for all the endpoints in the application.
  *
  * @example
@@ -1028,3 +1047,4 @@ exports.VerifyEmailSchema = VerifyEmailSchema;
 exports.VoidPaymentSchema = VoidPaymentSchema;
 exports.validationPatterns = validationPatterns;
 exports.withParams = withParams;
+exports.withQueryParams = withQueryParams;

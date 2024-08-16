@@ -1,8 +1,7 @@
 import { listAllColors } from '@/data/colors';
-import ROUTES from '@/utils/routes';
-import { Button, Flex, Select } from 'antd';
+import { ColorEditorModal } from '@/features/colors';
+import { Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import Link from 'next/link';
 
 import { StockColor } from '.';
 
@@ -34,9 +33,7 @@ export const SelectColor: React.FC = async () => {
         />
       </FormItem>
       <FormItem label=" ">
-        <Link href={ROUTES.CREATE_COLOR}>
-          <Button>Add Color</Button>
-        </Link>
+        <ColorEditorModal>Add Color</ColorEditorModal>
       </FormItem>
     </Flex>
   );

@@ -12,7 +12,6 @@ import type {
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
 export const createColor = async (data: CreateColorRequest['body']) => {
   const response = await callEndpoint<CreateColorRequest, CreateColorResponse>(
@@ -25,14 +24,16 @@ export const createColor = async (data: CreateColorRequest['body']) => {
 };
 
 export const updateColor = async (id: string | number, data: UpdateColorRequest['body']) => {
-  await callEndpoint<UpdateColorRequest, UpdateColorResponse>(ENDPOINT_CONFIGS.updateColor, {
-    body: data,
-    params: { colorId: Number(id) },
-  });
+  const response = await callEndpoint<UpdateColorRequest, UpdateColorResponse>(
+    ENDPOINT_CONFIGS.updateColor,
+    {
+      body: data,
+      params: { colorId: Number(id) },
+    }
+  );
 
   revalidatePath(ROUTES.COLORS);
-
-  redirect(ROUTES.EDIT_COLOR(id));
+  return response;
 };
 
 export const deleteColor = async (id: string | number) => {

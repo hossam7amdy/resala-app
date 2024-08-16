@@ -4,7 +4,7 @@ import { deleteUser } from '@/actions/user';
 import { Pagination, PopconfirmDeleteButton, ResalaTooltip, TableColumn } from '@/components';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import ROUTES from '@/utils/routes';
-import { EditFilled } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { ListUsersResponse, User } from '@resala/shared';
 import { Button, Flex, Space, Table, Tag } from 'antd';
 import Link from 'next/link';
@@ -60,7 +60,7 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
               <ResalaTooltip title="Edit">
                 <Button type="link" size="small">
                   <Link href={ROUTES.EDIT_CUSTOMER(user.id)}>
-                    <EditFilled />
+                    <EditOutlined />
                   </Link>
                 </Button>
               </ResalaTooltip>

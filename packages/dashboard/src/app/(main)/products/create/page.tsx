@@ -1,5 +1,4 @@
-import BackButton from '@/components/back-button';
-import FormSkeleton from '@/components/form-skeleton';
+import { BackButton, FormSkeleton } from '@/components';
 import { listAllCategories } from '@/data/category';
 import { Form } from '@/features/products/create-form';
 import ROUTES from '@/utils/routes';
@@ -9,7 +8,7 @@ import { Suspense } from 'react';
 
 const CreateProductPage = () => {
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 20]}>
       <Col span={24}>
         <Breadcrumb
           items={[

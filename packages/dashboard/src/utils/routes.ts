@@ -21,12 +21,7 @@ export const ROUTES = {
   EDIT_STOCK: (stockId: string | number) => `/stocks/${stockId}/edit`,
 
   COLORS: '/stocks/colors',
-  CREATE_COLOR: '/stocks/colors/create',
-  EDIT_COLOR: (id: string | number) => `/stocks/colors/${id}/edit`,
-
   SIZES: '/stocks/sizes',
-  CREATE_SIZE: '/stocks/sizes/create',
-  EDIT_SIZE: (id: string | number) => `/stocks/sizes/${id}/edit`,
 
   ORDERS: '/orders',
 
