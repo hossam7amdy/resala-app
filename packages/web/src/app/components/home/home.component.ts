@@ -71,10 +71,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   //Add product in Wish list method
-  addPoductInWishList(id: string | number | undefined, element: HTMLElement): void {
-    this._Renderer.setStyle(element, 'font-weight', 'bold');
+  addPoductInWishList(id: any, element: HTMLElement): void {
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
+        this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
       },

@@ -19,14 +19,40 @@ nav .logo {
 .navbar-expand-xl .navbar-nav .dropdown-menu {
   position: absolute;
   border: none !important;
-  width: 600px !important;
+  min-width: 300px !important;
   border-radius: 5px;
-  margin-top: 10px;
+  
+  /* margin-top: 10px; */
+ 
 }
 
-.navbar-expand-xl .navbar-nav .dropdown-menu li {
-  color: #016373;
+
+.navbar-expand-xl .navbar-nav .dropdown-menu li:hover {
+  background-color: #fbb935;
 }
+
+.dropdown-menu .dropdown-item{
+  color: #016373;
+  font-weight: bold;
+  
+}
+.dropdown-menu .dropdown-item:hover{
+  background-color: #fbb935;
+  color: #fff;
+}
+
+/**/
+
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+  /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}
+
 
 .active-link {
   color: #fff;
