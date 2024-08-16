@@ -19,7 +19,6 @@
     "react": "^18",
     "react-dom": "^18",
     "resala": "file:..",
-    "server-only": "^0.0.1",
     "sharp": "0.32"
   },
   "devDependencies": {

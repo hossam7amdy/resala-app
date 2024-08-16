@@ -1,5 +1,4 @@
-import BackButton from '@/components/back-button';
-import FormSkeleton from '@/components/form-skeleton';
+import { BackButton, FormSkeleton } from '@/components';
 import CreateForm from '@/features/categories/create-form';
 import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
@@ -8,7 +7,7 @@ import { Suspense } from 'react';
 
 const CreateCategoryPage = () => {
   return (
-    <Row gutter={[10, 50]} style={{ padding: 20 }}>
+    <Row gutter={[10, 50]}>
       <Col span={24}>
         <Breadcrumb
           items={[

@@ -6,7 +6,7 @@ import { ResalaTooltip } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import ROUTES from '@/utils/routes';
-import { EditFilled } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { Category, GetProductsListResponse, Product } from '@resala/shared';
 import { Button, Image, Space, Table } from 'antd';
 import Link from 'next/link';
@@ -72,7 +72,7 @@ export const TableData: React.FC<{ products: GetProductsListResponse['data']['pr
               <ResalaTooltip title="Edit">
                 <Button size="small" type="link">
                   <Link href={ROUTES.EDIT_PRODUCT(product.id)}>
-                    <EditFilled />
+                    <EditOutlined />
                   </Link>
                 </Button>
               </ResalaTooltip>

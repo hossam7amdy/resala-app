@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <Row gutter={[10, 50]} style={{ padding: 20 }}>
+    <Row gutter={[10, 50]}>
       <Col span={24}>
         <Breadcrumb
           items={[

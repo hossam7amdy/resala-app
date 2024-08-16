@@ -4,28 +4,37 @@ import { LogoutOutlined } from '@ant-design/icons';
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
-import { Logo, NavLinks } from '.';
+import { Logo, Menu, NavLinks } from '.';
 
-const SideNav: React.FC = () => {
+export const SideNav: React.FC = () => {
   return (
     <Flex vertical style={{ height: '100%' }}>
       <Link href={ROUTES.DASHBOARD}>
         <div style={{ textAlign: 'center', margin: '50px auto' }}>
-          <Logo />
+          <Logo className="side-nav-logo" />
         </div>
       </Link>
       <div style={{ flex: 1 }}>
         <NavLinks />
       </div>
-      <div style={{ alignSelf: 'center', marginBottom: 20 }}>
-        <form action={logout}>
-          <Button htmlType="submit" icon={<LogoutOutlined />}>
-            Logout
-          </Button>
-        </form>
+      <div style={{ marginBottom: 20 }}>
+        <Menu
+          items={[
+            {
+              danger: true,
+              key: 'logout',
+              icon: <LogoutOutlined />,
+              label: (
+                <form action={logout}>
+                  <Button type="text" htmlType="submit">
+                    Logout
+                  </Button>
+                </form>
+              ),
+            },
+          ]}
+        />
       </div>
     </Flex>
   );
 };
-
-export default SideNav;

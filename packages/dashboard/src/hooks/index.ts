@@ -1,4 +1,4 @@
-export { useQuery } from './useQuery';
-export { useMutation } from './useMutation';
-export { useDebounce } from './useDebounce';
-export { useNotification } from './useNotification';
+export { useQuery } from './use-query';
+export { useMutation } from './use-mutation';
+export { useDebounce } from './use-debounce';
+export { useNotification } from './use-notification';

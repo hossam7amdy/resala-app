@@ -9,7 +9,7 @@ import React, { Suspense } from 'react';
 
 const EditStockPage = ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 20]}>
       <Col span={24}>
         <Breadcrumb
           items={[

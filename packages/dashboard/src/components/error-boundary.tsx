@@ -6,7 +6,7 @@ import Paragraph from 'antd/es/typography/Paragraph';
 import Text from 'antd/es/typography/Text';
 import { useEffect } from 'react';
 
-const ErrorBoundary: React.FC<{
+export const ErrorBoundary: React.FC<{
   error: Error & { digest?: string };
   reset: () => void;
 }> = ({ error, reset }) => {
@@ -72,5 +72,3 @@ const ErrorBoundary: React.FC<{
     </div>
   );
 };
-
-export default ErrorBoundary;

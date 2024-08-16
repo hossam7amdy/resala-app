@@ -1,7 +1,6 @@
-import BackButton from '@/components/back-button';
-import FormSkeleton from '@/components/form-skeleton';
+import { BackButton, FormSkeleton } from '@/components';
 import { listAllCategories } from '@/data/category';
-import { findProductById } from '@/data/product';
+import { findProduct } from '@/data/product';
 import { Form } from '@/features/products/create-form';
 import ROUTES from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
@@ -10,7 +9,7 @@ import { Suspense } from 'react';
 
 const EditProductPage = ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 20]}>
       <Col span={24}>
         <Breadcrumb
           items={[
@@ -32,7 +31,7 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
 };
 
 const EditProductForm = async ({ id }: { id: string }) => {
-  const [categories, product] = await Promise.all([listAllCategories(), findProductById(id)]);
+  const [categories, product] = await Promise.all([listAllCategories(), findProduct(id)]);
 
   return <Form categories={categories} product={product!} />;
 };

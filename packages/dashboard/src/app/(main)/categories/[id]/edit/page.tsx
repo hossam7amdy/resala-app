@@ -1,5 +1,4 @@
-import BackButton from '@/components/back-button';
-import FormSkeleton from '@/components/form-skeleton';
+import { BackButton, FormSkeleton } from '@/components';
 import { findCategoryById } from '@/data/category';
 import EditForm from '@/features/categories/edit-form';
 import ROUTES from '@/utils/routes';
@@ -10,7 +9,7 @@ import { Suspense } from 'react';
 
 const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 50]} style={{ padding: 20 }}>
+    <Row gutter={[10, 50]}>
       <Col span={24}>
         <Breadcrumb
           items={[

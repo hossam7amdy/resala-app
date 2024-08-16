@@ -1,8 +1,8 @@
 import { listAllSizes } from '@/data/sizes';
-import ROUTES from '@/utils/routes';
-import { Button, Flex, Select } from 'antd';
+import { Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import Link from 'next/link';
+
+import { SizeEditorModal } from '../sizes';
 
 export const SelectSize: React.FC = async () => {
   const sizes = await listAllSizes();
@@ -25,9 +25,7 @@ export const SelectSize: React.FC = async () => {
         />
       </FormItem>
       <FormItem label=" ">
-        <Link href={ROUTES.CREATE_SIZE}>
-          <Button style={{ padding: '0 20px' }}>Add Size</Button>
-        </Link>
+        <SizeEditorModal>Add Size</SizeEditorModal>
       </FormItem>
     </Flex>
   );
