@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "pre-commit": "yarn checks:fix",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
     "format": "prettier --write .",
@@ -23,12 +24,13 @@
     "test:dashboard": "yarn workspace @resala/dashboard test",
     "test:web": "yarn workspace @resala/web test",
     "test": "npm-run-all --parallel test:server test:dashboard test:web",
-    "start:dashboard": "yarn workspace @resala/dashboard dev",
-    "start:web": "yarn workspace @resala/web ng serve --open",
-    "start:server": "yarn workspace @resala/server dev",
-    "start": "npm-run-all --parallel start:server start:dashboard start:web",
-    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server",
-    "pre-commit": "yarn checks:fix"
+    "start:dashboard:dev": "yarn workspace @resala/dashboard dev",
+    "start:dashboard": "yarn workspace @resala/dashboard start",
+    "start:web:dev": "yarn workspace @resala/web watch",
+    "start:web": "yarn workspace @resala/web start",
+    "start:server:dev": "yarn workspace @resala/server dev",
+    "start:server": "yarn workspace @resala/server start",
+    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
