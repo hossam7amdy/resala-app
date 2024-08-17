@@ -26,7 +26,7 @@
     "test": "npm-run-all --parallel test:server test:dashboard test:web",
     "start:dashboard:dev": "yarn workspace @resala/dashboard dev",
     "start:dashboard": "yarn workspace @resala/dashboard start",
-    "start:web:dev": "yarn workspace @resala/web watch",
+    "start:web:dev": "yarn workspace @resala/web ng serve --open",
     "start:web": "yarn workspace @resala/web start",
     "start:server:dev": "yarn workspace @resala/server dev",
     "start:server": "yarn workspace @resala/server start",
