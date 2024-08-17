@@ -2,14 +2,14 @@
 
 import { deleteStock } from '@/actions/stock';
 import { Pagination, PopconfirmDeleteButton } from '@/components';
-import type { GetStocksListResponse } from '@resala/shared';
+import type { ListStocksResponse } from '@resala/shared';
 import { Flex, Space, Table } from 'antd';
 import React from 'react';
 
 import { StockColor, StockColorImages, StockQuantity, StockSizes } from '.';
 import { UploadModal } from './upload-modal';
 
-export const StocksTable: React.FC<GetStocksListResponse['data']> = ({ pagination, stocks }) => {
+export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, stocks }) => {
   return (
     <Flex vertical gap={10}>
       <Table

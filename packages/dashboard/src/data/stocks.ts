@@ -2,25 +2,20 @@
 
 import { callEndpoint } from '@/services/callEndpoint';
 import type {
-  DefaultRequestQuery,
   GetStockRequest,
   GetStockResponse,
-  GetStocksListRequest,
-  GetStocksListResponse,
+  ListStocksRequest,
+  ListStocksResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
-export const listStocksPaginated = async ({
-  page,
-  limit,
-  query,
-}: Pick<DefaultRequestQuery['query'], 'page' | 'limit' | 'query'>) => {
+export const listStocks = async (query: ListStocksRequest['query']) => {
   noStore();
 
-  const response = await callEndpoint<GetStocksListRequest, GetStocksListResponse>(
+  const response = await callEndpoint<ListStocksRequest, ListStocksResponse>(
     ENDPOINT_CONFIGS.listStocks,
-    { query: { page: Number(page), limit: Number(limit), query } }
+    { query }
   );
 
   return response.data;

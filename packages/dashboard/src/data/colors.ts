@@ -4,8 +4,8 @@ import { callEndpoint } from '@/services/callEndpoint';
 import type {
   GetColorRequest,
   GetColorResponse,
-  GetColorsListRequest,
-  GetColorsListResponse,
+  ListColorsRequest,
+  ListColorsResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -13,7 +13,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const listAllColors = async () => {
   noStore();
 
-  const response = await callEndpoint<GetColorsListRequest, GetColorsListResponse>(
+  const response = await callEndpoint<ListColorsRequest, ListColorsResponse>(
     ENDPOINT_CONFIGS.listColors
   );
 
