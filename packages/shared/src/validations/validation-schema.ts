@@ -34,7 +34,6 @@ export const DefaultQuerySchema = z.object({
     page: z.coerce
       .number()
       .positive()
-      .max(10000)
       .optional()
       .transform(val => val || 1),
     limit: z.coerce
@@ -212,6 +211,12 @@ export const GetProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
 
+export const ListProductsSchema = z.object({
+  query: DefaultQuerySchema.shape.query.extend({
+    categoryId: z.coerce.number().positive().optional(),
+  }),
+});
+
 export const DeleteProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
@@ -236,6 +241,12 @@ export const UpdateStockSchema = z.object({
 export const DeleteStockSchema = z.object({
   params: z.object({
     stockId: z.coerce.number().positive(),
+  }),
+});
+
+export const ListStocksSchema = z.object({
+  query: DefaultQuerySchema.shape.query.extend({
+    productId: z.coerce.number().positive().optional(),
   }),
 });
 
@@ -278,10 +289,10 @@ export const DeleteSizeSchema = z.object({
 });
 
 // Image Schemas
-export const FindImagesSchema = z.object({
+export const ListImagesSchema = z.object({
   query: z.object({
-    productId: z.coerce.number().positive(),
-    colorId: z.coerce.number().positive(),
+    productId: z.coerce.number().positive().optional(),
+    colorId: z.coerce.number().positive().optional(),
   }),
 });
 
@@ -292,7 +303,7 @@ export const CreateImageSchema = z.object({
   }),
 });
 
-export const PatchImageSchema = z.object({
+export const UpdateImageSchema = z.object({
   params: z.object({
     imageId: z.coerce.number().positive(),
   }),
@@ -349,7 +360,9 @@ export const GetOrderSchema = z.object({
 });
 
 export const ListOrdersSchema = z.object({
-  query: DefaultQuerySchema.shape.query,
+  query: DefaultQuerySchema.shape.query.extend({
+    userId: z.coerce.number().positive().optional(),
+  }),
 });
 
 export const UpdateOrderStatusSchema = z.object({
@@ -416,15 +429,10 @@ export const GetReviewSchema = z.object({
   }),
 });
 
-export const ListProductReviewsSchema = z.object({
-  params: z.object({
-    productId: z.coerce.number().positive(),
-  }),
-  query: DefaultQuerySchema.shape.query,
-});
-
 export const ListReviewsSchema = z.object({
-  query: DefaultQuerySchema.shape.query,
+  query: DefaultQuerySchema.shape.query.extend({
+    productId: z.coerce.number().positive().optional(),
+  }),
 });
 
 export const UpdateReviewSchema = z.object({

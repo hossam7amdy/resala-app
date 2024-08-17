@@ -46,7 +46,6 @@ export enum Endpoints {
   // category endpoints
   getCategory = 'getCategory',
   listCategories = 'listCategories',
-  listCategoryProducts = 'listCategoryProducts',
   createCategory = 'createCategory',
   updateCategory = 'updateCategory',
   deleteCategory = 'deleteCategory',
@@ -54,7 +53,6 @@ export enum Endpoints {
   // product endpoints
   getProduct = 'getProduct',
   listProducts = 'listProducts',
-  listProductStocks = 'listProductStocks',
   createProduct = 'createProduct',
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
@@ -115,7 +113,6 @@ export enum Endpoints {
   createReview = 'createReview',
   updateReview = 'updateReview',
   deleteReview = 'deleteReview',
-  listProductReviews = 'listProductReviews',
 }
 
 /**
@@ -300,18 +297,10 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'delete',
     auth: true,
   },
-  [Endpoints.listCategoryProducts]: {
-    url: '/api/v1/categories/:categoryId/products',
-    method: 'get',
-  },
 
   // product endpoints
   [Endpoints.getProduct]: {
     url: '/api/v1/products/:productId',
-    method: 'get',
-  },
-  [Endpoints.listProductStocks]: {
-    url: '/api/v1/products/:productId/stocks',
     method: 'get',
   },
   [Endpoints.listProducts]: {
@@ -544,10 +533,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
   [Endpoints.listReviews]: {
     url: '/api/v1/reviews',
-    method: 'get',
-  },
-  [Endpoints.listProductReviews]: {
-    url: '/api/v1/products/:productId/reviews',
     method: 'get',
   },
 };
