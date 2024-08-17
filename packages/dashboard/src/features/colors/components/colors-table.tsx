@@ -5,12 +5,12 @@ import { PopconfirmDeleteButton } from '@/components';
 import { StockColor } from '@/features/stocks';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
-import type { GetColorsListResponse } from '@resala/shared';
+import type { ListColorsResponse } from '@resala/shared';
 import { Space, Table } from 'antd';
 
 import { ColorEditorModal } from './color-editor-modal';
 
-export const ColorsTable: React.FC<{ colors: GetColorsListResponse['data'] }> = ({ colors }) => {
+export const ColorsTable: React.FC<{ colors: ListColorsResponse['data'] }> = ({ colors }) => {
   return (
     <Table
       pagination={{

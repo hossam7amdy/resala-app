@@ -1,4 +1,4 @@
-import { listStocksPaginated } from '@/data/stocks';
+import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
 import React from 'react';
 
@@ -9,7 +9,7 @@ const StocksPage: React.FC<{
   const page = parseInt(searchParams.page, 10) || 1;
   const limit = parseInt(searchParams.limit, 10) || 10;
 
-  const { pagination, stocks } = await listStocksPaginated({ query, page, limit });
+  const { pagination, stocks } = await listStocks({ query, page, limit });
 
   return <StocksTable pagination={pagination} stocks={stocks} />;
 };

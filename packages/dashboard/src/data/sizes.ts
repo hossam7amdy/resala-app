@@ -4,8 +4,8 @@ import { callEndpoint } from '@/services/callEndpoint';
 import type {
   GetSizeRequest,
   GetSizeResponse,
-  GetSizesListRequest,
-  GetSizesListResponse,
+  ListSizesRequest,
+  ListSizesResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -13,7 +13,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const listAllSizes = async () => {
   noStore();
 
-  const response = await callEndpoint<GetSizesListRequest, GetSizesListResponse>(
+  const response = await callEndpoint<ListSizesRequest, ListSizesResponse>(
     ENDPOINT_CONFIGS.listSizes
   );
 

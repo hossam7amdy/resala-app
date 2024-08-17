@@ -2,41 +2,23 @@
 
 import { callEndpoint } from '@/services/callEndpoint';
 import type {
-  DefaultRequestQuery,
   GetProductRequest,
   GetProductResponse,
-  GetProductStocksRequest,
-  GetProductStocksResponse,
-  GetProductsListRequest,
-  GetProductsListResponse,
+  ListProductsRequest,
+  ListProductsResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';
 
-export const listProducts = async (query: DefaultRequestQuery['query']) => {
+export const listProducts = async (query: ListProductsRequest['query']) => {
   noStore();
 
-  const response = await callEndpoint<GetProductsListRequest, GetProductsListResponse>(
+  const response = await callEndpoint<ListProductsRequest, ListProductsResponse>(
     ENDPOINT_CONFIGS.listProducts,
     { query }
   );
 
   return response.data;
-};
-
-export const listProductStocks = async (id: string) => {
-  noStore();
-
-  try {
-    const response = await callEndpoint<GetProductStocksRequest, GetProductStocksResponse>(
-      ENDPOINT_CONFIGS.listProductStocks,
-      { params: { productId: Number(id) } }
-    );
-
-    return response.data;
-  } catch (e) {
-    return null;
-  }
 };
 
 export const findProduct = async (id: string | number) => {
