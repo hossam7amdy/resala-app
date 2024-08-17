@@ -3,4 +3,4 @@ export * from './validateMiddleware.js';
 export * from './loggerMiddleware.js';
 export * from './uploadMiddleware.js';
 
-export { default as AuthMiddleware } from './authMiddleware.js';
+export { AuthMiddleware } from './authMiddleware.js';

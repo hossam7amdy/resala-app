@@ -2,10 +2,11 @@ import { Role } from '@resala/shared';
 import type { RoleType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
-import type { AuthService, UserService } from '../services/index.js';
-import { ForbiddenError, UnauthorizedError } from '../utils/ApiErrors.js';
+import { ForbiddenError, UnauthorizedError } from '../errors/api.errors.js';
+import type { AuthService } from '../features/auth/auth.service.js';
+import type { UserService } from '../features/user/user.service.js';
 
-export default class AuthMiddleware {
+export class AuthMiddleware {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService
@@ -19,7 +20,7 @@ export default class AuthMiddleware {
       }
 
       const payload = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
-      res.locals.user = await this.userService.findUserById(payload.id);
+      res.locals.user = await this.userService.find(payload.id);
 
       next();
     } catch (error) {
@@ -58,13 +59,10 @@ export default class AuthMiddleware {
   authorizeSelf = (roles?: RoleType[]): RequestHandler => {
     return (req, res, next) => {
       try {
+        const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
         const user = res.locals.user;
 
-        if (req.params.userId === 'self') {
-          req.params.userId = user?.id.toString();
-        }
-
-        if (!roles?.includes(user?.role) && req.params.userId !== user?.id.toString()) {
+        if (!roles?.includes(user?.role) && userId !== user?.id.toString()) {
           throw new ForbiddenError();
         }
 

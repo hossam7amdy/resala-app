@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { AnyZodObject, ZodError } from 'zod';
 
-import { BadRequestError } from '../utils/ApiErrors.js';
+import { BadRequestError } from '../errors/api.errors.js';
 import { formatZodError } from '../utils/zodErrors.js';
 
 /**

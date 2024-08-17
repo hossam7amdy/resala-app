@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import {
   ChangePasswordSchema,
   CreateAddressSchema,
@@ -27,7 +26,6 @@ import {
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  FindImagesSchema,
   ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
@@ -36,17 +34,19 @@ import {
   GetReviewSchema,
   GetUserSchema,
   ListAddressSchema,
+  ListImagesSchema,
   ListOrdersSchema,
-  ListProductReviewsSchema,
+  ListProductsSchema,
   ListReviewsSchema,
+  ListStocksSchema,
   LoginSchema,
-  PatchImageSchema,
   RefreshTokenSchema,
   RegisterSchema,
   ResetPasswordSchema,
   UpdateAddressSchema,
   UpdateCategorySchema,
   UpdateColorSchema,
+  UpdateImageSchema,
   UpdateOrderStatusSchema,
   UpdateProductSchema,
   UpdateReviewSchema,
@@ -58,20 +58,36 @@ import {
 import type { Request, RequestHandler, Response } from 'express';
 import { Router } from 'express';
 
-import {
-  AuthController,
-  CategoryCtrl,
-  ColorController,
-  ImageController,
-  OrderController,
-  PaymentController,
-  ProductController,
-  ReviewController,
-  ShoppingController,
-  SizeController,
-  StockController,
-  UserController,
-} from '../controllers/index.js';
+import { db } from '../datastore/index.js';
+import { AuthController } from '../features/auth/auth.controller.js';
+import { AuthService } from '../features/auth/auth.service.js';
+import { CategoryController } from '../features/category/category.controller.js';
+import { CategoryService } from '../features/category/category.service.js';
+import { ColorController } from '../features/color/color.controller.js';
+import { ColorService } from '../features/color/color.service.js';
+import { FileService } from '../features/filestorage/file.service.js';
+import { S3FileStorage } from '../features/filestorage/s3.filestorage.js';
+import { ImageController } from '../features/image/image.controller.js';
+import { ImageService } from '../features/image/image.service.js';
+import { EmailNotificationService } from '../features/notification/email.notification.js';
+import { NotificationService } from '../features/notification/notification.service.js';
+import { OrderController } from '../features/order/order.controller.js';
+import { OrderService } from '../features/order/order.service.js';
+import { PaymentController } from '../features/payment/payment.controller.js';
+import { PaymentService } from '../features/payment/payment.service.js';
+import { PaymobService } from '../features/payment/paymob/paymob.service.js';
+import { ProductController } from '../features/product/product.controller.js';
+import { ProductService } from '../features/product/product.service.js';
+import { ReviewController } from '../features/review/review.controller.js';
+import { ReviewService } from '../features/review/review.rervice.js';
+import { ShoppingController } from '../features/shopping/shopping.controller.js';
+import { ShoppingService } from '../features/shopping/shopping.service.js';
+import { SizeController } from '../features/size/size.controller.js';
+import { SizeService } from '../features/size/size.service.js';
+import { StockController } from '../features/stock/stock.controller.js';
+import { StockService } from '../features/stock/stock.service.js';
+import { UserController } from '../features/user/user.controller.js';
+import { UserService } from '../features/user/user.service.js';
 import {
   AuthMiddleware,
   asyncHandler,
@@ -79,68 +95,36 @@ import {
   uploadMiddleware,
   validateMiddleware,
 } from '../middlewares/index.js';
-import {
-  InventoryRepository,
-  OrderRepository,
-  PaymentRepository,
-  ReviewRepository,
-  ShoppingRepository,
-  UserRepository,
-} from '../repositories/index.js';
-import {
-  AuthService,
-  EmailNotificationService,
-  FileService,
-  InventoryService,
-  NotificationService,
-  OrderService,
-  PaymentService,
-  PaymobPaymentService,
-  ReviewService,
-  S3FileStorageService,
-  ShoppingService,
-  UserService,
-} from '../services/index.js';
 
 /** Create Express Router with all the endpoints and their handlers */
 export const createExpressRouter = (legRequests: boolean) => {
   const router = Router();
 
-  const prisma = new PrismaClient();
-
-  // repositories
-  const userRepository = new UserRepository(prisma);
-  const inventoryRepository = new InventoryRepository(prisma);
-  const orderRepository = new OrderRepository(prisma);
-  const paymentRepository = new PaymentRepository(prisma);
-  const reviewRepository = new ReviewRepository(prisma);
-  const shoppingRepository = new ShoppingRepository(prisma);
-
   // services
-  const authService = new AuthService(userRepository);
-  const userService = new UserService(userRepository);
-  const fileService = new FileService(new S3FileStorageService());
-  const inventoryService = new InventoryService(inventoryRepository, fileService);
+  const fileService = new FileService(new S3FileStorage());
+  const authService = new AuthService(db);
+  const userService = new UserService(db);
+  const stockService = new StockService(db);
+  const imageService = new ImageService(db, fileService);
+  const productService = new ProductService(db, fileService);
+  const categoryService = new CategoryService(db);
+  const colorService = new ColorService(db);
+  const sizeService = new SizeService(db);
   const notificationService = new NotificationService(new EmailNotificationService());
-  const reviewService = new ReviewService(reviewRepository, userService, inventoryService);
-  const shoppingService = new ShoppingService(shoppingRepository, inventoryService);
-  const paymentService = new PaymentService(paymentRepository, new PaymobPaymentService());
-  const orderService = new OrderService(
-    orderRepository,
-    shoppingService,
-    userService,
-    inventoryService
-  );
+  const reviewService = new ReviewService(db);
+  const shoppingService = new ShoppingService(db);
+  const paymentService = new PaymentService(db, new PaymobService());
+  const orderService = new OrderService(db, userService, stockService, shoppingService);
 
   // controllers
   const authCtrl = new AuthController(authService, notificationService);
   const userCtrl = new UserController(userService);
-  const categoryCtrl = new CategoryCtrl(inventoryService);
-  const productCtrl = new ProductController(inventoryService);
-  const colorCtrl = new ColorController(inventoryService);
-  const sizeCtrl = new SizeController(inventoryService);
-  const stockCtrl = new StockController(inventoryService);
-  const imageCtrl = new ImageController(inventoryService);
+  const categoryCtrl = new CategoryController(categoryService);
+  const productCtrl = new ProductController(productService);
+  const colorCtrl = new ColorController(colorService);
+  const sizeCtrl = new SizeController(sizeService);
+  const stockCtrl = new StockController(stockService);
+  const imageCtrl = new ImageController(imageService);
   const shoppingCtrl = new ShoppingController(shoppingService);
   const paymentCtrl = new PaymentController(paymentService, orderService);
   const orderCtrl = new OrderController(orderService, paymentService, notificationService);
@@ -189,7 +173,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listUserOrders]: [
       authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(DefaultQuerySchema),
-      orderCtrl.listUserOrders,
+      orderCtrl.listOrders,
     ],
 
     // user address endpoints
@@ -211,7 +195,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listAddress]: [
       authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
       validateMiddleware(ListAddressSchema),
-      userCtrl.getUserAddressList,
+      userCtrl.listUserAddress,
     ],
 
     // category endpoints
@@ -219,10 +203,6 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listCategories]: [
       validateMiddleware(DefaultQuerySchema),
       categoryCtrl.listCategories,
-    ],
-    [Endpoints.listCategoryProducts]: [
-      validateMiddleware(GetCategorySchema),
-      categoryCtrl.listCategoryProducts,
     ],
     [Endpoints.createCategory]: [
       validateMiddleware(CreateCategorySchema),
@@ -242,12 +222,7 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // product endpoints
     [Endpoints.getProduct]: [validateMiddleware(GetProductSchema), productCtrl.getProduct],
-    [Endpoints.listProducts]: [validateMiddleware(DefaultQuerySchema), productCtrl.listProducts],
-    [Endpoints.listProductStocks]: [
-      validateMiddleware(GetProductSchema),
-      productCtrl.listProductStocks,
-    ],
-
+    [Endpoints.listProducts]: [validateMiddleware(ListProductsSchema), productCtrl.listProducts],
     [Endpoints.createProduct]: [
       uploadMiddleware.single('image'),
       validateMiddleware(CreateProductSchema),
@@ -268,7 +243,7 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // stock endpoints
     [Endpoints.getStock]: [validateMiddleware(DeleteStockSchema), stockCtrl.getStock],
-    [Endpoints.listStocks]: [validateMiddleware(DefaultQuerySchema), stockCtrl.listStocks],
+    [Endpoints.listStocks]: [validateMiddleware(ListStocksSchema), stockCtrl.listStocks],
     [Endpoints.addStock]: [
       validateMiddleware(CreateStockSchema),
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
@@ -324,7 +299,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
 
     // image endpoints
-    [Endpoints.findImages]: [validateMiddleware(FindImagesSchema), imageCtrl.findImages],
+    [Endpoints.findImages]: [validateMiddleware(ListImagesSchema), imageCtrl.listImages],
     [Endpoints.addImages]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
       uploadMiddleware.array('images', 5),
@@ -333,7 +308,7 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
     [Endpoints.updateImage]: [
       authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
-      validateMiddleware(PatchImageSchema),
+      validateMiddleware(UpdateImageSchema),
       imageCtrl.updateImage,
     ],
     [Endpoints.deleteImage]: [
@@ -407,10 +382,6 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.deleteReview]: [validateMiddleware(DeleteReviewSchema), reviewCtrl.deleteReview],
     [Endpoints.getReview]: [validateMiddleware(GetReviewSchema), reviewCtrl.getReview],
     [Endpoints.listReviews]: [validateMiddleware(ListReviewsSchema), reviewCtrl.listReviews],
-    [Endpoints.listProductReviews]: [
-      validateMiddleware(ListProductReviewsSchema),
-      reviewCtrl.listProductReviews,
-    ],
   };
 
   /** Register all the routes and their handlers */

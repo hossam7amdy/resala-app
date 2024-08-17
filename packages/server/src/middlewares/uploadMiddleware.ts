@@ -1,7 +1,7 @@
 import type { Request } from 'express';
 import multer from 'multer';
 
-import { BadRequestError } from '../utils/ApiErrors.js';
+import { BadRequestError } from '../errors/api.errors.js';
 
 const FILE_SIZE_LIMIT = 1024 * 1024 * 50; // 50MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
