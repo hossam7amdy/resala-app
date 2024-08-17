@@ -36,13 +36,11 @@ export declare enum Endpoints {
     deleteAddress = "deleteAddress",
     getCategory = "getCategory",
     listCategories = "listCategories",
-    listCategoryProducts = "listCategoryProducts",
     createCategory = "createCategory",
     updateCategory = "updateCategory",
     deleteCategory = "deleteCategory",
     getProduct = "getProduct",
     listProducts = "listProducts",
-    listProductStocks = "listProductStocks",
     createProduct = "createProduct",
     updateProduct = "updateProduct",
     deleteProduct = "deleteProduct",
@@ -86,8 +84,7 @@ export declare enum Endpoints {
     listReviews = "listReviews",
     createReview = "createReview",
     updateReview = "updateReview",
-    deleteReview = "deleteReview",
-    listProductReviews = "listProductReviews"
+    deleteReview = "deleteReview"
 }
 /**
  * Function to add params to the endpoint url

@@ -32,14 +32,12 @@ export var Endpoints;
     // category endpoints
     Endpoints["getCategory"] = "getCategory";
     Endpoints["listCategories"] = "listCategories";
-    Endpoints["listCategoryProducts"] = "listCategoryProducts";
     Endpoints["createCategory"] = "createCategory";
     Endpoints["updateCategory"] = "updateCategory";
     Endpoints["deleteCategory"] = "deleteCategory";
     // product endpoints
     Endpoints["getProduct"] = "getProduct";
     Endpoints["listProducts"] = "listProducts";
-    Endpoints["listProductStocks"] = "listProductStocks";
     Endpoints["createProduct"] = "createProduct";
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
@@ -92,7 +90,6 @@ export var Endpoints;
     Endpoints["createReview"] = "createReview";
     Endpoints["updateReview"] = "updateReview";
     Endpoints["deleteReview"] = "deleteReview";
-    Endpoints["listProductReviews"] = "listProductReviews";
 })(Endpoints || (Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -267,17 +264,9 @@ export const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
-    [Endpoints.listCategoryProducts]: {
-        url: '/api/v1/categories/:categoryId/products',
-        method: 'get',
-    },
     // product endpoints
     [Endpoints.getProduct]: {
         url: '/api/v1/products/:productId',
-        method: 'get',
-    },
-    [Endpoints.listProductStocks]: {
-        url: '/api/v1/products/:productId/stocks',
         method: 'get',
     },
     [Endpoints.listProducts]: {
@@ -500,10 +489,6 @@ export const ENDPOINT_CONFIGS = {
     },
     [Endpoints.listReviews]: {
         url: '/api/v1/reviews',
-        method: 'get',
-    },
-    [Endpoints.listProductReviews]: {
-        url: '/api/v1/products/:productId/reviews',
         method: 'get',
     },
 };
