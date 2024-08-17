@@ -1,8 +1,9 @@
+import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import { MulterError } from 'multer';
 
-import { logger } from '../lib/index.js';
-import { APPError } from '../utils/ApiErrors.js';
+import { APPError } from '../errors/api.errors.js';
+import { logger } from '../logger/index.js';
 
 /**
  * @description catch errors from async functions
@@ -26,13 +27,32 @@ export const errorMiddleware = (
       success: false,
       message: error.message,
     });
-  }
-
-  if (error instanceof MulterError) {
+  } else if (error instanceof MulterError) {
     return res.status(400).json({
       success: false,
       message: error.message,
     });
+  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case 'P2002':
+        return res
+          .status(400)
+          .json({ success: false, message: `Duplicate field value: ${error?.meta?.target}` });
+      case 'P2014':
+        return res
+          .status(400)
+          .json({ success: false, message: `Invalid ID: ${error?.meta?.target}` });
+      case 'P2003':
+        return res
+          .status(400)
+          .json({ success: false, message: `Invalid input data: ${error?.meta?.target}` });
+      case 'P2025':
+        return res.status(404).json({ success: false, message: error.message });
+      default:
+        return res
+          .status(400)
+          .json({ success: false, message: `Something went wrong: ${error.message}` });
+    }
   }
 
   logger.error(error);
