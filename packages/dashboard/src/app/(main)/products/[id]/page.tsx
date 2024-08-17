@@ -11,11 +11,7 @@ import React from 'react';
 export const metadata: Metadata = { title: 'Product Stocks' };
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
-  const { stocks } = await listStocks({
-    productId: +params.id,
-    page: 1,
-    limit: 50,
-  });
+  const { stocks } = await listStocks({ productId: +params.id, page: 1, limit: 50, query: '' });
 
   if (!stocks) {
     return notFound();
