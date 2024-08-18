@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 
 @Injectable({
