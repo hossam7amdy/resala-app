@@ -12,15 +12,16 @@ export class AuthMiddleware {
     private readonly userService: UserService
   ) {}
 
-  jwtParseMiddleware: RequestHandler = async (req, res, next) => {
+  parseJwt: RequestHandler = async (req, res, next) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
         return next();
       }
 
-      const payload = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
-      res.locals.user = await this.userService.find(payload.id);
+      const { id } = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
+
+      res.locals.user = await this.userService.find(id);
 
       next();
     } catch (error) {
@@ -28,7 +29,7 @@ export class AuthMiddleware {
     }
   };
 
-  enforceJwtMiddleware: RequestHandler = async (_, res, next) => {
+  enforceJwt: RequestHandler = async (_, res, next) => {
     try {
       if (!res.locals?.user?.id) {
         throw new UnauthorizedError();
@@ -40,7 +41,7 @@ export class AuthMiddleware {
     }
   };
 
-  authorizeUser = (roles: RoleType[]): RequestHandler => {
+  authorizeRole = (roles: RoleType[]): RequestHandler => {
     return (_req, res, next) => {
       try {
         const user = res.locals.user;
@@ -56,29 +57,12 @@ export class AuthMiddleware {
     };
   };
 
-  authorizeSelf = (roles?: RoleType[]): RequestHandler => {
-    return (req, res, next) => {
-      try {
-        const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
-        const user = res.locals.user;
-
-        if (!roles?.includes(user?.role) && userId !== user?.id.toString()) {
-          throw new ForbiddenError();
-        }
-
-        next();
-      } catch (error) {
-        next(error);
-      }
-    };
-  };
-
-  authorizeRoleChange: RequestHandler = (req, res, next) => {
+  authorizeAccess: RequestHandler = (req, res, next) => {
     try {
-      const user = res.locals.user;
-      const role = req.body.role as RoleType;
+      const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
+      const { id, role } = res.locals.user;
 
-      if (role && user?.role !== Role.ADMIN) {
+      if (![Role.ADMIN, Role.MODERATOR].includes(role) && userId !== id?.toString()) {
         throw new ForbiddenError();
       }
 

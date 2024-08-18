@@ -35,7 +35,6 @@ export enum Endpoints {
   listUsers = 'listUsers',
   updateUser = 'updateUser',
   deleteUser = 'deleteUser',
-  listUserOrders = 'listUserOrders',
 
   // address endpoints
   createAddress = 'createAddress',
@@ -245,30 +244,25 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/users/:userId',
     auth: true,
   },
-  [Endpoints.listUserOrders]: {
-    method: 'get',
-    url: '/api/v1/users/:userId/orders',
-    auth: true,
-  },
 
   // address endpoints
   [Endpoints.createAddress]: {
-    url: '/api/v1/users/:userId/addresses',
+    url: '/api/v1/addresses',
     method: 'post',
     auth: true,
   },
   [Endpoints.listAddress]: {
-    url: '/api/v1/users/:userId/addresses',
+    url: '/api/v1/addresses',
     method: 'get',
     auth: true,
   },
   [Endpoints.updateAddress]: {
-    url: '/api/v1/users/:userId/addresses/:addressId',
+    url: '/api/v1/addresses/:addressId',
     method: 'put',
     auth: true,
   },
   [Endpoints.deleteAddress]: {
-    url: '/api/v1/users/:userId/addresses/:addressId',
+    url: '/api/v1/addresses/:addressId',
     method: 'delete',
     auth: true,
   },

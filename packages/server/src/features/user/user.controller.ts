@@ -58,12 +58,7 @@ export class UserController implements IUserController {
 
   updateUser: UpdateUser = async (req, res, next) => {
     try {
-      const user = await this.userService.update(req.params.userId, {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        phone: req.body.phone,
-        role: req.body.role,
-      });
+      const user = await this.userService.update(req.params.userId, req.body);
 
       return res.json({
         success: true,
@@ -75,7 +70,7 @@ export class UserController implements IUserController {
   };
 
   listUserAddress: ListUserAddress = async (req, res, next) => {
-    const userId = req.params.userId;
+    const userId = req.query.userId;
 
     try {
       const addresses = await this.userService.listAddress(userId);
@@ -90,10 +85,8 @@ export class UserController implements IUserController {
   };
 
   createUserAddress: CreateUserAddress = async (req, res, next) => {
-    const userId = req.params.userId;
-
     try {
-      const address = await this.userService.createAddress(userId, req.body);
+      const address = await this.userService.createAddress(req.body);
 
       return res.status(201).json({ success: true, data: address });
     } catch (error) {
@@ -102,11 +95,10 @@ export class UserController implements IUserController {
   };
 
   updateUserAddress: UpdateUserAddress = async (req, res, next) => {
-    const userId = req.params.userId;
     const addressId = req.params.addressId;
 
     try {
-      const address = await this.userService.updateAddress(userId, addressId, req.body);
+      const address = await this.userService.updateAddress(addressId, req.body);
 
       return res.json({
         success: true,
@@ -118,11 +110,10 @@ export class UserController implements IUserController {
   };
 
   deleteUserAddress: DeleteUserAddress = async (req, res, next) => {
-    const userId = req.params.userId;
     const addressId = req.params.addressId;
 
     try {
-      const address = await this.userService.deleteAddress(userId, addressId);
+      const address = await this.userService.deleteAddress(addressId);
 
       return res.json({ success: true, data: address });
     } catch (error) {

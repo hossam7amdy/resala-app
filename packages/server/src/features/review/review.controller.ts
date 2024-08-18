@@ -6,7 +6,7 @@ import type {
   ListReviews,
   UpdateReview,
 } from './review.controller.interface.js';
-import type { ReviewService } from './review.rervice.js';
+import type { ReviewService } from './review.service.js';
 
 export class ReviewController implements IReviewController {
   private readonly reviewService: ReviewService;

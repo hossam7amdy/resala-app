@@ -355,6 +355,7 @@ export const RefundPaymentSchema = z.object({
 // Review Schemas
 export const CreateReviewSchema = z.object({
     body: z.object({
+        userId: z.coerce.number().positive(),
         productId: z.coerce.number().positive(),
         rating: z.coerce.number().min(1).max(5),
         comment: z.string().max(500).optional(),
