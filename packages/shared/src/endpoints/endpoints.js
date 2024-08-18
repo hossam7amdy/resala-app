@@ -23,7 +23,6 @@ export var Endpoints;
     Endpoints["listUsers"] = "listUsers";
     Endpoints["updateUser"] = "updateUser";
     Endpoints["deleteUser"] = "deleteUser";
-    Endpoints["listUserOrders"] = "listUserOrders";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -214,29 +213,24 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/users/:userId',
         auth: true,
     },
-    [Endpoints.listUserOrders]: {
-        method: 'get',
-        url: '/api/v1/users/:userId/orders',
-        auth: true,
-    },
     // address endpoints
     [Endpoints.createAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'post',
         auth: true,
     },
     [Endpoints.listAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'get',
         auth: true,
     },
     [Endpoints.updateAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'delete',
         auth: true,
     },

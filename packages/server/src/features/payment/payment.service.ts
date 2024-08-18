@@ -58,7 +58,7 @@ export class PaymentService {
 
   async retrieve(transactionId: number): Promise<GetPaymentResponse['data']> {
     try {
-      return this.paymobService.retrieve(transactionId);
+      return await this.paymobService.retrieve(transactionId);
     } catch (e) {
       throw new NotFoundError((e as Error).message);
     }

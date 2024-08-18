@@ -27,7 +27,6 @@ exports.Endpoints = void 0;
     Endpoints["listUsers"] = "listUsers";
     Endpoints["updateUser"] = "updateUser";
     Endpoints["deleteUser"] = "deleteUser";
-    Endpoints["listUserOrders"] = "listUserOrders";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -218,29 +217,24 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/users/:userId',
         auth: true,
     },
-    [exports.Endpoints.listUserOrders]: {
-        method: 'get',
-        url: '/api/v1/users/:userId/orders',
-        auth: true,
-    },
     // address endpoints
     [exports.Endpoints.createAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'post',
         auth: true,
     },
     [exports.Endpoints.listAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'get',
         auth: true,
     },
     [exports.Endpoints.updateAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'put',
         auth: true,
     },
     [exports.Endpoints.deleteAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'delete',
         auth: true,
     },
@@ -711,10 +705,8 @@ const DeleteUserSchema = zod.z.object({
     }),
 });
 const CreateAddressSchema = zod.z.object({
-    params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
-    }),
     body: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
         phone: UserSchema.shape.phone,
@@ -728,19 +720,19 @@ const CreateAddressSchema = zod.z.object({
     }),
 });
 const ListAddressSchema = zod.z.object({
-    params: zod.z.object({
+    query: zod.z.object({
         userId: zod.z.coerce.number().positive(),
     }),
 });
 const UpdateAddressSchema = zod.z.object({
     params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
         addressId: zod.z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
 });
 const DeleteAddressSchema = zod.z.object({
     params: UpdateAddressSchema.shape.params,
+    query: ListAddressSchema.shape.query,
 });
 // Category Schemas
 const CreateCategorySchema = zod.z.object({
@@ -959,6 +951,7 @@ const RefundPaymentSchema = zod.z.object({
 // Review Schemas
 const CreateReviewSchema = zod.z.object({
     body: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         productId: zod.z.coerce.number().positive(),
         rating: zod.z.coerce.number().min(1).max(5),
         comment: zod.z.string().max(500).optional(),
@@ -980,6 +973,9 @@ const UpdateReviewSchema = zod.z.object({
 });
 const DeleteReviewSchema = zod.z.object({
     params: GetReviewSchema.shape.params,
+    query: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
 });
 
 exports.ChangePasswordSchema = ChangePasswordSchema;

@@ -71,8 +71,7 @@ export class OrderService {
       }))
     );
 
-    const orderItems = userCart.items.map(item => ({
-      orderId: newOrder.id,
+    let orderItems = userCart.items.map(item => ({
       name: item.product.enName,
       price: item.product.price,
       color: item.stock.color.enName,
@@ -80,7 +79,6 @@ export class OrderService {
       quantity: item.quantity,
       imageUrl: item.images.find(img => img.isPrimary)?.imageUrl || null,
     }));
-
     const newOrder = await this.db.$transaction(async tx => {
       const newOrder = await tx.order.create({
         data: {
@@ -92,7 +90,7 @@ export class OrderService {
         },
       });
       await tx.orderItem.createMany({
-        data: orderItems,
+        data: orderItems.map(item => ({ ...item, orderId: newOrder.id })),
       });
       const { id: addressId } = await tx.address.create({
         data: address,
