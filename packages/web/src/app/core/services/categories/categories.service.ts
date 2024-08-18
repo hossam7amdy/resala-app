@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
-import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../../shared';
 
 @Injectable({
   providedIn: 'root',
@@ -17,14 +17,12 @@ export class CategoriesService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   getCategories(): Observable<any> {
-    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.listCategories])
-    return this._HTTPClient.get(this.baseURL + url,);
-  }
-
-  getCategoryProducts(id:any):Observable<any>{
-    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.listCategoryProducts], id +'');
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.listCategories]);
     return this._HTTPClient.get(this.baseURL + url);
   }
 
-  
+  getCategoryProducts(id: any): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS[Endpoints.listProducts], { productId: id });
+    return this._HTTPClient.get(this.baseURL + url);
+  }
 }

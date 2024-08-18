@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withParams } from '../../../../../shared';
+import { ENDPOINT_CONFIGS, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
-
-  constructor(
-    private _HttpClient: HttpClient
-  ) { }
+  constructor(private _HttpClient: HttpClient) {}
   baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
-  myToken: any = { 'Authorization': `Bearer ${localStorage.getItem('etoken')}` }
+  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
   // countries API
   urlCountries: string = `https://countriesnow.space/api/v0.1/`;
