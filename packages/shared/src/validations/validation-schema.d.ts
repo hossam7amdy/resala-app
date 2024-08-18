@@ -276,14 +276,8 @@ export declare const DeleteUserSchema: z.ZodObject<{
     };
 }>;
 export declare const CreateAddressSchema: z.ZodObject<{
-    params: z.ZodObject<{
-        userId: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        userId: number;
-    }, {
-        userId: number;
-    }>;
     body: z.ZodObject<{
+        userId: z.ZodNumber;
         firstName: z.ZodString;
         lastName: z.ZodString;
         phone: z.ZodString;
@@ -298,6 +292,7 @@ export declare const CreateAddressSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -309,6 +304,7 @@ export declare const CreateAddressSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -318,13 +314,11 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
-    params: {
-        userId: number;
-    };
     body: {
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -334,13 +328,11 @@ export declare const CreateAddressSchema: z.ZodObject<{
         address?: string | undefined;
     };
 }, {
-    params: {
-        userId: number;
-    };
     body: {
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -351,7 +343,7 @@ export declare const CreateAddressSchema: z.ZodObject<{
     };
 }>;
 export declare const ListAddressSchema: z.ZodObject<{
-    params: z.ZodObject<{
+    query: z.ZodObject<{
         userId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         userId: number;
@@ -359,26 +351,24 @@ export declare const ListAddressSchema: z.ZodObject<{
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
-    params: {
+    query: {
         userId: number;
     };
 }, {
-    params: {
+    query: {
         userId: number;
     };
 }>;
 export declare const UpdateAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
-        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
         addressId: number;
     }, {
-        userId: number;
         addressId: number;
     }>;
     body: z.ZodObject<{
+        userId: z.ZodNumber;
         firstName: z.ZodString;
         lastName: z.ZodString;
         phone: z.ZodString;
@@ -393,6 +383,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -404,6 +395,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -414,13 +406,13 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        userId: number;
         addressId: number;
     };
     body: {
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -431,13 +423,13 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     };
 }, {
     params: {
-        userId: number;
         addressId: number;
     };
     body: {
         phone: string;
         firstName: string;
         lastName: string;
+        userId: number;
         state: string;
         city: string;
         street: string;
@@ -449,24 +441,32 @@ export declare const UpdateAddressSchema: z.ZodObject<{
 }>;
 export declare const DeleteAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
-        userId: z.ZodNumber;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
         addressId: number;
     }, {
-        userId: number;
         addressId: number;
+    }>;
+    query: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        userId: number;
         addressId: number;
+    };
+    query: {
+        userId: number;
     };
 }, {
     params: {
-        userId: number;
         addressId: number;
+    };
+    query: {
+        userId: number;
     };
 }>;
 export declare const CreateCategorySchema: z.ZodObject<{
@@ -1496,12 +1496,25 @@ export declare const DeleteReviewSchema: z.ZodObject<{
     }, {
         reviewId: number;
     }>;
+    query: z.ZodObject<{
+        userId: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        userId: number;
+    }, {
+        userId: number;
+    }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         reviewId: number;
     };
+    query: {
+        userId: number;
+    };
 }, {
     params: {
         reviewId: number;
+    };
+    query: {
+        userId: number;
     };
 }>;

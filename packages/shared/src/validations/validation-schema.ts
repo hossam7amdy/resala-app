@@ -441,4 +441,7 @@ export const UpdateReviewSchema = z.object({
 
 export const DeleteReviewSchema = z.object({
   params: GetReviewSchema.shape.params,
+  query: z.object({
+    userId: z.coerce.number().positive(),
+  }),
 });

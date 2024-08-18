@@ -38,15 +38,22 @@ export class UserService {
     return await this.db.user.update({
       where: { id },
       data: payload,
+      select: USER_SELECT,
     });
   }
 
   async delete(id: number) {
-    return await this.db.user.delete({ where: { id } });
+    return await this.db.user.delete({
+      select: USER_SELECT,
+      where: { id },
+    });
   }
 
   async find(id: number) {
-    return await this.db.user.findUniqueOrThrow({ where: { id } });
+    return await this.db.user.findUniqueOrThrow({
+      select: USER_SELECT,
+      where: { id },
+    });
   }
 
   async list({ page, limit, query }: DefaultFilters) {
@@ -116,7 +123,7 @@ export class UserService {
     return userAddr?.address ?? null;
   }
 
-  async updateAddress(addressId: number, payload: UpdateAddressRequest['body']) {
+  async updateAddress(addressId: number, { userId: _, ...payload }: UpdateAddressRequest['body']) {
     return await this.db.address.update({
       data: payload,
       where: { id: addressId },

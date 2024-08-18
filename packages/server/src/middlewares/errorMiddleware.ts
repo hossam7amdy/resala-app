@@ -37,17 +37,19 @@ export const errorMiddleware = (
       case 'P2002':
         return res
           .status(400)
-          .json({ success: false, message: `Duplicate field value: ${error?.meta?.target}` });
+          .json({ success: false, message: `Duplicate field value: ${error.meta?.target}` });
       case 'P2014':
         return res
           .status(400)
-          .json({ success: false, message: `Invalid ID: ${error?.meta?.target}` });
+          .json({ success: false, message: `Invalid ID: ${error.meta?.target}` });
       case 'P2003':
         return res
           .status(400)
-          .json({ success: false, message: `Invalid input data: ${error?.meta?.target}` });
+          .json({ success: false, message: `Invalid input data: ${error.meta?.cause ?? ''}` });
       case 'P2025':
-        return res.status(404).json({ success: false, message: error.message });
+        return res
+          .status(404)
+          .json({ success: false, message: error.meta?.cause ?? error.message });
       default:
         return res
           .status(400)
@@ -56,6 +58,7 @@ export const errorMiddleware = (
   }
 
   logger.error(error);
+  console.error(error);
   return res.status(500).json({
     success: false,
     message: 'Unexpected error occurred, please try again.',

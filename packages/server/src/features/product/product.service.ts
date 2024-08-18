@@ -6,6 +6,7 @@ import type {
   ListProductsResponse,
   UpdateProductRequest,
 } from '@resala/shared';
+import { ConflictError } from 'src/errors/api.errors.js';
 
 import type { DataStore } from '../../datastore/index.js';
 import type { FileService } from '../filestorage/file.service.js';
@@ -54,20 +55,30 @@ export class ProductService {
     };
   }
 
-  async create(payload: CreateProductRequest['body'] & { file: Express.Multer.File }) {
-    const product = {
-      categoryId: payload.categoryId,
-      arName: payload.arName,
-      enName: payload.enName,
-      arDescription: payload.arDescription,
-      enDescription: payload.enDescription,
-      price: payload.price,
-      imageKey: '',
-      imageUrl: '',
-    };
-    const { id } = await this.db.product.create({ data: product });
+  async create({
+    categoryId,
+    enName,
+    arName,
+    file,
+    ...payload
+  }: CreateProductRequest['body'] & { file: Express.Multer.File }) {
+    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
-    const { key, url } = await this.fileService.uploadFile(payload.file);
+    const product = await this.db.product.findFirst({
+      where: {
+        OR: [{ enName }, { arName }],
+      },
+    });
+
+    if (product) {
+      throw new ConflictError('Product already exists');
+    }
+
+    const { key, url } = await this.fileService.uploadFile(file);
+
+    const { id } = await this.db.product.create({
+      data: { ...payload, categoryId, enName, arName, imageKey: key, imageUrl: url },
+    });
 
     return await this.update(id, { imageKey: key, imageUrl: url } as any);
   }
@@ -76,6 +87,8 @@ export class ProductService {
     id: number,
     { file, ...product }: UpdateProductRequest['body'] & { file?: Express.Multer.File }
   ) {
+    await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
+
     const { imageKey } = await this.get(id);
 
     if (file) {

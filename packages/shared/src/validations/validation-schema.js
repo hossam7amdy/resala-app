@@ -107,10 +107,8 @@ export const DeleteUserSchema = z.object({
     }),
 });
 export const CreateAddressSchema = z.object({
-    params: z.object({
-        userId: z.coerce.number().positive(),
-    }),
     body: z.object({
+        userId: z.coerce.number().positive(),
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
         phone: UserSchema.shape.phone,
@@ -124,19 +122,19 @@ export const CreateAddressSchema = z.object({
     }),
 });
 export const ListAddressSchema = z.object({
-    params: z.object({
+    query: z.object({
         userId: z.coerce.number().positive(),
     }),
 });
 export const UpdateAddressSchema = z.object({
     params: z.object({
-        userId: z.coerce.number().positive(),
         addressId: z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
 });
 export const DeleteAddressSchema = z.object({
     params: UpdateAddressSchema.shape.params,
+    query: ListAddressSchema.shape.query,
 });
 // Category Schemas
 export const CreateCategorySchema = z.object({
@@ -377,4 +375,7 @@ export const UpdateReviewSchema = z.object({
 });
 export const DeleteReviewSchema = z.object({
     params: GetReviewSchema.shape.params,
+    query: z.object({
+        userId: z.coerce.number().positive(),
+    }),
 });
