@@ -19,10 +19,10 @@ export const validateMiddleware = (schema: AnyZodObject) => {
         params: req.params,
       });
 
-      // Merge the validated data with the request object
-      req.body = { ...req.body, ...body };
-      req.query = { ...req.query, ...query };
-      req.params = { ...req.params, ...params };
+      // Assign the validated values to the request object
+      req.body = body;
+      req.query = query;
+      req.params = params;
 
       next();
     } catch (error) {

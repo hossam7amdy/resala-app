@@ -49,7 +49,7 @@ export type DeleteUser = ExpressHandlerWithParams<
 >;
 
 export type CreateUserAddress = ExpressHandlerWithParams<
-  CreateAddressRequest['params'],
+  undefined,
   CreateAddressRequest['body'],
   CreateAddressResponse,
   undefined,
@@ -66,17 +66,17 @@ export type UpdateUserAddress = ExpressHandlerWithParams<
 
 export type DeleteUserAddress = ExpressHandlerWithParams<
   UpdateAddressRequest['params'],
-  DeleteAddressRequest,
-  DeleteAddressResponse,
   undefined,
+  DeleteAddressResponse,
+  DeleteAddressRequest['query'],
   LocalUser
 >;
 
 export type ListUserAddress = ExpressHandlerWithParams<
-  ListAddressRequest['params'],
-  ListAddressRequest,
-  ListAddressResponse,
   undefined,
+  undefined,
+  ListAddressResponse,
+  ListAddressRequest['query'],
   LocalUser
 >;
 

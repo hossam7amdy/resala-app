@@ -28,6 +28,13 @@ export class UserService {
   constructor(private readonly db: DataStore) {}
 
   async update(id: number, payload: Partial<UpdateUserRequest['body']>) {
+    const user = await this.find(id);
+
+    // Prevent updating the role if the user is not an admin
+    if (payload.role && user.role !== 'ADMIN') {
+      delete payload.role;
+    }
+
     return await this.db.user.update({
       where: { id },
       data: payload,
@@ -84,7 +91,7 @@ export class UserService {
     return addresses.map(address => address.address);
   }
 
-  async createAddress(userId: number, payload: CreateAddressRequest['body']) {
+  async createAddress({ userId, ...payload }: CreateAddressRequest['body']) {
     const userAddrCount = await this.db.userAddress.count({ where: { userId } });
 
     if (userAddrCount >= this.maxAddressCount) {
@@ -109,18 +116,14 @@ export class UserService {
     return userAddr?.address ?? null;
   }
 
-  async updateAddress(userId: number, addressId: number, payload: UpdateAddressRequest['body']) {
-    await this.findAddress(userId, addressId);
-
+  async updateAddress(addressId: number, payload: UpdateAddressRequest['body']) {
     return await this.db.address.update({
       data: payload,
       where: { id: addressId },
     });
   }
 
-  async deleteAddress(userId: number, addressId: number) {
-    await this.findAddress(userId, addressId);
-
+  async deleteAddress(addressId: number) {
     return await this.db.address.delete({ where: { id: addressId } });
   }
 }

@@ -55,7 +55,7 @@ import {
   UpdateUserSchema,
   VerifyEmailSchema,
 } from '@resala/shared';
-import type { Request, RequestHandler, Response } from 'express';
+import type { Request, Response } from 'express';
 import { Router } from 'express';
 
 import { db } from '../datastore/index.js';
@@ -69,7 +69,7 @@ import { FileService } from '../features/filestorage/file.service.js';
 import { S3FileStorage } from '../features/filestorage/s3.filestorage.js';
 import { ImageController } from '../features/image/image.controller.js';
 import { ImageService } from '../features/image/image.service.js';
-import { EmailNotificationService } from '../features/notification/email.notification.js';
+import { EmailNotification } from '../features/notification/email.notification.js';
 import { NotificationService } from '../features/notification/notification.service.js';
 import { OrderController } from '../features/order/order.controller.js';
 import { OrderService } from '../features/order/order.service.js';
@@ -79,7 +79,7 @@ import { PaymobService } from '../features/payment/paymob/paymob.service.js';
 import { ProductController } from '../features/product/product.controller.js';
 import { ProductService } from '../features/product/product.service.js';
 import { ReviewController } from '../features/review/review.controller.js';
-import { ReviewService } from '../features/review/review.rervice.js';
+import { ReviewService } from '../features/review/review.service.js';
 import { ShoppingController } from '../features/shopping/shopping.controller.js';
 import { ShoppingService } from '../features/shopping/shopping.service.js';
 import { SizeController } from '../features/size/size.controller.js';
@@ -97,7 +97,7 @@ import {
 } from '../middlewares/index.js';
 
 /** Create Express Router with all the endpoints and their handlers */
-export const createExpressRouter = (legRequests: boolean) => {
+export const expressApiRoutes = (legRequests: boolean) => {
   const router = Router();
 
   // services
@@ -110,7 +110,7 @@ export const createExpressRouter = (legRequests: boolean) => {
   const categoryService = new CategoryService(db);
   const colorService = new ColorService(db);
   const sizeService = new SizeService(db);
-  const notificationService = new NotificationService(new EmailNotificationService());
+  const notificationService = new NotificationService(new EmailNotification());
   const reviewService = new ReviewService(db);
   const shoppingService = new ShoppingService(db);
   const paymentService = new PaymentService(db, new PaymobService());
@@ -134,7 +134,7 @@ export const createExpressRouter = (legRequests: boolean) => {
 
   /** Define the handlers for each endpoint */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const HANDLER: { [key in Endpoints]: RequestHandler<any, any, any, any, any>[] } = {
+  const HANDLER: { [key in Endpoints]: any[] } = {
     // health check
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
@@ -150,50 +150,44 @@ export const createExpressRouter = (legRequests: boolean) => {
 
     // user endpoints
     [Endpoints.getUser]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(GetUserSchema),
       userCtrl.getUser,
     ],
     [Endpoints.listUsers]: [
       validateMiddleware(DefaultQuerySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       userCtrl.listUsers,
     ],
     [Endpoints.updateUser]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
-      authMiddleware.authorizeRoleChange,
+      authMiddleware.authorizeAccess,
       validateMiddleware(UpdateUserSchema),
       userCtrl.updateUser,
     ],
     [Endpoints.deleteUser]: [
       validateMiddleware(DeleteUserSchema),
-      authMiddleware.authorizeUser(['ADMIN']),
+      authMiddleware.authorizeRole(['ADMIN']),
       userCtrl.deleteUser,
-    ],
-    [Endpoints.listUserOrders]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
-      validateMiddleware(DefaultQuerySchema),
-      orderCtrl.listOrders,
     ],
 
     // user address endpoints
     [Endpoints.createAddress]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(CreateAddressSchema),
       userCtrl.createUserAddress,
     ],
     [Endpoints.updateAddress]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(UpdateAddressSchema),
       userCtrl.updateUserAddress,
     ],
     [Endpoints.deleteAddress]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(DeleteAddressSchema),
       userCtrl.deleteUserAddress,
     ],
     [Endpoints.listAddress]: [
-      authMiddleware.authorizeSelf(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(ListAddressSchema),
       userCtrl.listUserAddress,
     ],
@@ -206,17 +200,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     ],
     [Endpoints.createCategory]: [
       validateMiddleware(CreateCategorySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       categoryCtrl.createCategory,
     ],
     [Endpoints.updateCategory]: [
       validateMiddleware(UpdateCategorySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       categoryCtrl.updateCategory,
     ],
     [Endpoints.deleteCategory]: [
       validateMiddleware(DeleteCategorySchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       categoryCtrl.deleteCategory,
     ],
 
@@ -226,18 +220,18 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.createProduct]: [
       uploadMiddleware.single('image'),
       validateMiddleware(CreateProductSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       productCtrl.createProduct,
     ],
     [Endpoints.updateProduct]: [
       uploadMiddleware.single('image'),
       validateMiddleware(UpdateProductSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       productCtrl.updateProduct,
     ],
     [Endpoints.deleteProduct]: [
       validateMiddleware(DeleteProductSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       productCtrl.deleteProduct,
     ],
 
@@ -246,17 +240,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listStocks]: [validateMiddleware(ListStocksSchema), stockCtrl.listStocks],
     [Endpoints.addStock]: [
       validateMiddleware(CreateStockSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       stockCtrl.createStock,
     ],
     [Endpoints.updateStock]: [
       validateMiddleware(UpdateStockSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       stockCtrl.updateStock,
     ],
     [Endpoints.deleteStock]: [
       validateMiddleware(DeleteStockSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       stockCtrl.deleteStock,
     ],
 
@@ -265,17 +259,17 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listColors]: [colorCtrl.listColors],
     [Endpoints.createColor]: [
       validateMiddleware(CreateColorSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       colorCtrl.createColor,
     ],
     [Endpoints.updateColor]: [
       validateMiddleware(UpdateColorSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       colorCtrl.updateColor,
     ],
     [Endpoints.deleteColor]: [
       validateMiddleware(DeleteColorSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       colorCtrl.deleteColor,
     ],
 
@@ -284,35 +278,35 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.listSizes]: [sizeCtrl.listSizes],
     [Endpoints.createSize]: [
       validateMiddleware(CreateSizeSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       sizeCtrl.createSize,
     ],
     [Endpoints.updateSize]: [
       validateMiddleware(UpdateSizeSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       sizeCtrl.updateSize,
     ],
     [Endpoints.deleteSize]: [
       validateMiddleware(DeleteSizeSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       sizeCtrl.deleteSize,
     ],
 
     // image endpoints
     [Endpoints.findImages]: [validateMiddleware(ListImagesSchema), imageCtrl.listImages],
     [Endpoints.addImages]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       uploadMiddleware.array('images', 5),
       validateMiddleware(CreateImageSchema),
       imageCtrl.createImages,
     ],
     [Endpoints.updateImage]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       validateMiddleware(UpdateImageSchema),
       imageCtrl.updateImage,
     ],
     [Endpoints.deleteImage]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       validateMiddleware(DeleteImageSchema),
       imageCtrl.deleteImage,
     ],
@@ -340,23 +334,23 @@ export const createExpressRouter = (legRequests: boolean) => {
     // order endpoints
     [Endpoints.createOrder]: [validateMiddleware(CreateOrderSchema), orderCtrl.createOrder],
     [Endpoints.getOrder]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(GetOrderSchema),
       orderCtrl.getOrder,
     ],
     [Endpoints.listOrders]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeAccess,
       validateMiddleware(ListOrdersSchema),
       orderCtrl.listOrders,
     ],
     [Endpoints.deleteOrder]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       validateMiddleware(DeleteOrderSchema),
       orderCtrl.deleteOrder,
     ],
     [Endpoints.updateOrderStatus]: [
       validateMiddleware(UpdateOrderStatusSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       orderCtrl.updateOrderStatus,
     ],
 
@@ -364,15 +358,15 @@ export const createExpressRouter = (legRequests: boolean) => {
     [Endpoints.postPayCallback]: [paymentCtrl.postPayCallback],
     [Endpoints.getPayment]: [
       validateMiddleware(GetPaymentSchema),
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       paymentCtrl.getPayment,
     ],
     [Endpoints.voidPayment]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       paymentCtrl.voidPayment,
     ],
     [Endpoints.refundPayment]: [
-      authMiddleware.authorizeUser(['ADMIN', 'MODERATOR']),
+      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
       paymentCtrl.refundPayment,
     ],
 
@@ -392,10 +386,10 @@ export const createExpressRouter = (legRequests: boolean) => {
       handlers = [loggerMiddleware, ...handlers];
     }
     if (auth) {
-      handlers = [authMiddleware.enforceJwtMiddleware, ...handlers];
+      handlers = [authMiddleware.enforceJwt, ...handlers];
     }
 
-    handlers = [authMiddleware.jwtParseMiddleware, ...handlers];
+    handlers = [authMiddleware.parseJwt, ...handlers];
 
     router[method](url, ...handlers.map(handler => asyncHandler(handler)));
   });

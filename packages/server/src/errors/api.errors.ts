@@ -22,13 +22,13 @@ export class NotFoundError extends APPError {
 }
 
 export class UnauthorizedError extends APPError {
-  constructor(message = 'Unauthorized. Please login.') {
+  constructor(message = 'JWT token is missing or invalid') {
     super(401, message);
   }
 }
 
 export class ForbiddenError extends APPError {
-  constructor(message = 'Forbidden. You do not have permission to access this resource.') {
+  constructor(message = 'You do not have permission to access this resource.') {
     super(403, message);
   }
 }

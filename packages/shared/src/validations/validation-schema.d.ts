@@ -1363,26 +1363,31 @@ export declare const RefundPaymentSchema: z.ZodObject<{
 }>;
 export declare const CreateReviewSchema: z.ZodObject<{
     body: z.ZodObject<{
+        userId: z.ZodNumber;
         productId: z.ZodNumber;
         rating: z.ZodNumber;
         comment: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
     }, {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
     };
 }, {
     body: {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
@@ -1447,14 +1452,17 @@ export declare const UpdateReviewSchema: z.ZodObject<{
         reviewId: number;
     }>;
     body: z.ZodObject<{
+        userId: z.ZodNumber;
         productId: z.ZodNumber;
         rating: z.ZodNumber;
         comment: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
     }, {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
@@ -1464,6 +1472,7 @@ export declare const UpdateReviewSchema: z.ZodObject<{
         reviewId: number;
     };
     body: {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
@@ -1473,6 +1482,7 @@ export declare const UpdateReviewSchema: z.ZodObject<{
         reviewId: number;
     };
     body: {
+        userId: number;
         productId: number;
         rating: number;
         comment?: string | undefined;
