@@ -1,5 +1,5 @@
-import { User as ResalaUser } from '@resala/shared';
-import { DefaultSession } from 'next-auth';
+import type { User as ResalaUser } from '@resala/shared';
+import type { DefaultSession } from 'next-auth';
 // The `JWT` interface can be found in the `next-auth/jwt` submodule
 import { JWT } from 'next-auth/jwt';
 

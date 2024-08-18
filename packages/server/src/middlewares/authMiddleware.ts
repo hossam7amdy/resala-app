@@ -2,24 +2,26 @@ import { Role } from '@resala/shared';
 import type { RoleType } from '@resala/shared';
 import type { RequestHandler } from 'express';
 
-import type { AuthService, UserService } from '../services/index.js';
-import { ForbiddenError, UnauthorizedError } from '../utils/ApiErrors.js';
+import { ForbiddenError, UnauthorizedError } from '../errors/api.errors.js';
+import type { AuthService } from '../features/auth/auth.service.js';
+import type { UserService } from '../features/user/user.service.js';
 
-export default class AuthMiddleware {
+export class AuthMiddleware {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService
   ) {}
 
-  jwtParseMiddleware: RequestHandler = async (req, res, next) => {
+  parseJwt: RequestHandler = async (req, res, next) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
         return next();
       }
 
-      const payload = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
-      res.locals.user = await this.userService.findUserById(payload.id);
+      const { id } = await this.authService.validateJwtToken(token, process.env.JWT_SECRET!);
+
+      res.locals.user = await this.userService.find(id);
 
       next();
     } catch (error) {
@@ -27,7 +29,7 @@ export default class AuthMiddleware {
     }
   };
 
-  enforceJwtMiddleware: RequestHandler = async (_, res, next) => {
+  enforceJwt: RequestHandler = async (_, res, next) => {
     try {
       if (!res.locals?.user?.id) {
         throw new UnauthorizedError();
@@ -39,7 +41,7 @@ export default class AuthMiddleware {
     }
   };
 
-  authorizeUser = (roles: RoleType[]): RequestHandler => {
+  authorizeRole = (roles: RoleType[]): RequestHandler => {
     return (_req, res, next) => {
       try {
         const user = res.locals.user;
@@ -55,32 +57,12 @@ export default class AuthMiddleware {
     };
   };
 
-  authorizeSelf = (roles?: RoleType[]): RequestHandler => {
-    return (req, res, next) => {
-      try {
-        const user = res.locals.user;
-
-        if (req.params.userId === 'self') {
-          req.params.userId = user?.id.toString();
-        }
-
-        if (!roles?.includes(user?.role) && req.params.userId !== user?.id.toString()) {
-          throw new ForbiddenError();
-        }
-
-        next();
-      } catch (error) {
-        next(error);
-      }
-    };
-  };
-
-  authorizeRoleChange: RequestHandler = (req, res, next) => {
+  authorizeAccess: RequestHandler = (req, res, next) => {
     try {
-      const user = res.locals.user;
-      const role = req.body.role as RoleType;
+      const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
+      const { id, role } = res.locals.user;
 
-      if (role && user?.role !== Role.ADMIN) {
+      if (![Role.ADMIN, Role.MODERATOR].includes(role) && userId !== id?.toString()) {
         throw new ForbiddenError();
       }
 

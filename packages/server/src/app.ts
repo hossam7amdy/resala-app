@@ -6,13 +6,14 @@ import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
-import { createExpressRouter } from './routes/index.js';
+import { expressApiRoutes } from './routes/api.routes.js';
 
-const swaggerDocument = fs.readFileSync('swagger.yml', 'utf8');
+const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
 
 /** creates an instance of express application. */
 export const createExpressApp = (logRequests: boolean = true) => {
   const app = express();
+
   app.set('views', 'src/views');
   app.set('view engine', 'ejs');
 
@@ -37,7 +38,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
     })
   );
 
-  app.use('/', createExpressRouter(logRequests));
+  app.use('/', expressApiRoutes(logRequests)); // Register API routes
 
   app.get('/uploads/*', (req: Request, res: Response) => {
     const filepath = req.params[0];

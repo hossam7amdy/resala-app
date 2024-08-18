@@ -1,14 +1,14 @@
 'use client';
 
 import { FolderOutlined } from '@ant-design/icons';
-import type { GetStocksListResponse } from '@resala/shared';
+import type { ListStocksResponse } from '@resala/shared';
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 
 import { ImagesList } from './images-list';
 
 export const StockColorImages: React.FC<{
-  stock: GetStocksListResponse['data']['stocks'][0];
+  stock: ListStocksResponse['data']['stocks'][0];
 }> = ({ stock }) => {
   const [open, setOpen] = useState(false);
 

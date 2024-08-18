@@ -34,7 +34,6 @@ export const DefaultQuerySchema = z.object({
     page: z.coerce
       .number()
       .positive()
-      .max(10000)
       .optional()
       .transform(val => val || 1),
     limit: z.coerce
@@ -131,10 +130,8 @@ export const DeleteUserSchema = z.object({
 });
 
 export const CreateAddressSchema = z.object({
-  params: z.object({
-    userId: z.coerce.number().positive(),
-  }),
   body: z.object({
+    userId: z.coerce.number().positive(),
     firstName: UserSchema.shape.firstName,
     lastName: UserSchema.shape.lastName,
     phone: UserSchema.shape.phone,
@@ -149,14 +146,13 @@ export const CreateAddressSchema = z.object({
 });
 
 export const ListAddressSchema = z.object({
-  params: z.object({
+  query: z.object({
     userId: z.coerce.number().positive(),
   }),
 });
 
 export const UpdateAddressSchema = z.object({
   params: z.object({
-    userId: z.coerce.number().positive(),
     addressId: z.coerce.number().positive(),
   }),
   body: CreateAddressSchema.shape.body,
@@ -164,6 +160,7 @@ export const UpdateAddressSchema = z.object({
 
 export const DeleteAddressSchema = z.object({
   params: UpdateAddressSchema.shape.params,
+  query: ListAddressSchema.shape.query,
 });
 
 // Category Schemas
@@ -212,6 +209,12 @@ export const GetProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
 
+export const ListProductsSchema = z.object({
+  query: DefaultQuerySchema.shape.query.extend({
+    categoryId: z.coerce.number().positive().optional(),
+  }),
+});
+
 export const DeleteProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
@@ -236,6 +239,12 @@ export const UpdateStockSchema = z.object({
 export const DeleteStockSchema = z.object({
   params: z.object({
     stockId: z.coerce.number().positive(),
+  }),
+});
+
+export const ListStocksSchema = z.object({
+  query: DefaultQuerySchema.shape.query.extend({
+    productId: z.coerce.number().positive().optional(),
   }),
 });
 
@@ -278,10 +287,10 @@ export const DeleteSizeSchema = z.object({
 });
 
 // Image Schemas
-export const FindImagesSchema = z.object({
+export const ListImagesSchema = z.object({
   query: z.object({
-    productId: z.coerce.number().positive(),
-    colorId: z.coerce.number().positive(),
+    productId: z.coerce.number().positive().optional(),
+    colorId: z.coerce.number().positive().optional(),
   }),
 });
 
@@ -292,7 +301,7 @@ export const CreateImageSchema = z.object({
   }),
 });
 
-export const PatchImageSchema = z.object({
+export const UpdateImageSchema = z.object({
   params: z.object({
     imageId: z.coerce.number().positive(),
   }),
@@ -349,7 +358,9 @@ export const GetOrderSchema = z.object({
 });
 
 export const ListOrdersSchema = z.object({
-  query: DefaultQuerySchema.shape.query,
+  query: DefaultQuerySchema.shape.query.extend({
+    userId: z.coerce.number().positive().optional(),
+  }),
 });
 
 export const UpdateOrderStatusSchema = z.object({
@@ -404,6 +415,7 @@ export const RefundPaymentSchema = z.object({
 // Review Schemas
 export const CreateReviewSchema = z.object({
   body: z.object({
+    userId: z.coerce.number().positive(),
     productId: z.coerce.number().positive(),
     rating: z.coerce.number().min(1).max(5),
     comment: z.string().max(500).optional(),
@@ -416,15 +428,10 @@ export const GetReviewSchema = z.object({
   }),
 });
 
-export const ListProductReviewsSchema = z.object({
-  params: z.object({
-    productId: z.coerce.number().positive(),
-  }),
-  query: DefaultQuerySchema.shape.query,
-});
-
 export const ListReviewsSchema = z.object({
-  query: DefaultQuerySchema.shape.query,
+  query: DefaultQuerySchema.shape.query.extend({
+    productId: z.coerce.number().positive().optional(),
+  }),
 });
 
 export const UpdateReviewSchema = z.object({
@@ -434,4 +441,7 @@ export const UpdateReviewSchema = z.object({
 
 export const DeleteReviewSchema = z.object({
   params: GetReviewSchema.shape.params,
+  query: z.object({
+    userId: z.coerce.number().positive(),
+  }),
 });

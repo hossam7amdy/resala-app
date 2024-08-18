@@ -1,5 +1,6 @@
 'use server';
 
+import { logout } from '@/actions/auth';
 import { auth } from '@/auth';
 import {
   type DefaultRequestQuery,
@@ -16,7 +17,10 @@ const apiClient = axios.create({
 
 apiClient.interceptors.response.use(
   response => response.data,
-  error => {
+  async (error: AxiosError) => {
+    if (error?.response?.status === 401) {
+      await logout();
+    }
     return Promise.reject(error);
   }
 );

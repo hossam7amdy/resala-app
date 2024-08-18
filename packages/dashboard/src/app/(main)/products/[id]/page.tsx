@@ -1,5 +1,5 @@
 import { BackButton } from '@/components';
-import { listProductStocks } from '@/data/product';
+import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
@@ -11,7 +11,7 @@ import React from 'react';
 export const metadata: Metadata = { title: 'Product Stocks' };
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
-  const stocks = await listProductStocks(params.id);
+  const { stocks } = await listStocks({ productId: +params.id, page: 1, limit: 50, query: '' });
 
   if (!stocks) {
     return notFound();

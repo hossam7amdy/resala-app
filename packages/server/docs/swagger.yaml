@@ -1,0 +1,768 @@
+openapi: 3.0.0
+info:
+  title: "@resala/server"
+  version: 1.0.0
+  description: Resala server
+  license:
+    name: ISC
+  contact:
+    name: Hossam Hamdy
+paths:
+  /api/v1/reviews:
+    post:
+      operationId: CreateReview
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                properties:
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  comment:
+                    type: string
+                  rating:
+                    type: number
+                    format: double
+                  productId:
+                    type: number
+                    format: double
+                  userId:
+                    type: number
+                    format: double
+                  id:
+                    type: number
+                    format: double
+                required:
+                  - updatedAt
+                  - createdAt
+                  - comment
+                  - rating
+                  - productId
+                  - userId
+                  - id
+                type: object
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Reviews
+      security:
+        - jwt: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                comment:
+                  type: string
+                rating:
+                  type: number
+                  format: double
+                productId:
+                  type: number
+                  format: double
+                userId:
+                  type: number
+                  format: double
+              type: object
+    get:
+      operationId: ListReviews
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  reviews:
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Review"
+                        - properties:
+                            product:
+                              $ref: "#/components/schemas/Product"
+                            user:
+                              $ref: "#/components/schemas/User"
+                          required:
+                            - product
+                            - user
+                          type: object
+                    type: array
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                required:
+                  - reviews
+                  - pagination
+                type: object
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Reviews
+      security:
+        - jwt: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            default: 1
+            format: double
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            format: double
+            type: number
+        - in: query
+          name: productId
+          required: false
+          schema:
+            format: double
+            type: number
+  /api/v1/reviews/{reviewId}:
+    put:
+      operationId: UpdateReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  comment:
+                    type: string
+                  rating:
+                    type: number
+                    format: double
+                  productId:
+                    type: number
+                    format: double
+                  userId:
+                    type: number
+                    format: double
+                  id:
+                    type: number
+                    format: double
+                required:
+                  - updatedAt
+                  - createdAt
+                  - comment
+                  - rating
+                  - productId
+                  - userId
+                  - id
+                type: object
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Reviews
+      security:
+        - jwt: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema:
+            format: double
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                comment:
+                  type: string
+                rating:
+                  type: number
+                  format: double
+                productId:
+                  type: number
+                  format: double
+                userId:
+                  type: number
+                  format: double
+              type: object
+    delete:
+      operationId: DeleteReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  comment:
+                    type: string
+                  rating:
+                    type: number
+                    format: double
+                  productId:
+                    type: number
+                    format: double
+                  userId:
+                    type: number
+                    format: double
+                  id:
+                    type: number
+                    format: double
+                required:
+                  - updatedAt
+                  - createdAt
+                  - comment
+                  - rating
+                  - productId
+                  - userId
+                  - id
+                type: object
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Reviews
+      security:
+        - jwt: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: userId
+          required: true
+          schema:
+            format: double
+            type: number
+    get:
+      operationId: GetReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Review"
+                  - properties:
+                      product:
+                        $ref: "#/components/schemas/Product"
+                      user:
+                        $ref: "#/components/schemas/User"
+                    required:
+                      - product
+                      - user
+                    type: object
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Reviews
+      security:
+        - jwt: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema:
+            format: double
+            type: number
+  /api/v1/auth/login:
+    post:
+      operationId: Login
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                sign:
+                  type: string
+              type: object
+  /api/v1/auth/register:
+    post:
+      operationId: Register
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                lastName:
+                  type: string
+                firstName:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              type: object
+  /api/v1/auth/refresh:
+    post:
+      operationId: Refresh
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefreshTokenResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+              type: object
+  /api/v1/auth/verify-email:
+    get:
+      operationId: VerifyEmail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyEmailResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security: []
+      parameters:
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+  /api/v1/auth/forgot-password:
+    post:
+      operationId: ForgotPassword
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForgotPasswordResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+              type: object
+  /api/v1/auth/reset-password:
+    post:
+      operationId: ResetPassword
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResetPasswordResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security:
+        - jwt: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                code:
+                  type: string
+              type: object
+  /api/v1/auth/change-password:
+    patch:
+      operationId: ChangePassword
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangePasswordResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security:
+        - jwt: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                newPassword:
+                  type: string
+                oldPassword:
+                  type: string
+              type: object
+  /api/v1/auth/resend-email-verification:
+    get:
+      operationId: ResendVerificationEmail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResendVerificationEmailResponse"
+        "401":
+          description: JWT token is missing or invalid
+        "403":
+          description: You are not authorized to access this resource
+      tags:
+        - Auth
+      security:
+        - jwt: []
+      parameters: []
+components:
+  examples: {}
+  headers: {}
+  parameters: {}
+  requestBodies: {}
+  responses: {}
+  schemas:
+    Pagination:
+      properties:
+        total:
+          type: number
+          format: double
+        limit:
+          type: number
+          format: double
+        page:
+          type: number
+          format: double
+      required:
+        - total
+        - limit
+        - page
+      type: object
+    Review:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          nullable: true
+        rating:
+          type: number
+          format: double
+        userId:
+          type: number
+          format: double
+          nullable: true
+        productId:
+          type: number
+          format: double
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - comment
+        - rating
+        - userId
+        - productId
+        - id
+      type: object
+    RoleType:
+      type: string
+      enum:
+        - ADMIN
+        - CUSTOMER
+        - MODERATOR
+      nullable: false
+    User:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        lastLogin:
+          type: string
+          format: date-time
+          nullable: true
+        role:
+          $ref: "#/components/schemas/RoleType"
+        lastName:
+          type: string
+        firstName:
+          type: string
+        phone:
+          type: string
+        isVerified:
+          type: boolean
+        email:
+          type: string
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - lastLogin
+        - role
+        - lastName
+        - firstName
+        - phone
+        - isVerified
+        - email
+        - id
+      type: object
+    Decimal:
+      type: string
+    Product:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        imageUrl:
+          type: string
+        imageKey:
+          type: string
+        price:
+          anyOf:
+            - type: number
+              format: double
+            - $ref: "#/components/schemas/Decimal"
+            - type: string
+            - {}
+        enDescription:
+          type: string
+        arDescription:
+          type: string
+        enName:
+          type: string
+        arName:
+          type: string
+        categoryId:
+          type: number
+          format: double
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - imageUrl
+        - imageKey
+        - price
+        - enDescription
+        - arDescription
+        - enName
+        - arName
+        - categoryId
+        - id
+      type: object
+    DefaultResponseBody:
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+      required:
+        - success
+      type: object
+    LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                refreshToken:
+                  type: string
+                accessToken:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+                - user
+                - refreshToken
+                - accessToken
+                - expiresAt
+              type: object
+          required:
+            - data
+          type: object
+    RegisterResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    RefreshTokenResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                refreshToken:
+                  type: string
+                accessToken:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+                - refreshToken
+                - accessToken
+                - expiresAt
+              type: object
+          required:
+            - data
+          type: object
+    VerifyEmailResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ForgotPasswordResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                expiresAt:
+                  type: string
+                  format: date-time
+                resetToken:
+                  type: string
+              required:
+                - expiresAt
+                - resetToken
+              type: object
+          required:
+            - data
+          type: object
+    ResetPasswordResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ChangePasswordResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ResendVerificationEmailResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+servers:
+  - url: http://localhost:5000
+    description: Local development
+  - url: http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
+    description: Development server

@@ -25,7 +25,7 @@ export class HomeProductsService {
   }
 
   getProductStock(id: string | null): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS.listProductStocks, id + '');
+    const { url } = withParams(ENDPOINT_CONFIGS.listProducts, id + '');
     return this._HttpClient.get(this.baseURL + url);
   }
 }

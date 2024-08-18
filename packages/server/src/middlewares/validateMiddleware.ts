@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { AnyZodObject, ZodError } from 'zod';
 
-import { BadRequestError } from '../utils/ApiErrors.js';
+import { BadRequestError } from '../errors/api.errors.js';
 import { formatZodError } from '../utils/zodErrors.js';
 
 /**
@@ -19,10 +19,10 @@ export const validateMiddleware = (schema: AnyZodObject) => {
         params: req.params,
       });
 
-      // Merge the validated data with the request object
-      req.body = { ...req.body, ...body };
-      req.query = { ...req.query, ...query };
-      req.params = { ...req.params, ...params };
+      // Assign the validated values to the request object
+      req.body = body;
+      req.query = query;
+      req.params = params;
 
       next();
     } catch (error) {
