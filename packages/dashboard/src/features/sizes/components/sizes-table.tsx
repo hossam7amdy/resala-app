@@ -4,12 +4,12 @@ import { deleteSize } from '@/actions/size';
 import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
-import type { GetSizesListResponse } from '@resala/shared';
+import type { ListSizesResponse } from '@resala/shared';
 import { Table as AntTable, Space } from 'antd';
 
 import { SizeEditorModal } from './size-editor-modal';
 
-export const SizesTable: React.FC<{ sizes: GetSizesListResponse['data'] }> = ({ sizes }) => {
+export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ sizes }) => {
   return (
     <AntTable
       dataSource={sizes}

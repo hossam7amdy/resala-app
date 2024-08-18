@@ -27,7 +27,6 @@ exports.Endpoints = void 0;
     Endpoints["listUsers"] = "listUsers";
     Endpoints["updateUser"] = "updateUser";
     Endpoints["deleteUser"] = "deleteUser";
-    Endpoints["listUserOrders"] = "listUserOrders";
     // address endpoints
     Endpoints["createAddress"] = "createAddress";
     Endpoints["listAddress"] = "listAddress";
@@ -36,14 +35,12 @@ exports.Endpoints = void 0;
     // category endpoints
     Endpoints["getCategory"] = "getCategory";
     Endpoints["listCategories"] = "listCategories";
-    Endpoints["listCategoryProducts"] = "listCategoryProducts";
     Endpoints["createCategory"] = "createCategory";
     Endpoints["updateCategory"] = "updateCategory";
     Endpoints["deleteCategory"] = "deleteCategory";
     // product endpoints
     Endpoints["getProduct"] = "getProduct";
     Endpoints["listProducts"] = "listProducts";
-    Endpoints["listProductStocks"] = "listProductStocks";
     Endpoints["createProduct"] = "createProduct";
     Endpoints["updateProduct"] = "updateProduct";
     Endpoints["deleteProduct"] = "deleteProduct";
@@ -96,7 +93,6 @@ exports.Endpoints = void 0;
     Endpoints["createReview"] = "createReview";
     Endpoints["updateReview"] = "updateReview";
     Endpoints["deleteReview"] = "deleteReview";
-    Endpoints["listProductReviews"] = "listProductReviews";
 })(exports.Endpoints || (exports.Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -221,29 +217,24 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/users/:userId',
         auth: true,
     },
-    [exports.Endpoints.listUserOrders]: {
-        method: 'get',
-        url: '/api/v1/users/:userId/orders',
-        auth: true,
-    },
     // address endpoints
     [exports.Endpoints.createAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'post',
         auth: true,
     },
     [exports.Endpoints.listAddress]: {
-        url: '/api/v1/users/:userId/addresses',
+        url: '/api/v1/addresses',
         method: 'get',
         auth: true,
     },
     [exports.Endpoints.updateAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'put',
         auth: true,
     },
     [exports.Endpoints.deleteAddress]: {
-        url: '/api/v1/users/:userId/addresses/:addressId',
+        url: '/api/v1/addresses/:addressId',
         method: 'delete',
         auth: true,
     },
@@ -271,17 +262,9 @@ const ENDPOINT_CONFIGS = {
         method: 'delete',
         auth: true,
     },
-    [exports.Endpoints.listCategoryProducts]: {
-        url: '/api/v1/categories/:categoryId/products',
-        method: 'get',
-    },
     // product endpoints
     [exports.Endpoints.getProduct]: {
         url: '/api/v1/products/:productId',
-        method: 'get',
-    },
-    [exports.Endpoints.listProductStocks]: {
-        url: '/api/v1/products/:productId/stocks',
         method: 'get',
     },
     [exports.Endpoints.listProducts]: {
@@ -506,10 +489,6 @@ const ENDPOINT_CONFIGS = {
         url: '/api/v1/reviews',
         method: 'get',
     },
-    [exports.Endpoints.listProductReviews]: {
-        url: '/api/v1/products/:productId/reviews',
-        method: 'get',
-    },
 };
 
 exports.Role = void 0;
@@ -641,7 +620,6 @@ const DefaultQuerySchema = zod.z.object({
         page: zod.z.coerce
             .number()
             .positive()
-            .max(10000)
             .optional()
             .transform(val => val || 1),
         limit: zod.z.coerce
@@ -727,10 +705,8 @@ const DeleteUserSchema = zod.z.object({
     }),
 });
 const CreateAddressSchema = zod.z.object({
-    params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
-    }),
     body: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         firstName: UserSchema.shape.firstName,
         lastName: UserSchema.shape.lastName,
         phone: UserSchema.shape.phone,
@@ -744,19 +720,19 @@ const CreateAddressSchema = zod.z.object({
     }),
 });
 const ListAddressSchema = zod.z.object({
-    params: zod.z.object({
+    query: zod.z.object({
         userId: zod.z.coerce.number().positive(),
     }),
 });
 const UpdateAddressSchema = zod.z.object({
     params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
         addressId: zod.z.coerce.number().positive(),
     }),
     body: CreateAddressSchema.shape.body,
 });
 const DeleteAddressSchema = zod.z.object({
     params: UpdateAddressSchema.shape.params,
+    query: ListAddressSchema.shape.query,
 });
 // Category Schemas
 const CreateCategorySchema = zod.z.object({
@@ -797,6 +773,11 @@ const UpdateProductSchema = zod.z.object({
 const GetProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
 });
+const ListProductsSchema = zod.z.object({
+    query: DefaultQuerySchema.shape.query.extend({
+        categoryId: zod.z.coerce.number().positive().optional(),
+    }),
+});
 const DeleteProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
 });
@@ -818,6 +799,11 @@ const UpdateStockSchema = zod.z.object({
 const DeleteStockSchema = zod.z.object({
     params: zod.z.object({
         stockId: zod.z.coerce.number().positive(),
+    }),
+});
+const ListStocksSchema = zod.z.object({
+    query: DefaultQuerySchema.shape.query.extend({
+        productId: zod.z.coerce.number().positive().optional(),
     }),
 });
 // Color Schemas
@@ -853,10 +839,10 @@ const DeleteSizeSchema = zod.z.object({
     params: UpdateSizeSchema.shape.params,
 });
 // Image Schemas
-const FindImagesSchema = zod.z.object({
+const ListImagesSchema = zod.z.object({
     query: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-        colorId: zod.z.coerce.number().positive(),
+        productId: zod.z.coerce.number().positive().optional(),
+        colorId: zod.z.coerce.number().positive().optional(),
     }),
 });
 const CreateImageSchema = zod.z.object({
@@ -865,7 +851,7 @@ const CreateImageSchema = zod.z.object({
         colorId: zod.z.coerce.number().positive(),
     }),
 });
-const PatchImageSchema = zod.z.object({
+const UpdateImageSchema = zod.z.object({
     params: zod.z.object({
         imageId: zod.z.coerce.number().positive(),
     }),
@@ -914,7 +900,9 @@ const GetOrderSchema = zod.z.object({
     }),
 });
 const ListOrdersSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query,
+    query: DefaultQuerySchema.shape.query.extend({
+        userId: zod.z.coerce.number().positive().optional(),
+    }),
 });
 const UpdateOrderStatusSchema = zod.z.object({
     params: zod.z.object({
@@ -963,6 +951,7 @@ const RefundPaymentSchema = zod.z.object({
 // Review Schemas
 const CreateReviewSchema = zod.z.object({
     body: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
         productId: zod.z.coerce.number().positive(),
         rating: zod.z.coerce.number().min(1).max(5),
         comment: zod.z.string().max(500).optional(),
@@ -973,14 +962,10 @@ const GetReviewSchema = zod.z.object({
         reviewId: zod.z.coerce.number().positive(),
     }),
 });
-const ListProductReviewsSchema = zod.z.object({
-    params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
-    }),
-    query: DefaultQuerySchema.shape.query,
-});
 const ListReviewsSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query,
+    query: DefaultQuerySchema.shape.query.extend({
+        productId: zod.z.coerce.number().positive().optional(),
+    }),
 });
 const UpdateReviewSchema = zod.z.object({
     params: GetReviewSchema.shape.params,
@@ -988,6 +973,9 @@ const UpdateReviewSchema = zod.z.object({
 });
 const DeleteReviewSchema = zod.z.object({
     params: GetReviewSchema.shape.params,
+    query: zod.z.object({
+        userId: zod.z.coerce.number().positive(),
+    }),
 });
 
 exports.ChangePasswordSchema = ChangePasswordSchema;
@@ -1016,7 +1004,6 @@ exports.DeleteStockSchema = DeleteStockSchema;
 exports.DeleteUserSchema = DeleteUserSchema;
 exports.DeleteWishlistSchema = DeleteWishlistSchema;
 exports.ENDPOINT_CONFIGS = ENDPOINT_CONFIGS;
-exports.FindImagesSchema = FindImagesSchema;
 exports.ForgotPasswordSchema = ForgotPasswordSchema;
 exports.GetCategorySchema = GetCategorySchema;
 exports.GetOrderSchema = GetOrderSchema;
@@ -1025,11 +1012,12 @@ exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
 exports.ListAddressSchema = ListAddressSchema;
+exports.ListImagesSchema = ListImagesSchema;
 exports.ListOrdersSchema = ListOrdersSchema;
-exports.ListProductReviewsSchema = ListProductReviewsSchema;
+exports.ListProductsSchema = ListProductsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
+exports.ListStocksSchema = ListStocksSchema;
 exports.LoginSchema = LoginSchema;
-exports.PatchImageSchema = PatchImageSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RefundPaymentSchema = RefundPaymentSchema;
 exports.RegisterSchema = RegisterSchema;
@@ -1037,6 +1025,7 @@ exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;
 exports.UpdateCategorySchema = UpdateCategorySchema;
 exports.UpdateColorSchema = UpdateColorSchema;
+exports.UpdateImageSchema = UpdateImageSchema;
 exports.UpdateOrderStatusSchema = UpdateOrderStatusSchema;
 exports.UpdateProductSchema = UpdateProductSchema;
 exports.UpdateReviewSchema = UpdateReviewSchema;

@@ -65,7 +65,7 @@ export const StockForm: React.FC<StockFormProps> = ({
 
   const isCreate = !stock?.id;
 
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = async (values: FormValues) => {
     const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
 
     const promiseAll: Promise<unknown>[] = [submit(values)];
@@ -84,7 +84,9 @@ export const StockForm: React.FC<StockFormProps> = ({
       promiseAll.push(uploadImages(formData));
     }
 
-    return Promise.all(promiseAll);
+    const [stockResponse] = await Promise.all(promiseAll);
+
+    return stockResponse;
   };
 
   const { isLoading, mutate } = useMutation({
