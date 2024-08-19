@@ -1,123 +1,89 @@
-import type {
-  CreateUserAddress,
-  DeleteUser,
-  DeleteUserAddress,
-  GetUser,
-  ListUserAddress,
-  ListUsers,
-  UpdateUser,
-  UpdateUserAddress,
-} from './user.controller.interface.js';
-import type { IUserController } from './user.controller.interface.js';
-import type { UserService } from './user.service.js';
+import {
+  DefaultQuerySchema,
+  type DeleteUserResponse,
+  DeleteUserSchema,
+  type GetUserResponse,
+  GetUserSchema,
+  ListUsersRequest,
+  type ListUsersResponse,
+  UpdateUserRequest,
+  type UpdateUserResponse,
+  UpdateUserSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Put,
+  Queries,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class UserController implements IUserController {
-  constructor(private readonly userService: UserService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeAccess, authorizeRole } from '../../middlewares/authorization.js';
+import { validateMiddleware } from '../../middlewares/index.js';
+import { UserService } from './user.service.js';
 
-  getUser: GetUser = async (req, res, next) => {
-    try {
-      const user = await this.userService.find(req.params.userId);
+@Tags('User')
+@Route('api/v1/users')
+@Security('jwt_auth')
+@Middlewares([authorizeAccess])
+export class UserController extends Controller {
+  private readonly userService: UserService;
 
-      return res.json({
-        success: true,
-        data: user,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.userService = new UserService(db);
+  }
 
-  listUsers: ListUsers = async (req, res, next) => {
-    try {
-      const { users, pagination } = await this.userService.list(req.query);
+  @Get('{userId}')
+  @Middlewares([validateMiddleware(GetUserSchema)])
+  public async getUser(@Path() userId: number): Promise<GetUserResponse> {
+    const user = await this.userService.find(userId);
 
-      return res.json({
-        success: true,
-        data: {
-          users,
-          pagination,
-        },
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: user };
+  }
 
-  deleteUser: DeleteUser = async (req, res, next) => {
-    try {
-      await this.userService.delete(req.params.userId);
+  @Get()
+  @Middlewares([validateMiddleware(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async listUsers(
+    @Queries() listUserDto: ListUsersRequest['query']
+  ): Promise<ListUsersResponse> {
+    const query = listUserDto.query ?? '';
+    const page = listUserDto.page ?? 1;
+    const limit = listUserDto.limit ?? 10;
 
-      return res.json({
-        success: true,
-        message: 'User deleted successfully',
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    const { users, pagination } = await this.userService.list({ page, limit, query });
 
-  updateUser: UpdateUser = async (req, res, next) => {
-    try {
-      const user = await this.userService.update(req.params.userId, req.body);
+    return {
+      success: true,
+      data: { users, pagination },
+    };
+  }
 
-      return res.json({
-        success: true,
-        data: user,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+  @Delete('{userId}')
+  @Middlewares([validateMiddleware(DeleteUserSchema), authorizeRole(['ADMIN'])])
+  @SuccessResponse('200', 'User deleted successfully')
+  public async deleteUser(@Path() userId: number): Promise<DeleteUserResponse> {
+    await this.userService.delete(userId);
 
-  listUserAddress: ListUserAddress = async (req, res, next) => {
-    const userId = req.query.userId;
+    return { success: true };
+  }
 
-    try {
-      const addresses = await this.userService.listAddress(userId);
+  @Put('{userId}')
+  @Middlewares([validateMiddleware(UpdateUserSchema)])
+  public async updateUser(
+    @Path() userId: number,
+    @Body() body: UpdateUserRequest['body']
+  ): Promise<UpdateUserResponse> {
+    const user = await this.userService.update(userId, body);
 
-      return res.json({
-        success: true,
-        data: addresses,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  createUserAddress: CreateUserAddress = async (req, res, next) => {
-    try {
-      const address = await this.userService.createAddress(req.body);
-
-      return res.status(201).json({ success: true, data: address });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  updateUserAddress: UpdateUserAddress = async (req, res, next) => {
-    const addressId = req.params.addressId;
-
-    try {
-      const address = await this.userService.updateAddress(addressId, req.body);
-
-      return res.json({
-        success: true,
-        data: address,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  deleteUserAddress: DeleteUserAddress = async (req, res, next) => {
-    const addressId = req.params.addressId;
-
-    try {
-      const address = await this.userService.deleteAddress(addressId);
-
-      return res.json({ success: true, data: address });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: user };
+  }
 }
