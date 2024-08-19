@@ -7,6 +7,7 @@ import { parse } from 'yaml';
 
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
 import { expressApiRoutes } from './routes/api.routes.js';
+import { RegisterRoutes } from './routes/tsoa.routes.js';
 
 const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
 
@@ -38,6 +39,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
     })
   );
 
+  RegisterRoutes(app); // Register TSOA routes
   app.use('/', expressApiRoutes(logRequests)); // Register API routes
 
   app.get('/uploads/*', (req: Request, res: Response) => {

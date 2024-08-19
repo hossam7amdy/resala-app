@@ -130,7 +130,7 @@ export enum Endpoints {
  */
 export const withParams = (endpoint: EndpointConfig, ...params: string[]): EndpointConfig => {
   let url = endpoint.url;
-  const placeholders = url.match(/:[^\\/]*/g) || [];
+  const placeholders = url.match(/{[^}]*}/g) ?? [];
   if (placeholders.length !== params.length) {
     throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
   }

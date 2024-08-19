@@ -6,9 +6,9 @@ import type {
   ListProductsResponse,
   UpdateProductRequest,
 } from '@resala/shared';
-import { ConflictError } from 'src/errors/api.errors.js';
 
 import type { DataStore } from '../../datastore/index.js';
+import { ConflictError } from '../../errors/api.errors.js';
 import type { FileService } from '../filestorage/file.service.js';
 
 export class ProductService {
