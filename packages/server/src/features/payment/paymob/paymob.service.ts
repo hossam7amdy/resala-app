@@ -103,7 +103,7 @@ export class PaymobService {
     const body = {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
-      redirection_url: `${process.env.FRONTEND_URL}`,
+      redirection_url: `${process.env.WEB_APP_URL}`,
       notification_url: `${process.env.SERVER_URL}/post_pay/${order.id}`,
       payment_methods: [+process.env.PAYMOB_INTEGRATION_ID],
       items: orderItems,

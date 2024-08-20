@@ -122,6 +122,176 @@ paths:
           required: false
           schema:
             type: string
+  /api/v1/auth/login:
+    post:
+      operationId: Login
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                sign:
+                  type: string
+                password:
+                  type: string
+              type: object
+  /api/v1/auth/register:
+    post:
+      operationId: Register
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                lastName:
+                  type: string
+                firstName:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+              type: object
+  /api/v1/auth/refresh:
+    post:
+      operationId: Refresh
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefreshTokenResponse"
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  type: string
+              type: object
+  /api/v1/auth/verify-email:
+    get:
+      operationId: VerifyEmail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyEmailResponse"
+      tags:
+        - Auth
+      security: []
+      parameters:
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+  /api/v1/auth/forgot-password:
+    post:
+      operationId: ForgotPassword
+      responses:
+        "200":
+          description: Password reset code sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForgotPasswordResponse"
+      tags:
+        - Auth
+      security: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+              type: object
+  /api/v1/auth/reset-password:
+    post:
+      operationId: ResetPassword
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResetPasswordResponse"
+      tags:
+        - Auth
+      security:
+        - jwt_auth:
+            - reset_password
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                email:
+                  type: string
+                code:
+                  type: string
+              type: object
+  /api/v1/auth/resend-email-verification:
+    get:
+      operationId: ResendVerificationEmail
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResendVerificationEmailResponse"
+      tags:
+        - Auth
+      security:
+        - jwt_auth: []
+      parameters: []
   /api/v1/addresses:
     get:
       operationId: ListUserAddress
@@ -260,6 +430,12 @@ paths:
           schema:
             format: double
             type: number
+        - in: query
+          name: userId
+          required: true
+          schema:
+            format: double
+            type: number
 components:
   examples: {}
   headers: {}
@@ -377,6 +553,77 @@ components:
           required:
             - data
           type: object
+    LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                refreshToken:
+                  type: string
+                accessToken:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+                - user
+                - refreshToken
+                - accessToken
+                - expiresAt
+              type: object
+          required:
+            - data
+          type: object
+    RegisterResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    RefreshTokenResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                refreshToken:
+                  type: string
+                accessToken:
+                  type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+              required:
+                - refreshToken
+                - accessToken
+                - expiresAt
+              type: object
+          required:
+            - data
+          type: object
+    VerifyEmailResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ForgotPasswordResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                expiresAt:
+                  type: string
+                  format: date-time
+                resetToken:
+                  type: string
+              required:
+                - expiresAt
+                - resetToken
+              type: object
+          required:
+            - data
+          type: object
+    ResetPasswordResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ResendVerificationEmailResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
     Address:
       properties:
         updatedAt:

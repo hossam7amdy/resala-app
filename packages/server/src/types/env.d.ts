@@ -4,7 +4,7 @@ declare global {
       NODE_ENV: 'development' | 'production' | 'test';
       PORT: string;
       SERVER_URL: string;
-      FRONTEND_URL: string;
+      WEB_APP_URL: string;
 
       JWT_SECRET: string;
       JWT_REFRESH: string;

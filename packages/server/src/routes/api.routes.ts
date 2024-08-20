@@ -1,5 +1,4 @@
 import {
-  ChangePasswordSchema,
   CreateCartSchema,
   CreateCategorySchema,
   CreateColorSchema,
@@ -23,7 +22,6 @@ import {
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
@@ -34,10 +32,6 @@ import {
   ListProductsSchema,
   ListReviewsSchema,
   ListStocksSchema,
-  LoginSchema,
-  RefreshTokenSchema,
-  RegisterSchema,
-  ResetPasswordSchema,
   UpdateCategorySchema,
   UpdateColorSchema,
   UpdateImageSchema,
@@ -46,14 +40,12 @@ import {
   UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
-  VerifyEmailSchema,
 } from '@resala/shared';
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 
 import { db } from '../datastore/index.js';
 import { AddressService } from '../features/address/address.service.js';
-import { AuthController } from '../features/auth/auth.controller.js';
 import { AuthService } from '../features/auth/auth.service.js';
 import { CategoryController } from '../features/category/category.controller.js';
 import { CategoryService } from '../features/category/category.service.js';
@@ -111,7 +103,6 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const authCtrl = new AuthController(authService, notificationService);
   const categoryCtrl = new CategoryController(categoryService);
   const productCtrl = new ProductController(productService);
   const colorCtrl = new ColorController(colorService);
@@ -132,14 +123,14 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
     // auth endpoints
-    [Endpoints.login]: [validateMiddleware(LoginSchema), authCtrl.login],
-    [Endpoints.register]: [validateMiddleware(RegisterSchema), authCtrl.register],
-    [Endpoints.refresh]: [validateMiddleware(RefreshTokenSchema), authCtrl.refresh],
-    [Endpoints.verifyEmail]: [validateMiddleware(VerifyEmailSchema), authCtrl.verifyEmail],
-    [Endpoints.forgotPassword]: [validateMiddleware(ForgotPasswordSchema), authCtrl.forgotPassword],
-    [Endpoints.resetPassword]: [validateMiddleware(ResetPasswordSchema), authCtrl.resetPassword],
-    [Endpoints.changePassword]: [validateMiddleware(ChangePasswordSchema), authCtrl.changePassword],
-    [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
+    [Endpoints.login]: [],
+    [Endpoints.register]: [],
+    [Endpoints.refresh]: [],
+    [Endpoints.verifyEmail]: [],
+    [Endpoints.forgotPassword]: [],
+    [Endpoints.resetPassword]: [],
+    [Endpoints.changePassword]: [],
+    [Endpoints.resendEmailVerification]: [],
 
     // user endpoints
     [Endpoints.getUser]: [],
