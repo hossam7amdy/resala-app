@@ -1,0 +1,38 @@
+{
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/features/**/*.controller.ts"],
+  "spec": {
+    "yaml": true,
+    "outputDirectory": "docs",
+    "specVersion": 3,
+    "specMerging": "recursive",
+    "spec": {
+      "components": {
+        "securitySchemes": {
+          "jwt_auth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        }
+      },
+      "servers": [
+        {
+          "url": "http://localhost:5000",
+          "description": "Local development"
+        },
+        {
+          "url": "http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
+          "description": "Development server"
+        }
+      ]
+    }
+  },
+  "routes": {
+    "esm": true,
+    "routesDir": "src/routes",
+    "routesFileName": "tsoa.routes.ts",
+    "authenticationModule": "./src/middlewares/authentication.ts"
+  }
+}

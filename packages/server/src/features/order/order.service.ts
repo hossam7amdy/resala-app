@@ -9,9 +9,9 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
+import { AddressService } from '../address/address.service.js';
 import type { ShoppingService } from '../shopping/shopping.service.js';
 import type { StockService } from '../stock/stock.service.js';
-import type { UserService } from '../user/user.service.js';
 
 const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
@@ -45,7 +45,7 @@ const ORDER_ATTRIBUTES = {
 export class OrderService {
   constructor(
     private readonly db: DataStore,
-    private readonly userService: UserService,
+    private readonly addressService: AddressService,
     private readonly stockService: StockService,
     private readonly shoppingService: ShoppingService
   ) {}
@@ -58,7 +58,7 @@ export class OrderService {
     }
 
     // eslint-disable-next-line no-unused-vars
-    const { id: _, ...address } = await this.userService.findAddress(userId, order.addressId);
+    const { id: _, ...address } = await this.addressService.find(userId, order.addressId);
 
     const subtotal = userCart.totalPrice;
 

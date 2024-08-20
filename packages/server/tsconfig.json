@@ -27,7 +27,7 @@
     /* Module Resolution Options */
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "baseUrl": ".",
+    "baseUrl": "/.",
 
     /* Experimental Options */
     "experimentalDecorators": true,

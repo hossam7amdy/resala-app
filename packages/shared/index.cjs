@@ -110,7 +110,7 @@ exports.Endpoints = void 0;
  */
 const withParams = (endpoint, ...params) => {
     let url = endpoint.url;
-    const placeholders = url.match(/:[^\\/]*/g) || [];
+    const placeholders = url.match(/{[^}]*}/g) ?? [];
     if (placeholders.length !== params.length) {
         throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
     }
@@ -605,7 +605,7 @@ const UserSchema = zod.z.object({
     phone: zod.z.string().length(11).startsWith('01'),
     firstName: zod.z.string().min(2).max(50),
     lastName: zod.z.string().min(2).max(50),
-    role: zod.z.enum([exports.Role.ADMIN, exports.Role.MODERATOR, exports.Role.CUSTOMER]),
+    role: zod.z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
     password: zod.z
         .string()
         .min(8)

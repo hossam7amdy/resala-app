@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
-import { createServer } from 'http';
+import { readFileSync } from 'fs';
+import { createServer as createHttpServer } from 'http';
+import { createServer as createHttpsServer } from 'https';
 
 import { createExpressApp } from './app.js';
 import { initDb } from './datastore/index.js';
@@ -11,13 +13,21 @@ dotenv.config();
 
   const app = createExpressApp();
 
-  const server = createServer(app);
+  const options = {
+    key: readFileSync(process.env.SSL_KEY_PATH!),
+    cert: readFileSync(process.env.SSL_CERT_PATH!),
+  };
 
-  const PORT = process.env.PORT || 5000;
+  const httpServer = createHttpServer(app);
+  const httpsServer = createHttpsServer(options, app);
 
-  server.listen(PORT, () => {
-    console.log(`Server is running on ${process.env.NODE_ENV} mode on port ${PORT} 🚀`);
-  });
+  const { PORT, NODE_ENV } = process.env;
+
+  httpServer.listen(+PORT ?? 80);
+  httpsServer.listen(+PORT + 1 ?? 443);
+
+  console.log(`HTTP server is running on ${NODE_ENV} mode on http://localhost:${PORT}`);
+  console.log(`HTTPS server is running on ${NODE_ENV} mode on https://localhost:${+PORT + 1}`);
 })();
 
 process.on('unhandledRejection', reason => {

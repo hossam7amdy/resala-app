@@ -106,7 +106,7 @@ export var Endpoints;
  */
 export const withParams = (endpoint, ...params) => {
     let url = endpoint.url;
-    const placeholders = url.match(/:[^\\/]*/g) || [];
+    const placeholders = url.match(/{[^}]*}/g) ?? [];
     if (placeholders.length !== params.length) {
         throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
     }
