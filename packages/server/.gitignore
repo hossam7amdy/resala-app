@@ -16,3 +16,6 @@ logs/*
 
 # Ignore test coverage
 coverage
+
+# Ignore certificates for HTTPS
+certs

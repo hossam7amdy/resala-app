@@ -19,6 +19,7 @@ import {
   Path,
   Post,
   Put,
+  Queries,
   Query,
   Route,
   Security,
@@ -75,7 +76,10 @@ export class AddressController extends Controller {
 
   @Delete('{addressId}')
   @Middlewares([validateMiddleware(DeleteAddressSchema)])
-  public async deleteUserAddress(@Path() addressId: number): Promise<DeleteAddressResponse> {
+  public async deleteUserAddress(
+    @Path() addressId: number,
+    @Queries() _: { userId: number }
+  ): Promise<DeleteAddressResponse> {
     const address = await this.addressService.delete(addressId);
 
     return { success: true, data: address };

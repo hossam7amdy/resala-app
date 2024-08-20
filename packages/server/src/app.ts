@@ -27,7 +27,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static('uploads')); // serve uploaded files
-  app.use(express.static('src/public')); // serve static files
+  app.use(express.static('public')); // serve static files
 
   // Swagger UI
   app.use(
@@ -56,7 +56,27 @@ export const createExpressApp = (logRequests: boolean = true) => {
 
   // Catch all routes
   app.get('*', (_, res) => {
-    res.status(404).send('Not found');
+    const uptimeInSeconds = process.uptime();
+
+    // Convert uptime to a more readable format
+    const hours = Math.floor(uptimeInSeconds / 3600)
+      .toString()
+      .padStart(2, '0');
+    const minutes = Math.floor((uptimeInSeconds % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const seconds = Math.floor(uptimeInSeconds % 60)
+      .toString()
+      .padStart(2, '0');
+
+    const uptime = `${hours}h ${minutes}m ${seconds}s`; // e.g. 1h 30m 15s
+
+    const year = new Date().getFullYear();
+
+    const webAppUrl = process.env.WEB_APP_URL || 'http://localhost:4200';
+    const adminDashboardUrl = process.env.ADMIN_DASHBOARD_URL || 'http://localhost:3000';
+
+    return res.render('index', { uptime, year, webAppUrl, adminDashboardUrl });
   });
 
   app.use(errorMiddleware);

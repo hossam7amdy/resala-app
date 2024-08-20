@@ -19,8 +19,12 @@ export const authorizeAccess: RequestHandler = (req, res, next) => {
   const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
   const { id, role } = res.locals.user;
 
-  if (userId && userId !== id?.toString() && ![Role.ADMIN, Role.MODERATOR].includes(role)) {
-    Promise.reject(new ForbiddenError());
+  if (
+    userId &&
+    userId.toString() !== id?.toString() &&
+    ![Role.ADMIN, Role.MODERATOR].includes(role)
+  ) {
+    throw new ForbiddenError();
   }
 
   next();
