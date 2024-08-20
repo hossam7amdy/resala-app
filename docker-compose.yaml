@@ -46,7 +46,8 @@ services:
       - db
       - s3
     ports:
-      - 5000:5000
+      - 5000:5000 # Http port
+      - 5001:5001 # Https port
     environment:
       S3_ENDPOINT: http://s3:9000 # Required for Minio
       DATABASE_URL: postgres://postgres:postgres@db:5432/resala
@@ -54,6 +55,8 @@ services:
       - packages/server/.env
     networks:
       - resala-net
+    volumes:
+      - ./packages/server/certs:/app/packages/server/certs
 
 volumes:
   db-data:

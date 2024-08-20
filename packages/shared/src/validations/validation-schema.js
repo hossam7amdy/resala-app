@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus } from '../enums/index.js';
 import { validationPatterns } from '../patterns/index.js';
 const UserSchema = z.object({
     email: z.string().min(5).max(128).email(),
@@ -7,7 +7,7 @@ const UserSchema = z.object({
     phone: z.string().length(11).startsWith('01'),
     firstName: z.string().min(2).max(50),
     lastName: z.string().min(2).max(50),
-    role: z.enum([Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]),
+    role: z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
     password: z
         .string()
         .min(8)

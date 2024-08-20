@@ -1,13 +1,7 @@
 import type { Prisma } from '@prisma/client';
-import type {
-  CreateAddressRequest,
-  DefaultFilters,
-  UpdateAddressRequest,
-  UpdateUserRequest,
-} from '@resala/shared';
+import type { ListUsersRequest, UpdateUserRequest } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
-import { BadRequestError } from '../../errors/api.errors.js';
 
 const USER_SELECT = {
   id: true,
@@ -23,11 +17,9 @@ const USER_SELECT = {
 };
 
 export class UserService {
-  private readonly maxAddressCount = 3;
-
   constructor(private readonly db: DataStore) {}
 
-  async update(id: number, payload: Partial<UpdateUserRequest['body']>) {
+  async update(id: number, payload: UpdateUserRequest['body']) {
     const user = await this.find(id);
 
     // Prevent updating the role if the user is not an admin
@@ -56,9 +48,9 @@ export class UserService {
     });
   }
 
-  async list({ page, limit, query }: DefaultFilters) {
-    const first = query?.split(' ')[0];
-    let last = query?.split(' ')[1];
+  async list({ page, limit, query }: ListUsersRequest['query']) {
+    const first = query.split(' ')[0];
+    let last = query.split(' ')[1];
     if (!last) last = first;
 
     const filters: Prisma.UserWhereInput = {
@@ -86,51 +78,5 @@ export class UserService {
       users,
       pagination: { page, limit, total },
     };
-  }
-
-  async listAddress(userId: number) {
-    const addresses = await this.db.userAddress.findMany({
-      select: { address: true },
-      where: { userId },
-      orderBy: { addressId: 'desc' },
-    });
-
-    return addresses.map(address => address.address);
-  }
-
-  async createAddress({ userId, ...payload }: CreateAddressRequest['body']) {
-    const userAddrCount = await this.db.userAddress.count({ where: { userId } });
-
-    if (userAddrCount >= this.maxAddressCount) {
-      throw new BadRequestError('You have reached the maximum number of addresses allowed');
-    }
-
-    return await this.db.$transaction(async trx => {
-      const newAddress = await trx.address.create({ data: payload });
-
-      await trx.userAddress.create({ data: { userId, addressId: newAddress.id } });
-
-      return newAddress;
-    });
-  }
-
-  async findAddress(userId: number, addressId: number) {
-    const userAddr = await this.db.userAddress.findFirstOrThrow({
-      select: { address: true },
-      where: { userId, addressId },
-    });
-
-    return userAddr?.address ?? null;
-  }
-
-  async updateAddress(addressId: number, { userId: _, ...payload }: UpdateAddressRequest['body']) {
-    return await this.db.address.update({
-      data: payload,
-      where: { id: addressId },
-    });
-  }
-
-  async deleteAddress(addressId: number) {
-    return await this.db.address.delete({ where: { id: addressId } });
   }
 }

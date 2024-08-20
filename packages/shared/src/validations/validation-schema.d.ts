@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
+import { OrderStatus, PaymentMethod, PaymentStatus } from '../enums/index.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
@@ -220,20 +220,20 @@ export declare const UpdateUserSchema: z.ZodObject<{
         firstName: z.ZodString;
         lastName: z.ZodString;
         phone: z.ZodString;
-        role: z.ZodOptional<z.ZodEnum<[Role.ADMIN, Role.MODERATOR, Role.CUSTOMER]>>;
+        role: z.ZodOptional<z.ZodEnum<["ADMIN", "MODERATOR", "CUSTOMER"]>>;
         isVerified: z.ZodOptional<z.ZodOptional<z.ZodBoolean>>;
     }, "strip", z.ZodTypeAny, {
         phone: string;
         firstName: string;
         lastName: string;
         isVerified?: boolean | undefined;
-        role?: Role | undefined;
+        role?: "ADMIN" | "CUSTOMER" | "MODERATOR" | undefined;
     }, {
         phone: string;
         firstName: string;
         lastName: string;
         isVerified?: boolean | undefined;
-        role?: Role | undefined;
+        role?: "ADMIN" | "CUSTOMER" | "MODERATOR" | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
@@ -244,7 +244,7 @@ export declare const UpdateUserSchema: z.ZodObject<{
         firstName: string;
         lastName: string;
         isVerified?: boolean | undefined;
-        role?: Role | undefined;
+        role?: "ADMIN" | "CUSTOMER" | "MODERATOR" | undefined;
     };
 }, {
     params: {
@@ -255,7 +255,7 @@ export declare const UpdateUserSchema: z.ZodObject<{
         firstName: string;
         lastName: string;
         isVerified?: boolean | undefined;
-        role?: Role | undefined;
+        role?: "ADMIN" | "CUSTOMER" | "MODERATOR" | undefined;
     };
 }>;
 export declare const DeleteUserSchema: z.ZodObject<{

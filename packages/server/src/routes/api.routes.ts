@@ -1,6 +1,4 @@
 import {
-  ChangePasswordSchema,
-  CreateAddressSchema,
   CreateCartSchema,
   CreateCategorySchema,
   CreateColorSchema,
@@ -12,7 +10,6 @@ import {
   CreateStockSchema,
   CreateWishlistSchema,
   DefaultQuerySchema,
-  DeleteAddressSchema,
   DeleteCartSchema,
   DeleteCategorySchema,
   DeleteColorSchema,
@@ -22,28 +19,19 @@ import {
   DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
-  DeleteUserSchema,
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  ForgotPasswordSchema,
   GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
   GetProductSchema,
   GetReviewSchema,
-  GetUserSchema,
-  ListAddressSchema,
   ListImagesSchema,
   ListOrdersSchema,
   ListProductsSchema,
   ListReviewsSchema,
   ListStocksSchema,
-  LoginSchema,
-  RefreshTokenSchema,
-  RegisterSchema,
-  ResetPasswordSchema,
-  UpdateAddressSchema,
   UpdateCategorySchema,
   UpdateColorSchema,
   UpdateImageSchema,
@@ -52,14 +40,12 @@ import {
   UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
-  UpdateUserSchema,
-  VerifyEmailSchema,
 } from '@resala/shared';
 import type { Request, Response } from 'express';
 import { Router } from 'express';
 
 import { db } from '../datastore/index.js';
-import { AuthController } from '../features/auth/auth.controller.js';
+import { AddressService } from '../features/address/address.service.js';
 import { AuthService } from '../features/auth/auth.service.js';
 import { CategoryController } from '../features/category/category.controller.js';
 import { CategoryService } from '../features/category/category.service.js';
@@ -86,7 +72,6 @@ import { SizeController } from '../features/size/size.controller.js';
 import { SizeService } from '../features/size/size.service.js';
 import { StockController } from '../features/stock/stock.controller.js';
 import { StockService } from '../features/stock/stock.service.js';
-import { UserController } from '../features/user/user.controller.js';
 import { UserService } from '../features/user/user.service.js';
 import {
   AuthMiddleware,
@@ -104,6 +89,7 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const fileService = new FileService(new S3FileStorage());
   const authService = new AuthService(db);
   const userService = new UserService(db);
+  const addressService = new AddressService(db);
   const stockService = new StockService(db);
   const imageService = new ImageService(db, fileService);
   const productService = new ProductService(db, fileService);
@@ -114,11 +100,9 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const reviewService = new ReviewService(db);
   const shoppingService = new ShoppingService(db);
   const paymentService = new PaymentService(db, new PaymobService());
-  const orderService = new OrderService(db, userService, stockService, shoppingService);
+  const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const authCtrl = new AuthController(authService, notificationService);
-  const userCtrl = new UserController(userService);
   const categoryCtrl = new CategoryController(categoryService);
   const productCtrl = new ProductController(productService);
   const colorCtrl = new ColorController(colorService);
@@ -139,58 +123,26 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
 
     // auth endpoints
-    [Endpoints.login]: [validateMiddleware(LoginSchema), authCtrl.login],
-    [Endpoints.register]: [validateMiddleware(RegisterSchema), authCtrl.register],
-    [Endpoints.refresh]: [validateMiddleware(RefreshTokenSchema), authCtrl.refresh],
-    [Endpoints.verifyEmail]: [validateMiddleware(VerifyEmailSchema), authCtrl.verifyEmail],
-    [Endpoints.forgotPassword]: [validateMiddleware(ForgotPasswordSchema), authCtrl.forgotPassword],
-    [Endpoints.resetPassword]: [validateMiddleware(ResetPasswordSchema), authCtrl.resetPassword],
-    [Endpoints.changePassword]: [validateMiddleware(ChangePasswordSchema), authCtrl.changePassword],
-    [Endpoints.resendEmailVerification]: [authCtrl.resendVerificationEmail],
+    [Endpoints.login]: [],
+    [Endpoints.register]: [],
+    [Endpoints.refresh]: [],
+    [Endpoints.verifyEmail]: [],
+    [Endpoints.forgotPassword]: [],
+    [Endpoints.resetPassword]: [],
+    [Endpoints.changePassword]: [],
+    [Endpoints.resendEmailVerification]: [],
 
     // user endpoints
-    [Endpoints.getUser]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(GetUserSchema),
-      userCtrl.getUser,
-    ],
-    [Endpoints.listUsers]: [
-      validateMiddleware(DefaultQuerySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      userCtrl.listUsers,
-    ],
-    [Endpoints.updateUser]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(UpdateUserSchema),
-      userCtrl.updateUser,
-    ],
-    [Endpoints.deleteUser]: [
-      validateMiddleware(DeleteUserSchema),
-      authMiddleware.authorizeRole(['ADMIN']),
-      userCtrl.deleteUser,
-    ],
+    [Endpoints.getUser]: [],
+    [Endpoints.listUsers]: [],
+    [Endpoints.updateUser]: [],
+    [Endpoints.deleteUser]: [],
 
     // user address endpoints
-    [Endpoints.createAddress]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(CreateAddressSchema),
-      userCtrl.createUserAddress,
-    ],
-    [Endpoints.updateAddress]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(UpdateAddressSchema),
-      userCtrl.updateUserAddress,
-    ],
-    [Endpoints.deleteAddress]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(DeleteAddressSchema),
-      userCtrl.deleteUserAddress,
-    ],
-    [Endpoints.listAddress]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(ListAddressSchema),
-      userCtrl.listUserAddress,
-    ],
+    [Endpoints.createAddress]: [],
+    [Endpoints.updateAddress]: [],
+    [Endpoints.deleteAddress]: [],
+    [Endpoints.listAddress]: [],
 
     // category endpoints
     [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],
