@@ -135,7 +135,6 @@ export const withParams = (endpoint: EndpointConfig, ...params: string[]): Endpo
   for (let index = 0; index < params.length; index++) {
     url = url.replace(placeholders[index]!, params[index]!);
   }
-  console.log('url', url);
   return {
     url: url,
     method: endpoint.method,
