@@ -3,7 +3,6 @@ import {
   CreateColorSchema,
   CreateImageSchema,
   CreateOrderSchema,
-  CreateProductSchema,
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
@@ -11,7 +10,6 @@ import {
   DeleteColorSchema,
   DeleteImageSchema,
   DeleteOrderSchema,
-  DeleteProductSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
   DeleteWishlistSchema,
@@ -19,15 +17,12 @@ import {
   Endpoints,
   GetOrderSchema,
   GetPaymentSchema,
-  GetProductSchema,
   ListImagesSchema,
   ListOrdersSchema,
-  ListProductsSchema,
   ListStocksSchema,
   UpdateColorSchema,
   UpdateImageSchema,
   UpdateOrderStatusSchema,
-  UpdateProductSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
 } from '@resala/shared';
@@ -49,8 +44,6 @@ import { OrderService } from '../features/order/order.service.js';
 import { PaymentController } from '../features/payment/payment.controller.js';
 import { PaymentService } from '../features/payment/payment.service.js';
 import { PaymobService } from '../features/payment/paymob/paymob.service.js';
-import { ProductController } from '../features/product/product.controller.js';
-import { ProductService } from '../features/product/product.service.js';
 import { ShoppingController } from '../features/shopping/shopping.controller.js';
 import { ShoppingService } from '../features/shopping/shopping.service.js';
 import { SizeController } from '../features/size/size.controller.js';
@@ -77,7 +70,6 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const addressService = new AddressService(db);
   const stockService = new StockService(db);
   const imageService = new ImageService(db, fileService);
-  const productService = new ProductService(db, fileService);
   const colorService = new ColorService(db);
   const sizeService = new SizeService(db);
   const notificationService = new NotificationService(new EmailNotification());
@@ -86,7 +78,6 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const productCtrl = new ProductController(productService);
   const colorCtrl = new ColorController(colorService);
   const sizeCtrl = new SizeController(sizeService);
   const stockCtrl = new StockController(stockService);
@@ -130,25 +121,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.deleteCategory]: [],
 
     // product endpoints
-    [Endpoints.getProduct]: [validateMiddleware(GetProductSchema), productCtrl.getProduct],
-    [Endpoints.listProducts]: [validateMiddleware(ListProductsSchema), productCtrl.listProducts],
-    [Endpoints.createProduct]: [
-      uploadMiddleware.single('image'),
-      validateMiddleware(CreateProductSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      productCtrl.createProduct,
-    ],
-    [Endpoints.updateProduct]: [
-      uploadMiddleware.single('image'),
-      validateMiddleware(UpdateProductSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      productCtrl.updateProduct,
-    ],
-    [Endpoints.deleteProduct]: [
-      validateMiddleware(DeleteProductSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      productCtrl.deleteProduct,
-    ],
+    [Endpoints.getProduct]: [],
+    [Endpoints.listProducts]: [],
+    [Endpoints.createProduct]: [],
+    [Endpoints.updateProduct]: [],
+    [Endpoints.deleteProduct]: [],
 
     // stock endpoints
     [Endpoints.getStock]: [validateMiddleware(DeleteStockSchema), stockCtrl.getStock],

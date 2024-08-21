@@ -3,9 +3,11 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { MulterError } from 'multer';
 import { ValidateError } from 'tsoa/dist/index.js';
+import { ZodError } from 'zod';
 
 import { APPError } from '../errors/api.errors.js';
 import { logger } from '../logger/index.js';
+import { formatZodError } from '../utils/zodErrors.js';
 
 /**
  * @description catch errors from async functions
@@ -35,6 +37,11 @@ export const errorMiddleware = (
       success: false,
       message: error.message,
       details: error.fields,
+    });
+  } else if (error instanceof ZodError) {
+    return res.status(400).json({
+      success: false,
+      message: formatZodError(error),
     });
   } else if (error instanceof jwt.TokenExpiredError) {
     return res.status(401).json({
