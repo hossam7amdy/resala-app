@@ -5,6 +5,8 @@ import { TsoaRoute, fetchMiddlewares, ExpressTemplateService } from '@tsoa/runti
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../features/user/user.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ReviewController } from './../features/review/review.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../features/auth/auth.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AddressController } from './../features/address/address.controller.js';
@@ -56,6 +58,46 @@ const models: TsoaRoute.Models = {
     "UpdateUserResponse": {
         "dataType": "refAlias",
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"User","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Review": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"comment":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"rating":{"dataType":"double","required":true},"userId":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"double"}],"required":true},"productId":{"dataType":"double","required":true},"id":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateReviewResponse": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"Review","required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateReviewResponse": {
+        "dataType": "refAlias",
+        "type": {"ref":"CreateReviewResponse","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DeleteReviewResponse": {
+        "dataType": "refAlias",
+        "type": {"ref":"CreateReviewResponse","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Decimal": {
+        "dataType": "refAlias",
+        "type": {"dataType":"string","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Product": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"price":{"dataType":"union","subSchemas":[{"dataType":"double"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"enDescription":{"dataType":"string","required":true},"arDescription":{"dataType":"string","required":true},"enName":{"dataType":"string","required":true},"arName":{"dataType":"string","required":true},"categoryId":{"dataType":"double","required":true},"id":{"dataType":"double","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetReviewResponse": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"product":{"ref":"Product","required":true},"user":{"dataType":"union","subSchemas":[{"ref":"User"},{"dataType":"enum","enums":[null]}],"required":true}}}],"required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListReviewsResponse": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"reviews":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"product":{"ref":"Product","required":true},"user":{"dataType":"union","subSchemas":[{"ref":"User"},{"dataType":"enum","enums":[null]}],"required":true}}}]},"required":true},"pagination":{"ref":"Pagination","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LoginResponse": {
@@ -254,6 +296,163 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'updateUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/v1/reviews',
+            authenticateMiddleware([{"jwt_auth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController)),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.createReview)),
+
+            async function ReviewController_createReview(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comment":{"dataType":"string"},"rating":{"dataType":"double"},"productId":{"dataType":"double"},"userId":{"dataType":"double"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ReviewController();
+
+              await templateService.apiHandler({
+                methodName: 'createReview',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.put('/api/v1/reviews/:reviewId',
+            authenticateMiddleware([{"jwt_auth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController)),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.updateReview)),
+
+            async function ReviewController_updateReview(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comment":{"dataType":"string"},"rating":{"dataType":"double"},"productId":{"dataType":"double"},"userId":{"dataType":"double"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ReviewController();
+
+              await templateService.apiHandler({
+                methodName: 'updateReview',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/api/v1/reviews/:reviewId',
+            authenticateMiddleware([{"jwt_auth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController)),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.deleteReview)),
+
+            async function ReviewController_deleteReview(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},
+                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ReviewController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteReview',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/v1/reviews/:reviewId',
+            authenticateMiddleware([{"jwt_auth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController)),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.getReview)),
+
+            async function ReviewController_getReview(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ReviewController();
+
+              await templateService.apiHandler({
+                methodName: 'getReview',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/v1/reviews',
+            authenticateMiddleware([{"jwt_auth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController)),
+            ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.listReviews)),
+
+            async function ReviewController_listReviews(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"double"},"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ReviewController();
+
+              await templateService.apiHandler({
+                methodName: 'listReviews',
                 controller,
                 response,
                 next,

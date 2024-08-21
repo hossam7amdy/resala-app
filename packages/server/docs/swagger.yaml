@@ -122,6 +122,155 @@ paths:
           required: false
           schema:
             type: string
+  /api/v1/reviews:
+    post:
+      operationId: CreateReview
+      responses:
+        "201":
+          description: Review created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateReviewResponse"
+      tags:
+        - Review
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                comment:
+                  type: string
+                rating:
+                  type: number
+                  format: double
+                productId:
+                  type: number
+                  format: double
+                userId:
+                  type: number
+                  format: double
+              type: object
+    get:
+      operationId: ListReviews
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListReviewsResponse"
+      tags:
+        - Review
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: query
+          name: productId
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+  /api/v1/reviews/{reviewId}:
+    put:
+      operationId: UpdateReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateReviewResponse"
+      tags:
+        - Review
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema: {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                comment:
+                  type: string
+                rating:
+                  type: number
+                  format: double
+                productId:
+                  type: number
+                  format: double
+                userId:
+                  type: number
+                  format: double
+              type: object
+    delete:
+      operationId: DeleteReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteReviewResponse"
+      tags:
+        - Review
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema: {}
+        - in: query
+          name: userId
+          required: false
+          schema:
+            format: double
+            type: number
+    get:
+      operationId: GetReview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetReviewResponse"
+      tags:
+        - Review
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: reviewId
+          required: true
+          schema: {}
   /api/v1/auth/login:
     post:
       operationId: Login
@@ -550,6 +699,152 @@ components:
         - properties:
             data:
               $ref: "#/components/schemas/User"
+          required:
+            - data
+          type: object
+    Review:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        comment:
+          type: string
+          nullable: true
+        rating:
+          type: number
+          format: double
+        userId:
+          type: number
+          format: double
+          nullable: true
+        productId:
+          type: number
+          format: double
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - comment
+        - rating
+        - userId
+        - productId
+        - id
+      type: object
+    CreateReviewResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              $ref: "#/components/schemas/Review"
+          required:
+            - data
+          type: object
+    UpdateReviewResponse:
+      $ref: "#/components/schemas/CreateReviewResponse"
+    DeleteReviewResponse:
+      $ref: "#/components/schemas/CreateReviewResponse"
+    Decimal:
+      type: string
+    Product:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        imageUrl:
+          type: string
+        imageKey:
+          type: string
+        price:
+          anyOf:
+            - type: number
+              format: double
+            - $ref: "#/components/schemas/Decimal"
+            - type: string
+            - {}
+        enDescription:
+          type: string
+        arDescription:
+          type: string
+        enName:
+          type: string
+        arName:
+          type: string
+        categoryId:
+          type: number
+          format: double
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - imageUrl
+        - imageKey
+        - price
+        - enDescription
+        - arDescription
+        - enName
+        - arName
+        - categoryId
+        - id
+      type: object
+    GetReviewResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              allOf:
+                - $ref: "#/components/schemas/Review"
+                - properties:
+                    product:
+                      $ref: "#/components/schemas/Product"
+                    user:
+                      allOf:
+                        - $ref: "#/components/schemas/User"
+                      nullable: true
+                  required:
+                    - product
+                    - user
+                  type: object
+          required:
+            - data
+          type: object
+    ListReviewsResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                reviews:
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/Review"
+                      - properties:
+                          product:
+                            $ref: "#/components/schemas/Product"
+                          user:
+                            allOf:
+                              - $ref: "#/components/schemas/User"
+                            nullable: true
+                        required:
+                          - product
+                          - user
+                        type: object
+                  type: array
+                pagination:
+                  $ref: "#/components/schemas/Pagination"
+              required:
+                - reviews
+                - pagination
+              type: object
           required:
             - data
           type: object
