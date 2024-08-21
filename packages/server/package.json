@@ -6,11 +6,11 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "yarn db:generate && yarn routes:generate && rm -r -f dist/* && tsc",
+    "build": "yarn db:generate && rm -r -f dist/* && tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "test": "DOTENV_CONFIG_PATH=.env.test vitest -c ./vitest.config.ts",
-    "db:generate": "yarn prisma generate",
+    "db:generate": "yarn prisma generate && tsc",
     "db:seed": "node src/datastore/sql/seed.js",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
