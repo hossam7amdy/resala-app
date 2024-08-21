@@ -1,63 +1,94 @@
-import type {
-  CreateCategory,
-  DeleteCategory,
-  GetCategory,
-  ICategoryController,
-  ListCategories,
-  UpdateCategory,
-} from './category.controller.interface.js';
-import type { CategoryService } from './category.service.js';
+import {
+  type CreateCategoryRequest,
+  type CreateCategoryResponse,
+  CreateCategorySchema,
+  type DeleteCategoryResponse,
+  DeleteCategorySchema,
+  type GetCategoryResponse,
+  GetCategorySchema,
+  type ListCategoriesResponse,
+  type UpdateCategoryRequest,
+  type UpdateCategoryResponse,
+  UpdateCategorySchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class CategoryController implements ICategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { CategoryService } from './category.service.js';
 
-  getCategory: GetCategory = async (req, res, next) => {
-    try {
-      const category = await this.categoryService.findCategoryById(req.params.categoryId);
+@Tags('Category')
+@Route('api/v1/categories')
+export class CategoryController extends Controller {
+  private readonly categoryService: CategoryService;
 
-      return res.json({ success: true, data: category });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.categoryService = new CategoryService(db);
+  }
 
-  listCategories: ListCategories = async (_req, res, next) => {
-    try {
-      const categories = await this.categoryService.listCategories();
+  @Get('{categoryId}')
+  @Middlewares([validateMiddleware(GetCategorySchema)])
+  public async get(@Path() categoryId: number): Promise<GetCategoryResponse> {
+    const category = await this.categoryService.find(+categoryId);
 
-      return res.json({ success: true, data: categories });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: category };
+  }
 
-  createCategory: CreateCategory = async (req, res, next) => {
-    try {
-      const category = await this.categoryService.createCategory(req.body);
+  @Get()
+  public async list(): Promise<ListCategoriesResponse> {
+    const categories = await this.categoryService.list();
 
-      return res.status(201).json({ success: true, data: category });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: categories };
+  }
 
-  updateCategory: UpdateCategory = async (req, res, next) => {
-    try {
-      const category = await this.categoryService.updateCategory(req.params.categoryId, req.body);
+  /** Create a new category, only admins can create categories */
+  @Post()
+  @SuccessResponse('201', 'Category created')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(CreateCategorySchema)])
+  public async create(
+    @Body() body: CreateCategoryRequest['body']
+  ): Promise<CreateCategoryResponse> {
+    const category = await this.categoryService.create(body);
 
-      return res.json({ success: true, data: category });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: category };
+  }
 
-  deleteCategory: DeleteCategory = async (req, res, next) => {
-    try {
-      const category = await this.categoryService.deleteCategory(req.params.categoryId);
+  /** Update a category, only admins can update categories */
+  @Put('{categoryId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateCategorySchema)])
+  public async update(
+    @Path() categoryId: number,
+    @Body() body: UpdateCategoryRequest['body']
+  ): Promise<UpdateCategoryResponse> {
+    const category = await this.categoryService.update(+categoryId, body);
 
-      return res.json({ success: true, data: category });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: category };
+  }
+
+  /** Delete a category, only admins can delete categories */
+  @Delete('{categoryId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(DeleteCategorySchema)])
+  public async delete(@Path() categoryId: number): Promise<DeleteCategoryResponse> {
+    const category = await this.categoryService.delete(+categoryId);
+
+    return { success: true, data: category };
+  }
 }

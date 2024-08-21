@@ -10,7 +10,7 @@ import type { DataStore } from '../../datastore/index.js';
 export class CategoryService {
   constructor(private readonly db: DataStore) {}
 
-  async createCategory(category: CreateCategoryRequest['body']) {
+  async create(category: CreateCategoryRequest['body']) {
     return await this.db.category.create({
       data: {
         enName: category.enName,
@@ -19,7 +19,7 @@ export class CategoryService {
     });
   }
 
-  async updateCategory(id: number, category: UpdateCategoryRequest['body']) {
+  async update(id: number, category: UpdateCategoryRequest['body']) {
     return await this.db.category.update({
       data: {
         enName: category.enName,
@@ -29,15 +29,15 @@ export class CategoryService {
     });
   }
 
-  async deleteCategory(id: number) {
+  async delete(id: number) {
     return await this.db.category.delete({ where: { id } });
   }
 
-  async findCategoryById(id: number): Promise<GetCategoryResponse['data']> {
+  async find(id: number): Promise<GetCategoryResponse['data']> {
     return await this.db.category.findUniqueOrThrow({ where: { id } });
   }
 
-  async listCategories(): Promise<ListCategoriesResponse['data']> {
+  async list(): Promise<ListCategoriesResponse['data']> {
     return await this.db.category.findMany();
   }
 }

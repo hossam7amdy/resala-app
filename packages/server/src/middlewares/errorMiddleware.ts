@@ -1,6 +1,8 @@
 import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { MulterError } from 'multer';
+import { ValidateError } from 'tsoa/dist/index.js';
 
 import { APPError } from '../errors/api.errors.js';
 import { logger } from '../logger/index.js';
@@ -24,6 +26,23 @@ export const errorMiddleware = (
 ) => {
   if (error instanceof APPError) {
     return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  } else if (error instanceof ValidateError) {
+    console.error('Caught a validation error:', error);
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+      details: error.fields,
+    });
+  } else if (error instanceof jwt.TokenExpiredError) {
+    return res.status(401).json({
+      success: false,
+      message: `Token expired at ${error.expiredAt}`,
+    });
+  } else if (error instanceof jwt.JsonWebTokenError) {
+    return res.status(401).json({
       success: false,
       message: error.message,
     });
