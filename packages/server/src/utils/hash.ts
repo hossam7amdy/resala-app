@@ -1,4 +1,7 @@
-import crypto from 'crypto';
+import { pbkdf2 } from 'crypto';
+import { promisify } from 'util';
+
+const pdkdf2Async = promisify(pbkdf2);
 
 /**
  * Hash a string using pbkdf2 algorithm with sha512 and base64
@@ -9,13 +12,8 @@ import crypto from 'crypto';
  * @param iterations number of iterations
  * @returns hashed string
  */
-export const hash = (str: string, salt: string, iterations: number): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    crypto.pbkdf2(str, salt, iterations, 150, 'sha512', (err, derivedKey) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(derivedKey.toString('base64'));
-    });
-  });
+export const hash = async (str: string, salt: string, iterations: number): Promise<string> => {
+  const derivedKey = await pdkdf2Async(str, salt, iterations, 150, 'sha512');
+
+  return derivedKey.toString('base64');
 };
