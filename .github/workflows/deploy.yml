@@ -38,4 +38,4 @@ jobs:
           docker rm resala-server || true
       - name: Run new container
         run: |
-          docker run --env-file /home/ec2-user/secrets/.env -d -p 80:80 --name resala-server hossam7amdy/resala-server:${{ github.sha }}
+          docker run --env-file /home/ec2-user/secrets/.env -d -p 5000:5000 --name resala-server hossam7amdy/resala-server:${{ github.sha }}
