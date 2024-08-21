@@ -271,6 +271,176 @@ paths:
           name: reviewId
           required: true
           schema: {}
+  /api/v1/products/{productId}:
+    get:
+      operationId: Get
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetProductResponse"
+      tags:
+        - Product
+      security: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: {}
+    put:
+      operationId: Update
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateProductResponse"
+      description: Update a product, only admins can update products
+      tags:
+        - Product
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            format: double
+            type: number
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                arName:
+                  type: string
+                enName:
+                  type: string
+                arDescription:
+                  type: string
+                enDescription:
+                  type: string
+                price:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+              required:
+                - categoryId
+                - arName
+                - enName
+                - arDescription
+                - enDescription
+                - price
+                - image
+    delete:
+      operationId: Delete
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteProductResponse"
+      description: Delete a product, only admins can delete products
+      tags:
+        - Product
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema: {}
+  /api/v1/products:
+    get:
+      operationId: List
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListProductsResponse"
+      tags:
+        - Product
+      security: []
+      parameters:
+        - in: query
+          name: categoryId
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: double
+            type: number
+        - in: query
+          name: query
+          required: false
+          schema:
+            type: string
+    post:
+      operationId: Create
+      responses:
+        "201":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateProductResponse"
+      description: Create a new product, only admins can create products
+      tags:
+        - Product
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                arName:
+                  type: string
+                enName:
+                  type: string
+                arDescription:
+                  type: string
+                enDescription:
+                  type: string
+                price:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+              required:
+                - categoryId
+                - arName
+                - enName
+                - arDescription
+                - enDescription
+                - price
+                - image
   /api/v1/categories/{categoryId}:
     get:
       operationId: Get
@@ -983,6 +1153,61 @@ components:
         - arName
         - id
       type: object
+    GetProductResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              allOf:
+                - $ref: "#/components/schemas/Product"
+                - properties:
+                    category:
+                      $ref: "#/components/schemas/Category"
+                  required:
+                    - category
+                  type: object
+          required:
+            - data
+          type: object
+    ListProductsResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                pagination:
+                  $ref: "#/components/schemas/Pagination"
+                products:
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/Product"
+                      - properties:
+                          category:
+                            $ref: "#/components/schemas/Category"
+                        required:
+                          - category
+                        type: object
+                  type: array
+              required:
+                - pagination
+                - products
+              type: object
+          required:
+            - data
+          type: object
+    CreateProductResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              $ref: "#/components/schemas/Product"
+          required:
+            - data
+          type: object
+    UpdateProductResponse:
+      $ref: "#/components/schemas/CreateProductResponse"
+    DeleteProductResponse:
+      $ref: "#/components/schemas/CreateProductResponse"
     GetCategoryResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"

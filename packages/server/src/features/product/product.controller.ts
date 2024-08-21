@@ -1,68 +1,125 @@
-import type {
-  CreateProduct,
-  DeleteProduct,
-  GetProduct,
-  ListProducts,
-  UpdateProduct,
-} from './product.controller.interface.js';
-import type { IProductController } from './product.controller.interface.js';
-import type { ProductService } from './product.service.js';
+import {
+  type CreateProductResponse,
+  CreateProductSchema,
+  type DeleteProductResponse,
+  type GetProductResponse,
+  type ListProductsRequest,
+  type ListProductsResponse,
+  ListProductsSchema,
+  type UpdateProductResponse,
+  UpdateProductSchema,
+} from '@resala/shared';
+import {
+  Controller,
+  Delete,
+  FormField,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Queries,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+  UploadedFile,
+} from 'tsoa/dist/index.js';
 
-export class ProductController implements IProductController {
-  constructor(private readonly productService: ProductService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { FileService } from '../filestorage/file.service.js';
+import { S3FileStorage } from '../filestorage/s3.filestorage.js';
+import { ProductService } from './product.service.js';
 
-  getProduct: GetProduct = async (req, res, next) => {
-    try {
-      const product = await this.productService.get(req.params.productId);
+@Tags('Product')
+@Route('api/v1/products')
+export class ProductController extends Controller {
+  private readonly productService: ProductService;
 
-      return res.json({ success: true, data: product });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
 
-  listProducts: ListProducts = async (req, res, next) => {
-    try {
-      const { products, pagination } = await this.productService.list(req.query);
+    const fileServer = new FileService(new S3FileStorage());
+    this.productService = new ProductService(db, fileServer);
+  }
 
-      return res.json({ success: true, data: { pagination, products } });
-    } catch (error) {
-      next(error);
-    }
-  };
+  @Get('{productId}')
+  public async get(@Path() productId: number | string): Promise<GetProductResponse> {
+    const product = await this.productService.get(+productId);
 
-  createProduct: CreateProduct = async (req, res, next) => {
-    try {
-      const data = await this.productService.create({
-        ...req.body,
-        file: req.file!,
-      });
+    return { success: true, data: product };
+  }
 
-      return res.json({ success: true, data });
-    } catch (error) {
-      return next(error);
-    }
-  };
+  @Get()
+  @Middlewares([validateMiddleware(ListProductsSchema)])
+  public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
+    const { products, pagination } = await this.productService.list(query);
 
-  updateProduct: UpdateProduct = async (req, res, next) => {
-    try {
-      const data = await this.productService.update(req.params.productId, {
-        ...req.body,
-        file: req.file,
-      });
-      return res.json({ success: true, data });
-    } catch (error) {
-      return next(error);
-    }
-  };
+    return { success: true, data: { pagination, products } };
+  }
 
-  deleteProduct: DeleteProduct = async (req, res, next) => {
-    try {
-      const data = await this.productService.delete(req.params.productId);
+  /** Create a new product, only admins can create products */
+  @Post()
+  @SuccessResponse('201', 'Product created')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async create(
+    @FormField() categoryId: number,
+    @FormField() arName: string,
+    @FormField() enName: string,
+    @FormField() arDescription: string,
+    @FormField() enDescription: string,
+    @FormField() price: number,
+    @UploadedFile() image: Express.Multer.File
+  ): Promise<CreateProductResponse> {
+    const { body } = await CreateProductSchema.parseAsync({
+      body: { categoryId, arName, enName, arDescription, enDescription, price },
+    });
 
-      return res.json({ success: true, data });
-    } catch (error) {
-      return next(error);
-    }
-  };
+    const data = await this.productService.create({ ...body, file: image });
+
+    return { success: true, data };
+  }
+
+  /** Update a product, only admins can update products */
+  @Put('{productId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async update(
+    @Path() productId: number,
+    @FormField() categoryId: number,
+    @FormField() arName: string,
+    @FormField() enName: string,
+    @FormField() arDescription: string,
+    @FormField() enDescription: string,
+    @FormField() price: number,
+    @UploadedFile() image: Express.Multer.File
+  ): Promise<UpdateProductResponse> {
+    const { body } = await UpdateProductSchema.parseAsync({
+      body: {
+        categoryId: +categoryId,
+        arName,
+        enName,
+        arDescription,
+        enDescription,
+        price: +price,
+      },
+    });
+
+    const data = await this.productService.update(+productId, { ...body, file: image });
+
+    return { success: true, data };
+  }
+
+  /** Delete a product, only admins can delete products */
+  @Delete('{productId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async delete(@Path() productId: number | string): Promise<DeleteProductResponse> {
+    const data = await this.productService.delete(+productId);
+
+    return { success: true, data };
+  }
 }
