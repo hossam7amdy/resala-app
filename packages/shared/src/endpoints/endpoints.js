@@ -8,7 +8,6 @@
  */
 export var Endpoints;
 (function (Endpoints) {
-    Endpoints["healthz"] = "healthz";
     // auth endpoints
     Endpoints["login"] = "login";
     Endpoints["register"] = "register";
@@ -113,6 +112,7 @@ export const withParams = (endpoint, ...params) => {
     for (let index = 0; index < params.length; index++) {
         url = url.replace(placeholders[index], params[index]);
     }
+    console.log('url', url);
     return {
         url: url,
         method: endpoint.method,
@@ -150,8 +150,6 @@ export const withQueryParams = (endpoint, query) => {
  * // returns { url: '/api/v1/auth/login', method: 'post', sensitive: true }
  */
 export const ENDPOINT_CONFIGS = {
-    // health check
-    [Endpoints.healthz]: { method: 'get', url: '/api/v1/healthz' },
     // auth endpoints
     [Endpoints.login]: {
         method: 'post',
@@ -200,17 +198,17 @@ export const ENDPOINT_CONFIGS = {
     },
     [Endpoints.getUser]: {
         method: 'get',
-        url: '/api/v1/users/:userId',
+        url: '/api/v1/users/{userId}',
         auth: true,
     },
     [Endpoints.updateUser]: {
         method: 'put',
-        url: '/api/v1/users/:userId',
+        url: '/api/v1/users/{userId}',
         auth: true,
     },
     [Endpoints.deleteUser]: {
         method: 'delete',
-        url: '/api/v1/users/:userId',
+        url: '/api/v1/users/{userId}',
         auth: true,
     },
     // address endpoints
@@ -225,12 +223,12 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateAddress]: {
-        url: '/api/v1/addresses/:addressId',
+        url: '/api/v1/addresses/{addressId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteAddress]: {
-        url: '/api/v1/addresses/:addressId',
+        url: '/api/v1/addresses/{addressId}',
         method: 'delete',
         auth: true,
     },
@@ -245,22 +243,22 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.getCategory]: {
-        url: '/api/v1/categories/:categoryId',
+        url: '/api/v1/categories/{categoryId}',
         method: 'get',
     },
     [Endpoints.updateCategory]: {
-        url: '/api/v1/categories/:categoryId',
+        url: '/api/v1/categories/{categoryId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteCategory]: {
-        url: '/api/v1/categories/:categoryId',
+        url: '/api/v1/categories/{categoryId}',
         method: 'delete',
         auth: true,
     },
     // product endpoints
     [Endpoints.getProduct]: {
-        url: '/api/v1/products/:productId',
+        url: '/api/v1/products/{productId}',
         method: 'get',
     },
     [Endpoints.listProducts]: {
@@ -273,12 +271,12 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateProduct]: {
-        url: '/api/v1/products/:productId',
+        url: '/api/v1/products/{productId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteProduct]: {
-        url: '/api/v1/products/:productId',
+        url: '/api/v1/products/{productId}',
         method: 'delete',
         auth: true,
     },
@@ -293,12 +291,12 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateImage]: {
-        url: '/api/v1/images/:imageId',
+        url: '/api/v1/images/{imageId}',
         method: 'patch',
         auth: true,
     },
     [Endpoints.deleteImage]: {
-        url: '/api/v1/images/:imageId',
+        url: '/api/v1/images/{imageId}',
         method: 'delete',
         auth: true,
     },
@@ -309,7 +307,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.getStock]: {
-        url: '/api/v1/stocks/:stockId',
+        url: '/api/v1/stocks/{stockId}',
         method: 'get',
     },
     [Endpoints.listStocks]: {
@@ -317,18 +315,18 @@ export const ENDPOINT_CONFIGS = {
         method: 'get',
     },
     [Endpoints.updateStock]: {
-        url: '/api/v1/stocks/:stockId',
+        url: '/api/v1/stocks/{stockId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteStock]: {
-        url: '/api/v1/stocks/:stockId',
+        url: '/api/v1/stocks/{stockId}',
         method: 'delete',
         auth: true,
     },
     // color endpoints
     [Endpoints.getColor]: {
-        url: '/api/v1/colors/:colorId',
+        url: '/api/v1/colors/{colorId}',
         method: 'get',
     },
     [Endpoints.listColors]: {
@@ -341,18 +339,18 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateColor]: {
-        url: '/api/v1/colors/:colorId',
+        url: '/api/v1/colors/{colorId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteColor]: {
-        url: '/api/v1/colors/:colorId',
+        url: '/api/v1/colors/{colorId}',
         method: 'delete',
         auth: true,
     },
     // size endpoints
     [Endpoints.getSize]: {
-        url: '/api/v1/sizes/:sizeId',
+        url: '/api/v1/sizes/{sizeId}',
         method: 'get',
     },
     [Endpoints.listSizes]: {
@@ -365,12 +363,12 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateSize]: {
-        url: '/api/v1/sizes/:sizeId',
+        url: '/api/v1/sizes/{sizeId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteSize]: {
-        url: '/api/v1/sizes/:sizeId',
+        url: '/api/v1/sizes/{sizeId}',
         method: 'delete',
         auth: true,
     },
@@ -381,7 +379,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.removeItemFromCart]: {
-        url: '/api/v1/cart/items/:stockId',
+        url: '/api/v1/cart/items/{stockId}',
         method: 'delete',
         auth: true,
     },
@@ -401,7 +399,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.removeProductFromWishlist]: {
-        url: '/api/v1/wishlist/items/:productId',
+        url: '/api/v1/wishlist/items/{productId}',
         method: 'delete',
         auth: true,
     },
@@ -422,7 +420,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.getOrder]: {
-        url: '/api/v1/orders/:orderId',
+        url: '/api/v1/orders/{orderId}',
         method: 'get',
         auth: true,
     },
@@ -432,18 +430,18 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.deleteOrder]: {
-        url: '/api/v1/orders/:orderId',
+        url: '/api/v1/orders/{orderId}',
         method: 'delete',
         auth: true,
     },
     [Endpoints.updateOrderStatus]: {
-        url: '/api/v1/orders/:orderId',
+        url: '/api/v1/orders/{orderId}',
         method: 'patch',
         auth: true,
     },
     // payment endpoints
     [Endpoints.getPayment]: {
-        url: '/api/v1/payments/:transactionId',
+        url: '/api/v1/payments/{transactionId}',
         method: 'get',
         auth: true,
     },
@@ -458,7 +456,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.postPayCallback]: {
-        url: '/post_pay/:orderId',
+        url: '/post_pay/{orderId}',
         method: 'post',
     },
     // product reviews endpoints
@@ -468,17 +466,17 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.updateReview]: {
-        url: '/api/v1/reviews/:reviewId',
+        url: '/api/v1/reviews/{reviewId}',
         method: 'put',
         auth: true,
     },
     [Endpoints.deleteReview]: {
-        url: '/api/v1/reviews/:reviewId',
+        url: '/api/v1/reviews/{reviewId}',
         method: 'delete',
         auth: true,
     },
     [Endpoints.getReview]: {
-        url: '/api/v1/reviews/:reviewId',
+        url: '/api/v1/reviews/{reviewId}',
         method: 'get',
     },
     [Endpoints.listReviews]: {
