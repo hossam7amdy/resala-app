@@ -1,83 +1,101 @@
-import type {
-  CreateReview,
-  DeleteReview,
-  GetReview,
-  IReviewController,
-  ListReviews,
-  UpdateReview,
-} from './review.controller.interface.js';
-import type { ReviewService } from './review.service.js';
+import {
+  type CreateReviewRequest,
+  type CreateReviewResponse,
+  CreateReviewSchema,
+  type DeleteReviewRequest,
+  type DeleteReviewResponse,
+  DeleteReviewSchema,
+  type GetReviewResponse,
+  GetReviewSchema,
+  type ListReviewsRequest,
+  type ListReviewsResponse,
+  ListReviewsSchema,
+  type UpdateReviewRequest,
+  type UpdateReviewResponse,
+  UpdateReviewSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Queries,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class ReviewController implements IReviewController {
+import { db } from '../../datastore/index.js';
+import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { ReviewService } from './review.service.js';
+
+@Tags('Review')
+@Route('api/v1/reviews')
+@Security('jwt_auth')
+export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;
 
-  constructor(reviewService: ReviewService) {
-    this.reviewService = reviewService;
+  constructor() {
+    super();
+    this.reviewService = new ReviewService(db);
   }
 
-  createReview: CreateReview = async (req, res, next) => {
-    try {
-      const review = await this.reviewService.create({
-        ...req.body,
-        userId: res.locals.user.id,
-      });
+  @Post()
+  @SuccessResponse('201', 'Review created')
+  @Middlewares([validateMiddleware(CreateReviewSchema)])
+  public async createReview(
+    @Body() body: CreateReviewRequest['body']
+  ): Promise<CreateReviewResponse> {
+    const review = await this.reviewService.create(body);
 
-      res.status(201).json({ success: true, data: review });
-    } catch (e) {
-      next(e);
-    }
-  };
+    return { success: true, data: review };
+  }
 
-  updateReview: UpdateReview = async (req, res, next) => {
-    try {
-      const review = await this.reviewService.update(req.params.reviewId, {
-        ...req.body,
-        userId: res.locals.user.id,
-      });
+  @Put('{reviewId}')
+  @Middlewares([validateMiddleware(UpdateReviewSchema)])
+  public async updateReview(
+    @Path() reviewId: number | string,
+    @Body() body: UpdateReviewRequest['body']
+  ): Promise<UpdateReviewResponse> {
+    const review = await this.reviewService.update(+reviewId, body);
 
-      res.json({ success: true, data: review });
-    } catch (e) {
-      next(e);
-    }
-  };
+    return { success: true, data: review };
+  }
 
-  deleteReview: DeleteReview = async (req, res, next) => {
-    try {
-      const address = await this.reviewService.delete(req.params.reviewId, res.locals.user.id);
+  @Delete('{reviewId}')
+  @Middlewares([validateMiddleware(DeleteReviewSchema)])
+  public async deleteReview(
+    @Path() reviewId: number | string,
+    @Queries() query: DeleteReviewRequest['query']
+  ): Promise<DeleteReviewResponse> {
+    const address = await this.reviewService.delete(+reviewId, query.userId);
 
-      res.json({ success: true, data: address });
-    } catch (e) {
-      next(e);
-    }
-  };
+    return { success: true, data: address };
+  }
 
-  getReview: GetReview = async (req, res, next) => {
-    try {
-      const review = await this.reviewService.find(req.params.reviewId);
+  @Get('{reviewId}')
+  @Middlewares([validateMiddleware(GetReviewSchema)])
+  public async getReview(@Path() reviewId: number | string): Promise<GetReviewResponse> {
+    const review = await this.reviewService.find(+reviewId);
 
-      res.json({ success: true, data: review });
-    } catch (e) {
-      next(e);
-    }
-  };
+    return { success: true, data: review };
+  }
 
-  listReviews: ListReviews = async (req, res, next) => {
-    try {
-      const page = req.query.page || 1;
-      const limit = req.query.limit || 10;
+  @Get()
+  @Middlewares([validateMiddleware(ListReviewsSchema)])
+  public async listReviews(
+    @Queries() query: ListReviewsRequest['query']
+  ): Promise<ListReviewsResponse> {
+    const { reviews, pagination } = await this.reviewService.list(query);
 
-      const { reviews, pagination } = await this.reviewService.list({
-        page,
-        limit,
-        query: req.query.query || '',
-      });
-
-      res.json({
-        success: true,
-        data: { reviews, pagination },
-      });
-    } catch (e) {
-      next(e);
-    }
-  };
+    return {
+      success: true,
+      data: { reviews, pagination },
+    };
+  }
 }

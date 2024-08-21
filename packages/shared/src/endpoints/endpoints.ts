@@ -18,8 +18,6 @@ export type EndpointConfig = {
  * Enum for all the endpoints in the application.
  */
 export enum Endpoints {
-  healthz = 'healthz',
-
   // auth endpoints
   login = 'login',
   register = 'register',
@@ -179,9 +177,6 @@ export const withQueryParams = (
  * // returns { url: '/api/v1/auth/login', method: 'post', sensitive: true }
  */
 export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
-  // health check
-  [Endpoints.healthz]: { method: 'get', url: '/api/v1/healthz' },
-
   // auth endpoints
   [Endpoints.login]: {
     method: 'post',
