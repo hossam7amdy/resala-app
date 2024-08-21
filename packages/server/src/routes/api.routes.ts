@@ -1,54 +1,41 @@
 import {
   CreateCartSchema,
-  CreateCategorySchema,
   CreateColorSchema,
   CreateImageSchema,
   CreateOrderSchema,
   CreateProductSchema,
-  CreateReviewSchema,
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
-  DefaultQuerySchema,
   DeleteCartSchema,
-  DeleteCategorySchema,
   DeleteColorSchema,
   DeleteImageSchema,
   DeleteOrderSchema,
   DeleteProductSchema,
-  DeleteReviewSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
   GetProductSchema,
-  GetReviewSchema,
   ListImagesSchema,
   ListOrdersSchema,
   ListProductsSchema,
-  ListReviewsSchema,
   ListStocksSchema,
-  UpdateCategorySchema,
   UpdateColorSchema,
   UpdateImageSchema,
   UpdateOrderStatusSchema,
   UpdateProductSchema,
-  UpdateReviewSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
 } from '@resala/shared';
-import type { Request, Response } from 'express';
 import { Router } from 'express';
 
 import { db } from '../datastore/index.js';
 import { AddressService } from '../features/address/address.service.js';
 import { AuthService } from '../features/auth/auth.service.js';
-import { CategoryController } from '../features/category/category.controller.js';
-import { CategoryService } from '../features/category/category.service.js';
 import { ColorController } from '../features/color/color.controller.js';
 import { ColorService } from '../features/color/color.service.js';
 import { FileService } from '../features/filestorage/file.service.js';
@@ -64,8 +51,6 @@ import { PaymentService } from '../features/payment/payment.service.js';
 import { PaymobService } from '../features/payment/paymob/paymob.service.js';
 import { ProductController } from '../features/product/product.controller.js';
 import { ProductService } from '../features/product/product.service.js';
-import { ReviewController } from '../features/review/review.controller.js';
-import { ReviewService } from '../features/review/review.service.js';
 import { ShoppingController } from '../features/shopping/shopping.controller.js';
 import { ShoppingService } from '../features/shopping/shopping.service.js';
 import { SizeController } from '../features/size/size.controller.js';
@@ -93,17 +78,14 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const stockService = new StockService(db);
   const imageService = new ImageService(db, fileService);
   const productService = new ProductService(db, fileService);
-  const categoryService = new CategoryService(db);
   const colorService = new ColorService(db);
   const sizeService = new SizeService(db);
   const notificationService = new NotificationService(new EmailNotification());
-  const reviewService = new ReviewService(db);
   const shoppingService = new ShoppingService(db);
   const paymentService = new PaymentService(db, new PaymobService());
   const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const categoryCtrl = new CategoryController(categoryService);
   const productCtrl = new ProductController(productService);
   const colorCtrl = new ColorController(colorService);
   const sizeCtrl = new SizeController(sizeService);
@@ -112,16 +94,12 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const shoppingCtrl = new ShoppingController(shoppingService);
   const paymentCtrl = new PaymentController(paymentService, orderService);
   const orderCtrl = new OrderController(orderService, paymentService, notificationService);
-  const reviewCtrl = new ReviewController(reviewService);
 
   const authMiddleware = new AuthMiddleware(authService, userService);
 
   /** Define the handlers for each endpoint */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const HANDLER: { [key in Endpoints]: any[] } = {
-    // health check
-    [Endpoints.healthz]: [(_: Request, res: Response) => res.send('OK 🤞')],
-
     // auth endpoints
     [Endpoints.login]: [],
     [Endpoints.register]: [],
@@ -145,26 +123,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.listAddress]: [],
 
     // category endpoints
-    [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],
-    [Endpoints.listCategories]: [
-      validateMiddleware(DefaultQuerySchema),
-      categoryCtrl.listCategories,
-    ],
-    [Endpoints.createCategory]: [
-      validateMiddleware(CreateCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.createCategory,
-    ],
-    [Endpoints.updateCategory]: [
-      validateMiddleware(UpdateCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.updateCategory,
-    ],
-    [Endpoints.deleteCategory]: [
-      validateMiddleware(DeleteCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.deleteCategory,
-    ],
+    [Endpoints.getCategory]: [],
+    [Endpoints.listCategories]: [],
+    [Endpoints.createCategory]: [],
+    [Endpoints.updateCategory]: [],
+    [Endpoints.deleteCategory]: [],
 
     // product endpoints
     [Endpoints.getProduct]: [validateMiddleware(GetProductSchema), productCtrl.getProduct],
@@ -323,11 +286,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     ],
 
     // review endpoints
-    [Endpoints.createReview]: [validateMiddleware(CreateReviewSchema), reviewCtrl.createReview],
-    [Endpoints.updateReview]: [validateMiddleware(UpdateReviewSchema), reviewCtrl.updateReview],
-    [Endpoints.deleteReview]: [validateMiddleware(DeleteReviewSchema), reviewCtrl.deleteReview],
-    [Endpoints.getReview]: [validateMiddleware(GetReviewSchema), reviewCtrl.getReview],
-    [Endpoints.listReviews]: [validateMiddleware(ListReviewsSchema), reviewCtrl.listReviews],
+    [Endpoints.createReview]: [],
+    [Endpoints.updateReview]: [],
+    [Endpoints.deleteReview]: [],
+    [Endpoints.getReview]: [],
+    [Endpoints.listReviews]: [],
   };
 
   /** Register all the routes and their handlers */
