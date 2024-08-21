@@ -271,6 +271,119 @@ paths:
           name: reviewId
           required: true
           schema: {}
+  /api/v1/categories/{categoryId}:
+    get:
+      operationId: Get
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCategoryResponse"
+      tags:
+        - Category
+      security: []
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            format: double
+            type: number
+    put:
+      operationId: Update
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateCategoryResponse"
+      description: Update a category, only admins can update categories
+      tags:
+        - Category
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            format: double
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                enName:
+                  type: string
+                arName:
+                  type: string
+              type: object
+    delete:
+      operationId: Delete
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteCategoryResponse"
+      description: Delete a category, only admins can delete categories
+      tags:
+        - Category
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          schema:
+            format: double
+            type: number
+  /api/v1/categories:
+    get:
+      operationId: List
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCategoriesResponse"
+      tags:
+        - Category
+      security: []
+      parameters: []
+    post:
+      operationId: Create
+      responses:
+        "201":
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCategoryResponse"
+      description: Create a new category, only admins can create categories
+      tags:
+        - Category
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                enName:
+                  type: string
+                arName:
+                  type: string
+              type: object
   /api/v1/auth/login:
     post:
       operationId: Login
@@ -848,6 +961,54 @@ components:
           required:
             - data
           type: object
+    Category:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        enName:
+          type: string
+        arName:
+          type: string
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - enName
+        - arName
+        - id
+      type: object
+    GetCategoryResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              $ref: "#/components/schemas/Category"
+          required:
+            - data
+          type: object
+    ListCategoriesResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              items:
+                $ref: "#/components/schemas/Category"
+              type: array
+          required:
+            - data
+          type: object
+    CreateCategoryResponse:
+      $ref: "#/components/schemas/GetCategoryResponse"
+    UpdateCategoryResponse:
+      $ref: "#/components/schemas/GetCategoryResponse"
+    DeleteCategoryResponse:
+      $ref: "#/components/schemas/GetCategoryResponse"
     LoginResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"

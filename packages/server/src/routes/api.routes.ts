@@ -1,6 +1,5 @@
 import {
   CreateCartSchema,
-  CreateCategorySchema,
   CreateColorSchema,
   CreateImageSchema,
   CreateOrderSchema,
@@ -8,9 +7,7 @@ import {
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
-  DefaultQuerySchema,
   DeleteCartSchema,
-  DeleteCategorySchema,
   DeleteColorSchema,
   DeleteImageSchema,
   DeleteOrderSchema,
@@ -20,7 +17,6 @@ import {
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  GetCategorySchema,
   GetOrderSchema,
   GetPaymentSchema,
   GetProductSchema,
@@ -28,7 +24,6 @@ import {
   ListOrdersSchema,
   ListProductsSchema,
   ListStocksSchema,
-  UpdateCategorySchema,
   UpdateColorSchema,
   UpdateImageSchema,
   UpdateOrderStatusSchema,
@@ -41,8 +36,6 @@ import { Router } from 'express';
 import { db } from '../datastore/index.js';
 import { AddressService } from '../features/address/address.service.js';
 import { AuthService } from '../features/auth/auth.service.js';
-import { CategoryController } from '../features/category/category.controller.js';
-import { CategoryService } from '../features/category/category.service.js';
 import { ColorController } from '../features/color/color.controller.js';
 import { ColorService } from '../features/color/color.service.js';
 import { FileService } from '../features/filestorage/file.service.js';
@@ -85,7 +78,6 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const stockService = new StockService(db);
   const imageService = new ImageService(db, fileService);
   const productService = new ProductService(db, fileService);
-  const categoryService = new CategoryService(db);
   const colorService = new ColorService(db);
   const sizeService = new SizeService(db);
   const notificationService = new NotificationService(new EmailNotification());
@@ -94,7 +86,6 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const categoryCtrl = new CategoryController(categoryService);
   const productCtrl = new ProductController(productService);
   const colorCtrl = new ColorController(colorService);
   const sizeCtrl = new SizeController(sizeService);
@@ -132,26 +123,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.listAddress]: [],
 
     // category endpoints
-    [Endpoints.getCategory]: [validateMiddleware(GetCategorySchema), categoryCtrl.getCategory],
-    [Endpoints.listCategories]: [
-      validateMiddleware(DefaultQuerySchema),
-      categoryCtrl.listCategories,
-    ],
-    [Endpoints.createCategory]: [
-      validateMiddleware(CreateCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.createCategory,
-    ],
-    [Endpoints.updateCategory]: [
-      validateMiddleware(UpdateCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.updateCategory,
-    ],
-    [Endpoints.deleteCategory]: [
-      validateMiddleware(DeleteCategorySchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      categoryCtrl.deleteCategory,
-    ],
+    [Endpoints.getCategory]: [],
+    [Endpoints.listCategories]: [],
+    [Endpoints.createCategory]: [],
+    [Endpoints.updateCategory]: [],
+    [Endpoints.deleteCategory]: [],
 
     // product endpoints
     [Endpoints.getProduct]: [validateMiddleware(GetProductSchema), productCtrl.getProduct],
