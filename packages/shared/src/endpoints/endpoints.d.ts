@@ -16,7 +16,6 @@ export type EndpointConfig = {
  * Enum for all the endpoints in the application.
  */
 export declare enum Endpoints {
-    healthz = "healthz",
     login = "login",
     register = "register",
     refresh = "refresh",
