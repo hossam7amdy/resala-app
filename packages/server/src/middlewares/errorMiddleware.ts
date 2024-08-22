@@ -81,10 +81,14 @@ export const errorMiddleware = (
           .status(400)
           .json({ success: false, message: `Something went wrong: ${error.message}` });
     }
+  } else if (error instanceof Prisma.PrismaClientValidationError) {
+    return res.status(400).json({
+      success: false,
+      message: error.cause ?? 'Invalid input data',
+    });
   }
 
   logger.error(error);
-  console.error(error);
   return res.status(500).json({
     success: false,
     message: 'Unexpected error occurred, please try again.',

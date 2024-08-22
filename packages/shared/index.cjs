@@ -886,7 +886,7 @@ const DeleteWishlistSchema = zod.z.object({
 // Order Schemas
 const CreateOrderSchema = zod.z.object({
     body: zod.z.object({
-        paymentMethod: zod.z.enum([exports.PaymentMethod.CARD, exports.PaymentMethod.CASH]),
+        paymentMethod: zod.z.enum(['CARD', 'CASH']),
         note: zod.z.string().max(500).optional(),
         addressId: zod.z.coerce.number().positive(),
     }),
@@ -906,20 +906,8 @@ const UpdateOrderStatusSchema = zod.z.object({
         orderId: zod.z.coerce.number().positive(),
     }),
     body: zod.z.object({
-        orderStatus: zod.z.enum([
-            exports.OrderStatus.PENDING,
-            exports.OrderStatus.FULFILLED,
-            exports.OrderStatus.SHIPPED,
-            exports.OrderStatus.DELIVERED,
-            exports.OrderStatus.CANCELLED,
-        ]),
-        paymentStatus: zod.z.enum([
-            exports.PaymentStatus.UNPAID,
-            exports.PaymentStatus.PAID,
-            exports.PaymentStatus.FAILED,
-            exports.PaymentStatus.VOIDED,
-            exports.PaymentStatus.REFUNDED,
-        ]),
+        orderStatus: zod.z.enum(['PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+        paymentStatus: zod.z.enum(['UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED']),
     }),
 });
 const DeleteOrderSchema = zod.z.object({
