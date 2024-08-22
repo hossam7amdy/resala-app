@@ -20,9 +20,13 @@ import { ImageController } from './../features/image/image.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrderController } from './../features/order/order.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PaymentController } from './../features/payment/payment.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProductController } from './../features/product/product.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ReviewController } from './../features/review/review.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StockController } from './../features/stock/stock.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../features/user/user.controller.js';
 import { expressAuthentication } from './../middlewares/authentication.js';
@@ -154,6 +158,240 @@ const models: TsoaRoute.Models = {
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Decimal: {
+    dataType: 'refAlias',
+    type: { dataType: 'string', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Product: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        imageUrl: { dataType: 'string', required: true },
+        imageKey: { dataType: 'string', required: true },
+        price: {
+          dataType: 'union',
+          subSchemas: [
+            { dataType: 'double' },
+            { ref: 'Decimal' },
+            { dataType: 'string' },
+            { dataType: 'any' },
+          ],
+          required: true,
+        },
+        enDescription: { dataType: 'string', required: true },
+        arDescription: { dataType: 'string', required: true },
+        enName: { dataType: 'string', required: true },
+        arName: { dataType: 'string', required: true },
+        categoryId: { dataType: 'double', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Color: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        enName: { dataType: 'string', required: true },
+        arName: { dataType: 'string', required: true },
+        code: { dataType: 'string', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Pick_Stock.Exclude_keyofStock.id-or-colorId-or-productId__': {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        sizeId: { dataType: 'double', required: true },
+        quantity: { dataType: 'double', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        updatedAt: { dataType: 'datetime', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Omit_Stock.id-or-colorId-or-productId_': {
+    dataType: 'refAlias',
+    type: { ref: 'Pick_Stock.Exclude_keyofStock.id-or-colorId-or-productId__', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Pick_Image.Exclude_keyofImage.colorId-or-productId__': {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        id: { dataType: 'double', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        isPrimary: { dataType: 'boolean', required: true },
+        imageKey: { dataType: 'string', required: true },
+        imageUrl: { dataType: 'string', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Omit_Image.colorId-or-productId_': {
+    dataType: 'refAlias',
+    type: { ref: 'Pick_Image.Exclude_keyofImage.colorId-or-productId__', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetStockResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                images: {
+                  dataType: 'array',
+                  array: { dataType: 'refAlias', ref: 'Omit_Image.colorId-or-productId_' },
+                  required: true,
+                },
+                sizes: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'intersection',
+                    subSchemas: [
+                      { ref: 'Omit_Stock.id-or-colorId-or-productId_' },
+                      {
+                        dataType: 'nestedObjectLiteral',
+                        nestedProperties: {
+                          size: { dataType: 'string', required: true },
+                          stockId: { dataType: 'double', required: true },
+                        },
+                      },
+                    ],
+                  },
+                  required: true,
+                },
+                color: { ref: 'Color', required: true },
+                product: { ref: 'Product', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListStocksResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                stocks: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'nestedObjectLiteral',
+                    nestedProperties: {
+                      images: {
+                        dataType: 'array',
+                        array: { dataType: 'refAlias', ref: 'Omit_Image.colorId-or-productId_' },
+                        required: true,
+                      },
+                      sizes: {
+                        dataType: 'array',
+                        array: {
+                          dataType: 'intersection',
+                          subSchemas: [
+                            { ref: 'Omit_Stock.id-or-colorId-or-productId_' },
+                            {
+                              dataType: 'nestedObjectLiteral',
+                              nestedProperties: {
+                                size: { dataType: 'string', required: true },
+                                stockId: { dataType: 'double', required: true },
+                              },
+                            },
+                          ],
+                        },
+                        required: true,
+                      },
+                      color: { ref: 'Color', required: true },
+                      product: { ref: 'Product', required: true },
+                    },
+                  },
+                  required: true,
+                },
+                pagination: { ref: 'Pagination', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Stock: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        quantity: { dataType: 'double', required: true },
+        sizeId: { dataType: 'double', required: true },
+        colorId: { dataType: 'double', required: true },
+        productId: { dataType: 'double', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateStockResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Stock', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  UpdateStockResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'CreateStockResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  DeleteStockResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'CreateStockResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   Review: {
     dataType: 'refAlias',
     type: {
@@ -202,41 +440,6 @@ const models: TsoaRoute.Models = {
   DeleteReviewResponse: {
     dataType: 'refAlias',
     type: { ref: 'CreateReviewResponse', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Decimal: {
-    dataType: 'refAlias',
-    type: { dataType: 'string', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Product: {
-    dataType: 'refAlias',
-    type: {
-      dataType: 'nestedObjectLiteral',
-      nestedProperties: {
-        updatedAt: { dataType: 'datetime', required: true },
-        createdAt: { dataType: 'datetime', required: true },
-        imageUrl: { dataType: 'string', required: true },
-        imageKey: { dataType: 'string', required: true },
-        price: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
-        enDescription: { dataType: 'string', required: true },
-        arDescription: { dataType: 'string', required: true },
-        enName: { dataType: 'string', required: true },
-        arName: { dataType: 'string', required: true },
-        categoryId: { dataType: 'double', required: true },
-        id: { dataType: 'double', required: true },
-      },
-      validators: {},
-    },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   GetReviewResponse: {
@@ -421,6 +624,43 @@ const models: TsoaRoute.Models = {
     type: { ref: 'CreateProductResponse', validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetPaymentResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                created_at: { dataType: 'string', required: true },
+                has_parent_transaction: { dataType: 'boolean', required: true },
+                profile_id: { dataType: 'double', required: true },
+                integration_id: { dataType: 'double', required: true },
+                is_3d_secure: { dataType: 'boolean', required: true },
+                is_refunded: { dataType: 'boolean', required: true },
+                is_voided: { dataType: 'boolean', required: true },
+                is_standalone_payment: { dataType: 'boolean', required: true },
+                is_capture: { dataType: 'boolean', required: true },
+                is_auth: { dataType: 'boolean', required: true },
+                success: { dataType: 'boolean', required: true },
+                amount_cents: { dataType: 'double', required: true },
+                pending: { dataType: 'boolean', required: true },
+                id: { dataType: 'double', required: true },
+              },
+              additionalProperties: { dataType: 'any' },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   CreateOrderResponse: {
     dataType: 'refAlias',
     type: {
@@ -584,9 +824,9 @@ const models: TsoaRoute.Models = {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
         id: { dataType: 'double', required: true },
-        cost: { dataType: 'any', required: true },
         createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
+        cost: { dataType: 'any', required: true },
       },
       validators: {},
     },
@@ -848,22 +1088,6 @@ const models: TsoaRoute.Models = {
           nestedProperties: { data: { ref: 'Image', required: true } },
         },
       ],
-      validators: {},
-    },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Color: {
-    dataType: 'refAlias',
-    type: {
-      dataType: 'nestedObjectLiteral',
-      nestedProperties: {
-        updatedAt: { dataType: 'datetime', required: true },
-        createdAt: { dataType: 'datetime', required: true },
-        enName: { dataType: 'string', required: true },
-        arName: { dataType: 'string', required: true },
-        code: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
-      },
       validators: {},
     },
   },
@@ -1282,6 +1506,203 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
         await templateService.apiHandler({
           methodName: 'updateUser',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/stocks/:stockId',
+    ...fetchMiddlewares<RequestHandler>(StockController),
+    ...fetchMiddlewares<RequestHandler>(StockController.prototype.get),
+
+    async function StockController_get(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        stockId: { in: 'path', name: 'stockId', required: true, dataType: 'string' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new StockController();
+
+        await templateService.apiHandler({
+          methodName: 'get',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/stocks',
+    ...fetchMiddlewares<RequestHandler>(StockController),
+    ...fetchMiddlewares<RequestHandler>(StockController.prototype.list),
+
+    async function StockController_list(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        query: {
+          in: 'queries',
+          name: 'query',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            productId: { dataType: 'double' },
+            limit: { dataType: 'double' },
+            page: { dataType: 'double' },
+            query: { dataType: 'string' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new StockController();
+
+        await templateService.apiHandler({
+          methodName: 'list',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/stocks',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(StockController),
+    ...fetchMiddlewares<RequestHandler>(StockController.prototype.create),
+
+    async function StockController_create(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            quantity: { dataType: 'double' },
+            sizeId: { dataType: 'double' },
+            productId: { dataType: 'double' },
+            colorId: { dataType: 'double' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new StockController();
+
+        await templateService.apiHandler({
+          methodName: 'create',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: 201,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.put(
+    '/api/v1/stocks/:stockId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(StockController),
+    ...fetchMiddlewares<RequestHandler>(StockController.prototype.update),
+
+    async function StockController_update(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        stockId: { in: 'path', name: 'stockId', required: true, dataType: 'string' },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            quantity: { dataType: 'double' },
+            sizeId: { dataType: 'double' },
+            productId: { dataType: 'double' },
+            colorId: { dataType: 'double' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new StockController();
+
+        await templateService.apiHandler({
+          methodName: 'update',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.delete(
+    '/api/v1/stocks/:stockId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(StockController),
+    ...fetchMiddlewares<RequestHandler>(StockController.prototype.delete),
+
+    async function StockController_delete(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        stockId: { in: 'path', name: 'stockId', required: true, dataType: 'string' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new StockController();
+
+        await templateService.apiHandler({
+          methodName: 'delete',
           controller,
           response,
           next,
@@ -1725,6 +2146,153 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     }
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/payments/:transactionId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(PaymentController),
+    ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.get),
+
+    async function PaymentController_get(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        transactionId: { in: 'path', name: 'transactionId', required: true, dataType: 'string' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new PaymentController();
+
+        await templateService.apiHandler({
+          methodName: 'get',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/payments/void',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(PaymentController),
+    ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.void),
+
+    async function PaymentController_void(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { transactionId: { dataType: 'double' } },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new PaymentController();
+
+        await templateService.apiHandler({
+          methodName: 'void',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/payments/refund',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(PaymentController),
+    ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.refund),
+
+    async function PaymentController_refund(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            amount: { dataType: 'double' },
+            transactionId: { dataType: 'double' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new PaymentController();
+
+        await templateService.apiHandler({
+          methodName: 'refund',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/payments/post_pay/:orderId',
+    ...fetchMiddlewares<RequestHandler>(PaymentController),
+    ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.postPay),
+
+    async function PaymentController_postPay(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'string' },
+        req: { in: 'body', name: 'req', required: true, dataType: 'any' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new PaymentController();
+
+        await templateService.apiHandler({
+          methodName: 'postPay',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/orders',
     authenticateMiddleware([{ jwt_auth: [] }]),
@@ -2011,7 +2579,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'query',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { colorId: { dataType: 'double' }, productId: { dataType: 'double' } },
+          nestedProperties: { productId: { dataType: 'double' }, colorId: { dataType: 'double' } },
         },
       };
 

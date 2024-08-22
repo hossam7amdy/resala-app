@@ -1,34 +1,22 @@
 import {
   CreateCartSchema,
   CreateSizeSchema,
-  CreateStockSchema,
   CreateWishlistSchema,
   DeleteCartSchema,
   DeleteSizeSchema,
-  DeleteStockSchema,
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  GetPaymentSchema,
-  ListStocksSchema,
   UpdateSizeSchema,
-  UpdateStockSchema,
 } from '@resala/shared';
 import { Router } from 'express';
 
 import { db } from '../datastore/index.js';
-import { AddressService } from '../features/address/address.service.js';
 import { AuthService } from '../features/auth/auth.service.js';
-import { OrderService } from '../features/order/order.service.js';
-import { PaymentController } from '../features/payment/payment.controller.js';
-import { PaymentService } from '../features/payment/payment.service.js';
-import { PaymobService } from '../features/payment/paymob/paymob.service.js';
 import { ShoppingController } from '../features/shopping/shopping.controller.js';
 import { ShoppingService } from '../features/shopping/shopping.service.js';
 import { SizeController } from '../features/size/size.controller.js';
 import { SizeService } from '../features/size/size.service.js';
-import { StockController } from '../features/stock/stock.controller.js';
-import { StockService } from '../features/stock/stock.service.js';
 import { UserService } from '../features/user/user.service.js';
 import {
   AuthMiddleware,
@@ -44,18 +32,12 @@ export const expressApiRoutes = (legRequests: boolean) => {
   // services
   const authService = new AuthService(db);
   const userService = new UserService(db);
-  const addressService = new AddressService(db);
-  const stockService = new StockService(db);
   const sizeService = new SizeService(db);
   const shoppingService = new ShoppingService(db);
-  const paymentService = new PaymentService(db, new PaymobService());
-  const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
   const sizeCtrl = new SizeController(sizeService);
-  const stockCtrl = new StockController(stockService);
   const shoppingCtrl = new ShoppingController(shoppingService);
-  const paymentCtrl = new PaymentController(paymentService, orderService);
 
   const authMiddleware = new AuthMiddleware(authService, userService);
 
@@ -99,23 +81,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.deleteProduct]: [],
 
     // stock endpoints
-    [Endpoints.getStock]: [validateMiddleware(DeleteStockSchema), stockCtrl.getStock],
-    [Endpoints.listStocks]: [validateMiddleware(ListStocksSchema), stockCtrl.listStocks],
-    [Endpoints.addStock]: [
-      validateMiddleware(CreateStockSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      stockCtrl.createStock,
-    ],
-    [Endpoints.updateStock]: [
-      validateMiddleware(UpdateStockSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      stockCtrl.updateStock,
-    ],
-    [Endpoints.deleteStock]: [
-      validateMiddleware(DeleteStockSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      stockCtrl.deleteStock,
-    ],
+    [Endpoints.getStock]: [],
+    [Endpoints.listStocks]: [],
+    [Endpoints.addStock]: [],
+    [Endpoints.updateStock]: [],
+    [Endpoints.deleteStock]: [],
 
     // color endpoints
     [Endpoints.getColor]: [],
@@ -177,20 +147,10 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.updateOrderStatus]: [],
 
     // payment endpoints
-    [Endpoints.postPayCallback]: [paymentCtrl.postPayCallback],
-    [Endpoints.getPayment]: [
-      validateMiddleware(GetPaymentSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      paymentCtrl.getPayment,
-    ],
-    [Endpoints.voidPayment]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      paymentCtrl.voidPayment,
-    ],
-    [Endpoints.refundPayment]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      paymentCtrl.refundPayment,
-    ],
+    [Endpoints.postPayCallback]: [],
+    [Endpoints.getPayment]: [],
+    [Endpoints.voidPayment]: [],
+    [Endpoints.refundPayment]: [],
 
     // review endpoints
     [Endpoints.createReview]: [],
