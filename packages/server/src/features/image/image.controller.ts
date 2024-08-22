@@ -1,55 +1,96 @@
-import type {
-  CreateImage,
-  DeleteImage,
-  IImageController,
-  ListImages,
-  UpdateImage,
-} from './image.controller.interface.js';
-import type { ImageService } from './image.service.js';
+import {
+  type CreateImageResponse,
+  CreateImageSchema,
+  type ListImagesRequest,
+  type ListImagesResponse,
+  UpdateImageRequest,
+  type UpdateImageResponse,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  FormField,
+  Get,
+  Middlewares,
+  Patch,
+  Path,
+  Post,
+  Queries,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+  UploadedFiles,
+} from 'tsoa/dist/index.js';
 
-export class ImageController implements IImageController {
-  constructor(private readonly imageService: ImageService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { FileService } from '../filestorage/file.service.js';
+import { S3FileStorage } from '../filestorage/s3.filestorage.js';
+import { ImageService } from './image.service.js';
 
-  createImages: CreateImage = async (req, res, next) => {
-    try {
-      await this.imageService.createMany({
-        ...req.body,
-        files: req.files as Express.Multer.File[],
-      });
+@Tags('Image')
+@Route('api/v1/images')
+export class ImageController extends Controller {
+  private readonly imageService: ImageService;
 
-      return res.status(201).json({ success: true });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
 
-  listImages: ListImages = async (req, res, next) => {
-    try {
-      const images = await this.imageService.list(req.query);
+    const fileService = new FileService(new S3FileStorage());
+    this.imageService = new ImageService(db, fileService);
+  }
 
-      return res.status(200).json({ success: true, data: images });
-    } catch (error) {
-      next(error);
-    }
-  };
+  @Post()
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  @SuccessResponse('201', 'Image created successfully')
+  public async create(
+    @FormField() colorId: number | string,
+    @FormField() productId: number | string,
+    @UploadedFiles() images: Express.Multer.File[]
+  ): Promise<CreateImageResponse> {
+    const { body } = await CreateImageSchema.parseAsync({
+      body: {
+        colorId,
+        productId,
+      },
+    });
 
-  updateImage: UpdateImage = async (req, res, next) => {
-    try {
-      const image = await this.imageService.updatePrimary(req.params.imageId);
+    await this.imageService.createMany({
+      ...body,
+      files: images,
+    });
 
-      return res.status(200).json({ success: true, data: image });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true };
+  }
 
-  deleteImage: DeleteImage = async (req, res, next) => {
-    try {
-      const image = await this.imageService.delete(req.params.imageId);
+  @Get()
+  public async list(@Queries() query: ListImagesRequest['query']): Promise<ListImagesResponse> {
+    const images = await this.imageService.list(query);
 
-      return res.status(200).json({ success: true, data: image });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: images };
+  }
+
+  @Patch('{imageId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async update(
+    @Path() imageId: number | string,
+    @Body() _: UpdateImageRequest['body']
+  ): Promise<UpdateImageResponse> {
+    const image = await this.imageService.updatePrimary(+imageId);
+
+    return { success: true, data: image };
+  }
+
+  @Delete('{imageId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async delete(@Path() imageId: number | string): Promise<UpdateImageResponse> {
+    const image = await this.imageService.delete(+imageId);
+
+    return { success: true, data: image };
+  }
 }

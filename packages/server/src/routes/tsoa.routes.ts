@@ -14,6 +14,12 @@ import { AuthController } from './../features/auth/auth.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CategoryController } from './../features/category/category.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ColorController } from './../features/color/color.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ImageController } from './../features/image/image.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrderController } from './../features/order/order.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProductController } from './../features/product/product.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ReviewController } from './../features/review/review.controller.js';
@@ -415,6 +421,504 @@ const models: TsoaRoute.Models = {
     type: { ref: 'CreateProductResponse', validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateOrderResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: { paymentUrl: { dataType: 'string', required: true } },
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  OrderStatusType: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'enum',
+      enums: ['PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED'],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  PaymentMethodType: {
+    dataType: 'refAlias',
+    type: { dataType: 'enum', enums: ['CARD', 'CASH'], validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  PaymentStatusType: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'enum',
+      enums: ['UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED'],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Order: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        note: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
+        paymentStatus: { ref: 'PaymentStatusType', required: true },
+        paymentMethod: { ref: 'PaymentMethodType', required: true },
+        orderStatus: { ref: 'OrderStatusType', required: true },
+        total: {
+          dataType: 'union',
+          subSchemas: [
+            { dataType: 'double' },
+            { ref: 'Decimal' },
+            { dataType: 'string' },
+            { dataType: 'any' },
+          ],
+          required: true,
+        },
+        discount: {
+          dataType: 'union',
+          subSchemas: [
+            { dataType: 'double' },
+            { ref: 'Decimal' },
+            { dataType: 'string' },
+            { dataType: 'any' },
+          ],
+          required: true,
+        },
+        subtotal: {
+          dataType: 'union',
+          subSchemas: [
+            { dataType: 'double' },
+            { ref: 'Decimal' },
+            { dataType: 'string' },
+            { dataType: 'any' },
+          ],
+          required: true,
+        },
+        userId: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
+          required: true,
+        },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  OrderItem: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        quantity: { dataType: 'double', required: true },
+        imageUrl: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'string' }, { dataType: 'enum', enums: [null] }],
+          required: true,
+        },
+        price: {
+          dataType: 'union',
+          subSchemas: [
+            { dataType: 'double' },
+            { ref: 'Decimal' },
+            { dataType: 'string' },
+            { dataType: 'any' },
+          ],
+          required: true,
+        },
+        size: { dataType: 'string', required: true },
+        color: { dataType: 'string', required: true },
+        name: { dataType: 'string', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Payment: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        transactionOrderId: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'enum', enums: [null] }],
+          required: true,
+        },
+        transactionId: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'enum', enums: [null] }],
+          required: true,
+        },
+        paymentLink: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'string' }, { dataType: 'enum', enums: [null] }],
+          required: true,
+        },
+        orderId: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__': {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        id: { dataType: 'double', required: true },
+        cost: { dataType: 'any', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        updatedAt: { dataType: 'datetime', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  'Omit_Shipping.addressId-or-orderId_': {
+    dataType: 'refAlias',
+    type: { ref: 'Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Address: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        lastName: { dataType: 'string', required: true },
+        firstName: { dataType: 'string', required: true },
+        phone: { dataType: 'string', required: true },
+        address: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
+        floor: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
+          required: true,
+        },
+        building: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
+        street: { dataType: 'string', required: true },
+        city: { dataType: 'string', required: true },
+        state: { dataType: 'string', required: true },
+        country: { dataType: 'string', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetOrderResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'intersection',
+              subSchemas: [
+                { ref: 'Order' },
+                {
+                  dataType: 'nestedObjectLiteral',
+                  nestedProperties: {
+                    shippingDetails: {
+                      dataType: 'union',
+                      subSchemas: [
+                        {
+                          dataType: 'intersection',
+                          subSchemas: [
+                            { ref: 'Omit_Shipping.addressId-or-orderId_' },
+                            {
+                              dataType: 'nestedObjectLiteral',
+                              nestedProperties: { address: { ref: 'Address', required: true } },
+                            },
+                          ],
+                        },
+                        { dataType: 'enum', enums: [null] },
+                      ],
+                      required: true,
+                    },
+                    paymentDetails: {
+                      dataType: 'union',
+                      subSchemas: [{ ref: 'Payment' }, { dataType: 'enum', enums: [null] }],
+                      required: true,
+                    },
+                    orderItems: {
+                      dataType: 'array',
+                      array: { dataType: 'refAlias', ref: 'OrderItem' },
+                      required: true,
+                    },
+                    user: {
+                      dataType: 'union',
+                      subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
+                      required: true,
+                    },
+                  },
+                },
+              ],
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListOrdersResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                orders: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'intersection',
+                    subSchemas: [
+                      { ref: 'Order' },
+                      {
+                        dataType: 'nestedObjectLiteral',
+                        nestedProperties: {
+                          shippingDetails: {
+                            dataType: 'union',
+                            subSchemas: [
+                              {
+                                dataType: 'intersection',
+                                subSchemas: [
+                                  { ref: 'Omit_Shipping.addressId-or-orderId_' },
+                                  {
+                                    dataType: 'nestedObjectLiteral',
+                                    nestedProperties: {
+                                      address: { ref: 'Address', required: true },
+                                    },
+                                  },
+                                ],
+                              },
+                              { dataType: 'enum', enums: [null] },
+                            ],
+                            required: true,
+                          },
+                          paymentDetails: {
+                            dataType: 'union',
+                            subSchemas: [{ ref: 'Payment' }, { dataType: 'enum', enums: [null] }],
+                            required: true,
+                          },
+                          orderItems: {
+                            dataType: 'array',
+                            array: { dataType: 'refAlias', ref: 'OrderItem' },
+                            required: true,
+                          },
+                          user: {
+                            dataType: 'union',
+                            subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
+                            required: true,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                  required: true,
+                },
+                pagination: { ref: 'Pagination', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  DeleteOrderResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Order', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  UpdateOrderResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Order', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateImageResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'DefaultResponseBody', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Image: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        createdAt: { dataType: 'datetime', required: true },
+        imageUrl: { dataType: 'string', required: true },
+        imageKey: { dataType: 'string', required: true },
+        isPrimary: { dataType: 'boolean', required: true },
+        productId: { dataType: 'double', required: true },
+        colorId: { dataType: 'double', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListImagesResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'array',
+              array: { dataType: 'refAlias', ref: 'Image' },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  UpdateImageResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Image', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Color: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        enName: { dataType: 'string', required: true },
+        arName: { dataType: 'string', required: true },
+        code: { dataType: 'string', required: true },
+        id: { dataType: 'double', required: true },
+      },
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetColorResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Color', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListColorsResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'array',
+              array: { dataType: 'refAlias', ref: 'Color' },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateColorResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'GetColorResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  UpdateColorResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'GetColorResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  DeleteColorResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'GetColorResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   GetCategoryResponse: {
     dataType: 'refAlias',
     type: {
@@ -559,41 +1063,6 @@ const models: TsoaRoute.Models = {
   ResendVerificationEmailResponse: {
     dataType: 'refAlias',
     type: { ref: 'DefaultResponseBody', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Address: {
-    dataType: 'refAlias',
-    type: {
-      dataType: 'nestedObjectLiteral',
-      nestedProperties: {
-        updatedAt: { dataType: 'datetime', required: true },
-        createdAt: { dataType: 'datetime', required: true },
-        lastName: { dataType: 'string', required: true },
-        firstName: { dataType: 'string', required: true },
-        phone: { dataType: 'string', required: true },
-        address: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
-          required: true,
-        },
-        floor: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
-          required: true,
-        },
-        building: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
-          required: true,
-        },
-        street: { dataType: 'string', required: true },
-        city: { dataType: 'string', required: true },
-        state: { dataType: 'string', required: true },
-        country: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
-      },
-      validators: {},
-    },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   ListAddressResponse: {
@@ -1271,6 +1740,603 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
         validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
         const controller = new ProductController();
+
+        await templateService.apiHandler({
+          methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/orders',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(OrderController),
+    ...fetchMiddlewares<RequestHandler>(OrderController.prototype.create),
+
+    async function OrderController_create(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            addressId: { dataType: 'double' },
+            note: { dataType: 'string' },
+            paymentMethod: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['CARD'] },
+                { dataType: 'enum', enums: ['CASH'] },
+              ],
+            },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new OrderController();
+
+        await templateService.apiHandler({
+          methodName: 'create',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: 201,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/orders/:orderId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(OrderController),
+    ...fetchMiddlewares<RequestHandler>(OrderController.prototype.get),
+
+    async function OrderController_get(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new OrderController();
+
+        await templateService.apiHandler({
+          methodName: 'get',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/orders',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(OrderController),
+    ...fetchMiddlewares<RequestHandler>(OrderController.prototype.list),
+
+    async function OrderController_list(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        query: {
+          in: 'queries',
+          name: 'query',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            userId: { dataType: 'double' },
+            limit: { dataType: 'double' },
+            page: { dataType: 'double' },
+            query: { dataType: 'string' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new OrderController();
+
+        await templateService.apiHandler({
+          methodName: 'list',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.delete(
+    '/api/v1/orders/:orderId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(OrderController),
+    ...fetchMiddlewares<RequestHandler>(OrderController.prototype.delete),
+
+    async function OrderController_delete(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+        _: {
+          in: 'queries',
+          name: '_',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { userId: { dataType: 'double' } },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new OrderController();
+
+        await templateService.apiHandler({
+          methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.patch(
+    '/api/v1/orders/:orderId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(OrderController),
+    ...fetchMiddlewares<RequestHandler>(OrderController.prototype.updateStatus),
+
+    async function OrderController_updateStatus(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            paymentStatus: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['UNPAID'] },
+                { dataType: 'enum', enums: ['PAID'] },
+                { dataType: 'enum', enums: ['FAILED'] },
+                { dataType: 'enum', enums: ['VOIDED'] },
+                { dataType: 'enum', enums: ['REFUNDED'] },
+              ],
+            },
+            orderStatus: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['PENDING'] },
+                { dataType: 'enum', enums: ['FULFILLED'] },
+                { dataType: 'enum', enums: ['SHIPPED'] },
+                { dataType: 'enum', enums: ['DELIVERED'] },
+                { dataType: 'enum', enums: ['CANCELLED'] },
+              ],
+            },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new OrderController();
+
+        await templateService.apiHandler({
+          methodName: 'updateStatus',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/images',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    upload.fields([{ name: 'images' }]),
+    ...fetchMiddlewares<RequestHandler>(ImageController),
+    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.create),
+
+    async function ImageController_create(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        colorId: { in: 'formData', name: 'colorId', required: true, dataType: 'string' },
+        productId: { in: 'formData', name: 'productId', required: true, dataType: 'string' },
+        images: {
+          in: 'formData',
+          name: 'images',
+          required: true,
+          dataType: 'array',
+          array: { dataType: 'file' },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ImageController();
+
+        await templateService.apiHandler({
+          methodName: 'create',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: 201,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/images',
+    ...fetchMiddlewares<RequestHandler>(ImageController),
+    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.list),
+
+    async function ImageController_list(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        query: {
+          in: 'queries',
+          name: 'query',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { colorId: { dataType: 'double' }, productId: { dataType: 'double' } },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ImageController();
+
+        await templateService.apiHandler({
+          methodName: 'list',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.patch(
+    '/api/v1/images/:imageId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ImageController),
+    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.update),
+
+    async function ImageController_update(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        imageId: {
+          in: 'path',
+          name: 'imageId',
+          required: true,
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
+        },
+        _: {
+          in: 'body',
+          name: '_',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { isPrimary: { dataType: 'boolean' } },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ImageController();
+
+        await templateService.apiHandler({
+          methodName: 'update',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.delete(
+    '/api/v1/images/:imageId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ImageController),
+    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.delete),
+
+    async function ImageController_delete(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        imageId: {
+          in: 'path',
+          name: 'imageId',
+          required: true,
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ImageController();
+
+        await templateService.apiHandler({
+          methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/colors/:colorId',
+    ...fetchMiddlewares<RequestHandler>(ColorController),
+    ...fetchMiddlewares<RequestHandler>(ColorController.prototype.get),
+
+    async function ColorController_get(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        colorId: {
+          in: 'path',
+          name: 'colorId',
+          required: true,
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ColorController();
+
+        await templateService.apiHandler({
+          methodName: 'get',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/colors',
+    ...fetchMiddlewares<RequestHandler>(ColorController),
+    ...fetchMiddlewares<RequestHandler>(ColorController.prototype.lists),
+
+    async function ColorController_lists(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ColorController();
+
+        await templateService.apiHandler({
+          methodName: 'lists',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/colors',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ColorController),
+    ...fetchMiddlewares<RequestHandler>(ColorController.prototype.create),
+
+    async function ColorController_create(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            enName: { dataType: 'string' },
+            arName: { dataType: 'string' },
+            code: { dataType: 'string' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ColorController();
+
+        await templateService.apiHandler({
+          methodName: 'create',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: 201,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.put(
+    '/api/v1/colors/:colorId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ColorController),
+    ...fetchMiddlewares<RequestHandler>(ColorController.prototype.update),
+
+    async function ColorController_update(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        colorId: {
+          in: 'path',
+          name: 'colorId',
+          required: true,
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
+        },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            enName: { dataType: 'string' },
+            arName: { dataType: 'string' },
+            code: { dataType: 'string' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ColorController();
+
+        await templateService.apiHandler({
+          methodName: 'update',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.delete(
+    '/api/v1/colors/:colorId',
+    authenticateMiddleware([{ jwt_auth: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ColorController),
+    ...fetchMiddlewares<RequestHandler>(ColorController.prototype.delete),
+
+    async function ColorController_delete(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        colorId: {
+          in: 'path',
+          name: 'colorId',
+          required: true,
+          dataType: 'union',
+          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ColorController();
 
         await templateService.apiHandler({
           methodName: 'delete',

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, PaymentStatus } from '../enums/index.js';
 import { validationPatterns } from '../patterns/index.js';
 const UserSchema = z.object({
     email: z.string().min(5).max(128).email(),
@@ -291,7 +290,7 @@ export const DeleteWishlistSchema = z.object({
 // Order Schemas
 export const CreateOrderSchema = z.object({
     body: z.object({
-        paymentMethod: z.enum([PaymentMethod.CARD, PaymentMethod.CASH]),
+        paymentMethod: z.enum(['CARD', 'CASH']),
         note: z.string().max(500).optional(),
         addressId: z.coerce.number().positive(),
     }),
@@ -311,20 +310,8 @@ export const UpdateOrderStatusSchema = z.object({
         orderId: z.coerce.number().positive(),
     }),
     body: z.object({
-        orderStatus: z.enum([
-            OrderStatus.PENDING,
-            OrderStatus.FULFILLED,
-            OrderStatus.SHIPPED,
-            OrderStatus.DELIVERED,
-            OrderStatus.CANCELLED,
-        ]),
-        paymentStatus: z.enum([
-            PaymentStatus.UNPAID,
-            PaymentStatus.PAID,
-            PaymentStatus.FAILED,
-            PaymentStatus.VOIDED,
-            PaymentStatus.REFUNDED,
-        ]),
+        orderStatus: z.enum(['PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+        paymentStatus: z.enum(['UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED']),
     }),
 });
 export const DeleteOrderSchema = z.object({
