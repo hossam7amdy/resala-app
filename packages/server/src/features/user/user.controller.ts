@@ -44,8 +44,8 @@ export class UserController extends Controller {
 
   @Get('{userId}')
   @Middlewares([validateMiddleware(GetUserSchema)])
-  public async getUser(@Path() userId: number): Promise<GetUserResponse> {
-    const user = await this.userService.find(userId);
+  public async getUser(@Path() userId: string): Promise<GetUserResponse> {
+    const user = await this.userService.find(+userId);
 
     return { success: true, data: user };
   }
@@ -70,8 +70,8 @@ export class UserController extends Controller {
   @Delete('{userId}')
   @Middlewares([validateMiddleware(DeleteUserSchema), authorizeRole(['ADMIN'])])
   @SuccessResponse('200', 'User deleted successfully')
-  public async deleteUser(@Path() userId: number): Promise<DeleteUserResponse> {
-    await this.userService.delete(userId);
+  public async deleteUser(@Path() userId: string): Promise<DeleteUserResponse> {
+    await this.userService.delete(+userId);
 
     return { success: true };
   }
@@ -79,10 +79,10 @@ export class UserController extends Controller {
   @Put('{userId}')
   @Middlewares([validateMiddleware(UpdateUserSchema)])
   public async updateUser(
-    @Path() userId: number,
+    @Path() userId: string,
     @Body() body: UpdateUserRequest['body']
   ): Promise<UpdateUserResponse> {
-    const user = await this.userService.update(userId, body);
+    const user = await this.userService.update(+userId, body);
 
     return { success: true, data: user };
   }

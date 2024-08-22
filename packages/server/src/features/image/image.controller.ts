@@ -77,7 +77,7 @@ export class ImageController extends Controller {
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
-    @Path() imageId: number | string,
+    @Path() imageId: string,
     @Body() _: UpdateImageRequest['body']
   ): Promise<UpdateImageResponse> {
     const image = await this.imageService.updatePrimary(+imageId);
@@ -88,7 +88,7 @@ export class ImageController extends Controller {
   @Delete('{imageId}')
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
-  public async delete(@Path() imageId: number | string): Promise<UpdateImageResponse> {
+  public async delete(@Path() imageId: string): Promise<UpdateImageResponse> {
     const image = await this.imageService.delete(+imageId);
 
     return { success: true, data: image };

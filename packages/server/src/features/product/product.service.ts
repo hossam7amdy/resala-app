@@ -74,13 +74,13 @@ export class ProductService {
       throw new ConflictError('Product already exists');
     }
 
+    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
+
     const { key, url } = await this.fileService.uploadFile(file);
 
-    const { id } = await this.db.product.create({
+    return await this.db.product.create({
       data: { ...payload, categoryId, enName, arName, imageKey: key, imageUrl: url },
     });
-
-    return await this.update(id, { imageKey: key, imageUrl: url } as any);
   }
 
   async update(

@@ -1140,7 +1140,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function UserController_getUser(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        userId: { in: 'path', name: 'userId', required: true, dataType: 'double' },
+        userId: { in: 'path', name: 'userId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1216,7 +1216,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function UserController_deleteUser(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        userId: { in: 'path', name: 'userId', required: true, dataType: 'double' },
+        userId: { in: 'path', name: 'userId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1249,7 +1249,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function UserController_updateUser(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        userId: { in: 'path', name: 'userId', required: true, dataType: 'double' },
+        userId: { in: 'path', name: 'userId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -1354,13 +1354,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        reviewId: {
-          in: 'path',
-          name: 'reviewId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        reviewId: { in: 'path', name: 'reviewId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -1409,13 +1403,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        reviewId: {
-          in: 'path',
-          name: 'reviewId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        reviewId: { in: 'path', name: 'reviewId', required: true, dataType: 'string' },
         query: {
           in: 'queries',
           name: 'query',
@@ -1455,13 +1443,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ReviewController_getReview(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        reviewId: {
-          in: 'path',
-          name: 'reviewId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        reviewId: { in: 'path', name: 'reviewId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1541,13 +1523,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ProductController_get(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        productId: {
-          in: 'path',
-          name: 'productId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        productId: { in: 'path', name: 'productId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1674,7 +1650,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ProductController_update(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        productId: { in: 'path', name: 'productId', required: true, dataType: 'double' },
+        productId: { in: 'path', name: 'productId', required: true, dataType: 'string' },
         categoryId: { in: 'formData', name: 'categoryId', required: true, dataType: 'string' },
         arName: { in: 'formData', name: 'arName', required: true, dataType: 'string' },
         enName: { in: 'formData', name: 'enName', required: true, dataType: 'string' },
@@ -1724,13 +1700,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ProductController_delete(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        productId: {
-          in: 'path',
-          name: 'productId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        productId: { in: 'path', name: 'productId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1813,7 +1783,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function OrderController_get(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1890,7 +1860,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function OrderController_delete(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'string' },
         _: {
           in: 'queries',
           name: '_',
@@ -1934,7 +1904,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'double' },
+        orderId: { in: 'path', name: 'orderId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -2075,13 +2045,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ImageController_update(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        imageId: {
-          in: 'path',
-          name: 'imageId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        imageId: { in: 'path', name: 'imageId', required: true, dataType: 'string' },
         _: {
           in: 'body',
           name: '_',
@@ -2121,13 +2085,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ImageController_delete(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        imageId: {
-          in: 'path',
-          name: 'imageId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        imageId: { in: 'path', name: 'imageId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2159,13 +2117,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ColorController_get(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        colorId: {
-          in: 'path',
-          name: 'colorId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        colorId: { in: 'path', name: 'colorId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2271,13 +2223,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ColorController_update(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        colorId: {
-          in: 'path',
-          name: 'colorId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        colorId: { in: 'path', name: 'colorId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -2321,13 +2267,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ColorController_delete(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        colorId: {
-          in: 'path',
-          name: 'colorId',
-          required: true,
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'string' }],
-        },
+        colorId: { in: 'path', name: 'colorId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2359,7 +2299,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function CategoryController_get(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'double' },
+        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2461,7 +2401,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function CategoryController_update(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'double' },
+        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -2501,7 +2441,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function CategoryController_delete(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'double' },
+        categoryId: { in: 'path', name: 'categoryId', required: true, dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2915,7 +2855,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        addressId: { in: 'path', name: 'addressId', required: true, dataType: 'double' },
+        addressId: { in: 'path', name: 'addressId', required: true, dataType: 'string' },
         body: {
           in: 'body',
           name: 'body',
@@ -2971,13 +2911,13 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        addressId: { in: 'path', name: 'addressId', required: true, dataType: 'double' },
+        addressId: { in: 'path', name: 'addressId', required: true, dataType: 'string' },
         _: {
           in: 'queries',
           name: '_',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { userId: { dataType: 'double', required: true } },
+          nestedProperties: { userId: { dataType: 'string', required: true } },
         },
       };
 

@@ -27,8 +27,7 @@ paths:
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
     delete:
       operationId: DeleteUser
       responses:
@@ -47,8 +46,7 @@ paths:
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
     put:
       operationId: UpdateUser
       responses:
@@ -67,8 +65,7 @@ paths:
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -210,7 +207,8 @@ paths:
         - in: path
           name: reviewId
           required: true
-          schema: {}
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -246,7 +244,8 @@ paths:
         - in: path
           name: reviewId
           required: true
-          schema: {}
+          schema:
+            type: string
         - in: query
           name: userId
           required: false
@@ -270,7 +269,8 @@ paths:
         - in: path
           name: reviewId
           required: true
-          schema: {}
+          schema:
+            type: string
   /api/v1/products/{productId}:
     get:
       operationId: Get
@@ -288,7 +288,8 @@ paths:
         - in: path
           name: productId
           required: true
-          schema: {}
+          schema:
+            type: string
     put:
       operationId: Update
       responses:
@@ -308,8 +309,7 @@ paths:
           name: productId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -358,7 +358,8 @@ paths:
         - in: path
           name: productId
           required: true
-          schema: {}
+          schema:
+            type: string
   /api/v1/products:
     get:
       operationId: List
@@ -532,8 +533,7 @@ paths:
           name: orderId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
     delete:
       operationId: Delete
       responses:
@@ -554,8 +554,7 @@ paths:
           name: orderId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
         - in: query
           name: userId
           required: false
@@ -581,8 +580,7 @@ paths:
           name: orderId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -684,7 +682,8 @@ paths:
         - in: path
           name: imageId
           required: true
-          schema: {}
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -711,7 +710,8 @@ paths:
         - in: path
           name: imageId
           required: true
-          schema: {}
+          schema:
+            type: string
   /api/v1/colors/{colorId}:
     get:
       operationId: Get
@@ -729,7 +729,8 @@ paths:
         - in: path
           name: colorId
           required: true
-          schema: {}
+          schema:
+            type: string
     put:
       operationId: Update
       responses:
@@ -747,7 +748,8 @@ paths:
         - in: path
           name: colorId
           required: true
-          schema: {}
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -778,7 +780,8 @@ paths:
         - in: path
           name: colorId
           required: true
-          schema: {}
+          schema:
+            type: string
   /api/v1/colors:
     get:
       operationId: Lists
@@ -838,8 +841,7 @@ paths:
           name: categoryId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
     put:
       operationId: Update
       responses:
@@ -859,8 +861,7 @@ paths:
           name: categoryId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -891,8 +892,7 @@ paths:
           name: categoryId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
   /api/v1/categories:
     get:
       operationId: List
@@ -1188,8 +1188,7 @@ paths:
           name: addressId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
       requestBody:
         required: true
         content:
@@ -1239,14 +1238,12 @@ paths:
           name: addressId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
         - in: query
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            type: string
 components:
   examples: {}
   headers: {}

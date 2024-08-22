@@ -40,7 +40,7 @@ export class ColorController extends Controller {
   }
 
   @Get('{colorId}')
-  public async get(@Path() colorId: number | string): Promise<GetColorResponse> {
+  public async get(@Path() colorId: string): Promise<GetColorResponse> {
     const color = await this.colorService.find(+colorId);
 
     return { success: true, data: color };
@@ -67,7 +67,7 @@ export class ColorController extends Controller {
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateColorSchema)])
   public async update(
-    @Path() colorId: number | string,
+    @Path() colorId: string,
     @Body() body: UpdateColorRequest['body']
   ): Promise<UpdateColorResponse> {
     const color = await this.colorService.update(+colorId, body);
@@ -78,7 +78,7 @@ export class ColorController extends Controller {
   @Delete('{colorId}')
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
-  public async delete(@Path() colorId: number | string): Promise<DeleteColorResponse> {
+  public async delete(@Path() colorId: string): Promise<DeleteColorResponse> {
     const color = await this.colorService.delete(+colorId);
 
     return { success: true, data: color };
