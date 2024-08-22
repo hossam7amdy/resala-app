@@ -64,10 +64,7 @@ export class PaymentService {
     }
   }
 
-  async postPayCallback(
-    orderId: number,
-    postPayObj: PostPayCallbackObject
-  ): Promise<PaymentStatusType | undefined> {
+  async postPayCallback(orderId: number, postPayObj: PostPayCallbackObject): Promise<void> {
     this.paymobService.verify(postPayObj).catch(console.error);
 
     const transaction = postPayObj.transaction;
@@ -80,7 +77,12 @@ export class PaymentService {
       },
     });
 
-    return this._status(transaction);
+    await this.db.order.update({
+      data: {
+        paymentStatus: this._status(transaction),
+      },
+      where: { id: orderId },
+    });
   }
 
   _status(transaction: Transaction): PaymentStatusType | undefined {
