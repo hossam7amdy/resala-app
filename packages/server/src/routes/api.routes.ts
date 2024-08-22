@@ -1,28 +1,16 @@
 import {
   CreateCartSchema,
-  CreateColorSchema,
-  CreateImageSchema,
-  CreateOrderSchema,
   CreateSizeSchema,
   CreateStockSchema,
   CreateWishlistSchema,
   DeleteCartSchema,
-  DeleteColorSchema,
-  DeleteImageSchema,
-  DeleteOrderSchema,
   DeleteSizeSchema,
   DeleteStockSchema,
   DeleteWishlistSchema,
   ENDPOINT_CONFIGS,
   Endpoints,
-  GetOrderSchema,
   GetPaymentSchema,
-  ListImagesSchema,
-  ListOrdersSchema,
   ListStocksSchema,
-  UpdateColorSchema,
-  UpdateImageSchema,
-  UpdateOrderStatusSchema,
   UpdateSizeSchema,
   UpdateStockSchema,
 } from '@resala/shared';
@@ -31,15 +19,6 @@ import { Router } from 'express';
 import { db } from '../datastore/index.js';
 import { AddressService } from '../features/address/address.service.js';
 import { AuthService } from '../features/auth/auth.service.js';
-import { ColorController } from '../features/color/color.controller.js';
-import { ColorService } from '../features/color/color.service.js';
-import { FileService } from '../features/filestorage/file.service.js';
-import { S3FileStorage } from '../features/filestorage/s3.filestorage.js';
-import { ImageController } from '../features/image/image.controller.js';
-import { ImageService } from '../features/image/image.service.js';
-import { EmailNotification } from '../features/notification/email.notification.js';
-import { NotificationService } from '../features/notification/notification.service.js';
-import { OrderController } from '../features/order/order.controller.js';
 import { OrderService } from '../features/order/order.service.js';
 import { PaymentController } from '../features/payment/payment.controller.js';
 import { PaymentService } from '../features/payment/payment.service.js';
@@ -55,7 +34,6 @@ import {
   AuthMiddleware,
   asyncHandler,
   loggerMiddleware,
-  uploadMiddleware,
   validateMiddleware,
 } from '../middlewares/index.js';
 
@@ -64,27 +42,20 @@ export const expressApiRoutes = (legRequests: boolean) => {
   const router = Router();
 
   // services
-  const fileService = new FileService(new S3FileStorage());
   const authService = new AuthService(db);
   const userService = new UserService(db);
   const addressService = new AddressService(db);
   const stockService = new StockService(db);
-  const imageService = new ImageService(db, fileService);
-  const colorService = new ColorService(db);
   const sizeService = new SizeService(db);
-  const notificationService = new NotificationService(new EmailNotification());
   const shoppingService = new ShoppingService(db);
   const paymentService = new PaymentService(db, new PaymobService());
   const orderService = new OrderService(db, addressService, stockService, shoppingService);
 
   // controllers
-  const colorCtrl = new ColorController(colorService);
   const sizeCtrl = new SizeController(sizeService);
   const stockCtrl = new StockController(stockService);
-  const imageCtrl = new ImageController(imageService);
   const shoppingCtrl = new ShoppingController(shoppingService);
   const paymentCtrl = new PaymentController(paymentService, orderService);
-  const orderCtrl = new OrderController(orderService, paymentService, notificationService);
 
   const authMiddleware = new AuthMiddleware(authService, userService);
 
@@ -147,23 +118,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     ],
 
     // color endpoints
-    [Endpoints.getColor]: [validateMiddleware(DeleteColorSchema), colorCtrl.getColor],
-    [Endpoints.listColors]: [colorCtrl.listColors],
-    [Endpoints.createColor]: [
-      validateMiddleware(CreateColorSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      colorCtrl.createColor,
-    ],
-    [Endpoints.updateColor]: [
-      validateMiddleware(UpdateColorSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      colorCtrl.updateColor,
-    ],
-    [Endpoints.deleteColor]: [
-      validateMiddleware(DeleteColorSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      colorCtrl.deleteColor,
-    ],
+    [Endpoints.getColor]: [],
+    [Endpoints.listColors]: [],
+    [Endpoints.createColor]: [],
+    [Endpoints.updateColor]: [],
+    [Endpoints.deleteColor]: [],
 
     // size endpoints
     [Endpoints.getSize]: [validateMiddleware(DeleteSizeSchema), sizeCtrl.getSize],
@@ -185,23 +144,10 @@ export const expressApiRoutes = (legRequests: boolean) => {
     ],
 
     // image endpoints
-    [Endpoints.findImages]: [validateMiddleware(ListImagesSchema), imageCtrl.listImages],
-    [Endpoints.addImages]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      uploadMiddleware.array('images', 5),
-      validateMiddleware(CreateImageSchema),
-      imageCtrl.createImages,
-    ],
-    [Endpoints.updateImage]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      validateMiddleware(UpdateImageSchema),
-      imageCtrl.updateImage,
-    ],
-    [Endpoints.deleteImage]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      validateMiddleware(DeleteImageSchema),
-      imageCtrl.deleteImage,
-    ],
+    [Endpoints.findImages]: [],
+    [Endpoints.addImages]: [],
+    [Endpoints.updateImage]: [],
+    [Endpoints.deleteImage]: [],
 
     // shopping endpoints
     [Endpoints.addItemToCart]: [validateMiddleware(CreateCartSchema), shoppingCtrl.addItemToCart],
@@ -224,27 +170,11 @@ export const expressApiRoutes = (legRequests: boolean) => {
     [Endpoints.removeUserWishlist]: [shoppingCtrl.removeUserWishlist],
 
     // order endpoints
-    [Endpoints.createOrder]: [validateMiddleware(CreateOrderSchema), orderCtrl.createOrder],
-    [Endpoints.getOrder]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(GetOrderSchema),
-      orderCtrl.getOrder,
-    ],
-    [Endpoints.listOrders]: [
-      authMiddleware.authorizeAccess,
-      validateMiddleware(ListOrdersSchema),
-      orderCtrl.listOrders,
-    ],
-    [Endpoints.deleteOrder]: [
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      validateMiddleware(DeleteOrderSchema),
-      orderCtrl.deleteOrder,
-    ],
-    [Endpoints.updateOrderStatus]: [
-      validateMiddleware(UpdateOrderStatusSchema),
-      authMiddleware.authorizeRole(['ADMIN', 'MODERATOR']),
-      orderCtrl.updateOrderStatus,
-    ],
+    [Endpoints.createOrder]: [],
+    [Endpoints.getOrder]: [],
+    [Endpoints.listOrders]: [],
+    [Endpoints.deleteOrder]: [],
+    [Endpoints.updateOrderStatus]: [],
 
     // payment endpoints
     [Endpoints.postPayCallback]: [paymentCtrl.postPayCallback],
