@@ -3,7 +3,6 @@ import type {
   CreateOrderResponse,
   DeleteOrderRequest,
   DeleteOrderResponse,
-  GetOrderRequest,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
@@ -103,10 +102,8 @@ export class OrderController extends Controller {
   /** Get order details **Only admins can access this endpoint** */
   @Get('{orderId}')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(GetOrderSchema)])
-  public async get(
-    @Path() orderId: GetOrderRequest['params']['orderId']
-  ): Promise<GetOrderResponse> {
-    const order = await this.orderService.find(orderId);
+  public async get(@Path() orderId: string): Promise<GetOrderResponse> {
+    const order = await this.orderService.find(+orderId);
 
     return { success: true, data: order };
   }
@@ -127,11 +124,11 @@ export class OrderController extends Controller {
   @Delete('{orderId}')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(DeleteOrderSchema)])
   public async delete(
-    @Path() orderId: DeleteOrderRequest['params']['orderId'],
+    @Path() orderId: string,
     @Queries() _: DeleteOrderRequest['query']
   ): Promise<DeleteOrderResponse> {
     // cancel order
-    const order = await this.orderService.update(orderId, {
+    const order = await this.orderService.update(+orderId, {
       orderStatus: OrderStatus.CANCELLED,
       paymentStatus: undefined as any,
     });
@@ -148,11 +145,11 @@ export class OrderController extends Controller {
   @Patch('{orderId}')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateOrderStatusSchema)])
   public async updateStatus(
-    @Path() orderId: UpdateOrderRequest['params']['orderId'],
+    @Path() orderId: string,
     @Body() body: UpdateOrderRequest['body']
   ): Promise<UpdateOrderResponse> {
     const { orderStatus } = body;
-    const order = await this.orderService.update(orderId, body);
+    const order = await this.orderService.update(+orderId, body);
 
     if (order.user?.email) {
       await this.notificationService.sendOrderConfirmationEmail(

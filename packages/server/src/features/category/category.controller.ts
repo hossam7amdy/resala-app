@@ -43,7 +43,7 @@ export class CategoryController extends Controller {
 
   @Get('{categoryId}')
   @Middlewares([validateMiddleware(GetCategorySchema)])
-  public async get(@Path() categoryId: number): Promise<GetCategoryResponse> {
+  public async get(@Path() categoryId: string): Promise<GetCategoryResponse> {
     const category = await this.categoryService.find(+categoryId);
 
     return { success: true, data: category };
@@ -74,7 +74,7 @@ export class CategoryController extends Controller {
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateCategorySchema)])
   public async update(
-    @Path() categoryId: number,
+    @Path() categoryId: string,
     @Body() body: UpdateCategoryRequest['body']
   ): Promise<UpdateCategoryResponse> {
     const category = await this.categoryService.update(+categoryId, body);
@@ -86,7 +86,7 @@ export class CategoryController extends Controller {
   @Delete('{categoryId}')
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(DeleteCategorySchema)])
-  public async delete(@Path() categoryId: number): Promise<DeleteCategoryResponse> {
+  public async delete(@Path() categoryId: string): Promise<DeleteCategoryResponse> {
     const category = await this.categoryService.delete(+categoryId);
 
     return { success: true, data: category };

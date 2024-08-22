@@ -61,7 +61,7 @@ export class ReviewController extends Controller {
   @Put('{reviewId}')
   @Middlewares([validateMiddleware(UpdateReviewSchema)])
   public async updateReview(
-    @Path() reviewId: number | string,
+    @Path() reviewId: string,
     @Body() body: UpdateReviewRequest['body']
   ): Promise<UpdateReviewResponse> {
     const review = await this.reviewService.update(+reviewId, body);
@@ -72,7 +72,7 @@ export class ReviewController extends Controller {
   @Delete('{reviewId}')
   @Middlewares([validateMiddleware(DeleteReviewSchema)])
   public async deleteReview(
-    @Path() reviewId: number | string,
+    @Path() reviewId: string,
     @Queries() query: DeleteReviewRequest['query']
   ): Promise<DeleteReviewResponse> {
     const address = await this.reviewService.delete(+reviewId, query.userId);
@@ -82,7 +82,7 @@ export class ReviewController extends Controller {
 
   @Get('{reviewId}')
   @Middlewares([validateMiddleware(GetReviewSchema)])
-  public async getReview(@Path() reviewId: number | string): Promise<GetReviewResponse> {
+  public async getReview(@Path() reviewId: string): Promise<GetReviewResponse> {
     const review = await this.reviewService.find(+reviewId);
 
     return { success: true, data: review };

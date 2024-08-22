@@ -66,10 +66,10 @@ export class AddressController extends Controller {
   @Put('{addressId}')
   @Middlewares([validateMiddleware(UpdateAddressSchema)])
   public async updateUserAddress(
-    @Path() addressId: number,
+    @Path() addressId: string,
     @Body() body: UpdateAddressRequest['body']
   ): Promise<UpdateAddressResponse> {
-    const address = await this.addressService.update(addressId, body);
+    const address = await this.addressService.update(+addressId, body);
 
     return { success: true, data: address };
   }
@@ -77,10 +77,10 @@ export class AddressController extends Controller {
   @Delete('{addressId}')
   @Middlewares([validateMiddleware(DeleteAddressSchema)])
   public async deleteUserAddress(
-    @Path() addressId: number,
-    @Queries() _: { userId: number }
+    @Path() addressId: string,
+    @Queries() _: { userId: string }
   ): Promise<DeleteAddressResponse> {
-    const address = await this.addressService.delete(addressId);
+    const address = await this.addressService.delete(+addressId);
 
     return { success: true, data: address };
   }
