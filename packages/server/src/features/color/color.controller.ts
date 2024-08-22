@@ -1,64 +1,86 @@
-import type {
-  CreateColor,
-  DeleteColor,
-  GetColor,
-  GetColorsList,
-  UpdateColor,
-} from './color.controller.interface.js';
-import type { ColorService } from './color.service.js';
+import {
+  type CreateColorRequest,
+  type CreateColorResponse,
+  CreateColorSchema,
+  type DeleteColorResponse,
+  type GetColorResponse,
+  type ListColorsResponse,
+  type UpdateColorRequest,
+  type UpdateColorResponse,
+  UpdateColorSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class ColorController {
-  constructor(private readonly colorService: ColorService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { ColorService } from './color.service.js';
 
-  getColor: GetColor = async (req, res, next) => {
-    try {
-      const color = await this.colorService.find(req.params.colorId);
+@Tags('Color')
+@Route('api/v1/colors')
+export class ColorController extends Controller {
+  private readonly colorService: ColorService;
 
-      return res.json({ success: true, data: color });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.colorService = new ColorService(db);
+  }
 
-  listColors: GetColorsList = async (_, res, next) => {
-    try {
-      const colors = await this.colorService.list();
+  @Get('{colorId}')
+  public async get(@Path() colorId: number | string): Promise<GetColorResponse> {
+    const color = await this.colorService.find(+colorId);
 
-      return res.json({ success: true, data: colors });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: color };
+  }
 
-  createColor: CreateColor = async (req, res, next) => {
-    try {
-      const color = await this.colorService.create(req.body);
+  @Get()
+  public async lists(): Promise<ListColorsResponse> {
+    const colors = await this.colorService.list();
 
-      return res.status(201).json({ success: true, data: color });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: colors };
+  }
 
-  updateColor: UpdateColor = async (req, res, next) => {
-    const colorId = Number(req.params.colorId);
-    try {
-      const color = await this.colorService.update(colorId, req.body);
+  @Post()
+  @SuccessResponse('201', 'Color created successfully')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(CreateColorSchema)])
+  public async create(@Body() body: CreateColorRequest['body']): Promise<CreateColorResponse> {
+    const color = await this.colorService.create(body);
 
-      return res.json({ success: true, data: color });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: color };
+  }
 
-  deleteColor: DeleteColor = async (req, res, next) => {
-    const colorId = Number(req.params.colorId);
-    try {
-      const color = await this.colorService.delete(colorId);
+  @Put('{colorId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateColorSchema)])
+  public async update(
+    @Path() colorId: number | string,
+    @Body() body: UpdateColorRequest['body']
+  ): Promise<UpdateColorResponse> {
+    const color = await this.colorService.update(+colorId, body);
 
-      return res.json({ success: true, data: color });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: color };
+  }
+
+  @Delete('{colorId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async delete(@Path() colorId: number | string): Promise<DeleteColorResponse> {
+    const color = await this.colorService.delete(+colorId);
+
+    return { success: true, data: color };
+  }
 }

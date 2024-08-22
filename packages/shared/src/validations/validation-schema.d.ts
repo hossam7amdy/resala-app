@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { OrderStatus, PaymentMethod, PaymentStatus } from '../enums/index.js';
 export declare const DefaultQuerySchema: z.ZodObject<{
     query: z.ZodObject<{
         page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
@@ -1165,28 +1164,28 @@ export declare const DeleteWishlistSchema: z.ZodObject<{
 }>;
 export declare const CreateOrderSchema: z.ZodObject<{
     body: z.ZodObject<{
-        paymentMethod: z.ZodEnum<[PaymentMethod.CARD, PaymentMethod.CASH]>;
+        paymentMethod: z.ZodEnum<["CARD", "CASH"]>;
         note: z.ZodOptional<z.ZodString>;
         addressId: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         addressId: number;
-        paymentMethod: PaymentMethod;
+        paymentMethod: "CASH" | "CARD";
         note?: string | undefined;
     }, {
         addressId: number;
-        paymentMethod: PaymentMethod;
+        paymentMethod: "CASH" | "CARD";
         note?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
         addressId: number;
-        paymentMethod: PaymentMethod;
+        paymentMethod: "CASH" | "CARD";
         note?: string | undefined;
     };
 }, {
     body: {
         addressId: number;
-        paymentMethod: PaymentMethod;
+        paymentMethod: "CASH" | "CARD";
         note?: string | undefined;
     };
 }>;
@@ -1249,30 +1248,30 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
         orderId: number;
     }>;
     body: z.ZodObject<{
-        orderStatus: z.ZodEnum<[OrderStatus.PENDING, OrderStatus.FULFILLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED, OrderStatus.CANCELLED]>;
-        paymentStatus: z.ZodEnum<[PaymentStatus.UNPAID, PaymentStatus.PAID, PaymentStatus.FAILED, PaymentStatus.VOIDED, PaymentStatus.REFUNDED]>;
+        orderStatus: z.ZodEnum<["PENDING", "FULFILLED", "SHIPPED", "DELIVERED", "CANCELLED"]>;
+        paymentStatus: z.ZodEnum<["UNPAID", "PAID", "FAILED", "VOIDED", "REFUNDED"]>;
     }, "strip", z.ZodTypeAny, {
-        orderStatus: OrderStatus;
-        paymentStatus: PaymentStatus;
+        orderStatus: "PENDING" | "FULFILLED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+        paymentStatus: "UNPAID" | "PAID" | "FAILED" | "VOIDED" | "REFUNDED";
     }, {
-        orderStatus: OrderStatus;
-        paymentStatus: PaymentStatus;
+        orderStatus: "PENDING" | "FULFILLED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+        paymentStatus: "UNPAID" | "PAID" | "FAILED" | "VOIDED" | "REFUNDED";
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
         orderId: number;
     };
     body: {
-        orderStatus: OrderStatus;
-        paymentStatus: PaymentStatus;
+        orderStatus: "PENDING" | "FULFILLED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+        paymentStatus: "UNPAID" | "PAID" | "FAILED" | "VOIDED" | "REFUNDED";
     };
 }, {
     params: {
         orderId: number;
     };
     body: {
-        orderStatus: OrderStatus;
-        paymentStatus: PaymentStatus;
+        orderStatus: "PENDING" | "FULFILLED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+        paymentStatus: "UNPAID" | "PAID" | "FAILED" | "VOIDED" | "REFUNDED";
     };
 }>;
 export declare const DeleteOrderSchema: z.ZodObject<{
