@@ -35,6 +35,7 @@
   },
   "routes": {
     "esm": true,
+    "middleware": "express",
     "routesDir": "src/routes",
     "routesFileName": "api.routes.ts",
     "authenticationModule": "./src/middlewares/authentication.ts"
