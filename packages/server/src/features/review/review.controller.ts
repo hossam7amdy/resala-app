@@ -32,7 +32,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { ReviewService } from './review.service.js';
 
 @Tags('Review')
@@ -49,7 +49,7 @@ export class ReviewController extends Controller {
 
   @Post()
   @SuccessResponse('201', 'Review created')
-  @Middlewares([validateMiddleware(CreateReviewSchema)])
+  @Middlewares([requestValidator(CreateReviewSchema)])
   public async createReview(
     @Body() body: CreateReviewRequest['body']
   ): Promise<CreateReviewResponse> {
@@ -59,7 +59,7 @@ export class ReviewController extends Controller {
   }
 
   @Put('{reviewId}')
-  @Middlewares([validateMiddleware(UpdateReviewSchema)])
+  @Middlewares([requestValidator(UpdateReviewSchema)])
   public async updateReview(
     @Path() reviewId: string,
     @Body() body: UpdateReviewRequest['body']
@@ -70,7 +70,7 @@ export class ReviewController extends Controller {
   }
 
   @Delete('{reviewId}')
-  @Middlewares([validateMiddleware(DeleteReviewSchema)])
+  @Middlewares([requestValidator(DeleteReviewSchema)])
   public async deleteReview(
     @Path() reviewId: string,
     @Queries() query: DeleteReviewRequest['query']
@@ -81,7 +81,7 @@ export class ReviewController extends Controller {
   }
 
   @Get('{reviewId}')
-  @Middlewares([validateMiddleware(GetReviewSchema)])
+  @Middlewares([requestValidator(GetReviewSchema)])
   public async getReview(@Path() reviewId: string): Promise<GetReviewResponse> {
     const review = await this.reviewService.find(+reviewId);
 
@@ -89,7 +89,7 @@ export class ReviewController extends Controller {
   }
 
   @Get()
-  @Middlewares([validateMiddleware(ListReviewsSchema)])
+  @Middlewares([requestValidator(ListReviewsSchema)])
   public async listReviews(
     @Queries() query: ListReviewsRequest['query']
   ): Promise<ListReviewsResponse> {

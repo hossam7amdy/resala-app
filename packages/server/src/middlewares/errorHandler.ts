@@ -5,7 +5,7 @@ import { MulterError } from 'multer';
 import { ValidateError } from 'tsoa/dist/index.js';
 import { ZodError } from 'zod';
 
-import { APPError } from '../errors/api.errors.js';
+import { APIError } from '../errors/api.errors.js';
 import { logger } from '../logger/index.js';
 import { formatZodError } from '../utils/zodErrors.js';
 
@@ -19,14 +19,14 @@ export const asyncHandler = (fn: RequestHandler): RequestHandler => {
 };
 
 /** @description error middleware */
-export const errorMiddleware = (
+export const errorHandler = (
   error: Error,
   _req: Request,
   res: Response,
   // eslint-disable-next-line no-unused-vars
   _next: NextFunction
 ) => {
-  if (error instanceof APPError) {
+  if (error instanceof APIError) {
     return res.status(error.statusCode).json({
       success: false,
       message: error.message,
@@ -62,7 +62,7 @@ export const errorMiddleware = (
     switch (error.code) {
       case 'P2002':
         return res
-          .status(400)
+          .status(409)
           .json({ success: false, message: `Duplicate field value: ${error.meta?.target}` });
       case 'P2014':
         return res

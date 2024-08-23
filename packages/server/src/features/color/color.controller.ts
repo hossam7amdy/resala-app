@@ -26,7 +26,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { ColorService } from './color.service.js';
 
 @Tags('Color')
@@ -56,7 +56,7 @@ export class ColorController extends Controller {
   @Post()
   @SuccessResponse('201', 'Color created successfully')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(CreateColorSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateColorSchema)])
   public async create(@Body() body: CreateColorRequest['body']): Promise<CreateColorResponse> {
     const color = await this.colorService.create(body);
 
@@ -65,7 +65,7 @@ export class ColorController extends Controller {
 
   @Put('{colorId}')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateColorSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateColorSchema)])
   public async update(
     @Path() colorId: string,
     @Body() body: UpdateColorRequest['body']

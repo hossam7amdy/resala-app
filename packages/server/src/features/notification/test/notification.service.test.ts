@@ -1,15 +1,15 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mock, mockClear } from 'vitest-mock-extended';
 
-import type { EmailNotificationService } from '../email.notification.js';
+import type { EmailNotification } from '../email.notification.js';
 import { NotificationService } from '../notification.service.js';
 
 describe('Notification Service', () => {
-  let emailNotificationService: EmailNotificationService;
+  let emailNotificationService: EmailNotification;
   let notificationService: NotificationService;
 
   beforeAll(() => {
-    emailNotificationService = mock<EmailNotificationService>();
+    emailNotificationService = mock<EmailNotification>();
   });
 
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('Notification Service', () => {
     expect(emailNotificationService.send).toHaveBeenCalledWith(
       email,
       'Reset your password',
-      `Your reset code is: ${resetCode}`
+      `Your reset code is: <b>${resetCode}</b>`
     );
   });
 

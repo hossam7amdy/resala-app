@@ -10,7 +10,7 @@ import { formatZodError } from '../utils/zodErrors.js';
  * @param schema - The ZodSchema to validate against
  * @returns A middleware function that validates the request
  */
-export const validateMiddleware = (schema: AnyZodObject) => {
+export const requestValidator = (schema: AnyZodObject) => {
   return async (req: Request, _: Response, next: NextFunction) => {
     try {
       const { body, query, params } = await schema.parseAsync({

@@ -7,7 +7,7 @@ const logFormat = printf(({ level, stack, message, timestamp }) => {
   return `${new Date(timestamp).toISOString()} | ${level.toUpperCase()}: ${stack || message}`;
 });
 
-const logger = createLogger({
+export const logger = createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: combine(timestamp(), json(), errors({ stack: true })),
 
@@ -35,5 +35,3 @@ const logger = createLogger({
   exceptionHandlers: [new transports.File({ filename: 'logs/exceptions.log' })],
   rejectionHandlers: [new transports.File({ filename: 'logs/rejections.log' })],
 });
-
-export { logger };

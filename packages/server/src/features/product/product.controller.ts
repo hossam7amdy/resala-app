@@ -28,7 +28,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
@@ -53,7 +53,7 @@ export class ProductController extends Controller {
   }
 
   @Get()
-  @Middlewares([validateMiddleware(ListProductsSchema)])
+  @Middlewares([requestValidator(ListProductsSchema)])
   public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
     const { products, pagination } = await this.productService.list(query);
 
