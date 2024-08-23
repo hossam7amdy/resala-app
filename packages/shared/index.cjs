@@ -681,12 +681,18 @@ const ForgotPasswordSchema = zod.z.object({
 // User Schemas
 const GetUserSchema = zod.z.object({
     params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const UpdateUserSchema = zod.z.object({
     params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: zod.z.object({
         firstName: UserSchema.shape.firstName,
@@ -698,7 +704,10 @@ const UpdateUserSchema = zod.z.object({
 });
 const DeleteUserSchema = zod.z.object({
     params: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const CreateAddressSchema = zod.z.object({
@@ -723,7 +732,10 @@ const ListAddressSchema = zod.z.object({
 });
 const UpdateAddressSchema = zod.z.object({
     params: zod.z.object({
-        addressId: zod.z.coerce.number().positive(),
+        addressId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateAddressSchema.shape.body,
 });
@@ -740,7 +752,10 @@ const CreateCategorySchema = zod.z.object({
 });
 const UpdateCategorySchema = zod.z.object({
     params: zod.z.object({
-        categoryId: zod.z.coerce.number().positive(),
+        categoryId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateCategorySchema.shape.body,
 });
@@ -763,7 +778,10 @@ const CreateProductSchema = zod.z.object({
 });
 const UpdateProductSchema = zod.z.object({
     params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
+        productId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateProductSchema.shape.body,
 });
@@ -789,13 +807,19 @@ const CreateStockSchema = zod.z.object({
 });
 const UpdateStockSchema = zod.z.object({
     params: zod.z.object({
-        stockId: zod.z.coerce.number().positive(),
+        stockId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateStockSchema.shape.body,
 });
 const DeleteStockSchema = zod.z.object({
     params: zod.z.object({
-        stockId: zod.z.coerce.number().positive(),
+        stockId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const ListStocksSchema = zod.z.object({
@@ -813,7 +837,10 @@ const CreateColorSchema = zod.z.object({
 });
 const UpdateColorSchema = zod.z.object({
     params: zod.z.object({
-        colorId: zod.z.coerce.number().positive(),
+        colorId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateColorSchema.shape.body,
 });
@@ -828,7 +855,10 @@ const CreateSizeSchema = zod.z.object({
 });
 const UpdateSizeSchema = zod.z.object({
     params: zod.z.object({
-        sizeId: zod.z.coerce.number().positive(),
+        sizeId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: CreateSizeSchema.shape.body,
 });
@@ -850,7 +880,10 @@ const CreateImageSchema = zod.z.object({
 });
 const UpdateImageSchema = zod.z.object({
     params: zod.z.object({
-        imageId: zod.z.coerce.number().positive(),
+        imageId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: zod.z.object({
         isPrimary: zod.z.coerce.boolean().optional(),
@@ -858,7 +891,10 @@ const UpdateImageSchema = zod.z.object({
 });
 const DeleteImageSchema = zod.z.object({
     params: zod.z.object({
-        imageId: zod.z.coerce.number().positive(),
+        imageId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 // Cart Schemas
@@ -870,7 +906,10 @@ const CreateCartSchema = zod.z.object({
 });
 const DeleteCartSchema = zod.z.object({
     params: zod.z.object({
-        stockId: zod.z.coerce.number().positive(),
+        stockId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const CreateWishlistSchema = zod.z.object({
@@ -880,7 +919,10 @@ const CreateWishlistSchema = zod.z.object({
 });
 const DeleteWishlistSchema = zod.z.object({
     params: zod.z.object({
-        productId: zod.z.coerce.number().positive(),
+        productId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 // Order Schemas
@@ -893,7 +935,10 @@ const CreateOrderSchema = zod.z.object({
 });
 const GetOrderSchema = zod.z.object({
     params: zod.z.object({
-        orderId: zod.z.coerce.number().positive(),
+        orderId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const ListOrdersSchema = zod.z.object({
@@ -903,7 +948,10 @@ const ListOrdersSchema = zod.z.object({
 });
 const UpdateOrderStatusSchema = zod.z.object({
     params: zod.z.object({
-        orderId: zod.z.coerce.number().positive(),
+        orderId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
     body: zod.z.object({
         orderStatus: zod.z.enum(['PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
@@ -913,13 +961,19 @@ const UpdateOrderStatusSchema = zod.z.object({
 const DeleteOrderSchema = zod.z.object({
     params: GetOrderSchema.shape.params,
     query: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 // Payment Schemas
 const GetPaymentSchema = zod.z.object({
     params: zod.z.object({
-        transactionId: zod.z.coerce.number().positive(),
+        transactionId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const VoidPaymentSchema = zod.z.object({
@@ -944,7 +998,10 @@ const CreateReviewSchema = zod.z.object({
 });
 const GetReviewSchema = zod.z.object({
     params: zod.z.object({
-        reviewId: zod.z.coerce.number().positive(),
+        reviewId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const ListReviewsSchema = zod.z.object({
@@ -959,7 +1016,10 @@ const UpdateReviewSchema = zod.z.object({
 const DeleteReviewSchema = zod.z.object({
     params: GetReviewSchema.shape.params,
     query: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 

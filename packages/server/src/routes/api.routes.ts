@@ -2549,7 +2549,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'query',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { userId: { dataType: 'double' } },
+          nestedProperties: { userId: { dataType: 'string' } },
         },
       };
 
@@ -3120,7 +3120,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: '_',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { userId: { dataType: 'double' } },
+          nestedProperties: { userId: { dataType: 'string' } },
         },
       };
 

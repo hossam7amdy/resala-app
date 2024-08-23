@@ -15,7 +15,7 @@ export const findOrderById = async (id: string | number) => {
 
   const response = await callEndpoint<GetOrderRequest, GetOrderResponse>(
     ENDPOINT_CONFIGS.getOrder,
-    { params: { orderId: Number(id) } }
+    { params: { orderId: id.toString() } }
   );
 
   return response.data;

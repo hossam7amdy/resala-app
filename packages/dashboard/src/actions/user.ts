@@ -14,7 +14,7 @@ import { revalidatePath } from 'next/cache';
 export const updateUser = async (id: string | number, payload: UpdateUserRequest['body']) => {
   const response = await callEndpoint<UpdateUserRequest, UpdateUserResponse>(
     ENDPOINT_CONFIGS.updateUser,
-    { params: { userId: Number(id) }, body: payload }
+    { params: { userId: id.toString() }, body: payload }
   );
 
   revalidatePath(ROUTES.CUSTOMERS);
@@ -23,7 +23,7 @@ export const updateUser = async (id: string | number, payload: UpdateUserRequest
 
 export const deleteUser = async (id: string | number) => {
   await callEndpoint<DeleteUserRequest, DeleteUserResponse>(ENDPOINT_CONFIGS.deleteUser, {
-    params: { userId: Number(id) },
+    params: { userId: id.toString() },
   });
 
   revalidatePath(ROUTES.CUSTOMERS);

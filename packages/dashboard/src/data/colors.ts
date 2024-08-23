@@ -25,7 +25,7 @@ export const findColorById = async (id: string | number) => {
 
   const response = await callEndpoint<GetColorRequest, GetColorResponse>(
     ENDPOINT_CONFIGS.getColor,
-    { params: { colorId: Number(id) } }
+    { params: { colorId: id.toString() } }
   );
 
   return response.data;

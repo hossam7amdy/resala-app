@@ -24,7 +24,7 @@ export const findSizeById = async (id: string | number) => {
   noStore();
 
   const response = await callEndpoint<GetSizeRequest, GetSizeResponse>(ENDPOINT_CONFIGS.getSize, {
-    params: { sizeId: Number(id) },
+    params: { sizeId: id.toString() },
   });
 
   return response.data;

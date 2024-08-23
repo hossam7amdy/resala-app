@@ -25,7 +25,7 @@ export const updateOrderStatus = async (
 export const deleteOrder = async (orderId: string | number, userId: string | number) => {
   const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
     ENDPOINT_CONFIGS.deleteOrder,
-    { params: { orderId: +orderId }, query: { userId: +userId } }
+    { params: { orderId: orderId.toString() }, query: { userId: userId.toString() } }
   );
 
   revalidatePath(ROUTES.ORDERS);
