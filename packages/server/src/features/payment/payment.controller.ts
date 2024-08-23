@@ -1,71 +1,81 @@
-import type { OrderService } from '../order/order.service.js';
-import type {
-  GetPayment,
-  PostPayCallback,
-  RefundPayment,
-  VoidPayment,
-} from './payment.controller.interface.js';
-import type { IPaymentController } from './payment.controller.interface.js';
-import type { PaymentService } from './payment.service.js';
+import {
+  type GetPaymentResponse,
+  RefundPaymentRequest,
+  RefundPaymentSchema,
+  type VoidPaymentRequest,
+  VoidPaymentSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Route,
+  Security,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class PaymentController implements IPaymentController {
-  constructor(
-    private readonly paymentService: PaymentService,
-    private readonly orderService: OrderService
-  ) {}
+import { db } from '../../datastore/index.js';
+import { BadRequestError } from '../../errors/api.errors.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
+import { PaymentService } from './payment.service.js';
+import { PaymobService } from './paymob/paymob.service.js';
 
-  getPayment: GetPayment = async (req, res, next) => {
-    try {
-      const payment = await this.paymentService.retrieve(req.params.transactionId);
+@Tags('Payment')
+@Route('api/v1/payments')
+export class PaymentController extends Controller {
+  private readonly paymentService: PaymentService;
 
-      return res.json({ success: true, data: payment });
-    } catch (error) {
-      next(error);
+  constructor() {
+    super();
+    this.paymentService = new PaymentService(db, new PaymobService());
+  }
+
+  @Get('{transactionId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  public async get(@Path() transactionId: string): Promise<GetPaymentResponse> {
+    const payment = await this.paymentService.retrieve(+transactionId);
+
+    return { success: true, data: payment };
+  }
+
+  @Post('void')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(VoidPaymentSchema)])
+  public async void(@Body() body: VoidPaymentRequest['body']) {
+    const transactionId = body.transactionId;
+
+    await this.paymentService.void(transactionId);
+
+    return { success: true };
+  }
+
+  @Post('refund')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(RefundPaymentSchema)])
+  public async refund(@Body() body: RefundPaymentRequest['body']) {
+    const { transactionId, amount } = body;
+
+    await this.paymentService.refund(transactionId, amount);
+
+    return { success: true };
+  }
+
+  /** Webhook for PayMob */
+  @Post('post_pay/{orderId}')
+  public postPay(
+    @Path() orderId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Body() req: any
+  ) {
+    if (!orderId) {
+      throw new BadRequestError('Order ID is required');
     }
-  };
 
-  voidPayment: VoidPayment = async (req, res, next) => {
-    try {
-      const transactionId = req.body.transactionId;
-
-      await this.paymentService.void(transactionId);
-
-      return res.json({ success: true });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  refundPayment: RefundPayment = async (req, res, next) => {
-    try {
-      const { transactionId, amount } = req.body;
-
-      await this.paymentService.refund(transactionId, amount);
-
-      return res.json({ success: true });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  postPayCallback: PostPayCallback = async (req, res, next) => {
-    try {
-      const orderId = parseInt(req.params.orderId || '');
-
-      if (!orderId) {
-        return res.sendStatus(400);
-      }
-
-      const status = await this.paymentService.postPayCallback(orderId, req.body);
-
-      await this.orderService.update(+orderId, {
-        paymentStatus: status as any,
-        orderStatus: undefined as any,
-      });
-
-      return res.sendStatus(200);
-    } catch (error) {
-      next(error);
-    }
-  };
+    return this.paymentService.postPayCallback(+orderId, req.body);
+  }
 }

@@ -1,68 +1,93 @@
-import type {
-  CreateStock,
-  DeleteStock,
-  GetStock,
-  GetStocksList,
-  UpdateStock,
-} from './stock.controller.interface.js';
-import type { StockService } from './stock.service.js';
+import {
+  type CreateStockRequest,
+  type CreateStockResponse,
+  CreateStockSchema,
+  type DeleteStockResponse,
+  type GetStockResponse,
+  type ListStocksRequest,
+  type ListStocksResponse,
+  ListStocksSchema,
+  type UpdateStockRequest,
+  type UpdateStockResponse,
+  UpdateStockSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Queries,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class StockController {
-  constructor(private readonly stockService: StockService) {}
+import { db } from '../../datastore/index.js';
+import { authorizeRole } from '../../middlewares/authorization.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
+import { StockService } from './stock.service.js';
 
-  getStock: GetStock = async (req, res, next) => {
-    try {
-      const stock = await this.stockService.find(req.params.stockId);
+@Tags('Stock')
+@Route('api/v1/stocks')
+export class StockController extends Controller {
+  private readonly stockService: StockService;
 
-      return res.json({ success: true, data: stock });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.stockService = new StockService(db);
+  }
 
-  listStocks: GetStocksList = async (req, res, next) => {
-    try {
-      const { stocks, pagination } = await this.stockService.list(req.query);
+  @Get('{stockId}')
+  async get(@Path() stockId: string): Promise<GetStockResponse> {
+    const stock = await this.stockService.find(+stockId);
 
-      return res.json({
-        success: true,
-        data: { pagination, stocks },
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: stock };
+  }
 
-  createStock: CreateStock = async (req, res, next) => {
-    try {
-      const stock = await this.stockService.create(req.body);
+  @Get()
+  @Middlewares([requestValidator(ListStocksSchema)])
+  async list(@Queries() query: ListStocksRequest['query']): Promise<ListStocksResponse> {
+    const { stocks, pagination } = await this.stockService.list(query);
 
-      return res.json({ success: true, data: stock });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return {
+      success: true,
+      data: { pagination, stocks },
+    };
+  }
 
-  updateStock: UpdateStock = async (req, res, next) => {
-    try {
-      const stock = await this.stockService.update(req.params.stockId, req.body);
+  @Post()
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateStockSchema)])
+  @SuccessResponse('201', 'Stock created successfully')
+  async create(@Body() body: CreateStockRequest['body']): Promise<CreateStockResponse> {
+    const stock = await this.stockService.create(body);
 
-      return res.json({
-        success: true,
-        data: stock,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: stock };
+  }
 
-  deleteStock: DeleteStock = async (req, res, next) => {
-    try {
-      const stock = await this.stockService.delete(req.params.stockId);
+  @Put('{stockId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateStockSchema)])
+  async update(
+    @Path() stockId: string,
+    @Body() body: UpdateStockRequest['body']
+  ): Promise<UpdateStockResponse> {
+    const stock = await this.stockService.update(+stockId, body);
 
-      return res.json({ success: true, data: stock });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: stock };
+  }
+
+  @Delete('{stockId}')
+  @Security('jwt_auth')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
+  async delete(@Path() stockId: string): Promise<DeleteStockResponse> {
+    const stock = await this.stockService.delete(+stockId);
+
+    return { success: true, data: stock };
+  }
 }

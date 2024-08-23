@@ -3,8 +3,9 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { userAssertions } from '../../../tests/helpers/customAssertions.js';
-import { getTestServer } from '../../../tests/helpers/testServer.js';
+import { initDb } from '../../../datastore/index.js';
+import { userAssertions } from '../../../tests/customAssertions.js';
+import { getTestServer } from '../../../tests/testServer.js';
 
 const ADMIN_USER = {
   email: 'admin@resala.com',
@@ -31,6 +32,8 @@ describe('TEST /auth endpoints', () => {
   let client: TestAgent<superset.Test>;
 
   beforeAll(async () => {
+    await initDb();
+
     client = await getTestServer();
   });
 

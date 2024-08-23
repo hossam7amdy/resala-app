@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { ENDPOINT_CONFIGS, type Role } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { addressAssertions, userAssertions } from '../../../tests/helpers/customAssertions.js';
-import { getTestServer } from '../../../tests/helpers/testServer.js';
+import { initDb } from '../../../datastore/index.js';
+import { addressAssertions, userAssertions } from '../../../tests/customAssertions.js';
+import { getTestServer } from '../../../tests/testServer.js';
 import { UserService } from '../user.service.js';
 
 describe('TEST /users/self/addresses endpoint', () => {
@@ -19,6 +20,8 @@ describe('TEST /users/self/addresses endpoint', () => {
   const phone = `01${`${Date.now()}`.slice(-9)}`;
 
   beforeAll(async () => {
+    await initDb();
+
     client = await getTestServer();
 
     await registerNewUser({
@@ -131,7 +134,8 @@ describe('TEST /users/self/addresses endpoint', () => {
     const res = await client[method](url).set(await getAuthToken());
 
     // make him admin
-    return userService.update(res.body.data.id, { role: 'ADMIN' as Role });
+    // @ts-expect-error role is valid
+    return userService.update(res.body.data.id, { role: 'ADMIN' });
   };
 
   const loginUser = async (sign: string, password: string) => {

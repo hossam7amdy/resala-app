@@ -28,7 +28,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
@@ -46,14 +46,14 @@ export class ProductController extends Controller {
   }
 
   @Get('{productId}')
-  public async get(@Path() productId: number | string): Promise<GetProductResponse> {
+  public async get(@Path() productId: string): Promise<GetProductResponse> {
     const product = await this.productService.get(+productId);
 
     return { success: true, data: product };
   }
 
   @Get()
-  @Middlewares([validateMiddleware(ListProductsSchema)])
+  @Middlewares([requestValidator(ListProductsSchema)])
   public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
     const { products, pagination } = await this.productService.list(query);
 
@@ -66,7 +66,7 @@ export class ProductController extends Controller {
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
-    @FormField() categoryId: number,
+    @FormField() categoryId: string,
     @FormField() arName: string,
     @FormField() enName: string,
     @FormField() arDescription: string,
@@ -88,7 +88,7 @@ export class ProductController extends Controller {
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
-    @Path() productId: number,
+    @Path() productId: string,
     @FormField() categoryId: number,
     @FormField() arName: string,
     @FormField() enName: string,
@@ -98,14 +98,8 @@ export class ProductController extends Controller {
     @UploadedFile() image: Express.Multer.File
   ): Promise<UpdateProductResponse> {
     const { body } = await UpdateProductSchema.parseAsync({
-      body: {
-        categoryId: +categoryId,
-        arName,
-        enName,
-        arDescription,
-        enDescription,
-        price: +price,
-      },
+      params: { productId },
+      body: { categoryId, arName, enName, arDescription, enDescription, price },
     });
 
     const data = await this.productService.update(+productId, { ...body, file: image });
@@ -117,7 +111,7 @@ export class ProductController extends Controller {
   @Delete('{productId}')
   @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
-  public async delete(@Path() productId: number | string): Promise<DeleteProductResponse> {
+  public async delete(@Path() productId: string): Promise<DeleteProductResponse> {
     const data = await this.productService.delete(+productId);
 
     return { success: true, data };
