@@ -26,7 +26,7 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
   const response = await callEndpoint<UpdateCategoryRequest, UpdateCategoryResponse>(
     ENDPOINT_CONFIGS.updateCategory,
-    { params: { categoryId: Number(id) }, body: payload }
+    { params: { categoryId: id }, body: payload }
   );
 
   revalidatePath(ROUTES.CATEGORIES);
@@ -36,7 +36,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
 export const deleteCategory = async (id: string) => {
   await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
     ENDPOINT_CONFIGS.deleteCategory,
-    { params: { categoryId: Number(id) } }
+    { params: { categoryId: id } }
   );
 
   revalidatePath(ROUTES.CATEGORIES);

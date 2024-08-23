@@ -26,7 +26,7 @@ export const findStockById = async (id: string | number) => {
 
   const response = await callEndpoint<GetStockRequest, GetStockResponse>(
     ENDPOINT_CONFIGS.getStock,
-    { params: { stockId: Number(id) } }
+    { params: { stockId: id.toString() } }
   );
 
   return response.data;
