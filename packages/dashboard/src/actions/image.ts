@@ -45,7 +45,7 @@ export const setDefaultImage = async (imageId: string, productId: string) => {
 export const deleteImage = async (imageId: string, productId: string) => {
   const response = await callEndpoint<DeleteImageRequest, DeleteImageResponse>(
     ENDPOINT_CONFIGS.deleteImage,
-    { params: { imageId: Number(imageId) } }
+    { params: { imageId: imageId.toString() } }
   );
 
   revalidateCache(productId);
