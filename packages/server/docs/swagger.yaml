@@ -265,6 +265,260 @@ paths:
                   type: number
                   format: double
               type: object
+  /api/v1/sizes/{sizeId}:
+    get:
+      operationId: Get
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSizeResponse"
+      tags:
+        - Size
+      security: []
+      parameters:
+        - in: path
+          name: sizeId
+          required: true
+          schema:
+            type: string
+    put:
+      operationId: Update
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateSizeResponse"
+      tags:
+        - Size
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: sizeId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+              type: object
+    delete:
+      operationId: Delete
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteSizeResponse"
+      tags:
+        - Size
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: sizeId
+          required: true
+          schema:
+            type: string
+  /api/v1/sizes:
+    get:
+      operationId: List
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSizesResponse"
+      tags:
+        - Size
+      security: []
+      parameters: []
+    post:
+      operationId: Create
+      responses:
+        "201":
+          description: Size created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateSizeResponse"
+      tags:
+        - Size
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+              type: object
+  /api/v1/cart:
+    get:
+      operationId: GetCart
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCartResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+    delete:
+      operationId: ClearCart
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteCartResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+  /api/v1/cart/items:
+    post:
+      operationId: AddItemToCart
+      responses:
+        "201":
+          description: Item added to cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCartResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                stockId:
+                  type: number
+                  format: double
+                quantity:
+                  type: number
+                  format: double
+              type: object
+  /api/v1/cart/items/{stockId}:
+    delete:
+      operationId: RemoveItemFromCart
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteCartResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: stockId
+          required: true
+          schema:
+            type: string
+  /api/v1/wishlist:
+    get:
+      operationId: GetWishlist
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetWishlistResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+    delete:
+      operationId: ClearWishlist
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteWishlistResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+  /api/v1/wishlist/items:
+    post:
+      operationId: AddProductToWishlist
+      responses:
+        "201":
+          description: Item added to wishlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateWishlistResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                productId:
+                  type: number
+                  format: double
+              type: object
+  /api/v1/wishlist/items/{productId}:
+    delete:
+      operationId: RemoveProductFromWishlist
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteWishlistResponse"
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
   /api/v1/reviews:
     post:
       operationId: CreateReview
@@ -1866,6 +2120,195 @@ components:
       $ref: "#/components/schemas/CreateStockResponse"
     DeleteStockResponse:
       $ref: "#/components/schemas/CreateStockResponse"
+    Size:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        id:
+          type: number
+          format: double
+      required:
+        - updatedAt
+        - createdAt
+        - name
+        - id
+      type: object
+    GetSizeResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              $ref: "#/components/schemas/Size"
+          required:
+            - data
+          type: object
+    ListSizesResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              items:
+                $ref: "#/components/schemas/Size"
+              type: array
+          required:
+            - data
+          type: object
+    CreateSizeResponse:
+      $ref: "#/components/schemas/GetSizeResponse"
+    UpdateSizeResponse:
+      $ref: "#/components/schemas/GetSizeResponse"
+    DeleteSizeResponse:
+      $ref: "#/components/schemas/GetSizeResponse"
+    Pick_Cart.Exclude_keyofCart.stockId__:
+      properties:
+        userId:
+          type: number
+          format: double
+        quantity:
+          type: number
+          format: double
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - userId
+        - quantity
+        - createdAt
+        - updatedAt
+      type: object
+      description: From T, pick a set of properties whose keys are in the union K
+    Omit_Cart.stockId_:
+      $ref: "#/components/schemas/Pick_Cart.Exclude_keyofCart.stockId__"
+      description: Construct a type with the properties of T except for those in type K.
+    Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__:
+      properties:
+        id:
+          type: number
+          format: double
+        quantity:
+          type: number
+          format: double
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - quantity
+        - createdAt
+        - updatedAt
+      type: object
+      description: From T, pick a set of properties whose keys are in the union K
+    Omit_Stock.colorId-or-sizeId-or-productId_:
+      $ref: "#/components/schemas/Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-\
+        productId__"
+      description: Construct a type with the properties of T except for those in type K.
+    GetCartResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                items:
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/Omit_Cart.stockId_"
+                      - properties:
+                          stock:
+                            allOf:
+                              - $ref: "#/components/schemas/Omit_Stock.colorId-or-sizeId-or-productId_"
+                              - properties:
+                                  size:
+                                    $ref: "#/components/schemas/Size"
+                                  color:
+                                    $ref: "#/components/schemas/Color"
+                                required:
+                                  - size
+                                  - color
+                                type: object
+                          images:
+                            items:
+                              $ref: "#/components/schemas/Omit_Image.colorId-or-productId_"
+                            type: array
+                          product:
+                            $ref: "#/components/schemas/Product"
+                        required:
+                          - stock
+                          - images
+                          - product
+                        type: object
+                  type: array
+                totalPrice:
+                  type: number
+                  format: double
+                totalQuantity:
+                  type: number
+                  format: double
+              required:
+                - items
+                - totalPrice
+                - totalQuantity
+              type: object
+          required:
+            - data
+          type: object
+    CreateCartResponse:
+      $ref: "#/components/schemas/GetCartResponse"
+    DeleteCartResponse:
+      $ref: "#/components/schemas/GetCartResponse"
+    Pick_Wishlist.Exclude_keyofWishlist.productId__:
+      properties:
+        userId:
+          type: number
+          format: double
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - userId
+        - createdAt
+        - updatedAt
+      type: object
+      description: From T, pick a set of properties whose keys are in the union K
+    Omit_Wishlist.productId_:
+      $ref: "#/components/schemas/Pick_Wishlist.Exclude_keyofWishlist.productId__"
+      description: Construct a type with the properties of T except for those in type K.
+    GetWishlistResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/Omit_Wishlist.productId_"
+                  - properties:
+                      product:
+                        $ref: "#/components/schemas/Product"
+                    required:
+                      - product
+                    type: object
+              type: array
+          required:
+            - data
+          type: object
+    CreateWishlistResponse:
+      $ref: "#/components/schemas/GetWishlistResponse"
+    DeleteWishlistResponse:
+      $ref: "#/components/schemas/GetWishlistResponse"
     Review:
       properties:
         updatedAt:
@@ -2643,7 +3086,7 @@ components:
 servers:
   - url: http://localhost:5000
     description: Local development
-  - url: https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
-    description: Development server (https)
   - url: http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
     description: Development server (http)
+  - url: https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
+    description: Development server (https)

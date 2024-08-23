@@ -5,9 +5,9 @@ import fs from 'fs';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
-import { errorMiddleware } from './middlewares/errorMiddleware.js';
-import { expressApiRoutes } from './routes/api.routes.js';
-import { RegisterRoutes } from './routes/tsoa.routes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { apiRequestLogger } from './middlewares/requestLogger.js';
+import { RegisterRoutes } from './routes/api.routes.js';
 
 const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
 
@@ -34,13 +34,13 @@ export const createExpressApp = (logRequests: boolean = true) => {
     '/api-docs',
     swaggerUI.serve,
     swaggerUI.setup(parse(swaggerDocument), {
-      customCss: '.swagger-ui .topbar { display: none }',
       customSiteTitle: 'API Documentation',
     })
   );
 
+  if (logRequests) app.use(apiRequestLogger);
+
   RegisterRoutes(app); // Register TSOA routes
-  app.use('/', expressApiRoutes(logRequests)); // Register API routes
 
   app.get('/uploads/*', (req: Request, res: Response) => {
     const filepath = req.params[0];
@@ -55,7 +55,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
   });
 
   // Catch all routes
-  app.get('*', (_, res) => {
+  app.get('/', (_, res) => {
     const uptimeInSeconds = process.uptime();
 
     // Convert uptime to a more readable format
@@ -79,7 +79,11 @@ export const createExpressApp = (logRequests: boolean = true) => {
     return res.render('index', { uptime, year, webAppUrl, adminDashboardUrl });
   });
 
-  app.use(errorMiddleware);
+  app.use((_, res) => {
+    return res.status(404).send('Not found');
+  });
+
+  app.use(errorHandler);
 
   return app;
 };

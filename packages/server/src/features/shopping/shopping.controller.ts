@@ -1,111 +1,130 @@
-import type {
-  AddItemToCart,
-  AddProductToWishlist,
-  GetUserCart,
-  GetUserWishlist,
-  RemoveItemFromCart,
-  RemoveProductFromWishlist,
-} from './shopping.controller.interface.js';
-import type { IShoppingController } from './shopping.controller.interface.js';
-import type { ShoppingService } from './shopping.service.js';
+import {
+  type CreateCartRequest,
+  type CreateCartResponse,
+  CreateCartSchema,
+  type CreateWishlistRequest,
+  type CreateWishlistResponse,
+  CreateWishlistSchema,
+  type DeleteCartResponse,
+  type DeleteWishlistResponse,
+  type GetCartResponse,
+  type GetWishlistResponse,
+} from '@resala/shared';
+import type { Request as ExRequest } from 'express';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Request,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class ShoppingController implements IShoppingController {
-  constructor(private readonly shoppingService: ShoppingService) {}
+import { db } from '../../datastore/index.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
+import { ShoppingService } from './shopping.service.js';
 
-  getUserCart: GetUserCart = async (_, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const cart = await this.shoppingService.cart.get(userId);
+@Tags('Shopping')
+@Route('api/v1')
+@Security('jwt_auth')
+export class ShoppingController extends Controller {
+  private readonly shoppingService: ShoppingService;
 
-      return res.json({ success: true, data: cart });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.shoppingService = new ShoppingService(db);
+  }
 
-  addItemToCart: AddItemToCart = async (req, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const cart = await this.shoppingService.cart.update(userId, req.body);
+  @Get('cart')
+  public async getCart(@Request() req: ExRequest): Promise<GetCartResponse> {
+    const userId = req?.res?.locals.user.id;
+    const cart = await this.shoppingService.cart.get(userId);
 
-      return res.json({ success: true, data: cart });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: cart };
+  }
 
-  removeItemFromCart: RemoveItemFromCart = async (req, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const stockId = req.params.stockId;
-      const cart = await this.shoppingService.cart.delete(userId, stockId);
+  @Post('cart/items')
+  @SuccessResponse('201', 'Item added to cart')
+  @Middlewares([requestValidator(CreateCartSchema)])
+  public async addItemToCart(
+    @Request() req: ExRequest,
+    @Body() body: CreateCartRequest['body']
+  ): Promise<CreateCartResponse> {
+    const userId = req?.res?.locals.user.id;
+    const cart = await this.shoppingService.cart.update(userId, body);
 
-      return res.json({ success: true, data: cart });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: cart };
+  }
 
-  removeUserCart: RemoveItemFromCart = async (_, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      await this.shoppingService.cart.deleteMany(userId);
+  @Delete('cart/items/{stockId}')
+  public async removeItemFromCart(
+    @Request() req: ExRequest,
+    @Path() stockId: string
+  ): Promise<DeleteCartResponse> {
+    const userId = req?.res?.locals.user.id;
+    const cart = await this.shoppingService.cart.delete(userId, +stockId);
 
-      return res.json({
-        success: true,
-        data: {
-          totalQuantity: 0,
-          totalPrice: 0,
-          items: [],
-        },
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: cart };
+  }
 
-  getUserWishlist: GetUserWishlist = async (_, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const wishlist = await this.shoppingService.wishlist.get(userId);
+  @Delete('cart')
+  public async clearCart(@Request() req: ExRequest): Promise<DeleteCartResponse> {
+    const userId = req?.res?.locals.user.id;
+    await this.shoppingService.cart.deleteMany(userId);
 
-      return res.json({ success: true, data: wishlist });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return {
+      success: true,
+      data: {
+        totalQuantity: 0,
+        totalPrice: 0,
+        items: [],
+      },
+    };
+  }
 
-  addProductToWishlist: AddProductToWishlist = async (req, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const wishlist = await this.shoppingService.wishlist.update(userId, req.body.productId);
+  @Get('wishlist')
+  public async getWishlist(@Request() req: ExRequest): Promise<GetWishlistResponse> {
+    const userId = req?.res?.locals.user.id;
+    const wishlist = await this.shoppingService.wishlist.get(userId);
 
-      return res.json({ success: true, data: wishlist });
-    } catch (error) {
-      return next(error);
-    }
-  };
+    return { success: true, data: wishlist };
+  }
 
-  removeProductFromWishlist: RemoveProductFromWishlist = async (req, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      const productId = req.params.productId;
-      const wishlist = await this.shoppingService.wishlist.delete(userId, productId);
+  @Post('wishlist/items')
+  @SuccessResponse('201', 'Item added to wishlist')
+  @Middlewares([requestValidator(CreateWishlistSchema)])
+  public async addProductToWishlist(
+    @Request() req: ExRequest,
+    @Body() body: CreateWishlistRequest['body']
+  ): Promise<CreateWishlistResponse> {
+    const userId = req?.res?.locals.user.id;
+    const wishlist = await this.shoppingService.wishlist.update(userId, body.productId);
 
-      return res.json({ success: true, data: wishlist });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: wishlist };
+  }
 
-  removeUserWishlist: RemoveProductFromWishlist = async (_, res, next) => {
-    try {
-      const userId = res.locals.user.id;
-      await this.shoppingService.wishlist.deleteMany(userId);
+  @Delete('wishlist/items/{productId}')
+  public async removeProductFromWishlist(
+    @Request() req: ExRequest,
+    @Path() productId: string
+  ): Promise<DeleteWishlistResponse> {
+    const userId = req?.res?.locals.user.id;
+    const wishlist = await this.shoppingService.wishlist.delete(userId, +productId);
 
-      return res.json({ success: true, data: [] });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: wishlist };
+  }
+
+  @Delete('wishlist')
+  public async clearWishlist(@Request() req: ExRequest): Promise<DeleteWishlistResponse> {
+    const userId = req?.res?.locals.user.id;
+    await this.shoppingService.wishlist.deleteMany(userId);
+
+    return { success: true, data: [] };
+  }
 }

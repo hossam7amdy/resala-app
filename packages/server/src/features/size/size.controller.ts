@@ -1,78 +1,84 @@
-import type {
-  CreateSize,
-  DeleteSize,
-  GetSize,
-  GetSizesList,
-  ISizeController,
-  UpdateSize,
-} from './size.controller.interface.js';
-import type { SizeService } from './size.service.js';
+import {
+  type CreateSizeRequest,
+  type CreateSizeResponse,
+  CreateSizeSchema,
+  type DeleteSizeResponse,
+  type GetSizeResponse,
+  type ListSizesResponse,
+  type UpdateSizeRequest,
+  type UpdateSizeResponse,
+  UpdateSizeSchema,
+} from '@resala/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from 'tsoa/dist/index.js';
 
-export class SizeController implements ISizeController {
-  constructor(private readonly sizeService: SizeService) {}
+import { db } from '../../datastore/index.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
+import { SizeService } from './size.service.js';
 
-  getSize: GetSize = async (req, res, next) => {
-    try {
-      const size = await this.sizeService.find(req.params.sizeId);
+@Tags('Size')
+@Route('api/v1/sizes')
+export class SizeController extends Controller {
+  private readonly sizeService: SizeService;
 
-      return res.json({
-        success: true,
-        data: size,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+  constructor() {
+    super();
+    this.sizeService = new SizeService(db);
+  }
 
-  listSizes: GetSizesList = async (_, res, next) => {
-    try {
-      const sizes = await this.sizeService.list();
+  @Get('{sizeId}')
+  public async get(@Path() sizeId: string): Promise<GetSizeResponse> {
+    const size = await this.sizeService.find(+sizeId);
 
-      return res.json({
-        success: true,
-        data: sizes,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: size };
+  }
 
-  createSize: CreateSize = async (req, res, next) => {
-    try {
-      const size = await this.sizeService.create(req.body);
+  @Get()
+  public async list(): Promise<ListSizesResponse> {
+    const sizes = await this.sizeService.list();
 
-      return res.status(201).json({
-        success: true,
-        data: size,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: sizes };
+  }
 
-  updateSize: UpdateSize = async (req, res, next) => {
-    try {
-      const size = await this.sizeService.update(req.params.sizeId, req.body);
+  @Post()
+  @SuccessResponse('201', 'Size created')
+  @Security('jwt_auth')
+  @Middlewares([requestValidator(CreateSizeSchema)])
+  public async create(@Body() req: CreateSizeRequest['body']): Promise<CreateSizeResponse> {
+    const size = await this.sizeService.create(req);
 
-      return res.json({
-        success: true,
-        data: size,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: size };
+  }
 
-  deleteSize: DeleteSize = async (req, res, next) => {
-    try {
-      const size = await this.sizeService.delete(req.params.sizeId);
+  @Put('{sizeId}')
+  @Security('jwt_auth')
+  @Middlewares([requestValidator(UpdateSizeSchema)])
+  public async update(
+    @Path() sizeId: string,
+    @Body() req: UpdateSizeRequest['body']
+  ): Promise<UpdateSizeResponse> {
+    const size = await this.sizeService.update(+sizeId, req);
 
-      return res.json({
-        success: true,
-        data: size,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    return { success: true, data: size };
+  }
+
+  @Delete('{sizeId}')
+  @Security('jwt_auth')
+  public async delete(@Path() sizeId: string): Promise<DeleteSizeResponse> {
+    const size = await this.sizeService.delete(+sizeId);
+
+    return { success: true, data: size };
+  }
 }

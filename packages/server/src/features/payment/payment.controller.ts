@@ -20,7 +20,7 @@ import {
 import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { PaymentService } from './payment.service.js';
 import { PaymobService } from './paymob/paymob.service.js';
 
@@ -45,7 +45,7 @@ export class PaymentController extends Controller {
 
   @Post('void')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(VoidPaymentSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(VoidPaymentSchema)])
   public async void(@Body() body: VoidPaymentRequest['body']) {
     const transactionId = body.transactionId;
 
@@ -56,7 +56,7 @@ export class PaymentController extends Controller {
 
   @Post('refund')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(RefundPaymentSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(RefundPaymentSchema)])
   public async refund(@Body() body: RefundPaymentRequest['body']) {
     const { transactionId, amount } = body;
 

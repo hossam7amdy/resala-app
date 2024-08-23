@@ -1,5 +1,6 @@
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 
+import { initDb } from '../../datastore';
 import { execAsync } from '../../utils/execAsync';
 
 export const setup = async () => {
@@ -8,7 +9,7 @@ export const setup = async () => {
   const pgContainer = await new PostgreSqlContainer().start();
   process.env.DATABASE_URL = pgContainer.getConnectionUri();
 
-  await execAsync('yarn prisma migrate deploy');
+  await execAsync('yarn db:migrate');
 
   console.log('🟢 - Database is ready!');
 

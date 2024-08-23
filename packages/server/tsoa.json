@@ -23,12 +23,12 @@
           "description": "Local development"
         },
         {
-          "url": "https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
-          "description": "Development server (https)"
-        },
-        {
           "url": "http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
           "description": "Development server (http)"
+        },
+        {
+          "url": "https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
+          "description": "Development server (https)"
         }
       ]
     }
@@ -36,7 +36,7 @@
   "routes": {
     "esm": true,
     "routesDir": "src/routes",
-    "routesFileName": "tsoa.routes.ts",
+    "routesFileName": "api.routes.ts",
     "authenticationModule": "./src/middlewares/authentication.ts"
   }
 }

@@ -1,4 +1,4 @@
-export class APPError extends Error {
+export class APIError extends Error {
   constructor(
     public statusCode: 400 | 401 | 403 | 404 | 409 | 500,
     message: string
@@ -9,37 +9,37 @@ export class APPError extends Error {
   }
 }
 
-export class BadRequestError extends APPError {
+export class BadRequestError extends APIError {
   constructor(message = 'Bad request. Please check your request and try again.') {
     super(400, message);
   }
 }
 
-export class NotFoundError extends APPError {
+export class NotFoundError extends APIError {
   constructor(message = 'Resource not found') {
     super(404, message);
   }
 }
 
-export class UnauthorizedError extends APPError {
+export class UnauthorizedError extends APIError {
   constructor(message = 'JWT token is missing or invalid') {
     super(401, message);
   }
 }
 
-export class ForbiddenError extends APPError {
+export class ForbiddenError extends APIError {
   constructor(message = 'You do not have permission to access this resource.') {
     super(403, message);
   }
 }
 
-export class ConflictError extends APPError {
+export class ConflictError extends APIError {
   constructor(message = 'Conflict. Resource already exists.') {
     super(409, message);
   }
 }
 
-export class InternalServerError extends APPError {
+export class InternalServerError extends APIError {
   constructor(message = 'Internal server error. Please try again later.') {
     super(500, message);
   }
