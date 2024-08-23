@@ -192,15 +192,15 @@ export declare const ForgotPasswordSchema: z.ZodObject<{
 }>;
 export declare const GetUserSchema: z.ZodObject<{
     params: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        userId: number;
+        userId: string;
     };
 }, {
     params: {
@@ -209,9 +209,9 @@ export declare const GetUserSchema: z.ZodObject<{
 }>;
 export declare const UpdateUserSchema: z.ZodObject<{
     params: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
@@ -236,7 +236,7 @@ export declare const UpdateUserSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        userId: number;
+        userId: string;
     };
     body: {
         phone: string;
@@ -259,15 +259,15 @@ export declare const UpdateUserSchema: z.ZodObject<{
 }>;
 export declare const DeleteUserSchema: z.ZodObject<{
     params: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        userId: number;
+        userId: string;
     };
 }, {
     params: {
@@ -360,9 +360,9 @@ export declare const ListAddressSchema: z.ZodObject<{
 }>;
 export declare const UpdateAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
-        addressId: z.ZodNumber;
+        addressId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        addressId: number;
+        addressId: string;
     }, {
         addressId: number;
     }>;
@@ -405,7 +405,7 @@ export declare const UpdateAddressSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        addressId: number;
+        addressId: string;
     };
     body: {
         phone: string;
@@ -440,9 +440,9 @@ export declare const UpdateAddressSchema: z.ZodObject<{
 }>;
 export declare const DeleteAddressSchema: z.ZodObject<{
     params: z.ZodObject<{
-        addressId: z.ZodNumber;
+        addressId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        addressId: number;
+        addressId: string;
     }, {
         addressId: number;
     }>;
@@ -455,7 +455,7 @@ export declare const DeleteAddressSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        addressId: number;
+        addressId: string;
     };
     query: {
         userId: number;
@@ -492,9 +492,9 @@ export declare const CreateCategorySchema: z.ZodObject<{
 }>;
 export declare const UpdateCategorySchema: z.ZodObject<{
     params: z.ZodObject<{
-        categoryId: z.ZodNumber;
+        categoryId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        categoryId: number;
+        categoryId: string;
     }, {
         categoryId: number;
     }>;
@@ -510,7 +510,7 @@ export declare const UpdateCategorySchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        categoryId: number;
+        categoryId: string;
     };
     body: {
         arName: string;
@@ -527,15 +527,15 @@ export declare const UpdateCategorySchema: z.ZodObject<{
 }>;
 export declare const GetCategorySchema: z.ZodObject<{
     params: z.ZodObject<{
-        categoryId: z.ZodNumber;
+        categoryId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        categoryId: number;
+        categoryId: string;
     }, {
         categoryId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        categoryId: number;
+        categoryId: string;
     };
 }, {
     params: {
@@ -544,15 +544,15 @@ export declare const GetCategorySchema: z.ZodObject<{
 }>;
 export declare const DeleteCategorySchema: z.ZodObject<{
     params: z.ZodObject<{
-        categoryId: z.ZodNumber;
+        categoryId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        categoryId: number;
+        categoryId: string;
     }, {
         categoryId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        categoryId: number;
+        categoryId: string;
     };
 }, {
     params: {
@@ -603,9 +603,9 @@ export declare const CreateProductSchema: z.ZodObject<{
 }>;
 export declare const UpdateProductSchema: z.ZodObject<{
     params: z.ZodObject<{
-        productId: z.ZodNumber;
+        productId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        productId: number;
+        productId: string;
     }, {
         productId: number;
     }>;
@@ -633,7 +633,7 @@ export declare const UpdateProductSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        productId: number;
+        productId: string;
     };
     body: {
         arName: string;
@@ -658,15 +658,15 @@ export declare const UpdateProductSchema: z.ZodObject<{
 }>;
 export declare const GetProductSchema: z.ZodObject<{
     params: z.ZodObject<{
-        productId: z.ZodNumber;
+        productId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        productId: number;
+        productId: string;
     }, {
         productId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        productId: number;
+        productId: string;
     };
 }, {
     params: {
@@ -708,15 +708,15 @@ export declare const ListProductsSchema: z.ZodObject<{
 }>;
 export declare const DeleteProductSchema: z.ZodObject<{
     params: z.ZodObject<{
-        productId: z.ZodNumber;
+        productId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        productId: number;
+        productId: string;
     }, {
         productId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        productId: number;
+        productId: string;
     };
 }, {
     params: {
@@ -757,9 +757,9 @@ export declare const CreateStockSchema: z.ZodObject<{
 }>;
 export declare const UpdateStockSchema: z.ZodObject<{
     params: z.ZodObject<{
-        stockId: z.ZodNumber;
+        stockId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        stockId: number;
+        stockId: string;
     }, {
         stockId: number;
     }>;
@@ -781,7 +781,7 @@ export declare const UpdateStockSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        stockId: number;
+        stockId: string;
     };
     body: {
         productId: number;
@@ -802,15 +802,15 @@ export declare const UpdateStockSchema: z.ZodObject<{
 }>;
 export declare const DeleteStockSchema: z.ZodObject<{
     params: z.ZodObject<{
-        stockId: z.ZodNumber;
+        stockId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        stockId: number;
+        stockId: string;
     }, {
         stockId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        stockId: number;
+        stockId: string;
     };
 }, {
     params: {
@@ -879,9 +879,9 @@ export declare const CreateColorSchema: z.ZodObject<{
 }>;
 export declare const UpdateColorSchema: z.ZodObject<{
     params: z.ZodObject<{
-        colorId: z.ZodNumber;
+        colorId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        colorId: number;
+        colorId: string;
     }, {
         colorId: number;
     }>;
@@ -900,7 +900,7 @@ export declare const UpdateColorSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        colorId: number;
+        colorId: string;
     };
     body: {
         code: string;
@@ -919,15 +919,15 @@ export declare const UpdateColorSchema: z.ZodObject<{
 }>;
 export declare const DeleteColorSchema: z.ZodObject<{
     params: z.ZodObject<{
-        colorId: z.ZodNumber;
+        colorId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        colorId: number;
+        colorId: string;
     }, {
         colorId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        colorId: number;
+        colorId: string;
     };
 }, {
     params: {
@@ -953,9 +953,9 @@ export declare const CreateSizeSchema: z.ZodObject<{
 }>;
 export declare const UpdateSizeSchema: z.ZodObject<{
     params: z.ZodObject<{
-        sizeId: z.ZodNumber;
+        sizeId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        sizeId: number;
+        sizeId: string;
     }, {
         sizeId: number;
     }>;
@@ -968,7 +968,7 @@ export declare const UpdateSizeSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        sizeId: number;
+        sizeId: string;
     };
     body: {
         name: string;
@@ -983,15 +983,15 @@ export declare const UpdateSizeSchema: z.ZodObject<{
 }>;
 export declare const DeleteSizeSchema: z.ZodObject<{
     params: z.ZodObject<{
-        sizeId: z.ZodNumber;
+        sizeId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        sizeId: number;
+        sizeId: string;
     }, {
         sizeId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        sizeId: number;
+        sizeId: string;
     };
 }, {
     params: {
@@ -1044,9 +1044,9 @@ export declare const CreateImageSchema: z.ZodObject<{
 }>;
 export declare const UpdateImageSchema: z.ZodObject<{
     params: z.ZodObject<{
-        imageId: z.ZodNumber;
+        imageId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        imageId: number;
+        imageId: string;
     }, {
         imageId: number;
     }>;
@@ -1059,7 +1059,7 @@ export declare const UpdateImageSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        imageId: number;
+        imageId: string;
     };
     body: {
         isPrimary?: boolean | undefined;
@@ -1074,15 +1074,15 @@ export declare const UpdateImageSchema: z.ZodObject<{
 }>;
 export declare const DeleteImageSchema: z.ZodObject<{
     params: z.ZodObject<{
-        imageId: z.ZodNumber;
+        imageId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        imageId: number;
+        imageId: string;
     }, {
         imageId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        imageId: number;
+        imageId: string;
     };
 }, {
     params: {
@@ -1113,15 +1113,15 @@ export declare const CreateCartSchema: z.ZodObject<{
 }>;
 export declare const DeleteCartSchema: z.ZodObject<{
     params: z.ZodObject<{
-        stockId: z.ZodNumber;
+        stockId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        stockId: number;
+        stockId: string;
     }, {
         stockId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        stockId: number;
+        stockId: string;
     };
 }, {
     params: {
@@ -1147,15 +1147,15 @@ export declare const CreateWishlistSchema: z.ZodObject<{
 }>;
 export declare const DeleteWishlistSchema: z.ZodObject<{
     params: z.ZodObject<{
-        productId: z.ZodNumber;
+        productId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        productId: number;
+        productId: string;
     }, {
         productId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        productId: number;
+        productId: string;
     };
 }, {
     params: {
@@ -1191,15 +1191,15 @@ export declare const CreateOrderSchema: z.ZodObject<{
 }>;
 export declare const GetOrderSchema: z.ZodObject<{
     params: z.ZodObject<{
-        orderId: z.ZodNumber;
+        orderId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        orderId: number;
+        orderId: string;
     }, {
         orderId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        orderId: number;
+        orderId: string;
     };
 }, {
     params: {
@@ -1241,9 +1241,9 @@ export declare const ListOrdersSchema: z.ZodObject<{
 }>;
 export declare const UpdateOrderStatusSchema: z.ZodObject<{
     params: z.ZodObject<{
-        orderId: z.ZodNumber;
+        orderId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        orderId: number;
+        orderId: string;
     }, {
         orderId: number;
     }>;
@@ -1259,7 +1259,7 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        orderId: number;
+        orderId: string;
     };
     body: {
         orderStatus: "PENDING" | "FULFILLED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
@@ -1276,25 +1276,25 @@ export declare const UpdateOrderStatusSchema: z.ZodObject<{
 }>;
 export declare const DeleteOrderSchema: z.ZodObject<{
     params: z.ZodObject<{
-        orderId: z.ZodNumber;
+        orderId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        orderId: number;
+        orderId: string;
     }, {
         orderId: number;
     }>;
     query: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        orderId: number;
+        orderId: string;
     };
     query: {
-        userId: number;
+        userId: string;
     };
 }, {
     params: {
@@ -1306,15 +1306,15 @@ export declare const DeleteOrderSchema: z.ZodObject<{
 }>;
 export declare const GetPaymentSchema: z.ZodObject<{
     params: z.ZodObject<{
-        transactionId: z.ZodNumber;
+        transactionId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        transactionId: number;
+        transactionId: string;
     }, {
         transactionId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        transactionId: number;
+        transactionId: string;
     };
 }, {
     params: {
@@ -1394,15 +1394,15 @@ export declare const CreateReviewSchema: z.ZodObject<{
 }>;
 export declare const GetReviewSchema: z.ZodObject<{
     params: z.ZodObject<{
-        reviewId: z.ZodNumber;
+        reviewId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        reviewId: number;
+        reviewId: string;
     }, {
         reviewId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        reviewId: number;
+        reviewId: string;
     };
 }, {
     params: {
@@ -1444,9 +1444,9 @@ export declare const ListReviewsSchema: z.ZodObject<{
 }>;
 export declare const UpdateReviewSchema: z.ZodObject<{
     params: z.ZodObject<{
-        reviewId: z.ZodNumber;
+        reviewId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        reviewId: number;
+        reviewId: string;
     }, {
         reviewId: number;
     }>;
@@ -1468,7 +1468,7 @@ export declare const UpdateReviewSchema: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        reviewId: number;
+        reviewId: string;
     };
     body: {
         userId: number;
@@ -1489,25 +1489,25 @@ export declare const UpdateReviewSchema: z.ZodObject<{
 }>;
 export declare const DeleteReviewSchema: z.ZodObject<{
     params: z.ZodObject<{
-        reviewId: z.ZodNumber;
+        reviewId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        reviewId: number;
+        reviewId: string;
     }, {
         reviewId: number;
     }>;
     query: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
-        reviewId: number;
+        reviewId: string;
     };
     query: {
-        userId: number;
+        userId: string;
     };
 }, {
     params: {
