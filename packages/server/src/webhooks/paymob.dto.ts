@@ -1,10 +1,4 @@
-type SourceData = {
-  type: string;
-  pan: string;
-  sub_type: string;
-};
-
-export type PostProcessedBodyDTO = {
+export type PostPayRequestDTO = {
   paymob_request_id: string | null;
   intention: {
     id: string;
@@ -76,46 +70,12 @@ export type PostProcessedBodyDTO = {
     };
     owner: number;
     pending: boolean;
-    source_data: SourceData;
+    source_data: {
+      type: string;
+      pan: string;
+      sub_type: string;
+    };
     success: boolean;
     receipt: string;
   };
-};
-
-export type PostRedirectQueryDTO = {
-  id: number;
-  pending: boolean;
-  amount_cents: number;
-  success: boolean;
-  is_auth: boolean;
-  is_capture: boolean;
-  is_standalone_payment: boolean;
-  is_voided: boolean;
-  is_refunded: boolean;
-  is_3d_secure: boolean;
-  integration_id: number;
-  profile_id: number;
-  has_parent_transaction: boolean;
-  order: number;
-  created_at: string;
-  currency: string;
-  merchant_commission: number;
-  discount_details: any[];
-  is_void: boolean;
-  is_refund: boolean;
-  error_occured: boolean;
-  refunded_amount_cents: number;
-  captured_amount: number;
-  updated_at: string;
-  is_settled: boolean;
-  bill_balanced: boolean;
-  is_bill: boolean;
-  owner: number;
-  data_message: string;
-  source_data_pan: string;
-  source_data_sub_type: string;
-  source_data_type: string;
-  acq_response_code: string;
-  txn_response_code: string;
-  hmac: string;
 };
