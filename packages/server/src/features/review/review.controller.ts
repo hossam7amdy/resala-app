@@ -75,7 +75,7 @@ export class ReviewController extends Controller {
     @Path() reviewId: string,
     @Queries() query: DeleteReviewRequest['query']
   ): Promise<DeleteReviewResponse> {
-    const address = await this.reviewService.delete(+reviewId, query.userId);
+    const address = await this.reviewService.delete(+reviewId, +query.userId);
 
     return { success: true, data: address };
   }
