@@ -44,7 +44,7 @@ export const updateProduct = async (id: number | string, formData: FormData) => 
 
 export const deleteProduct = async (id: number | string) => {
   await callEndpoint<DeleteProductRequest, DeleteProductResponse>(ENDPOINT_CONFIGS.deleteProduct, {
-    params: { productId: Number(id) },
+    params: { productId: id.toString() },
   });
 
   revalidatePath(ROUTES.PRODUCTS);

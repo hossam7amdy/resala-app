@@ -24,7 +24,7 @@ export const getUserById = async (id: number | string) => {
 
   try {
     const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
-      params: { userId: Number(id) },
+      params: { userId: id.toString() },
     });
 
     return response.data;

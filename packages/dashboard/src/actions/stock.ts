@@ -27,7 +27,7 @@ export const createStock = async (stock: CreateStockRequest['body']) => {
 export const updateStock = async (stockId: string | number, stock: UpdateStockRequest['body']) => {
   const response = await callEndpoint<UpdateStockRequest, UpdateStockResponse>(
     ENDPOINT_CONFIGS.updateStock,
-    { params: { stockId: Number(stockId) }, body: stock }
+    { params: { stockId: stockId.toString() }, body: stock }
   );
 
   revalidatePath(ROUTES.STOCKS);
@@ -37,7 +37,7 @@ export const updateStock = async (stockId: string | number, stock: UpdateStockRe
 
 export const deleteStock = async (stockId: string | number) => {
   await callEndpoint<DeleteStockRequest, DeleteStockResponse>(ENDPOINT_CONFIGS.deleteStock, {
-    params: { stockId: Number(stockId) },
+    params: { stockId: stockId.toString() },
   });
 
   revalidatePath(ROUTES.STOCKS);

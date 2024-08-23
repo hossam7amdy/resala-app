@@ -25,7 +25,7 @@ export const findCategoryById = async (id: string) => {
 
   const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
     ENDPOINT_CONFIGS.getCategory,
-    { params: { categoryId: Number(id) } }
+    { params: { categoryId: id.toString() } }
   );
 
   return response.data;

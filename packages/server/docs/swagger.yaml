@@ -650,8 +650,7 @@ paths:
           name: userId
           required: false
           schema:
-            format: double
-            type: number
+            type: string
     get:
       operationId: GetReview
       responses:
@@ -1042,8 +1041,7 @@ paths:
           name: userId
           required: false
           schema:
-            format: double
-            type: number
+            type: string
     patch:
       operationId: UpdateStatus
       responses:

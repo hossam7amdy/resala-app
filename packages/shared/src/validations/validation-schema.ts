@@ -105,13 +105,19 @@ export const ForgotPasswordSchema = z.object({
 // User Schemas
 export const GetUserSchema = z.object({
   params: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
 export const UpdateUserSchema = z.object({
   params: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: z.object({
     firstName: UserSchema.shape.firstName,
@@ -124,7 +130,10 @@ export const UpdateUserSchema = z.object({
 
 export const DeleteUserSchema = z.object({
   params: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -152,7 +161,10 @@ export const ListAddressSchema = z.object({
 
 export const UpdateAddressSchema = z.object({
   params: z.object({
-    addressId: z.coerce.number().positive(),
+    addressId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateAddressSchema.shape.body,
 });
@@ -172,7 +184,10 @@ export const CreateCategorySchema = z.object({
 
 export const UpdateCategorySchema = z.object({
   params: z.object({
-    categoryId: z.coerce.number().positive(),
+    categoryId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateCategorySchema.shape.body,
 });
@@ -199,7 +214,10 @@ export const CreateProductSchema = z.object({
 
 export const UpdateProductSchema = z.object({
   params: z.object({
-    productId: z.coerce.number().positive(),
+    productId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateProductSchema.shape.body,
 });
@@ -230,14 +248,20 @@ export const CreateStockSchema = z.object({
 
 export const UpdateStockSchema = z.object({
   params: z.object({
-    stockId: z.coerce.number().positive(),
+    stockId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateStockSchema.shape.body,
 });
 
 export const DeleteStockSchema = z.object({
   params: z.object({
-    stockId: z.coerce.number().positive(),
+    stockId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -258,7 +282,10 @@ export const CreateColorSchema = z.object({
 
 export const UpdateColorSchema = z.object({
   params: z.object({
-    colorId: z.coerce.number().positive(),
+    colorId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateColorSchema.shape.body,
 });
@@ -276,7 +303,10 @@ export const CreateSizeSchema = z.object({
 
 export const UpdateSizeSchema = z.object({
   params: z.object({
-    sizeId: z.coerce.number().positive(),
+    sizeId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: CreateSizeSchema.shape.body,
 });
@@ -302,7 +332,10 @@ export const CreateImageSchema = z.object({
 
 export const UpdateImageSchema = z.object({
   params: z.object({
-    imageId: z.coerce.number().positive(),
+    imageId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: z.object({
     isPrimary: z.coerce.boolean().optional(),
@@ -311,7 +344,10 @@ export const UpdateImageSchema = z.object({
 
 export const DeleteImageSchema = z.object({
   params: z.object({
-    imageId: z.coerce.number().positive(),
+    imageId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -325,7 +361,10 @@ export const CreateCartSchema = z.object({
 
 export const DeleteCartSchema = z.object({
   params: z.object({
-    stockId: z.coerce.number().positive(),
+    stockId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -337,7 +376,10 @@ export const CreateWishlistSchema = z.object({
 
 export const DeleteWishlistSchema = z.object({
   params: z.object({
-    productId: z.coerce.number().positive(),
+    productId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -352,7 +394,10 @@ export const CreateOrderSchema = z.object({
 
 export const GetOrderSchema = z.object({
   params: z.object({
-    orderId: z.coerce.number().positive(),
+    orderId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -364,7 +409,10 @@ export const ListOrdersSchema = z.object({
 
 export const UpdateOrderStatusSchema = z.object({
   params: z.object({
-    orderId: z.coerce.number().positive(),
+    orderId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
   body: z.object({
     orderStatus: z.enum(['PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
@@ -375,14 +423,20 @@ export const UpdateOrderStatusSchema = z.object({
 export const DeleteOrderSchema = z.object({
   params: GetOrderSchema.shape.params,
   query: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
 // Payment Schemas
 export const GetPaymentSchema = z.object({
   params: z.object({
-    transactionId: z.coerce.number().positive(),
+    transactionId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -411,7 +465,10 @@ export const CreateReviewSchema = z.object({
 
 export const GetReviewSchema = z.object({
   params: z.object({
-    reviewId: z.coerce.number().positive(),
+    reviewId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -429,6 +486,9 @@ export const UpdateReviewSchema = z.object({
 export const DeleteReviewSchema = z.object({
   params: GetReviewSchema.shape.params,
   query: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });

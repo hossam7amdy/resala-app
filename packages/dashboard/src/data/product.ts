@@ -27,7 +27,7 @@ export const findProduct = async (id: string | number) => {
   try {
     const response = await callEndpoint<GetProductRequest, GetProductResponse>(
       ENDPOINT_CONFIGS.getProduct,
-      { params: { productId: Number(id) } }
+      { params: { productId: id.toString() } }
     );
 
     return response.data;

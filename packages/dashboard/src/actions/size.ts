@@ -28,7 +28,7 @@ export const updateSize = async (id: string | number, data: UpdateSizeRequest['b
     ENDPOINT_CONFIGS.updateSize,
     {
       body: data,
-      params: { sizeId: Number(id) },
+      params: { sizeId: id.toString() },
     }
   );
 
@@ -38,7 +38,7 @@ export const updateSize = async (id: string | number, data: UpdateSizeRequest['b
 
 export const deleteSize = async (id: string | number) => {
   await callEndpoint<DeleteSizeRequest, DeleteSizeResponse>(ENDPOINT_CONFIGS.deleteSize, {
-    params: { sizeId: Number(id) },
+    params: { sizeId: id.toString() },
   });
 
   revalidatePath(ROUTES.SIZES);
