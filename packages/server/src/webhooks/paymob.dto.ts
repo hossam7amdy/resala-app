@@ -111,10 +111,10 @@ export type PostRedirectQueryDTO = {
   bill_balanced: boolean;
   is_bill: boolean;
   owner: number;
-  data: {
-    message: string;
-  };
-  source_data: SourceData;
+  data_message: string;
+  source_data_pan: string;
+  source_data_sub_type: string;
+  source_data_type: string;
   acq_response_code: string;
   txn_response_code: string;
   hmac: string;
