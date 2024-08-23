@@ -18,7 +18,6 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { BadRequestError } from '../../errors/api.errors.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { requestValidator } from '../../middlewares/requestValidator.js';
 import { PaymentService } from './payment.service.js';
@@ -63,19 +62,5 @@ export class PaymentController extends Controller {
     await this.paymentService.refund(transactionId, amount);
 
     return { success: true };
-  }
-
-  /** Webhook for PayMob */
-  @Post('post_pay/{orderId}')
-  public postPay(
-    @Path() orderId: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Body() req: any
-  ) {
-    if (!orderId) {
-      throw new BadRequestError('Order ID is required');
-    }
-
-    return this.paymentService.postPayCallback(+orderId, req.body);
   }
 }

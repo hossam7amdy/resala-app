@@ -925,27 +925,6 @@ paths:
                   type: number
                   format: double
               type: object
-  /api/v1/payments/post_pay/{orderId}:
-    post:
-      operationId: PostPay
-      responses:
-        "204":
-          description: No content
-      description: Webhook for PayMob
-      tags:
-        - Payment
-      security: []
-      parameters:
-        - in: path
-          name: orderId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: {}
   /api/v1/orders:
     post:
       operationId: Create

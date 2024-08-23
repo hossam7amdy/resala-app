@@ -1,15 +1,7 @@
-import type {
-  Address,
-  GetPaymentResponse,
-  Order,
-  OrderItem,
-  PaymentStatusType,
-  User,
-} from '@resala/shared';
+import type { Address, GetPaymentResponse, Order, OrderItem, User } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
-import type { PostPayCallbackObject, Transaction } from './paymob/index.js';
 import type { PaymobService } from './paymob/index.js';
 
 export class PaymentService {
@@ -24,13 +16,13 @@ export class PaymentService {
     shipping: Omit<Address, 'id'>;
     items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
   }): Promise<{ paymentUrl: string }> {
-    const { payment_link } = await this.paymobService.checkout(payload);
+    const { payment_link, ...rest } = await this.paymobService.checkout(payload);
 
     await this.db.payment.create({
       data: {
         paymentLink: payment_link,
         orderId: payload.order.id,
-        transactionId: null,
+        transactionId: +rest.special_reference || null,
         transactionOrderId: null,
       },
     });
@@ -62,34 +54,5 @@ export class PaymentService {
     } catch (e) {
       throw new NotFoundError((e as Error).message);
     }
-  }
-
-  async postPayCallback(orderId: number, postPayObj: PostPayCallbackObject): Promise<void> {
-    this.paymobService.verify(postPayObj).catch(console.error);
-
-    const transaction = postPayObj.transaction;
-
-    await this.db.payment.update({
-      where: { orderId },
-      data: {
-        transactionId: transaction.id,
-        transactionOrderId: transaction.order.id,
-      },
-    });
-
-    await this.db.order.update({
-      data: {
-        paymentStatus: this._status(transaction),
-      },
-      where: { id: orderId },
-    });
-  }
-
-  _status(transaction: Transaction): PaymentStatusType | undefined {
-    if (transaction.is_voided) return 'VOIDED';
-    if (transaction.is_refunded) return 'REFUNDED';
-    if (transaction.error_occured) return 'FAILED';
-    if (transaction.success) return 'PAID';
-    if (transaction.pending) return 'UNPAID';
   }
 }

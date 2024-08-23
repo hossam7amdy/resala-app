@@ -8,6 +8,7 @@ import { parse } from 'yaml';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { apiRequestLogger } from './middlewares/requestLogger.js';
 import { RegisterRoutes } from './routes/api.routes.js';
+import { postPay } from './webhooks/paymob.js';
 
 const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
 
@@ -41,6 +42,8 @@ export const createExpressApp = (logRequests: boolean = true) => {
   if (logRequests) app.use(apiRequestLogger);
 
   RegisterRoutes(app); // Register TSOA routes
+
+  app.post('/post_pay', postPay); // Paymob webhook
 
   app.get('/uploads/*', (req: Request, res: Response) => {
     const filepath = req.params[0];
