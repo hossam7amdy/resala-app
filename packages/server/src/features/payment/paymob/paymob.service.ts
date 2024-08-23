@@ -1,21 +1,22 @@
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { createHmac } from 'crypto';
 import { Decimal } from 'decimal.js';
 
-import type {
-  AuthenticateApiResponse,
-  CheckoutApiResponse,
-  CheckoutDto,
-  PostPayCallbackObject,
-} from './payments.dtos.js';
+import type { AuthenticateApiResponse, CheckoutApiResponse, CheckoutDto } from './payments.dtos.js';
 
 export class PaymobService {
   private readonly api: AxiosInstance;
+  private readonly serverUrl = process.env.SERVER_URL;
+  private readonly baseURL = 'https://accept.paymob.com';
+  private readonly apiToken = process.env.PAYMOB_API_TOKEN;
+  private readonly secretKey = process.env.PAYMOB_SECRET_KEY;
+  private readonly publicKey = process.env.PAYMOB_PUBLIC_KEY;
+  private readonly integrationId = +process.env.PAYMOB_INTEGRATION_ID;
+  private readonly checkoutLink = `https://accept.paymob.com/unifiedcheckout/?publicKey=${this.publicKey}`;
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.PAYMOB_BASE_URL,
+      baseURL: this.baseURL,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -26,14 +27,14 @@ export class PaymobService {
         return response.data;
       },
       error => {
-        throw error.response.data;
+        throw error.response.data ?? error.response ?? error;
       }
     );
   }
 
   async authenticate(): Promise<{ token: string }> {
     const body = {
-      api_key: process.env.PAYMOB_API_TOKEN,
+      api_key: this.apiToken,
     };
 
     const { token } = await this.api.post<unknown, AuthenticateApiResponse>(
@@ -44,38 +45,6 @@ export class PaymobService {
     return { token };
   }
 
-  async verify({ hmac, transaction }: PostPayCallbackObject): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const lexicographical =
-        transaction.amount_cents +
-        transaction.created_at +
-        transaction.currency +
-        transaction.error_occured +
-        transaction.has_parent_transaction +
-        transaction.id +
-        transaction.integration_id +
-        transaction.is_3d_secure +
-        transaction.is_auth +
-        transaction.is_capture +
-        transaction.is_refunded +
-        transaction.is_standalone_payment +
-        transaction.is_voided +
-        transaction.order.id +
-        transaction.owner +
-        transaction.pending +
-        transaction.source_data.pan +
-        transaction.source_data.sub_type +
-        transaction.source_data.type +
-        transaction.success;
-
-      const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
-        .update(lexicographical)
-        .digest('hex');
-
-      return hash === hmac ? resolve() : reject("HMAC doesn't match");
-    });
-  }
-
   async checkout({
     user,
     order,
@@ -83,7 +52,7 @@ export class PaymobService {
     items,
   }: CheckoutDto): Promise<{ payment_link: string } & CheckoutApiResponse> {
     const headers = {
-      Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
+      Authorization: `Token ${this.secretKey}`,
     };
 
     const orderItems = items.map(item => ({
@@ -103,9 +72,9 @@ export class PaymobService {
     const body = {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
-      redirection_url: `${process.env.WEB_APP_URL}`,
-      notification_url: `${process.env.SERVER_URL}/post_pay/${order.id}`,
-      payment_methods: [+process.env.PAYMOB_INTEGRATION_ID],
+      redirection_url: `${this.serverUrl}/post_pay/${order.id}/`,
+      notification_url: `${this.serverUrl}/post_pay/${order.id}/`,
+      payment_methods: [this.integrationId],
       items: orderItems,
       billing_data: {
         first_name: user.firstName,
@@ -137,7 +106,7 @@ export class PaymobService {
       throw new Error('Invalid response from Paymob');
     }
 
-    const payment_link = `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}&clientSecret=${client_secret}`;
+    const payment_link = this.getCheckoutLink(client_secret);
 
     return { payment_link, client_secret, ...rest };
   }
@@ -170,7 +139,7 @@ export class PaymobService {
 
   async refund(trxId: number, amountCents: number): Promise<any> {
     const headers = {
-      Authorization: `Token ${process.env.PAYMOB_SECRET_KEY}`,
+      Authorization: `Token ${this.secretKey}`,
     };
 
     const body = {
@@ -181,5 +150,9 @@ export class PaymobService {
     return await this.api.post('/api/acceptance/void_refund/refund', body, {
       headers,
     });
+  }
+
+  private getCheckoutLink(clientSecret: string) {
+    return `${this.checkoutLink}&clientSecret=${clientSecret}`;
   }
 }
