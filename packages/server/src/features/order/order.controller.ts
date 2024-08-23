@@ -3,7 +3,6 @@ import type {
   CreateOrderResponse,
   DeleteOrderRequest,
   DeleteOrderResponse,
-  GetOrderRequest,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
@@ -38,7 +37,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess, authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { AddressService } from '../address/address.service.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
@@ -73,7 +72,7 @@ export class OrderController extends Controller {
   /** Creates a new order for current authenticated user */
   @Post()
   @SuccessResponse('201', 'Order created successfully')
-  @Middlewares([validateMiddleware(CreateOrderSchema)])
+  @Middlewares([requestValidator(CreateOrderSchema)])
   public async create(
     @Request() req: ExRequest,
     @Body() body: CreateOrderRequest['body']
@@ -102,18 +101,16 @@ export class OrderController extends Controller {
 
   /** Get order details **Only admins can access this endpoint** */
   @Get('{orderId}')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(GetOrderSchema)])
-  public async get(
-    @Path() orderId: GetOrderRequest['params']['orderId']
-  ): Promise<GetOrderResponse> {
-    const order = await this.orderService.find(orderId);
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(GetOrderSchema)])
+  public async get(@Path() orderId: string): Promise<GetOrderResponse> {
+    const order = await this.orderService.find(+orderId);
 
     return { success: true, data: order };
   }
 
   /** List orders with pagination */
   @Get()
-  @Middlewares([validateMiddleware(ListOrdersSchema)])
+  @Middlewares([requestValidator(ListOrdersSchema)])
   public async list(@Queries() query: ListOrdersRequest['query']): Promise<ListOrdersResponse> {
     const { orders, pagination } = await this.orderService.list(query);
 
@@ -125,13 +122,13 @@ export class OrderController extends Controller {
 
   /** Delete order, Order details will not deleted from database, it will just marked as canceled **Only admins can access this endpoint** */
   @Delete('{orderId}')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(DeleteOrderSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(DeleteOrderSchema)])
   public async delete(
-    @Path() orderId: DeleteOrderRequest['params']['orderId'],
+    @Path() orderId: string,
     @Queries() _: DeleteOrderRequest['query']
   ): Promise<DeleteOrderResponse> {
     // cancel order
-    const order = await this.orderService.update(orderId, {
+    const order = await this.orderService.update(+orderId, {
       orderStatus: OrderStatus.CANCELLED,
       paymentStatus: undefined as any,
     });
@@ -146,13 +143,13 @@ export class OrderController extends Controller {
 
   /** Update order status **Only admins can access this endpoint** */
   @Patch('{orderId}')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateOrderStatusSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateOrderStatusSchema)])
   public async updateStatus(
-    @Path() orderId: UpdateOrderRequest['params']['orderId'],
+    @Path() orderId: string,
     @Body() body: UpdateOrderRequest['body']
   ): Promise<UpdateOrderResponse> {
     const { orderStatus } = body;
-    const order = await this.orderService.update(orderId, body);
+    const order = await this.orderService.update(+orderId, body);
 
     if (order.user?.email) {
       await this.notificationService.sendOrderConfirmationEmail(

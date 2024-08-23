@@ -29,7 +29,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { AddressService } from './address.service.js';
 
 @Tags('Address')
@@ -45,7 +45,7 @@ export class AddressController extends Controller {
   }
 
   @Get()
-  @Middlewares([validateMiddleware(ListAddressSchema)])
+  @Middlewares([requestValidator(ListAddressSchema)])
   public async listUserAddress(@Query() userId: number): Promise<ListAddressResponse> {
     const addresses = await this.addressService.list(userId);
 
@@ -53,7 +53,7 @@ export class AddressController extends Controller {
   }
 
   @Post()
-  @Middlewares([validateMiddleware(CreateAddressSchema)])
+  @Middlewares([requestValidator(CreateAddressSchema)])
   @SuccessResponse('201', 'Address created')
   public async createUserAddress(
     @Body() body: CreateAddressRequest['body']
@@ -64,23 +64,23 @@ export class AddressController extends Controller {
   }
 
   @Put('{addressId}')
-  @Middlewares([validateMiddleware(UpdateAddressSchema)])
+  @Middlewares([requestValidator(UpdateAddressSchema)])
   public async updateUserAddress(
-    @Path() addressId: number,
+    @Path() addressId: string,
     @Body() body: UpdateAddressRequest['body']
   ): Promise<UpdateAddressResponse> {
-    const address = await this.addressService.update(addressId, body);
+    const address = await this.addressService.update(+addressId, body);
 
     return { success: true, data: address };
   }
 
   @Delete('{addressId}')
-  @Middlewares([validateMiddleware(DeleteAddressSchema)])
+  @Middlewares([requestValidator(DeleteAddressSchema)])
   public async deleteUserAddress(
-    @Path() addressId: number,
-    @Queries() _: { userId: number }
+    @Path() addressId: string,
+    @Queries() _: { userId: string }
   ): Promise<DeleteAddressResponse> {
-    const address = await this.addressService.delete(addressId);
+    const address = await this.addressService.delete(+addressId);
 
     return { success: true, data: address };
   }

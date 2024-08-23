@@ -71,15 +71,17 @@
             display: inline-block;
             margin: 10px;
             padding: 15px 30px;
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-size: 1.2em;
+            transition: background-color 0.3s;
         }
 
         .links a:hover {
-            background-color: #0056b3;
+            background-color: rgb(2, 99, 117, 0.85);
+
         }
 
         footer {
@@ -105,6 +107,7 @@
 
             .links a {
                 padding: 15px 20px;
+                width: 100%;
             }
 
             footer {
@@ -119,7 +122,7 @@
 <body>
     <header>
         <img src="/assets/logo.png" alt="Logo" width="150" />
-        <h1>Welcome to Our Server</h1>
+        <h1>Welcome to our server</h1>
         <p>Access our web app, admin dashboard, and API documentation below.</p>
     </header>
 
@@ -137,7 +140,7 @@
                 <%= year %>
             </span> Team. All rights reserved.
         </p>
-        <div>Server Status: 🟢<strong>Online</strong> | Uptime: <span>
+        <div>Server Status: 🟢 <strong>Online</strong> | Uptime: <span>
                 <%= uptime %>
             </span></div>
     </footer>

@@ -18,7 +18,7 @@ const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFil
   cb(null, true);
 };
 
-export const uploadMiddleware = multer({
+export const uploadHandler = multer({
   storage: multer.memoryStorage(),
   fileFilter,
   limits: {

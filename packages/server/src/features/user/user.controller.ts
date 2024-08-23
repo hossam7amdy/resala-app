@@ -27,7 +27,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess, authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/index.js';
+import { requestValidator } from '../../middlewares/index.js';
 import { UserService } from './user.service.js';
 
 @Tags('User')
@@ -43,15 +43,15 @@ export class UserController extends Controller {
   }
 
   @Get('{userId}')
-  @Middlewares([validateMiddleware(GetUserSchema)])
-  public async getUser(@Path() userId: number): Promise<GetUserResponse> {
-    const user = await this.userService.find(userId);
+  @Middlewares([requestValidator(GetUserSchema)])
+  public async getUser(@Path() userId: string): Promise<GetUserResponse> {
+    const user = await this.userService.find(+userId);
 
     return { success: true, data: user };
   }
 
   @Get()
-  @Middlewares([validateMiddleware(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([requestValidator(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
   public async listUsers(
     @Queries() listUserDto: ListUsersRequest['query']
   ): Promise<ListUsersResponse> {
@@ -68,21 +68,21 @@ export class UserController extends Controller {
   }
 
   @Delete('{userId}')
-  @Middlewares([validateMiddleware(DeleteUserSchema), authorizeRole(['ADMIN'])])
+  @Middlewares([requestValidator(DeleteUserSchema), authorizeRole(['ADMIN'])])
   @SuccessResponse('200', 'User deleted successfully')
-  public async deleteUser(@Path() userId: number): Promise<DeleteUserResponse> {
-    await this.userService.delete(userId);
+  public async deleteUser(@Path() userId: string): Promise<DeleteUserResponse> {
+    await this.userService.delete(+userId);
 
     return { success: true };
   }
 
   @Put('{userId}')
-  @Middlewares([validateMiddleware(UpdateUserSchema)])
+  @Middlewares([requestValidator(UpdateUserSchema)])
   public async updateUser(
-    @Path() userId: number,
+    @Path() userId: string,
     @Body() body: UpdateUserRequest['body']
   ): Promise<UpdateUserResponse> {
-    const user = await this.userService.update(userId, body);
+    const user = await this.userService.update(+userId, body);
 
     return { success: true, data: user };
   }

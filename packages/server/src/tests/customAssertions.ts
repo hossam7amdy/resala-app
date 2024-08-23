@@ -1,7 +1,7 @@
-import type { GetCategoryResponse, GetProfileResponse, ListAddressResponse } from '@resala/shared';
+import type { GetCategoryResponse, GetUserResponse, ListAddressResponse } from '@resala/shared';
 import { expect } from 'vitest';
 
-export const userAssertions: GetProfileResponse['data'] = {
+export const userAssertions: GetUserResponse['data'] = {
   id: expect.any(Number),
   email: expect.any(String),
   firstName: expect.any(String),

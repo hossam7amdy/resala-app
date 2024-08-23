@@ -28,7 +28,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { validateMiddleware } from '../../middlewares/validateMiddleware.js';
+import { requestValidator } from '../../middlewares/requestValidator.js';
 import { CategoryService } from './category.service.js';
 
 @Tags('Category')
@@ -42,8 +42,8 @@ export class CategoryController extends Controller {
   }
 
   @Get('{categoryId}')
-  @Middlewares([validateMiddleware(GetCategorySchema)])
-  public async get(@Path() categoryId: number): Promise<GetCategoryResponse> {
+  @Middlewares([requestValidator(GetCategorySchema)])
+  public async get(@Path() categoryId: string): Promise<GetCategoryResponse> {
     const category = await this.categoryService.find(+categoryId);
 
     return { success: true, data: category };
@@ -60,7 +60,7 @@ export class CategoryController extends Controller {
   @Post()
   @SuccessResponse('201', 'Category created')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(CreateCategorySchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateCategorySchema)])
   public async create(
     @Body() body: CreateCategoryRequest['body']
   ): Promise<CreateCategoryResponse> {
@@ -72,9 +72,9 @@ export class CategoryController extends Controller {
   /** Update a category, only admins can update categories */
   @Put('{categoryId}')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(UpdateCategorySchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateCategorySchema)])
   public async update(
-    @Path() categoryId: number,
+    @Path() categoryId: string,
     @Body() body: UpdateCategoryRequest['body']
   ): Promise<UpdateCategoryResponse> {
     const category = await this.categoryService.update(+categoryId, body);
@@ -85,8 +85,8 @@ export class CategoryController extends Controller {
   /** Delete a category, only admins can delete categories */
   @Delete('{categoryId}')
   @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validateMiddleware(DeleteCategorySchema)])
-  public async delete(@Path() categoryId: number): Promise<DeleteCategoryResponse> {
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(DeleteCategorySchema)])
+  public async delete(@Path() categoryId: string): Promise<DeleteCategoryResponse> {
     const category = await this.categoryService.delete(+categoryId);
 
     return { success: true, data: category };
