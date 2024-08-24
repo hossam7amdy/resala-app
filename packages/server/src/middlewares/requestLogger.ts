@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 
-import { logger } from '../logger/index.js';
+import { logger } from '../lib/logger.js';
 
 /** logging incoming requests */
 export const apiRequestLogger = morgan(
