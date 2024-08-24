@@ -62,8 +62,8 @@ export const postPay: RequestHandler<{ orderId: string }, unknown, PostPayReques
           orderId,
         },
         data: {
-          transactionId: transaction.id,
-          transactionOrderId: transaction.order.id,
+          transactionId: +transaction.id,
+          transactionOrderId: +transaction.order.id,
         },
       }),
       db.order.update({
