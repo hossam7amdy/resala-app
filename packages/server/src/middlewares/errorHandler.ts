@@ -6,7 +6,7 @@ import { ValidateError } from 'tsoa/dist/index.js';
 import { ZodError } from 'zod';
 
 import { APIError } from '../errors/api.errors.js';
-import { logger } from '../logger/index.js';
+import { logger } from '../lib/logger.js';
 import { formatZodError } from '../utils/zodErrors.js';
 
 /**
