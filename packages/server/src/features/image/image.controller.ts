@@ -26,6 +26,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateImage } from '../../middlewares/uploadHandler.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ImageService } from './image.service.js';
@@ -51,6 +52,8 @@ export class ImageController extends Controller {
     @FormField() productId: number | string,
     @UploadedFiles() images: Express.Multer.File[]
   ): Promise<CreateImageResponse> {
+    images.forEach(image => validateImage(image));
+
     const { body } = await CreateImageSchema.parseAsync({
       body: {
         colorId,

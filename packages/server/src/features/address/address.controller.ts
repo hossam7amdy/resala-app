@@ -29,7 +29,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { AddressService } from './address.service.js';
 
 @Tags('Address')
@@ -45,7 +45,7 @@ export class AddressController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListAddressSchema)])
+  @Middlewares([validate(ListAddressSchema)])
   public async listUserAddress(@Query() userId: number): Promise<ListAddressResponse> {
     const addresses = await this.addressService.list(userId);
 
@@ -53,7 +53,7 @@ export class AddressController extends Controller {
   }
 
   @Post()
-  @Middlewares([requestValidator(CreateAddressSchema)])
+  @Middlewares([validate(CreateAddressSchema)])
   @SuccessResponse('201', 'Address created')
   public async createUserAddress(
     @Body() body: CreateAddressRequest['body']
@@ -64,7 +64,7 @@ export class AddressController extends Controller {
   }
 
   @Put('{addressId}')
-  @Middlewares([requestValidator(UpdateAddressSchema)])
+  @Middlewares([validate(UpdateAddressSchema)])
   public async updateUserAddress(
     @Path() addressId: string,
     @Body() body: UpdateAddressRequest['body']
@@ -75,7 +75,7 @@ export class AddressController extends Controller {
   }
 
   @Delete('{addressId}')
-  @Middlewares([requestValidator(DeleteAddressSchema)])
+  @Middlewares([validate(DeleteAddressSchema)])
   public async deleteUserAddress(
     @Path() addressId: string,
     @Queries() _: { userId: string }

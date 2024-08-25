@@ -6,7 +6,7 @@ import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
 import { errorHandler } from './middlewares/errorHandler.js';
-import { apiRequestLogger } from './middlewares/requestLogger.js';
+import { loggerHandler } from './middlewares/loggerHandler.js';
 import { RegisterRoutes } from './routes/api.routes.js';
 import { postPay } from './webhooks/paymob.js';
 
@@ -39,7 +39,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
     })
   );
 
-  if (logRequests) app.use(apiRequestLogger);
+  if (logRequests) app.use(loggerHandler);
 
   RegisterRoutes(app); // Register TSOA routes
 

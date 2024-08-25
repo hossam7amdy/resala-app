@@ -41,7 +41,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import { requestValidator } from '../../middlewares/index.js';
+import { validate } from '../../middlewares/index.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
 import { AuthService } from './auth.service.js';
@@ -59,7 +59,7 @@ export class AuthController extends Controller {
   }
 
   @Post('login')
-  @Middlewares([requestValidator(LoginSchema)])
+  @Middlewares([validate(LoginSchema)])
   public async login(@Body() body: LoginRequest['body']): Promise<LoginResponse> {
     const { sign, password } = body;
     const response = await this.authService.authenticate(sign, password);
@@ -68,7 +68,7 @@ export class AuthController extends Controller {
   }
 
   @Post('register')
-  @Middlewares([requestValidator(RegisterSchema)])
+  @Middlewares([validate(RegisterSchema)])
   @SuccessResponse('201', 'User registered successfully')
   public async register(@Body() body: RegisterRequest['body']): Promise<RegisterResponse> {
     // Register user
@@ -81,7 +81,7 @@ export class AuthController extends Controller {
   }
 
   @Post('refresh')
-  @Middlewares([requestValidator(RefreshTokenSchema)])
+  @Middlewares([validate(RefreshTokenSchema)])
   public async refresh(@Body() body: RefreshTokenRequest['body']): Promise<RefreshTokenResponse> {
     const { token } = body;
     const response = await this.authService.refreshToken(token);
@@ -97,7 +97,7 @@ export class AuthController extends Controller {
   }
 
   @Get('verify-email')
-  @Middlewares([requestValidator(VerifyEmailSchema)])
+  @Middlewares([validate(VerifyEmailSchema)])
   public async verifyEmail(
     @Queries() query: VerifyEmailRequest['query']
   ): Promise<VerifyEmailResponse> {
@@ -107,7 +107,7 @@ export class AuthController extends Controller {
   }
 
   @Post('forgot-password')
-  @Middlewares([requestValidator(ForgotPasswordSchema)])
+  @Middlewares([validate(ForgotPasswordSchema)])
   @SuccessResponse('200', 'Password reset code sent successfully')
   public async forgotPassword(
     @Body() body: ForgotPasswordRequest['body']
@@ -126,7 +126,7 @@ export class AuthController extends Controller {
 
   @Post('reset-password')
   @Security('jwt_auth', ['reset_password'])
-  @Middlewares([requestValidator(ResetPasswordSchema)])
+  @Middlewares([validate(ResetPasswordSchema)])
   public async resetPassword(
     @Body() body: ResetPasswordRequest['body'],
     @Request() req: ExRequest
@@ -146,7 +146,7 @@ export class AuthController extends Controller {
 
   @Path('change-password')
   @Security('jwt_auth')
-  @Middlewares([requestValidator(ChangePasswordSchema)])
+  @Middlewares([validate(ChangePasswordSchema)])
   public async changePassword(
     @Body() body: ChangePasswordRequest['body'],
     @Request() req: ExRequest

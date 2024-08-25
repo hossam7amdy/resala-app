@@ -28,7 +28,8 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validateImage } from '../../middlewares/uploadHandler.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
@@ -53,7 +54,7 @@ export class ProductController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListProductsSchema)])
+  @Middlewares([validate(ListProductsSchema)])
   public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
     const { products, pagination } = await this.productService.list(query);
 
@@ -74,6 +75,8 @@ export class ProductController extends Controller {
     @FormField() price: number,
     @UploadedFile() image: Express.Multer.File
   ): Promise<CreateProductResponse> {
+    validateImage(image);
+
     const { body } = await CreateProductSchema.parseAsync({
       body: { categoryId, arName, enName, arDescription, enDescription, price },
     });
@@ -97,6 +100,8 @@ export class ProductController extends Controller {
     @FormField() price: number,
     @UploadedFile() image: Express.Multer.File
   ): Promise<UpdateProductResponse> {
+    validateImage(image);
+
     const { body } = await UpdateProductSchema.parseAsync({
       params: { productId },
       body: { categoryId, arName, enName, arDescription, enDescription, price },

@@ -1,4 +1,4 @@
 export * from './errorHandler.js';
-export * from './requestValidator.js';
-export * from './requestLogger.js';
+export * from './validateHandler.js';
+export * from './loggerHandler.js';
 export * from './uploadHandler.js';
