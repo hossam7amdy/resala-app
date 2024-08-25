@@ -15,7 +15,7 @@
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:reset": "prisma migrate reset --force",
-    "routes:generate": "tsoa spec-and-routes"
+    "routes:generate": "tsoa spec-and-routes && node src/routes/api.routes.fix.cjs && tsc"
   },
   "keywords": [],
   "author": "Hossam Hamdy",

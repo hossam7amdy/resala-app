@@ -27,7 +27,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeAccess, authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/index.js';
+import { validate } from '../../middlewares/index.js';
 import { UserService } from './user.service.js';
 
 @Tags('User')
@@ -43,7 +43,7 @@ export class UserController extends Controller {
   }
 
   @Get('{userId}')
-  @Middlewares([requestValidator(GetUserSchema)])
+  @Middlewares([validate(GetUserSchema)])
   public async getUser(@Path() userId: string): Promise<GetUserResponse> {
     const user = await this.userService.find(+userId);
 
@@ -51,7 +51,7 @@ export class UserController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([validate(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
   public async listUsers(
     @Queries() listUserDto: ListUsersRequest['query']
   ): Promise<ListUsersResponse> {
@@ -68,7 +68,7 @@ export class UserController extends Controller {
   }
 
   @Delete('{userId}')
-  @Middlewares([requestValidator(DeleteUserSchema), authorizeRole(['ADMIN'])])
+  @Middlewares([validate(DeleteUserSchema), authorizeRole(['ADMIN'])])
   @SuccessResponse('200', 'User deleted successfully')
   public async deleteUser(@Path() userId: string): Promise<DeleteUserResponse> {
     await this.userService.delete(+userId);
@@ -77,7 +77,7 @@ export class UserController extends Controller {
   }
 
   @Put('{userId}')
-  @Middlewares([requestValidator(UpdateUserSchema)])
+  @Middlewares([validate(UpdateUserSchema)])
   public async updateUser(
     @Path() userId: string,
     @Body() body: UpdateUserRequest['body']
