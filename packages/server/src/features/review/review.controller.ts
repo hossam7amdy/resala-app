@@ -31,14 +31,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { authorizeAccess } from '../../middlewares/authorization.js';
+import { authorization } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { ReviewService } from './review.service.js';
 
 @Tags('Review')
 @Route('api/v1/reviews')
 @Security('jwt_auth')
-@Middlewares([authorizeAccess])
+@Middlewares([authorization])
 export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;
 
