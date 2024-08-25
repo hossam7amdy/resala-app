@@ -3,19 +3,7 @@ import { RequestHandler } from 'express';
 
 import { ForbiddenError } from '../errors/api.errors.js';
 
-export const authorizeRole = (roles: RoleType[]): RequestHandler => {
-  return (_req, res, next) => {
-    const user = res.locals.user;
-
-    if (!roles.includes(user?.role)) {
-      throw new ForbiddenError();
-    }
-
-    next();
-  };
-};
-
-export const authorizeAccess: RequestHandler = (req, res, next) => {
+export const authorization: RequestHandler = (req, res, next) => {
   const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
   const { id, role } = res.locals.user;
 
@@ -28,4 +16,16 @@ export const authorizeAccess: RequestHandler = (req, res, next) => {
   }
 
   next();
+};
+
+export const authorizeRole = (roles: RoleType[]): RequestHandler => {
+  return (_req, res, next) => {
+    const { role } = res.locals.user;
+
+    if (!roles.includes(role)) {
+      throw new ForbiddenError();
+    }
+
+    next();
+  };
 };
