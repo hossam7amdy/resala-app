@@ -2,33 +2,88 @@
 
 import { resetPassword } from '@/actions/auth';
 import { useMutation, useNotification } from '@/hooks';
+import { ROUTES } from '@/utils/routes';
+import { validationPatterns } from '@resala/shared';
 import { Button, Form, Input } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-export const ResetPasswordForm = () => {
+interface FormValues {
+  token: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+interface ResetPasswordFormProps {
+  token?: FormValues['token'];
+}
+
+export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
+  const route = useRouter();
+  const [form] = Form.useForm();
   const notification = useNotification();
   const { isLoading, mutate } = useMutation({
-    mutationFn: resetPassword,
+    mutationFn: (values: FormValues) => resetPassword({ ...values, token: token ?? '' }),
+    onSuccess: () => {
+      form.resetFields();
+      route.replace(ROUTES.LOGIN);
+      notification.success('Password reset successfully');
+    },
     onError: error => {
       notification.error(error.message);
     },
   });
 
+  useEffect(() => {
+    if (!token) {
+      notification.error('Invalid reset password link');
+      route.replace(ROUTES.LOGIN);
+    }
+  }, [token]);
+
   return (
     <Form size="large" name="reset-password" layout="vertical" onFinish={mutate} autoComplete="off">
       <Form.Item
-        required
-        name="email"
-        label="Email"
-        rules={[{ required: true }, { type: 'email', message: 'Not valid E-mail!' }]}
+        hasFeedback
+        name="newPassword"
+        label="New Password"
+        rules={[
+          { required: true },
+          { ...validationPatterns.validatePasswordLength },
+          { ...validationPatterns.passwordContainsLowerCaseCharacter },
+          { ...validationPatterns.passwordContainsNumericCharacters },
+          { ...validationPatterns.passwordContainsUpperCaseCharacter },
+        ]}
+        normalize={value => value.trim()}
       >
-        <Input placeholder="Enter your email" autoFocus />
+        <Input.Password placeholder="Enter your password" />
       </Form.Item>
-      <Form.Item required name="code" label="Code" rules={[{ required: true }]}>
-        <Input placeholder="Enter reset code" />
+
+      <Form.Item
+        hasFeedback
+        name="confirmNewPassword"
+        label="Confirm New Password"
+        dependencies={['newPassword']}
+        rules={[
+          { required: true },
+          { ...validationPatterns.validatePasswordLength },
+          { ...validationPatterns.passwordContainsLowerCaseCharacter },
+          { ...validationPatterns.passwordContainsNumericCharacters },
+          { ...validationPatterns.passwordContainsUpperCaseCharacter },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('newPassword') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The two passwords that you entered do not match!'));
+            },
+          }),
+        ]}
+        normalize={value => value.trim()}
+      >
+        <Input.Password placeholder="Re-enter Password" />
       </Form.Item>
-      <Form.Item required name="password" label="New Password" rules={[{ required: true }]}>
-        <Input placeholder="Enter your new password" />
-      </Form.Item>
+
       <Form.Item noStyle>
         <Button type="primary" block htmlType="submit" loading={isLoading}>
           Confirm Password

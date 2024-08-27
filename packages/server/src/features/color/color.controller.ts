@@ -55,7 +55,7 @@ export class ColorController extends Controller {
 
   @Post()
   @SuccessResponse('201', 'Color created successfully')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateColorSchema)])
   public async create(@Body() body: CreateColorRequest['body']): Promise<CreateColorResponse> {
     const color = await this.colorService.create(body);
@@ -64,7 +64,7 @@ export class ColorController extends Controller {
   }
 
   @Put('{colorId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateColorSchema)])
   public async update(
     @Path() colorId: string,
@@ -76,7 +76,7 @@ export class ColorController extends Controller {
   }
 
   @Delete('{colorId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() colorId: string): Promise<DeleteColorResponse> {
     const color = await this.colorService.delete(+colorId);

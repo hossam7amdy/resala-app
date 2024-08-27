@@ -49,7 +49,7 @@ import { OrderService } from './order.service.js';
 
 @Tags('Order')
 @Route('api/v1/orders')
-@Security('jwt_auth')
+@Security('JWT_SECRET')
 @Middlewares([authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;

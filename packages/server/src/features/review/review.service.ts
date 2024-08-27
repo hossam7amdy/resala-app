@@ -9,19 +9,6 @@ import type {
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError } from '../../errors/api.errors.js';
 
-const SELECT = {
-  id: true,
-  email: true,
-  isVerified: true,
-  phone: true,
-  firstName: true,
-  lastName: true,
-  role: true,
-  lastLogin: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 export class ReviewService {
   constructor(private readonly db: DataStore) {}
 
@@ -62,7 +49,7 @@ export class ReviewService {
       where: { id: reviewId },
       include: {
         product: true,
-        user: { select: SELECT },
+        user: true,
       },
     });
   }
@@ -77,7 +64,7 @@ export class ReviewService {
       this.db.review.findMany({
         include: {
           product: true,
-          user: { select: SELECT },
+          user: true,
         },
         where: { productId },
         skip: page - 1,

@@ -34,7 +34,7 @@ import { AddressService } from './address.service.js';
 
 @Tags('Address')
 @Route('api/v1/addresses')
-@Security('jwt_auth')
+@Security('JWT_SECRET')
 @Middlewares([authorization])
 export class AddressController extends Controller {
   private readonly addressService: AddressService;

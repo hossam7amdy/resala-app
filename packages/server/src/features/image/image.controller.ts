@@ -44,7 +44,7 @@ export class ImageController extends Controller {
   }
 
   @Post()
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   @SuccessResponse('201', 'Image created successfully')
   public async create(
@@ -77,7 +77,7 @@ export class ImageController extends Controller {
   }
 
   @Patch('{imageId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() imageId: string,
@@ -89,7 +89,7 @@ export class ImageController extends Controller {
   }
 
   @Delete('{imageId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() imageId: string): Promise<UpdateImageResponse> {
     const image = await this.imageService.delete(+imageId);

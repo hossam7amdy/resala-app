@@ -8,6 +8,7 @@ import { parse } from 'yaml';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { loggerHandler } from './middlewares/loggerHandler.js';
 import { RegisterRoutes } from './routes/api.routes.js';
+import { views } from './views/index.js';
 import { postPay } from './webhooks/paymob.js';
 
 const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
@@ -57,31 +58,9 @@ export const createExpressApp = (logRequests: boolean = true) => {
     return res.sendFile(filepath, { root: 'uploads' });
   });
 
-  // Catch all routes
-  app.get('/', (_, res) => {
-    const uptimeInSeconds = process.uptime();
+  app.use(views);
 
-    // Convert uptime to a more readable format
-    const hours = Math.floor(uptimeInSeconds / 3600)
-      .toString()
-      .padStart(2, '0');
-    const minutes = Math.floor((uptimeInSeconds % 3600) / 60)
-      .toString()
-      .padStart(2, '0');
-    const seconds = Math.floor(uptimeInSeconds % 60)
-      .toString()
-      .padStart(2, '0');
-
-    const uptime = `${hours}h ${minutes}m ${seconds}s`; // e.g. 1h 30m 15s
-
-    const year = new Date().getFullYear();
-
-    const webAppUrl = process.env.WEB_APP_URL || 'http://localhost:4200';
-    const adminDashboardUrl = process.env.ADMIN_DASHBOARD_URL || 'http://localhost:3000';
-
-    return res.render('index', { uptime, year, webAppUrl, adminDashboardUrl });
-  });
-
+  // Catch all (unmatched) routes
   app.use((_, res) => {
     return res.status(404).send('Not found');
   });

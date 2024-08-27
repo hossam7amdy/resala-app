@@ -52,7 +52,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "User": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"lastLogin":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"role":{"ref":"RoleType","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"phone":{"dataType":"string","required":true},"isVerified":{"dataType":"boolean","required":true},"email":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"lastLogin":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"role":{"ref":"RoleType","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true},"isPhoneVerified":{"dataType":"boolean","required":true},"phone":{"dataType":"string","required":true},"isEmailVerified":{"dataType":"boolean","required":true},"email":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetUserResponse": {
@@ -442,7 +442,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LoginResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"ref":"User","required":true},"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true},"expiresAt":{"dataType":"datetime","required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"ref":"User","required":true},"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RegisterResponse": {
@@ -452,7 +452,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RefreshTokenResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true},"expiresAt":{"dataType":"datetime","required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "VerifyEmailResponse": {
@@ -462,10 +462,15 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ForgotPasswordResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"expiresAt":{"dataType":"datetime","required":true},"resetToken":{"dataType":"string","required":true}},"required":true}}}],"validators":{}},
+        "type": {"ref":"DefaultResponseBody","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResetPasswordResponse": {
+        "dataType": "refAlias",
+        "type": {"ref":"DefaultResponseBody","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ChangePasswordResponse": {
         "dataType": "refAlias",
         "type": {"ref":"DefaultResponseBody","validators":{}},
     },
@@ -519,7 +524,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
     
         app.get('/api/v1/users/:userId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.getUser)),
 
@@ -550,7 +555,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/users',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.listUsers)),
 
@@ -581,7 +586,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/users/:userId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.deleteUser)),
 
@@ -612,12 +617,13 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/users/:userId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UserController)),
             ...(fetchMiddlewares<RequestHandler>(UserController.prototype.updateUser)),
 
             async function UserController_updateUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
                     userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ADMIN"]},{"dataType":"enum","enums":["CUSTOMER"]},{"dataType":"enum","enums":["MODERATOR"]}]},"lastName":{"dataType":"string"},"firstName":{"dataType":"string"},"phone":{"dataType":"string"},"isVerified":{"dataType":"boolean"}}},
             };
@@ -704,7 +710,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/stocks',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.create)),
 
@@ -735,7 +741,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/stocks/:stockId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.update)),
 
@@ -767,7 +773,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/stocks/:stockId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.delete)),
 
@@ -857,7 +863,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/sizes',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.create)),
 
@@ -888,7 +894,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/sizes/:sizeId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.update)),
 
@@ -920,7 +926,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/sizes/:sizeId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.delete)),
 
@@ -951,7 +957,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/cart',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.getCart)),
 
@@ -982,7 +988,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/cart/items',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addItemToCart)),
 
@@ -1014,7 +1020,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/cart/items/:stockId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeItemFromCart)),
 
@@ -1046,7 +1052,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/cart',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.clearCart)),
 
@@ -1077,7 +1083,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/wishlist',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.getWishlist)),
 
@@ -1108,7 +1114,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/wishlist/items',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addProductToWishlist)),
 
@@ -1140,7 +1146,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/wishlist/items/:productId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeProductFromWishlist)),
 
@@ -1172,7 +1178,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/wishlist',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController)),
             ...(fetchMiddlewares<RequestHandler>(ShoppingController.prototype.clearWishlist)),
 
@@ -1203,7 +1209,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/reviews',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.createReview)),
 
@@ -1234,7 +1240,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/reviews/:reviewId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.updateReview)),
 
@@ -1266,7 +1272,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/reviews/:reviewId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.deleteReview)),
 
@@ -1298,7 +1304,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/reviews/:reviewId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.getReview)),
 
@@ -1329,7 +1335,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/reviews',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.listReviews)),
 
@@ -1420,7 +1426,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/products',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             upload.fields([{"name":"image","maxCount":1}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.create)),
@@ -1458,7 +1464,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/products/:productId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             upload.fields([{"name":"image","maxCount":1}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.update)),
@@ -1497,7 +1503,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/products/:productId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.delete)),
 
@@ -1528,7 +1534,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/payments/:transactionId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(PaymentController)),
             ...(fetchMiddlewares<RequestHandler>(PaymentController.prototype.get)),
 
@@ -1559,7 +1565,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/payments/void',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(PaymentController)),
             ...(fetchMiddlewares<RequestHandler>(PaymentController.prototype.void)),
 
@@ -1590,7 +1596,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/payments/refund',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(PaymentController)),
             ...(fetchMiddlewares<RequestHandler>(PaymentController.prototype.refund)),
 
@@ -1621,7 +1627,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/orders',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrderController)),
             ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.create)),
 
@@ -1653,7 +1659,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/orders/:orderId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrderController)),
             ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.get)),
 
@@ -1684,7 +1690,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/orders',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrderController)),
             ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.list)),
 
@@ -1715,7 +1721,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/orders/:orderId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrderController)),
             ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.delete)),
 
@@ -1747,7 +1753,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.patch('/api/v1/orders/:orderId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrderController)),
             ...(fetchMiddlewares<RequestHandler>(OrderController.prototype.updateStatus)),
 
@@ -1779,7 +1785,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/images',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             upload.fields([{"name":"images"}]),
             ...(fetchMiddlewares<RequestHandler>(ImageController)),
             ...(fetchMiddlewares<RequestHandler>(ImageController.prototype.create)),
@@ -1843,7 +1849,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.patch('/api/v1/images/:imageId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ImageController)),
             ...(fetchMiddlewares<RequestHandler>(ImageController.prototype.update)),
 
@@ -1875,7 +1881,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/images/:imageId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ImageController)),
             ...(fetchMiddlewares<RequestHandler>(ImageController.prototype.delete)),
 
@@ -1965,7 +1971,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/colors',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.create)),
 
@@ -1996,7 +2002,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/colors/:colorId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.update)),
 
@@ -2028,7 +2034,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/colors/:colorId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.delete)),
 
@@ -2118,7 +2124,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/categories',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.create)),
 
@@ -2149,7 +2155,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/categories/:categoryId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.update)),
 
@@ -2181,7 +2187,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/categories/:categoryId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.delete)),
 
@@ -2248,6 +2254,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AuthController_register(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"lastName":{"dataType":"string"},"firstName":{"dataType":"string"},"phone":{"dataType":"string"},"email":{"dataType":"string"}}},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2301,13 +2308,14 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/v1/auth/verify-email',
+        app.post('/api/v1/auth/verify-email',
+            authenticateMiddleware([{"JWT_VERIFY":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.verifyEmail)),
 
             async function AuthController_verifyEmail(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"token":{"dataType":"string"},"email":{"dataType":"string"}}},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2338,6 +2346,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AuthController_forgotPassword(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string"}}},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2362,13 +2371,13 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/auth/reset-password',
-            authenticateMiddleware([{"jwt_auth":["reset_password"]}]),
+            authenticateMiddleware([{"JWT_RESET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.resetPassword)),
 
             async function AuthController_resetPassword(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"code":{"dataType":"string"}}},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"confirmNewPassword":{"dataType":"string"},"newPassword":{"dataType":"string"}}},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
@@ -2393,13 +2402,46 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/v1/auth/resend-email-verification',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+        app.patch('/api/v1/auth/change-password',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AuthController)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.changePassword)),
+
+            async function AuthController_changePassword(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"oldPassword":{"dataType":"string"},"newPassword":{"dataType":"string"}}},
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new AuthController();
+
+              await templateService.apiHandler({
+                methodName: 'changePassword',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/api/v1/auth/resend-email-verification',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.resendVerificationEmail)),
 
             async function AuthController_resendVerificationEmail(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string"}}},
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
@@ -2425,7 +2467,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/addresses',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AddressController)),
             ...(fetchMiddlewares<RequestHandler>(AddressController.prototype.listUserAddress)),
 
@@ -2456,7 +2498,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/addresses',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AddressController)),
             ...(fetchMiddlewares<RequestHandler>(AddressController.prototype.createUserAddress)),
 
@@ -2487,7 +2529,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/api/v1/addresses/:addressId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AddressController)),
             ...(fetchMiddlewares<RequestHandler>(AddressController.prototype.updateUserAddress)),
 
@@ -2519,7 +2561,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/api/v1/addresses/:addressId',
-            authenticateMiddleware([{"jwt_auth":[]}]),
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AddressController)),
             ...(fetchMiddlewares<RequestHandler>(AddressController.prototype.deleteUserAddress)),
 

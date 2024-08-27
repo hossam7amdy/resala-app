@@ -21,7 +21,7 @@ paths:
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -40,7 +40,7 @@ paths:
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -59,7 +59,7 @@ paths:
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -100,7 +100,7 @@ paths:
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: limit
@@ -150,7 +150,7 @@ paths:
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -188,7 +188,7 @@ paths:
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -244,7 +244,7 @@ paths:
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -296,7 +296,7 @@ paths:
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: sizeId
@@ -324,7 +324,7 @@ paths:
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: sizeId
@@ -357,7 +357,7 @@ paths:
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -381,7 +381,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
     delete:
       operationId: ClearCart
@@ -395,7 +395,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
   /api/v1/cart/items:
     post:
@@ -410,7 +410,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -438,7 +438,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -458,7 +458,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
     delete:
       operationId: ClearWishlist
@@ -472,7 +472,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
   /api/v1/wishlist/items:
     post:
@@ -487,7 +487,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -512,7 +512,7 @@ paths:
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -532,7 +532,7 @@ paths:
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -564,7 +564,7 @@ paths:
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: productId
@@ -602,7 +602,7 @@ paths:
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: reviewId
@@ -639,7 +639,7 @@ paths:
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: reviewId
@@ -663,7 +663,7 @@ paths:
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: reviewId
@@ -702,7 +702,7 @@ paths:
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -752,7 +752,7 @@ paths:
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -809,7 +809,7 @@ paths:
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -854,7 +854,7 @@ paths:
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: transactionId
@@ -879,7 +879,7 @@ paths:
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -909,7 +909,7 @@ paths:
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -938,7 +938,7 @@ paths:
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -970,7 +970,7 @@ paths:
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: userId
@@ -1009,7 +1009,7 @@ paths:
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1030,7 +1030,7 @@ paths:
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1055,7 +1055,7 @@ paths:
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1098,7 +1098,7 @@ paths:
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1158,7 +1158,7 @@ paths:
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: imageId
@@ -1186,7 +1186,7 @@ paths:
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: imageId
@@ -1224,7 +1224,7 @@ paths:
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: colorId
@@ -1256,7 +1256,7 @@ paths:
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: colorId
@@ -1289,7 +1289,7 @@ paths:
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1336,7 +1336,7 @@ paths:
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: categoryId
@@ -1367,7 +1367,7 @@ paths:
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: categoryId
@@ -1401,7 +1401,7 @@ paths:
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1449,6 +1449,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RegisterResponse"
+      description: >-
+        Register a new user. Sends a verification email to the user's email.
+
+        Frontend should implement a `/confirm-email` route that takes the token
+        as a query parameter.
+
+        This route should call the `verifyEmail` endpoint with `Authorization`
+        header set to the token.
       tags:
         - Auth
       security: []
@@ -1494,7 +1502,7 @@ paths:
                   type: string
               type: object
   /api/v1/auth/verify-email:
-    get:
+    post:
       operationId: VerifyEmail
       responses:
         "200":
@@ -1503,20 +1511,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VerifyEmailResponse"
+      description: >-
+        Verify the user's email using the token sent to their email. This
+        endpoint should be called from the frontend after the user clicks the
+        verification link.
+
+        The token should be passed in the header as `Bearer` token.
       tags:
         - Auth
-      security: []
-      parameters:
-        - in: query
-          name: token
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: email
-          required: false
-          schema:
-            type: string
+      security:
+        - JWT_VERIFY: []
+      parameters: []
   /api/v1/auth/forgot-password:
     post:
       operationId: ForgotPassword
@@ -1527,6 +1532,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ForgotPasswordResponse"
+      description: >-
+        Send a password reset link to the user's email, containing a reset
+        token.
+
+        Frontend should implement a `/reset-password` route that takes the token
+        as a query parameter, and a form to reset the password
+
+        calling the `resetPassword` endpoint.
       tags:
         - Auth
       security: []
@@ -1550,11 +1563,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResetPasswordResponse"
+      description: >-
+        Reset the user's password using the token sent to their email. This
+        endpoint should be called from the frontend after the user clicks the
+        reset link.
+
+        The token should be passed in the header as `Bearer` token.
+
+        The new password should be passed in the body.
+
+        After resetting the password, send a confirmation email to the user's
+        email.
       tags:
         - Auth
       security:
-        - jwt_auth:
-            - reset_password
+        - JWT_RESET: []
       parameters: []
       requestBody:
         required: true
@@ -1562,15 +1585,39 @@ paths:
           application/json:
             schema:
               properties:
-                password:
+                confirmNewPassword:
                   type: string
-                email:
+                newPassword:
                   type: string
-                code:
+              type: object
+  /api/v1/auth/change-password:
+    patch:
+      operationId: ChangePassword
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangePasswordResponse"
+      tags:
+        - Auth
+      security:
+        - JWT_SECRET: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
                   type: string
               type: object
   /api/v1/auth/resend-email-verification:
-    get:
+    post:
       operationId: ResendVerificationEmail
       responses:
         "200":
@@ -1579,11 +1626,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResendVerificationEmailResponse"
+      description: >-
+        Resend the email verification link to the user's email. This is useful
+        if the user didn't receive the email the first time.
+
+        Frontend should implement a `/confirm-email` route that takes the token
+        as a query parameter. This route should call the `verifyEmail` endpoint.
       tags:
         - Auth
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+              type: object
   /api/v1/addresses:
     get:
       operationId: ListUserAddress
@@ -1597,7 +1659,7 @@ paths:
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: userId
@@ -1617,7 +1679,7 @@ paths:
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1663,7 +1725,7 @@ paths:
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: addressId
@@ -1713,7 +1775,7 @@ paths:
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: addressId
@@ -1766,9 +1828,11 @@ components:
           type: string
         firstName:
           type: string
+        isPhoneVerified:
+          type: boolean
         phone:
           type: string
-        isVerified:
+        isEmailVerified:
           type: boolean
         email:
           type: string
@@ -1782,8 +1846,9 @@ components:
         - role
         - lastName
         - firstName
+        - isPhoneVerified
         - phone
-        - isVerified
+        - isEmailVerified
         - email
         - id
       type: object
@@ -2970,14 +3035,10 @@ components:
                   type: string
                 accessToken:
                   type: string
-                expiresAt:
-                  type: string
-                  format: date-time
               required:
                 - user
                 - refreshToken
                 - accessToken
-                - expiresAt
               type: object
           required:
             - data
@@ -2994,13 +3055,9 @@ components:
                   type: string
                 accessToken:
                   type: string
-                expiresAt:
-                  type: string
-                  format: date-time
               required:
                 - refreshToken
                 - accessToken
-                - expiresAt
               type: object
           required:
             - data
@@ -3008,24 +3065,10 @@ components:
     VerifyEmailResponse:
       $ref: "#/components/schemas/DefaultResponseBody"
     ForgotPasswordResponse:
-      allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
-        - properties:
-            data:
-              properties:
-                expiresAt:
-                  type: string
-                  format: date-time
-                resetToken:
-                  type: string
-              required:
-                - expiresAt
-                - resetToken
-              type: object
-          required:
-            - data
-          type: object
+      $ref: "#/components/schemas/DefaultResponseBody"
     ResetPasswordResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
+    ChangePasswordResponse:
       $ref: "#/components/schemas/DefaultResponseBody"
     ResendVerificationEmailResponse:
       $ref: "#/components/schemas/DefaultResponseBody"
@@ -3056,7 +3099,19 @@ components:
     DeleteAddressResponse:
       $ref: "#/components/schemas/GetAddressResponse"
   securitySchemes:
-    jwt_auth:
+    JWT_SECRET:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    JWT_VERIFY:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    JWT_RESET:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    JWT_REFRESH:
       type: http
       scheme: bearer
       bearerFormat: JWT

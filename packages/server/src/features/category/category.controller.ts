@@ -59,7 +59,7 @@ export class CategoryController extends Controller {
   /** Create a new category, only admins can create categories */
   @Post()
   @SuccessResponse('201', 'Category created')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateCategorySchema)])
   public async create(
     @Body() body: CreateCategoryRequest['body']
@@ -71,7 +71,7 @@ export class CategoryController extends Controller {
 
   /** Update a category, only admins can update categories */
   @Put('{categoryId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateCategorySchema)])
   public async update(
     @Path() categoryId: string,
@@ -84,7 +84,7 @@ export class CategoryController extends Controller {
 
   /** Delete a category, only admins can delete categories */
   @Delete('{categoryId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteCategorySchema)])
   public async delete(@Path() categoryId: string): Promise<DeleteCategoryResponse> {
     const category = await this.categoryService.delete(+categoryId);
