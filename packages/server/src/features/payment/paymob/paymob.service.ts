@@ -7,6 +7,7 @@ import type { AuthenticateApiResponse, CheckoutApiResponse, CheckoutDto } from '
 export class PaymobService {
   private readonly api: AxiosInstance;
   private readonly serverUrl = process.env.SERVER_URL;
+  private readonly webUrl = process.env.WEB_APP_URL;
   private readonly baseURL = 'https://accept.paymob.com';
   private readonly apiToken = process.env.PAYMOB_API_TOKEN;
   private readonly secretKey = process.env.PAYMOB_SECRET_KEY;
@@ -73,7 +74,7 @@ export class PaymobService {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
       redirection_url: `${this.serverUrl}/post_pay/${order.id}/`,
-      notification_url: `${this.serverUrl}/post_pay/${order.id}/`,
+      notification_url: `${this.webUrl}/post_pay/${order.id}/`,
       payment_methods: [this.integrationId],
       items: orderItems,
       billing_data: {
