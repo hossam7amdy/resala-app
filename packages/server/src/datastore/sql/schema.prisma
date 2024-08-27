@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -14,27 +15,24 @@ datasource db {
 //*             User Data                *//
 
 model User {
-  id            Int            @id @default(autoincrement()) @db.Integer
-  email         String         @unique @db.VarChar(125)
-  isVerified    Boolean        @default(false) @map("is_verified")
-  phone         String         @db.Char(11)
-  firstName     String         @map("first_name") @db.VarChar(50)
-  lastName      String         @map("last_name") @db.VarChar(50)
-  role          Role           @default(CUSTOMER)
-  password      String         @db.VarChar(500)
-  salt          String         @db.VarChar(500)
-  iterations    Int
-  lastLogin     DateTime?      @map("last_login")
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
-  cart          Cart[]
-  wishlist      Wishlist[]
-  addressList   UserAddress[]
-  reviews       Review[]
-  orders        Order[]
-  notifications Notification[]
+  id              Int           @id @default(autoincrement()) @db.Integer
+  email           String        @unique @db.VarChar(125)
+  isEmailVerified Boolean       @default(false) @map(" is_email_verified")
+  phone           String        @unique @db.VarChar(15)
+  isPhoneVerified Boolean       @default(false) @map("is_phone_verified")
+  firstName       String        @map("first_name") @db.VarChar(50)
+  lastName        String        @map("last_name") @db.VarChar(50)
+  role            Role          @default(CUSTOMER)
+  password        String        @db.VarChar(500)
+  lastLogin       DateTime?     @map("last_login")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  cart            Cart[]
+  wishlist        Wishlist[]
+  addressList     UserAddress[]
+  reviews         Review[]
+  orders          Order[]
 
-  @@index([phone])
   @@map("user")
 }
 
@@ -239,21 +237,6 @@ model Review {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("review")
-}
-
-// ------------------------------------------------ //
-//*             Notification Data                *//
-model Notification {
-  id        Int      @id @default(autoincrement()) @db.Integer
-  userId    Int      @map("user_id") @db.Integer
-  title     String   @db.VarChar(25)
-  content   String   @db.VarChar(250)
-  isRead    Boolean  @default(false) @map("is_read")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("notification")
 }
 
 // ------------------------------------------------ //

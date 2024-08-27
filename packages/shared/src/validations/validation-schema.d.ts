@@ -85,6 +85,23 @@ export declare const RegisterSchema: z.ZodObject<{
         password: string;
     };
 }>;
+export declare const ResendVerificationSchema: z.ZodObject<{
+    body: z.ZodObject<{
+        email: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        email: string;
+    }, {
+        email: string;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    body: {
+        email: string;
+    };
+}, {
+    body: {
+        email: string;
+    };
+}>;
 export declare const RefreshTokenSchema: z.ZodObject<{
     body: z.ZodObject<{
         token: z.ZodString;
@@ -103,52 +120,32 @@ export declare const RefreshTokenSchema: z.ZodObject<{
     };
 }>;
 export declare const VerifyEmailSchema: z.ZodObject<{
-    query: z.ZodObject<{
-        email: z.ZodString;
-        token: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        email: string;
-        token: string;
-    }, {
-        email: string;
-        token: string;
-    }>;
+    body: z.ZodObject<{}, "strip", z.ZodTypeAny, {}, {}>;
 }, "strip", z.ZodTypeAny, {
-    query: {
-        email: string;
-        token: string;
-    };
+    body: {};
 }, {
-    query: {
-        email: string;
-        token: string;
-    };
+    body: {};
 }>;
 export declare const ResetPasswordSchema: z.ZodObject<{
     body: z.ZodObject<{
-        email: z.ZodString;
-        code: z.ZodString;
-        password: z.ZodString;
+        newPassword: z.ZodString;
+        confirmNewPassword: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        email: string;
-        code: string;
-        password: string;
+        newPassword: string;
+        confirmNewPassword: string;
     }, {
-        email: string;
-        code: string;
-        password: string;
+        newPassword: string;
+        confirmNewPassword: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
-        email: string;
-        code: string;
-        password: string;
+        newPassword: string;
+        confirmNewPassword: string;
     };
 }, {
     body: {
-        email: string;
-        code: string;
-        password: string;
+        newPassword: string;
+        confirmNewPassword: string;
     };
 }>;
 export declare const ChangePasswordSchema: z.ZodObject<{
@@ -156,21 +153,21 @@ export declare const ChangePasswordSchema: z.ZodObject<{
         oldPassword: z.ZodString;
         newPassword: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        oldPassword: string;
         newPassword: string;
+        oldPassword: string;
     }, {
-        oldPassword: string;
         newPassword: string;
+        oldPassword: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
-        oldPassword: string;
         newPassword: string;
+        oldPassword: string;
     };
 }, {
     body: {
-        oldPassword: string;
         newPassword: string;
+        oldPassword: string;
     };
 }>;
 export declare const ForgotPasswordSchema: z.ZodObject<{

@@ -176,8 +176,9 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.verifyEmail]: {
-        method: 'get',
+        method: 'post',
         url: '/api/v1/auth/verify-email',
+        auth: true,
     },
     [Endpoints.changePassword]: {
         method: 'patch',
@@ -186,7 +187,7 @@ export const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [Endpoints.resendEmailVerification]: {
-        method: 'get',
+        method: 'post',
         url: '/api/v1/auth/resend-email-verification',
         auth: true,
     },

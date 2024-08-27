@@ -53,22 +53,23 @@ export const RegisterSchema = z.object({
         password: UserSchema.shape.password,
     }),
 });
+export const ResendVerificationSchema = z.object({
+    body: z.object({
+        email: UserSchema.shape.email,
+    }),
+});
 export const RefreshTokenSchema = z.object({
     body: z.object({
         token: z.string().min(80),
     }),
 });
 export const VerifyEmailSchema = z.object({
-    query: z.object({
-        email: UserSchema.shape.email,
-        token: z.string().min(80),
-    }),
+    body: z.object({}),
 });
 export const ResetPasswordSchema = z.object({
     body: z.object({
-        email: UserSchema.shape.email,
-        code: z.string().length(6),
-        password: UserSchema.shape.password,
+        newPassword: UserSchema.shape.password,
+        confirmNewPassword: UserSchema.shape.password,
     }),
 });
 export const ChangePasswordSchema = z.object({

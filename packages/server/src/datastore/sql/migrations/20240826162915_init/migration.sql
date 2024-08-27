@@ -2,7 +2,7 @@
 CREATE TYPE "role" AS ENUM ('ADMIN', 'MODERATOR', 'CUSTOMER');
 
 -- CreateEnum
-CREATE TYPE "order_status" AS ENUM ('PENDING', 'FULFILLED', 'CANCELLED');
+CREATE TYPE "order_status" AS ENUM ('PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "payment_status" AS ENUM ('UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REFUNDED');
@@ -14,14 +14,13 @@ CREATE TYPE "payment_method" AS ENUM ('CASH', 'CARD');
 CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
     "email" VARCHAR(125) NOT NULL,
-    "is_verified" BOOLEAN NOT NULL DEFAULT false,
-    "phone" CHAR(11) NOT NULL,
+    " is_email_verified" BOOLEAN NOT NULL DEFAULT false,
+    "phone" VARCHAR(15) NOT NULL,
+    "is_phone_verified" BOOLEAN NOT NULL DEFAULT false,
     "first_name" VARCHAR(50) NOT NULL,
     "last_name" VARCHAR(50) NOT NULL,
     "role" "role" NOT NULL DEFAULT 'CUSTOMER',
     "password" VARCHAR(500) NOT NULL,
-    "salt" VARCHAR(500) NOT NULL,
-    "iterations" INTEGER NOT NULL,
     "last_login" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -158,6 +157,7 @@ CREATE TABLE "order_item" (
     "size" VARCHAR(5) NOT NULL,
     "quantity" INTEGER NOT NULL,
     "unit_price" DECIMAL(9,2) NOT NULL,
+    "image_url" VARCHAR(500),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -179,9 +179,9 @@ CREATE TABLE "shipping" (
 -- CreateTable
 CREATE TABLE "payment" (
     "order_id" INTEGER NOT NULL,
-    "payment_url" VARCHAR(500),
-    "order_ref" INTEGER,
-    "transaction_ref" INTEGER,
+    "payment_link" VARCHAR(500),
+    "transaction_id" INTEGER,
+    "transaction_order_id" INTEGER,
 
     CONSTRAINT "payment_pkey" PRIMARY KEY ("order_id")
 );
@@ -197,19 +197,6 @@ CREATE TABLE "review" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "review_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "notification" (
-    "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "title" VARCHAR(25) NOT NULL,
-    "content" VARCHAR(250) NOT NULL,
-    "is_read" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "notification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -235,7 +222,7 @@ CREATE TABLE "address" (
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
-CREATE INDEX "user_phone_idx" ON "user"("phone");
+CREATE UNIQUE INDEX "user_phone_key" ON "user"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_address_address_id_key" ON "user_address"("address_id");
@@ -286,16 +273,16 @@ ALTER TABLE "user_address" ADD CONSTRAINT "user_address_user_id_fkey" FOREIGN KE
 ALTER TABLE "user_address" ADD CONSTRAINT "user_address_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "image" ADD CONSTRAINT "image_color_id_fkey" FOREIGN KEY ("color_id") REFERENCES "color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "image" ADD CONSTRAINT "image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "image" ADD CONSTRAINT "image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock" ADD CONSTRAINT "stock_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "stock" ADD CONSTRAINT "stock_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stock" ADD CONSTRAINT "stock_color_id_fkey" FOREIGN KEY ("color_id") REFERENCES "color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -335,6 +322,3 @@ ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id"
 
 -- AddForeignKey
 ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "notification" ADD CONSTRAINT "notification_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;

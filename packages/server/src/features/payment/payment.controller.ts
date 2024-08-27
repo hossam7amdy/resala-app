@@ -19,7 +19,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
 import { PaymobService } from './paymob/paymob.service.js';
 
@@ -34,7 +34,7 @@ export class PaymentController extends Controller {
   }
 
   @Get('{transactionId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async get(@Path() transactionId: string): Promise<GetPaymentResponse> {
     const payment = await this.paymentService.retrieve(+transactionId);
@@ -43,8 +43,8 @@ export class PaymentController extends Controller {
   }
 
   @Post('void')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(VoidPaymentSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(VoidPaymentSchema)])
   public async void(@Body() body: VoidPaymentRequest['body']) {
     const transactionId = body.transactionId;
 
@@ -54,8 +54,8 @@ export class PaymentController extends Controller {
   }
 
   @Post('refund')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(RefundPaymentSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(RefundPaymentSchema)])
   public async refund(@Body() body: RefundPaymentRequest['body']) {
     const { transactionId, amount } = body;
 

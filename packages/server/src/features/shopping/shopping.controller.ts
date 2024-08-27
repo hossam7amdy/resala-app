@@ -27,12 +27,12 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { ShoppingService } from './shopping.service.js';
 
 @Tags('Shopping')
 @Route('api/v1')
-@Security('jwt_auth')
+@Security('JWT_SECRET')
 export class ShoppingController extends Controller {
   private readonly shoppingService: ShoppingService;
 
@@ -51,7 +51,7 @@ export class ShoppingController extends Controller {
 
   @Post('cart/items')
   @SuccessResponse('201', 'Item added to cart')
-  @Middlewares([requestValidator(CreateCartSchema)])
+  @Middlewares([validate(CreateCartSchema)])
   public async addItemToCart(
     @Request() req: ExRequest,
     @Body() body: CreateCartRequest['body']
@@ -98,7 +98,7 @@ export class ShoppingController extends Controller {
 
   @Post('wishlist/items')
   @SuccessResponse('201', 'Item added to wishlist')
-  @Middlewares([requestValidator(CreateWishlistSchema)])
+  @Middlewares([validate(CreateWishlistSchema)])
   public async addProductToWishlist(
     @Request() req: ExRequest,
     @Body() body: CreateWishlistRequest['body']
