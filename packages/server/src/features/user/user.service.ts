@@ -3,47 +3,24 @@ import type { ListUsersRequest, UpdateUserRequest } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
 
-const USER_SELECT = {
-  id: true,
-  email: true,
-  firstName: true,
-  lastName: true,
-  isVerified: true,
-  phone: true,
-  role: true,
-  lastLogin: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 export class UserService {
   constructor(private readonly db: DataStore) {}
 
   async update(id: number, payload: UpdateUserRequest['body']) {
-    const user = await this.find(id);
-
-    // Prevent updating the role if the user is not an admin
-    if (payload.role && user.role !== 'ADMIN') {
-      delete payload.role;
-    }
-
     return await this.db.user.update({
       where: { id },
       data: payload,
-      select: USER_SELECT,
     });
   }
 
   async delete(id: number) {
     return await this.db.user.delete({
-      select: USER_SELECT,
       where: { id },
     });
   }
 
   async find(id: number) {
     return await this.db.user.findUniqueOrThrow({
-      select: USER_SELECT,
       where: { id },
     });
   }
@@ -66,7 +43,6 @@ export class UserService {
       this.db.user.count({ where: filters }),
 
       this.db.user.findMany({
-        select: USER_SELECT,
         where: filters,
         take: limit,
         skip: (page - 1) * limit,

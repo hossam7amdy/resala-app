@@ -37,7 +37,7 @@ import { ReviewService } from './review.service.js';
 
 @Tags('Review')
 @Route('api/v1/reviews')
-@Security('jwt_auth')
+@Security('JWT_SECRET')
 @Middlewares([authorization])
 export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;

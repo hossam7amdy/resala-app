@@ -10,6 +10,7 @@ import {
   type UpdateUserResponse,
   UpdateUserSchema,
 } from '@resala/shared';
+import type { Request as ExRequest } from 'express';
 import {
   Body,
   Controller,
@@ -19,6 +20,7 @@ import {
   Path,
   Put,
   Queries,
+  Request,
   Route,
   Security,
   SuccessResponse,
@@ -32,7 +34,7 @@ import { UserService } from './user.service.js';
 
 @Tags('User')
 @Route('api/v1/users')
-@Security('jwt_auth')
+@Security('JWT_SECRET')
 @Middlewares([authorization])
 export class UserController extends Controller {
   private readonly userService: UserService;
@@ -79,9 +81,17 @@ export class UserController extends Controller {
   @Put('{userId}')
   @Middlewares([validate(UpdateUserSchema)])
   public async updateUser(
+    @Request() req: ExRequest,
     @Path() userId: string,
     @Body() body: UpdateUserRequest['body']
   ): Promise<UpdateUserResponse> {
+    const localUser = req.res?.locals.user;
+
+    // Prevent updating the role if the user is not an admin
+    if (body.role && localUser.role !== 'ADMIN') {
+      delete body.role;
+    }
+
     const user = await this.userService.update(+userId, body);
 
     return { success: true, data: user };

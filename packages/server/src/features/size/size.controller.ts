@@ -54,7 +54,7 @@ export class SizeController extends Controller {
 
   @Post()
   @SuccessResponse('201', 'Size created')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([validate(CreateSizeSchema)])
   public async create(@Body() req: CreateSizeRequest['body']): Promise<CreateSizeResponse> {
     const size = await this.sizeService.create(req);
@@ -63,7 +63,7 @@ export class SizeController extends Controller {
   }
 
   @Put('{sizeId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([validate(UpdateSizeSchema)])
   public async update(
     @Path() sizeId: string,
@@ -75,7 +75,7 @@ export class SizeController extends Controller {
   }
 
   @Delete('{sizeId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   public async delete(@Path() sizeId: string): Promise<DeleteSizeResponse> {
     const size = await this.sizeService.delete(+sizeId);
 

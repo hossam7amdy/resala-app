@@ -4,6 +4,7 @@ import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { initDb } from '../../../datastore/index.js';
+import { jwtSign } from '../../../lib/jwt.js';
 import { userAssertions } from '../../../tests/customAssertions.js';
 import { getTestServer } from '../../../tests/testServer.js';
 
@@ -150,7 +151,6 @@ describe('TEST /auth endpoints', () => {
         success: true,
         data: {
           user: userAssertions,
-          expiresAt: expect.any(String),
           accessToken: expect.any(String),
           refreshToken: expect.any(String),
         },
@@ -241,10 +241,7 @@ describe('TEST /auth endpoints', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
         success: true,
-        data: {
-          expiresAt: expect.any(String),
-          resetToken: expect.any(String),
-        },
+        message: expect.any(String),
       });
     });
 
@@ -275,11 +272,11 @@ describe('TEST /auth endpoints', () => {
     it('should reset password with incomplete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
       const res = await client[method](url).send({
-        email: CUSTOMER_USER.email,
-        password: CUSTOMER_USER.password,
+        newPassword: CUSTOMER_USER.password,
+        confirmNewPassword: CUSTOMER_USER.password,
       });
 
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(401);
       expect(res.body).toEqual({
         success: false,
         message: expect.any(String),
@@ -287,14 +284,19 @@ describe('TEST /auth endpoints', () => {
     });
 
     it('should reset password with wrong data', async () => {
-      const { method, url } = ENDPOINT_CONFIGS.resetPassword;
-      const res = await client[method](url).send({
-        email: CUSTOMER_USER.email,
-        code: 'code',
-        password: CUSTOMER_USER.password,
+      const token = jwtSign({ id: '2', email: CUSTOMER_USER.email }, 'JWT_RESET', {
+        expiresIn: '10m',
       });
 
-      expect(res.statusCode).toBe(400);
+      const { method, url } = ENDPOINT_CONFIGS.resetPassword;
+      const res = await client[method](url)
+        .set({ Authorization: 'Bearer ' + token })
+        .send({
+          newPassword: 'password',
+          confirmNewPassword: CUSTOMER_USER.password,
+        });
+
+      expect(res.statusCode).toBe(404);
       expect(res.body).toEqual({
         success: false,
         message: expect.any(String),

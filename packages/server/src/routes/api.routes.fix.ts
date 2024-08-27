@@ -1,11 +1,15 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Specify the file path
-const filePath = path.join(__dirname, 'api.routes.ts');
+const filePath = join(__dirname, 'api.routes.ts');
 
 // Read the file content
-fs.readFile(filePath, 'utf8', (err, data) => {
+fs.readFile(filePath, 'utf8', (err: any, data: string) => {
   if (err) {
     console.error('Error reading `api.routes.ts` file:', err);
     return;
@@ -18,7 +22,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
   const updatedData = data.replace(regex, '');
 
   // Write the updated content back to the file
-  fs.writeFile(filePath, updatedData, 'utf8', err => {
+  fs.writeFile(filePath, updatedData, 'utf8', (err: any) => {
     if (err) {
       console.error('Error writing `api.routes.ts` file:', err);
       return;

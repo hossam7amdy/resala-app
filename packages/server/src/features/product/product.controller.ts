@@ -64,7 +64,7 @@ export class ProductController extends Controller {
   /** Create a new product, only admins can create products */
   @Post()
   @SuccessResponse('201', 'Product created')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
     @FormField() categoryId: string,
@@ -88,7 +88,7 @@ export class ProductController extends Controller {
 
   /** Update a product, only admins can update products */
   @Put('{productId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() productId: string,
@@ -114,7 +114,7 @@ export class ProductController extends Controller {
 
   /** Delete a product, only admins can delete products */
   @Delete('{productId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() productId: string): Promise<DeleteProductResponse> {
     const data = await this.productService.delete(+productId);

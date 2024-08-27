@@ -17,20 +17,7 @@ const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
   orderItems: true,
   paymentDetails: true,
-  user: {
-    select: {
-      id: true,
-      email: true,
-      isVerified: true,
-      phone: true,
-      firstName: true,
-      lastName: true,
-      role: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  },
+  user: true,
   shippingDetails: {
     select: {
       id: true,
