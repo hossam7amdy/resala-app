@@ -66,9 +66,7 @@ export class AuthController extends Controller {
   private _parseClientUrl(request: ExRequest) {
     const url = new URL(request?.protocol + '://' + request?.get('host'));
 
-    const isValid = url.protocol === 'http:' || url.protocol === 'https:';
-
-    return isValid ? url.origin : this._clientUrl;
+    return this._clientUrl || url.origin;
   }
 
   private async _sendVerificationEmail(email: string, redirectUrl: string, token: string) {
