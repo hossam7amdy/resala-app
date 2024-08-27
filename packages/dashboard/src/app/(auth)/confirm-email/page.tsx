@@ -1,24 +1,19 @@
 import { Logo } from '@/components';
-import { ROUTES } from '@/utils/routes';
 import { Flex } from 'antd';
-import Link from 'next/link';
-import React from 'react';
 
-import { EmailForm } from './email-form';
+import { ConfirmEmailForm } from './confirm-email-form';
 import styles from './page.module.css';
 
-const ForgotPasswordPage = () => {
+const ConfirmEmailPage = ({ searchParams }: { searchParams: { token?: string } }) => {
   return (
     <div className={styles.container}>
       <Flex vertical gap={10}>
         <div style={{ alignSelf: 'center' }}>
           <Logo />
         </div>
-        <EmailForm />
-        <Link href={ROUTES.LOGIN}>Back to Login</Link>
+        <ConfirmEmailForm token={searchParams.token} />
       </Flex>
     </div>
   );
 };
-
-export default ForgotPasswordPage;
+export default ConfirmEmailPage;

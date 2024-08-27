@@ -180,8 +180,9 @@ const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [exports.Endpoints.verifyEmail]: {
-        method: 'get',
+        method: 'post',
         url: '/api/v1/auth/verify-email',
+        auth: true,
     },
     [exports.Endpoints.changePassword]: {
         method: 'patch',
@@ -190,7 +191,7 @@ const ENDPOINT_CONFIGS = {
         auth: true,
     },
     [exports.Endpoints.resendEmailVerification]: {
-        method: 'get',
+        method: 'post',
         url: '/api/v1/auth/resend-email-verification',
         auth: true,
     },
@@ -649,22 +650,23 @@ const RegisterSchema = zod.z.object({
         password: UserSchema.shape.password,
     }),
 });
+const ResendVerificationSchema = zod.z.object({
+    body: zod.z.object({
+        email: UserSchema.shape.email,
+    }),
+});
 const RefreshTokenSchema = zod.z.object({
     body: zod.z.object({
         token: zod.z.string().min(80),
     }),
 });
 const VerifyEmailSchema = zod.z.object({
-    query: zod.z.object({
-        email: UserSchema.shape.email,
-        token: zod.z.string().min(80),
-    }),
+    body: zod.z.object({}),
 });
 const ResetPasswordSchema = zod.z.object({
     body: zod.z.object({
-        email: UserSchema.shape.email,
-        code: zod.z.string().length(6),
-        password: UserSchema.shape.password,
+        newPassword: UserSchema.shape.password,
+        confirmNewPassword: UserSchema.shape.password,
     }),
 });
 const ChangePasswordSchema = zod.z.object({
@@ -1066,6 +1068,7 @@ exports.LoginSchema = LoginSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RefundPaymentSchema = RefundPaymentSchema;
 exports.RegisterSchema = RegisterSchema;
+exports.ResendVerificationSchema = ResendVerificationSchema;
 exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;
 exports.UpdateCategorySchema = UpdateCategorySchema;

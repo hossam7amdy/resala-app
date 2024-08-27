@@ -39,7 +39,6 @@ export type DefaultResponseBody = {
 export type LoginRequest = z.infer<typeof Schemas.LoginSchema>;
 export type LoginResponse = DefaultResponseBody & {
   data: {
-    expiresAt: Date;
     accessToken: string;
     refreshToken: string;
     user: User;
@@ -52,7 +51,6 @@ export type RegisterResponse = DefaultResponseBody;
 export type RefreshTokenRequest = z.infer<typeof Schemas.RefreshTokenSchema>;
 export type RefreshTokenResponse = DefaultResponseBody & {
   data: {
-    expiresAt: Date;
     accessToken: string;
     refreshToken: string;
   };
@@ -61,16 +59,11 @@ export type RefreshTokenResponse = DefaultResponseBody & {
 export type VerifyEmailRequest = z.infer<typeof Schemas.VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
 
-export type ResendVerificationEmailRequest = undefined;
+export type ResendVerificationEmailRequest = z.infer<typeof Schemas.ResendVerificationSchema>;
 export type ResendVerificationEmailResponse = DefaultResponseBody;
 
 export type ForgotPasswordRequest = z.infer<typeof Schemas.ForgotPasswordSchema>;
-export type ForgotPasswordResponse = DefaultResponseBody & {
-  data: {
-    resetToken: string;
-    expiresAt: Date;
-  };
-};
+export type ForgotPasswordResponse = DefaultResponseBody;
 
 export type ResetPasswordRequest = z.infer<typeof Schemas.ResetPasswordSchema>;
 export type ResetPasswordResponse = DefaultResponseBody;

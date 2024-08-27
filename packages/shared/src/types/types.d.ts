@@ -15,8 +15,9 @@ export type Pagination = {
 export type User = {
     id: number;
     email: string;
-    isVerified: boolean;
+    isEmailVerified: boolean;
     phone: string;
+    isPhoneVerified: boolean;
     firstName: string;
     lastName: string;
     role: RoleType;

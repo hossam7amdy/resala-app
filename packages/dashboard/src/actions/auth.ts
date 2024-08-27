@@ -9,9 +9,10 @@ import type {
   LoginRequest,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  VerifyEmailRequest,
+  VerifyEmailResponse,
 } from '@resala/shared';
 import { AuthError } from 'next-auth';
-import { RedirectType, redirect } from 'next/navigation';
 
 import { callEndpoint } from '../services/callEndpoint';
 import { deleteCookie, setCookie } from '../utils/cookies';
@@ -47,26 +48,40 @@ export const logout = async () => {
   await signOut({ redirectTo: ROUTES.LOGIN });
 };
 
-export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
-  const { data } = await callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
-    ENDPOINT_CONFIGS.forgotPassword,
-    { body: payload }
+export const verifyEmail = async ({ token }: { token: string }) => {
+  setCookie('jwt-token', { token });
+
+  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+    ENDPOINT_CONFIGS.verifyEmail
   );
-
-  setCookie('jwt-token', {
-    token: data.resetToken,
-    expireDate: data.expiresAt.toString(),
-  });
-
-  redirect(ROUTES.RESET_PASSWORD, RedirectType.replace);
-};
-
-export const resetPassword = async (payload: ResetPasswordRequest['body']) => {
-  await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(ENDPOINT_CONFIGS.resetPassword, {
-    body: payload,
-  });
 
   deleteCookie('jwt-token');
 
-  redirect(ROUTES.LOGIN, RedirectType.replace);
+  return response;
+};
+
+export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
+  return callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
+    ENDPOINT_CONFIGS.forgotPassword,
+    { body: payload }
+  );
+};
+
+export const resetPassword = async ({
+  token,
+  newPassword,
+  confirmNewPassword,
+}: ResetPasswordRequest['body'] & { token: string }) => {
+  setCookie('jwt-token', { token });
+
+  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
+    ENDPOINT_CONFIGS.resetPassword,
+    {
+      body: { newPassword, confirmNewPassword },
+    }
+  );
+
+  deleteCookie('jwt-token');
+
+  return response;
 };

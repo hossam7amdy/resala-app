@@ -1,62 +1,66 @@
-import type { User } from '@prisma/client';
 import type { RegisterRequest } from '@resala/shared';
-import type { JwtPayload } from 'jsonwebtoken';
-import jwt from 'jsonwebtoken';
 
 import type { DataStore } from '../../datastore/index.js';
-import { BadRequestError, UnauthorizedError } from '../../errors/api.errors.js';
-import { genHashedPassword, verifyHashedPassword } from '../../utils/password.js';
-import { generateRandomString } from '../../utils/random.js';
+import { BadRequestError } from '../../errors/api.errors.js';
+import { jwtSign, jwtVerify } from '../../lib/jwt.js';
+import { hashPassword, verifyPassword } from '../../lib/password.js';
 
 export class AuthService {
   constructor(private readonly db: DataStore) {}
 
-  private cleanSensitiveData(user: User) {
-    const { password, iterations, salt, ...rest } = user;
-    return rest;
+  private _getAccessToken(id: string, email: string) {
+    return jwtSign({ id, email }, 'JWT_SECRET', {
+      expiresIn: '8h',
+    });
   }
 
-  async authenticate(sign: string, password: string) {
-    const user = await this.db.user.findFirstOrThrow({
-      where: { OR: [{ email: sign }, { phone: sign }] },
+  private _getRefreshToken(id: string, email: string) {
+    return jwtSign({ id: id.toString(), email }, 'JWT_REFRESH', {
+      expiresIn: '7d',
+    });
+  }
+
+  private _getResetToken(id: string, email: string) {
+    return jwtSign({ id: id.toString(), email }, 'JWT_RESET', {
+      expiresIn: '15m',
+    });
+  }
+
+  private _getVerifyToken(id: string, email: string) {
+    return jwtSign({ id, email }, 'JWT_VERIFY', {
+      expiresIn: '1h',
+    });
+  }
+
+  async login(sign: string, password: string) {
+    const { id, password: passwordHash } = await this.db.user.findFirstOrThrow({
+      select: {
+        id: true,
+        password: true,
+      },
+      where: {
+        OR: [{ email: sign }, { phone: sign }],
+      },
     });
 
-    const verified = await verifyHashedPassword({
-      password: password!,
-      salt: user.salt,
-      iterations: user.iterations,
-      hashedPassword: user.password,
-    });
+    const verified = await verifyPassword(password, passwordHash);
     if (!verified) {
       throw new BadRequestError('Invalid email/phone or password');
     }
 
-    await this.db.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        lastLogin: new Date(),
-      },
+    const user = await this.db.user.update({
+      where: { id },
+      data: { lastLogin: new Date() },
     });
 
-    const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
-      expiresIn: '1d',
-    });
-    const refreshToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_REFRESH!, {
-      expiresIn: '7d',
-    });
+    const accessToken = this._getAccessToken(user.id.toString(), user.email);
+    const refreshToken = this._getRefreshToken(user.id.toString(), user.email);
 
-    return {
-      expiresAt: this.oneDayFromNow,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      user: this.cleanSensitiveData(user),
-    };
+    return { accessToken, refreshToken, user };
   }
 
   async register(payload: RegisterRequest['body']) {
-    const { hashedPassword, salt, iterations } = await genHashedPassword(payload.password);
+    const hashedPassword = await hashPassword(payload.password);
 
     const user = await this.db.user.create({
       data: {
@@ -64,121 +68,89 @@ export class AuthService {
         phone: payload.phone,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        role: 'CUSTOMER',
-        isVerified: false,
         password: hashedPassword,
-        salt,
-        iterations,
-        lastLogin: null,
       },
     });
 
-    // generate verify token
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_VERIFY!, {
-      expiresIn: '30d',
-    });
-
     return {
-      user: this.cleanSensitiveData(user),
-      verifyToken: token,
+      user,
+      verifyToken: this._getVerifyToken(user.id.toString(), user.email),
     };
   }
 
-  async verifyEmail(email: string, token: string) {
+  async requestEmailVerification(email: string) {
     const user = await this.db.user.findUniqueOrThrow({ where: { email } });
 
-    const jwtObj = await this.validateJwtToken(token, process.env.JWT_VERIFY!);
-    if (email !== jwtObj.email) {
-      throw new BadRequestError('Invalid token');
+    if (user.isEmailVerified) {
+      throw new BadRequestError('Email is already verified');
     }
 
-    await this.db.user.update({ where: { id: user.id }, data: { isVerified: true } });
-    return true;
+    const token = this._getVerifyToken(user.id.toString(), user.email);
+
+    return { token };
+  }
+
+  async verifyEmail(email: string) {
+    const { isEmailVerified } = await this.db.user.findUniqueOrThrow({
+      where: { email },
+      select: { isEmailVerified: true },
+    });
+
+    if (isEmailVerified) {
+      throw new BadRequestError('Email is already verified');
+    }
+
+    await this.db.user.update({ where: { email }, data: { isEmailVerified: true } });
   }
 
   async changePassword(email: string, oldPassword: string, newPassword: string) {
-    const user = await this.db.user.findUniqueOrThrow({ where: { email } });
-
-    const verified = await verifyHashedPassword({
-      password: oldPassword,
-      salt: user.salt,
-      iterations: user.iterations,
-      hashedPassword: user.password,
+    const { id, password: passwordHash } = await this.db.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        password: true,
+      },
+      where: { email },
     });
+
+    const verified = await verifyPassword(oldPassword, passwordHash);
     if (!verified) {
-      throw new BadRequestError('Old password is incorrect');
+      throw new BadRequestError('Invalid password, please try again');
     }
 
-    const { hashedPassword, salt, iterations } = await genHashedPassword(newPassword);
+    const hashedPassword = await hashPassword(newPassword);
 
     await this.db.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword, salt, iterations },
+      where: { id },
+      data: { password: hashedPassword },
     });
   }
 
   async forgotPassword(email: string) {
     // validate user exists
-    const user = await this.db.user.findUniqueOrThrow({ where: { email } });
+    const { id } = await this.db.user.findUniqueOrThrow({ where: { email } });
 
     // generate reset token
-    const resetCode = generateRandomString(6).toUpperCase();
-    const token = jwt.sign({ id: user.id, email, resetCode }, process.env.JWT_RESET!, {
-      expiresIn: '1h',
-    });
+    const token = this._getResetToken(id.toString(), email);
 
-    return {
-      expiresAt: this.oneHourFromNow,
-      token,
-      resetCode,
-    };
+    return { token };
   }
 
-  async resetPassword(token: string, code: string, password: string) {
-    // validate reset code
-    const { id, resetCode } = await this.validateJwtToken(token, process.env.JWT_RESET!);
-
-    if (resetCode !== code) {
-      throw new BadRequestError('Invalid code');
-    }
-
+  async resetPassword(email: string, newPassword: string) {
     // update password
-    const { hashedPassword, salt, iterations } = await genHashedPassword(password);
+    const hashedPassword = await hashPassword(newPassword);
+
     await this.db.user.update({
-      where: { id },
-      data: { password: hashedPassword, salt, iterations },
+      where: { email },
+      data: { password: hashedPassword },
     });
   }
 
   async refreshToken(token: string) {
-    const { id } = await this.validateJwtToken(token, process.env.JWT_REFRESH!);
-    const user = await this.db.user.findUniqueOrThrow({ where: { id } });
+    const { id } = jwtVerify(token, 'JWT_REFRESH');
+    const user = await this.db.user.findUniqueOrThrow({ where: { id: +id } });
 
-    const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
-      expiresIn: '1d',
-    });
-    return {
-      expiresAt: this.oneDayFromNow,
-      accessToken: accessToken,
-    };
-  }
+    const accessToken = this._getAccessToken(user.id.toString(), user.email);
 
-  async validateJwtToken(token: string, secret: string): Promise<JwtPayload> {
-    try {
-      return jwt.verify(token, secret) as JwtPayload;
-    } catch (error) {
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new UnauthorizedError('Token expired');
-      }
-      throw new UnauthorizedError('Invalid token');
-    }
-  }
-
-  get oneDayFromNow() {
-    return new Date(Date.now() + 1000 * 60 * 60 * 24);
-  }
-
-  get oneHourFromNow() {
-    return new Date(Date.now() + 1000 * 60 * 60);
+    return { accessToken };
   }
 }

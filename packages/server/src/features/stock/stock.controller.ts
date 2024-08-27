@@ -29,7 +29,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { StockService } from './stock.service.js';
 
 @Tags('Stock')
@@ -50,7 +50,7 @@ export class StockController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListStocksSchema)])
+  @Middlewares([validate(ListStocksSchema)])
   async list(@Queries() query: ListStocksRequest['query']): Promise<ListStocksResponse> {
     const { stocks, pagination } = await this.stockService.list(query);
 
@@ -61,8 +61,8 @@ export class StockController extends Controller {
   }
 
   @Post()
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateStockSchema)])
   @SuccessResponse('201', 'Stock created successfully')
   async create(@Body() body: CreateStockRequest['body']): Promise<CreateStockResponse> {
     const stock = await this.stockService.create(body);
@@ -71,8 +71,8 @@ export class StockController extends Controller {
   }
 
   @Put('{stockId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateStockSchema)])
   async update(
     @Path() stockId: string,
     @Body() body: UpdateStockRequest['body']
@@ -83,7 +83,7 @@ export class StockController extends Controller {
   }
 
   @Delete('{stockId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   async delete(@Path() stockId: string): Promise<DeleteStockResponse> {
     const stock = await this.stockService.delete(+stockId);

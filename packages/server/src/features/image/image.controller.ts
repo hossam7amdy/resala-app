@@ -26,6 +26,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateImage } from '../../middlewares/uploadHandler.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ImageService } from './image.service.js';
@@ -43,7 +44,7 @@ export class ImageController extends Controller {
   }
 
   @Post()
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   @SuccessResponse('201', 'Image created successfully')
   public async create(
@@ -51,6 +52,8 @@ export class ImageController extends Controller {
     @FormField() productId: number | string,
     @UploadedFiles() images: Express.Multer.File[]
   ): Promise<CreateImageResponse> {
+    images.forEach(image => validateImage(image));
+
     const { body } = await CreateImageSchema.parseAsync({
       body: {
         colorId,
@@ -74,7 +77,7 @@ export class ImageController extends Controller {
   }
 
   @Patch('{imageId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() imageId: string,
@@ -86,7 +89,7 @@ export class ImageController extends Controller {
   }
 
   @Delete('{imageId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() imageId: string): Promise<UpdateImageResponse> {
     const image = await this.imageService.delete(+imageId);

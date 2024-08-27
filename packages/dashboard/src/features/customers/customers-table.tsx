@@ -26,7 +26,7 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
         <TableColumn
           width="10%"
           title="Verified"
-          dataIndex="isVerified"
+          dataIndex="isEmailVerified"
           render={isVerified => (
             <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
           )}

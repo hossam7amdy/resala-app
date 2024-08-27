@@ -1,7 +1,7 @@
 'use server';
 
-import { logout } from '@/actions/auth';
 import { auth } from '@/auth';
+import { getCookie } from '@/utils/cookies';
 import {
   type DefaultRequestQuery,
   type DefaultResponseBody,
@@ -18,9 +18,6 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
   response => response.data,
   async (error: AxiosError) => {
-    if (error?.response?.status === 401) {
-      await logout();
-    }
     return Promise.reject(error);
   }
 );
@@ -46,13 +43,15 @@ export const callEndpoint = async <Request extends Req, Response extends Res>(
   const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
   const { url, method, auth: isProtected } = withParams(endpoint, ...params);
 
+  const accessToken = (await auth())?.accessToken || (await getCookie('jwt-token'))?.value;
+
   const config: AxiosRequestConfig = {
     url,
     method,
     data: request?.body,
     params: request?.query,
     headers: {
-      Authorization: isProtected ? `Bearer ${(await auth())?.accessToken}` : undefined,
+      Authorization: isProtected ? `Bearer ${accessToken}` : undefined,
     },
   };
 
