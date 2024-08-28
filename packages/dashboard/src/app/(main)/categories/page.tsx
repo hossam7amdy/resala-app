@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   title: 'Categories',
 };
 
-const CategoryPage = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = searchParams.query || '';
+const CategoryPage = async ({ searchParams }: { searchParams: { search?: string } }) => {
+  const search = searchParams.search || '';
   const categories = await listAllCategories();
 
   return (
@@ -30,7 +30,7 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
       </Col>
       <Col span={24}>
         <Suspense fallback={<Table loading />}>
-          <CategoryTable query={query} categories={categories} />
+          <CategoryTable search={search} categories={categories} />
         </Suspense>
       </Col>
     </Row>

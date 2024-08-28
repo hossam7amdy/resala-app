@@ -1,4 +1,5 @@
-import { ENDPOINT_CONFIGS, RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
+import type { RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
 import type { NextAuthConfig } from 'next-auth';
 

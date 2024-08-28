@@ -7,7 +7,6 @@ import {
   DeleteReviewSchema,
   type GetReviewResponse,
   GetReviewSchema,
-  type ListReviewsRequest,
   type ListReviewsResponse,
   ListReviewsSchema,
   type UpdateReviewRequest,
@@ -24,6 +23,7 @@ import {
   Post,
   Put,
   Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -91,9 +91,15 @@ export class ReviewController extends Controller {
   @Get()
   @Middlewares([validate(ListReviewsSchema)])
   public async listReviews(
-    @Queries() query: ListReviewsRequest['query']
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() productId: string = ''
   ): Promise<ListReviewsResponse> {
-    const { reviews, pagination } = await this.reviewService.list(query);
+    const { reviews, pagination } = await this.reviewService.list({
+      page,
+      limit,
+      productId: +productId,
+    });
 
     return {
       success: true,

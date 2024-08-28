@@ -4,7 +4,6 @@ import type {
   DeleteOrderRequest,
   DeleteOrderResponse,
   GetOrderResponse,
-  ListOrdersRequest,
   ListOrdersResponse,
   UpdateOrderRequest,
   UpdateOrderResponse,
@@ -28,6 +27,7 @@ import {
   Path,
   Post,
   Queries,
+  Query,
   Request,
   Route,
   Security,
@@ -111,8 +111,13 @@ export class OrderController extends Controller {
   /** List orders with pagination */
   @Get()
   @Middlewares([validate(ListOrdersSchema)])
-  public async list(@Queries() query: ListOrdersRequest['query']): Promise<ListOrdersResponse> {
-    const { orders, pagination } = await this.orderService.list(query);
+  public async list(
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string,
+    @Query() userId?: number
+  ): Promise<ListOrdersResponse> {
+    const { orders, pagination } = await this.orderService.list({ page, limit, search, userId });
 
     return {
       success: true,

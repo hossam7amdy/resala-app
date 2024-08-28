@@ -1,15 +1,12 @@
 import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
+import { ListStocksRequest } from '@resala/shared';
 import React from 'react';
 
 const StocksPage: React.FC<{
-  searchParams: { query: string; page: string; limit: string };
+  searchParams?: ListStocksRequest['query'];
 }> = async ({ searchParams }) => {
-  const query = searchParams.query || '';
-  const page = parseInt(searchParams.page, 10) || 1;
-  const limit = parseInt(searchParams.limit, 10) || 10;
-
-  const { pagination, stocks } = await listStocks({ query, page, limit });
+  const { pagination, stocks } = await listStocks(searchParams ?? {});
 
   return <StocksTable pagination={pagination} stocks={stocks} />;
 };

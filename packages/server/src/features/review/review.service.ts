@@ -55,8 +55,8 @@ export class ReviewService {
   }
 
   async list({
-    page,
-    limit,
+    page = 1,
+    limit = 10,
     productId,
   }: ListReviewsRequest['query']): Promise<ListReviewsResponse['data']> {
     const [count, reviews] = await this.db.$transaction([

@@ -4,7 +4,6 @@ import {
   CreateStockSchema,
   type DeleteStockResponse,
   type GetStockResponse,
-  type ListStocksRequest,
   type ListStocksResponse,
   ListStocksSchema,
   type UpdateStockRequest,
@@ -20,7 +19,7 @@ import {
   Path,
   Post,
   Put,
-  Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -51,8 +50,18 @@ export class StockController extends Controller {
 
   @Get()
   @Middlewares([validate(ListStocksSchema)])
-  async list(@Queries() query: ListStocksRequest['query']): Promise<ListStocksResponse> {
-    const { stocks, pagination } = await this.stockService.list(query);
+  async list(
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string,
+    @Query() productId: string = ''
+  ): Promise<ListStocksResponse> {
+    const { stocks, pagination } = await this.stockService.list({
+      page,
+      limit,
+      search,
+      productId: +productId,
+    });
 
     return {
       success: true,

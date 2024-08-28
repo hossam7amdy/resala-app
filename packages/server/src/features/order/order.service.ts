@@ -97,16 +97,15 @@ export class OrderService {
   }
 
   async list({
-    limit,
-    page,
-    query,
+    page = 1,
+    limit = 10,
+    search,
     userId,
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {
       OR: [
-        { id: { equals: Number(query) || undefined } },
-        { user: { email: { startsWith: query } } },
-        { user: { phone: { startsWith: query } } },
+        { user: { email: { startsWith: search } } },
+        { user: { phone: { startsWith: search } } },
       ],
       userId: userId,
     };
