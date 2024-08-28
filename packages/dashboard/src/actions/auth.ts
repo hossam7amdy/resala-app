@@ -7,6 +7,8 @@ import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,
@@ -43,8 +45,6 @@ export const login = async (payload: LoginRequest['body']) => {
 };
 
 export const logout = async () => {
-  deleteCookie('refresh-token');
-
   await signOut({ redirectTo: ROUTES.LOGIN });
 };
 
