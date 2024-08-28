@@ -2,6 +2,7 @@ import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type { RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
 import type { NextAuthConfig } from 'next-auth';
+import { NextResponse } from 'next/server';
 
 import { PROTECTED_ROUTES, ROUTES } from './utils/routes';
 
@@ -47,7 +48,12 @@ export const authConfig = {
     strategy: 'jwt',
   },
   callbacks: {
-    authorized: ({ auth, request: { nextUrl } }) => {
+    authorized: ({ auth, request: { url, nextUrl, headers } }) => {
+      // Store current request url in a custom header, which you can read later
+      // https://stackoverflow.com/questions/75362636/how-can-i-get-the-url-pathname-on-a-server-component-next-js-13
+      const requestHeaders = new Headers(headers);
+      requestHeaders.set('x-pathname', url);
+
       const isLoggedIn = !!auth?.user;
 
       const isValid = isValidToken(auth?.accessToken);
@@ -59,12 +65,21 @@ export const authConfig = {
       const isOnDashboard = PROTECTED_ROUTES.some(route => nextUrl.pathname.startsWith(route));
 
       if (isOnDashboard) {
-        if (isLoggedIn) return true;
+        if (isLoggedIn)
+          return NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          });
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
         return Response.redirect(new URL(ROUTES.DASHBOARD, nextUrl));
       }
-      return true;
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     },
     jwt: async ({ token, user }) => {
       const isValid = isValidToken(token.accessToken as string);
