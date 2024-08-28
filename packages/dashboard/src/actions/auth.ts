@@ -7,8 +7,6 @@ import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,

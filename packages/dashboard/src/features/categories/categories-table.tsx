@@ -10,12 +10,12 @@ import { Button, Flex, Table } from 'antd';
 import Link from 'next/link';
 
 export const CategoryTable: React.FC<{
-  query: string | undefined;
+  search: string | undefined;
   categories: ListCategoriesResponse['data'];
-}> = ({ categories, query = '' }) => {
+}> = ({ categories, search = '' }) => {
   const filteredCategories = categories.filter(category => {
-    if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
-    if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
+    if (category.enName.toLowerCase().includes(search.toLowerCase())) return true;
+    if (category.arName.toLowerCase().includes(search.toLowerCase())) return true;
   });
 
   return (

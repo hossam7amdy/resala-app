@@ -8,10 +8,10 @@ import { Flex } from 'antd';
 import { TableData } from './table-data';
 
 interface ProductTableProps {
-  searchParams: ListProductsRequest['query'];
+  searchParams?: ListProductsRequest['query'];
 }
 export const ProductTable = async ({ searchParams }: ProductTableProps) => {
-  const { products, pagination } = await listProducts(searchParams);
+  const { products, pagination } = await listProducts(searchParams ?? {});
 
   return (
     <Flex vertical align="center" gap={10}>

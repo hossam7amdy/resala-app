@@ -25,15 +25,15 @@ export class ProductService {
   }
 
   async list({
-    query,
-    page,
-    limit,
+    search,
+    page = 1,
+    limit = 10,
     categoryId,
   }: ListProductsRequest['query']): Promise<ListProductsResponse['data']> {
     const filters: Prisma.ProductWhereInput = {
       OR: [
-        { enName: { startsWith: query, mode: 'insensitive' } },
-        { arName: { startsWith: query, mode: 'insensitive' } },
+        { enName: { startsWith: search, mode: 'insensitive' } },
+        { arName: { startsWith: search, mode: 'insensitive' } },
       ],
       categoryId,
     };

@@ -2,7 +2,6 @@
 
 import { callEndpoint } from '@/services/callEndpoint';
 import type {
-  DefaultRequestQuery,
   GetUserRequest,
   GetUserResponse,
   ListUsersRequest,
@@ -34,18 +33,12 @@ export const getUserById = async (id: number | string) => {
   }
 };
 
-export const listUsersPaginated = async (params: DefaultRequestQuery['query']) => {
+export const listUsers = async (query: ListUsersRequest['query']) => {
   noStore();
 
   const response = await callEndpoint<ListUsersRequest, ListUsersResponse>(
     ENDPOINT_CONFIGS.listUsers,
-    {
-      query: {
-        page: Number(params.page),
-        limit: Number(params.limit),
-        query: params?.query || '',
-      },
-    }
+    { query }
   );
 
   return response.data;
