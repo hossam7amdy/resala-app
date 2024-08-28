@@ -355,7 +355,6 @@ export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;
 export type GetReviewResponse = DefaultResponseBody & {
   data: Review & {
     user: User | null;
-    product: Product;
   };
 };
 

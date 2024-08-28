@@ -1,17 +1,15 @@
 import { Search } from '@/components';
-import { ProductTable } from '@/features/products/product-table';
 import { ROUTES } from '@/utils/routes';
-import type { ListRequestQuery } from '@resala/shared';
-import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
+import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: 'Products',
 };
 
-const ProductPage = ({ searchParams }: { searchParams?: ListRequestQuery['query'] }) => {
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Row gutter={[10, 20]}>
       <Col span={24}>
@@ -26,13 +24,9 @@ const ProductPage = ({ searchParams }: { searchParams?: ListRequestQuery['query'
           </Link>
         </Flex>
       </Col>
-      <Col span={24}>
-        <Suspense key={JSON.stringify(searchParams ?? {})} fallback={<Table loading />}>
-          <ProductTable searchParams={searchParams} />
-        </Suspense>
-      </Col>
+      <Col span={24}>{children}</Col>
     </Row>
   );
 };
 
-export default ProductPage;
+export default Layout;
