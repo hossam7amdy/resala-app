@@ -690,7 +690,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                     page: {"default":1,"in":"query","name":"page","dataType":"double"},
                     limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
                     search: {"in":"query","name":"search","dataType":"string"},
-                    productId: {"default":"","in":"query","name":"productId","dataType":"string"},
+                    productId: {"in":"query","name":"productId","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1348,7 +1348,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     page: {"default":1,"in":"query","name":"page","dataType":"double"},
                     limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
-                    productId: {"default":"","in":"query","name":"productId","dataType":"string"},
+                    productId: {"in":"query","name":"productId","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

@@ -99,7 +99,7 @@ export class OrderService {
   async list({
     page = 1,
     limit = 10,
-    search,
+    search = '',
     userId,
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {

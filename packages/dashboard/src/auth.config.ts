@@ -52,7 +52,7 @@ export const authConfig = {
 
       const isValid = isValidToken(auth?.accessToken);
 
-      if (!isValid) {
+      if (!isValid && isLoggedIn) {
         return false;
       }
 
@@ -69,10 +69,6 @@ export const authConfig = {
     jwt: async ({ token, user }) => {
       const isValid = isValidToken(token.accessToken as string);
       if (isValid) return { ...token, ...user };
-
-      if (!token.refreshToken) {
-        return {};
-      }
 
       try {
         const { data } = await refreshToken(token.refreshToken as string);

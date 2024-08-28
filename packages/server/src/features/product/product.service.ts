@@ -25,7 +25,7 @@ export class ProductService {
   }
 
   async list({
-    search,
+    search = '',
     page = 1,
     limit = 10,
     categoryId,
