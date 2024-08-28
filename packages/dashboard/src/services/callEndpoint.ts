@@ -2,12 +2,7 @@
 
 import { auth } from '@/auth';
 import { getCookie } from '@/utils/cookies';
-import {
-  type DefaultResponseBody,
-  type EndpointConfig,
-  type ListRequestQuery,
-  withParams,
-} from '@resala/shared';
+import { type DefaultResponseBody, type EndpointConfig, withParams } from '@resala/shared';
 import axios from 'axios';
 import type { AxiosError, AxiosRequestConfig } from 'axios';
 
@@ -26,14 +21,13 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === 'object';
 };
 
-type Req =
-  | {
-      params?: Record<string, string | number>;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body?: { [key: string]: any };
-      query?: ListRequestQuery['query'] | { [key: string]: string | number };
-    }
-  | undefined;
+type Req = {
+  params?: Record<string, string | number>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query?: any;
+};
 type Res = DefaultResponseBody;
 
 export const callEndpoint = async <Request extends Req, Response extends Res>(
