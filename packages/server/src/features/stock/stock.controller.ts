@@ -54,13 +54,13 @@ export class StockController extends Controller {
     @Query() page: number = 1,
     @Query() limit: number = 10,
     @Query() search?: string,
-    @Query() productId: string = ''
+    @Query() productId?: number
   ): Promise<ListStocksResponse> {
     const { stocks, pagination } = await this.stockService.list({
       page,
       limit,
       search,
-      productId: +productId,
+      productId,
     });
 
     return {

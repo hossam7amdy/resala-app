@@ -234,8 +234,8 @@ paths:
           name: productId
           required: false
           schema:
-            default: ""
-            type: string
+            format: double
+            type: number
     post:
       operationId: Create
       responses:
@@ -586,10 +586,10 @@ paths:
             type: number
         - in: query
           name: productId
-          required: false
+          required: true
           schema:
-            default: ""
-            type: string
+            format: double
+            type: number
   /api/v1/reviews/{reviewId}:
     put:
       operationId: UpdateReview

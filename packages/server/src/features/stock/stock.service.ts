@@ -48,7 +48,7 @@ export class StockService {
     page = 1,
     limit = 10,
     productId,
-    search,
+    search = '',
   }: ListStocksRequest['query']): Promise<ListStocksResponse['data']> {
     const filters: Prisma.StockWhereInput = {
       OR: [
