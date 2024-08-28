@@ -482,10 +482,12 @@ const ENDPOINT_CONFIGS = {
     [exports.Endpoints.getReview]: {
         url: '/api/v1/reviews/{reviewId}',
         method: 'get',
+        auth: true,
     },
     [exports.Endpoints.listReviews]: {
         url: '/api/v1/reviews',
         method: 'get',
+        auth: true,
     },
 };
 
@@ -986,7 +988,7 @@ const CreateReviewSchema = zod.z.object({
         userId: zod.z.coerce.number().positive(),
         productId: zod.z.coerce.number().positive(),
         rating: zod.z.coerce.number().min(1).max(5),
-        comment: zod.z.string().max(500).optional(),
+        comment: zod.z.string().max(250).optional(),
     }),
 });
 const GetReviewSchema = zod.z.object({

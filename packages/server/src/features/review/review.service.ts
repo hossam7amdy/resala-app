@@ -48,7 +48,6 @@ export class ReviewService {
     return await this.db.review.findUniqueOrThrow({
       where: { id: reviewId },
       include: {
-        product: true,
         user: true,
       },
     });
@@ -63,7 +62,6 @@ export class ReviewService {
       this.db.review.count({ where: { productId } }),
       this.db.review.findMany({
         include: {
-          product: true,
           user: true,
         },
         where: { productId },

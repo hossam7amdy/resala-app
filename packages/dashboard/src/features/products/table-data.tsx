@@ -6,7 +6,7 @@ import { ResalaTooltip } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, SelectOutlined } from '@ant-design/icons';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
 import { Button, Image, Space, Table } from 'antd';
 import Link from 'next/link';
@@ -23,16 +23,45 @@ export const TableData: React.FC<{ products: ListProductsResponse['data']['produ
       dataSource={products}
       rowKey={record => record.id}
       rowClassName={() => 'table-row-pointer'}
-      onRow={record => {
-        return {
-          onClick: () => {
-            router.push(ROUTES.PRODUCT_STOCKS(record.id));
-          },
-        };
-      }}
       scroll={{ x: true, y: 500 }}
       pagination={false}
+      expandable={{
+        expandRowByClick: true,
+        expandedRowRender: product => (
+          <Table
+            dataSource={[product]}
+            columns={[
+              {
+                title: 'English Description',
+                dataIndex: 'enDescription',
+                key: 'enDescription',
+                width: '50%',
+              },
+              {
+                title: 'وصف بالعربي',
+                dataIndex: 'arDescription',
+                key: 'arDescription',
+                width: '50%',
+                align: 'end',
+              },
+            ]}
+            pagination={false}
+          />
+        ),
+      }}
       columns={[
+        {
+          title: 'ID',
+          dataIndex: 'id',
+          onCell: () => ({
+            onClick: e => e.stopPropagation(),
+          }),
+          render: (id: number) => (
+            <Button size="small" type="link" onClick={() => router.push(ROUTES.PRODUCT_STOCKS(id))}>
+              {id} <SelectOutlined style={{ transform: 'rotate(90deg)' }} />
+            </Button>
+          ),
+        },
         {
           title: 'Image',
           dataIndex: 'imageUrl',
