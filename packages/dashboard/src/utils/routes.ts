@@ -15,6 +15,7 @@ export const ROUTES = {
   CREATE_PRODUCT: '/products/create',
   EDIT_PRODUCT: (id: string | number) => `/products/${id}/edit`,
   PRODUCT_STOCKS: (id: string | number) => `/products/${id}`,
+  PRODUCT_REVIEWS: (id: string | number) => `/products/${id}/reviews`,
 
   STOCKS: '/stocks',
   CREATE_STOCK: (id?: string | number) => `/stocks/create?productId=${id}`,

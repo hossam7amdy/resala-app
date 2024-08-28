@@ -478,9 +478,11 @@ export const ENDPOINT_CONFIGS = {
     [Endpoints.getReview]: {
         url: '/api/v1/reviews/{reviewId}',
         method: 'get',
+        auth: true,
     },
     [Endpoints.listReviews]: {
         url: '/api/v1/reviews',
         method: 'get',
+        auth: true,
     },
 };
