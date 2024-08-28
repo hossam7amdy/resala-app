@@ -5,7 +5,6 @@ import credentials from 'next-auth/providers/credentials';
 
 import { authConfig } from './auth.config';
 import { callEndpoint } from './services/callEndpoint';
-import { setCookie } from './utils/cookies';
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -25,8 +24,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           if (!['MODERATOR', 'ADMIN'].includes(data.user.role)) {
             throw new Error('You are not authorized to access this page');
           }
-
-          setCookie('refresh-token', { token: data.refreshToken });
 
           return data;
         } catch (e) {

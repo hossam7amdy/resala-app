@@ -612,27 +612,10 @@ const UserSchema = zod.z.object({
         .regex(validationPatterns.passwordContainsNumericCharacters.pattern, validationPatterns.passwordContainsNumericCharacters.message)
         .regex(validationPatterns.passwordContainsUpperCaseCharacter.pattern, validationPatterns.passwordContainsUpperCaseCharacter.message),
 });
-// Pagination Schema
-const DefaultQuerySchema = zod.z.object({
-    query: zod.z.object({
-        page: zod.z.coerce
-            .number()
-            .positive()
-            .optional()
-            .transform(val => val || 1),
-        limit: zod.z.coerce
-            .number()
-            .positive()
-            .max(100)
-            .optional()
-            .transform(val => val || 10),
-        query: zod.z
-            .string()
-            .min(0)
-            .max(50)
-            .optional()
-            .transform(val => val || ''),
-    }),
+// Offset page schema
+const OffsetPageParamsSchema = zod.z.object({
+    page: zod.z.coerce.number().positive().default(1).optional(),
+    limit: zod.z.coerce.number().positive().max(100).default(10).optional(),
 });
 // Auth Schemas
 const LoginSchema = zod.z.object({
@@ -687,6 +670,11 @@ const GetUserSchema = zod.z.object({
             .number()
             .positive()
             .transform(val => val.toString()),
+    }),
+});
+const ListUsersSchema = zod.z.object({
+    query: OffsetPageParamsSchema.extend({
+        search: zod.z.string().max(100).default('').optional(),
     }),
 });
 const UpdateUserSchema = zod.z.object({
@@ -791,7 +779,8 @@ const GetProductSchema = zod.z.object({
     params: UpdateProductSchema.shape.params,
 });
 const ListProductsSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
+        search: zod.z.string().max(100).optional(),
         categoryId: zod.z.coerce.number().positive().optional(),
     }),
 });
@@ -825,7 +814,8 @@ const DeleteStockSchema = zod.z.object({
     }),
 });
 const ListStocksSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
+        search: zod.z.string().max(100).optional(),
         productId: zod.z.coerce.number().positive().optional(),
     }),
 });
@@ -944,8 +934,9 @@ const GetOrderSchema = zod.z.object({
     }),
 });
 const ListOrdersSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
         userId: zod.z.coerce.number().positive().optional(),
+        search: zod.z.string().max(100).optional(),
     }),
 });
 const UpdateOrderStatusSchema = zod.z.object({
@@ -1007,7 +998,7 @@ const GetReviewSchema = zod.z.object({
     }),
 });
 const ListReviewsSchema = zod.z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
         productId: zod.z.coerce.number().positive().optional(),
     }),
 });
@@ -1037,7 +1028,6 @@ exports.CreateReviewSchema = CreateReviewSchema;
 exports.CreateSizeSchema = CreateSizeSchema;
 exports.CreateStockSchema = CreateStockSchema;
 exports.CreateWishlistSchema = CreateWishlistSchema;
-exports.DefaultQuerySchema = DefaultQuerySchema;
 exports.DeleteAddressSchema = DeleteAddressSchema;
 exports.DeleteCartSchema = DeleteCartSchema;
 exports.DeleteCategorySchema = DeleteCategorySchema;
@@ -1064,7 +1054,9 @@ exports.ListOrdersSchema = ListOrdersSchema;
 exports.ListProductsSchema = ListProductsSchema;
 exports.ListReviewsSchema = ListReviewsSchema;
 exports.ListStocksSchema = ListStocksSchema;
+exports.ListUsersSchema = ListUsersSchema;
 exports.LoginSchema = LoginSchema;
+exports.OffsetPageParamsSchema = OffsetPageParamsSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RefundPaymentSchema = RefundPaymentSchema;
 exports.RegisterSchema = RegisterSchema;

@@ -1,30 +1,13 @@
 import { z } from 'zod';
-export declare const DefaultQuerySchema: z.ZodObject<{
-    query: z.ZodObject<{
-        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
-    }, "strip", z.ZodTypeAny, {
-        query: string;
-        page: number;
-        limit: number;
-    }, {
-        query?: string | undefined;
-        page?: number | undefined;
-        limit?: number | undefined;
-    }>;
+export declare const OffsetPageParamsSchema: z.ZodObject<{
+    page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
 }, "strip", z.ZodTypeAny, {
-    query: {
-        query: string;
-        page: number;
-        limit: number;
-    };
+    page?: number | undefined;
+    limit?: number | undefined;
 }, {
-    query: {
-        query?: string | undefined;
-        page?: number | undefined;
-        limit?: number | undefined;
-    };
+    page?: number | undefined;
+    limit?: number | undefined;
 }>;
 export declare const LoginSchema: z.ZodObject<{
     body: z.ZodObject<{
@@ -202,6 +185,34 @@ export declare const GetUserSchema: z.ZodObject<{
 }, {
     params: {
         userId: number;
+    };
+}>;
+export declare const ListUsersSchema: z.ZodObject<{
+    query: z.ZodObject<z.objectUtil.extendShape<{
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    }, {
+        search: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+    }>, "strip", z.ZodTypeAny, {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
+    }, {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query: {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
+    };
+}, {
+    query: {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
     };
 }>;
 export declare const UpdateUserSchema: z.ZodObject<{
@@ -672,34 +683,34 @@ export declare const GetProductSchema: z.ZodObject<{
 }>;
 export declare const ListProductsSchema: z.ZodObject<{
     query: z.ZodObject<z.objectUtil.extendShape<{
-        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     }, {
+        search: z.ZodOptional<z.ZodString>;
         categoryId: z.ZodOptional<z.ZodNumber>;
     }>, "strip", z.ZodTypeAny, {
-        query: string;
-        page: number;
-        limit: number;
-        categoryId?: number | undefined;
-    }, {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
+        search?: string | undefined;
+        categoryId?: number | undefined;
+    }, {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
         categoryId?: number | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
-        query: string;
-        page: number;
-        limit: number;
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
         categoryId?: number | undefined;
     };
 }, {
     query: {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
+        search?: string | undefined;
         categoryId?: number | undefined;
     };
 }>;
@@ -816,34 +827,34 @@ export declare const DeleteStockSchema: z.ZodObject<{
 }>;
 export declare const ListStocksSchema: z.ZodObject<{
     query: z.ZodObject<z.objectUtil.extendShape<{
-        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     }, {
+        search: z.ZodOptional<z.ZodString>;
         productId: z.ZodOptional<z.ZodNumber>;
     }>, "strip", z.ZodTypeAny, {
-        query: string;
-        page: number;
-        limit: number;
-        productId?: number | undefined;
-    }, {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
+        search?: string | undefined;
+        productId?: number | undefined;
+    }, {
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
         productId?: number | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
-        query: string;
-        page: number;
-        limit: number;
+        page?: number | undefined;
+        limit?: number | undefined;
+        search?: string | undefined;
         productId?: number | undefined;
     };
 }, {
     query: {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
+        search?: string | undefined;
         productId?: number | undefined;
     };
 }>;
@@ -1205,35 +1216,35 @@ export declare const GetOrderSchema: z.ZodObject<{
 }>;
 export declare const ListOrdersSchema: z.ZodObject<{
     query: z.ZodObject<z.objectUtil.extendShape<{
-        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     }, {
         userId: z.ZodOptional<z.ZodNumber>;
+        search: z.ZodOptional<z.ZodString>;
     }>, "strip", z.ZodTypeAny, {
-        query: string;
-        page: number;
-        limit: number;
-        userId?: number | undefined;
-    }, {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
         userId?: number | undefined;
+        search?: string | undefined;
+    }, {
+        page?: number | undefined;
+        limit?: number | undefined;
+        userId?: number | undefined;
+        search?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
-        query: string;
-        page: number;
-        limit: number;
-        userId?: number | undefined;
-    };
-}, {
-    query: {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
         userId?: number | undefined;
+        search?: string | undefined;
+    };
+}, {
+    query: {
+        page?: number | undefined;
+        limit?: number | undefined;
+        userId?: number | undefined;
+        search?: string | undefined;
     };
 }>;
 export declare const UpdateOrderStatusSchema: z.ZodObject<{
@@ -1408,32 +1419,27 @@ export declare const GetReviewSchema: z.ZodObject<{
 }>;
 export declare const ListReviewsSchema: z.ZodObject<{
     query: z.ZodObject<z.objectUtil.extendShape<{
-        page: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        limit: z.ZodEffects<z.ZodOptional<z.ZodNumber>, number, number | undefined>;
-        query: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+        page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     }, {
         productId: z.ZodOptional<z.ZodNumber>;
     }>, "strip", z.ZodTypeAny, {
-        query: string;
-        page: number;
-        limit: number;
+        page?: number | undefined;
+        limit?: number | undefined;
         productId?: number | undefined;
     }, {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
         productId?: number | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
-        query: string;
-        page: number;
-        limit: number;
+        page?: number | undefined;
+        limit?: number | undefined;
         productId?: number | undefined;
     };
 }, {
     query: {
-        query?: string | undefined;
         page?: number | undefined;
         limit?: number | undefined;
         productId?: number | undefined;

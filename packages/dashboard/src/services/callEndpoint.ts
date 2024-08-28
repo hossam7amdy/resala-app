@@ -3,9 +3,9 @@
 import { auth } from '@/auth';
 import { getCookie } from '@/utils/cookies';
 import {
-  type DefaultRequestQuery,
   type DefaultResponseBody,
   type EndpointConfig,
+  type ListRequestQuery,
   withParams,
 } from '@resala/shared';
 import axios from 'axios';
@@ -31,7 +31,7 @@ type Req =
       params?: Record<string, string | number>;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       body?: { [key: string]: any };
-      query?: DefaultRequestQuery['query'] | { [key: string]: string | number };
+      query?: ListRequestQuery['query'] | { [key: string]: string | number };
     }
   | undefined;
 type Res = DefaultResponseBody;

@@ -103,19 +103,21 @@ paths:
         - JWT_SECRET: []
       parameters:
         - in: query
-          name: limit
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
           name: page
           required: false
           schema:
+            default: 1
             format: double
             type: number
         - in: query
-          name: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            format: double
+            type: number
+        - in: query
+          name: search
           required: false
           schema:
             type: string
@@ -210,27 +212,29 @@ paths:
       security: []
       parameters:
         - in: query
-          name: productId
+          name: page
           required: false
           schema:
+            default: 1
             format: double
             type: number
         - in: query
           name: limit
           required: false
           schema:
+            default: 10
             format: double
             type: number
         - in: query
-          name: page
+          name: search
           required: false
           schema:
-            format: double
-            type: number
+            type: string
         - in: query
-          name: query
+          name: productId
           required: false
           schema:
+            default: ""
             type: string
     post:
       operationId: Create
@@ -567,27 +571,24 @@ paths:
         - JWT_SECRET: []
       parameters:
         - in: query
-          name: productId
+          name: page
           required: false
           schema:
+            default: 1
             format: double
             type: number
         - in: query
           name: limit
           required: false
           schema:
+            default: 10
             format: double
             type: number
         - in: query
-          name: page
+          name: productId
           required: false
           schema:
-            format: double
-            type: number
-        - in: query
-          name: query
-          required: false
-          schema:
+            default: ""
             type: string
   /api/v1/reviews/{reviewId}:
     put:
@@ -774,28 +775,30 @@ paths:
       security: []
       parameters:
         - in: query
-          name: categoryId
+          name: page
           required: false
           schema:
+            default: 1
             format: double
             type: number
         - in: query
           name: limit
           required: false
           schema:
+            default: 10
             format: double
             type: number
         - in: query
-          name: page
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: query
+          name: search
           required: false
           schema:
             type: string
+        - in: query
+          name: categoryId
+          required: false
+          schema:
+            format: double
+            type: number
     post:
       operationId: Create
       responses:
@@ -973,28 +976,30 @@ paths:
         - JWT_SECRET: []
       parameters:
         - in: query
-          name: userId
+          name: page
           required: false
           schema:
+            default: 1
             format: double
             type: number
         - in: query
           name: limit
           required: false
           schema:
+            default: 10
             format: double
             type: number
         - in: query
-          name: page
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: query
+          name: search
           required: false
           schema:
             type: string
+        - in: query
+          name: userId
+          required: false
+          schema:
+            format: double
+            type: number
   /api/v1/orders/{orderId}:
     get:
       operationId: Get

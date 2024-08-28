@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client';
-import type { ListUsersRequest, UpdateUserRequest } from '@resala/shared';
+import type { ListUsersRequest, ListUsersResponse, UpdateUserRequest } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
 
@@ -25,9 +25,13 @@ export class UserService {
     });
   }
 
-  async list({ page, limit, query }: ListUsersRequest['query']) {
-    const first = query.split(' ')[0];
-    let last = query.split(' ')[1];
+  async list({
+    page = 1,
+    limit = 10,
+    search = '',
+  }: ListUsersRequest['query']): Promise<ListUsersResponse['data']> {
+    const first = search.split(' ')[0];
+    let last = search.split(' ')[1];
     if (!last) last = first;
 
     const filters: Prisma.UserWhereInput = {

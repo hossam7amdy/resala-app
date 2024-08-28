@@ -3,7 +3,6 @@ import {
   CreateProductSchema,
   type DeleteProductResponse,
   type GetProductResponse,
-  type ListProductsRequest,
   type ListProductsResponse,
   ListProductsSchema,
   type UpdateProductResponse,
@@ -18,7 +17,7 @@ import {
   Path,
   Post,
   Put,
-  Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -55,8 +54,18 @@ export class ProductController extends Controller {
 
   @Get()
   @Middlewares([validate(ListProductsSchema)])
-  public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
-    const { products, pagination } = await this.productService.list(query);
+  public async list(
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string,
+    @Query() categoryId?: number
+  ): Promise<ListProductsResponse> {
+    const { products, pagination } = await this.productService.list({
+      page,
+      limit,
+      search,
+      categoryId,
+    });
 
     return { success: true, data: { pagination, products } };
   }

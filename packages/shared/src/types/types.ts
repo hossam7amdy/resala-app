@@ -3,7 +3,7 @@ import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
-import type { DefaultQuerySchema } from '../validations/index.js';
+import type { OffsetPageParamsSchema } from '../validations/index.js';
 
 export type RoleType = keyof typeof Role;
 
@@ -13,7 +13,7 @@ export type PaymentStatusType = keyof typeof PaymentStatus;
 
 export type PaymentMethodType = keyof typeof PaymentMethod;
 
-export type DefaultFilters = z.infer<typeof DefaultQuerySchema>['query'];
+export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 
 export type Pagination = {
   page: number;
