@@ -45,18 +45,18 @@ export class StockService {
   }
 
   async list({
-    page,
-    limit,
-    query,
+    page = 1,
+    limit = 10,
     productId,
+    search,
   }: ListStocksRequest['query']): Promise<ListStocksResponse['data']> {
     const filters: Prisma.StockWhereInput = {
       OR: [
-        { product: { arName: { contains: query, mode: 'insensitive' } } },
-        { product: { enName: { contains: query, mode: 'insensitive' } } },
-        { color: { arName: { contains: query, mode: 'insensitive' } } },
-        { color: { enName: { contains: query, mode: 'insensitive' } } },
-        { size: { name: { contains: query, mode: 'insensitive' } } },
+        { product: { arName: { contains: search, mode: 'insensitive' } } },
+        { product: { enName: { contains: search, mode: 'insensitive' } } },
+        { color: { arName: { contains: search, mode: 'insensitive' } } },
+        { color: { enName: { contains: search, mode: 'insensitive' } } },
+        { size: { name: { contains: search, mode: 'insensitive' } } },
       ],
       productId,
     };

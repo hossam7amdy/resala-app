@@ -1,11 +1,10 @@
 import {
-  DefaultQuerySchema,
   type DeleteUserResponse,
   DeleteUserSchema,
   type GetUserResponse,
   GetUserSchema,
-  ListUsersRequest,
   type ListUsersResponse,
+  ListUsersSchema,
   UpdateUserRequest,
   type UpdateUserResponse,
   UpdateUserSchema,
@@ -19,7 +18,7 @@ import {
   Middlewares,
   Path,
   Put,
-  Queries,
+  Query,
   Request,
   Route,
   Security,
@@ -53,15 +52,13 @@ export class UserController extends Controller {
   }
 
   @Get()
-  @Middlewares([validate(DefaultQuerySchema), authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([validate(ListUsersSchema), authorizeRole(['ADMIN', 'MODERATOR'])])
   public async listUsers(
-    @Queries() listUserDto: ListUsersRequest['query']
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string
   ): Promise<ListUsersResponse> {
-    const query = listUserDto.query ?? '';
-    const page = listUserDto.page ?? 1;
-    const limit = listUserDto.limit ?? 10;
-
-    const { users, pagination } = await this.userService.list({ page, limit, query });
+    const { users, pagination } = await this.userService.list({ page, limit, search });
 
     return {
       success: true,

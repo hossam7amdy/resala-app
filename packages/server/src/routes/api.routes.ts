@@ -561,7 +561,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function UserController_listUsers(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    listUserDto: {"in":"queries","name":"listUserDto","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    search: {"in":"query","name":"search","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -685,7 +687,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function StockController_list(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"double"},"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    productId: {"default":"","in":"query","name":"productId","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1341,7 +1346,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function ReviewController_listReviews(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"double"},"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    productId: {"default":"","in":"query","name":"productId","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1401,7 +1408,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function ProductController_list(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"categoryId":{"dataType":"double"},"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    categoryId: {"in":"query","name":"categoryId","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1696,7 +1706,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function OrderController_list(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double"},"limit":{"dataType":"double"},"page":{"dataType":"double"},"query":{"dataType":"string"}}},
+                    page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                    limit: {"default":10,"in":"query","name":"limit","dataType":"double"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    userId: {"in":"query","name":"userId","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

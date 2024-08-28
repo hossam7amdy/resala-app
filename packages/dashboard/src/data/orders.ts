@@ -21,7 +21,7 @@ export const findOrderById = async (id: string | number) => {
   return response.data;
 };
 
-export const listOrders = async (query: { page: number; limit: number; query: string }) => {
+export const listOrders = async (query: ListOrdersRequest['query']) => {
   noStore();
 
   const response = await callEndpoint<ListOrdersRequest, ListOrdersResponse>(

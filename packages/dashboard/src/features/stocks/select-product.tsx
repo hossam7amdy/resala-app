@@ -15,7 +15,7 @@ export const SelectProduct: React.FC = () => {
         filterOption={false}
         optionFilterProp="children"
         fetchOptions={async search => {
-          const data = await listProducts({ page: 1, limit: 10, query: search });
+          const data = await listProducts({ page: 1, limit: 10, search });
           return data.products.map(p => ({ label: p.enName, value: p.id }));
         }}
       />

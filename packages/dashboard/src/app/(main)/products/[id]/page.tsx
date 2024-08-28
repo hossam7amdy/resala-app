@@ -8,12 +8,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
-export const metadata: Metadata = { title: 'Product Stocks' };
+export const metadata: Metadata = {
+  title: 'Product Stocks',
+};
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
-  const { stocks } = await listStocks({ productId: +params.id, page: 1, limit: 50, query: '' });
+  const { stocks } = await listStocks({ productId: +params.id });
 
-  if (!stocks) {
+  if (!stocks.length) {
     return notFound();
   }
 
@@ -24,7 +26,7 @@ const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Stocks' },
+            { title: stocks[0].product.enName },
           ]}
         />
       </Col>

@@ -26,8 +26,8 @@ import type {
 } from '../types/index.js';
 import type * as Schemas from '../validations/index.js';
 
-export type DefaultRequestQuery = {
-  query: Partial<z.infer<typeof Schemas.DefaultQuerySchema>['query']>;
+export type ListRequestQuery = {
+  query: z.infer<typeof Schemas.OffsetPageParamsSchema>;
 };
 
 export type DefaultResponseBody = {
@@ -77,7 +77,7 @@ export type GetUserResponse = DefaultResponseBody & {
   data: User;
 };
 
-export type ListUsersRequest = z.infer<typeof Schemas.DefaultQuerySchema>;
+export type ListUsersRequest = z.infer<typeof Schemas.ListUsersSchema>;
 export type ListUsersResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
@@ -119,7 +119,7 @@ export type GetCategoryResponse = DefaultResponseBody & {
   data: Category;
 };
 
-export type ListCategoriesRequest = DefaultRequestQuery;
+export type ListCategoriesRequest = ListRequestQuery;
 export type ListCategoriesResponse = DefaultResponseBody & {
   data: GetCategoryResponse['data'][];
 };
@@ -166,7 +166,7 @@ export type GetColorResponse = DefaultResponseBody & {
   data: Color;
 };
 
-export type ListColorsRequest = DefaultRequestQuery;
+export type ListColorsRequest = ListRequestQuery;
 export type ListColorsResponse = DefaultResponseBody & {
   data: GetColorResponse['data'][];
 };
@@ -186,7 +186,7 @@ export type GetSizeResponse = DefaultResponseBody & {
   data: Size;
 };
 
-export type ListSizesRequest = DefaultRequestQuery;
+export type ListSizesRequest = ListRequestQuery;
 export type ListSizesResponse = DefaultResponseBody & {
   data: GetSizeResponse['data'][];
 };

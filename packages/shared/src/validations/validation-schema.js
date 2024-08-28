@@ -15,27 +15,10 @@ const UserSchema = z.object({
         .regex(validationPatterns.passwordContainsNumericCharacters.pattern, validationPatterns.passwordContainsNumericCharacters.message)
         .regex(validationPatterns.passwordContainsUpperCaseCharacter.pattern, validationPatterns.passwordContainsUpperCaseCharacter.message),
 });
-// Pagination Schema
-export const DefaultQuerySchema = z.object({
-    query: z.object({
-        page: z.coerce
-            .number()
-            .positive()
-            .optional()
-            .transform(val => val || 1),
-        limit: z.coerce
-            .number()
-            .positive()
-            .max(100)
-            .optional()
-            .transform(val => val || 10),
-        query: z
-            .string()
-            .min(0)
-            .max(50)
-            .optional()
-            .transform(val => val || ''),
-    }),
+// Offset page schema
+export const OffsetPageParamsSchema = z.object({
+    page: z.coerce.number().positive().default(1).optional(),
+    limit: z.coerce.number().positive().max(100).default(10).optional(),
 });
 // Auth Schemas
 export const LoginSchema = z.object({
@@ -90,6 +73,11 @@ export const GetUserSchema = z.object({
             .number()
             .positive()
             .transform(val => val.toString()),
+    }),
+});
+export const ListUsersSchema = z.object({
+    query: OffsetPageParamsSchema.extend({
+        search: z.string().max(100).default('').optional(),
     }),
 });
 export const UpdateUserSchema = z.object({
@@ -194,7 +182,8 @@ export const GetProductSchema = z.object({
     params: UpdateProductSchema.shape.params,
 });
 export const ListProductsSchema = z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
+        search: z.string().max(100).optional(),
         categoryId: z.coerce.number().positive().optional(),
     }),
 });
@@ -228,7 +217,8 @@ export const DeleteStockSchema = z.object({
     }),
 });
 export const ListStocksSchema = z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
+        search: z.string().max(100).optional(),
         productId: z.coerce.number().positive().optional(),
     }),
 });
@@ -347,8 +337,9 @@ export const GetOrderSchema = z.object({
     }),
 });
 export const ListOrdersSchema = z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
         userId: z.coerce.number().positive().optional(),
+        search: z.string().max(100).optional(),
     }),
 });
 export const UpdateOrderStatusSchema = z.object({
@@ -410,7 +401,7 @@ export const GetReviewSchema = z.object({
     }),
 });
 export const ListReviewsSchema = z.object({
-    query: DefaultQuerySchema.shape.query.extend({
+    query: OffsetPageParamsSchema.extend({
         productId: z.coerce.number().positive().optional(),
     }),
 });

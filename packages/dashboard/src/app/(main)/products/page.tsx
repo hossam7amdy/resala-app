@@ -1,7 +1,7 @@
 import { Search } from '@/components';
 import { ProductTable } from '@/features/products/product-table';
 import { ROUTES } from '@/utils/routes';
-import type { DefaultRequestQuery } from '@resala/shared';
+import type { ListRequestQuery } from '@resala/shared';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -11,15 +11,7 @@ export const metadata: Metadata = {
   title: 'Products',
 };
 
-const ProductPage = ({
-  searchParams,
-}: {
-  searchParams?: Partial<DefaultRequestQuery['query']>;
-}) => {
-  const page = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-  const query = searchParams?.query || '';
-
+const ProductPage = ({ searchParams }: { searchParams?: ListRequestQuery['query'] }) => {
   return (
     <Row gutter={[10, 20]}>
       <Col span={24}>
@@ -35,8 +27,8 @@ const ProductPage = ({
         </Flex>
       </Col>
       <Col span={24}>
-        <Suspense key={page + limit + query} fallback={<Table loading />}>
-          <ProductTable searchParams={{ page, limit, query }} />
+        <Suspense key={JSON.stringify(searchParams ?? {})} fallback={<Table loading />}>
+          <ProductTable searchParams={searchParams} />
         </Suspense>
       </Col>
     </Row>
