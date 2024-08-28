@@ -93,7 +93,7 @@ export class ReviewController extends Controller {
   public async listReviews(
     @Query() page: number = 1,
     @Query() limit: number = 10,
-    @Query() productId: string = ''
+    @Query() productId: number
   ): Promise<ListReviewsResponse> {
     const { reviews, pagination } = await this.reviewService.list({
       page,
