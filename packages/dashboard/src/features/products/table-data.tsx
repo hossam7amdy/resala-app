@@ -29,7 +29,9 @@ export const TableData: React.FC<{ products: ListProductsResponse['data']['produ
         expandRowByClick: true,
         expandedRowRender: product => (
           <Table
+            rowKey={record => record.id}
             dataSource={[product]}
+            pagination={false}
             columns={[
               {
                 title: 'English Description',
@@ -45,7 +47,6 @@ export const TableData: React.FC<{ products: ListProductsResponse['data']['produ
                 align: 'end',
               },
             ]}
-            pagination={false}
           />
         ),
       }}
