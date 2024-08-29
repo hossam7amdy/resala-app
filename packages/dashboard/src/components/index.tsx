@@ -15,4 +15,5 @@ export { DebounceSelect, type DebounceSelectProps } from './debounce-select';
 export { PopconfirmDeleteButton } from './popconfirm-delete-button';
 export { Sider } from './sider';
 export { Main } from './main';
-export { Image } from './Image';
+export { Image } from './image';
+export { Table } from './table';
