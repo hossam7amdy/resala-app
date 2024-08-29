@@ -107,15 +107,15 @@ paths:
           required: false
           schema:
             default: 1
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
             default: 10
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: search
           required: false
@@ -166,17 +166,17 @@ paths:
             schema:
               properties:
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 sizeId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 colorId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: Delete
@@ -216,15 +216,15 @@ paths:
           required: false
           schema:
             default: 1
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
             default: 10
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: search
           required: false
@@ -234,8 +234,8 @@ paths:
           name: productId
           required: false
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
@@ -257,17 +257,17 @@ paths:
             schema:
               properties:
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 sizeId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 colorId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/sizes/{sizeId}:
     get:
@@ -423,11 +423,11 @@ paths:
             schema:
               properties:
                 stockId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/cart/items/{stockId}:
     delete:
@@ -500,8 +500,8 @@ paths:
             schema:
               properties:
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/wishlist/items/{productId}:
     delete:
@@ -547,14 +547,14 @@ paths:
                 comment:
                   type: string
                 rating:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     get:
       operationId: ListReviews
@@ -575,21 +575,21 @@ paths:
           required: false
           schema:
             default: 1
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
             default: 10
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: productId
           required: true
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
   /api/v1/reviews/{reviewId}:
     put:
       operationId: UpdateReview
@@ -619,14 +619,14 @@ paths:
                 comment:
                   type: string
                 rating:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: DeleteReview
@@ -779,15 +779,15 @@ paths:
           required: false
           schema:
             default: 1
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
             default: 10
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: search
           required: false
@@ -797,8 +797,8 @@ paths:
           name: categoryId
           required: false
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
@@ -891,8 +891,8 @@ paths:
             schema:
               properties:
                 transactionId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/payments/refund:
     post:
@@ -921,11 +921,11 @@ paths:
             schema:
               properties:
                 amount:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 transactionId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/orders:
     post:
@@ -950,8 +950,8 @@ paths:
             schema:
               properties:
                 addressId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 note:
                   type: string
                 paymentMethod:
@@ -980,15 +980,15 @@ paths:
           required: false
           schema:
             default: 1
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
             default: 10
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: search
           required: false
@@ -998,8 +998,8 @@ paths:
           name: userId
           required: false
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
   /api/v1/orders/{orderId}:
     get:
       operationId: Get
@@ -1142,14 +1142,14 @@ paths:
           name: productId
           required: false
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
         - in: query
           name: colorId
           required: false
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
   /api/v1/images/{imageId}:
     patch:
       operationId: Update
@@ -1670,8 +1670,8 @@ paths:
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
     post:
       operationId: CreateUserAddress
       responses:
@@ -1695,8 +1695,8 @@ paths:
                 address:
                   type: string
                 floor:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 building:
                   type: string
                 country:
@@ -1714,8 +1714,8 @@ paths:
                 phone:
                   type: string
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/addresses/{addressId}:
     put:
@@ -1746,8 +1746,8 @@ paths:
                 address:
                   type: string
                 floor:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 building:
                   type: string
                 country:
@@ -1765,8 +1765,8 @@ paths:
                 phone:
                   type: string
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: DeleteUserAddress
@@ -1842,8 +1842,8 @@ components:
         email:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1869,14 +1869,14 @@ components:
     Pagination:
       properties:
         total:
-          type: number
-          format: double
+          type: integer
+          format: int32
         limit:
-          type: number
-          format: double
+          type: integer
+          format: int32
         page:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - total
         - limit
@@ -1928,8 +1928,8 @@ components:
           type: string
         price:
           anyOf:
-            - type: number
-              format: double
+            - type: integer
+              format: int32
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
@@ -1942,11 +1942,11 @@ components:
         arName:
           type: string
         categoryId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1975,8 +1975,8 @@ components:
         code:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1988,11 +1988,11 @@ components:
     Pick_Stock.Exclude_keyofStock.id-or-colorId-or-productId__:
       properties:
         sizeId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2013,8 +2013,8 @@ components:
     Pick_Image.Exclude_keyofImage.colorId-or-productId__:
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2054,8 +2054,8 @@ components:
                           size:
                             type: string
                           stockId:
-                            type: number
-                            format: double
+                            type: integer
+                            format: int32
                         required:
                           - size
                           - stockId
@@ -2095,8 +2095,8 @@ components:
                                 size:
                                   type: string
                                 stockId:
-                                  type: number
-                                  format: double
+                                  type: integer
+                                  format: int32
                               required:
                                 - size
                                 - stockId
@@ -2131,20 +2131,20 @@ components:
           type: string
           format: date-time
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         sizeId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         colorId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         productId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2178,8 +2178,8 @@ components:
         name:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2215,11 +2215,11 @@ components:
     Pick_Cart.Exclude_keyofCart.stockId__:
       properties:
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2239,11 +2239,11 @@ components:
     Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__:
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2297,11 +2297,11 @@ components:
                         type: object
                   type: array
                 totalPrice:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 totalQuantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               required:
                 - items
                 - totalPrice
@@ -2317,8 +2317,8 @@ components:
     Pick_Wishlist.Exclude_keyofWishlist.productId__:
       properties:
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2368,18 +2368,18 @@ components:
           type: string
           nullable: true
         rating:
-          type: number
-          format: double
+          type: integer
+          format: int32
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         productId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2410,14 +2410,11 @@ components:
               allOf:
                 - $ref: "#/components/schemas/Review"
                 - properties:
-                    product:
-                      $ref: "#/components/schemas/Product"
                     user:
                       allOf:
                         - $ref: "#/components/schemas/User"
                       nullable: true
                   required:
-                    - product
                     - user
                   type: object
           required:
@@ -2434,14 +2431,11 @@ components:
                     allOf:
                       - $ref: "#/components/schemas/Review"
                       - properties:
-                          product:
-                            $ref: "#/components/schemas/Product"
                           user:
                             allOf:
                               - $ref: "#/components/schemas/User"
                             nullable: true
                         required:
-                          - product
                           - user
                         type: object
                   type: array
@@ -2467,8 +2461,8 @@ components:
         arName:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2542,11 +2536,11 @@ components:
                 has_parent_transaction:
                   type: boolean
                 profile_id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 integration_id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 is_3d_secure:
                   type: boolean
                 is_refunded:
@@ -2562,13 +2556,13 @@ components:
                 success:
                   type: boolean
                 amount_cents:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 pending:
                   type: boolean
                 id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               additionalProperties: {}
               required:
                 - created_at
@@ -2644,32 +2638,32 @@ components:
           $ref: "#/components/schemas/OrderStatusType"
         total:
           anyOf:
-            - type: number
-              format: double
+            - type: integer
+              format: int32
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
         discount:
           anyOf:
-            - type: number
-              format: double
+            - type: integer
+              format: int32
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
         subtotal:
           anyOf:
-            - type: number
-              format: double
+            - type: integer
+              format: int32
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2692,15 +2686,15 @@ components:
           type: string
           format: date-time
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         imageUrl:
           type: string
           nullable: true
         price:
           anyOf:
-            - type: number
-              format: double
+            - type: integer
+              format: int32
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
@@ -2711,8 +2705,8 @@ components:
         name:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2727,19 +2721,19 @@ components:
     Payment:
       properties:
         transactionOrderId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         transactionId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         paymentLink:
           type: string
           nullable: true
         orderId:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - transactionOrderId
         - transactionId
@@ -2749,8 +2743,8 @@ components:
     Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__:
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2787,8 +2781,8 @@ components:
           type: string
           nullable: true
         floor:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         building:
           type: string
@@ -2802,8 +2796,8 @@ components:
         country:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2939,14 +2933,14 @@ components:
         isPrimary:
           type: boolean
         productId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         colorId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - createdAt
         - imageUrl

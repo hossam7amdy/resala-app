@@ -1,5 +1,6 @@
 {
   "entryFile": "src/app.ts",
+  "defaultNumberType": "integer",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/features/**/*.controller.ts"],
   "spec": {
