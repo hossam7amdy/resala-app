@@ -1,14 +1,14 @@
 'use client';
 
 import { deleteProduct } from '@/actions/product';
-import { PopconfirmDeleteButton } from '@/components';
+import { Image, PopconfirmDeleteButton } from '@/components';
 import { ResalaTooltip } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined, SelectOutlined } from '@ant-design/icons';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Button, Image, Space, Table } from 'antd';
+import { Button, Space, Table } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -34,13 +34,13 @@ export const TableData: React.FC<{ products: ListProductsResponse['data']['produ
             pagination={false}
             columns={[
               {
-                title: 'English Description',
+                title: 'Description',
                 dataIndex: 'enDescription',
                 key: 'enDescription',
                 width: '50%',
               },
               {
-                title: 'وصف بالعربي',
+                title: 'الوصف',
                 dataIndex: 'arDescription',
                 key: 'arDescription',
                 width: '50%',

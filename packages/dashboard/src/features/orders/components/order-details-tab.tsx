@@ -1,7 +1,7 @@
-import { FALLBACK_IMAGE } from '@/utils/constants';
+import { Image } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import type { GetOrderResponse } from '@resala/shared';
-import { Flex, Image, List, Typography } from 'antd';
+import { Flex, List, Typography } from 'antd';
 import React from 'react';
 
 export const OrderDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = ({ order }) => {
@@ -20,13 +20,7 @@ export const OrderDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = ({
             }
           >
             <List.Item.Meta
-              avatar={
-                <Image
-                  src={item?.imageUrl || FALLBACK_IMAGE}
-                  alt="primary stock image"
-                  width={50}
-                />
-              }
+              avatar={<Image src={item?.imageUrl!} alt="primary stock image" width={50} />}
               title={item.name}
               description={`ID: ${item.id} | Color: ${item.color} | Size: ${item.size}`}
             />
