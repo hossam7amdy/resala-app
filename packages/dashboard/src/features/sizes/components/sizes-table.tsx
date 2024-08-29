@@ -1,17 +1,17 @@
 'use client';
 
 import { deleteSize } from '@/actions/size';
-import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
+import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListSizesResponse } from '@resala/shared';
-import { Table as AntTable, Space } from 'antd';
+import { Space } from 'antd';
 
 import { SizeEditorModal } from './size-editor-modal';
 
 export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ sizes }) => {
   return (
-    <AntTable
+    <Table
       dataSource={sizes}
       pagination={{
         current: 1,
@@ -19,7 +19,6 @@ export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ siz
         total: sizes.length,
         position: ['bottomCenter'],
       }}
-      scroll={{ x: true, y: 500 }}
       rowKey="id"
       columns={[
         { title: 'Size', dataIndex: 'name' },

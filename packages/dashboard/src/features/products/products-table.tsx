@@ -1,19 +1,18 @@
 'use client';
 
 import { deleteProduct } from '@/actions/product';
-import { Image, PopconfirmDeleteButton } from '@/components';
-import { ResalaTooltip } from '@/components';
+import { Image, PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined, SelectOutlined } from '@ant-design/icons';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Button, Space, Table } from 'antd';
+import { Button, Space } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export const TableData: React.FC<{ products: ListProductsResponse['data']['products'] }> = ({
+export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['products'] }> = ({
   products,
 }) => {
   const router = useRouter();
@@ -23,7 +22,6 @@ export const TableData: React.FC<{ products: ListProductsResponse['data']['produ
       dataSource={products}
       rowKey={record => record.id}
       rowClassName={() => 'table-row-pointer'}
-      scroll={{ x: true, y: 500 }}
       pagination={false}
       expandable={{
         expandRowByClick: true,
