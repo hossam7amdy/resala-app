@@ -1,23 +1,24 @@
 'use client';
 
 import { deleteUser } from '@/actions/user';
-import { Pagination, PopconfirmDeleteButton, ResalaTooltip, TableColumn } from '@/components';
+import {
+  Pagination,
+  PopconfirmDeleteButton,
+  ResalaTooltip,
+  Table,
+  TableColumn,
+} from '@/components';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListUsersResponse, User } from '@resala/shared';
-import { Button, Flex, Space, Table, Tag } from 'antd';
+import { Button, Flex, Space, Tag } from 'antd';
 import Link from 'next/link';
 
 export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
-      <Table
-        rowKey={record => record.id}
-        scroll={{ x: true, y: 500 }}
-        pagination={false}
-        dataSource={users}
-      >
+      <Table rowKey={record => record.id} pagination={false} dataSource={users}>
         <TableColumn width="12%" title="First name" dataIndex="firstName" />
         <TableColumn width="12%" title="Last name" dataIndex="lastName" />
         <TableColumn width="12%" title="Phone" dataIndex="phone" />

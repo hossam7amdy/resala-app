@@ -40,7 +40,7 @@ body {
   font-family: var(--font-sans);
 }
 
-.error-list > li {
+.error-list>li {
   margin-left: 30px;
 }
 
@@ -55,5 +55,16 @@ body {
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .side-nav-logo {
+    height: 30px !important;
+    width: 55px !important;
+  }
+
+  .main {
+    margin-left: 80px !important;
   }
 }

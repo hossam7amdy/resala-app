@@ -1,8 +1,8 @@
-import { Pagination } from '@/components';
+import { Pagination, Table } from '@/components';
 import { listReviews } from '@/data/reviews';
 import { DeleteButton } from '@/features/reviews/delete-button';
 import { formatDate } from '@/utils/date-time-formatter';
-import { Flex, Rate, Table } from 'antd';
+import { Flex, Rate } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -41,7 +41,7 @@ const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
           { title: 'Comment', dataIndex: 'comment', key: 'comment', width: '35%' },
           { title: 'Created', dataIndex: 'createdAt', key: 'createdAt', width: '12.5%' },
           { title: 'Updated', dataIndex: 'updatedAt', key: 'updatedAt', width: '12.5%' },
-          { title: 'Actions', dataIndex: 'actions', key: 'actions', width: '5%' },
+          { title: 'Actions', dataIndex: 'actions', key: 'actions', width: '10%' },
         ]}
         dataSource={reviews.map(review => ({
           key: review.id,

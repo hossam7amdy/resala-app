@@ -27,7 +27,6 @@ export const errorHandler = (
   // eslint-disable-next-line no-unused-vars
   _next: NextFunction
 ) => {
-  console.error(error);
   if (error instanceof APIError) {
     return res.status(error.statusCode).json({
       success: false,
@@ -61,13 +60,6 @@ export const errorHandler = (
       message: error.message,
     });
   } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    const { code, message } = formatPrismaError(error);
-
-    return res.status(code).json({
-      success: false,
-      message,
-    });
-  } else if (error instanceof Prisma.PrismaClientValidationError) {
     const { code, message } = formatPrismaError(error);
 
     return res.status(code).json({

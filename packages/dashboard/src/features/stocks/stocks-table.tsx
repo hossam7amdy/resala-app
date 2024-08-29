@@ -1,9 +1,9 @@
 'use client';
 
 import { deleteStock } from '@/actions/stock';
-import { Pagination, PopconfirmDeleteButton } from '@/components';
+import { Pagination, PopconfirmDeleteButton, Table } from '@/components';
 import type { ListStocksResponse } from '@resala/shared';
-import { Flex, Space, Table } from 'antd';
+import { Flex, Space } from 'antd';
 import React from 'react';
 
 import { StockColor, StockColorImages, StockQuantity, StockSizes } from '.';
@@ -16,7 +16,6 @@ export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, 
         rowClassName={() => 'table-row-pointer'}
         bordered
         rowKey={s => `${s.product.id}-${s.color.id}`}
-        scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={stocks}
         expandable={{
