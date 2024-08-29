@@ -4,14 +4,13 @@ import { RequestHandler } from 'express';
 import { ForbiddenError } from '../errors/api.errors.js';
 
 export const authorization: RequestHandler = (req, res, next) => {
-  const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
   const { id, role } = res.locals.user;
+  const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
 
-  if (
-    userId &&
-    userId.toString() !== id?.toString() &&
-    ![Role.ADMIN, Role.MODERATOR].includes(role)
-  ) {
+  const isAuthorized = userId && userId.toString() === id?.toString();
+  const isAdmin = [Role.ADMIN, Role.MODERATOR].includes(role);
+
+  if (!isAuthorized && !isAdmin) {
     throw new ForbiddenError();
   }
 
