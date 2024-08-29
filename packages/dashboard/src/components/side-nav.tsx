@@ -1,10 +1,9 @@
-import { logout } from '@/actions/auth';
 import { ROUTES } from '@/utils/routes';
-import { LogoutOutlined } from '@ant-design/icons';
-import { Button, Flex } from 'antd';
+import { Flex } from 'antd';
 import Link from 'next/link';
 
-import { Logo, Menu, NavLinks } from '.';
+import { Logo, NavLinks } from '.';
+import { LogoutButton } from './logout-button';
 
 export const SideNav: React.FC = () => {
   return (
@@ -18,27 +17,7 @@ export const SideNav: React.FC = () => {
         <NavLinks />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <Menu
-          items={[
-            {
-              danger: true,
-              key: 'logout',
-              icon: <LogoutOutlined />,
-              label: (
-                <form action={logout}>
-                  <Button
-                    danger
-                    type="link"
-                    htmlType="submit"
-                    style={{ padding: 0, fontWeight: 'inherit' }}
-                  >
-                    Logout
-                  </Button>
-                </form>
-              ),
-            },
-          ]}
-        />
+        <LogoutButton />
       </div>
     </Flex>
   );
