@@ -10,7 +10,8 @@ import { ResalaTooltip } from '.';
 
 interface PopconfirmDeleteButtonProps extends Omit<PopconfirmProps, 'title'> {
   title?: PopconfirmProps['title'];
-  onConfirmDelete: () => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onConfirmDelete: () => Promise<any>;
 }
 
 export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({

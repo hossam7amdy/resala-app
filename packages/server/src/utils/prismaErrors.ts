@@ -10,9 +10,12 @@ export const formatPrismaError = (error: PrismaErrors): { code: number; message:
       case 'P2014':
         return { code: 400, message: `Invalid ID: ${error.meta?.target}` };
       case 'P2003': // Foreign key constraint failed
+        const [resource1, resource2] = ((error.meta?.field_name as string) ?? '')?.split('_');
+        const errMsg = resource1 && resource2 ? `${resource1} and ${resource2}` : 'some resources';
+
         return {
-          code: 404,
-          message: `Not found, ${((error.meta?.field_name as string) ?? '')?.split('_')[1] ?? 'resource'} is not found or deleted.`,
+          code: 400,
+          message: `Invalid reference, there is a conflict with ${errMsg}`,
         };
       case 'P2025':
         return { code: 404, message: (error.meta?.cause as string) ?? error.message };
