@@ -1,5 +1,6 @@
 import { Pagination } from '@/components';
 import { listReviews } from '@/data/reviews';
+import { DeleteButton } from '@/features/reviews/delete-button';
 import { formatDate } from '@/utils/date-time-formatter';
 import { Flex, Rate, Table } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
@@ -37,9 +38,10 @@ const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
         columns={[
           { title: 'User', dataIndex: 'user', key: 'user', width: '15%' },
           { title: 'Rating', dataIndex: 'rating', key: 'rating', width: '15%' },
-          { title: 'Comment', dataIndex: 'comment', key: 'comment', width: '45%' },
+          { title: 'Comment', dataIndex: 'comment', key: 'comment', width: '35%' },
           { title: 'Created', dataIndex: 'createdAt', key: 'createdAt', width: '12.5%' },
           { title: 'Updated', dataIndex: 'updatedAt', key: 'updatedAt', width: '12.5%' },
+          { title: 'Actions', dataIndex: 'actions', key: 'actions', width: '5%' },
         ]}
         dataSource={reviews.map(review => ({
           key: review.id,
@@ -48,6 +50,7 @@ const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
           comment: <Paragraph ellipsis={{ rows: 2, expandable: true }}>{review.comment}</Paragraph>,
           createdAt: formatDate(review.createdAt),
           updatedAt: formatDate(review.updatedAt),
+          actions: <DeleteButton id={review.id} userId={review.userId!} />,
         }))}
       />
       <Pagination totalPages={pagination.total} />
