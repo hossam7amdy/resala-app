@@ -52,7 +52,8 @@ export const authConfig = {
       // Store current request url in a custom header, which you can read later
       // https://stackoverflow.com/questions/75362636/how-can-i-get-the-url-pathname-on-a-server-component-next-js-13
       const requestHeaders = new Headers(headers);
-      requestHeaders.set('x-pathname', url);
+      const pathname = new URL(url).pathname;
+      requestHeaders.set('x-pathname', pathname);
 
       const isLoggedIn = !!auth?.user;
 
