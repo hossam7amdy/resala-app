@@ -45,6 +45,9 @@ export const useMutation = <Data, Variables>({
           setError(errorObj);
           onError(errorObj);
         }
+      } catch (e) {
+        setError(e as Error);
+        onError(e as Error);
       } finally {
         setIsLoading(false);
       }
