@@ -22,9 +22,12 @@ export const updateUser = async (id: string | number, payload: UpdateUserRequest
 };
 
 export const deleteUser = async (id: string | number) => {
-  await callEndpoint<DeleteUserRequest, DeleteUserResponse>(ENDPOINT_CONFIGS.deleteUser, {
-    params: { userId: id.toString() },
-  });
+  const response = await callEndpoint<DeleteUserRequest, DeleteUserResponse>(
+    ENDPOINT_CONFIGS.deleteUser,
+    { params: { userId: id.toString() } }
+  );
 
   revalidatePath(ROUTES.CUSTOMERS);
+
+  return response;
 };

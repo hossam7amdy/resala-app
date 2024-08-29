@@ -1,6 +1,6 @@
 import { listUsers } from '@/data/user';
 import { CustomersTable } from '@/features/customers';
-import { ListUsersRequest } from '@resala/shared';
+import type { ListUsersRequest } from '@resala/shared';
 
 const CustomerPage = async ({ searchParams }: { searchParams?: ListUsersRequest['query'] }) => {
   const { users, pagination } = await listUsers(searchParams ?? {});

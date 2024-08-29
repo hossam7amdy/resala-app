@@ -1,6 +1,6 @@
 import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
-import { ListStocksRequest } from '@resala/shared';
+import type { ListStocksRequest } from '@resala/shared';
 import React from 'react';
 
 const StocksPage: React.FC<{
