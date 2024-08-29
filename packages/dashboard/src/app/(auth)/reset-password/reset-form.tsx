@@ -71,7 +71,7 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) =
           { ...validationPatterns.passwordContainsNumericCharacters },
           { ...validationPatterns.passwordContainsUpperCaseCharacter },
           ({ getFieldValue }) => ({
-            validator(_, value) {
+            validator: (_, value) => {
               if (!value || getFieldValue('newPassword') === value) {
                 return Promise.resolve();
               }
