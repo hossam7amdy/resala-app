@@ -1,6 +1,9 @@
-import { Image as AntImage, type ImageProps } from 'antd';
+import { Image as AntImage, type ImageProps as AntImageProps } from 'antd';
 import React from 'react';
 
+interface ImageProps extends Omit<AntImageProps, 'src'> {
+  src?: string | null;
+}
 export const Image: React.FC<ImageProps> = ({ src, ...props }) => {
   return (
     <AntImage
