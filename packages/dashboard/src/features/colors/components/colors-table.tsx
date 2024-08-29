@@ -1,12 +1,12 @@
 'use client';
 
 import { deleteColor } from '@/actions/color';
-import { PopconfirmDeleteButton } from '@/components';
+import { PopconfirmDeleteButton, Table } from '@/components';
 import { StockColor } from '@/features/stocks';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListColorsResponse } from '@resala/shared';
-import { Space, Table } from 'antd';
+import { Space } from 'antd';
 
 import { ColorEditorModal } from './color-editor-modal';
 
@@ -19,7 +19,6 @@ export const ColorsTable: React.FC<{ colors: ListColorsResponse['data'] }> = ({ 
         total: colors.length,
         position: ['bottomCenter'],
       }}
-      scroll={{ x: true, y: 500 }}
       rowKey="id"
       columns={[
         { title: 'Color', dataIndex: 'code', key: 'code' },

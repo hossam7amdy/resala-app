@@ -1,12 +1,12 @@
 'use client';
 
 import { deleteCategory } from '@/actions/category';
-import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
+import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
 import { formatDate } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { GetCategoryResponse, ListCategoriesResponse } from '@resala/shared';
-import { Button, Flex, Table } from 'antd';
+import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
 export const CategoryTable: React.FC<{
@@ -20,7 +20,6 @@ export const CategoryTable: React.FC<{
 
   return (
     <Table
-      scroll={{ x: true, y: 500 }}
       pagination={{ total: filteredCategories.length, position: ['bottomCenter'] }}
       columns={[
         { title: 'English', dataIndex: 'enName' },
