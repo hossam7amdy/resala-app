@@ -988,7 +988,7 @@ const CreateReviewSchema = zod.z.object({
         userId: zod.z.coerce.number().positive(),
         productId: zod.z.coerce.number().positive(),
         rating: zod.z.coerce.number().min(1).max(5),
-        comment: zod.z.string().max(250).optional(),
+        comment: zod.z.string().max(500).optional(),
     }),
 });
 const GetReviewSchema = zod.z.object({
