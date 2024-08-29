@@ -68,7 +68,7 @@ model Product {
   enDescription String     @map("en_description") @db.VarChar(1000)
   price         Decimal    @db.Decimal(9, 2)
   imageKey      String     @map("image_key") @db.VarChar(50)
-  imageUrl      String     @map("image_url") @db.VarChar(500)
+  imageUrl      String     @map("image_url") @db.VarChar(300)
   createdAt     DateTime   @default(now()) @map("created_at")
   updatedAt     DateTime   @updatedAt @map("updated_at")
   category      Category   @relation(fields: [categoryId], references: [id])
@@ -86,7 +86,7 @@ model Image {
   productId Int      @map("product_id") @db.Integer
   isPrimary Boolean  @default(false) @map("is_primary")
   imageKey  String   @map("image_key") @db.VarChar(50)
-  imageUrl  String   @map("image_url") @db.VarChar(500)
+  imageUrl  String   @map("image_url") @db.VarChar(300)
   createdAt DateTime @default(now()) @map("created_at")
   color     Color    @relation(fields: [colorId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
@@ -192,7 +192,7 @@ model OrderItem {
   size      String   @db.VarChar(5)
   quantity  Int
   price     Decimal  @map("unit_price") @db.Decimal(9, 2)
-  imageUrl  String?  @map("image_url") @db.VarChar(500)
+  imageUrl  String?  @map("image_url") @db.VarChar(300)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   order     Order    @relation(fields: [orderId], references: [id])
@@ -230,7 +230,7 @@ model Review {
   userId    Int?     @map("user_id") @db.Integer
   productId Int      @map("product_id") @db.Integer
   rating    Int      @default(5)
-  comment   String?  @db.VarChar(250)
+  comment   String?  @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)

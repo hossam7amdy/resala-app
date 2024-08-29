@@ -31,9 +31,9 @@ export class ReviewService {
     });
   }
 
-  async update(reviewId: number, review: UpdateReviewRequest['body'] & { userId: number }) {
+  async update(reviewId: number, { userId, ...review }: UpdateReviewRequest['body']) {
     return await this.db.review.update({
-      where: { id: reviewId },
+      where: { id: reviewId, userId },
       data: review,
     });
   }
@@ -47,9 +47,7 @@ export class ReviewService {
   async find(reviewId: number): Promise<GetReviewResponse['data']> {
     return await this.db.review.findUniqueOrThrow({
       where: { id: reviewId },
-      include: {
-        user: true,
-      },
+      include: { user: true },
     });
   }
 
@@ -61,15 +59,11 @@ export class ReviewService {
     const [count, reviews] = await this.db.$transaction([
       this.db.review.count({ where: { productId } }),
       this.db.review.findMany({
-        include: {
-          user: true,
-        },
+        include: { user: true },
         where: { productId },
         skip: page - 1,
         take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
+        orderBy: { createdAt: 'desc' },
       }),
     ]);
 
