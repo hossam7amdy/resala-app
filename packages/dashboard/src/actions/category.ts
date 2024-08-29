@@ -34,10 +34,11 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
 };
 
 export const deleteCategory = async (id: string) => {
-  await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
+  const response = await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
     ENDPOINT_CONFIGS.deleteCategory,
     { params: { categoryId: id } }
   );
 
   revalidatePath(ROUTES.CATEGORIES);
+  return response;
 };

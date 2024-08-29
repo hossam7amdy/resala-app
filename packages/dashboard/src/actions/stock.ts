@@ -36,9 +36,12 @@ export const updateStock = async (stockId: string | number, stock: UpdateStockRe
 };
 
 export const deleteStock = async (stockId: string | number) => {
-  await callEndpoint<DeleteStockRequest, DeleteStockResponse>(ENDPOINT_CONFIGS.deleteStock, {
-    params: { stockId: stockId.toString() },
-  });
+  const response = await callEndpoint<DeleteStockRequest, DeleteStockResponse>(
+    ENDPOINT_CONFIGS.deleteStock,
+    { params: { stockId: stockId.toString() } }
+  );
 
   revalidatePath(ROUTES.STOCKS);
+
+  return response;
 };

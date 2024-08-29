@@ -37,9 +37,11 @@ export const updateColor = async (id: string | number, data: UpdateColorRequest[
 };
 
 export const deleteColor = async (id: string | number) => {
-  await callEndpoint<DeleteColorRequest, DeleteColorResponse>(ENDPOINT_CONFIGS.deleteColor, {
-    params: { colorId: id.toString() },
-  });
+  const response = await callEndpoint<DeleteColorRequest, DeleteColorResponse>(
+    ENDPOINT_CONFIGS.deleteColor,
+    { params: { colorId: id.toString() } }
+  );
 
   revalidatePath(ROUTES.COLORS);
+  return response;
 };
