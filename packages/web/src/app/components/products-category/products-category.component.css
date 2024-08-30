@@ -1,0 +1,128 @@
+p {
+    margin-top: 40px;
+  }
+  
+  
+  /* Products*/
+  
+  .porduct {
+    display: block;
+    position: relative;
+  }
+  
+  .porduct img {
+    background-size: cover;
+  }
+  
+  .parent-img-content {
+    position: relative;
+    width: 200px;
+  }
+  
+  .img-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+  
+  @media (max-width: 576px) {
+    .col-xs-12 {
+      width: 51%;
+    }
+  }
+  
+  .img-content .offer {
+    background-color: #14adc6;
+    color: #fff;
+    position: absolute;
+    top: 1%;
+    left: -3%;
+    padding: 5px;
+    margin: 0;
+    z-index: 55;
+  }
+  
+  .img-content .offer span {
+    font-weight: bold;
+  }
+  
+  .img-content .offer::after {
+    content: '';
+    position: absolute;
+    background-color: #14adc6;
+    width: 23px;
+    height: 23px;
+    top: 5px;
+    right: -12px;
+    transform: rotate(45deg);
+    /* border-radius: 5px; */
+    z-index: -1;
+  }
+  
+  .favourit-icon {
+    position: absolute;
+    top: 2.5%;
+    right: 4.5%;
+    color: #fbb935;
+    font-size: 20px;
+    z-index: 10;
+    font-weight: lighter;
+    cursor: pointer;
+    text-shadow: 0 2px 2px rgba(251, 170, 49, 0.308);
+  }
+  
+  .favourit-icon::before {
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 50%;
+  }
+  
+  /* .favourit-icon:hover {
+    font-weight: bold;
+  } */
+  
+  .header-product.active i {
+    /* background-color: #fbb935; */
+    font-weight: bold;
+  }
+  
+  .shopping-icon {
+    position: absolute;
+    bottom: 3.5%;
+    right: 4.5%;
+    color: #fbb935;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .img-content .fa-plus {
+    color: #14adc6;
+    font-size: 20px;
+    position: absolute;
+    top: 7px;
+    right: 13px;
+  }
+  
+  .shopping-icon::before {
+    background-color: #fff;
+    padding: 8px 10px;
+    border-radius: 50%;
+  }
+  
+  .img-content .w-100 {
+    height: 300px !important;
+  }
+  
+  .descrp {
+    text-align: left;
+    color: #016373;
+  }
+  
+  .descrp .fa-star {
+    color: #fbb935;
+    font-weight: bold;
+    font-size: 10px;
+    margin-right: 2px;
+  }
+  

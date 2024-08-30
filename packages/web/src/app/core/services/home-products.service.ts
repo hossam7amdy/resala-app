@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,14 +14,16 @@ export class HomeProductsService {
   //base url =
 
   // Products
-  getProducts(): Observable<any> {
-    return this._HttpClient.get(this.baseURL + '/api/v1/products?page=1&limit=10&query=');
+  getProducts(currentPage:string ='1'): Observable<any> {
+    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{page:currentPage})
+    return this._HttpClient.get(this.baseURL + url);
   }
+//'/api/v1/products?page=1&limit=10&query='
 
   //Product Details
-  getProductDetails(id: string | null): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getProduct], id + '');
-    return this._HttpClient.get(this.baseURL + url);
+  getProductDetails(id: any): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.getProduct, { productId: id! });
+    return this._HttpClient.get(`http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com/api/v1/products/${id}`);
   }
 
   getProductStock(id: string | null): Observable<any> {

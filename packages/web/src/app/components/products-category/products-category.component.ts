@@ -6,15 +6,14 @@ import { CategoriesService } from 'src/app/core/services/categories/categories.s
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
 
-
 @Component({
-  selector: 'app-products',
+  selector: 'app-products-category',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css'],
+  templateUrl: './products-category.component.html',
+  styleUrls: ['./products-category.component.css']
 })
-export class ProductsComponent implements  OnInit {
+export class ProductsCategoryComponent implements OnInit {
   constructor(
     private route:ActivatedRoute,
     private _Categories:CategoriesService,
@@ -38,16 +37,15 @@ export class ProductsComponent implements  OnInit {
   }
 
 
-
+  
  
   allCategoryProducts(id:any):void{
 
     this._Categories.getCategoryProducts(id).subscribe({
       next:(response)=>{
-        this.allProductsCategory = response.data.products
-        this.titleCategory = response.data.products[0].category.enName;
-        console.log('title',this.titleCategory);
-        console.log('category-products',this.allProductsCategory);
+        this.allProductsCategory = response.data
+        this.titleCategory = response.data[0].category.enName;
+        console.log(response)
       },error:(err)=>{
         console.log(err);
       }
@@ -64,7 +62,7 @@ export class ProductsComponent implements  OnInit {
         console.log(response);
       },
       error: err => {
-        if (err.statusText == 'Unauthorized') {
+        if (err.error.message == 'Token expired') {
           this._Toaster.error('Should be Login !!');
           this._Router.navigate(['/login']);
         } else {
