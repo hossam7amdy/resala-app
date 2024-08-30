@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withParams } from '@resala/shared';
+import { ENDPOINT_CONFIGS, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -30,15 +30,21 @@ export class PaymentService {
     );
   }
 
-  registerUserAddress(userAddress: any): Observable<any> {
+  registerUserAddress(userAddress: any , id:string): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS.createAddress);
-    return this._HttpClient.post(this.baseURL + url, userAddress, {
+    return this._HttpClient.post(this.baseURL + url, 
+      {
+        userAddress,
+        id
+      }, 
+      {
       headers: this.myToken,
-    });
+      }
+  );
   }
 
-  getUserAddress(): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS.listAddress);
+  getListAddressUser(id:string): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress,{userId:id});
     return this._HttpClient.get(this.baseURL + url, {
       headers: this.myToken,
     });

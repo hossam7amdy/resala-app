@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class CategoriesService {
   }
 
   getCategoryProducts(id: any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS[Endpoints.listProducts], { productId: id });
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts,{categoryId:id!});
     return this._HTTPClient.get(this.baseURL + url);
   }
 }

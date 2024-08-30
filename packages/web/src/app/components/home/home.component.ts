@@ -11,11 +11,12 @@ import { Product } from 'src/app/core/interfaces/product';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+// import {NgxPaginationModule} from 'ngx-pagination';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink],
+  imports: [CommonModule, CarouselModule, RouterLink], //, NgxPaginationModule
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -38,6 +39,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // overlay
   onClick: boolean = false;
 
+  // pagination
+  pageLimit:number =0;
+  currentPage:number = 1;
+  totalItems:number=1;
   //favourit icons
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
@@ -79,7 +84,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log(response);
       },
       error: err => {
-        if (err.error.message == 'Token expired') {
+        if (err.statusText == 'Unauthorized') {
           this._Toaster.error('Should be Login !!');
           this._Router.navigate(['/login']);
         } else {
@@ -189,4 +194,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
     },
     nav: true,
   };
+
+
+  // pagination Method
+
+  pageChanged(event:any){
+     //  products
+     this._HomeProductsService.getProducts(event).subscribe({
+      next: response => {
+        console.log(event);
+        console.log('products', response.data.products);
+        this.products = response.data.products;
+        this.pageLimit = response.data.pagination.limit;
+        this.currentPage = response.data.pagination.page;
+        this.totalItems = response.data.pagination.total;
+      },
+    });
+  }
 }
