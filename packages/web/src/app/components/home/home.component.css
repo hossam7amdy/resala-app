@@ -130,6 +130,14 @@ section .overlay {
 }
 
 /* Trends */
+.trend-parent{
+  height: auto;
+}
+@media (max-width: 576px){
+  .trend-parent{
+    height: 300px;
+  } 
+}
 .trends .trends-slide {
   padding-left: 1px !important;
   padding-right: 1px !important;
@@ -176,6 +184,12 @@ section .overlay {
   width: 30%;
   padding-left: 2px;
   padding-right: 2px;
+}
+@media (max-width: 576px) {
+  .img-trend{
+    height: 300px;
+  width: 30%;
+  }
 }
 
 /* .trends .notes{

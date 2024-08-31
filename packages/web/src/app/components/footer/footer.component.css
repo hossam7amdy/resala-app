@@ -19,16 +19,34 @@ footer {
   cursor: pointer;
   color: #efefef;
 }
-
-.title h5 {
+.our-service{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.title h3,h4 {
   font-weight: bold;
   margin: 0;
+  color: #fff;
 }
 
 .title p {
   text-align: left;
   padding: 0;
   margin: 0;
+}
+.p-footer{
+  font-size: 14px;
+}
+@media (max-width: 992px){
+  .p-footer{
+    font-size: 10px;
+  }
+}
+@media (max-width: 576px){
+  .p-footer{
+    font-size: 10px ;
+
+  }
 }
 
 i {
@@ -46,8 +64,16 @@ p span {
 nav a {
   color: #fff;
   cursor: pointer;
+  font-size: 12px;
 }
-
+@media (max-width: 576px){
+  nav a{
+    font-size: 8px ;
+  }
+}
+.nav-link{
+  margin: var(--bs-nav-link-margin-y) var(--bs-nav-link-margin-x);
+}
 nav a:hover,
 i:hover,
 nav a:active,
