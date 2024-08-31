@@ -5,6 +5,7 @@ import type {
   DeleteOrderResponse,
   GetOrderResponse,
   ListOrdersResponse,
+  PaymentStatusType,
   UpdateOrderRequest,
   UpdateOrderResponse,
 } from '@resala/shared';
@@ -59,7 +60,7 @@ export class OrderController extends Controller {
   constructor() {
     super();
 
-    this.paymentService = new PaymentService(db, new PaymobService());
+    this.paymentService = new PaymentService(new PaymobService());
     this.notificationService = new NotificationService(new EmailNotification());
     this.orderService = new OrderService(
       db,
@@ -77,23 +78,14 @@ export class OrderController extends Controller {
     @Request() req: ExRequest,
     @Body() body: CreateOrderRequest['body']
   ): Promise<CreateOrderResponse> {
-    const user = req?.res?.locals.user;
-    const { addressId, paymentMethod, note } = body;
+    const user = req.res?.locals.user;
+    const { paymentMethod } = body;
 
-    const { address, items, ...order } = await this.orderService.create(user.id, {
-      addressId,
-      paymentMethod,
-      note,
-    });
+    const { address, items, ...order } = await this.orderService.create(user.id, body);
 
     let payment;
     if (paymentMethod === 'CARD') {
-      payment = await this.paymentService.checkout({
-        user: user,
-        order: order,
-        items: items,
-        shipping: address,
-      });
+      payment = await this.paymentService.checkout({ user, order, items, shipping: address });
     }
 
     return { success: true, data: payment };
@@ -130,12 +122,13 @@ export class OrderController extends Controller {
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteOrderSchema)])
   public async delete(
     @Path() orderId: string,
+    // eslint-disable-next-line no-unused-vars
     @Queries() _: DeleteOrderRequest['query']
   ): Promise<DeleteOrderResponse> {
     // cancel order
     const order = await this.orderService.update(+orderId, {
       orderStatus: OrderStatus.CANCELLED,
-      paymentStatus: undefined as any,
+      paymentStatus: undefined as unknown as PaymentStatusType,
     });
 
     // notify user with order cancellation
