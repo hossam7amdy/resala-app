@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -50,14 +50,15 @@ export class PaymentService {
     });
   }
 
-  userOrder(userAddressId: string, payInfo: string, note: string): Observable<any> {
-    const { url } = ENDPOINT_CONFIGS.createOrder;
+  userOrder(userAddressId: number, payInfo: string, note: string): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createOrder]);
     return this._HttpClient.post(
       this.baseURL + url,
       {
         addressId: userAddressId,
         paymentMethod: payInfo,
         note: note,
+        
       },
       {
         headers: this.myToken,

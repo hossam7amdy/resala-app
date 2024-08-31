@@ -1,5 +1,8 @@
+
+
 .top-bar {
-  transition-duration: 0.3ms !important;
+  
+  transition:all ease-out 1s !important;
   padding: 5px !important;
   background-color: #14adc6 !important;
   position: fixed;
@@ -62,3 +65,4 @@ button:not(:disabled) {
 .carousel-item {
   height: 0;
 }
+

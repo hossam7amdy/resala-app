@@ -36,7 +36,7 @@ export class PaymentComponent implements OnInit {
   successMsg: string = '';
   isLoading: boolean = false;
   getUserAddress: any = [];
-  addressId: string = '';
+  addressId: number = 1;
   selectPayMethod: string = '';
   note: string = '';
 
@@ -79,7 +79,7 @@ export class PaymentComponent implements OnInit {
     });
   }
 
-  selectedAddressMethod(value: string): void {
+  selectedAddressMethod(value: number): void {
     this.addressId = value;
     this.isSelectesAddress = true;
     console.log('address id', this.addressId);

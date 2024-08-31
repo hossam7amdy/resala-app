@@ -363,7 +363,7 @@
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
 <section
-  *ngIf="addressId != '' || isRegisterd"
+  *ngIf="addressId != 0 || isRegisterd"
   class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step Two ...</h1>
@@ -418,10 +418,10 @@
         formControlName="note"
       />
     </div>
-
+    <!-- [disabled]="payForm.invalid" -->
     <div class="pay-btn col-12">
       <button
-        [disabled]="payForm.invalid"
+        
         (click)="creatOrder(btn)"
         #btn
         type="submit"
