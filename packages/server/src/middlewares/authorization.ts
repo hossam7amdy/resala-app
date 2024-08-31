@@ -1,5 +1,5 @@
 import { Role, type RoleType } from '@resala/shared';
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import { ForbiddenError } from '../errors/api.errors.js';
 
@@ -7,10 +7,10 @@ export const authorization: RequestHandler = (req, res, next) => {
   const { id, role } = res.locals.user;
   const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
 
-  const isAuthorized = userId && userId.toString() === id?.toString();
-  const isAdmin = [Role.ADMIN, Role.MODERATOR].includes(role);
+  const notAuthorized = userId && userId.toString() !== id?.toString();
+  const notAdmin = ![Role.ADMIN, Role.MODERATOR].includes(role);
 
-  if (!isAuthorized && !isAdmin) {
+  if (notAuthorized && notAdmin) {
     throw new ForbiddenError();
   }
 

@@ -43,7 +43,7 @@ export class ShoppingController extends Controller {
 
   @Get('cart')
   public async getCart(@Request() req: ExRequest): Promise<GetCartResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.get(userId);
 
     return { success: true, data: cart };
@@ -56,7 +56,7 @@ export class ShoppingController extends Controller {
     @Request() req: ExRequest,
     @Body() body: CreateCartRequest['body']
   ): Promise<CreateCartResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.update(userId, body);
 
     return { success: true, data: cart };
@@ -67,7 +67,7 @@ export class ShoppingController extends Controller {
     @Request() req: ExRequest,
     @Path() stockId: string
   ): Promise<DeleteCartResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.delete(userId, +stockId);
 
     return { success: true, data: cart };
@@ -75,7 +75,7 @@ export class ShoppingController extends Controller {
 
   @Delete('cart')
   public async clearCart(@Request() req: ExRequest): Promise<DeleteCartResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     await this.shoppingService.cart.deleteMany(userId);
 
     return {
@@ -90,7 +90,7 @@ export class ShoppingController extends Controller {
 
   @Get('wishlist')
   public async getWishlist(@Request() req: ExRequest): Promise<GetWishlistResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const wishlist = await this.shoppingService.wishlist.get(userId);
 
     return { success: true, data: wishlist };
@@ -103,7 +103,7 @@ export class ShoppingController extends Controller {
     @Request() req: ExRequest,
     @Body() body: CreateWishlistRequest['body']
   ): Promise<CreateWishlistResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const wishlist = await this.shoppingService.wishlist.update(userId, body.productId);
 
     return { success: true, data: wishlist };
@@ -114,7 +114,7 @@ export class ShoppingController extends Controller {
     @Request() req: ExRequest,
     @Path() productId: string
   ): Promise<DeleteWishlistResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     const wishlist = await this.shoppingService.wishlist.delete(userId, +productId);
 
     return { success: true, data: wishlist };
@@ -122,7 +122,7 @@ export class ShoppingController extends Controller {
 
   @Delete('wishlist')
   public async clearWishlist(@Request() req: ExRequest): Promise<DeleteWishlistResponse> {
-    const userId = req?.res?.locals.user.id;
+    const userId = req.res?.locals.user.id;
     await this.shoppingService.wishlist.deleteMany(userId);
 
     return { success: true, data: [] };
