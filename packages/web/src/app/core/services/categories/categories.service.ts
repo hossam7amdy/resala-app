@@ -21,8 +21,8 @@ export class CategoriesService {
     return this._HTTPClient.get(this.baseURL + url);
   }
 
-  getCategoryProducts(id: any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts,{categoryId:id!});
+  getCategoryProducts(id: any, currentPage:string ='1'): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts,{categoryId:id!, page:currentPage});
     return this._HTTPClient.get(this.baseURL + url);
   }
 }

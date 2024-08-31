@@ -10,6 +10,10 @@
   top: 30px;
 }
 
+.navbar{
+  transition: top ease-in-out 0.5s;
+  view-transition-name: top;
+}
 nav .logo {
   width: 118.13px;
   height: 53.53px;
