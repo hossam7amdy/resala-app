@@ -30,11 +30,11 @@ const main = async () => {
       },
       {
         password: await hashPassword('abcABC@123'),
-        email: `customer2@resala.com`,
+        email: `Moderator@resala.com`,
         phone: `01500000002`,
         firstName: `Resala`,
-        lastName: `Customer`,
-        role: 'CUSTOMER',
+        lastName: `Moderator`,
+        role: 'MODERATOR',
       },
     ],
   });
