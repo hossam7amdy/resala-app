@@ -30,11 +30,11 @@ const main = async () => {
       },
       {
         password: await hashPassword('abcABC@123'),
-        email: `customer2@resala.com`,
+        email: `Moderator@resala.com`,
         phone: `01500000002`,
         firstName: `Resala`,
-        lastName: `Customer`,
-        role: 'CUSTOMER',
+        lastName: `Moderator`,
+        role: 'MODERATOR',
       },
     ],
   });
@@ -95,6 +95,13 @@ const main = async () => {
       { enName: 'white', arName: 'أبيض', code: '#ffffff' },
       { enName: 'black', arName: 'أسود', code: '#000000' },
       { enName: 'Green', arName: 'أخضر', code: '#407d58' },
+      { enName: 'Blue', arName: 'أزرق', code: '#3b5998' },
+      { enName: 'Red', arName: 'أحمر', code: '#ff0000' },
+      { enName: 'Yellow', arName: 'أصفر', code: '#ffff00' },
+      { enName: 'Purple', arName: 'أرجواني', code: '#800080' },
+      { enName: 'Orange', arName: 'برتقالي', code: '#ffa500' },
+      { enName: 'Pink', arName: 'وردي', code: '#ffc0cb' },
+      { enName: 'Brown', arName: 'بني', code: '#a52a2a' },
     ],
   });
   await db.size.createMany({
@@ -105,6 +112,9 @@ const main = async () => {
       { name: 'L' },
       { name: 'XL' },
       { name: 'XXL' },
+      { name: 'XXXL' },
+      { name: '4XL' },
+      { name: '5XL' },
     ],
   });
 

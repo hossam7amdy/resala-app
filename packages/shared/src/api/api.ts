@@ -15,7 +15,6 @@ import type {
   Order,
   OrderItem,
   Pagination,
-  Payment,
   Product,
   Review,
   Shipping,
@@ -296,9 +295,12 @@ export type CreateOrderResponse = DefaultResponseBody & {
 export type GetOrderRequest = z.infer<typeof Schemas.GetOrderSchema>;
 export type GetOrderResponse = DefaultResponseBody & {
   data: Order & {
-    user: User | null;
-    orderItems: OrderItem[];
-    paymentDetails: Payment | null;
+    user: User;
+    orderItems: (OrderItem & {
+      product: Product;
+      color: string;
+      size: string;
+    })[];
     shippingDetails: (Omit<Shipping, 'addressId' | 'orderId'> & { address: Address }) | null;
   };
 };
@@ -376,3 +378,79 @@ export type UpdateReviewResponse = CreateReviewResponse;
 
 export type DeleteReviewRequest = z.infer<typeof Schemas.DeleteReviewSchema>;
 export type DeleteReviewResponse = CreateReviewResponse;
+
+// Dashboard types
+export type GetDashboardOverviewRequest = undefined;
+export type GetDashboardOverviewResponse = DefaultResponseBody & {
+  data: {
+    totalProducts: number;
+    totalOrders: number;
+    totalCustomers: number;
+    totalSales: number;
+    totalRefund: number;
+    totalRevenue: number;
+  };
+};
+
+export type GetSalesTrendsRequest = undefined;
+export type GetSalesTrendsResponse = DefaultResponseBody & {
+  data: {
+    trends: {
+      date: string;
+      sales: number;
+    }[];
+  };
+};
+
+export type GetOrdersStatusRequest = undefined;
+export type GetOrdersStatusResponse = DefaultResponseBody & {
+  data: {
+    pending: number;
+    shipped: number;
+    delivered: number;
+    canceled: number;
+    fulfilled: number;
+  };
+};
+
+export type GetInventoryStatusRequest = undefined;
+export type GetInventoryStatusResponse = DefaultResponseBody & {
+  data: {
+    lowStock: {
+      stockRemaining: number;
+      product: Product;
+      color: Color;
+      size: Size;
+    }[];
+    outOfStock: {
+      product: Product;
+      color: Color;
+      size: Size;
+    }[];
+  };
+};
+
+export type ListCustomersFeedbackRequest = undefined;
+export type ListCustomersFeedbackResponse = DefaultResponseBody & {
+  data: {
+    averageRating: number;
+    recentFeedback: (Review & {
+      user: User | null;
+      product: Product;
+    })[];
+  };
+};
+
+export type ListTopProductsRequest = undefined;
+export type ListTopProductsResponse = DefaultResponseBody & {
+  data: { unitsSold: number; product: Product }[];
+};
+
+export type ListTopCustomersRequest = undefined;
+export type ListTopCustomersResponse = DefaultResponseBody & {
+  data: {
+    totalPaid: number;
+    totalOrders: number;
+    user: User;
+  }[];
+};

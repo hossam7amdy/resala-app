@@ -9,14 +9,23 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import { AddressService } from '../address/address.service.js';
+import type { AddressService } from '../address/address.service.js';
 import type { ShoppingService } from '../shopping/shopping.service.js';
 import type { StockService } from '../stock/stock.service.js';
 
 const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
-  orderItems: true,
-  paymentDetails: true,
+  orderItems: {
+    include: {
+      product: true,
+      stock: {
+        select: {
+          size: { select: { name: true } },
+          color: { select: { enName: true } },
+        },
+      },
+    },
+  },
   user: true,
   shippingDetails: {
     select: {
@@ -58,39 +67,40 @@ export class OrderService {
       }))
     );
 
-    let orderItems = userCart.items.map(item => ({
-      name: item.product.enName,
-      price: item.product.price,
-      color: item.stock.color.enName,
-      size: item.stock.size.name,
+    const orderItems = userCart.items.map(item => ({
+      productId: item.product.id,
+      stockId: item.stock.id,
       quantity: item.quantity,
-      imageUrl: item.images.find(img => img.isPrimary)?.imageUrl || null,
+      price: item.product.price,
+      productName: `${item.product.enName} | ${item.product.arName}`,
+      description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
-    const newOrder = await this.db.$transaction(async tx => {
-      const newOrder = await tx.order.create({
-        data: {
-          userId: userId,
-          subtotal: subtotal,
-          total: subtotal + SHIPPING,
-          note: order.note,
-          paymentMethod: order.paymentMethod,
-        },
-      });
-      await tx.orderItem.createMany({
-        data: orderItems.map(item => ({ ...item, orderId: newOrder.id })),
-      });
-      const { id: addressId } = await tx.address.create({
-        data: address,
-      });
-      await tx.shipping.create({
-        data: {
-          orderId: newOrder.id,
-          addressId: addressId,
-          cost: SHIPPING,
-        },
-      });
 
-      return newOrder;
+    const newOrder = await this.db.order.create({
+      data: {
+        userId: userId,
+        subtotal: subtotal,
+        total: subtotal + SHIPPING,
+        note: order.note,
+        paymentMethod: order.paymentMethod,
+        shippingDetails: {
+          create: {
+            address: {
+              create: address,
+            },
+          },
+        },
+        orderItems: {
+          createMany: {
+            data: userCart.items.map(item => ({
+              productId: item.product.id,
+              stockId: item.stock.id,
+              quantity: item.quantity,
+              price: item.product.price,
+            })),
+          },
+        },
+      },
     });
 
     return { ...newOrder, shipping: SHIPPING, items: orderItems, address };
@@ -106,6 +116,9 @@ export class OrderService {
       OR: [
         { user: { email: { startsWith: search } } },
         { user: { phone: { startsWith: search } } },
+        {
+          orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
+        },
       ],
       userId: userId,
     };
@@ -123,12 +136,31 @@ export class OrderService {
 
     return {
       pagination: { total: count, page, limit },
-      orders,
+      orders: orders.map(order => ({
+        ...order,
+        orderItems: order.orderItems.map(({ stock, ...item }) => ({
+          ...item,
+          color: stock.color.enName,
+          size: stock.size.name,
+        })),
+      })),
     };
   }
 
   async find(id: number): Promise<GetOrderResponse['data']> {
-    return await this.db.order.findUniqueOrThrow({ where: { id }, include: ORDER_ATTRIBUTES });
+    const order = await this.db.order.findUniqueOrThrow({
+      where: { id },
+      include: ORDER_ATTRIBUTES,
+    });
+
+    return {
+      ...order,
+      orderItems: order.orderItems.map(({ stock, ...item }) => ({
+        ...item,
+        color: stock.color.enName,
+        size: stock.size.name,
+      })),
+    };
   }
 
   async update(id: number, order: UpdateOrderRequest['body']) {

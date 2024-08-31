@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type PostPayRequestDTO = {
   paymob_request_id: string | null;
   intention: {

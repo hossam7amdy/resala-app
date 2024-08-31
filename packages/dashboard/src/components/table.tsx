@@ -1,4 +1,4 @@
-import { Table as AntTable, TableProps } from 'antd';
+import { Table as AntTable, type TableProps } from 'antd';
 import React from 'react';
 
 export const Table: React.FC<TableProps> = props => {

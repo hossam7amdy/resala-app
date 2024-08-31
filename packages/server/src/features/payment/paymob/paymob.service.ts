@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// TODO: remove this 👆 after implementing the service
 import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { Decimal } from 'decimal.js';
@@ -57,9 +59,9 @@ export class PaymobService {
     };
 
     const orderItems = items.map(item => ({
-      name: item.name,
+      name: item.productName,
       amount: +item.price * 100,
-      description: `${item.color}, ${item.size}`,
+      description: item.description,
       quantity: item.quantity,
     }));
 
@@ -73,8 +75,8 @@ export class PaymobService {
     const body = {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
-      redirection_url: `${this.serverUrl}/post_pay/${order.id}/`,
-      notification_url: `${this.webUrl}/post_pay/${order.id}/`,
+      redirection_url: `${this.webUrl}/post_pay/${order.id}/`,
+      notification_url: `${this.serverUrl}/post_pay/${order.id}/`,
       payment_methods: [this.integrationId],
       items: orderItems,
       billing_data: {
