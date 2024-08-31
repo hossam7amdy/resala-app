@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Address, Order, OrderItem, User } from '@resala/shared';
+import type { Address, Order, User } from '@resala/shared';
 
 export interface CheckoutDto {
   user: User;
   order: Order & { shipping: number };
   shipping: Omit<Address, 'id'>;
-  items: Omit<OrderItem, 'id' | 'createdAt' | 'updatedAt'>[];
+  items: {
+    productId: number;
+    stockId: number;
+    price: any;
+    quantity: number;
+    productName: string;
+    description: string;
+  }[];
 }
 
 export interface AuthenticateApiResponse {

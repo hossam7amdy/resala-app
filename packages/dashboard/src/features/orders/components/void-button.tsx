@@ -1,17 +1,16 @@
 import { voidPayment } from '@/actions/payment';
 import { useMutation, useNotification } from '@/hooks';
-import type { Payment } from '@resala/shared';
 import { Button, Popconfirm } from 'antd';
 import React from 'react';
 
-export const VoidButton: React.FC<{ payment: Payment; orderDate: string }> = ({
-  payment,
+export const VoidButton: React.FC<{ transactionId: string; orderDate: string }> = ({
+  transactionId,
   orderDate,
 }) => {
   const notification = useNotification();
 
   const { mutate } = useMutation({
-    mutationFn: (transactionId: number) => voidPayment({ transactionId }),
+    mutationFn: (transactionId: string) => voidPayment({ transactionId }),
     onSuccess: () => {
       notification.success('Payment voided successfully');
     },
@@ -30,7 +29,7 @@ export const VoidButton: React.FC<{ payment: Payment; orderDate: string }> = ({
       overlayStyle={{ maxWidth: '350px' }}
       title="Are you sure you want to void this payment?"
       description="By this action, the payment will be voided and the amount will be refunded to the customer."
-      onConfirm={() => mutate(payment.transactionId!)}
+      onConfirm={() => mutate(transactionId!)}
       okText="Yes"
       cancelText="No"
       cancelButtonProps={{ type: 'primary' }}

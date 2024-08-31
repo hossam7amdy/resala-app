@@ -965,20 +965,17 @@ const DeleteOrderSchema = zod.z.object({
 // Payment Schemas
 const GetPaymentSchema = zod.z.object({
     params: zod.z.object({
-        transactionId: zod.z.coerce
-            .number()
-            .positive()
-            .transform(val => val.toString()),
+        transactionId: zod.z.string(),
     }),
 });
 const VoidPaymentSchema = zod.z.object({
     body: zod.z.object({
-        transactionId: zod.z.coerce.number().positive(),
+        transactionId: zod.z.string(),
     }),
 });
 const RefundPaymentSchema = zod.z.object({
     body: zod.z.object({
-        transactionId: zod.z.coerce.number().positive(),
+        transactionId: zod.z.string(),
         amount: zod.z.coerce.number().positive(),
     }),
 });

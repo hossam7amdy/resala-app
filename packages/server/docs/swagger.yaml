@@ -891,8 +891,7 @@ paths:
             schema:
               properties:
                 transactionId:
-                  type: integer
-                  format: int32
+                  type: string
               type: object
   /api/v1/payments/refund:
     post:
@@ -924,8 +923,7 @@ paths:
                   type: integer
                   format: int32
                 transactionId:
-                  type: integer
-                  format: int32
+                  type: string
               type: object
   /api/v1/orders:
     post:
@@ -1198,6 +1196,123 @@ paths:
           required: true
           schema:
             type: string
+  /api/v1/dashboard/overview:
+    get:
+      operationId: GetOverview
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDashboardOverviewResponse"
+      description: "* returns an overview of the store's performance data for the
+        specified period of time (daily, weekly, or monthly), if omitted will
+        return all data"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/top-products:
+    get:
+      operationId: ListTopProducts
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTopProductsResponse"
+      description: "* returns the list of top selling products for the specified
+        period of time (daily, weekly, or monthly)"
+      tags:
+        - Dashboard
+      security: []
+      parameters: []
+  /api/v1/dashboard/sales-trend:
+    get:
+      operationId: GetSalesTrend
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSalesTrendsResponse"
+      description: "* returns the sales trend data for the specified period of time
+        (daily, weekly, or monthly)"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/orders-status:
+    get:
+      operationId: GetOrderStatus
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrdersStatusResponse"
+      description: "* returns the order status data for the specified period of time
+        (daily, weekly, or monthly)"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/inventory-status:
+    get:
+      operationId: GetInventoryStatus
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetInventoryStatusResponse"
+      description: "* returns the inventory status data"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/customers-feedback:
+    get:
+      operationId: ListCustomersFeedback
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCustomersFeedbackResponse"
+      description: "* returns the list of customers' feedback"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/top-customers:
+    get:
+      operationId: ListTopCustomers
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTopCustomersResponse"
+      description: "* returns the list of top customers for the specified period of
+        time (daily, weekly, or monthly)"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
   /api/v1/colors/{colorId}:
     get:
       operationId: Get
@@ -2634,6 +2749,9 @@ components:
           $ref: "#/components/schemas/PaymentStatusType"
         paymentMethod:
           $ref: "#/components/schemas/PaymentMethodType"
+        transactionId:
+          type: string
+          nullable: true
         orderStatus:
           $ref: "#/components/schemas/OrderStatusType"
         total:
@@ -2670,6 +2788,7 @@ components:
         - note
         - paymentStatus
         - paymentMethod
+        - transactionId
         - orderStatus
         - total
         - discount
@@ -2688,9 +2807,6 @@ components:
         quantity:
           type: integer
           format: int32
-        imageUrl:
-          type: string
-          nullable: true
         price:
           anyOf:
             - type: integer
@@ -2698,12 +2814,12 @@ components:
             - $ref: "#/components/schemas/Decimal"
             - type: string
             - {}
-        size:
-          type: string
-        color:
-          type: string
-        name:
-          type: string
+        stockId:
+          type: integer
+          format: int32
+        productId:
+          type: integer
+          format: int32
         id:
           type: integer
           format: int32
@@ -2711,34 +2827,10 @@ components:
         - updatedAt
         - createdAt
         - quantity
-        - imageUrl
         - price
-        - size
-        - color
-        - name
+        - stockId
+        - productId
         - id
-      type: object
-    Payment:
-      properties:
-        transactionOrderId:
-          type: integer
-          format: int32
-          nullable: true
-        transactionId:
-          type: integer
-          format: int32
-          nullable: true
-        paymentLink:
-          type: string
-          nullable: true
-        orderId:
-          type: integer
-          format: int32
-      required:
-        - transactionOrderId
-        - transactionId
-        - paymentLink
-        - orderId
       type: object
     Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__:
       properties:
@@ -2831,21 +2923,27 @@ components:
                             - address
                           type: object
                       nullable: true
-                    paymentDetails:
-                      allOf:
-                        - $ref: "#/components/schemas/Payment"
-                      nullable: true
                     orderItems:
                       items:
-                        $ref: "#/components/schemas/OrderItem"
+                        allOf:
+                          - $ref: "#/components/schemas/OrderItem"
+                          - properties:
+                              size:
+                                type: string
+                              color:
+                                type: string
+                              product:
+                                $ref: "#/components/schemas/Product"
+                            required:
+                              - size
+                              - color
+                              - product
+                            type: object
                       type: array
                     user:
-                      allOf:
-                        - $ref: "#/components/schemas/User"
-                      nullable: true
+                      $ref: "#/components/schemas/User"
                   required:
                     - shippingDetails
-                    - paymentDetails
                     - orderItems
                     - user
                   type: object
@@ -2873,21 +2971,27 @@ components:
                                   - address
                                 type: object
                             nullable: true
-                          paymentDetails:
-                            allOf:
-                              - $ref: "#/components/schemas/Payment"
-                            nullable: true
                           orderItems:
                             items:
-                              $ref: "#/components/schemas/OrderItem"
+                              allOf:
+                                - $ref: "#/components/schemas/OrderItem"
+                                - properties:
+                                    size:
+                                      type: string
+                                    color:
+                                      type: string
+                                    product:
+                                      $ref: "#/components/schemas/Product"
+                                  required:
+                                    - size
+                                    - color
+                                    - product
+                                  type: object
                             type: array
                           user:
-                            allOf:
-                              - $ref: "#/components/schemas/User"
-                            nullable: true
+                            $ref: "#/components/schemas/User"
                         required:
                           - shippingDetails
-                          - paymentDetails
                           - orderItems
                           - user
                         type: object
@@ -2967,6 +3071,220 @@ components:
         - properties:
             data:
               $ref: "#/components/schemas/Image"
+          required:
+            - data
+          type: object
+    GetDashboardOverviewResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                totalRevenue:
+                  type: integer
+                  format: int32
+                totalRefund:
+                  type: integer
+                  format: int32
+                totalSales:
+                  type: integer
+                  format: int32
+                totalCustomers:
+                  type: integer
+                  format: int32
+                totalOrders:
+                  type: integer
+                  format: int32
+                totalProducts:
+                  type: integer
+                  format: int32
+              required:
+                - totalRevenue
+                - totalRefund
+                - totalSales
+                - totalCustomers
+                - totalOrders
+                - totalProducts
+              type: object
+          required:
+            - data
+          type: object
+    ListTopProductsResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              items:
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+                  unitsSold:
+                    type: integer
+                    format: int32
+                required:
+                  - product
+                  - unitsSold
+                type: object
+              type: array
+          required:
+            - data
+          type: object
+    GetSalesTrendsResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                trends:
+                  items:
+                    properties:
+                      sales:
+                        type: integer
+                        format: int32
+                      date:
+                        type: string
+                    required:
+                      - sales
+                      - date
+                    type: object
+                  type: array
+              required:
+                - trends
+              type: object
+          required:
+            - data
+          type: object
+    GetOrdersStatusResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                fulfilled:
+                  type: integer
+                  format: int32
+                canceled:
+                  type: integer
+                  format: int32
+                delivered:
+                  type: integer
+                  format: int32
+                shipped:
+                  type: integer
+                  format: int32
+                pending:
+                  type: integer
+                  format: int32
+              required:
+                - fulfilled
+                - canceled
+                - delivered
+                - shipped
+                - pending
+              type: object
+          required:
+            - data
+          type: object
+    GetInventoryStatusResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                outOfStock:
+                  items:
+                    properties:
+                      size:
+                        $ref: "#/components/schemas/Size"
+                      color:
+                        $ref: "#/components/schemas/Color"
+                      product:
+                        $ref: "#/components/schemas/Product"
+                    required:
+                      - size
+                      - color
+                      - product
+                    type: object
+                  type: array
+                lowStock:
+                  items:
+                    properties:
+                      size:
+                        $ref: "#/components/schemas/Size"
+                      color:
+                        $ref: "#/components/schemas/Color"
+                      product:
+                        $ref: "#/components/schemas/Product"
+                      stockRemaining:
+                        type: integer
+                        format: int32
+                    required:
+                      - size
+                      - color
+                      - product
+                      - stockRemaining
+                    type: object
+                  type: array
+              required:
+                - outOfStock
+                - lowStock
+              type: object
+          required:
+            - data
+          type: object
+    ListCustomersFeedbackResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                recentFeedback:
+                  items:
+                    allOf:
+                      - $ref: "#/components/schemas/Review"
+                      - properties:
+                          product:
+                            $ref: "#/components/schemas/Product"
+                          user:
+                            allOf:
+                              - $ref: "#/components/schemas/User"
+                            nullable: true
+                        required:
+                          - product
+                          - user
+                        type: object
+                  type: array
+                averageRating:
+                  type: integer
+                  format: int32
+              required:
+                - recentFeedback
+                - averageRating
+              type: object
+          required:
+            - data
+          type: object
+    ListTopCustomersResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              items:
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  totalOrders:
+                    type: integer
+                    format: int32
+                  totalPaid:
+                    type: integer
+                    format: int32
+                required:
+                  - user
+                  - totalOrders
+                  - totalPaid
+                type: object
+              type: array
           required:
             - data
           type: object
