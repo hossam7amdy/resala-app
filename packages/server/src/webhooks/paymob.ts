@@ -1,8 +1,8 @@
 import { createHmac } from 'crypto';
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import { db } from '../datastore/index.js';
-import { PostPayRequestDTO } from './paymob.dto.js';
+import type { PostPayRequestDTO } from './paymob.dto.js';
 
 const status = (transaction: PostPayRequestDTO['transaction']) => {
   if (transaction.is_voided) return 'VOIDED';
@@ -56,23 +56,13 @@ export const postPay: RequestHandler<{ orderId: string }, unknown, PostPayReques
 
     const isValid = verify(hmac, transaction);
 
-    await Promise.allSettled([
-      db.payment.update({
-        where: {
-          orderId,
-        },
-        data: {
-          transactionId: +transaction.id,
-          transactionOrderId: +transaction.order.id,
-        },
-      }),
-      db.order.update({
-        data: {
-          paymentStatus: status(transaction),
-        },
-        where: { id: orderId },
-      }),
-    ]);
+    await db.order.update({
+      data: {
+        transactionId: transaction.id.toString(),
+        paymentStatus: status(transaction),
+      },
+      where: { id: orderId },
+    });
 
     if (!isValid) {
       throw new Error(`Invalid HMAC signature, hmac=${hmac}`);

@@ -20,8 +20,8 @@ export const OrderDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = ({
             }
           >
             <List.Item.Meta
-              avatar={<Image src={item.imageUrl} alt="primary stock image" width={50} />}
-              title={item.name}
+              avatar={<Image src={item.product.imageUrl} alt="primary stock image" width={50} />}
+              title={`${item.product.enName} | ${item.product.arName}`}
               description={`ID: ${item.id} | Color: ${item.color} | Size: ${item.size}`}
             />
           </List.Item>
