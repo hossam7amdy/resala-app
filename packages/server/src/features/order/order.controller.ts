@@ -60,7 +60,7 @@ export class OrderController extends Controller {
   constructor() {
     super();
 
-    this.paymentService = new PaymentService(new PaymobService());
+    this.paymentService = new PaymentService(db, new PaymobService());
     this.notificationService = new NotificationService(new EmailNotification());
     this.orderService = new OrderService(
       db,
