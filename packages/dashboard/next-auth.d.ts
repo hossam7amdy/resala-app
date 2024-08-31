@@ -1,6 +1,7 @@
 import type { User as ResalaUser } from '@resala/shared';
 import type { DefaultSession } from 'next-auth';
 // The `JWT` interface can be found in the `next-auth/jwt` submodule
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 import { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {

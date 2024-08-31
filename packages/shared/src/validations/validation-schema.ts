@@ -427,22 +427,19 @@ export const DeleteOrderSchema = z.object({
 // Payment Schemas
 export const GetPaymentSchema = z.object({
   params: z.object({
-    transactionId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    transactionId: z.string(),
   }),
 });
 
 export const VoidPaymentSchema = z.object({
   body: z.object({
-    transactionId: z.coerce.number().positive(),
+    transactionId: z.string(),
   }),
 });
 
 export const RefundPaymentSchema = z.object({
   body: z.object({
-    transactionId: z.coerce.number().positive(),
+    transactionId: z.string(),
     amount: z.coerce.number().positive(),
   }),
 });

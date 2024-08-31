@@ -1314,11 +1314,11 @@ export declare const DeleteOrderSchema: z.ZodObject<{
 }>;
 export declare const GetPaymentSchema: z.ZodObject<{
     params: z.ZodObject<{
-        transactionId: z.ZodEffects<z.ZodNumber, string, number>;
+        transactionId: z.ZodString;
     }, "strip", z.ZodTypeAny, {
         transactionId: string;
     }, {
-        transactionId: number;
+        transactionId: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     params: {
@@ -1326,45 +1326,45 @@ export declare const GetPaymentSchema: z.ZodObject<{
     };
 }, {
     params: {
-        transactionId: number;
+        transactionId: string;
     };
 }>;
 export declare const VoidPaymentSchema: z.ZodObject<{
     body: z.ZodObject<{
-        transactionId: z.ZodNumber;
+        transactionId: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        transactionId: number;
+        transactionId: string;
     }, {
-        transactionId: number;
+        transactionId: string;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
-        transactionId: number;
+        transactionId: string;
     };
 }, {
     body: {
-        transactionId: number;
+        transactionId: string;
     };
 }>;
 export declare const RefundPaymentSchema: z.ZodObject<{
     body: z.ZodObject<{
-        transactionId: z.ZodNumber;
+        transactionId: z.ZodString;
         amount: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        transactionId: number;
+        transactionId: string;
         amount: number;
     }, {
-        transactionId: number;
+        transactionId: string;
         amount: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
-        transactionId: number;
+        transactionId: string;
         amount: number;
     };
 }, {
     body: {
-        transactionId: number;
+        transactionId: string;
         amount: number;
     };
 }>;

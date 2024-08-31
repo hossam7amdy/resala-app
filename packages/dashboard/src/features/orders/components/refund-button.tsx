@@ -2,12 +2,11 @@
 
 import { refundPayment } from '@/actions/payment';
 import { useMutation, useNotification } from '@/hooks';
-import type { Payment } from '@resala/shared';
 import { Button, Flex, Form, Input, InputNumber, Modal } from 'antd';
 import React, { useState } from 'react';
 
-export const RefundButton: React.FC<{ payment: Payment; orderAmount: number }> = ({
-  payment,
+export const RefundButton: React.FC<{ transactionId: string; orderAmount: number }> = ({
+  transactionId,
   orderAmount,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,8 +45,8 @@ export const RefundButton: React.FC<{ payment: Payment; orderAmount: number }> =
       >
         <Form
           layout="vertical"
-          name={`refund-${payment.transactionId}`}
-          initialValues={{ transactionId: payment.transactionId, amount: orderAmount }}
+          name={`refund-${transactionId}`}
+          initialValues={{ transactionId, amount: orderAmount }}
           onFinish={mutate}
         >
           <Form.Item name="transactionId" hidden>

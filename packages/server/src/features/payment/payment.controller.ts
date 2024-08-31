@@ -1,6 +1,6 @@
 import {
   type GetPaymentResponse,
-  RefundPaymentRequest,
+  type RefundPaymentRequest,
   RefundPaymentSchema,
   type VoidPaymentRequest,
   VoidPaymentSchema,
@@ -17,7 +17,6 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
-import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
@@ -30,14 +29,14 @@ export class PaymentController extends Controller {
 
   constructor() {
     super();
-    this.paymentService = new PaymentService(db, new PaymobService());
+    this.paymentService = new PaymentService(new PaymobService());
   }
 
   @Get('{transactionId}')
   @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async get(@Path() transactionId: string): Promise<GetPaymentResponse> {
-    const payment = await this.paymentService.retrieve(+transactionId);
+    const payment = await this.paymentService.retrieve(transactionId);
 
     return { success: true, data: payment };
   }

@@ -4,6 +4,7 @@ import type {
   GetProductResponse,
   ListProductsRequest,
   ListProductsResponse,
+  Product,
   UpdateProductRequest,
 } from '@resala/shared';
 
@@ -45,7 +46,7 @@ export class ProductService {
         where: filters,
         skip: (page - 1) * limit,
         take: limit,
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
       }),
     ]);
 
@@ -96,7 +97,7 @@ export class ProductService {
 
       const { key, url } = await this.fileService.uploadFile(file);
 
-      product = { ...product, imageKey: key, imageUrl: url } as any;
+      product = { ...product, imageKey: key, imageUrl: url } as Product;
     }
 
     return await this.db.product.update({ where: { id }, data: product });

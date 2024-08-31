@@ -101,6 +101,7 @@ export type Order = {
     discount: number | Decimal | string | any;
     total: number | Decimal | string | any;
     orderStatus: OrderStatusType;
+    transactionId: null | string;
     paymentMethod: PaymentMethodType;
     paymentStatus: PaymentStatusType;
     note: null | string;
@@ -109,11 +110,9 @@ export type Order = {
 };
 export type OrderItem = {
     id: number;
-    name: string;
-    color: string;
-    size: string;
+    productId: number;
+    stockId: number;
     price: number | Decimal | string | any;
-    imageUrl: string | null;
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
@@ -125,12 +124,6 @@ export type Shipping = {
     cost: number | Decimal | string | any;
     createdAt: Date;
     updatedAt: Date;
-};
-export type Payment = {
-    orderId: number;
-    paymentLink: string | null;
-    transactionId: number | null;
-    transactionOrderId: number | null;
 };
 export type Review = {
     id: number;
@@ -153,15 +146,6 @@ export type Address = {
     phone: string;
     firstName: string;
     lastName: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
-export type Notification = {
-    id: number;
-    userId: number;
-    title: string;
-    content: string;
-    isRead: boolean;
     createdAt: Date;
     updatedAt: Date;
 };
