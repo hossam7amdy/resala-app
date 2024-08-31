@@ -1,6 +1,6 @@
 import type { CreateAddressRequest, UpdateAddressRequest } from '@resala/shared';
 
-import { DataStore } from '../../datastore/index.js';
+import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
 
 export class AddressService {
@@ -43,6 +43,7 @@ export class AddressService {
     return userAddr?.address ?? null;
   }
 
+  // eslint-disable-next-line no-unused-vars
   async update(addressId: number, { userId: _, ...payload }: UpdateAddressRequest['body']) {
     return await this.db.address.update({
       data: payload,
