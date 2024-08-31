@@ -5,7 +5,7 @@ import {
   GetUserSchema,
   type ListUsersResponse,
   ListUsersSchema,
-  UpdateUserRequest,
+  type UpdateUserRequest,
   type UpdateUserResponse,
   UpdateUserSchema,
 } from '@resala/shared';
