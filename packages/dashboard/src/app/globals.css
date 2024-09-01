@@ -58,7 +58,7 @@ body {
   }
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 991px) {
   .side-nav-logo {
     height: 30px !important;
     width: 55px !important;
