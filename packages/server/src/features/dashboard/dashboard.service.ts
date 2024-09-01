@@ -13,9 +13,6 @@ import {
   type GetSalesTrend,
   type ListTopCustomers,
   type ListTopProducts,
-  getSalesTrend,
-  listTopCustomers,
-  listTopProducts,
 } from './dashboard.sql.js';
 
 export class DashboardService {
@@ -54,7 +51,15 @@ export class DashboardService {
   }
 
   async getSalesTrend(): Promise<GetSalesTrendsResponse['data']> {
-    const trends = await this.db.$queryRaw<GetSalesTrend>`${getSalesTrend}`;
+    const trends = await this.db.$queryRaw<GetSalesTrend>`
+        SELECT 
+          SUM(total) AS sales,
+          to_char(created_at, 'YYYY-MM') AS date
+        FROM "order"
+        GROUP BY date
+        ORDER BY date ASC
+        LIMIT 12;
+    `;
 
     return { trends };
   }
@@ -152,7 +157,23 @@ export class DashboardService {
   }
 
   async listTopProducts(): Promise<ListTopProductsResponse['data']> {
-    const topProducts = await this.db.$queryRaw<ListTopProducts>`${listTopProducts}`;
+    const topProducts = await this.db.$queryRaw<ListTopProducts>`
+      SELECT
+          t.units_sold,
+          p.*
+      FROM "product" p
+      JOIN (
+          SELECT 
+              product_id,
+              SUM(quantity) AS units_sold
+          FROM "order_item"
+          GROUP BY 1
+          ORDER BY 2 DESC
+          LIMIT 10
+          ) AS t
+          ON (t.product_id = p.id)
+      ORDER BY 1 DESC;
+    `;
 
     return topProducts.map(p => ({
       unitsSold: Number(p.units_sold?.toString() ?? 0),
@@ -173,7 +194,25 @@ export class DashboardService {
   }
 
   async listTopCustomers(): Promise<ListTopCustomersResponse['data']> {
-    const topCustomers = await this.db.$queryRaw<ListTopCustomers>`${listTopCustomers}`;
+    const topCustomers = await this.db.$queryRaw<ListTopCustomers>`
+      SELECT
+        o.total_paid,
+        o.total_orders,
+        u.*
+      FROM "user" AS u
+      JOIN (
+          SELECT 
+              user_id,
+              SUM(total) AS total_paid,
+              COUNT(*) AS total_orders
+          FROM "order"
+          GROUP BY 1
+          ORDER BY 2 DESC
+          LIMIT 10
+          ) AS o
+          ON (o.user_id = u.id)
+      ORDER BY 1 DESC;
+    `;
 
     return topCustomers.map(({ total_paid, total_orders, ...user }) => ({
       totalPaid: +(total_paid ?? 0),
