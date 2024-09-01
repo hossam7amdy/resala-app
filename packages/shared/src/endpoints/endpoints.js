@@ -88,6 +88,14 @@ export var Endpoints;
     Endpoints["createReview"] = "createReview";
     Endpoints["updateReview"] = "updateReview";
     Endpoints["deleteReview"] = "deleteReview";
+    // dashboard summery
+    Endpoints["getDashboardOverview"] = "getDashboardOverview";
+    Endpoints["getInventoryStatus"] = "getInventoryStatus";
+    Endpoints["getOrdersStatus"] = "getOrdersStatus";
+    Endpoints["getSalesTrends"] = "getSalesTrends";
+    Endpoints["listCustomersFeedback"] = "listCustomersFeedback";
+    Endpoints["listTopCustomers"] = "listTopCustomers";
+    Endpoints["listTopProducts"] = "listTopProducts";
 })(Endpoints || (Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -484,5 +492,40 @@ export const ENDPOINT_CONFIGS = {
         url: '/api/v1/reviews',
         method: 'get',
         auth: true,
+    },
+    // dashboard endpoints
+    [Endpoints.getDashboardOverview]: {
+        url: '/api/v1/dashboard/overview',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.getInventoryStatus]: {
+        url: '/api/v1/dashboard/inventory-status',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.getOrdersStatus]: {
+        url: '/api/v1/dashboard/orders-status',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.getSalesTrends]: {
+        url: '/api/v1/dashboard/sales-trends',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.listCustomersFeedback]: {
+        url: '/api/v1/dashboard/customers-feedback',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.listTopCustomers]: {
+        url: '/api/v1/dashboard/top-customers',
+        method: 'get',
+        auth: true,
+    },
+    [Endpoints.listTopProducts]: {
+        url: '/api/v1/dashboard/top-products',
+        method: 'get',
     },
 };
