@@ -1,4 +1,3 @@
-import { getSalesTrend, listTopCustomers, listTopProducts } from '@prisma/client/sql';
 import type {
   GetDashboardOverviewResponse,
   GetInventoryStatusResponse,
@@ -10,6 +9,14 @@ import type {
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
+import {
+  type GetSalesTrend,
+  type ListTopCustomers,
+  type ListTopProducts,
+  getSalesTrend,
+  listTopCustomers,
+  listTopProducts,
+} from './dashboard.sql.js';
 
 export class DashboardService {
   constructor(private readonly db: DataStore) {}
@@ -47,9 +54,9 @@ export class DashboardService {
   }
 
   async getSalesTrend(): Promise<GetSalesTrendsResponse['data']> {
-    const trends = await this.db.$queryRawTyped(getSalesTrend());
+    const trends = await this.db.$queryRaw<GetSalesTrend>`${getSalesTrend}`;
 
-    return { trends } as unknown as GetSalesTrendsResponse['data'];
+    return { trends };
   }
 
   async getOrderStatus(): Promise<GetOrdersStatusResponse['data']> {
@@ -145,7 +152,7 @@ export class DashboardService {
   }
 
   async listTopProducts(): Promise<ListTopProductsResponse['data']> {
-    const topProducts = await this.db.$queryRawTyped(listTopProducts());
+    const topProducts = await this.db.$queryRaw<ListTopProducts>`${listTopProducts}`;
 
     return topProducts.map(p => ({
       unitsSold: Number(p.units_sold?.toString() ?? 0),
@@ -166,15 +173,14 @@ export class DashboardService {
   }
 
   async listTopCustomers(): Promise<ListTopCustomersResponse['data']> {
-    const topProducts = await this.db.$queryRawTyped(listTopCustomers());
+    const topCustomers = await this.db.$queryRaw<ListTopCustomers>`${listTopCustomers}`;
 
-    return topProducts.map(({ total_paid, total_orders, ...user }) => ({
+    return topCustomers.map(({ total_paid, total_orders, ...user }) => ({
       totalPaid: +(total_paid ?? 0),
       totalOrders: +(total_orders?.toString() ?? 0),
       user: {
         id: user.id,
         email: user.email,
-        // @ts-expect-error a bug in prisma client
         isEmailVerified: user.is_email_verified,
         phone: user.phone,
         isPhoneVerified: user.is_phone_verified,
