@@ -10,7 +10,7 @@ export const SideNav: React.FC = () => {
     <Flex vertical style={{ height: '100%' }}>
       <Link href={ROUTES.DASHBOARD}>
         <div style={{ textAlign: 'center', margin: '50px auto' }}>
-          <Logo className="side-nav-logo" />
+          <Logo className="h-[30px] w-[55px] lg:h-full lg:w-[116px]" />
         </div>
       </Link>
       <div style={{ flex: 1 }}>
