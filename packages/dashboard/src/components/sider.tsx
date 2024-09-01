@@ -9,7 +9,7 @@ const { Sider: AntSider } = Layout;
 const { useBreakpoint } = Grid;
 
 export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
-  const { md } = useBreakpoint();
+  const { lg } = useBreakpoint();
 
   return (
     <AntSider
@@ -22,7 +22,7 @@ export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
         bottom: 0,
         boxShadow: boxShadow,
       }}
-      collapsed={!md}
+      collapsed={!lg}
       {...props}
     >
       {children}

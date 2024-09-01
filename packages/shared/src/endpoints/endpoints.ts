@@ -110,6 +110,15 @@ export enum Endpoints {
   createReview = 'createReview',
   updateReview = 'updateReview',
   deleteReview = 'deleteReview',
+
+  // dashboard summery
+  getDashboardOverview = 'getDashboardOverview',
+  getInventoryStatus = 'getInventoryStatus',
+  getOrdersStatus = 'getOrdersStatus',
+  getSalesTrends = 'getSalesTrends',
+  listCustomersFeedback = 'listCustomersFeedback',
+  listTopCustomers = 'listTopCustomers',
+  listTopProducts = 'listTopProducts',
 }
 
 /**
@@ -526,5 +535,41 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/reviews',
     method: 'get',
     auth: true,
+  },
+
+  // dashboard endpoints
+  [Endpoints.getDashboardOverview]: {
+    url: '/api/v1/dashboard/overview',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getInventoryStatus]: {
+    url: '/api/v1/dashboard/inventory-status',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getOrdersStatus]: {
+    url: '/api/v1/dashboard/orders-status',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getSalesTrends]: {
+    url: '/api/v1/dashboard/sales-trends',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listCustomersFeedback]: {
+    url: '/api/v1/dashboard/customers-feedback',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listTopCustomers]: {
+    url: '/api/v1/dashboard/top-customers',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listTopProducts]: {
+    url: '/api/v1/dashboard/top-products',
+    method: 'get',
   },
 };
