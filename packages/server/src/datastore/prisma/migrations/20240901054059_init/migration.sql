@@ -14,7 +14,7 @@ CREATE TYPE "payment_method" AS ENUM ('CASH', 'CARD');
 CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
     "email" VARCHAR(125) NOT NULL,
-    " is_email_verified" BOOLEAN NOT NULL DEFAULT false,
+    "is_email_verified" BOOLEAN NOT NULL DEFAULT false,
     "phone" VARCHAR(15) NOT NULL,
     "is_phone_verified" BOOLEAN NOT NULL DEFAULT false,
     "first_name" VARCHAR(50) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE "product" (
     "en_description" VARCHAR(1000) NOT NULL,
     "price" DECIMAL(9,2) NOT NULL,
     "image_key" VARCHAR(50) NOT NULL,
-    "image_url" VARCHAR(500) NOT NULL,
+    "image_url" VARCHAR(300) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -71,7 +71,7 @@ CREATE TABLE "image" (
     "product_id" INTEGER NOT NULL,
     "is_primary" BOOLEAN NOT NULL DEFAULT false,
     "image_key" VARCHAR(50) NOT NULL,
-    "image_url" VARCHAR(500) NOT NULL,
+    "image_url" VARCHAR(300) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "image_pkey" PRIMARY KEY ("id")
@@ -134,11 +134,12 @@ CREATE TABLE "wishlist" (
 -- CreateTable
 CREATE TABLE "order" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER,
+    "user_id" INTEGER NOT NULL,
     "subtotal" DECIMAL(9,2) NOT NULL,
     "discount" DECIMAL(9,2) NOT NULL DEFAULT 0,
     "total" DECIMAL(9,2) NOT NULL,
     "order_status" "order_status" NOT NULL DEFAULT 'PENDING',
+    "transaction_id" VARCHAR(32),
     "payment_method" "payment_method" NOT NULL,
     "payment_status" "payment_status" NOT NULL DEFAULT 'UNPAID',
     "note" VARCHAR(250),
@@ -152,12 +153,10 @@ CREATE TABLE "order" (
 CREATE TABLE "order_item" (
     "id" SERIAL NOT NULL,
     "order_id" INTEGER NOT NULL,
-    "name" VARCHAR(50) NOT NULL,
-    "color" VARCHAR(15) NOT NULL,
-    "size" VARCHAR(5) NOT NULL,
+    "product_id" INTEGER NOT NULL,
+    "stock_id" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "unit_price" DECIMAL(9,2) NOT NULL,
-    "image_url" VARCHAR(500),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -177,22 +176,12 @@ CREATE TABLE "shipping" (
 );
 
 -- CreateTable
-CREATE TABLE "payment" (
-    "order_id" INTEGER NOT NULL,
-    "payment_link" VARCHAR(500),
-    "transaction_id" INTEGER,
-    "transaction_order_id" INTEGER,
-
-    CONSTRAINT "payment_pkey" PRIMARY KEY ("order_id")
-);
-
--- CreateTable
 CREATE TABLE "review" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER,
+    "user_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
     "rating" INTEGER NOT NULL DEFAULT 5,
-    "comment" VARCHAR(250),
+    "comment" VARCHAR(500),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -209,7 +198,7 @@ CREATE TABLE "address" (
     "building" VARCHAR(50),
     "floor" SMALLINT,
     "address" VARCHAR(250),
-    "phone" CHAR(11) NOT NULL,
+    "phone" VARCHAR(15) NOT NULL,
     "first_name" VARCHAR(50) NOT NULL,
     "last_name" VARCHAR(50) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -303,10 +292,16 @@ ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_id_fkey" FOREIGN KEY ("user
 ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "order" ADD CONSTRAINT "order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "order" ADD CONSTRAINT "order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "order_item" ADD CONSTRAINT "order_item_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "order_item" ADD CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "order_item" ADD CONSTRAINT "order_item_stock_id_fkey" FOREIGN KEY ("stock_id") REFERENCES "stock"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "shipping" ADD CONSTRAINT "shipping_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -315,10 +310,7 @@ ALTER TABLE "shipping" ADD CONSTRAINT "shipping_order_id_fkey" FOREIGN KEY ("ord
 ALTER TABLE "shipping" ADD CONSTRAINT "shipping_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "payment" ADD CONSTRAINT "payment_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
