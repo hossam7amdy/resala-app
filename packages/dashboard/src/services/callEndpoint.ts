@@ -21,13 +21,15 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === 'object';
 };
 
-type Req = {
-  params?: Record<string, string | number>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body?: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query?: any;
-};
+type Req =
+  | {
+      params?: Record<string, string | number>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body?: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      query?: any;
+    }
+  | undefined;
 type Res = DefaultResponseBody;
 
 export const callEndpoint = async <Request extends Req, Response extends Res>(

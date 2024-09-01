@@ -82,7 +82,14 @@ export declare enum Endpoints {
     listReviews = "listReviews",
     createReview = "createReview",
     updateReview = "updateReview",
-    deleteReview = "deleteReview"
+    deleteReview = "deleteReview",
+    getDashboardOverview = "getDashboardOverview",
+    getInventoryStatus = "getInventoryStatus",
+    getOrdersStatus = "getOrdersStatus",
+    getSalesTrends = "getSalesTrends",
+    listCustomersFeedback = "listCustomersFeedback",
+    listTopCustomers = "listTopCustomers",
+    listTopProducts = "listTopProducts"
 }
 /**
  * Function to add params to the endpoint url
