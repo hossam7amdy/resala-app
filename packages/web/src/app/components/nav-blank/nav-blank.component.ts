@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit } from '@angular/core';
+import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -23,7 +23,7 @@ export class NavBlankComponent implements OnInit {
     private _CartService: CartService,
     private _Categories:CategoriesService,
     private route:ActivatedRoute,
-    
+    private _Renderer:Renderer2
   
   ) {}
 
@@ -32,6 +32,15 @@ export class NavBlankComponent implements OnInit {
 
   cartNum: number = 0;
 
+  @ViewChild('navbar') navbarElement!:ElementRef
+  @HostListener('window:scroll')
+  onScroll():void{
+    if(scrollY > 600){
+      this._Renderer.setStyle(this.navbarElement.nativeElement,'top',0)
+    }else{
+      this._Renderer.removeStyle(this.navbarElement.nativeElement,'top')
+    }
+  }
   
 
   ngOnInit(): void {

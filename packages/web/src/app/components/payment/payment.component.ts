@@ -5,8 +5,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
+
 
 @Component({
   selector: 'app-payment',
@@ -21,9 +23,10 @@ export class PaymentComponent implements OnInit {
     private _Renderer2: Renderer2,
     private _Toaster: ToastrService,
     private _Router: Router,
-    private _CartService: CartService
+    private _CartService: CartService,
+    private _AuthService:AuthService
   ) {}
-
+  userId:string='';
   isEdit: boolean = false;
   editIndex: any;
   isSelectesAddress: boolean = false;
@@ -33,7 +36,7 @@ export class PaymentComponent implements OnInit {
   successMsg: string = '';
   isLoading: boolean = false;
   getUserAddress: any = [];
-  addressId: string = '';
+  addressId: number = 1;
   selectPayMethod: string = '';
   note: string = '';
 
@@ -52,10 +55,14 @@ export class PaymentComponent implements OnInit {
   paymentSelected: string = '';
 
   ngOnInit(): void {
-    this._PaymentServices.getUserAddress().subscribe({
+    this._AuthService.decodeUser();
+    this.userId = this._AuthService.userInfo.id;
+    console.log('user info',this.userId);
+    this._PaymentServices.getListAddressUser(this.userId).subscribe({
       next: response => {
         this.getUserAddress = response.data;
-        this.addressId = this.getUserAddress[0].id;
+        console.log(response);
+        this.addressId = this.getUserAddress[0]?.id;
         console.log('user address id', this.addressId);
       },
       error: err => {
@@ -72,7 +79,7 @@ export class PaymentComponent implements OnInit {
     });
   }
 
-  selectedAddressMethod(value: string): void {
+  selectedAddressMethod(value: number): void {
     this.addressId = value;
     this.isSelectesAddress = true;
     console.log('address id', this.addressId);
@@ -128,23 +135,24 @@ export class PaymentComponent implements OnInit {
     this.isLoading = true;
 
     const userData = this.addressForm.value;
-    console.log(userData);
+    console.log('user data',userData);
 
     if (userAddress.valid) {
-      console.log(userData);
-      this._PaymentServices.registerUserAddress(userData).subscribe({
+      console.log('user data2',userData);
+      this._PaymentServices.registerUserAddress(userData,this.userId).subscribe({
         next: response => {
           if (response.success == true) {
             // this.successMsg = 'Registration successfuly';
             this._Toaster.success('Registration successfuly');
             this.isLoading = false;
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
+            console.log('response register',response);
           }
         },
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
-          console.log(err);
+          console.log('error register',err);
           this.isLoading = false;
         },
       });
