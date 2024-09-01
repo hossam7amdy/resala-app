@@ -97,7 +97,7 @@ export class ProductDetailsComponent implements OnInit {
   getProductStock(id: any) {
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
-        this.productStock = res?.data;
+        this.productStock = res?.data.stocks;
 
         console.log('stock', this.productStock);
 

@@ -8,12 +8,13 @@ section {
 
 section .overlay {
   position: fixed;
-  background-color: #000000b0;
+  background-color: #00000075;
   height: 100vh;
   width: 100vw;
-  z-index: 99999999;
+  z-index: 999;
   margin: 0;
   padding: 0;
+  top: 0;
 }
 
 .overlay .overlay-section {
@@ -129,6 +130,14 @@ section .overlay {
 }
 
 /* Trends */
+.trend-parent{
+  height: auto;
+}
+@media (max-width: 576px){
+  .trend-parent{
+    height: 300px;
+  } 
+}
 .trends .trends-slide {
   padding-left: 1px !important;
   padding-right: 1px !important;
@@ -175,6 +184,12 @@ section .overlay {
   width: 30%;
   padding-left: 2px;
   padding-right: 2px;
+}
+@media (max-width: 576px) {
+  .img-trend{
+    height: 300px;
+  width: 30%;
+  }
 }
 
 /* .trends .notes{
@@ -308,6 +323,17 @@ section .overlay {
   font-size: 10px;
   margin-right: 2px;
 }
+/* NGX pagination*/
+
+
+::ng-deep .ngx-pagination .current {
+  padding: 8px 16px !important;
+  background: #016373 !important;
+  color: #fefefe;
+  cursor: default;
+ 
+}
+ 
 
 /* NGXowl carowsel all cat*/
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
