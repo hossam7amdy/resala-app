@@ -146,7 +146,10 @@ export const CreateAddressSchema = z.object({
 
 export const ListAddressSchema = z.object({
   query: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
