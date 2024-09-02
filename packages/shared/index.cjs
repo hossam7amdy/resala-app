@@ -762,7 +762,10 @@ const CreateAddressSchema = zod.z.object({
 });
 const ListAddressSchema = zod.z.object({
     query: zod.z.object({
-        userId: zod.z.coerce.number().positive(),
+        userId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
     }),
 });
 const UpdateAddressSchema = zod.z.object({

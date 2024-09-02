@@ -51,7 +51,9 @@ export class AddressService {
     });
   }
 
-  async delete(addressId: number) {
+  async delete(addressId: number, userId: number) {
+    await this.find(userId, addressId);
+
     return await this.db.address.delete({ where: { id: addressId } });
   }
 }

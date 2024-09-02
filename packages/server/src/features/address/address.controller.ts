@@ -1,13 +1,15 @@
-import {
+import type {
   CreateAddressRequest,
-  type CreateAddressResponse,
-  CreateAddressSchema,
-  type DeleteAddressResponse,
-  DeleteAddressSchema,
-  type ListAddressResponse,
-  ListAddressSchema,
+  CreateAddressResponse,
+  DeleteAddressResponse,
+  ListAddressResponse,
   UpdateAddressRequest,
-  type UpdateAddressResponse,
+  UpdateAddressResponse,
+} from '@resala/shared';
+import {
+  CreateAddressSchema,
+  DeleteAddressSchema,
+  ListAddressSchema,
   UpdateAddressSchema,
 } from '@resala/shared';
 import {
@@ -19,7 +21,6 @@ import {
   Path,
   Post,
   Put,
-  Queries,
   Query,
   Route,
   Security,
@@ -78,9 +79,9 @@ export class AddressController extends Controller {
   @Middlewares([validate(DeleteAddressSchema)])
   public async deleteUserAddress(
     @Path() addressId: string,
-    @Queries() _: { userId: string }
+    @Query() userId: number
   ): Promise<DeleteAddressResponse> {
-    const address = await this.addressService.delete(+addressId);
+    const address = await this.addressService.delete(+addressId, +userId);
 
     return { success: true, data: address };
   }

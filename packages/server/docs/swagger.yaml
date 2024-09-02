@@ -1906,7 +1906,8 @@ paths:
           name: userId
           required: true
           schema:
-            type: string
+            format: int32
+            type: integer
 components:
   examples: {}
   headers: {}
