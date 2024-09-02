@@ -2822,7 +2822,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AddressController_deleteUserAddress(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     addressId: {"in":"path","name":"addressId","required":true,"dataType":"string"},
-                    _: {"in":"queries","name":"_","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"string","required":true}}},
+                    userId: {"in":"query","name":"userId","required":true,"dataType":"integer"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
