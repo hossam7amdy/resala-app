@@ -351,15 +351,15 @@ export declare const CreateAddressSchema: z.ZodObject<{
 }>;
 export declare const ListAddressSchema: z.ZodObject<{
     query: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
-        userId: number;
+        userId: string;
     };
 }, {
     query: {
@@ -455,9 +455,9 @@ export declare const DeleteAddressSchema: z.ZodObject<{
         addressId: number;
     }>;
     query: z.ZodObject<{
-        userId: z.ZodNumber;
+        userId: z.ZodEffects<z.ZodNumber, string, number>;
     }, "strip", z.ZodTypeAny, {
-        userId: number;
+        userId: string;
     }, {
         userId: number;
     }>;
@@ -466,7 +466,7 @@ export declare const DeleteAddressSchema: z.ZodObject<{
         addressId: string;
     };
     query: {
-        userId: number;
+        userId: string;
     };
 }, {
     params: {
