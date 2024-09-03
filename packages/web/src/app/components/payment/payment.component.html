@@ -1,12 +1,12 @@
 <!-- && isEdit == false -->
 <!--  -->
 <section
-  *ngIf="getUserAddress.length >= 1 && isSelectesAddress == false"
+  *ngIf="getUserAddress.length >= 1 && isSelectedAddress == false"
   class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step One ...</h1>
   <h3 class="h3 mt-0">Information Delivery</h3>
-  <form [formGroup]="addressForm" action="">
+  <form [formGroup]="userAddresses" action="">
     <div class="row justify-content-center">
       <div *ngFor="let userAddress of getUserAddress; let i = index" class="col-11 address-field">
         <div class="m-3">
@@ -224,7 +224,10 @@
   <h1 class="h2 step-one">Step One ...</h1>
   <h3 class="h3 mt-0">Information Delivery</h3>
 
-  <form [formGroup]="addressForm" (ngSubmit)="handleForm(addressForm, btn)" class="row g-3 px-5">
+  <!-- (ngSubmit)="handleForm(addressForm, btn)"  -->
+
+  <form [formGroup]="addressForm" class="row g-3 px-5">
+    
     <div class="form-item col-4">
       <label for="firstName">First Name</label>
       <input type="text" formControlName="firstName" class="form-control" id="firstName" />
@@ -345,7 +348,7 @@
     <div class="col-12">
       <button
         [disabled]="addressForm.invalid"
-        (click)="isRegisterdFun()"
+        (click)="[handleForm(addressForm, btn), isRegisterdFun()]"
         #btn
         type="submit"
         class="submit mt-3"
@@ -363,27 +366,13 @@
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
 <section
-  *ngIf="addressId != 0 || isRegisterd"
+  *ngIf="addressId != 0  || isRegisterd"
   class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step Two ...</h1>
   <h3 class="h3 mt-0">Payment Method</h3>
   <form [formGroup]="payForm" class="row g-3 px-5">
-    <!-- <div class="form-item col-3">
-            <label for="paymentMethod" class="form-label">Payment Method</label>
-            <select class="form-select" id="paymentMethod" [(ngModel)]="selectPayMethod" [value]="selectPayMethod"
-                formControlName="paymentMethod">
-                <option selected disabled value=""></option>
-                <option>CARD</option>
-                <option>CASH</option>
-            </select>
-            <div *ngIf="payForm.get('paymentMethod')?.errors != null && payForm.get('paymentMethod')?.touched"
-                class="alert text-danger">
-                <p *ngIf="payForm.get('paymentMethod')?.getError('required')">this field is required !!!</p>
-            </div>
-        </div>
-        <div>
-            <h3>Payment Method</h3> -->
+    
 
     <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
       <input
@@ -398,10 +387,6 @@
       />
       <label class="form-check-label check-address-lbl p-2" for="method">{{ method }}</label>
 
-      <!-- <div *ngIf="payForm.get('paymentMethod')?.errors != null && payForm.get('paymentMethod')?.touched"
-                class="alert text-danger">
-                <p *ngIf="payForm.get('paymentMethod')?.getError('required')">Please Check Your Payment Method !!!</p>
-            </div> -->
     </div>
     <p>payment method{{ paymentSelected }}</p>
 
@@ -418,11 +403,11 @@
         formControlName="note"
       />
     </div>
-    <!-- [disabled]="payForm.invalid" -->
+    [disabled]="payForm.invalid"
     <div class="pay-btn col-12">
       <button
         
-        (click)="creatOrder(btn)"
+        (click)="creatOrder(payForm,btn)"
         #btn
         type="submit"
         class="w-100 submit mt-3"

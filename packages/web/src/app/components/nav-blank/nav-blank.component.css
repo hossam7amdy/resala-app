@@ -25,7 +25,8 @@ nav .logo {
   border: none !important;
   min-width: 300px !important;
   border-radius: 5px;
-  
+  overflow: auto;
+  max-height: 300px;
   /* margin-top: 10px; */
  
 }
