@@ -107,9 +107,9 @@ export class ProductController extends Controller {
     @FormField() arDescription: string,
     @FormField() enDescription: string,
     @FormField() price: number,
-    @UploadedFile() image: Express.Multer.File
+    @UploadedFile() image?: Express.Multer.File
   ): Promise<UpdateProductResponse> {
-    validateImage(image);
+    image && validateImage(image);
 
     const { body } = await UpdateProductSchema.parseAsync({
       params: { productId },

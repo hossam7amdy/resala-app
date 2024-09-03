@@ -1520,7 +1520,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                     arDescription: {"in":"formData","name":"arDescription","required":true,"dataType":"string"},
                     enDescription: {"in":"formData","name":"enDescription","required":true,"dataType":"string"},
                     price: {"in":"formData","name":"price","required":true,"dataType":"string"},
-                    image: {"in":"formData","name":"image","required":true,"dataType":"file"},
+                    image: {"in":"formData","name":"image","dataType":"file"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1901,7 +1901,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function ImageController_update(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     imageId: {"in":"path","name":"imageId","required":true,"dataType":"string"},
-                    _: {"in":"body","name":"_","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"isPrimary":{"dataType":"boolean"}}},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"isPrimary":{"dataType":"boolean"}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
