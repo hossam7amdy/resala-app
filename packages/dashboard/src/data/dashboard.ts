@@ -1,6 +1,7 @@
 'use server';
 
 import { callEndpoint } from '@/services/callEndpoint';
+import { sleep } from '@/utils/sleep';
 import type {
   GetDashboardOverviewRequest,
   GetDashboardOverviewResponse,
@@ -23,6 +24,8 @@ import { unstable_noStore as noStore } from 'next/cache';
 export const getOverview = async () => {
   noStore();
 
+  await sleep(3000);
+
   const response = await callEndpoint<GetDashboardOverviewRequest, GetDashboardOverviewResponse>(
     ENDPOINT_CONFIGS.getDashboardOverview
   );
@@ -32,6 +35,8 @@ export const getOverview = async () => {
 
 export const getSalesTrends = async () => {
   noStore();
+
+  await sleep(2500);
 
   const response = await callEndpoint<GetSalesTrendsRequest, GetSalesTrendsResponse>(
     ENDPOINT_CONFIGS.getSalesTrends
@@ -43,6 +48,8 @@ export const getSalesTrends = async () => {
 export const getInventoryStatus = async () => {
   noStore();
 
+  await sleep(5000);
+
   const response = await callEndpoint<GetInventoryStatusRequest, GetInventoryStatusResponse>(
     ENDPOINT_CONFIGS.getInventoryStatus
   );
@@ -52,6 +59,8 @@ export const getInventoryStatus = async () => {
 
 export const getOrdersStatus = async () => {
   noStore();
+
+  await sleep(5000);
 
   const response = await callEndpoint<GetOrdersStatusRequest, GetOrdersStatusResponse>(
     ENDPOINT_CONFIGS.getOrdersStatus
@@ -63,6 +72,8 @@ export const getOrdersStatus = async () => {
 export const listTopProducts = async () => {
   noStore();
 
+  await sleep(5000);
+
   const response = await callEndpoint<ListTopProductsRequest, ListTopProductsResponse>(
     ENDPOINT_CONFIGS.listTopProducts
   );
@@ -73,6 +84,8 @@ export const listTopProducts = async () => {
 export const listTopCustomers = async () => {
   noStore();
 
+  await sleep(5000);
+
   const response = await callEndpoint<ListTopCustomersRequest, ListTopCustomersResponse>(
     ENDPOINT_CONFIGS.listTopCustomers
   );
@@ -82,6 +95,8 @@ export const listTopCustomers = async () => {
 
 export const listCustomersFeedback = async () => {
   noStore();
+
+  await sleep(5000);
 
   const response = await callEndpoint<ListCustomersFeedbackRequest, ListCustomersFeedbackResponse>(
     ENDPOINT_CONFIGS.listCustomersFeedback
