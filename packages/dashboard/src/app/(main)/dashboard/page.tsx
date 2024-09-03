@@ -2,8 +2,6 @@ import { getOverview } from '@/data/dashboard';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { Card, Col, Row, Statistic } from 'antd';
 
-export const revalidate = 5;
-
 const DashboardPage = async () => {
   const { totalProducts, totalOrders, totalCustomers, totalSales, totalRefund, totalRevenue } =
     await getOverview();
