@@ -1,4 +1,4 @@
-import { Breadcrumb, Card, Col, Row } from 'antd';
+import { Breadcrumb, Col, Row } from 'antd';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,9 +8,22 @@ export const metadata: Metadata = {
 interface DashboardLayoutProps {
   children: React.ReactNode;
   topProducts: React.ReactNode;
+  salesTrends: React.ReactNode;
+  customersFeedback: React.ReactNode;
+  inventoryStatus: React.ReactNode;
+  ordersStatus: React.ReactNode;
+  topCustomers: React.ReactNode;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, topProducts }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+  children,
+  topProducts,
+  salesTrends,
+  customersFeedback,
+  inventoryStatus,
+  ordersStatus,
+  topCustomers,
+}) => {
   return (
     <Row gutter={[10, 20]}>
       <Col span={24}>
@@ -20,13 +33,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, topProducts
       <Col span={24}>{children}</Col>
 
       <Col span={24} lg={{ span: 12 }}>
-        <Card title="Top Products" size="small" style={{ padding: 0 }}>
-          {topProducts}
-        </Card>
+        {topProducts}
       </Col>
       <Col span={24} lg={{ span: 12 }}>
-        <Card style={{ padding: 0 }} />
+        {topCustomers}
       </Col>
+
+      <Col span={24} lg={{ span: 12 }}>
+        {salesTrends}
+      </Col>
+      <Col span={24} lg={{ span: 12 }}>
+        {ordersStatus}
+      </Col>
+
+      <Col span={24}>{customersFeedback}</Col>
+
+      <Col span={24}>{inventoryStatus}</Col>
     </Row>
   );
 };

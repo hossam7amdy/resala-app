@@ -42,7 +42,7 @@ export class DashboardController extends Controller {
   }
 
   /** * returns the sales trend data for the specified period of time (daily, weekly, or monthly) */
-  @Get('sales-trend')
+  @Get('sales-trends')
   @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async getSalesTrend(): Promise<GetSalesTrendsResponse> {
