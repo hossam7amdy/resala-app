@@ -30,20 +30,17 @@ export class PaymentService {
     );
   }
 
-  registerUserAddress(userAddress: any , id:string): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS.createAddress);
-    return this._HttpClient.post(this.baseURL + url, 
-      {
-        userAddress,
-        id
-      }, 
+  registerUserAddress(userAddress: any): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createAddress]);
+    console.log(userAddress.userId);
+    return this._HttpClient.post(this.baseURL + url, userAddress, 
       {
       headers: this.myToken,
       }
   );
   }
 
-  getListAddressUser(id:string): Observable<any> {
+  getListAddressUser(id:any): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress,{userId:id});
     return this._HttpClient.get(this.baseURL + url, {
       headers: this.myToken,
