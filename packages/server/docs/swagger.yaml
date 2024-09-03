@@ -1230,7 +1230,7 @@ paths:
         - Dashboard
       security: []
       parameters: []
-  /api/v1/dashboard/sales-trend:
+  /api/v1/dashboard/sales-trends:
     get:
       operationId: GetSalesTrend
       responses:
@@ -2527,9 +2527,7 @@ components:
                 - $ref: "#/components/schemas/Review"
                 - properties:
                     user:
-                      allOf:
-                        - $ref: "#/components/schemas/User"
-                      nullable: true
+                      $ref: "#/components/schemas/User"
                   required:
                     - user
                   type: object
@@ -2548,9 +2546,7 @@ components:
                       - $ref: "#/components/schemas/Review"
                       - properties:
                           user:
-                            allOf:
-                              - $ref: "#/components/schemas/User"
-                            nullable: true
+                            $ref: "#/components/schemas/User"
                         required:
                           - user
                         type: object
@@ -3247,9 +3243,7 @@ components:
                           product:
                             $ref: "#/components/schemas/Product"
                           user:
-                            allOf:
-                              - $ref: "#/components/schemas/User"
-                            nullable: true
+                            $ref: "#/components/schemas/User"
                         required:
                           - product
                           - user

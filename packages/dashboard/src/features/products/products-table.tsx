@@ -57,7 +57,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
           }),
           render: (id: number) => (
             <Button size="small" type="link" onClick={() => router.push(ROUTES.PRODUCT_STOCKS(id))}>
-              {id} <SelectOutlined style={{ transform: 'rotate(90deg)' }} />
+              {id} <SelectOutlined className="rotate-90" />
             </Button>
           ),
         },

@@ -259,12 +259,12 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetReviewResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"dataType":"union","subSchemas":[{"ref":"User"},{"dataType":"enum","enums":[null]}],"required":true}}}],"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"ref":"User","required":true}}}],"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListReviewsResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"reviews":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"dataType":"union","subSchemas":[{"ref":"User"},{"dataType":"enum","enums":[null]}],"required":true}}}]},"required":true},"pagination":{"ref":"Pagination","required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"reviews":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"user":{"ref":"User","required":true}}}]},"required":true},"pagination":{"ref":"Pagination","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Category": {
@@ -414,7 +414,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListCustomersFeedbackResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"recentFeedback":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"product":{"ref":"Product","required":true},"user":{"dataType":"union","subSchemas":[{"ref":"User"},{"dataType":"enum","enums":[null]}],"required":true}}}]},"required":true},"averageRating":{"dataType":"integer","required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"recentFeedback":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Review"},{"dataType":"nestedObjectLiteral","nestedProperties":{"product":{"ref":"Product","required":true},"user":{"ref":"User","required":true}}}]},"required":true},"averageRating":{"dataType":"integer","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListTopCustomersResponse": {
@@ -2015,7 +2015,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/v1/dashboard/sales-trend',
+        app.get('/api/v1/dashboard/sales-trends',
             authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DashboardController)),
             ...(fetchMiddlewares<RequestHandler>(DashboardController.prototype.getSalesTrend)),
