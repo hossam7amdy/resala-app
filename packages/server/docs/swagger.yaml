@@ -3430,7 +3430,7 @@ components:
 servers:
   - url: http://localhost:5000
     description: Local development
+  - url: https://tender-krill-flying.ngrok-free.app
+    description: Development server
   - url: http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
     description: Development server (http)
-  - url: https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
-    description: Development server (https)
