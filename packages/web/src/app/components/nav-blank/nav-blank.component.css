@@ -19,6 +19,7 @@ nav .logo {
   height: 53.53px;
 }
 
+
 /* @media (min-width: 1200px)  */
 .navbar-expand-xl .navbar-nav .dropdown-menu {
   position: absolute;
@@ -93,7 +94,11 @@ form .icon-search {
   border-radius: 5px;
   outline: none;
 }
-
+@media (max-width: 1300px) {
+  .search{
+    width: 250px;
+  }
+}
 .search:active,
 .search:focus {
   outline: none;
@@ -140,4 +145,11 @@ edit on bootstrap classes
 
 .nav-link {
   color: #fff;
+}
+@media (max-width:1300px) {
+  .nav-link,
+  .nav-link span{
+    font-size: 14px;
+    
+  }
 }
