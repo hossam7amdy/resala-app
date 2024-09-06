@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/services/callEndpoint';
+import { callEndpoint } from '@/fetch';
 import type { GetPaymentRequest, GetPaymentResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { unstable_noStore as noStore } from 'next/cache';

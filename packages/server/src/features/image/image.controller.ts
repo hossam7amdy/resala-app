@@ -1,11 +1,11 @@
-import {
-  type CreateImageResponse,
-  CreateImageSchema,
-  type ListImagesRequest,
-  type ListImagesResponse,
+import type {
+  CreateImageResponse,
+  ListImagesRequest,
+  ListImagesResponse,
   UpdateImageRequest,
-  type UpdateImageResponse,
+  UpdateImageResponse,
 } from '@resala/shared';
+import { CreateImageSchema } from '@resala/shared';
 import {
   Body,
   Controller,
@@ -81,9 +81,9 @@ export class ImageController extends Controller {
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() imageId: string,
-    @Body() _: UpdateImageRequest['body']
+    @Body() body: UpdateImageRequest['body']
   ): Promise<UpdateImageResponse> {
-    const image = await this.imageService.updatePrimary(+imageId);
+    const image = await this.imageService.updatePrimary(+imageId, body.isPrimary);
 
     return { success: true, data: image };
   }

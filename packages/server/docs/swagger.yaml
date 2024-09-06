@@ -739,7 +739,6 @@ paths:
                 - arDescription
                 - enDescription
                 - price
-                - image
     delete:
       operationId: Delete
       responses:

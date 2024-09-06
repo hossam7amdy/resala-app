@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/classnames';
 import React from 'react';
 
 export const StockColor: React.FC<{ color: string }> = ({ color }) => {

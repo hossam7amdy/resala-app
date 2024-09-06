@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/services/callEndpoint';
+import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/utils/routes';
 import type { DeleteReviewRequest, DeleteReviewResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
