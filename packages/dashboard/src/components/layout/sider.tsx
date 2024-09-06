@@ -3,13 +3,16 @@
 import { Grid, Layout, type SiderProps } from 'antd';
 import React from 'react';
 
-import { boxShadow } from '../app/theme.config';
+import { boxShadow } from '../../app/theme.config';
+import { SideNav } from '../side-nav';
 
 const { Sider: AntSider } = Layout;
 const { useBreakpoint } = Grid;
 
-export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
-  const { lg } = useBreakpoint();
+export const Sider: React.FC<SiderProps> = ({ ...props }) => {
+  const { lg, sm } = useBreakpoint();
+
+  if (!sm) return null;
 
   return (
     <AntSider
@@ -25,7 +28,7 @@ export const Sider: React.FC<SiderProps> = ({ children, ...props }) => {
       collapsed={!lg}
       {...props}
     >
-      {children}
+      <SideNav />
     </AntSider>
   );
 };
