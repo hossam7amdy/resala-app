@@ -1,6 +1,6 @@
 'use server';
 
-import { callEndpoint } from '@/services/callEndpoint';
+import { callEndpoint } from '@/fetch';
 import type {
   GetOrderRequest,
   GetOrderResponse,

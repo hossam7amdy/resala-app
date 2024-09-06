@@ -1,10 +1,12 @@
 'use client';
 
+import { logout } from '@/actions/auth';
+import type { ApiError } from '@/fetch';
 import { useCallback, useState } from 'react';
 
 type MutationOptions<Data, Variables> = {
   mutationFn: (variables: Variables) => Promise<Data>;
-  onError?: (error: Error) => void;
+  onError?: (error: ApiError) => void;
   onSuccess?: (data: Data, variables: Variables) => void;
 };
 
@@ -12,7 +14,7 @@ type MutationResult<Data, Variables> = {
   mutate: (variables: Variables) => Promise<void>;
   isLoading: boolean;
   data?: Data | null;
-  error?: Error | null;
+  error?: ApiError | null;
 };
 
 export const useMutation = <Data, Variables>({
@@ -22,7 +24,7 @@ export const useMutation = <Data, Variables>({
 }: MutationOptions<Data, Variables>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<Data | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
   const mutate = useCallback(
     async (variables: Variables) => {
@@ -33,21 +35,19 @@ export const useMutation = <Data, Variables>({
       try {
         const result = await mutationFn(variables);
 
-        // @ts-expect-error - This is a valid check
-        if (result?.success === true) {
-          setData(result);
-          onSuccess(result, variables);
-          // @ts-expect-error - This is a valid check
-        } else if (result?.success === false) {
-          // @ts-expect-error - This is a valid check
-          const errorObj = new Error(result?.message || 'An error occurred');
+        console.log('result', result);
 
-          setError(errorObj);
-          onError(errorObj);
-        }
+        setData(result);
+        onSuccess(result, variables);
       } catch (e) {
-        setError(e as Error);
-        onError(e as Error);
+        const error = e as ApiError;
+
+        if (error.status === 401) {
+          await logout();
+        }
+
+        setError(error);
+        onError(error);
       } finally {
         setIsLoading(false);
       }
