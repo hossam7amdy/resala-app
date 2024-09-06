@@ -54,3 +54,23 @@ section p {
   background-color: #fbb935;
   transition-duration: 2ms;
 }
+
+/* Media query */
+
+@media (max-width:900px) {
+  .w-25{
+    width: 50% !important;
+  }
+}
+
+@media (max-width:500px) {
+  .w-25{
+    width: 75% !important;
+  }
+}
+
+@media (max-width:300px) {
+  .w-25{
+    width: 90% !important;
+  }
+}

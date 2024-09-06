@@ -83,6 +83,7 @@ export class PaymentComponent implements OnInit {
   selectedAddressMethod(value: number): void {
     this.addressId = value;
     this.isSelectedAddress = true;
+    this.isRegisterd = true;
     console.log('address id', this.addressId);
   }
 
@@ -184,6 +185,7 @@ export class PaymentComponent implements OnInit {
             this._Toaster.success('Registration successfuly');
             this.isLoading = false;
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
+            this.isRegisterd = true;
             console.log('response register',response);
           }
         },
@@ -198,10 +200,7 @@ export class PaymentComponent implements OnInit {
   }
 
  
-  // is registerd method
-  isRegisterdFun(): void {
-    this.isRegisterd = true;
-  }
+  
   // textTimer(txt:string): void {
   //   setTimeout(() => {
   //     txt;
@@ -241,12 +240,20 @@ export class PaymentComponent implements OnInit {
           }
           this._Renderer2.setAttribute(btn, 'disabled', 'true');
           this._CartService.cartNumber.next(0);
+          
         }
+        this.isLoading = false;
       },
       error: err => {
-        this.errMsg = err.error.message;
-        this._Toaster.error(this.errMsg);
-        console.log(err);
+        if(this.paymentSelected ==''){
+          this._Toaster.error("Choose Payment Method Please!!");
+          
+        }else{
+          this.errMsg = err.error.message;
+          this._Toaster.error(this.errMsg);
+          console.log(err);
+          
+        }
         this.isLoading = false;
       },
     });

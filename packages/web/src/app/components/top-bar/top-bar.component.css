@@ -37,6 +37,11 @@ div {
   z-index: 99999;
   width: 20%;
 }
+@media(max-width:1200px){
+  .social-icon{
+    display: none;
+  }
+}
 
 .social-icon > i:hover {
   transition-duration: 0.4s;
