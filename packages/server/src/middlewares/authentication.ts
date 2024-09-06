@@ -14,9 +14,7 @@ export const expressAuthentication = async (
 ): Promise<User> => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedError();
-    }
+    if (!token) throw new Error();
 
     const { id } = jwtVerify(token, securityName);
 
@@ -25,6 +23,6 @@ export const expressAuthentication = async (
     res.locals.user = user;
     return Promise.resolve(user);
   } catch (e) {
-    return Promise.reject(new UnauthorizedError("Couldn't authenticate user"));
+    throw new UnauthorizedError();
   }
 };

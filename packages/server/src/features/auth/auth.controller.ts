@@ -1,26 +1,28 @@
-import {
-  type ChangePasswordRequest,
-  type ChangePasswordResponse,
-  ChangePasswordSchema,
-  type ForgotPasswordRequest,
-  type ForgotPasswordResponse,
-  ForgotPasswordSchema,
+import type {
+  ChangePasswordRequest,
+  ChangePasswordResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   LoginRequest,
-  type LoginResponse,
-  LoginSchema,
+  LoginResponse,
   RefreshTokenRequest,
-  type RefreshTokenResponse,
-  RefreshTokenSchema,
+  RefreshTokenResponse,
   RegisterRequest,
-  type RegisterResponse,
-  RegisterSchema,
+  RegisterResponse,
   ResendVerificationEmailRequest,
-  type ResendVerificationEmailResponse,
-  ResendVerificationSchema,
+  ResendVerificationEmailResponse,
   ResetPasswordRequest,
-  type ResetPasswordResponse,
+  ResetPasswordResponse,
+  VerifyEmailResponse,
+} from '@resala/shared';
+import {
+  ChangePasswordSchema,
+  ForgotPasswordSchema,
+  LoginSchema,
+  RefreshTokenSchema,
+  RegisterSchema,
+  ResendVerificationSchema,
   ResetPasswordSchema,
-  type VerifyEmailResponse,
   VerifyEmailSchema,
 } from '@resala/shared';
 import type { Request as ExRequest } from 'express';
@@ -39,7 +41,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import { validate } from '../../middlewares/index.js';
+import { limiter, validate } from '../../middlewares/index.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
 import { AuthService } from './auth.service.js';
@@ -108,7 +110,7 @@ export class AuthController extends Controller {
   }
 
   @Post('refresh')
-  @Middlewares([validate(RefreshTokenSchema)])
+  @Middlewares([validate(RefreshTokenSchema), limiter(10, 10)])
   public async refresh(@Body() body: RefreshTokenRequest['body']): Promise<RefreshTokenResponse> {
     const { token } = body;
     const response = await this.authService.refreshToken(token);
@@ -128,7 +130,7 @@ export class AuthController extends Controller {
    */
   @Post('verify-email')
   @Security('JWT_VERIFY')
-  @Middlewares([validate(VerifyEmailSchema)])
+  @Middlewares([validate(VerifyEmailSchema), limiter(10, 2)])
   public async verifyEmail(@Request() req: ExRequest): Promise<VerifyEmailResponse> {
     const email = req.res?.locals.user.email;
 
@@ -143,7 +145,7 @@ export class AuthController extends Controller {
    * calling the `resetPassword` endpoint.
    */
   @Post('forgot-password')
-  @Middlewares([validate(ForgotPasswordSchema)])
+  @Middlewares([validate(ForgotPasswordSchema), limiter(10, 1)])
   @SuccessResponse('200', 'Password reset code sent successfully')
   public async forgotPassword(
     @Body() body: ForgotPasswordRequest['body'],
@@ -174,7 +176,7 @@ export class AuthController extends Controller {
     @Body() body: ResetPasswordRequest['body'],
     @Request() req: ExRequest
   ): Promise<ResetPasswordResponse> {
-    const { email } = req.res?.locals.user;
+    const email = req.res?.locals.user.email;
     const { newPassword, confirmNewPassword } = body;
 
     if (newPassword !== confirmNewPassword) {
@@ -208,7 +210,7 @@ export class AuthController extends Controller {
    */
   @Post('resend-email-verification')
   @Security('JWT_SECRET')
-  @Middlewares([validate(ResendVerificationSchema)])
+  @Middlewares([validate(ResendVerificationSchema), limiter(10, 1)])
   public async resendVerificationEmail(
     @Body() body: ResendVerificationEmailRequest['body'],
     @Request() req: ExRequest
