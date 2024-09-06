@@ -13,7 +13,5 @@ export { SubmitButton } from './submit-button';
 export { TableColumn } from './table-column';
 export { DebounceSelect, type DebounceSelectProps } from './debounce-select';
 export { PopconfirmDeleteButton } from './popconfirm-delete-button';
-export { Sider } from './sider';
-export { Main } from './main';
 export { Image } from './image';
 export { Table } from './table';
