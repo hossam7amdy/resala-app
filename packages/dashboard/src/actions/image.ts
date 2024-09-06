@@ -1,7 +1,7 @@
 'use server';
 
-import { callEndpoint } from '@/services/callEndpoint';
-import { optimizeImages } from '@/services/optimizeImages';
+import { callEndpoint } from '@/fetch';
+import { optimizeImages } from '@/lib/optimize-images';
 import { ROUTES } from '@/utils/routes';
 import {
   type DeleteImageRequest,

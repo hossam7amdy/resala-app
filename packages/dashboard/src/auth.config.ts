@@ -4,9 +4,10 @@ import { jwtDecode } from 'jwt-decode';
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 
+import type { AuthUser } from '../next-auth';
 import { PROTECTED_ROUTES, ROUTES } from './utils/routes';
 
-export const refreshToken = async (refreshToken: string) => {
+export const refreshToken = async (refreshToken: string): Promise<RefreshTokenResponse> => {
   const baseURL = process.env.API_HOST;
 
   const body: RefreshTokenRequest['body'] = { token: refreshToken };
@@ -26,20 +27,6 @@ export const refreshToken = async (refreshToken: string) => {
   return data as RefreshTokenResponse;
 };
 
-export const isValidToken = (token: string = '') => {
-  if (!token) return false;
-
-  const jwtExpireTimestamp = jwtDecode(token).exp ?? 0;
-
-  const jwtExpireDateTime = new Date(jwtExpireTimestamp * 1000);
-
-  if (jwtExpireDateTime < new Date()) {
-    return false;
-  }
-
-  return true;
-};
-
 export const authConfig = {
   pages: {
     signIn: ROUTES.LOGIN,
@@ -56,12 +43,6 @@ export const authConfig = {
       requestHeaders.set('x-pathname', pathname);
 
       const isLoggedIn = !!auth?.user;
-
-      const isValid = isValidToken(auth?.accessToken);
-
-      if (!isValid && isLoggedIn) {
-        return false;
-      }
 
       const isOnDashboard = PROTECTED_ROUTES.some(route => nextUrl.pathname.startsWith(route));
 
@@ -83,27 +64,32 @@ export const authConfig = {
       });
     },
     jwt: async ({ token, user }) => {
-      const isValid = isValidToken(token.accessToken as string);
-      if (isValid) return { ...token, ...user };
+      if (user) {
+        const { accessToken, refreshToken, ...userProps } = user;
 
-      try {
-        const { data } = await refreshToken(token.refreshToken as string);
+        token.user = userProps as AuthUser;
 
-        return { ...token, ...user, ...data };
-      } catch (e) {
-        return {};
+        token.accessToken = accessToken;
+        token.refreshToken = refreshToken;
+        token.expiresAt = jwtDecode(accessToken).exp ?? 0;
+      } else if (Date.now() / 1000 >= (jwtDecode(token.accessToken)?.exp ?? 0)) {
+        try {
+          if (!token.refreshToken) throw new Error('Missing refresh token');
+
+          const { data } = await refreshToken(token.refreshToken);
+
+          token.accessToken = data.accessToken;
+          token.refreshToken = data.refreshToken;
+          token.expiresAt = jwtDecode(data.accessToken).exp ?? 0;
+        } catch (e) {
+          token.error = 'RefreshTokenError';
+        }
       }
+      return token;
     },
-    // @ts-expect-error - This is a valid callback
+    // @ts-expect-error `token` is defined in `jwt` callback
     session: ({ session, token }) => {
-      const isValid = isValidToken(token.accessToken);
-      if (!isValid) return { expires: new Date(Date.now() - 3600).toISOString() };
-
-      session.user = token.user;
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      session.expires = token.exp.toString();
-      return session;
+      return { ...session, ...token };
     },
   },
   providers: [], // Add providers with an empty array for now

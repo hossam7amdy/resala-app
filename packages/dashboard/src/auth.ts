@@ -4,17 +4,22 @@ import NextAuth from 'next-auth';
 import credentials from 'next-auth/providers/credentials';
 
 import { authConfig } from './auth.config';
-import { callEndpoint } from './services/callEndpoint';
+import { callEndpoint } from './fetch';
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     credentials({
       credentials: {
-        sign: { type: 'text' },
-        password: { type: 'password' },
+        sign: {
+          label: 'Sign',
+          type: 'text',
+        },
+        password: {
+          label: 'Password',
+          type: 'password',
+        },
       },
-      // @ts-expect-error - We don't need to define the types for this function
       authorize: async credentials => {
         try {
           const { data } = await callEndpoint<LoginRequest, LoginResponse>(ENDPOINT_CONFIGS.login, {
@@ -25,7 +30,12 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             throw new Error('You are not authorized to access this page');
           }
 
-          return data;
+          return {
+            ...data.user,
+            id: data.user.id.toString(),
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          };
         } catch (e) {
           return null;
         }
