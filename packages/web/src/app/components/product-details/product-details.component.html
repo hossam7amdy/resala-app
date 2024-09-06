@@ -4,8 +4,8 @@
     <div class="row img-product">
       <div class="col-sm-12 col-md-8 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
-          <ng-container *ngFor="let product of productStock; let j = index">
-            <ng-container *ngFor="let image of product.images">
+          <ng-container *ngFor="let product of productStock">
+            <ng-container *ngFor="let image of product.images; let j = index">
               <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div class="main-img p-3">

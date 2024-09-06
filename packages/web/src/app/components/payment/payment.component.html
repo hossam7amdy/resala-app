@@ -15,7 +15,7 @@
             type="radio"
             name="address"
             id="method"
-            [(ngModel)]="paymentSelected"
+            [(ngModel)]="addressId"
             value="{{ userAddress.id }}"
             formControlName="address"
             (change)="selectedAddressMethod(userAddress.id)"
@@ -26,7 +26,9 @@
         </div>
         <fieldset class="" [disabled]="i != editIndex">
           <div class="row">
-            <div class="mb-3 col-3">
+            <!-- col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 -->
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="first-name" class="form-label">First Name</label>
               <input
                 type="text"
@@ -38,7 +40,7 @@
               />
             </div>
 
-            <div class="mb-3 col-3">
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="last-name" class="form-label">Last Name</label>
               <input
                 type="text"
@@ -50,7 +52,7 @@
               />
             </div>
 
-            <div class="mb-3 col-3">
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="phone" class="form-label">Contact Number</label>
               <input
                 type="text"
@@ -62,7 +64,7 @@
               />
             </div>
 
-            <div *ngIf="i != editIndex" class="mb-3 col-3">
+            <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="country" class="form-label">Country</label>
               <input
                 type="text"
@@ -74,7 +76,7 @@
               />
             </div>
 
-            <div *ngIf="i == editIndex" class="mb-3 col-3">
+            <div *ngIf="i == editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="state" class="form-label">Country</label>
               <select
                 #selectedValue
@@ -104,10 +106,10 @@
                 </p>
               </div>
             </div>
-          </div>
+          
 
-          <div class="row">
-            <div *ngIf="i != editIndex" class="mb-3 col-3">
+          
+            <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="state" class="form-label">State</label>
               <input
                 type="text"
@@ -119,7 +121,7 @@
               />
             </div>
 
-            <div *ngIf="i != editIndex" class="mb-3 col-3">
+            <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="city" class="form-label">City</label>
               <input
                 type="text"
@@ -130,7 +132,7 @@
                 name="city"
               />
             </div>
-            <div *ngIf="i == editIndex" class="mb-3 col-3">
+            <div *ngIf="i == editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="city" class="form-label">City</label>
               <select class="form-select" id="state" name="city" formControlName="city">
                 <option selected>{{ userAddress.city }}</option>
@@ -147,7 +149,7 @@
               </div>
             </div>
 
-            <div class="mb-3 col-3">
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="street" class="form-label">Street</label>
               <input
                 type="text"
@@ -159,7 +161,7 @@
               />
             </div>
 
-            <div class="mb-3 col-3">
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="building" class="form-label">Building</label>
               <input
                 type="text"
@@ -170,9 +172,8 @@
                 name="building"
               />
             </div>
-          </div>
-          <div class="row">
-            <div class="mb-3 col-6">
+          
+            <div class=" col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="floor" class="form-label">Floor</label>
               <input
                 type="text"
@@ -184,7 +185,7 @@
               />
             </div>
 
-            <div class="mb-3 col-6">
+            <div class="mb-3 col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <label for="address-details" class="form-label">Address Details</label>
               <input
                 type="text"
@@ -195,8 +196,9 @@
                 name="address"
               />
             </div>
-          </div>
-        </fieldset>
+          
+        </div>
+      </fieldset>
 
         <div class="d-grid gap-2 d-md-block">
           <button *ngIf="getUserAddress.length < 1" class="btn btn-primary" type="button">
@@ -216,10 +218,14 @@
     </div>
   </form>
 </section>
+<!--End User Address's Form-->
 
+
+
+<!--Start Register New Address User Form-->
 <section
   *ngIf="getUserAddress.length == 0 && isRegisterd == false"
-  class="w-50 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
+  class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step One ...</h1>
   <h3 class="h3 mt-0">Information Delivery</h3>
@@ -324,12 +330,12 @@
       </div>
     </div>
 
-    <div class="form-item col-3">
+    <div class="form-item col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <label for="building" class="form-label">Building</label>
       <input type="text" class="form-control" id="building" formControlName="building" />
     </div>
 
-    <div class="form-item col-3">
+    <div class="form-item col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <label for="floor" class="form-label">Floor</label>
       <input type="number" class="form-control" id="floor" formControlName="floor" />
       <div
@@ -348,7 +354,7 @@
     <div class="col-12">
       <button
         [disabled]="addressForm.invalid"
-        (click)="[handleForm(addressForm, btn), isRegisterdFun()]"
+        (click)="handleForm(addressForm, btn)"
         #btn
         type="submit"
         class="submit mt-3"
@@ -363,10 +369,15 @@
     </div>
   </form>
 </section>
+<!--End Register New Address User Form-->
+
+
+
+
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
 <section
-  *ngIf="addressId != 0  || isRegisterd"
+  *ngIf="isRegisterd"
   class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step Two ...</h1>
@@ -403,7 +414,7 @@
         formControlName="note"
       />
     </div>
-    [disabled]="payForm.invalid"
+    <!-- [disabled]="payForm.invalid" -->
     <div class="pay-btn col-12">
       <button
         

@@ -63,3 +63,29 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+/*Media Query*/
+
+@media (max-width:500px) {
+  .w-75{
+    width: 90% !important;
+  }
+}
+
+@media (max-width:1200px) {
+  .w-25{
+    width: 50% !important;
+  }
+}
+
+@media (max-width:800px) {
+  .w-25{
+    width: 75% !important;
+  }
+}
+
+@media (max-width:500px) {
+  .w-25{
+    width: 90% !important;
+  }
+}

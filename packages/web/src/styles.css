@@ -94,6 +94,16 @@ body {
   }
 }
 
+@media (max-width: 450px) {
+  .h1 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    font-size: 20px;
+    
+  }
+}
+
 .h2 {
   color: #016373;
   font-weight: bold;
