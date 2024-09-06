@@ -1,6 +1,7 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
+import { httpClient } from '@/lib/http-client';
 import { ROUTES } from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
@@ -14,8 +15,7 @@ import type {
 } from '@resala/shared';
 import { AuthError } from 'next-auth';
 
-import { callEndpoint } from '../services/callEndpoint';
-import { deleteCookie, setCookie } from '../utils/cookies';
+import { callEndpoint } from '../fetch';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
@@ -47,13 +47,16 @@ export const logout = async () => {
 };
 
 export const verifyEmail = async ({ token }: { token: string }) => {
-  setCookie('jwt-token', { token });
+  const { method, url } = ENDPOINT_CONFIGS.verifyEmail;
 
-  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
-    ENDPOINT_CONFIGS.verifyEmail
-  );
-
-  deleteCookie('jwt-token');
+  const response = await httpClient<VerifyEmailRequest, VerifyEmailResponse>({
+    url,
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response;
 };
@@ -70,16 +73,17 @@ export const resetPassword = async ({
   newPassword,
   confirmNewPassword,
 }: ResetPasswordRequest['body'] & { token: string }) => {
-  setCookie('jwt-token', { token });
+  const { method, url } = ENDPOINT_CONFIGS.resetPassword;
 
-  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
-    ENDPOINT_CONFIGS.resetPassword,
-    {
-      body: { newPassword, confirmNewPassword },
-    }
-  );
-
-  deleteCookie('jwt-token');
+  const response = await httpClient<ResetPasswordRequest, ResetPasswordResponse>({
+    url,
+    method,
+    data: { newPassword, confirmNewPassword },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response;
 };
