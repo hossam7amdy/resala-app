@@ -1,5 +1,4 @@
-import { SideNav } from '@/components';
-import { Main, Sider } from '@/components';
+import { Header, Main, Sider } from '@/components/layout';
 import { Layout as AntLayout } from 'antd';
 import React from 'react';
 
@@ -8,10 +7,9 @@ interface LayoutProps {
 }
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <AntLayout hasSider>
-      <Sider>
-        <SideNav />
-      </Sider>
+    <AntLayout>
+      <Header />
+      <Sider />
       <Main>{children}</Main>
     </AntLayout>
   );
