@@ -190,3 +190,22 @@ body {
 .currency {
   color: #016373;
 }
+
+
+.custome-btn {
+  padding: 10px 0;
+  color: #fff;
+  font-weight: 500;
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  transition: all 0.3s ease-in-out;
+}
+
+.custome-btn:hover,
+.custome-btn:active {
+  padding: 10px 0;
+  color: #016373;
+  font-weight: 500;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}

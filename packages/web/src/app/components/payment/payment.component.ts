@@ -13,7 +13,7 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
@@ -26,17 +26,18 @@ export class PaymentComponent implements OnInit {
     private _CartService: CartService,
     private _AuthService:AuthService
   ) {}
-  userLoginId!:number;
+  userLoginId:number=0;
   isEdit: boolean = false;
   editIndex: any;
   isSelectedAddress: boolean = false;
   isRegisterd: boolean = false;
-
+  addNew:boolean = false;
+  firstRegister:boolean=false;
   errMsg: string = '';
   successMsg: string = '';
   isLoading: boolean = false;
   getUserAddress: any = [];
-  addressId: number = 1;
+  addressId: number = 0;
   selectPayMethod: string = '';
   note: string = '';
 
@@ -57,13 +58,18 @@ export class PaymentComponent implements OnInit {
   ngOnInit(): void {
     this._AuthService.decodeUser();
     this.userLoginId = this._AuthService.userInfo.id;
+    
     console.log('user info',this.userLoginId);
+    console.log(this._AuthService.userInfo, typeof this.userLoginId);
     this.addressForm.patchValue({userId:this.userLoginId});
     this._PaymentServices.getListAddressUser(this.userLoginId).subscribe({
       next: response => {
         this.getUserAddress = response.data;
+        if(this.getUserAddress.length == 0){
+          this.firstRegister = true;
+        }
         console.log(response);
-        this.addressId = this.getUserAddress[0]?.id;
+       
         console.log('user address id', this.getUserAddress);
       },
       error: err => {
@@ -84,14 +90,20 @@ export class PaymentComponent implements OnInit {
     this.addressId = value;
     this.isSelectedAddress = true;
     this.isRegisterd = true;
+    this.addNew = false;
     console.log('address id', this.addressId);
   }
-
-  editAddressForm(index: any): void {
-    this.isEdit = true;
-    this.editIndex = index;
+  addNewAddressFun():void{
+    this.addNew = true;
+    // window.location.reload();
   }
 
+  
+
+
+
+  
+  
   addressForm: FormGroup = new FormGroup({
 
     userId: new FormControl('',[Validators.required]),
@@ -125,7 +137,7 @@ export class PaymentComponent implements OnInit {
 
   userAddresses: FormGroup = new FormGroup({
 
- 
+    userId: new FormControl('',[Validators.required]),
     state: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     street: new FormControl('', [Validators.required]),
@@ -151,6 +163,7 @@ export class PaymentComponent implements OnInit {
     building: new FormControl(''), //optional
     floor: new FormControl('', [Validators.pattern('^[1-9][0-9]?$'), Validators.required]),
     address: new FormControl(''), //optional
+    addressId: new FormControl(''), //optional
   });
 
   onSelected(value: string): void {
@@ -182,30 +195,84 @@ export class PaymentComponent implements OnInit {
           if (response.success == true) {
             // this.successMsg = 'Registration successfuly';
             this.addressId = response.data.id;
-            this._Toaster.success('Registration successfuly');
+            this._Toaster.success('Save Your Address successfuly');
             this.isLoading = false;
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
             this.isRegisterd = true;
+            this.addNew= false;
+            this.firstRegister = false;
             console.log('response register',response);
           }
         },
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
-          console.log('error register',err);
+          console.log('Save Address Error',err);
           this.isLoading = false;
         },
       });
     }
   }
-
+  editAddressForm(index: any): void {
+    this.isEdit = true;
+    this.editIndex = index;
+    let userNumberId = Number(this.userLoginId);
+    console.log(typeof userNumberId)
+    this.userAddresses.patchValue({userId:userNumberId});
+    
+  }
  
+  updateAddress(userAddressId:number,userAddresses:FormGroup,element:HTMLButtonElement):void{
+    this.isLoading = true;
+    this._Renderer2.setAttribute(element, 'disabled', 'true');
+    const userData = this.userAddresses.value;
+    if (userAddresses.valid){
+      console.log('user address edits',this.userAddresses.value,userAddressId);
+    
+    this._PaymentServices.updateUserAddress(userAddressId, userData).subscribe({
+      next:(response)=>{
+        
+        console.log('request true user address edits',this.userAddresses.value,userAddressId);
+        this._Toaster.success('Updated Your Address successfuly');
+        this.isEdit = false;
+        console.log('after edit', response)
+        this._Renderer2.setAttribute(element, 'disabled', 'true');
+        
+      },error:(err)=>{
+        console.log(err);
+        this._Toaster.error(this.errMsg);
+        console.log('request false user address edits',this.userAddresses.value,userAddressId);
+      }
+    })
+    this.isLoading = false;
+    
+    }
+  }
   
   // textTimer(txt:string): void {
   //   setTimeout(() => {
   //     txt;
   //   }, 3000);
   // }
+  removeItem(addressId:number,element:HTMLElement):void{
+    this.isLoading = true;
+    this._Renderer2.setAttribute(element, 'disabled', 'true');
+    this._PaymentServices.deleteUserAddress(this.userLoginId,addressId).subscribe({
+      next:(response)=>{
+        this.getUserAddress = response.data;
+        this._Renderer2.removeAttribute(element, 'disabled');
+        this._Toaster.success('Removed Your Address Successfuly');
+        window.location.reload();
+        this.isRegisterd = false;
+      },error:(err)=>{
+        this._Toaster.info('Your Item Not Removed');
+        console.log(err);
+        
+      }
+    })
+    this.isLoading = false;
+  }
+
 
   paymentSelectedMethod(event: any) {
     this.paymentSelected = event;
