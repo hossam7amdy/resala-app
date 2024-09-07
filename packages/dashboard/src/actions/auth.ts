@@ -15,7 +15,7 @@ import type {
 } from '@resala/shared';
 import { AuthError } from 'next-auth';
 
-import { callEndpoint } from '../fetch';
+import { APIError, callEndpoint } from '../fetch';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
@@ -27,15 +27,9 @@ export const login = async (payload: LoginRequest['body']) => {
     if (error instanceof AuthError) {
       switch (error?.type) {
         case 'CredentialsSignin':
-          return {
-            success: false,
-            message: 'Invalid phone/email or password',
-          };
+          throw new APIError(400, 'Invalid email or password');
         default:
-          return {
-            success: false,
-            message: 'An error occurred while logging in',
-          };
+          throw new APIError(500, error.message);
       }
     }
     throw error;
@@ -86,4 +80,11 @@ export const resetPassword = async ({
   });
 
   return response;
+};
+
+export const resendVerificationEmail = async (email: string) => {
+  return await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+    ENDPOINT_CONFIGS.resendEmailVerification,
+    { body: { email } }
+  );
 };

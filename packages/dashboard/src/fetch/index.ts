@@ -3,11 +3,13 @@ import { httpClient } from '@/lib/http-client';
 import { type DefaultResponseBody, type EndpointConfig, withParams } from '@resala/shared';
 import type { AxiosRequestConfig } from 'axios';
 
-export class ApiError extends Error {
+export class APIError extends Error {
   public status: number;
+  public success: boolean;
 
   constructor(status: number, msg: string) {
     super(msg);
+    this.success = false;
     this.status = status;
   }
 }

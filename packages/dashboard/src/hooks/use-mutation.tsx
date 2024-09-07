@@ -1,12 +1,12 @@
 'use client';
 
 import { logout } from '@/actions/auth';
-import type { ApiError } from '@/fetch';
+import type { APIError } from '@/fetch';
 import { useCallback, useState } from 'react';
 
 type MutationOptions<Data, Variables> = {
   mutationFn: (variables: Variables) => Promise<Data>;
-  onError?: (error: ApiError) => void;
+  onError?: (error: APIError) => void;
   onSuccess?: (data: Data, variables: Variables) => void;
 };
 
@@ -14,7 +14,7 @@ type MutationResult<Data, Variables> = {
   mutate: (variables: Variables) => Promise<void>;
   isLoading: boolean;
   data?: Data | null;
-  error?: ApiError | null;
+  error?: APIError | null;
 };
 
 export const useMutation = <Data, Variables>({
@@ -24,7 +24,7 @@ export const useMutation = <Data, Variables>({
 }: MutationOptions<Data, Variables>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<Data | null>(null);
-  const [error, setError] = useState<ApiError | null>(null);
+  const [error, setError] = useState<APIError | null>(null);
 
   const mutate = useCallback(
     async (variables: Variables) => {
@@ -40,7 +40,7 @@ export const useMutation = <Data, Variables>({
         setData(result);
         onSuccess(result, variables);
       } catch (e) {
-        const error = e as ApiError;
+        const error = e as APIError;
 
         if (error.status === 401) {
           await logout();
