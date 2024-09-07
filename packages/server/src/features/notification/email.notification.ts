@@ -7,8 +7,8 @@ export class EmailNotification implements INotification {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      secure: true,
+      host: 'live.smtp.mailtrap.io',
+      port: 587,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
@@ -18,7 +18,7 @@ export class EmailNotification implements INotification {
 
   async send(to: string | string[], subject: string, body: string) {
     const mailOptions = {
-      from: process.env.MAIL_USER,
+      from: 'noreply@demomailtrap.com',
       to,
       subject,
       html: body,
