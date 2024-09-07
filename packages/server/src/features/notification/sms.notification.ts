@@ -4,9 +4,11 @@ import type { INotification } from './notification.interface.js';
 
 export class SmsNotificationService implements INotification {
   private readonly twilio: Twilio.Twilio;
+  private readonly phoneNumber: string;
 
   constructor() {
     this.twilio = new Twilio.Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    this.phoneNumber = process.env.TWILIO_PHONE_NUMBER;
   }
 
   async send(to: string | string[], _: string, body: string) {
@@ -21,9 +23,9 @@ export class SmsNotificationService implements INotification {
     await Promise.all(
       to.map(phone =>
         this.twilio.messages.create({
-          body,
-          from: process.env.TWILIO_PHONE_NUMBER,
+          from: this.phoneNumber,
           to: phone,
+          body,
         })
       )
     );
@@ -31,9 +33,9 @@ export class SmsNotificationService implements INotification {
 
   async _sendSingle(to: string, body: string) {
     await this.twilio.messages.create({
-      body,
-      from: process.env.TWILIO_PHONE_NUMBER,
+      from: this.phoneNumber,
       to,
+      body,
     });
   }
 }
