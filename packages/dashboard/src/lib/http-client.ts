@@ -1,4 +1,4 @@
-import { ApiError } from '@/fetch';
+import { APIError } from '@/fetch';
 import axios from 'axios';
 import type { AxiosError } from 'axios';
 
@@ -10,8 +10,9 @@ httpClient.interceptors.response.use(
   response => response.data,
   async (error: AxiosError<{ message: string }>) => {
     if (error.response?.data) {
-      return Promise.reject(new ApiError(error.response.status, error.response.data.message));
+      console.error(error.response.data);
+      return Promise.reject(new APIError(error.response.status, error.response.data.message));
     }
-    return Promise.reject(new ApiError(error.status ?? 500, error.message));
+    return Promise.reject(new APIError(error.status ?? 500, error.message));
   }
 );
