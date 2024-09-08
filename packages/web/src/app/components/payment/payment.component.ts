@@ -4,6 +4,7 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -24,7 +25,8 @@ export class PaymentComponent implements OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _CartService: CartService,
-    private _AuthService:AuthService
+    private _AuthService:AuthService,
+    private spinner:NgxSpinnerService
   ) {}
   userLoginId:number=0;
   isEdit: boolean = false;
@@ -56,6 +58,7 @@ export class PaymentComponent implements OnInit {
   paymentSelected: string = '';
 
   ngOnInit(): void {
+    this.spinner.show()
     this._AuthService.decodeUser();
     this.userLoginId = this._AuthService.userInfo.id;
     
@@ -84,6 +87,7 @@ export class PaymentComponent implements OnInit {
         console.log(this.allCountries);
       },
     });
+    this.spinner.hide();
   }
 
   selectedAddressMethod(value: number): void {

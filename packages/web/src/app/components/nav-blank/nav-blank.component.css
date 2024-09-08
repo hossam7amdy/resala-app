@@ -117,7 +117,7 @@ form .icon-search {
   background-color: #fbb935;
   top: 0;
   left: 25px;
-  z-index: 9999;
+  z-index: 99;
   text-align: center;
   line-height: 1.9;
   font-weight: bolder;
