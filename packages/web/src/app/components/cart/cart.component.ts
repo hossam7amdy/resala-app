@@ -4,6 +4,7 @@ import  { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import  { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import  { ToastrService } from 'ngx-toastr';
 import  { CartService } from 'src/app/core/services/cart.service';
 
@@ -26,10 +27,12 @@ export class CartComponent implements OnInit {
     private _CartService: CartService,
     private _Renderer: Renderer2,
     private _toaster: ToastrService,
-    private _Router: Router
+    private _Router: Router,
+    private spinner:NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
@@ -40,6 +43,7 @@ export class CartComponent implements OnInit {
         console.log(err);
       },
     });
+    this.spinner.hide();
   }
 
   // Quantity Fun

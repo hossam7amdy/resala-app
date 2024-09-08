@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
@@ -23,6 +24,7 @@ export class ProductsComponent implements  OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
+    private spinner:NgxSpinnerService
 
     
 
@@ -39,8 +41,10 @@ export class ProductsComponent implements  OnInit {
     totalItems:number=0;
 
   ngOnInit(): void {
+    this.spinner.show()
     this.route.paramMap.subscribe(params =>(this.categoryId = params.get('category-id')));
     this.allCategoryProducts(this.categoryId);
+    this.spinner.hide()
   }
 
 
