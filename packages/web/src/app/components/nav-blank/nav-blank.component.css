@@ -19,13 +19,15 @@ nav .logo {
   height: 53.53px;
 }
 
+
 /* @media (min-width: 1200px)  */
 .navbar-expand-xl .navbar-nav .dropdown-menu {
   position: absolute;
   border: none !important;
   min-width: 300px !important;
   border-radius: 5px;
-  
+  overflow: auto;
+  max-height: 300px;
   /* margin-top: 10px; */
  
 }
@@ -92,7 +94,11 @@ form .icon-search {
   border-radius: 5px;
   outline: none;
 }
-
+@media (max-width: 1300px) {
+  .search{
+    width: 250px;
+  }
+}
 .search:active,
 .search:focus {
   outline: none;
@@ -111,7 +117,7 @@ form .icon-search {
   background-color: #fbb935;
   top: 0;
   left: 25px;
-  z-index: 9999;
+  z-index: 99;
   text-align: center;
   line-height: 1.9;
   font-weight: bolder;
@@ -139,4 +145,11 @@ edit on bootstrap classes
 
 .nav-link {
   color: #fff;
+}
+@media (max-width:1300px) {
+  .nav-link,
+  .nav-link span{
+    font-size: 14px;
+    
+  }
 }

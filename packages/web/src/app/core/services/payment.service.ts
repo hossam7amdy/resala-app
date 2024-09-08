@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Query } from '@angular/core';
 import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 
@@ -30,24 +30,40 @@ export class PaymentService {
     );
   }
 
-  registerUserAddress(userAddress: any , id:string): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS.createAddress);
-    return this._HttpClient.post(this.baseURL + url, 
-      {
-        userAddress,
-        id
-      }, 
+  registerUserAddress(userAddress: any): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createAddress]);
+    console.log(userAddress.userId);
+    return this._HttpClient.post(this.baseURL + url, userAddress, 
       {
       headers: this.myToken,
       }
   );
   }
 
-  getListAddressUser(id:string): Observable<any> {
+  getListAddressUser(id:any): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress,{userId:id});
     return this._HttpClient.get(this.baseURL + url, {
       headers: this.myToken,
     });
+  }
+
+  deleteUserAddress(userId:any , addressId:any ):Observable<any>{
+   const withParamsConfig :any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress],addressId=addressId)
+   const {url} = withQueryParams(withParamsConfig,{userId:userId})
+    return this._HttpClient.delete(this.baseURL + url,
+      {
+        headers:this.myToken
+      })
+  }
+
+  updateUserAddress(addressId:any, userAddress:object):Observable<any>{
+    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.updateAddress],addressId+'')
+    return this._HttpClient.put(this.baseURL+url,userAddress
+      ,
+      {
+        headers:this.myToken
+      }
+    )
   }
 
   userOrder(userAddressId: number, payInfo: string, note: string): Observable<any> {
