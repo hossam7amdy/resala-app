@@ -164,9 +164,9 @@ export const withParams = (endpoint: EndpointConfig, ...params: string[]): Endpo
  */
 export const withQueryParams = (
   endpoint: EndpointConfig,
-  query: Record<string, string>
+  query: Record<string, string | number>
 ): EndpointConfig => {
-  const url = endpoint.url.concat('?', new URLSearchParams(query).toString());
+  const url = endpoint.url.concat('?', new URLSearchParams(query.toString()).toString());
   return {
     url: url.toString(),
     method: endpoint.method,
