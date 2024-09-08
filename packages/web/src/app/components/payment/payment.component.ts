@@ -95,7 +95,7 @@ export class PaymentComponent implements OnInit {
   }
   addNewAddressFun():void{
     this.addNew = true;
-    // window.location.reload();
+    window.scrollTo(400,400)
   }
 
   
