@@ -117,7 +117,7 @@ export declare const withParams: (endpoint: EndpointConfig, ...params: string[])
  * withQueryParams(ENDPOINT_CONFIGS.listProducts, { page: '1', limit: '10' })
  * // returns { url: '/api/v1/products?page=1&limit=10', method: 'get' }
  */
-export declare const withQueryParams: (endpoint: EndpointConfig, query: Record<string, string>) => EndpointConfig;
+export declare const withQueryParams: (endpoint: EndpointConfig, query: Record<string, string | number>) => EndpointConfig;
 /**
  * Endpoint configuration for all the endpoints in the application.
  *
