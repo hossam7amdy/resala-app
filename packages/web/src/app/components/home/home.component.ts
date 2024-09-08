@@ -12,6 +12,7 @@ import { CategoriesService } from 'src/app/core/services/categories/categories.s
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 
@@ -29,7 +30,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _WishListService: WishListService,
     private _Toaster: ToastrService,
     private _Router: Router,
-    private _Renderer: Renderer2
+    private _Renderer: Renderer2,
+    private spinner:NgxSpinnerService
   ) {}
 
   // interfaces
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   currentProduct: any;
 
   ngOnInit(): void {
+    this.spinner.show();
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
@@ -68,6 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log('categories', response.data);
       },
     });
+    this.spinner.hide();
   }
 
   // overlay

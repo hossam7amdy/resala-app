@@ -22,9 +22,31 @@ section .overlay {
   width: 554.5px;
   height: 460px;
   z-index: 999999999;
-  left: 33%;
-  top: 150px;
+  margin: auto;
+  top: 38%;
   border-radius: 10px;
+}
+@media (max-width: 1199px){
+  .overlay .overlay-section{
+    width: 534.5px;
+    height: 440px;
+    
+  }
+}
+@media (max-width: 800px){
+  .overlay .overlay-section{
+    width: 464px;
+    height: 360px;
+    
+  
+  }
+}
+@media (max-width: 550px){
+  .overlay .overlay-section{
+    width: 263.3px;
+    height: 240px;
+    
+    }
 }
 
 .overlay .img-overlay {
@@ -34,6 +56,26 @@ section .overlay {
   height: 460px;
   border-radius: 0 10px 10px 0;
   cursor: pointer;
+}
+@media (max-width: 1199px){
+  .overlay .img-overlay{
+    width: 348px;
+    height: 440px;
+    
+  }
+}
+@media (max-width: 800px){
+  .overlay .img-overlay{
+    width: 258px;
+    height: 360px;
+    
+  }
+}
+@media (max-width: 550px){
+  .overlay .img-overlay{
+    width: 172px;
+    height: 240px;
+    }
 }
 
 .overlay-section .close {
@@ -47,6 +89,31 @@ section .overlay {
   width: auto;
   padding: 0;
 }
+@media (max-width: 1199px){
+  .overlay-section .close{
+    right: -15px;
+    top: -19px;
+    font-size: 25px;
+    
+  }
+}
+@media (max-width: 800px){
+  .overlay-section .close{
+    right: 30px;
+    top: -20px;
+    font-size: 25px;
+    
+  }
+}
+
+@media (max-width: 550px){
+  .overlay-section .close{
+    right: -18px;
+    
+    }
+}
+
+
 
 .overlay-section .left-overlay {
   background-color: #fff;
@@ -56,41 +123,72 @@ section .overlay {
   cursor: pointer;
 }
 
-.overlay-section .left-overlay h3 {
+.overlay-section .left-overlay .mini-tilte {
   margin-top: 100px;
   margin-bottom: 0px;
 }
+@media (max-width: 800px){
+  .overlay-section .left-overlay .mini-tilte {
+  margin-top: 70px;
+  }
+  }
 
-.overlay-section .left-overlay h1 {
+  @media (max-width: 550px){
+    .overlay-section .left-overlay .mini-tilte {
+      margin-top: 50px;
+      font-size: 18px;
+      }
+  }
+.overlay-section .left-overlay .title {
   font-family: 'Oleo Script', system-ui;
   font-weight: 700;
   font-size: 50px;
   margin-bottom: 0px;
 }
 
-.overlay-section .left-overlay h1:nth-of-type(2) {
+.overlay-section .left-overlay .title:nth-of-type(2) {
   color: #fbb935;
 }
-
+@media (max-width: 800px){
+  .overlay-section .left-overlay .title{
+  font-size: 40px;
+  }
+  }
+  @media (max-width: 550px){
+  .overlay-section .left-overlay .title{
+      font-size: 25px;
+      }
+  }
 .overlay .img-overlay img {
   width: 100%;
   height: 100%;
   border-radius: 0 10px 10px 0;
   box-shadow: 0px 0px 10px #fff;
 }
+@media (max-width: 550px){
+  .overlay-section .left-overlay .p-title{
+    font-size: 10px;
+  }
+}
 
 /* Slider*/
 .custom-owl .row,
 .custom-owl .row .col-6 {
-  padding: 0 !important;
+  padding: 0 ;
 }
 
 .half-slide {
   background-color: #14aec602;
+  height: 100vh;
 }
-
+@media (max-width:900px) {
+  .half-slide{
+    height: auto;
+  }
+}
 .right-content {
   text-align: center;
+  padding: 0 20px !important;
 }
 
 .right-content .title-content {
@@ -116,6 +214,12 @@ section .overlay {
   .owl-theme .owl-dots .owl-dot.active span,
   .owl-theme .owl-dots .owl-dot:hover span {
     background-color: #fbb935 !important;
+  }
+}
+
+@media (max-width:550px) {
+  .hyper-title{
+    font-size: 30px;
   }
 }
 
@@ -157,7 +261,9 @@ section .overlay {
 .trends-slide a .favourit-icon {
   position: absolute;
   top: 2%;
-  right: 7%;
+  right: 2%;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .trends-slide a .favourit-icon::before {
@@ -168,10 +274,10 @@ section .overlay {
 
 .trends-slide a .shopping-icon {
   position: absolute;
-  bottom: 17%;
-  right: 7%;
+  bottom: 2%;
+  right: 2%;
   color: #fbb935;
-  font-size: 20px;
+  font-size: 25px;
   cursor: pointer;
 }
 
@@ -180,15 +286,16 @@ section .overlay {
 }
 
 .img-trend {
-  height: 700px;
+  /* height: 700px; */
   width: 30%;
   padding-left: 2px;
   padding-right: 2px;
 }
 @media (max-width: 576px) {
   .img-trend{
-    height: 300px;
-  width: 30%;
+    height: auto;
+    width: 20%;
+    
   }
 }
 
@@ -309,7 +416,7 @@ section .overlay {
 }
 
 .img-content .w-100 {
-  height: 300px !important;
+  height: auto !important;
 }
 
 .descrp {
