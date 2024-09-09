@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment.development';
 export class HomeProductsService {
   constructor(private _HttpClient: HttpClient) {}
 
-  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  // baseURL: string = `https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   //base url =
 
   // Products
