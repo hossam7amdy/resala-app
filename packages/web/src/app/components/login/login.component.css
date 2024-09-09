@@ -23,16 +23,16 @@ section p {
   color: #ccc;
 }
 
-.forget {
+.forgot {
   text-align: right;
   margin-top: 20px;
 }
-.forget p {
+.forgot p {
   display: inline;
   cursor: pointer;
   color: #016373;
 }
-.forget p:hover {
+.forgot p:hover {
   text-decoration: solid;
   color: #016473a1;
 }
