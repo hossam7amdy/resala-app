@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Query } from '@angular/core';
 import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
   constructor(private _HttpClient: HttpClient) {}
-  baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
   // countries API
@@ -33,7 +34,7 @@ export class PaymentService {
   registerUserAddress(userAddress: any): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createAddress]);
     console.log(userAddress.userId);
-    return this._HttpClient.post(this.baseURL + url, userAddress, 
+    return this._HttpClient.post(environment.BASE_URL + url, userAddress, 
       {
       headers: this.myToken,
       }
@@ -42,7 +43,7 @@ export class PaymentService {
 
   getListAddressUser(id:any): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress,{userId:id});
-    return this._HttpClient.get(this.baseURL + url, {
+    return this._HttpClient.get(environment.BASE_URL + url, {
       headers: this.myToken,
     });
   }
@@ -50,7 +51,7 @@ export class PaymentService {
   deleteUserAddress(userId:any , addressId:any ):Observable<any>{
    const withParamsConfig :any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress],addressId=addressId)
    const {url} = withQueryParams(withParamsConfig,{userId:userId})
-    return this._HttpClient.delete(this.baseURL + url,
+    return this._HttpClient.delete(environment.BASE_URL + url,
       {
         headers:this.myToken
       })
@@ -58,7 +59,7 @@ export class PaymentService {
 
   updateUserAddress(addressId:any, userAddress:object):Observable<any>{
     const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.updateAddress],addressId+'')
-    return this._HttpClient.put(this.baseURL+url,userAddress
+    return this._HttpClient.put(environment.BASE_URL+url,userAddress
       ,
       {
         headers:this.myToken
@@ -69,7 +70,7 @@ export class PaymentService {
   userOrder(userAddressId: number, payInfo: string, note: string): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createOrder]);
     return this._HttpClient.post(
-      this.baseURL + url,
+      environment.BASE_URL + url,
       {
         addressId: userAddressId,
         paymentMethod: payInfo,
