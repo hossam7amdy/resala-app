@@ -70,7 +70,11 @@
               "browserTarget": "freshcart:build:production"
             },
             "development": {
-              "browserTarget": "freshcart:build:development"
+              "browserTarget": "freshcart:build:development",
+              "ssl": false,
+              "sslKey": "ssl/server.key",
+              "sslCert": "ssl/server.crt"
+              
             }
           },
           "defaultConfiguration": "development"
