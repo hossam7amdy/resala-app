@@ -3,6 +3,7 @@ import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
@@ -17,13 +18,15 @@ import { CategoriesService } from 'src/app/core/services/categories/categories.s
   styleUrls: ['./nav-blank.component.css'],
 })
 export class NavBlankComponent implements OnInit {
+
   constructor(
     private _AuthService: AuthService,
     private _Router: Router,
     private _CartService: CartService,
     private _Categories:CategoriesService,
     private route:ActivatedRoute,
-    private _Renderer:Renderer2
+    private _Renderer:Renderer2,
+    private spinner:NgxSpinnerService
   
   ) {}
 
@@ -69,7 +72,12 @@ export class NavBlankComponent implements OnInit {
 
 
   
-
+  reloadPage(id:any):void{
+  this.spinner.show();
+    window.location.replace(`/products/${id}`)
+    this.spinner.hide();
+   
+  }
   
 
   signOut: boolean = this._AuthService.signOut;
