@@ -3,11 +3,14 @@
 import { callEndpoint } from '@/fetch';
 import { optimizeImages } from '@/lib/optimize-images';
 import { ROUTES } from '@/utils/routes';
-import {
-  type DeleteImageRequest,
-  type DeleteImageResponse,
-  ENDPOINT_CONFIGS,
+import type {
+  CreateImageResponse,
+  DeleteImageRequest,
+  DeleteImageResponse,
+  UpdateImageRequest,
+  UpdateImageResponse,
 } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
 const revalidateCache = (productId: string) => {
@@ -25,7 +28,10 @@ export const uploadImages = async (formData: FormData) => {
     formData.append('images', optimizedImage);
   });
 
-  const response = await callEndpoint(ENDPOINT_CONFIGS.addImages, { body: formData });
+  const response = await callEndpoint<{ body: FormData }, CreateImageResponse>(
+    ENDPOINT_CONFIGS.addImages,
+    { body: formData }
+  );
 
   revalidateCache(formData.get('productId') as string);
 
@@ -33,9 +39,10 @@ export const uploadImages = async (formData: FormData) => {
 };
 
 export const setDefaultImage = async (imageId: string, productId: string) => {
-  const response = await callEndpoint(ENDPOINT_CONFIGS.updateImage, {
-    params: { imageId: Number(imageId) },
-  });
+  const response = await callEndpoint<UpdateImageRequest, UpdateImageResponse>(
+    ENDPOINT_CONFIGS.updateImage,
+    { params: { imageId }, body: { isPrimary: true } }
+  );
 
   revalidateCache(productId);
 
