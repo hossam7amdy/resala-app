@@ -142,7 +142,8 @@ const withParams = (endpoint, ...params) => {
  * // returns { url: '/api/v1/products?page=1&limit=10', method: 'get' }
  */
 const withQueryParams = (endpoint, query) => {
-    const url = endpoint.url.concat('?', new URLSearchParams(query.toString()).toString());
+    const searchParams = new URLSearchParams(query);
+    const url = endpoint.url.concat('?', searchParams.toString());
     return {
         url: url.toString(),
         method: endpoint.method,
