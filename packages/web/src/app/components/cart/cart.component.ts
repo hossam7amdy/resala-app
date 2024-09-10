@@ -43,15 +43,19 @@ export class CartComponent implements OnInit {
         console.log(err);
       },
     });
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   // Quantity Fun
   plusCounterQuantity(): void {
+    this.spinner.show();
     this.counterQuantity++;
   }
 
   minCounterQuantity(): void {
+    
     if (this.counterQuantity > 1) {
       this.counterQuantity--;
     } else {
@@ -66,6 +70,7 @@ export class CartComponent implements OnInit {
     element1: HTMLButtonElement,
     element2: HTMLButtonElement
   ): void {
+    this.spinner.show();
     if (count > 0) {
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
@@ -88,10 +93,14 @@ export class CartComponent implements OnInit {
     } else {
       count = 1;
     }
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 500);
   }
 
   // Remove item
   removeItem(itemId: string, element: HTMLElement): void {
+    this.spinner.show();
     this._Renderer.setAttribute(element, 'disabled', 'true');
 
     this._CartService.removeCartItem(itemId).subscribe({
@@ -106,6 +115,10 @@ export class CartComponent implements OnInit {
         this._toaster.info('Your Item Not Removed');
       },
     });
+
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   // Delete Confirmation
@@ -120,6 +133,7 @@ export class CartComponent implements OnInit {
   }
   // Clear Cart
   clearAllItems(element: HTMLElement): void {
+    this.spinner.show();
     if (this.confirmDeleteAll == true) {
       this._Renderer.setAttribute(element, 'disabled', 'true');
       this._CartService.clearCart().subscribe({
@@ -133,5 +147,8 @@ export class CartComponent implements OnInit {
         },
       });
     }
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 }

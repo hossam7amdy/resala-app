@@ -40,16 +40,21 @@ export class FavoritesComponent implements OnInit {
       },
     });
 
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
   // remove favorite icone
   removeFavoriteIcon(productId: string): void {
+    
     this.productId = productId;
     console.log(this.productId);
+   
   }
 
   // delete my favorite product
   deletePoductInWishList(): void {
+    this.spinner.show();
     this._WishListService.deleteMyFavoriteProduct(this.productId).subscribe({
       next: response => {
         this._Toaster.success('Removed Successfully');
@@ -60,5 +65,9 @@ export class FavoritesComponent implements OnInit {
         console.log(err);
       },
     });
+
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 }
