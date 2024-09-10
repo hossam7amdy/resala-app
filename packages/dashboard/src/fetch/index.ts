@@ -1,50 +1,45 @@
 import { auth } from '@/auth';
-import { httpClient } from '@/lib/http-client';
-import { type DefaultResponseBody, type EndpointConfig, withParams } from '@resala/shared';
-import type { AxiosRequestConfig } from 'axios';
+import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
 
-export class APIError extends Error {
-  public status: number;
-  public success: boolean;
+const baseURL = process.env.API_HOST;
 
-  constructor(status: number, msg: string) {
-    super(msg);
-    this.success = false;
-    this.status = status;
-  }
-}
+type Request<T> = Omit<RequestInit, 'body'> &
+  T & {
+    params?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    body?: Record<string, unknown> | RequestInit['body'];
+  };
+type Response<T> = T & { statusCode: number };
 
 const isObject = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === 'object';
 };
 
-type Req =
-  | {
-      params?: Record<string, string | number>;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      body?: any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      query?: any;
-    }
-  | undefined;
-type Res = DefaultResponseBody;
+const isFormData = (value: unknown): value is FormData => {
+  return value instanceof FormData;
+};
 
-export const callEndpoint = async <Request extends Req, Response extends Res>(
+export const callEndpoint = async <Req, Res>(
   endpoint: EndpointConfig,
-  request?: Request
-): Promise<Response> => {
-  const params = isObject(request?.params) ? (Object.values(request.params) as string[]) : [];
-  const { url, method, auth: isProtected } = withParams(endpoint, ...params);
+  request?: Request<Req>
+): Promise<Response<Res>> => {
+  const { headers, params, query, body, ...requestInit } = request ?? {};
 
-  const config: AxiosRequestConfig = {
-    url,
-    method,
-    data: request?.body,
-    params: request?.query,
+  const paramsArr = isObject(params) ? (Object.values(params) as string[]) : [];
+  const withParamsConfig = withParams(endpoint, ...paramsArr);
+  const { method, url } = withQueryParams(withParamsConfig, query ?? {});
+
+  const response = await fetch(`${baseURL}${url}`, {
+    method: method.toUpperCase(),
     headers: {
-      Authorization: isProtected ? `Bearer ${(await auth())?.accessToken}` : undefined,
+      ...(isFormData(body) ? {} : { 'Content-Type': 'application/json' }),
+      Authorization: `Bearer ${(await auth())?.accessToken}`,
+      ...headers,
     },
-  };
+    body: isFormData(body) ? body : body ? JSON.stringify(body) : undefined,
+    ...requestInit,
+  });
 
-  return httpClient<Request, Response>(config);
+  const isJson = response.headers.get('content-type')?.includes('application/json');
+  return { ...(isJson ? await response.json() : {}), statusCode: response.status } as Response<Res>;
 };

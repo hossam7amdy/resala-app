@@ -15,7 +15,7 @@ export const EmailForm = () => {
     mutationFn: forgotPassword,
     onSuccess: data => {
       form.resetFields();
-      notification.success(data.message ?? 'Reset password link sent successfully');
+      notification.success(data?.message ?? 'Reset password link sent successfully');
       router.replace(ROUTES.LOGIN);
     },
     onError: error => {

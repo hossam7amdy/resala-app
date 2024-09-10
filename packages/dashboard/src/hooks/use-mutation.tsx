@@ -1,20 +1,22 @@
 'use client';
 
 import { logout } from '@/actions/auth';
-import type { APIError } from '@/fetch';
 import { useCallback, useState } from 'react';
 
+type Success<T> = ({ statusCode: number; success: boolean } & T) | void;
+type Error = { statusCode: number; success: boolean; message: string };
+
 type MutationOptions<Data, Variables> = {
-  mutationFn: (variables: Variables) => Promise<Data>;
-  onError?: (error: APIError) => void;
-  onSuccess?: (data: Data, variables: Variables) => void;
+  mutationFn: (variables: Variables) => Promise<Success<Data>>;
+  onSuccess?: (data: Success<Data>, variables: Variables) => void;
+  onError?: (error: Error) => void;
 };
 
 type MutationResult<Data, Variables> = {
   mutate: (variables: Variables) => Promise<void>;
   isLoading: boolean;
-  data?: Data | null;
-  error?: APIError | null;
+  data?: Success<Data>;
+  error?: Error;
 };
 
 export const useMutation = <Data, Variables>({
@@ -23,27 +25,31 @@ export const useMutation = <Data, Variables>({
   onSuccess = () => {},
 }: MutationOptions<Data, Variables>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<Data | null>(null);
-  const [error, setError] = useState<APIError | null>(null);
+  const [data, setData] = useState<Success<Data>>();
+  const [error, setError] = useState<Error>();
 
   const mutate = useCallback(
     async (variables: Variables) => {
       setIsLoading(true);
-      setData(null);
-      setError(null);
+      setData(undefined);
+      setError(undefined);
 
       try {
         const result = await mutationFn(variables);
 
-        console.log('result', result);
+        if (result instanceof Object && !result.success) {
+          throw result;
+        }
 
-        setData(result);
-        onSuccess(result, variables);
+        const successResult = (result ?? {}) as Success<Data>;
+
+        setData(successResult);
+        onSuccess(successResult, variables);
       } catch (e) {
-        const error = e as APIError;
+        const error = e as Error;
 
-        if (error.status === 401) {
-          await logout();
+        if (error.statusCode === 401) {
+          logout();
         }
 
         setError(error);
