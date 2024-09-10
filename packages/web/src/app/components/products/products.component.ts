@@ -30,7 +30,6 @@ export class ProductsComponent implements  OnInit {
 
   ){}
   
-
   allProductsCategory:any = [];
   titleCategory:string = '';
   categoryId!:any;  // '!' to add initial value Undefined to this property
@@ -41,22 +40,28 @@ export class ProductsComponent implements  OnInit {
     totalItems:number=0;
 
   ngOnInit(): void {
-    this.spinner.show()
+    this.spinner.show();  
+    
+    
     this.route.paramMap.subscribe(params =>(this.categoryId = params.get('category-id')));
+    console.log('category id', this.categoryId);
     this.allCategoryProducts(this.categoryId);
-    this.spinner.hide()
+
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
 
 
  
   allCategoryProducts(id:any):void{
-
+    
     this._Categories.getCategoryProducts(id).subscribe({
       next:(response)=>{
         this.allProductsCategory = response.data.products
         this.titleCategory = response.data.products[0].category.enName;
-        console.log('title',this.titleCategory);
+        console.log('title & categ id',this.titleCategory);
         console.log('category-products',this.allProductsCategory);
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
@@ -65,6 +70,7 @@ export class ProductsComponent implements  OnInit {
         console.log(err);
       }
     })
+    
   }
 
   //Add product in Wish list method

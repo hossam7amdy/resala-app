@@ -35,7 +35,7 @@
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li  *ngFor="let category of categoryList" >
-              <a routerLinkActive="active-link" [routerLink]="['/products/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/products/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
             </li>
             
           </ul>
