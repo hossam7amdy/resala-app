@@ -15,6 +15,8 @@ import type { ListUsersResponse, User } from '@resala/shared';
 import { Button, Flex, Space, Tag } from 'antd';
 import Link from 'next/link';
 
+import { ResendEmailVerificationButton } from './resend-email-verification-button';
+
 export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
@@ -28,8 +30,11 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
           width="10%"
           title="Verified"
           dataIndex="isEmailVerified"
-          render={isVerified => (
-            <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
+          render={(isVerified: boolean, user: User) => (
+            <Flex>
+              <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
+              {!isVerified && <ResendEmailVerificationButton email={user.email} />}
+            </Flex>
           )}
         />
         <TableColumn

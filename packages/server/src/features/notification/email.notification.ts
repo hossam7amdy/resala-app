@@ -18,7 +18,7 @@ export class EmailNotification implements INotification {
 
   async send(to: string | string[], subject: string, body: string) {
     const mailOptions = {
-      from: process.env.MAIL_USER,
+      from: 'noreply@resala.com',
       to,
       subject,
       html: body,

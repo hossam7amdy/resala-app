@@ -1,13 +1,14 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
-import { httpClient } from '@/lib/http-client';
 import { ROUTES } from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,
@@ -27,19 +28,19 @@ export const login = async (payload: LoginRequest['body']) => {
     if (error instanceof AuthError) {
       switch (error?.type) {
         case 'CredentialsSignin':
-          return {
-            success: false,
-            message: 'Invalid phone/email or password',
-          };
+          return { success: false, statusCode: 400, message: 'Invalid email or password' };
         default:
-          return {
-            success: false,
-            message: 'An error occurred while logging in',
-          };
+          return { success: false, statusCode: 400, message: error.message };
       }
     }
     throw error;
   }
+};
+
+export const refreshToken = async (refreshToken: string) => {
+  return await callEndpoint<RefreshTokenRequest, RefreshTokenResponse>(ENDPOINT_CONFIGS.refresh, {
+    body: { token: refreshToken },
+  });
 };
 
 export const logout = async () => {
@@ -47,16 +48,10 @@ export const logout = async () => {
 };
 
 export const verifyEmail = async ({ token }: { token: string }) => {
-  const { method, url } = ENDPOINT_CONFIGS.verifyEmail;
-
-  const response = await httpClient<VerifyEmailRequest, VerifyEmailResponse>({
-    url,
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+    ENDPOINT_CONFIGS.verifyEmail,
+    { body: {}, headers: { Authorization: `Bearer ${token}` } }
+  );
 
   return response;
 };
@@ -73,17 +68,20 @@ export const resetPassword = async ({
   newPassword,
   confirmNewPassword,
 }: ResetPasswordRequest['body'] & { token: string }) => {
-  const { method, url } = ENDPOINT_CONFIGS.resetPassword;
-
-  const response = await httpClient<ResetPasswordRequest, ResetPasswordResponse>({
-    url,
-    method,
-    data: { newPassword, confirmNewPassword },
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
+    ENDPOINT_CONFIGS.resetPassword,
+    {
+      body: { newPassword, confirmNewPassword },
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   return response;
+};
+
+export const resendVerificationEmail = async (email: string) => {
+  return await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+    ENDPOINT_CONFIGS.resendEmailVerification,
+    { body: { email } }
+  );
 };

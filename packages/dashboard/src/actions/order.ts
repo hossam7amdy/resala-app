@@ -3,20 +3,22 @@
 import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import type { DeleteOrderRequest, DeleteOrderResponse } from '@resala/shared';
+import type {
+  DeleteOrderRequest,
+  DeleteOrderResponse,
+  UpdateOrderRequest,
+  UpdateOrderResponse,
+} from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
 export const updateOrderStatus = async (
   id: string | number,
-  payload: {
-    paymentStatus: string;
-    orderStatus: string;
-  }
+  payload: UpdateOrderRequest['body']
 ) => {
-  const response = await callEndpoint(ENDPOINT_CONFIGS.updateOrderStatus, {
-    params: { orderId: Number(id) },
-    body: payload,
-  });
+  const response = await callEndpoint<UpdateOrderRequest, UpdateOrderResponse>(
+    ENDPOINT_CONFIGS.updateOrderStatus,
+    { params: { orderId: id.toString() }, body: payload }
+  );
 
   revalidatePath(ROUTES.ORDERS);
   return response;
