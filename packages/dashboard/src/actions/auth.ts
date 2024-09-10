@@ -1,13 +1,14 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
-import { httpClient } from '@/lib/http-client';
 import { ROUTES } from '@/utils/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,
@@ -15,7 +16,7 @@ import type {
 } from '@resala/shared';
 import { AuthError } from 'next-auth';
 
-import { APIError, callEndpoint } from '../fetch';
+import { callEndpoint } from '../fetch';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
@@ -27,13 +28,19 @@ export const login = async (payload: LoginRequest['body']) => {
     if (error instanceof AuthError) {
       switch (error?.type) {
         case 'CredentialsSignin':
-          throw new APIError(400, 'Invalid email or password');
+          return { success: false, statusCode: 400, message: 'Invalid email or password' };
         default:
-          throw new APIError(500, error.message);
+          return { success: false, statusCode: 400, message: error.message };
       }
     }
     throw error;
   }
+};
+
+export const refreshToken = async (refreshToken: string) => {
+  return await callEndpoint<RefreshTokenRequest, RefreshTokenResponse>(ENDPOINT_CONFIGS.refresh, {
+    body: { token: refreshToken },
+  });
 };
 
 export const logout = async () => {
@@ -41,16 +48,10 @@ export const logout = async () => {
 };
 
 export const verifyEmail = async ({ token }: { token: string }) => {
-  const { method, url } = ENDPOINT_CONFIGS.verifyEmail;
-
-  const response = await httpClient<VerifyEmailRequest, VerifyEmailResponse>({
-    url,
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+    ENDPOINT_CONFIGS.verifyEmail,
+    { body: {}, headers: { Authorization: `Bearer ${token}` } }
+  );
 
   return response;
 };
@@ -67,17 +68,13 @@ export const resetPassword = async ({
   newPassword,
   confirmNewPassword,
 }: ResetPasswordRequest['body'] & { token: string }) => {
-  const { method, url } = ENDPOINT_CONFIGS.resetPassword;
-
-  const response = await httpClient<ResetPasswordRequest, ResetPasswordResponse>({
-    url,
-    method,
-    data: { newPassword, confirmNewPassword },
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
+    ENDPOINT_CONFIGS.resetPassword,
+    {
+      body: { newPassword, confirmNewPassword },
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   return response;
 };

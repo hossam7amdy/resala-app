@@ -38,6 +38,6 @@ export class CategoryService {
   }
 
   async list(): Promise<ListCategoriesResponse['data']> {
-    return await this.db.category.findMany();
+    return await this.db.category.findMany({ orderBy: { createdAt: 'desc' } });
   }
 }

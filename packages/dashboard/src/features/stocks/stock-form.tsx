@@ -4,7 +4,7 @@ import { uploadImages } from '@/actions/image';
 import { createStock, updateStock } from '@/actions/stock';
 import { listImages } from '@/data/images';
 import { useMutation, useNotification } from '@/hooks';
-import type { Image } from '@resala/shared';
+import type { DefaultResponseBody, Image } from '@resala/shared';
 import { Button, Flex, Form, InputNumber, Typography } from 'antd';
 import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -68,7 +68,7 @@ export const StockForm: React.FC<StockFormProps> = ({
   const handleSubmit = async (values: FormValues) => {
     const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
 
-    const promiseAll: Promise<unknown>[] = [submit(values)];
+    const promiseAll: Promise<DefaultResponseBody & { statusCode: number }>[] = [submit(values)];
 
     const newFiles = fileList.filter(file => file.status === 'done' && !file.url);
 

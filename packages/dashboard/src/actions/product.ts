@@ -3,7 +3,12 @@
 import { callEndpoint } from '@/fetch';
 import { optimizeImages } from '@/lib/optimize-images';
 import { ROUTES } from '@/utils/routes';
-import type { DeleteProductRequest, DeleteProductResponse } from '@resala/shared';
+import type {
+  CreateProductResponse,
+  DeleteProductRequest,
+  DeleteProductResponse,
+  UpdateProductResponse,
+} from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
@@ -17,7 +22,10 @@ export const addProduct = async (formData: FormData) => {
     formData.append('image', optimizedImage[0]);
   }
 
-  const response = await callEndpoint(ENDPOINT_CONFIGS.createProduct, { body: formData });
+  const response = await callEndpoint<{ body: FormData }, CreateProductResponse>(
+    ENDPOINT_CONFIGS.createProduct,
+    { body: formData }
+  );
 
   revalidatePath(ROUTES.PRODUCTS);
   return response;
@@ -33,10 +41,10 @@ export const updateProduct = async (id: number | string, formData: FormData) => 
     formData.append('image', optimizedImage[0]);
   }
 
-  const response = await callEndpoint(ENDPOINT_CONFIGS.updateProduct, {
-    params: { productId: +id },
-    body: formData,
-  });
+  const response = await callEndpoint<{ body: FormData }, UpdateProductResponse>(
+    ENDPOINT_CONFIGS.updateProduct,
+    { params: { productId: +id }, body: formData }
+  );
 
   revalidatePath(ROUTES.PRODUCTS);
   return response;
