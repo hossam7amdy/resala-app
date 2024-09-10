@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
@@ -13,6 +13,18 @@ export class WishListService {
     
   ) {}
 
+ // refactor free API url 
+ private getHeaders() {
+  const headers = new HttpHeaders({
+    'ngrok-skip-browser-warning':  '69420',
+    'Authorization':`Bearer ${localStorage.getItem('etoken')}`
+    
+  });
+
+  return {headers};
+}
+
+  
   //base URL
   // baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
 
@@ -27,25 +39,19 @@ export class WishListService {
       {
         productId: productId,
       },
-      {
-        headers: this.myToken,
-      }
+      this.getHeaders()
     );
   }
 
   // get all favourits products
   getAllMyProducts(): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getUserWishlist]);
-    return this._HttpClient.get(environment.BASE_URL + url, {
-      headers: this.myToken,
-    });
+    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 
   //Delelte product from my favorite
   deleteMyFavoriteProduct(id: any): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.removeProductFromWishlist], id + '');
-    return this._HttpClient.delete(environment.BASE_URL + url, {
-      headers: this.myToken,
-    });
+    return this._HttpClient.delete(environment.BASE_URL + url, this.getHeaders());
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Observable } from 'rxjs';
@@ -11,17 +11,25 @@ import { environment } from 'src/environments/environment.development';
 export class AuthService {
   constructor(private _HttpClient: HttpClient) {}
 
+  // refactor free API url 
+private getHeaders() {
+  const headers = new HttpHeaders({
+    'ngrok-skip-browser-warning':  '69420'
+  });
+  return {headers};
+}
+
   signOut: boolean = false;
   userInfo: any;
   // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   //baseurl = https://resala-app.onrender.com/
 
   register(userData: object): Observable<any> {
-    return this._HttpClient.post(environment.BASE_URL + '/api/v1/auth/register', userData);
+    return this._HttpClient.post(environment.BASE_URL + '/api/v1/auth/register', userData,this.getHeaders());
   }
 
   login(userdata: any): Observable<any> {
-    return this._HttpClient.post(environment.BASE_URL + '/api/v1/auth/login', userdata);
+    return this._HttpClient.post(environment.BASE_URL + '/api/v1/auth/login', userdata ,this.getHeaders());
   }
 
   decodeUser(): void {

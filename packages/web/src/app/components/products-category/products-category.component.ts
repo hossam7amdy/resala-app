@@ -34,10 +34,11 @@ export class ProductsCategoryComponent implements OnInit {
   categoryId!:any;  // '!' to add initial value Undefined to this property
 
   ngOnInit(): void {
-    this.spinner.show();
+    
     this.route.paramMap.subscribe(params =>(this.categoryId = params.get('category-id')));
+    
     this.allCategoryProducts(this.categoryId);
-    this.spinner.hide();
+   
   }
 
 
@@ -45,8 +46,9 @@ export class ProductsCategoryComponent implements OnInit {
   
  
   allCategoryProducts(id:any):void{
-
+   
     this._Categories.getCategoryProducts(id).subscribe({
+
       next:(response)=>{
         this.allProductsCategory = response.data
         this.titleCategory = response.data[0].category.enName;
