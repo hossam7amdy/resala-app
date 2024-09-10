@@ -191,7 +191,7 @@ body {
   color: #016373;
 }
 
-
+/* Primary Btn*/
 .custome-btn {
   padding: 10px 0;
   color: #fff;
@@ -199,13 +199,33 @@ body {
   background-color: #fbb935;
   border: 1px solid #fbb935;
   transition: all 0.3s ease-in-out;
+  width: 100%;
 }
 
 .custome-btn:hover,
-.custome-btn:active {
+.custome-btn:active,
+.custome-btn:disabled {
   padding: 10px 0;
   color: #016373;
   font-weight: 500;
   background-color: #fff;
   border: 1px solid #ccc;
+}
+
+.custome-btn:disabled{
+  cursor: not-allowed;
+}
+
+/* second Btn*/
+.second-custom-btn{
+  background-color: #fff;
+  border: 1px solid #016373;
+  color: #016373;
+}
+.second-custom-btn:hover,
+.second-custom-btn:active{
+border: 1px solid #fbb935;
+}
+.second-custom-btn:disabled{
+cursor: not-allowed;
 }

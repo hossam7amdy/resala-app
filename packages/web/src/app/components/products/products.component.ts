@@ -47,9 +47,7 @@ export class ProductsComponent implements  OnInit {
     console.log('category id', this.categoryId);
     this.allCategoryProducts(this.categoryId);
 
-    setTimeout(() => {
-      this.spinner.hide();   
-    }, 1000);
+   
   }
 
 
@@ -70,7 +68,9 @@ export class ProductsComponent implements  OnInit {
         console.log(err);
       }
     })
-    
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   //Add product in Wish list method
@@ -97,6 +97,7 @@ export class ProductsComponent implements  OnInit {
 
 pageChanged(event:any){
   //  products
+  this.spinner.show();
   this._Categories.getCategoryProducts(this.categoryId, event).subscribe({
     next:(response)=>{
       this.allProductsCategory = response.data.products
@@ -110,6 +111,7 @@ pageChanged(event:any){
       console.log(err);
     }
   })
+  this.spinner.hide();
 }
 
 }

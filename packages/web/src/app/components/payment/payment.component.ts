@@ -87,19 +87,29 @@ export class PaymentComponent implements OnInit {
         console.log(this.allCountries);
       },
     });
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   selectedAddressMethod(value: number): void {
+    this.spinner.show()
     this.addressId = value;
     this.isSelectedAddress = true;
     this.isRegisterd = true;
     this.addNew = false;
     console.log('address id', this.addressId);
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
   addNewAddressFun():void{
+    this.spinner.show()
     this.addNew = true;
-    window.scrollTo(400,400)
+    window.scrollTo(500,500)
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   
@@ -220,7 +230,7 @@ export class PaymentComponent implements OnInit {
   editAddressForm(index: any): void {
     this.isEdit = true;
     this.editIndex = index;
-    let userNumberId = Number(this.userLoginId);
+    let userNumberId = Number(this.userLoginId);// parsing to number
     console.log(typeof userNumberId)
     this.userAddresses.patchValue({userId:userNumberId});
     
@@ -259,6 +269,7 @@ export class PaymentComponent implements OnInit {
   //   }, 3000);
   // }
   removeItem(addressId:number,element:HTMLElement):void{
+    this.spinner.show()
     this.isLoading = true;
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     this._PaymentServices.deleteUserAddress(this.userLoginId,addressId).subscribe({
@@ -268,6 +279,7 @@ export class PaymentComponent implements OnInit {
         this._Toaster.success('Removed Your Address Successfuly');
         window.location.reload();
         this.isRegisterd = false;
+        this.isEdit = false;
       },error:(err)=>{
         this._Toaster.info('Your Item Not Removed');
         console.log(err);
@@ -275,6 +287,8 @@ export class PaymentComponent implements OnInit {
       }
     })
     this.isLoading = false;
+    
+
   }
 
 
