@@ -9,7 +9,7 @@
   <form [formGroup]="userAddresses" action="">
     <div class="row justify-content-center">
       <div *ngFor="let userAddress of getUserAddress; let i = index" class="col-11 address-field">
-        <div class="m-3">
+        <div *ngIf="isEdit == false" class="m-3">
           <input
             class="form-check-input"
             type="radio"
@@ -210,8 +210,8 @@
         </div>
       </fieldset>
 
-        <div class="d-flex gap-2 d-md-block">
-          <button *ngIf="getUserAddress.length != 3" class="custome-btn submit mx-3 px-3 rounded-3"
+        <div class="edit-section d-flex gap-2 d-md-block">
+          <button [disabled]="isEdit" *ngIf="getUserAddress.length != 3" class="custome-btn mx-3 px-3 rounded-3"
            type="submit" (click)="addNewAddressFun()">
             <i class="fa-solid fa-plus fa-sm mr-2"></i>
             <i class="fa-regular fa-address-card fa-xl"></i>
@@ -220,7 +220,7 @@
           <button
             (click)="editAddressForm(i)"
             [disabled]="isEdit ==  true"
-            class="custome-btn submit mx-3 px-3 rounded-3"
+            class="custome-btn mx-3 px-3 rounded-3"
             type="submit">
           <i class="fa-solid fa-user-pen fa-xl"></i>
           </button>
@@ -228,13 +228,13 @@
           <button
             (click)="updateAddress(userAddress.id,userAddresses,update)"#update
             [disabled]="userAddresses.invalid"
-            class="custome-btn submit mx-3 px-3 rounded-3"
+            class="custome-btn mx-3 px-3 rounded-3"
             type="submit">
           <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
           <i class="fa-regular fa-floppy-disk fa-xl"></i>
           </button>
           
-          <button class="submit custome-btn mx-3 px-3 rounded-3" type="submit">
+          <button [disabled]="isEdit" class=" custome-btn mx-3 px-3 rounded-3" type="submit">
             <i
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -271,7 +271,7 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn second-custom-btn"
                     data-bs-dismiss="modal"
                     (click)="removeItem(userAddress.id, remove)"
                     #remove

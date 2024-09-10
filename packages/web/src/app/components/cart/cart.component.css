@@ -12,6 +12,19 @@
   margin-top: 10%;
 }
 
+.second-custom-btn{
+    background-color: #fff;
+    border: 1px solid #016373;
+    color: #016373;
+}
+.second-custom-btn:hover,
+.second-custom-btn:active{
+  border: 1px solid #fbb935;
+}
+.second-custom-btn:disabled{
+  cursor: not-allowed;
+}
+
 @media (max-width:1200px) {
   .emptyCart{
     padding: 40px 40px;
@@ -71,6 +84,9 @@
   color: #016373;
   font-weight: bold;
   font-size: 12px;
+}
+.counter .min-counter-btn:disabled{
+  cursor: not-allowed;
 }
 
 .order-btn {

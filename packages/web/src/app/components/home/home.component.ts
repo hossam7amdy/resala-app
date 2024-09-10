@@ -71,7 +71,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log('categories', response.data);
       },
     });
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   // overlay
@@ -93,7 +95,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log(response);
       },
       error: err => {
-        if (err.statusText == 'Unauthorized') {
+        if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid') {
           this._Toaster.error('Should be Login !!');
           this._Router.navigate(['/login']);
         } else {

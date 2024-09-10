@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class ResetPasswordComponent implements OnInit{
   constructor(
     private spinner:NgxSpinnerService,
     private _AuthService:AuthService,
-    private route:ActivatedRoute
+    private route:ActivatedRoute,
+    private toaster:ToastrService
   ){}
 
   newToken:string='';
@@ -72,8 +74,12 @@ export class ResetPasswordComponent implements OnInit{
     this._AuthService.resetPassword(this.resetPw.value, this.newToken).subscribe({
       next:(response)=>{
         console.log('response',response)
+        this.isLoading = false;
+        this.toaster.success('Changed Your Password Successfuly');
       },error:(err)=>{
         console.log(err);
+        this.toaster.error(err.error.message)
+        this.isLoading = false;
       }
     })
   }

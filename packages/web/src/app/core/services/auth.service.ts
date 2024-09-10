@@ -11,10 +11,13 @@ import { environment } from 'src/environments/environment.development';
 export class AuthService {
   constructor(private _HttpClient: HttpClient) {}
 
+
+  myToken:any;
   // refactor free API url 
 private getHeaders() {
   const headers = new HttpHeaders({
-    'ngrok-skip-browser-warning':  '69420'
+    'ngrok-skip-browser-warning':  '69420',
+    'Authorization':`Bearer ${this.myToken}`
   });
   return {headers};
 }
@@ -51,11 +54,9 @@ private getHeaders() {
 
   // Reset Password
   resetPassword(resetPwData: any, token:any):Observable<any>{
+    this.myToken = token;
     const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.resetPassword])
-    return this._HttpClient.post(environment.BASE_URL+ url, resetPwData ,
-      {
-        headers:token
-      }
+    return this._HttpClient.post(environment.BASE_URL+ url, resetPwData ,this.getHeaders()
     )
   }
 }
