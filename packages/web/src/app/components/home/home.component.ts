@@ -187,9 +187,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
       0: {
         items: 1,
       },
+      
       300: {
+        items: 1,
+      },
+
+      400: {
         items: 2,
       },
+
       600: {
         items: 3,
       },
