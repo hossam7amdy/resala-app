@@ -225,12 +225,12 @@ section .overlay {
 
 /*Loading icon*/
 .spinner-border {
-  left: 50%;
+  left: 49%;
   position: relative;
 }
 
 .slider img {
-  background-size: contain;
+  background-size:contain;
 }
 
 /* Trends */
@@ -271,6 +271,27 @@ section .overlay {
   padding: 5px;
   border-radius: 50%;
 }
+@media (max-width:800px) {
+  .trends-slide a .favourit-icon{
+    top: 2%;
+  right: 2%;
+  font-size: 20px;
+  }
+  .trends-slide a .favourit-icon::before{
+    padding: 3px;
+  }
+}
+@media (max-width:500px) {
+  .trends-slide a .favourit-icon{
+   
+  font-size: 15px;
+  
+  }
+  .trends-slide a .favourit-icon::before{
+    padding: 2px;
+  }
+}
+
 
 .trends-slide a .shopping-icon {
   position: absolute;
@@ -279,6 +300,19 @@ section .overlay {
   color: #fbb935;
   font-size: 25px;
   cursor: pointer;
+}
+@media (max-width:800px) {
+  .trends-slide a .shopping-icon{
+    bottom: 2%;
+  right: 2%;
+  font-size: 20px;
+  }
+}
+@media (max-width:500px) {
+  .trends-slide a .shopping-icon{
+   
+  font-size: 15px;
+  }
 }
 
 .w-100[_ngcontent-ng-c3001152195] {
@@ -321,7 +355,7 @@ section .overlay {
 
 .parent-img-content {
   position: relative;
-  width: 200px;
+  width: 100%;
 }
 
 .img-content {
@@ -414,7 +448,16 @@ section .overlay {
   padding: 8px 10px;
   border-radius: 50%;
 }
-
+@media (max-width:800px) {
+  .shopping-icon::before{
+    padding: 6px 8px;
+  }
+}
+@media (max-width:500px) {
+  .shopping-icon::before{
+    padding: 5px 7px;
+  }
+}
 .img-content .w-100 {
   height: auto !important;
 }
