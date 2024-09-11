@@ -12,6 +12,9 @@ export const refreshToken = async (refreshToken: string): Promise<RefreshTokenRe
 
   const response = await fetch(`${process.env.API_HOST}${url}`, {
     method: method.toUpperCase(),
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ token: refreshToken } as RefreshTokenRequest['body']),
   });
 
@@ -80,6 +83,9 @@ export const authConfig = {
     },
     // @ts-expect-error `token` is defined in `jwt` callback
     session: ({ session, token }) => {
+      if (token.error === 'RefreshTokenError') {
+        return { user: null };
+      }
       return { ...session, ...token };
     },
   },

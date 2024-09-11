@@ -49,7 +49,7 @@ import { AuthService } from './auth.service.js';
 
 @Tags('Auth')
 @Route('api/v1/auth')
-@Middlewares([limiter(10, 10)])
+@Middlewares([limiter()])
 export class AuthController extends Controller {
   private readonly _resetPasswordPath = '/reset-password';
   private readonly _confirmEmailPath = '/confirm-email';
