@@ -14,7 +14,11 @@ export class PostPayComponent implements OnInit {
     private route:ActivatedRoute,
   ){}
   orderStatus:string='';
+  orderId:any;
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params =>{
+      this.orderId = params.get('orderId')
+    })
     this.route.queryParams.subscribe(mobPayQuery=>{
       
       this.orderStatus = mobPayQuery['success'];
