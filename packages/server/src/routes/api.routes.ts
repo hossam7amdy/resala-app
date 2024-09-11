@@ -367,11 +367,6 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"Order","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateImageResponse": {
-        "dataType": "refAlias",
-        "type": {"ref":"DefaultResponseBody","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Image": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"isPrimary":{"dataType":"boolean","required":true},"productId":{"dataType":"integer","required":true},"colorId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
@@ -380,6 +375,11 @@ const models: TsoaRoute.Models = {
     "ListImagesResponse": {
         "dataType": "refAlias",
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"array","array":{"dataType":"refAlias","ref":"Image"},"required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateImageResponse": {
+        "dataType": "refAlias",
+        "type": {"ref":"DefaultResponseBody","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateImageResponse": {
@@ -684,6 +684,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/stocks/:stockId',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.get)),
 
@@ -714,6 +715,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/stocks',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.list)),
 
@@ -841,6 +843,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/sizes/:sizeId',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.get)),
 
@@ -871,6 +874,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/sizes',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.list)),
 
@@ -1405,6 +1409,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/products/:productId',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.get)),
 
@@ -1435,6 +1440,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/products',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.list)),
 
@@ -1829,6 +1835,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/api/v1/images',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ImageController)),
+            ...(fetchMiddlewares<RequestHandler>(ImageController.prototype.list)),
+
+            async function ImageController_list(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"integer"},"colorId":{"dataType":"integer"}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new ImageController();
+
+              await templateService.apiHandler({
+                methodName: 'list',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/images',
             authenticateMiddleware([{"JWT_SECRET":[]}]),
             upload.fields([{"name":"images"}]),
@@ -1857,36 +1894,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 next,
                 validatedArgs,
                 successStatus: 201,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/api/v1/images',
-            ...(fetchMiddlewares<RequestHandler>(ImageController)),
-            ...(fetchMiddlewares<RequestHandler>(ImageController.prototype.list)),
-
-            async function ImageController_list(request: ExRequest, response: ExResponse, next: any) {
-            const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"productId":{"dataType":"integer"},"colorId":{"dataType":"integer"}}},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-                const controller = new ImageController();
-
-              await templateService.apiHandler({
-                methodName: 'list',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
               });
             } catch (err) {
                 return next(err);
@@ -1987,6 +1994,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/dashboard/top-products',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DashboardController)),
             ...(fetchMiddlewares<RequestHandler>(DashboardController.prototype.listTopProducts)),
 
@@ -2166,6 +2174,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/colors/:colorId',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.get)),
 
@@ -2196,6 +2205,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/colors',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.lists)),
 
@@ -2319,6 +2329,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/categories/:categoryId',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.get)),
 
@@ -2349,6 +2360,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/categories',
+            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.list)),
 

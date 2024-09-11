@@ -31,6 +31,7 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorization } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { ReviewService } from './review.service.js';
@@ -38,7 +39,7 @@ import { ReviewService } from './review.service.js';
 @Tags('Review')
 @Route('api/v1/reviews')
 @Security('JWT_SECRET')
-@Middlewares([authorization])
+@Middlewares([enforceJwt, authorization])
 export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;
 

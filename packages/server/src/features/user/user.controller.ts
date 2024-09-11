@@ -27,6 +27,7 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/index.js';
 import { UserService } from './user.service.js';
@@ -34,7 +35,7 @@ import { UserService } from './user.service.js';
 @Tags('User')
 @Route('api/v1/users')
 @Security('JWT_SECRET')
-@Middlewares([authorization])
+@Middlewares([enforceJwt, authorization])
 export class UserController extends Controller {
   private readonly userService: UserService;
 

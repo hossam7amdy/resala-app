@@ -17,13 +17,16 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
 import { PaymobService } from './paymob/paymob.service.js';
 
 @Tags('Payment')
+@Security('JWT_SECRET')
 @Route('api/v1/payments')
+@Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
 export class PaymentController extends Controller {
   private readonly paymentService: PaymentService;
 
@@ -33,8 +36,6 @@ export class PaymentController extends Controller {
   }
 
   @Get('{transactionId}')
-  @Security('JWT_SECRET')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async get(@Path() transactionId: string): Promise<GetPaymentResponse> {
     const payment = await this.paymentService.retrieve(transactionId);
 
@@ -42,8 +43,7 @@ export class PaymentController extends Controller {
   }
 
   @Post('void')
-  @Security('JWT_SECRET')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(VoidPaymentSchema)])
+  @Middlewares([validate(VoidPaymentSchema)])
   public async void(@Body() body: VoidPaymentRequest['body']) {
     const transactionId = body.transactionId;
 
@@ -53,8 +53,7 @@ export class PaymentController extends Controller {
   }
 
   @Post('refund')
-  @Security('JWT_SECRET')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(RefundPaymentSchema)])
+  @Middlewares([validate(RefundPaymentSchema)])
   public async refund(@Body() body: RefundPaymentRequest['body']) {
     const { transactionId, amount } = body;
 
