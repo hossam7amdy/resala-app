@@ -1,10 +1,22 @@
-import { refreshToken } from '@/actions/auth';
 import { PROTECTED_ROUTES, ROUTES } from '@/utils/routes';
+import type { RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 import type { AuthUser } from '../next-auth';
+
+export const refreshToken = async (refreshToken: string): Promise<RefreshTokenResponse> => {
+  const { method, url } = ENDPOINT_CONFIGS.refresh;
+
+  const response = await fetch(`${process.env.API_HOST}${url}`, {
+    method: method.toUpperCase(),
+    body: JSON.stringify({ token: refreshToken } as RefreshTokenRequest['body']),
+  });
+
+  return response.json();
+};
 
 export const authConfig = {
   pages: {

@@ -7,8 +7,6 @@ import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
-  RefreshTokenRequest,
-  RefreshTokenResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,
@@ -35,12 +33,6 @@ export const login = async (payload: LoginRequest['body']) => {
     }
     throw error;
   }
-};
-
-export const refreshToken = async (refreshToken: string) => {
-  return await callEndpoint<RefreshTokenRequest, RefreshTokenResponse>(ENDPOINT_CONFIGS.refresh, {
-    body: { token: refreshToken },
-  });
 };
 
 export const logout = async () => {
