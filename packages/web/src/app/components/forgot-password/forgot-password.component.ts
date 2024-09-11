@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,8 +16,11 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class ForgotPasswordComponent {
   constructor(
     private spinner:NgxSpinnerService,
-    private _AuthService:AuthService
+    private _AuthService:AuthService,
+    private route:ActivatedRoute,
+    private toaster:ToastrService
   ){}
+
   isLoading:boolean=false;
   successMsg:string ='';
   errMsg:string = '';
@@ -30,7 +35,9 @@ export class ForgotPasswordComponent {
     this.spinner.show()
     this.isEmail = true;
     this.isPhone = false;
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();   
+    }, 1000);
   }
 
   spinnerLoadPhone():void{
@@ -39,7 +46,9 @@ export class ForgotPasswordComponent {
       this.isPhone = true;
       this.isEmail = false;
     
-    this.spinner.hide();
+      setTimeout(() => {
+        this.spinner.hide();   
+      }, 1000);
   }
   
   sendEmail():void{
