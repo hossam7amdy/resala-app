@@ -29,6 +29,7 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorization } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { AddressService } from './address.service.js';
@@ -36,7 +37,7 @@ import { AddressService } from './address.service.js';
 @Tags('Address')
 @Route('api/v1/addresses')
 @Security('JWT_SECRET')
-@Middlewares([authorization])
+@Middlewares([enforceJwt, authorization])
 export class AddressController extends Controller {
   private readonly addressService: AddressService;
 
