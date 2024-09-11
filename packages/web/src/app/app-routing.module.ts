@@ -75,6 +75,13 @@ const routes: Routes = [
           import('./components/payment/payment.component').then(m => m.PaymentComponent),
         title: 'Payment',
       },
+
+      {
+        path: 'post_pay',
+        loadComponent: () =>
+          import('./components/post-pay/post-pay.component').then(m => m.PostPayComponent),
+        title: 'Order Status',
+      },
     ],
   },
 
