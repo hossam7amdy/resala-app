@@ -32,8 +32,8 @@ export const callEndpoint = async <Req, Res>(
   const response = await fetch(`${baseURL}${url}`, {
     method: method.toUpperCase(),
     headers: {
-      ...(isFormData(body) ? {} : { 'Content-Type': 'application/json' }),
       Authorization: `Bearer ${(await auth())?.accessToken}`,
+      ...(isFormData(body) ? {} : { 'Content-Type': 'application/json' }),
       ...headers,
     },
     body: isFormData(body) ? body : body ? JSON.stringify(body) : undefined,
