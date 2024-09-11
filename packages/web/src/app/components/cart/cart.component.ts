@@ -20,7 +20,7 @@ export class CartComponent implements OnInit {
   cartDetailsItems: any = [];
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-
+  
   // quantity attr
   counterQuantity: number = 1;
   constructor(
@@ -30,14 +30,17 @@ export class CartComponent implements OnInit {
     private _Router: Router,
     private spinner:NgxSpinnerService
   ) {}
+  totalCount:number = 0;
 
   ngOnInit(): void {
+    
     this.spinner.show();
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
+        this.totalCount=response.data.totalQuantity;
       },
       error: err => {
         console.log(err);
@@ -45,7 +48,7 @@ export class CartComponent implements OnInit {
     });
     setTimeout(() => {
       this.spinner.hide();   
-    }, 1000);
+    }, 2000);
   }
 
   // Quantity Fun
@@ -83,6 +86,7 @@ export class CartComponent implements OnInit {
           console.log(this.cartDetails);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
+          this.totalCount = response.data.totalQuantity;
         },
         error: err => {
           console.log(err);
@@ -141,6 +145,7 @@ export class CartComponent implements OnInit {
           this._toaster.success('Your Cart Is Empty');
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
+          this.totalCount = response.data.totalQuantity;
         },
         error: () => {
           this._toaster.info('Your Items are Not Deleted !!');
