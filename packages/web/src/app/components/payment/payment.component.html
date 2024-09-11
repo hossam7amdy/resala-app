@@ -210,9 +210,9 @@
         </div>
       </fieldset>
 
-        <div class="edit-section d-flex gap-2 d-md-block">
-          <button [disabled]="isEdit" *ngIf="getUserAddress.length != 3" class="custome-btn mx-3 px-3 rounded-3"
-           type="submit" (click)="addNewAddressFun()">
+        <div class="edit-section ">
+          <button (click)="addNewAddressFun(target)" #target [disabled]="isEdit" *ngIf="getUserAddress.length != 3" class="custome-btn mx-3 px-3 rounded-3"
+           type="submit" >
             <i class="fa-solid fa-plus fa-sm mr-2"></i>
             <i class="fa-regular fa-address-card fa-xl"></i>
           </button>
@@ -304,9 +304,9 @@
 
   <!-- (ngSubmit)="handleForm(addressForm, btn)"  -->
 
-  <form [formGroup]="addressForm" class="row g-3 px-5">
+  <form  [formGroup]="addressForm" class="row g-3 px-5">
     
-    <div class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+    <div #target class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <label for="firstName" class="form-label">First Name</label>
       <input type="text" formControlName="firstName" class="form-control" id="firstName" />
       <div

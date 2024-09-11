@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log(response);
       },
       error: err => {
-        if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid') {
+        if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
           this._Toaster.error('Should be Login !!');
           this._Router.navigate(['/login']);
         } else {
@@ -142,8 +142,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     pullDrag: false,
     dots: true,
     navSpeed: 700,
-    navText: ['', ''],
-    items: 1,
+    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    items: 1.1,
     nav: false,
     autoplay: true,
     autoplayTimeout: 5000,
