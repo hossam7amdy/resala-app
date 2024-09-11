@@ -27,12 +27,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { ShoppingService } from './shopping.service.js';
 
 @Tags('Shopping')
 @Route('api/v1')
 @Security('JWT_SECRET')
+@Middlewares([enforceJwt])
 export class ShoppingController extends Controller {
   private readonly shoppingService: ShoppingService;
 

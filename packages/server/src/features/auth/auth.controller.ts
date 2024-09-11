@@ -41,6 +41,7 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { limiter, validate } from '../../middlewares/index.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
@@ -48,6 +49,7 @@ import { AuthService } from './auth.service.js';
 
 @Tags('Auth')
 @Route('api/v1/auth')
+@Middlewares([limiter(10, 10)])
 export class AuthController extends Controller {
   private readonly _resetPasswordPath = '/reset-password';
   private readonly _confirmEmailPath = '/confirm-email';
@@ -110,7 +112,7 @@ export class AuthController extends Controller {
   }
 
   @Post('refresh')
-  @Middlewares([validate(RefreshTokenSchema), limiter(10, 10)])
+  @Middlewares([validate(RefreshTokenSchema)])
   public async refresh(@Body() body: RefreshTokenRequest['body']): Promise<RefreshTokenResponse> {
     const { token } = body;
     const response = await this.authService.refreshToken(token);
@@ -130,7 +132,7 @@ export class AuthController extends Controller {
    */
   @Post('verify-email')
   @Security('JWT_VERIFY')
-  @Middlewares([validate(VerifyEmailSchema), limiter(10, 2)])
+  @Middlewares([enforceJwt, validate(VerifyEmailSchema)])
   public async verifyEmail(@Request() req: ExRequest): Promise<VerifyEmailResponse> {
     const email = req.res?.locals.user.email;
 
@@ -145,7 +147,7 @@ export class AuthController extends Controller {
    * calling the `resetPassword` endpoint.
    */
   @Post('forgot-password')
-  @Middlewares([validate(ForgotPasswordSchema), limiter(10, 1)])
+  @Middlewares([validate(ForgotPasswordSchema)])
   @SuccessResponse('200', 'Password reset code sent successfully')
   public async forgotPassword(
     @Body() body: ForgotPasswordRequest['body'],
@@ -171,7 +173,7 @@ export class AuthController extends Controller {
    */
   @Post('reset-password')
   @Security('JWT_RESET')
-  @Middlewares([validate(ResetPasswordSchema)])
+  @Middlewares([enforceJwt, validate(ResetPasswordSchema)])
   public async resetPassword(
     @Body() body: ResetPasswordRequest['body'],
     @Request() req: ExRequest
@@ -191,7 +193,7 @@ export class AuthController extends Controller {
 
   @Patch('change-password')
   @Security('JWT_SECRET')
-  @Middlewares([validate(ChangePasswordSchema)])
+  @Middlewares([enforceJwt, validate(ChangePasswordSchema)])
   public async changePassword(
     @Body() body: ChangePasswordRequest['body'],
     @Request() req: ExRequest
@@ -210,7 +212,7 @@ export class AuthController extends Controller {
    */
   @Post('resend-email-verification')
   @Security('JWT_SECRET')
-  @Middlewares([validate(ResendVerificationSchema), limiter(10, 1)])
+  @Middlewares([enforceJwt, validate(ResendVerificationSchema)])
   public async resendVerificationEmail(
     @Body() body: ResendVerificationEmailRequest['body'],
     @Request() req: ExRequest
