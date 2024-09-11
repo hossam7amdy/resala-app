@@ -37,6 +37,7 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { AddressService } from '../address/address.service.js';
@@ -51,7 +52,7 @@ import { OrderService } from './order.service.js';
 @Tags('Order')
 @Route('api/v1/orders')
 @Security('JWT_SECRET')
-@Middlewares([authorization])
+@Middlewares([enforceJwt, authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;
   private readonly paymentService: PaymentService;

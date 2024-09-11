@@ -133,7 +133,8 @@ paths:
                 $ref: "#/components/schemas/GetStockResponse"
       tags:
         - Stock
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -209,7 +210,8 @@ paths:
                 $ref: "#/components/schemas/ListStocksResponse"
       tags:
         - Stock
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: page
@@ -281,7 +283,8 @@ paths:
                 $ref: "#/components/schemas/GetSizeResponse"
       tags:
         - Size
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: sizeId
@@ -347,7 +350,8 @@ paths:
                 $ref: "#/components/schemas/ListSizesResponse"
       tags:
         - Size
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters: []
     post:
       operationId: Create
@@ -683,7 +687,8 @@ paths:
                 $ref: "#/components/schemas/GetProductResponse"
       tags:
         - Product
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -771,7 +776,8 @@ paths:
                 $ref: "#/components/schemas/ListProductsResponse"
       tags:
         - Product
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: page
@@ -1088,6 +1094,32 @@ paths:
                     - CANCELLED
               type: object
   /api/v1/images:
+    get:
+      operationId: List
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListImagesResponse"
+      tags:
+        - Image
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: query
+          name: productId
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: colorId
+          required: false
+          schema:
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
@@ -1122,31 +1154,6 @@ paths:
                 - colorId
                 - productId
                 - images
-    get:
-      operationId: List
-      responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListImagesResponse"
-      tags:
-        - Image
-      security: []
-      parameters:
-        - in: query
-          name: productId
-          required: false
-          schema:
-            format: int32
-            type: integer
-        - in: query
-          name: colorId
-          required: false
-          schema:
-            format: int32
-            type: integer
   /api/v1/images/{imageId}:
     patch:
       operationId: Update
@@ -1227,7 +1234,8 @@ paths:
         period of time (daily, weekly, or monthly)"
       tags:
         - Dashboard
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters: []
   /api/v1/dashboard/sales-trends:
     get:
@@ -1324,7 +1332,8 @@ paths:
                 $ref: "#/components/schemas/GetColorResponse"
       tags:
         - Color
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: colorId
@@ -1394,7 +1403,8 @@ paths:
                 $ref: "#/components/schemas/ListColorsResponse"
       tags:
         - Color
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters: []
     post:
       operationId: Create
@@ -1435,7 +1445,8 @@ paths:
                 $ref: "#/components/schemas/GetCategoryResponse"
       tags:
         - Category
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: categoryId
@@ -1505,7 +1516,8 @@ paths:
                 $ref: "#/components/schemas/ListCategoriesResponse"
       tags:
         - Category
-      security: []
+      security:
+        - JWT_SECRET: []
       parameters: []
     post:
       operationId: Create
@@ -3019,8 +3031,6 @@ components:
           required:
             - data
           type: object
-    CreateImageResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
     Image:
       properties:
         createdAt:
@@ -3061,6 +3071,8 @@ components:
           required:
             - data
           type: object
+    CreateImageResponse:
+      $ref: "#/components/schemas/DefaultResponseBody"
     UpdateImageResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"
