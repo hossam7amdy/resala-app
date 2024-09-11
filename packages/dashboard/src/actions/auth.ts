@@ -13,15 +13,17 @@ import type {
   VerifyEmailResponse,
 } from '@resala/shared';
 import { AuthError } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 import { callEndpoint } from '../fetch';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
-    await signIn('credentials', {
-      ...payload,
-      redirectTo: ROUTES.DASHBOARD,
-    });
+    const response = await signIn('credentials', { ...payload, redirect: false });
+
+    const { searchParams } = new URL(response);
+
+    redirect(searchParams.get('callbackUrl') || ROUTES.DASHBOARD);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error?.type) {
