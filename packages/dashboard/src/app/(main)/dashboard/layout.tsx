@@ -1,5 +1,8 @@
 import { Breadcrumb, Col, Row } from 'antd';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
+
+import { Fallback } from './fallback';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -30,7 +33,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <Breadcrumb items={[{ title: 'Dashboard' }]} />
       </Col>
 
-      <Col span={24}>{children}</Col>
+      <Col span={24}>
+        <Suspense fallback={<Fallback />}>{children}</Suspense>
+      </Col>
 
       <Col span={24} lg={{ span: 12 }}>
         {topProducts}

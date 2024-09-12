@@ -1,3 +1,4 @@
+import { findProduct } from '@/data/product';
 import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
 import type { Metadata } from 'next';
@@ -9,11 +10,11 @@ export const metadata: Metadata = {
 };
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
-  const { stocks } = await listStocks({ productId: +params.id });
+  const product = await findProduct(params.id);
 
-  if (!stocks.length) {
-    return notFound();
-  }
+  if (!product) notFound();
+
+  const { stocks } = await listStocks({ productId: +params.id });
 
   return <StocksTable stocks={stocks} pagination={{ page: 1, limit: 10, total: stocks.length }} />;
 };

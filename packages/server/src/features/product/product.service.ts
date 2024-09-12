@@ -106,10 +106,9 @@ export class ProductService {
   async delete(id: number) {
     const { imageKey } = await this.get(id);
 
-    const [product] = await Promise.all([
-      this.db.product.delete({ where: { id } }),
-      this.fileService.deleteFile(imageKey),
-    ]);
+    const product = await this.db.product.delete({ where: { id } });
+
+    await this.fileService.deleteFile(imageKey);
 
     return product;
   }
