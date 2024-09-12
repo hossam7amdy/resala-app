@@ -19,6 +19,8 @@ import { PaymentService } from 'src/app/core/services/payment.service';
   styleUrls: ['./payment.component.css'],
 })
 export class PaymentComponent implements OnInit {
+
+
   constructor(
     private _PaymentServices: PaymentService,
     private _Renderer2: Renderer2,
@@ -103,13 +105,11 @@ export class PaymentComponent implements OnInit {
       this.spinner.hide();   
     }, 1000);
   }
-  addNewAddressFun():void{
-    this.spinner.show()
+  addNewAddressFun(trarget:HTMLElement):void{
+    
     this.addNew = true;
-    window.scrollTo(500,500)
-    setTimeout(() => {
-      this.spinner.hide();   
-    }, 1000);
+    trarget.scrollIntoView({behavior:"smooth"});
+    
   }
 
   

@@ -34,6 +34,7 @@ export class NavBlankComponent implements OnInit {
   categoryList:any=[];
 
   cartNum: number = 0;
+  togglerOpend:boolean=false;
 
   @ViewChild('navbar') navbarElement!:ElementRef
   @HostListener('window:scroll')
@@ -70,6 +71,13 @@ export class NavBlankComponent implements OnInit {
     })
   }
 
+  isTogglerOpend():void{
+    if(this.togglerOpend == false){
+      this.togglerOpend = true
+    }else{
+      this.togglerOpend = false;
+    }
+  }
 
   
   reloadPage(id:any):void{
