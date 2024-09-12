@@ -11,8 +11,12 @@
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
       aria-label="Toggle navigation"
+      (click)="isTogglerOpend()"
     >
-      <span class="navbar-toggler-icon"></span>
+      <i *ngIf="togglerOpend == false" class="fa-solid fa-bars"></i>
+      
+      <i *ngIf="togglerOpend == true" class="fa-solid fa-xmark"></i>
+
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- left nav -->

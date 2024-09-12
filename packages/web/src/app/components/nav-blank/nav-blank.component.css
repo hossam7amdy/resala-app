@@ -48,8 +48,20 @@ nav .logo {
 }
 
 /**/
+.navbar-toggler{
+  transition: all 1s ease-in-out;
+}
+.navbar-toggler i{
+  font-size: 30px !important;
+  color: #fff !important;
+}
+.navbar-toggler span{
+  color: #fff !important;
+}
 
-
+.navbar-toggler:focus{
+  box-shadow: none !important;
+}
 .dropdown:hover>.dropdown-menu {
   display: block;
 }
