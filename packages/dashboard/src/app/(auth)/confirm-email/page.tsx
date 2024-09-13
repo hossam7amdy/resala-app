@@ -5,7 +5,7 @@ import { ConfirmEmailForm } from './confirm-email-form';
 
 const ConfirmEmailPage = ({ searchParams }: { searchParams: { token?: string } }) => {
   return (
-    <Card className="shadow-lg w-96">
+    <Card className="shadow-lg min-w-96">
       <div className="text-center">
         <Logo />
       </div>
