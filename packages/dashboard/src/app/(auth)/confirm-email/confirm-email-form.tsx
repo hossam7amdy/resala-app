@@ -1,27 +1,44 @@
 'use client';
 
 import { verifyEmail } from '@/actions/auth';
+import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/utils/routes';
 import { Button, Card, Result } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const ConfirmEmailForm: React.FC<{ token?: string }> = ({ token }) => {
   const router = useRouter();
-  const [error, setError] = useState<{ message?: string }>();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      const response = await verifyEmail({ token: token ?? '' });
+  const { error: notificationError } = useNotification();
 
-      if (!response.success) {
-        setError({ message: response.message });
-      }
+  const verifyEmailCallback = useCallback(
+    (variables: { token: string }) => verifyEmail(variables),
+    []
+  );
 
+  const handleSuccess = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  const handleError = useCallback(
+    (error: { message: string }) => {
       setIsLoading(false);
-    })();
-  }, [token]);
+      notificationError(error.message);
+    },
+    [notificationError]
+  );
+
+  const { mutate, error } = useMutation({
+    mutationFn: verifyEmailCallback,
+    onSuccess: handleSuccess,
+    onError: handleError,
+  });
+
+  useEffect(() => {
+    mutate({ token: token ?? '' });
+  }, [token, mutate]);
 
   return (
     <Card size="small" loading={isLoading} bordered={false} className="shadow-none">
