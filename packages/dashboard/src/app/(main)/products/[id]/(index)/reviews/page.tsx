@@ -4,12 +4,7 @@ import { DeleteButton } from '@/features/reviews/delete-button';
 import { formatDate } from '@/utils/date-time-formatter';
 import { Flex, Rate } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
-import type { Metadata } from 'next';
 import React from 'react';
-
-export const metadata: Metadata = {
-  title: 'Product reviews',
-};
 
 type SearchParams = {
   page?: number;

@@ -4,7 +4,7 @@ import { PopconfirmDeleteButton } from '@/components';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { GetStockResponse } from '@resala/shared';
-import { Button, Space, Table } from 'antd';
+import { Space, Table } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
@@ -39,11 +39,9 @@ export const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> 
         render: (stockId: number) => (
           <Space size="small">
             <ResalaTooltip title="Edit">
-              <Button size="small" type="link">
-                <Link href={ROUTES.EDIT_STOCK(stockId)}>
-                  <EditOutlined />
-                </Link>
-              </Button>
+              <Link href={ROUTES.EDIT_STOCK(stockId)}>
+                <EditOutlined />
+              </Link>
             </ResalaTooltip>
 
             <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stockId)} />

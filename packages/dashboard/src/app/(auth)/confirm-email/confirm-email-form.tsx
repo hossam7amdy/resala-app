@@ -3,67 +3,66 @@
 import { verifyEmail } from '@/actions/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/utils/routes';
-import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Flex, Typography } from 'antd';
+import { Button, Card, Result } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const ConfirmEmailForm: React.FC<{ token?: string }> = ({ token }) => {
   const router = useRouter();
-  const notification = useNotification();
   const [isLoading, setIsLoading] = useState(true);
 
+  const { error: notificationError } = useNotification();
+
+  const verifyEmailCallback = useCallback(
+    (variables: { token: string }) => verifyEmail(variables),
+    []
+  );
+
+  const handleSuccess = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
+  const handleError = useCallback(
+    (error: { message: string }) => {
+      setIsLoading(false);
+      notificationError(error.message);
+    },
+    [notificationError]
+  );
+
   const { mutate, error } = useMutation({
-    mutationFn: verifyEmail,
-    onSuccess: () => {
-      setIsLoading(false);
-    },
-    onError: error => {
-      setIsLoading(false);
-      notification.error(error.message);
-    },
+    mutationFn: verifyEmailCallback,
+    onSuccess: handleSuccess,
+    onError: handleError,
   });
 
   useEffect(() => {
-    if (!token?.trim()) {
-      notification.error('Invalid verification link');
-      router.replace(ROUTES.LOGIN);
-    } else {
-      mutate({ token });
-    }
-  }, [token]);
+    mutate({ token: token ?? '' });
+  }, [token, mutate]);
 
   return (
-    <Card loading={isLoading} bordered={false} style={{ height: '100%', boxShadow: 'none' }}>
-      <Flex vertical align="center">
-        <Typography.Title style={{ textAlign: 'center' }} level={3}>
-          {error ? 'Invalid confirmation link' : 'Your email has been verified'}
-        </Typography.Title>
-
-        <Empty
-          style={{ marginBlockEnd: '20px' }}
-          image={error ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />}
-          imageStyle={{ fontSize: '80px', marginBlockEnd: '20px' }}
-          description={
-            error
-              ? error.message
-              : 'Your email has been verified successfully, you can now sign in to your account.'
-          }
-        />
-
-        <Button
-          block
-          size="large"
-          type="primary"
-          onClick={() => {
-            if (!error) {
+    <Card size="small" loading={isLoading} bordered={false} className="shadow-none">
+      <Result
+        status={error ? 'error' : 'success'}
+        title={error ? 'Invalid confirmation link' : 'Your email has been verified'}
+        subTitle={
+          error
+            ? error.message
+            : 'Your email has been verified successfully, you can now sign in to your account.'
+        }
+        extra={
+          <Button
+            block
+            size="large"
+            type="primary"
+            onClick={() => {
               router.replace(ROUTES.LOGIN);
-            }
-          }}
-        >
-          {error ? 'Resend Email' : 'Sign In to your account'}
-        </Button>
-      </Flex>
+            }}
+          >
+            Go to login
+          </Button>
+        }
+      />
     </Card>
   );
 };
