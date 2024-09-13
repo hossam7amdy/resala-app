@@ -5,6 +5,8 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
 
   // Dashboard routes (private)
+  NOT_AUTHORIZED: '/not-authorized',
+
   DASHBOARD: '/dashboard',
 
   CATEGORIES: '/categories',
@@ -39,4 +41,5 @@ export const PROTECTED_ROUTES = [
   ROUTES.SIZES,
   ROUTES.ORDERS,
   ROUTES.CUSTOMERS,
+  ROUTES.NOT_AUTHORIZED,
 ];

@@ -1,9 +1,25 @@
 import { BackButton } from '@/components';
+import { findProduct } from '@/data/product';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';
+import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const id = params.id;
+
+  const product = await findProduct(id);
+
+  return {
+    title: product?.enName ? product.enName : 'Not Found',
+  };
+};
 
 interface LayoutProps {
   params: { id: string };

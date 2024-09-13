@@ -9,32 +9,32 @@ const DashboardPage = async () => {
   return (
     <Row gutter={[10, 20]}>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Customers" value={totalCustomers} />
         </Card>
       </Col>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Products" value={totalProducts} />
         </Card>
       </Col>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Orders" value={totalOrders} />
         </Card>
       </Col>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Sales" value={formatCurrency(totalSales)} />
         </Card>
       </Col>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Revenue" value={formatCurrency(totalRevenue)} />
         </Card>
       </Col>
       <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
-        <Card hoverable style={{ height: 200 }}>
+        <Card hoverable className="h-[200px] cursor-default">
           <Statistic title="Total Refund" value={formatCurrency(totalRefund)} />
         </Card>
       </Col>
