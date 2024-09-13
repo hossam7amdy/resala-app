@@ -36,7 +36,7 @@ export const OffsetPageParamsSchema = z.object({
 // Auth Schemas
 export const LoginSchema = z.object({
   body: z.object({
-    sign: z.string(),
+    sign: z.string().min(3),
     password: z.string(),
   }),
 });

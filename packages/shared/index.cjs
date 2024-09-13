@@ -666,7 +666,7 @@ const OffsetPageParamsSchema = zod.z.object({
 // Auth Schemas
 const LoginSchema = zod.z.object({
     body: zod.z.object({
-        sign: zod.z.string(),
+        sign: zod.z.string().min(3),
         password: zod.z.string(),
     }),
 });
