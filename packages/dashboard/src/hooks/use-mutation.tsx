@@ -1,6 +1,7 @@
 'use client';
 
 import { logout } from '@/actions/auth';
+import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
 type Success<T> = ({ statusCode: number; success: boolean } & T) | void;
@@ -17,6 +18,8 @@ type MutationResult<Data, Variables> = {
   isLoading: boolean;
   data?: Success<Data>;
   error?: Error;
+  isSuccess: boolean;
+  isError: boolean;
 };
 
 export const useMutation = <Data, Variables>({
@@ -48,22 +51,24 @@ export const useMutation = <Data, Variables>({
       } catch (e) {
         const error = e as Error;
 
-        if (error.statusCode === 401) {
-          logout();
-        }
-
         setError(error);
         onError(error);
+
+        if ([401, 403].includes(error.statusCode)) {
+          await sleep(2000).then(logout);
+        }
       } finally {
         setIsLoading(false);
       }
     },
-    [mutationFn, onSuccess, onError]
+    [mutationFn, onError, onSuccess]
   );
 
   return {
     mutate,
     isLoading,
+    isError: !!error,
+    isSuccess: !!data,
     data,
     error,
   };

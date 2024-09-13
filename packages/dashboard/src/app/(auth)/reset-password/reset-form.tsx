@@ -21,25 +21,25 @@ interface ResetPasswordFormProps {
 export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
   const route = useRouter();
   const [form] = Form.useForm();
-  const notification = useNotification();
+  const { error: notificationError, success: notificationSuccess } = useNotification();
   const { isLoading, mutate } = useMutation({
     mutationFn: (values: FormValues) => resetPassword({ ...values, token: token ?? '' }),
     onSuccess: () => {
       form.resetFields();
       route.replace(ROUTES.LOGIN);
-      notification.success('Password reset successfully');
+      notificationSuccess('Password reset successfully');
     },
     onError: error => {
-      notification.error(error.message);
+      notificationError(error.message);
     },
   });
 
   useEffect(() => {
     if (!token) {
-      notification.error('Invalid reset password link');
+      notificationError('Invalid reset password link');
       route.replace(ROUTES.LOGIN);
     }
-  }, [token]);
+  }, [notificationError, route, token]);
 
   return (
     <Form size="large" name="reset-password" layout="vertical" onFinish={mutate} autoComplete="off">
