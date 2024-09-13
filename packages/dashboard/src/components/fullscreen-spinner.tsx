@@ -1,3 +1,5 @@
+'use client';
+
 import { Modal, Spin } from 'antd';
 import React from 'react';
 

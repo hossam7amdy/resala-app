@@ -7,12 +7,11 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 
-type Props = {
+export const generateMetadata = async ({
+  params,
+}: {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
+}): Promise<Metadata> => {
   const id = params.id;
 
   const product = await findProduct(id);

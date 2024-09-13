@@ -1,22 +1,33 @@
 'use client';
 
 import { App } from 'antd';
+import { useCallback } from 'react';
 
 export const useNotification = () => {
   const { notification } = App.useApp();
 
-  return {
-    success: (description: string) => {
+  const successCallback = useCallback(
+    (description: string) => {
       notification.success({
         message: 'Success',
         description,
       });
     },
-    error: (description: string) => {
+    [notification]
+  );
+
+  const errorCallback = useCallback(
+    (description: string) => {
       notification.error({
         message: 'Error',
         description,
       });
     },
-  };
+    [notification]
+  );
+
+  return Object.freeze({
+    success: successCallback,
+    error: errorCallback,
+  } as const);
 };
