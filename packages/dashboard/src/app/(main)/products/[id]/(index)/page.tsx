@@ -1,13 +1,8 @@
 import { findProduct } from '@/data/product';
 import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import React from 'react';
-
-export const metadata: Metadata = {
-  title: 'Product stocks',
-};
 
 const ProductStocksPage = async ({ params }: { params: { id: string } }) => {
   const product = await findProduct(params.id);
