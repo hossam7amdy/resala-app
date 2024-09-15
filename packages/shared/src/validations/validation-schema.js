@@ -29,7 +29,7 @@ export const LoginSchema = z.object({
 });
 export const GoogleLoginSchema = z.object({
     query: z.object({
-        redirectUrl: z.string().url().max(100).optional(),
+        redirectUrl: z.string().url().max(200).optional(),
     }),
 });
 export const RegisterSchema = z.object({

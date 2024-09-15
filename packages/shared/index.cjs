@@ -677,7 +677,7 @@ const LoginSchema = zod.z.object({
 });
 const GoogleLoginSchema = zod.z.object({
     query: zod.z.object({
-        redirectUrl: zod.z.string().url().max(100).optional(),
+        redirectUrl: zod.z.string().url().max(200).optional(),
     }),
 });
 const RegisterSchema = zod.z.object({
