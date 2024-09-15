@@ -30,6 +30,14 @@ private getHeaders() {
     return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
     
   }
+
+  // Products
+  getProductsSearch(searchText:string): Observable<any> {
+    console.log(this.getHeaders());
+    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{search:searchText, limit:"100"})
+    return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
+    
+  }
 //'/api/v1/products?page=1&limit=10&query='
 
   //Product Details

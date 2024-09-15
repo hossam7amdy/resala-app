@@ -84,6 +84,73 @@
   </div>
 
   <!-- fixed buttons -->
+  <!-- search section  -->
+  <!-- routerLink="/search" -->
+  <div class="search-btn"  (click)="[toggleSearch(), searchProducts()]">
+    <i class="fa-solid fa-magnifying-glass "></i>
+  </div>
+  <section *ngIf="isClickedSearch" class="search-form">
+  
+      <div class="parent-search">
+        <form class="d-flex ">
+          <i class="fa-solid fa-magnifying-glass icon-search"></i> 
+          <input (keydown)="searchProducts()" placeholder="Search" name="search-text" [(ngModel)]="searchText" class="form-control  search" type="text" aria-label="Search" />
+          <i class="fa-solid fa-xmark search-close" (click)="closeSearch()"></i>
+        </form>
+
+        <div class="products-search row">
+          <div *ngFor="let product of products |search:searchText "
+           class="col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2">
+           <div (click)="closeSearch()">
+            
+            <div class="parent-img-content w-100 ">
+              <header class="header-product">
+                <i
+                  (click)="addPoductInWishList(product.id, favoritIcon)"
+                  #favoritIcon
+                  class="fa-regular fa-heart favourit-icon"
+                ></i>
+              </header>
+              
+              <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
+  
+                <img
+                  class="w-100 image-products"
+                  [src]="product.imageUrl"
+                  [alt]="product.enName"
+                  [title]="product.enName"
+                />
+              </div>
+            </div>
+            <!--  -->
+            
+            <div class="descrp">
+              <h6 [routerLink]="['/product-details/', product.id]" class="h4 mb-0" role="button">
+                {{ product.enName }}
+              </h6>
+  
+              <div class="rating">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
+            </div>
+          </div>
+          </div>
+  
+        </div>
+      
+
+      </div>
+     
+      
+     
+  </section>
+
+<!-- scroll section  -->
   <button (click)="scrollTop()" class="btn-up"><i class="fa-solid fa-arrow-up"></i></button>
   <a class="whats-icon" href=""><i class="fab fa-whatsapp"></i></a>
 </footer>
