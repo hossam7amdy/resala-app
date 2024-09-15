@@ -22,6 +22,8 @@ export type LoginResponse = DefaultResponseBody & {
         user: User;
     };
 };
+export type GoogleLoginRequest = z.infer<typeof Schemas.GoogleLoginSchema>;
+export type GoogleLoginResponse = undefined;
 export type RegisterRequest = z.infer<typeof Schemas.RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
 export type RefreshTokenRequest = z.infer<typeof Schemas.RefreshTokenSchema>;

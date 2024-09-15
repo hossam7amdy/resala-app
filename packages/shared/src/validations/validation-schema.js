@@ -27,6 +27,11 @@ export const LoginSchema = z.object({
         password: z.string(),
     }),
 });
+export const GoogleLoginSchema = z.object({
+    query: z.object({
+        redirectUrl: z.string().url().max(100).optional(),
+    }),
+});
 export const RegisterSchema = z.object({
     body: z.object({
         firstName: UserSchema.shape.firstName,
@@ -34,11 +39,13 @@ export const RegisterSchema = z.object({
         phone: UserSchema.shape.phone,
         email: UserSchema.shape.email,
         password: UserSchema.shape.password,
+        redirectUrl: z.string().url().max(100).optional(),
     }),
 });
 export const ResendVerificationSchema = z.object({
     body: z.object({
         email: UserSchema.shape.email,
+        redirectUrl: z.string().url().max(100).optional(),
     }),
 });
 export const RefreshTokenSchema = z.object({
@@ -64,6 +71,7 @@ export const ChangePasswordSchema = z.object({
 export const ForgotPasswordSchema = z.object({
     body: z.object({
         email: UserSchema.shape.email,
+        redirectUrl: z.string().url().max(100).optional(),
     }),
 });
 // User Schemas

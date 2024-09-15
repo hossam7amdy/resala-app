@@ -14,6 +14,7 @@ exports.Endpoints = void 0;
 (function (Endpoints) {
     // auth endpoints
     Endpoints["login"] = "login";
+    Endpoints["loginWithGoogle"] = "loginWithGoogle";
     Endpoints["register"] = "register";
     Endpoints["refresh"] = "refresh";
     Endpoints["forgotPassword"] = "forgotPassword";
@@ -167,6 +168,10 @@ const ENDPOINT_CONFIGS = {
         method: 'post',
         url: '/api/v1/auth/login',
         sensitive: true,
+    },
+    [exports.Endpoints.loginWithGoogle]: {
+        method: 'get',
+        url: '/auth/google',
     },
     [exports.Endpoints.register]: {
         method: 'post',
@@ -670,6 +675,11 @@ const LoginSchema = zod.z.object({
         password: zod.z.string(),
     }),
 });
+const GoogleLoginSchema = zod.z.object({
+    query: zod.z.object({
+        redirectUrl: zod.z.string().url().max(100).optional(),
+    }),
+});
 const RegisterSchema = zod.z.object({
     body: zod.z.object({
         firstName: UserSchema.shape.firstName,
@@ -677,11 +687,13 @@ const RegisterSchema = zod.z.object({
         phone: UserSchema.shape.phone,
         email: UserSchema.shape.email,
         password: UserSchema.shape.password,
+        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 const ResendVerificationSchema = zod.z.object({
     body: zod.z.object({
         email: UserSchema.shape.email,
+        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 const RefreshTokenSchema = zod.z.object({
@@ -707,6 +719,7 @@ const ChangePasswordSchema = zod.z.object({
 const ForgotPasswordSchema = zod.z.object({
     body: zod.z.object({
         email: UserSchema.shape.email,
+        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 // User Schemas
@@ -1094,6 +1107,7 @@ exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
+exports.GoogleLoginSchema = GoogleLoginSchema;
 exports.ListAddressSchema = ListAddressSchema;
 exports.ListImagesSchema = ListImagesSchema;
 exports.ListOrdersSchema = ListOrdersSchema;
