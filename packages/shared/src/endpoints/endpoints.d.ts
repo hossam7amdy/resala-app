@@ -17,6 +17,7 @@ export type EndpointConfig = {
  */
 export declare enum Endpoints {
     login = "login",
+    loginWithGoogle = "loginWithGoogle",
     register = "register",
     refresh = "refresh",
     forgotPassword = "forgotPassword",

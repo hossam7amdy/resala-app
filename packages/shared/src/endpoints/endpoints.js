@@ -10,6 +10,7 @@ export var Endpoints;
 (function (Endpoints) {
     // auth endpoints
     Endpoints["login"] = "login";
+    Endpoints["loginWithGoogle"] = "loginWithGoogle";
     Endpoints["register"] = "register";
     Endpoints["refresh"] = "refresh";
     Endpoints["forgotPassword"] = "forgotPassword";
@@ -163,6 +164,10 @@ export const ENDPOINT_CONFIGS = {
         method: 'post',
         url: '/api/v1/auth/login',
         sensitive: true,
+    },
+    [Endpoints.loginWithGoogle]: {
+        method: 'get',
+        url: '/auth/google',
     },
     [Endpoints.register]: {
         method: 'post',
