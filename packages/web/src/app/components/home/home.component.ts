@@ -13,13 +13,14 @@ import { HomeProductsService } from 'src/app/core/services/home-products.service
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule ], //
+  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -95,12 +96,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
         console.log(response);
       },
       error: err => {
-        if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-          this._Toaster.error('Should be Login !!');
+
+        this._Toaster.error('Should be Login !!');
           this._Router.navigate(['/login']);
-        } else {
-          this._Toaster.error(err.message);
-        }
+        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
+          
+        // } else {
+        //   this._Toaster.error(err.message);
+        // }
         console.log(err);
       },
     });

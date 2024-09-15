@@ -171,6 +171,10 @@ section .overlay {
   }
 }
 
+
+
+
+
 /* Slider*/
 .custom-owl .row,
 .custom-owl .row .col-6 {
@@ -487,7 +491,9 @@ section .overlay {
  
 
 /* NGXowl carowsel all cat*/
-::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
+::ng-deep .owl-theme .owl-nav [class*='owl-']:hover,
+::ng-deep .owl-theme .owl-nav [class*='owl-']:focus,
+::ng-deep .owl-theme .owl-nav [class*='owl-']:active {
   background: #fbb935;
   color: #fff;
   text-decoration: none;

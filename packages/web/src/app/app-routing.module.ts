@@ -82,6 +82,8 @@ const routes: Routes = [
           import('./components/post-pay/post-pay.component').then(m => m.PostPayComponent),
         title: 'Order Status',
       },
+
+      
     ],
   },
 
