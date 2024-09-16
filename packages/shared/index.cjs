@@ -687,13 +687,11 @@ const RegisterSchema = zod.z.object({
         phone: UserSchema.shape.phone,
         email: UserSchema.shape.email,
         password: UserSchema.shape.password,
-        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 const ResendVerificationSchema = zod.z.object({
     body: zod.z.object({
         email: UserSchema.shape.email,
-        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 const RefreshTokenSchema = zod.z.object({

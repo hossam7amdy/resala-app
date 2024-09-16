@@ -54,14 +54,12 @@ export const RegisterSchema = z.object({
     phone: UserSchema.shape.phone,
     email: UserSchema.shape.email,
     password: UserSchema.shape.password,
-    redirectUrl: z.string().url().max(100).optional(),
   }),
 });
 
 export const ResendVerificationSchema = z.object({
   body: z.object({
     email: UserSchema.shape.email,
-    redirectUrl: z.string().url().max(100).optional(),
   }),
 });
 

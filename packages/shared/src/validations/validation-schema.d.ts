@@ -55,21 +55,18 @@ export declare const RegisterSchema: z.ZodObject<{
         phone: z.ZodString;
         email: z.ZodString;
         password: z.ZodString;
-        redirectUrl: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         email: string;
         phone: string;
         firstName: string;
         lastName: string;
         password: string;
-        redirectUrl?: string | undefined;
     }, {
         email: string;
         phone: string;
         firstName: string;
         lastName: string;
         password: string;
-        redirectUrl?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
@@ -78,7 +75,6 @@ export declare const RegisterSchema: z.ZodObject<{
         firstName: string;
         lastName: string;
         password: string;
-        redirectUrl?: string | undefined;
     };
 }, {
     body: {
@@ -87,29 +83,23 @@ export declare const RegisterSchema: z.ZodObject<{
         firstName: string;
         lastName: string;
         password: string;
-        redirectUrl?: string | undefined;
     };
 }>;
 export declare const ResendVerificationSchema: z.ZodObject<{
     body: z.ZodObject<{
         email: z.ZodString;
-        redirectUrl: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         email: string;
-        redirectUrl?: string | undefined;
     }, {
         email: string;
-        redirectUrl?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
         email: string;
-        redirectUrl?: string | undefined;
     };
 }, {
     body: {
         email: string;
-        redirectUrl?: string | undefined;
     };
 }>;
 export declare const RefreshTokenSchema: z.ZodObject<{
