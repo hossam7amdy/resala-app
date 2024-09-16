@@ -21,7 +21,7 @@ nav .logo {
 
 
 /* @media (min-width: 1200px)  */
-.navbar-expand-xl .navbar-nav .dropdown-menu {
+.navbar-expand-lg .navbar-nav .dropdown-menu {
   position: absolute;
   border: none !important;
   min-width: 300px !important;
@@ -39,7 +39,7 @@ nav .logo {
 
 .dropdown-menu .dropdown-item{
   color: #016373;
-  font-weight: bold;
+  font-weight: 500;
   
 }
 .dropdown-menu .dropdown-item:hover{
@@ -47,6 +47,13 @@ nav .logo {
   color: #fff;
 }
 
+
+/*login*/
+.not-member{
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+}
 /**/
 .navbar-toggler{
   transition: all 1s ease-in-out;

@@ -82,15 +82,16 @@ const routes: Routes = [
           import('./components/post-pay/post-pay.component').then(m => m.PostPayComponent),
         title: 'Order Status',
       },
-    ],
-  },
 
-  {
-    path: '',
-    loadComponent: () =>
-      import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
-    children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./components/orders/orders.component').then(m => m.OrdersComponent),
+        title: 'Orders',
+      },
+
+
+      // login 
 
       {
         path: 'login',
@@ -118,8 +119,57 @@ const routes: Routes = [
           import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
         title: 'Reset Password',
       },
+
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./components/profile/profile.component').then(m => m.ProfileComponent),
+        title: 'Profile',
+      },
+
+
+
+      // end login
+
+      
     ],
   },
+
+  // {
+  //   path: '',
+  //   loadComponent: () =>
+  //     import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
+  //   children: [
+  //     { path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  //     {
+  //       path: 'login',
+  //       loadComponent: () =>
+  //         import('./components/login/login.component').then(m => m.LoginComponent),
+  //       title: 'Login',
+  //     },
+
+  //     {
+  //       path: 'register',
+  //       loadComponent: () =>
+  //         import('./components/register/register.component').then(m => m.RegisterComponent),
+  //       title: 'Register',
+  //     },
+  //     {
+  //       path: 'forgot-password',
+  //       loadComponent: () =>
+  //         import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+  //       title: 'Forgot Password',
+  //     },
+
+  //     {
+  //       path: 'reset-password',
+  //       loadComponent: () =>
+  //         import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+  //       title: 'Reset Password',
+  //     },
+  //   ],
+  // },
 
   {
     path: '',
