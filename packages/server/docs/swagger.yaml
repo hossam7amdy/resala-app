@@ -133,8 +133,7 @@ paths:
                 $ref: "#/components/schemas/GetStockResponse"
       tags:
         - Stock
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: stockId
@@ -210,8 +209,7 @@ paths:
                 $ref: "#/components/schemas/ListStocksResponse"
       tags:
         - Stock
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: query
           name: page
@@ -283,8 +281,7 @@ paths:
                 $ref: "#/components/schemas/GetSizeResponse"
       tags:
         - Size
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: sizeId
@@ -350,8 +347,7 @@ paths:
                 $ref: "#/components/schemas/ListSizesResponse"
       tags:
         - Size
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters: []
     post:
       operationId: Create
@@ -687,8 +683,7 @@ paths:
                 $ref: "#/components/schemas/GetProductResponse"
       tags:
         - Product
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: productId
@@ -776,8 +771,7 @@ paths:
                 $ref: "#/components/schemas/ListProductsResponse"
       tags:
         - Product
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: query
           name: page
@@ -1234,8 +1228,7 @@ paths:
         period of time (daily, weekly, or monthly)"
       tags:
         - Dashboard
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters: []
   /api/v1/dashboard/sales-trends:
     get:
@@ -1332,8 +1325,7 @@ paths:
                 $ref: "#/components/schemas/GetColorResponse"
       tags:
         - Color
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: colorId
@@ -1403,8 +1395,7 @@ paths:
                 $ref: "#/components/schemas/ListColorsResponse"
       tags:
         - Color
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters: []
     post:
       operationId: Create
@@ -1445,8 +1436,7 @@ paths:
                 $ref: "#/components/schemas/GetCategoryResponse"
       tags:
         - Category
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: categoryId
@@ -1516,8 +1506,7 @@ paths:
                 $ref: "#/components/schemas/ListCategoriesResponse"
       tags:
         - Category
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters: []
     post:
       operationId: Create
@@ -1545,6 +1534,58 @@ paths:
                 arName:
                   type: string
               type: object
+  /auth/google:
+    get:
+      operationId: GoogleAuth
+      responses:
+        "204":
+          description: No content
+      description: >-
+        This endpoint redirects the user to Google's and initiates the Google
+        OAuth2 login flow.
+
+
+        - The `redirectUrl` query parameter should be passed in the request, the
+        `redirectUrl` should be a URL encoded.
+
+        - The frontend should implement a route that listens to the
+        `redirectUrl` and extracts the `accessToken` and `refreshToken` from the
+        query parameters.
+
+
+        **Example:**
+
+
+        1. _Request_ - Redirect the user to Google's login page:
+
+        ```ts
+
+        const redirectUrl =
+        encodeURIComponent('http://localhost:3000/login/callback');
+
+        window.location.href =
+        `http://localhost:3000/auth/google?redirectUrl=${redirectUrl}`;
+
+        ```
+
+        2. _Response_ - Google redirects the user to the `redirectUrl` with the
+        tokens as query parameters:
+
+        ```ts
+
+        // http://localhost:3000/login/callback?accessToken=...&refreshToken=...
+
+        ```
+      tags:
+        - Auth
+      security: []
+      parameters:
+        - description: "- The URL to redirect the user to after the login is successful."
+          in: query
+          name: redirectUrl
+          required: false
+          schema:
+            type: string
   /api/v1/auth/login:
     post:
       operationId: Login
@@ -1681,6 +1722,8 @@ paths:
           application/json:
             schema:
               properties:
+                redirectUrl:
+                  type: string
                 email:
                   type: string
               type: object
@@ -3431,10 +3474,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
     JWT_RESET:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    JWT_REFRESH:
       type: http
       scheme: bearer
       bearerFormat: JWT

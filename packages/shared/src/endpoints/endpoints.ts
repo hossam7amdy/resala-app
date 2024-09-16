@@ -20,6 +20,7 @@ export type EndpointConfig = {
 export enum Endpoints {
   // auth endpoints
   login = 'login',
+  loginWithGoogle = 'loginWithGoogle',
   register = 'register',
   refresh = 'refresh',
   forgotPassword = 'forgotPassword',
@@ -192,6 +193,10 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     method: 'post',
     url: '/api/v1/auth/login',
     sensitive: true,
+  },
+  [Endpoints.loginWithGoogle]: {
+    method: 'get',
+    url: '/auth/google',
   },
   [Endpoints.register]: {
     method: 'post',

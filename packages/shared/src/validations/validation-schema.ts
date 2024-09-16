@@ -36,8 +36,14 @@ export const OffsetPageParamsSchema = z.object({
 // Auth Schemas
 export const LoginSchema = z.object({
   body: z.object({
-    sign: z.string(),
+    sign: z.string().min(3),
     password: z.string(),
+  }),
+});
+
+export const GoogleLoginSchema = z.object({
+  query: z.object({
+    redirectUrl: z.string().url().max(200).optional(),
   }),
 });
 
@@ -84,6 +90,7 @@ export const ChangePasswordSchema = z.object({
 export const ForgotPasswordSchema = z.object({
   body: z.object({
     email: UserSchema.shape.email,
+    redirectUrl: z.string().url().max(100).optional(),
   }),
 });
 

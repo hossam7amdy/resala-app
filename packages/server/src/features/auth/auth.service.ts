@@ -1,35 +1,17 @@
-import type { RegisterRequest } from '@resala/shared';
+import type { ProviderUser, RegisterRequest, SignProvider } from '@resala/shared';
 
+import type { Configuration } from '../../configuration/index.js';
 import type { DataStore } from '../../datastore/index.js';
-import { BadRequestError } from '../../errors/api.errors.js';
-import { jwtSign, jwtVerify } from '../../lib/jwt.js';
+import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
 import { hashPassword, verifyPassword } from '../../lib/password.js';
+import { JwtManager } from './index.js';
 
-export class AuthService {
-  constructor(private readonly db: DataStore) {}
-
-  private _getAccessToken(id: string, email: string) {
-    return jwtSign({ id, email }, 'JWT_SECRET', {
-      expiresIn: '8h',
-    });
-  }
-
-  private _getRefreshToken(id: string, email: string) {
-    return jwtSign({ id: id.toString(), email }, 'JWT_REFRESH', {
-      expiresIn: '7d',
-    });
-  }
-
-  private _getResetToken(id: string, email: string) {
-    return jwtSign({ id: id.toString(), email }, 'JWT_RESET', {
-      expiresIn: '15m',
-    });
-  }
-
-  private _getVerifyToken(id: string, email: string) {
-    return jwtSign({ id, email }, 'JWT_VERIFY', {
-      expiresIn: '1h',
-    });
+export class AuthService extends JwtManager {
+  constructor(
+    readonly configuration: Configuration,
+    readonly db: DataStore
+  ) {
+    super(configuration.jwt);
   }
 
   async login(sign: string, password: string) {
@@ -53,10 +35,35 @@ export class AuthService {
       data: { lastLogin: new Date() },
     });
 
-    const accessToken = this._getAccessToken(user.id.toString(), user.email);
-    const refreshToken = this._getRefreshToken(user.id.toString(), user.email);
+    const jwtPayload = { id: user.id.toString(), email: user.email };
+    const accessToken = this.signAccess(jwtPayload);
+    const refreshToken = this.signRefresh(jwtPayload);
 
     return { accessToken, refreshToken, user };
+  }
+
+  async loginWithProvider(providerUser: ProviderUser, provider: SignProvider = 'google') {
+    if (!providerUser) {
+      throw new NotFoundError('User not found');
+    }
+
+    const { id, email } = await this.db.user.upsert({
+      create: {
+        ...providerUser,
+        phone: '',
+        password: '',
+        isEmailVerified: true,
+        role: 'CUSTOMER',
+      },
+      update: providerUser,
+      where: { email: providerUser.email },
+    });
+
+    const jwtPayload = { id: id.toString(), email, strategy: provider };
+    const accessToken = this.signAccess(jwtPayload);
+    const refreshToken = this.signRefresh(jwtPayload);
+
+    return { accessToken, refreshToken };
   }
 
   async register(payload: RegisterRequest['body']) {
@@ -74,7 +81,7 @@ export class AuthService {
 
     return {
       user,
-      verifyToken: this._getVerifyToken(user.id.toString(), user.email),
+      verifyToken: this.signVerify({ id: user.id.toString(), email: user.email }),
     };
   }
 
@@ -85,7 +92,7 @@ export class AuthService {
       throw new BadRequestError('Email is already verified');
     }
 
-    const token = this._getVerifyToken(user.id.toString(), user.email);
+    const token = this.signVerify({ id: user.id.toString(), email: user.email });
 
     return { token };
   }
@@ -130,7 +137,7 @@ export class AuthService {
     const { id } = await this.db.user.findUniqueOrThrow({ where: { email } });
 
     // generate reset token
-    const token = this._getResetToken(id.toString(), email);
+    const token = this.signReset({ id: id.toString(), email });
 
     return { token };
   }
@@ -146,10 +153,10 @@ export class AuthService {
   }
 
   async refreshToken(token: string) {
-    const { id } = jwtVerify(token, 'JWT_REFRESH');
+    const { id, strategy } = this.verify(token, this.configuration.jwt.refresh);
     const user = await this.db.user.findUniqueOrThrow({ where: { id: +id } });
 
-    const accessToken = this._getAccessToken(user.id.toString(), user.email);
+    const accessToken = this.signAccess({ id: user.id.toString(), email: user.email, strategy });
 
     return { accessToken };
   }
