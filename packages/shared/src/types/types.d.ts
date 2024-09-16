@@ -7,6 +7,13 @@ export type OrderStatusType = keyof typeof OrderStatus;
 export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
 export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
+export type SignProvider = 'google';
+export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName'>;
+export type JwtPayload = {
+    id: string;
+    email: string;
+    strategy?: 'credentials' | SignProvider;
+};
 export type Pagination = {
     page: number;
     limit: number;
