@@ -27,7 +27,6 @@ export const errorHandler = (
   // eslint-disable-next-line no-unused-vars
   _next: NextFunction
 ) => {
-  console.error('errorHandler:', error);
   if (error instanceof APIError) {
     return res.status(error.statusCode).json({
       success: false,
