@@ -27,6 +27,8 @@ import { ColorController } from './../features/color/color.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CategoryController } from './../features/category/category.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { GoogleOAuthController } from './../features/auth/google-oauth.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../features/auth/auth.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AddressController } from './../features/address/address.controller.js';
@@ -684,7 +686,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/stocks/:stockId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.get)),
 
@@ -715,7 +716,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/stocks',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockController)),
             ...(fetchMiddlewares<RequestHandler>(StockController.prototype.list)),
 
@@ -843,7 +843,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/sizes/:sizeId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.get)),
 
@@ -874,7 +873,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/sizes',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(SizeController)),
             ...(fetchMiddlewares<RequestHandler>(SizeController.prototype.list)),
 
@@ -1409,7 +1407,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/products/:productId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.get)),
 
@@ -1440,7 +1437,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/products',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductController)),
             ...(fetchMiddlewares<RequestHandler>(ProductController.prototype.list)),
 
@@ -1994,7 +1990,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/dashboard/top-products',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DashboardController)),
             ...(fetchMiddlewares<RequestHandler>(DashboardController.prototype.listTopProducts)),
 
@@ -2174,7 +2169,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/colors/:colorId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.get)),
 
@@ -2205,7 +2199,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/colors',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ColorController)),
             ...(fetchMiddlewares<RequestHandler>(ColorController.prototype.lists)),
 
@@ -2329,7 +2322,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/categories/:categoryId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.get)),
 
@@ -2360,7 +2352,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/categories',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.list)),
 
@@ -2483,6 +2474,67 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/auth/google',
+            ...(fetchMiddlewares<RequestHandler>(GoogleOAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(GoogleOAuthController.prototype.googleAuth)),
+
+            async function GoogleOAuthController_googleAuth(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    redirectUrl: {"in":"query","name":"redirectUrl","dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new GoogleOAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'googleAuth',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/auth/google/callback',
+            ...(fetchMiddlewares<RequestHandler>(GoogleOAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(GoogleOAuthController.prototype.googleCallback)),
+
+            async function GoogleOAuthController_googleCallback(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new GoogleOAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'googleCallback',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/api/v1/auth/login',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.login)),
@@ -2520,7 +2572,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AuthController_register(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"lastName":{"dataType":"string"},"firstName":{"dataType":"string"},"phone":{"dataType":"string"},"email":{"dataType":"string"}}},
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2611,8 +2662,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function AuthController_forgotPassword(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string"}}},
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                    body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"redirectUrl":{"dataType":"string"},"email":{"dataType":"string"}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2708,7 +2758,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             async function AuthController_resendVerificationEmail(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"email":{"dataType":"string"}}},
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

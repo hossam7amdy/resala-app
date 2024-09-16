@@ -14,6 +14,7 @@ exports.Endpoints = void 0;
 (function (Endpoints) {
     // auth endpoints
     Endpoints["login"] = "login";
+    Endpoints["loginWithGoogle"] = "loginWithGoogle";
     Endpoints["register"] = "register";
     Endpoints["refresh"] = "refresh";
     Endpoints["forgotPassword"] = "forgotPassword";
@@ -167,6 +168,10 @@ const ENDPOINT_CONFIGS = {
         method: 'post',
         url: '/api/v1/auth/login',
         sensitive: true,
+    },
+    [exports.Endpoints.loginWithGoogle]: {
+        method: 'get',
+        url: '/auth/google',
     },
     [exports.Endpoints.register]: {
         method: 'post',
@@ -666,8 +671,13 @@ const OffsetPageParamsSchema = zod.z.object({
 // Auth Schemas
 const LoginSchema = zod.z.object({
     body: zod.z.object({
-        sign: zod.z.string(),
+        sign: zod.z.string().min(3),
         password: zod.z.string(),
+    }),
+});
+const GoogleLoginSchema = zod.z.object({
+    query: zod.z.object({
+        redirectUrl: zod.z.string().url().max(200).optional(),
     }),
 });
 const RegisterSchema = zod.z.object({
@@ -707,6 +717,7 @@ const ChangePasswordSchema = zod.z.object({
 const ForgotPasswordSchema = zod.z.object({
     body: zod.z.object({
         email: UserSchema.shape.email,
+        redirectUrl: zod.z.string().url().max(100).optional(),
     }),
 });
 // User Schemas
@@ -1094,6 +1105,7 @@ exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductSchema = GetProductSchema;
 exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
+exports.GoogleLoginSchema = GoogleLoginSchema;
 exports.ListAddressSchema = ListAddressSchema;
 exports.ListImagesSchema = ListImagesSchema;
 exports.ListOrdersSchema = ListOrdersSchema;

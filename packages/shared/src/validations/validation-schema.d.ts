@@ -31,6 +31,23 @@ export declare const LoginSchema: z.ZodObject<{
         sign: string;
     };
 }>;
+export declare const GoogleLoginSchema: z.ZodObject<{
+    query: z.ZodObject<{
+        redirectUrl: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        redirectUrl?: string | undefined;
+    }, {
+        redirectUrl?: string | undefined;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    query: {
+        redirectUrl?: string | undefined;
+    };
+}, {
+    query: {
+        redirectUrl?: string | undefined;
+    };
+}>;
 export declare const RegisterSchema: z.ZodObject<{
     body: z.ZodObject<{
         firstName: z.ZodString;
@@ -156,18 +173,23 @@ export declare const ChangePasswordSchema: z.ZodObject<{
 export declare const ForgotPasswordSchema: z.ZodObject<{
     body: z.ZodObject<{
         email: z.ZodString;
+        redirectUrl: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         email: string;
+        redirectUrl?: string | undefined;
     }, {
         email: string;
+        redirectUrl?: string | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     body: {
         email: string;
+        redirectUrl?: string | undefined;
     };
 }, {
     body: {
         email: string;
+        redirectUrl?: string | undefined;
     };
 }>;
 export declare const GetUserSchema: z.ZodObject<{

@@ -26,7 +26,7 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { enforceJwt } from '../../middlewares/authentication.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validateImage } from '../../middlewares/uploadHandler.js';
 import { validate } from '../../middlewares/validateHandler.js';
@@ -35,7 +35,7 @@ import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
 
 @Tags('Product')
-@Security('JWT_SECRET')
+@Middlewares([jwtParse])
 @Route('api/v1/products')
 export class ProductController extends Controller {
   private readonly productService: ProductService;
@@ -74,8 +74,9 @@ export class ProductController extends Controller {
 
   /** Create a new product, only admins can create products */
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Product created')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
     @FormField() categoryId: string,
     @FormField() arName: string,
@@ -98,7 +99,8 @@ export class ProductController extends Controller {
 
   /** Update a product, only admins can update products */
   @Put('{productId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() productId: string,
     @FormField() categoryId: number,
@@ -123,7 +125,8 @@ export class ProductController extends Controller {
 
   /** Delete a product, only admins can delete products */
   @Delete('{productId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() productId: string): Promise<DeleteProductResponse> {
     const data = await this.productService.delete(+productId);
 

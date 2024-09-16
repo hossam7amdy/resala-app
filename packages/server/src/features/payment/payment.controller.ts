@@ -17,7 +17,6 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
-import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
@@ -26,7 +25,7 @@ import { PaymobService } from './paymob/paymob.service.js';
 @Tags('Payment')
 @Security('JWT_SECRET')
 @Route('api/v1/payments')
-@Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+@Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
 export class PaymentController extends Controller {
   private readonly paymentService: PaymentService;
 
