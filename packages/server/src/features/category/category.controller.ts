@@ -27,14 +27,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { enforceJwt } from '../../middlewares/authentication.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { CategoryService } from './category.service.js';
 
 @Tags('Category')
-@Security('JWT_SECRET')
 @Route('api/v1/categories')
+@Middlewares([jwtParse])
 export class CategoryController extends Controller {
   private readonly categoryService: CategoryService;
 
@@ -60,8 +60,9 @@ export class CategoryController extends Controller {
 
   /** Create a new category, only admins can create categories */
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Category created')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateCategorySchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateCategorySchema)])
   public async create(
     @Body() body: CreateCategoryRequest['body']
   ): Promise<CreateCategoryResponse> {
@@ -72,7 +73,8 @@ export class CategoryController extends Controller {
 
   /** Update a category, only admins can update categories */
   @Put('{categoryId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateCategorySchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateCategorySchema)])
   public async update(
     @Path() categoryId: string,
     @Body() body: UpdateCategoryRequest['body']
@@ -84,7 +86,8 @@ export class CategoryController extends Controller {
 
   /** Delete a category, only admins can delete categories */
   @Delete('{categoryId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteCategorySchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteCategorySchema)])
   public async delete(@Path() categoryId: string): Promise<DeleteCategoryResponse> {
     const category = await this.categoryService.delete(+categoryId);
 

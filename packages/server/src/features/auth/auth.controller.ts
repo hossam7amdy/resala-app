@@ -39,42 +39,35 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
+import { configuration } from '../../configuration/index.js';
 import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import { enforceJwt } from '../../middlewares/authentication.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { limiter, validate } from '../../middlewares/index.js';
+import { isAllowedOrigin } from '../../utils/is-allowed-origin.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
-import { AuthService } from './auth.service.js';
+import { AuthService } from './index.js';
 
 @Tags('Auth')
 @Route('api/v1/auth')
-@Middlewares([limiter()])
+@Middlewares([jwtParse, limiter()])
 export class AuthController extends Controller {
-  private readonly _resetPasswordPath = '/reset-password';
-  private readonly _confirmEmailPath = '/confirm-email';
+  private readonly resetUrl = configuration.origin.web + '/reset-password';
+  private readonly confirmUrl = configuration.origin.web + '/confirm-email';
+
   private readonly authService: AuthService;
   private readonly notificationService: NotificationService;
 
   constructor() {
     super();
 
-    this.authService = new AuthService(db);
+    this.authService = new AuthService(configuration, db);
     this.notificationService = new NotificationService(new EmailNotification());
   }
 
-  private get _clientUrl() {
-    return process.env.WEB_APP_URL || process.env.DATABASE_URL || process.env.SERVER_URL;
-  }
-
-  private _parseClientUrl(request: ExRequest) {
-    const url = new URL(request?.protocol + '://' + request?.get('host'));
-
-    return this._clientUrl || url.origin;
-  }
-
-  private async _sendVerificationEmail(email: string, redirectUrl: string, token: string) {
-    const link = `${redirectUrl}?token=${token}`;
+  private async _sendVerificationEmail(email: string, token: string) {
+    const link = `${this.confirmUrl}?token=${token}`;
 
     return await this.notificationService.sendVerificationEmail(email, link);
   }
@@ -96,17 +89,12 @@ export class AuthController extends Controller {
   @Post('register')
   @Middlewares([validate(RegisterSchema)])
   @SuccessResponse('201', 'User registered successfully')
-  public async register(
-    @Body() body: RegisterRequest['body'],
-    @Request() req: ExRequest
-  ): Promise<RegisterResponse> {
-    const verifyUrl = this._parseClientUrl(req) + this._confirmEmailPath;
-
+  public async register(@Body() body: RegisterRequest['body']): Promise<RegisterResponse> {
     // Register user
     const { user, verifyToken } = await this.authService.register(body);
 
     // Send verification email
-    await this._sendVerificationEmail(user.email, verifyUrl, verifyToken);
+    await this._sendVerificationEmail(user.email, verifyToken);
 
     return { success: true };
   }
@@ -132,7 +120,7 @@ export class AuthController extends Controller {
    */
   @Post('verify-email')
   @Security('JWT_VERIFY')
-  @Middlewares([enforceJwt, validate(VerifyEmailSchema)])
+  @Middlewares([validate(VerifyEmailSchema)])
   public async verifyEmail(@Request() req: ExRequest): Promise<VerifyEmailResponse> {
     const email = req.res?.locals.user.email;
 
@@ -150,11 +138,14 @@ export class AuthController extends Controller {
   @Middlewares([validate(ForgotPasswordSchema)])
   @SuccessResponse('200', 'Password reset code sent successfully')
   public async forgotPassword(
-    @Body() body: ForgotPasswordRequest['body'],
-    @Request() req: ExRequest
+    @Body() body: ForgotPasswordRequest['body']
   ): Promise<ForgotPasswordResponse> {
-    const email = body.email;
-    const resetUrl = this._parseClientUrl(req) + this._resetPasswordPath;
+    const { email, redirectUrl } = body;
+    const resetUrl = redirectUrl ?? this.resetUrl;
+
+    if (!isAllowedOrigin(resetUrl)) {
+      throw new BadRequestError('Invalid redirect URL');
+    }
 
     const { token } = await this.authService.forgotPassword(email);
 
@@ -173,7 +164,7 @@ export class AuthController extends Controller {
    */
   @Post('reset-password')
   @Security('JWT_RESET')
-  @Middlewares([enforceJwt, validate(ResetPasswordSchema)])
+  @Middlewares([validate(ResetPasswordSchema)])
   public async resetPassword(
     @Body() body: ResetPasswordRequest['body'],
     @Request() req: ExRequest
@@ -193,7 +184,7 @@ export class AuthController extends Controller {
 
   @Patch('change-password')
   @Security('JWT_SECRET')
-  @Middlewares([enforceJwt, validate(ChangePasswordSchema)])
+  @Middlewares([validate(ChangePasswordSchema)])
   public async changePassword(
     @Body() body: ChangePasswordRequest['body'],
     @Request() req: ExRequest
@@ -212,17 +203,15 @@ export class AuthController extends Controller {
    */
   @Post('resend-email-verification')
   @Security('JWT_SECRET')
-  @Middlewares([enforceJwt, validate(ResendVerificationSchema)])
+  @Middlewares([validate(ResendVerificationSchema)])
   public async resendVerificationEmail(
-    @Body() body: ResendVerificationEmailRequest['body'],
-    @Request() req: ExRequest
+    @Body() body: ResendVerificationEmailRequest['body']
   ): Promise<ResendVerificationEmailResponse> {
     const { email } = body;
-    const verifyUrl = this._parseClientUrl(req) + this._confirmEmailPath;
 
     const { token } = await this.authService.requestEmailVerification(email);
 
-    await this._sendVerificationEmail(email, verifyUrl, token);
+    await this._sendVerificationEmail(email, token);
 
     return { success: true, message: 'Verification email sent successfully' };
   }

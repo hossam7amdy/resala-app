@@ -27,14 +27,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { enforceJwt } from '../../middlewares/authentication.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { StockService } from './stock.service.js';
 
 @Tags('Stock')
 @Route('api/v1/stocks')
-@Security('JWT_SECRET')
+@Middlewares([jwtParse])
 export class StockController extends Controller {
   private readonly stockService: StockService;
 
@@ -72,7 +72,8 @@ export class StockController extends Controller {
   }
 
   @Post()
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateStockSchema)])
   @SuccessResponse('201', 'Stock created successfully')
   async create(@Body() body: CreateStockRequest['body']): Promise<CreateStockResponse> {
     const stock = await this.stockService.create(body);
@@ -81,7 +82,8 @@ export class StockController extends Controller {
   }
 
   @Put('{stockId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateStockSchema)])
   async update(
     @Path() stockId: string,
     @Body() body: UpdateStockRequest['body']
@@ -92,7 +94,8 @@ export class StockController extends Controller {
   }
 
   @Delete('{stockId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   async delete(@Path() stockId: string): Promise<DeleteStockResponse> {
     const stock = await this.stockService.delete(+stockId);
 

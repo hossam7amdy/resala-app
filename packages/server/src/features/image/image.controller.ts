@@ -25,7 +25,6 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { enforceJwt } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validateImage } from '../../middlewares/uploadHandler.js';
 import { FileService } from '../filestorage/file.service.js';
@@ -53,7 +52,7 @@ export class ImageController extends Controller {
   }
 
   @Post()
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   @SuccessResponse('201', 'Image created successfully')
   public async create(
     @FormField() colorId: number | string,
@@ -78,7 +77,7 @@ export class ImageController extends Controller {
   }
 
   @Patch('{imageId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() imageId: string,
     @Body() body: UpdateImageRequest['body']
@@ -89,7 +88,7 @@ export class ImageController extends Controller {
   }
 
   @Delete('{imageId}')
-  @Middlewares([enforceJwt, authorizeRole(['ADMIN', 'MODERATOR'])])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() imageId: string): Promise<UpdateImageResponse> {
     const image = await this.imageService.delete(+imageId);
 
