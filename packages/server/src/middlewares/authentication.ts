@@ -1,33 +1,56 @@
-import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { JwtPayload } from '@resala/shared';
+import type { Request, RequestHandler } from 'express';
 
+import { configuration } from '../configuration/index.js';
 import { db } from '../datastore/index.js';
 import { UnauthorizedError } from '../errors/api.errors.js';
-import { type Secret, jwtVerify } from '../lib/jwt.js';
+import { JwtManager } from '../features/auth/jwt.manager.js';
 
-const jwtParse = async (req: Request, res: Response, _: NextFunction, securityName: Secret) => {
+type SecurityName = 'JWT_SECRET' | 'JWT_RESET' | 'JWT_VERIFY';
+
+const jwtManager = new JwtManager(configuration.jwt);
+
+const validateJwt = (token: string, securityName: SecurityName = 'JWT_SECRET') => {
+  let payload: JwtPayload;
+
+  switch (securityName) {
+    case 'JWT_RESET':
+      payload = jwtManager.verifyReset(token);
+      break;
+    case 'JWT_VERIFY':
+      payload = jwtManager.verifyVerify(token);
+      break;
+    default:
+      payload = jwtManager.verifyAccess(token);
+      break;
+  }
+
+  return db.user.findUniqueOrThrow({ where: { id: +payload.id } });
+};
+
+export const jwtParse: RequestHandler = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return Promise.resolve();
+    if (!token || res.locals.user) return next();
 
-    const { id } = jwtVerify(token, securityName);
-
-    const user = await db.user.findUnique({ where: { id: +id } });
-    if (!user) throw new Error('User not found');
-
-    res.locals.user = user;
-    return Promise.resolve(user);
+    res.locals.user = await validateJwt(token);
+    return next();
   } catch (e) {
-    throw new UnauthorizedError((e as Error).message);
+    return next(new UnauthorizedError((e as Error).message));
   }
 };
 
-export const enforceJwt: RequestHandler = (_, res, next) => {
+export const enforceJwt: RequestHandler = (_, res) => {
   if (!res.locals.user) {
     throw new UnauthorizedError('Unauthorized');
   }
-  return next();
+  return Promise.resolve();
 };
 
-export const expressAuthentication = async (req: Request, securityName: Secret) => {
-  return jwtParse(req, req.res!, req.next!, securityName);
+export const expressAuthentication = async (req: Request, securityName: SecurityName) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) throw new UnauthorizedError('Unauthorized');
+
+  req.res!.locals.user = await validateJwt(token, securityName);
+  return enforceJwt(req, req.res!, req.next!);
 };

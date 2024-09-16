@@ -2,9 +2,11 @@ import type { CorsOptions } from 'cors';
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import fs from 'fs';
+import passport from 'passport';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
+import { configuration } from './configuration/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { loggerHandler } from './middlewares/loggerHandler.js';
 import { RegisterRoutes } from './routes/api.routes.js';
@@ -21,11 +23,12 @@ export const createExpressApp = (logRequests: boolean = true) => {
   app.set('view engine', 'ejs');
 
   const corsConfig: CorsOptions = {
-    origin: '*',
+    origin: [configuration.origin.allowedList],
   };
 
   // Middlewares
   app.use(cors(corsConfig));
+  app.use(passport.initialize());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static('uploads')); // serve uploaded files
