@@ -1,6 +1,8 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { Router } from 'express';
 
+import { configuration } from '../configuration/index.js';
+
 const router = Router();
 
 router.get('/', (_, res) => {
@@ -22,8 +24,8 @@ router.get('/', (_, res) => {
 
   const year = new Date().getFullYear();
 
-  const webAppUrl = process.env.WEB_APP_URL || 'http://localhost:4200';
-  const adminDashboardUrl = process.env.ADMIN_DASHBOARD_URL || 'http://localhost:3000';
+  const webAppUrl = configuration.origin.web;
+  const adminDashboardUrl = configuration.origin.dashboard;
 
   return res.render('index', { uptime, year, webAppUrl, adminDashboardUrl });
 });
