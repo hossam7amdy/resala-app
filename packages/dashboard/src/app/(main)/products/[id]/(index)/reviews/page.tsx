@@ -1,6 +1,6 @@
 import { Pagination, Table } from '@/components';
-import { listReviews } from '@/data/reviews';
 import { DeleteButton } from '@/features/reviews/delete-button';
+import { listReviews } from '@/fetch/reviews';
 import { formatDate } from '@/utils/date-time-formatter';
 import { Flex, Rate } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';

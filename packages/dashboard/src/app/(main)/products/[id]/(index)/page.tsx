@@ -1,6 +1,6 @@
-import { findProduct } from '@/data/product';
-import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
+import { findProduct } from '@/fetch/products';
+import { listStocks } from '@/fetch/stocks';
 import { notFound } from 'next/navigation';
 import React from 'react';
 

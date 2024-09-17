@@ -1,6 +1,6 @@
 'use client';
 
-import { addProduct, updateProduct } from '@/actions/product';
+import { addProduct, updateProduct } from '@/fetch/products';
 import { useMutation, useNotification } from '@/hooks';
 import { InboxOutlined } from '@ant-design/icons';
 import { type Category, type Product, validationPatterns } from '@resala/shared';

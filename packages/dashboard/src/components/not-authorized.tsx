@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/actions/auth';
+import { logout } from '@/fetch/auth';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';

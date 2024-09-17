@@ -3,13 +3,24 @@
 import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/utils/routes';
 import type {
+  GetPaymentRequest,
+  GetPaymentResponse,
   RefundPaymentRequest,
   RefundPaymentResponse,
   VoidPaymentRequest,
   VoidPaymentResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+
+export const findPaymentById = async (id: string) => {
+  const response = await callEndpoint<GetPaymentRequest, GetPaymentResponse>(
+    ENDPOINT_CONFIGS.getPayment,
+    { params: { transactionId: id }, next: { tags: [ROUTES.ORDERS, `payments/${id}`] } }
+  );
+
+  return response.data;
+};
 
 export const voidPayment = async (data: VoidPaymentRequest['body']) => {
   const response = await callEndpoint<VoidPaymentRequest, VoidPaymentResponse>(
@@ -17,7 +28,9 @@ export const voidPayment = async (data: VoidPaymentRequest['body']) => {
     { body: data }
   );
 
-  revalidatePath(ROUTES.ORDERS);
+  revalidateTag(ROUTES.ORDERS);
+  revalidateTag(`payments/${data.transactionId}`);
+
   return response;
 };
 
@@ -27,6 +40,8 @@ export const refundPayment = async (payload: RefundPaymentRequest['body']) => {
     { body: payload }
   );
 
-  revalidatePath(ROUTES.ORDERS);
+  revalidateTag(ROUTES.ORDERS);
+  revalidateTag(`payments/${payload.transactionId}`);
+
   return response;
 };

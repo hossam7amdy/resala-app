@@ -1,5 +1,5 @@
-import { getInventoryStatus } from '@/data/dashboard';
 import { InventoryStatusList } from '@/features/dashboard/inventory-status-list';
+import { getInventoryStatus } from '@/fetch/dashboard';
 import { Card, Tabs } from 'antd';
 import React from 'react';
 

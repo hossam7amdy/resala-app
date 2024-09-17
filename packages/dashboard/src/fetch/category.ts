@@ -7,11 +7,33 @@ import type {
   CreateCategoryResponse,
   DeleteCategoryRequest,
   DeleteCategoryResponse,
+  GetCategoryRequest,
+  GetCategoryResponse,
+  ListCategoriesRequest,
+  ListCategoriesResponse,
   UpdateCategoryRequest,
   UpdateCategoryResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+
+export const listAllCategories = async () => {
+  const response = await callEndpoint<ListCategoriesRequest, ListCategoriesResponse>(
+    ENDPOINT_CONFIGS.listCategories,
+    { query: {}, next: { tags: [ROUTES.CATEGORIES] } }
+  );
+
+  return response.data;
+};
+
+export const findCategoryById = async (id: string) => {
+  const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
+    ENDPOINT_CONFIGS.getCategory,
+    { params: { categoryId: id.toString() }, next: { tags: [ROUTES.CATEGORIES] } }
+  );
+
+  return response.data;
+};
 
 export const createCategory = async (payload: CreateCategoryRequest['body']) => {
   const response = await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
@@ -19,7 +41,7 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
     { body: payload }
   );
 
-  revalidatePath(ROUTES.CATEGORIES);
+  revalidateTag(ROUTES.CATEGORIES);
   return response;
 };
 
@@ -29,7 +51,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
     { params: { categoryId: id }, body: payload }
   );
 
-  revalidatePath(ROUTES.CATEGORIES);
+  revalidateTag(ROUTES.CATEGORIES);
   return response;
 };
 
@@ -39,6 +61,6 @@ export const deleteCategory = async (id: string) => {
     { params: { categoryId: id } }
   );
 
-  revalidatePath(ROUTES.CATEGORIES);
+  revalidateTag(ROUTES.CATEGORIES);
   return response;
 };

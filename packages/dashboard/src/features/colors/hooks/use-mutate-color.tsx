@@ -1,6 +1,6 @@
 'use client';
 
-import { createColor, updateColor } from '@/actions/color';
+import { createColor, updateColor } from '@/fetch/colors';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 

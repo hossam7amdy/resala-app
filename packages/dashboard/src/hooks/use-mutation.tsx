@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/actions/auth';
+import { logout } from '@/fetch/auth';
 import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
