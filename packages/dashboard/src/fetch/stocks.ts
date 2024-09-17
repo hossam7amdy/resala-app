@@ -7,11 +7,33 @@ import type {
   CreateStockResponse,
   DeleteStockRequest,
   DeleteStockResponse,
+  GetStockRequest,
+  GetStockResponse,
+  ListStocksRequest,
+  ListStocksResponse,
   UpdateStockRequest,
   UpdateStockResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+
+export const listStocks = async (query: ListStocksRequest['query']) => {
+  const response = await callEndpoint<ListStocksRequest, ListStocksResponse>(
+    ENDPOINT_CONFIGS.listStocks,
+    { query, next: { tags: [ROUTES.STOCKS] } }
+  );
+
+  return response.data;
+};
+
+export const findStockById = async (id: string | number) => {
+  const response = await callEndpoint<GetStockRequest, GetStockResponse>(
+    ENDPOINT_CONFIGS.getStock,
+    { params: { stockId: id.toString() }, cache: 'no-store' }
+  );
+
+  return response.data;
+};
 
 export const createStock = async (stock: CreateStockRequest['body']) => {
   const response = await callEndpoint<CreateStockRequest, CreateStockResponse>(
@@ -19,8 +41,8 @@ export const createStock = async (stock: CreateStockRequest['body']) => {
     { body: stock }
   );
 
-  revalidatePath(ROUTES.STOCKS);
-  revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
+  revalidateTag(ROUTES.STOCKS);
+  revalidateTag(ROUTES.PRODUCT_STOCKS(stock.productId));
   return response;
 };
 
@@ -30,8 +52,8 @@ export const updateStock = async (stockId: string | number, stock: UpdateStockRe
     { params: { stockId: stockId.toString() }, body: stock }
   );
 
-  revalidatePath(ROUTES.STOCKS);
-  revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
+  revalidateTag(ROUTES.STOCKS);
+  revalidateTag(ROUTES.PRODUCT_STOCKS(stock.productId));
   return response;
 };
 
@@ -41,7 +63,7 @@ export const deleteStock = async (stockId: string | number) => {
     { params: { stockId: stockId.toString() } }
   );
 
-  revalidatePath(ROUTES.STOCKS);
+  revalidateTag(ROUTES.STOCKS);
 
   return response;
 };

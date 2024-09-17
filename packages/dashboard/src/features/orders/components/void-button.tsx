@@ -1,4 +1,4 @@
-import { voidPayment } from '@/actions/payment';
+import { voidPayment } from '@/fetch/payments';
 import { useMutation, useNotification } from '@/hooks';
 import { Button, Popconfirm } from 'antd';
 import React from 'react';

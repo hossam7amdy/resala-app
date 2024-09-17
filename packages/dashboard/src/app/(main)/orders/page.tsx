@@ -1,5 +1,5 @@
-import { listOrders } from '@/data/orders';
 import { OrdersTable } from '@/features/orders';
+import { listOrders } from '@/fetch/orders';
 import type { ListOrdersRequest } from '@resala/shared';
 
 export const revalidate = 1;

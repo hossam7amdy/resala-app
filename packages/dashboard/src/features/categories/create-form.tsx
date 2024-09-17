@@ -1,6 +1,6 @@
 'use client';
 
-import { createCategory } from '@/actions/category';
+import { createCategory } from '@/fetch/category';
 import { useMutation, useNotification } from '@/hooks';
 import { validationPatterns } from '@resala/shared';
 import type { Category } from '@resala/shared';

@@ -1,6 +1,6 @@
 'use client';
 
-import { createSize, updateSize } from '@/actions/size';
+import { createSize, updateSize } from '@/fetch/sizes';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 

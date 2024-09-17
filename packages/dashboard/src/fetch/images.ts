@@ -7,15 +7,21 @@ import type {
   CreateImageResponse,
   DeleteImageRequest,
   DeleteImageResponse,
+  ListImagesRequest,
+  ListImagesResponse,
   UpdateImageRequest,
   UpdateImageResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
-const revalidateCache = (productId: string) => {
-  revalidatePath(ROUTES.STOCKS);
-  revalidatePath(ROUTES.PRODUCT_STOCKS(productId));
+export const listImages = async (productId: number, colorId: number) => {
+  const response = await callEndpoint<ListImagesRequest, ListImagesResponse>(
+    ENDPOINT_CONFIGS.findImages,
+    { query: { productId, colorId }, next: { tags: [ROUTES.PRODUCT_STOCKS(productId)] } }
+  );
+
+  return response.data;
 };
 
 export const uploadImages = async (formData: FormData) => {
@@ -33,7 +39,8 @@ export const uploadImages = async (formData: FormData) => {
     { body: formData }
   );
 
-  revalidateCache(formData.get('productId') as string);
+  revalidateTag(ROUTES.STOCKS);
+  revalidateTag(ROUTES.PRODUCT_STOCKS(formData.get('productId') as string));
 
   return response;
 };
@@ -44,7 +51,8 @@ export const setDefaultImage = async (imageId: string, productId: string) => {
     { params: { imageId }, body: { isPrimary: true } }
   );
 
-  revalidateCache(productId);
+  revalidateTag(ROUTES.STOCKS);
+  revalidateTag(ROUTES.PRODUCT_STOCKS(productId));
 
   return response;
 };
@@ -55,7 +63,8 @@ export const deleteImage = async (imageId: string, productId: string) => {
     { params: { imageId: imageId.toString() } }
   );
 
-  revalidateCache(productId);
+  revalidateTag(ROUTES.STOCKS);
+  revalidateTag(ROUTES.PRODUCT_STOCKS(productId));
 
   return response;
 };

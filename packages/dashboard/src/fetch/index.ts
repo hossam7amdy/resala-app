@@ -1,7 +1,8 @@
 import { auth } from '@/auth';
+import { configuration } from '@/config';
+import { ROUTES } from '@/utils/routes';
 import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
-
-const baseURL = process.env.API_HOST;
+import { redirect } from 'next/navigation';
 
 type Request<T> = Omit<RequestInit, 'body'> &
   T & {
@@ -27,18 +28,25 @@ export const callEndpoint = async <Req, Res>(
 
   const paramsArr = isObject(params) ? (Object.values(params) as string[]) : [];
   const withParamsConfig = withParams(endpoint, ...paramsArr);
-  const { method, url } = withQueryParams(withParamsConfig, query ?? {});
+  const { method, url, auth: isProtected } = withQueryParams(withParamsConfig, query ?? {});
 
-  const response = await fetch(`${baseURL}${url}`, {
+  const session = await auth();
+  const isLoggedIn = session !== null;
+
+  const response = await fetch(`${configuration.baseUrl}${url}`, {
     method: method.toUpperCase(),
     headers: {
-      Authorization: `Bearer ${(await auth())?.accessToken}`,
+      ...(isProtected || isLoggedIn ? { Authorization: `Bearer ${session?.accessToken}` } : {}),
       ...(isFormData(body) ? {} : { 'Content-Type': 'application/json' }),
       ...headers,
     },
     body: isFormData(body) ? body : body ? JSON.stringify(body) : undefined,
     ...requestInit,
   });
+
+  if ([401, 403].includes(response.status) && method === 'get') {
+    redirect(ROUTES.NOT_AUTHORIZED);
+  }
 
   const isJson = response.headers.get('content-type')?.includes('application/json');
   return { ...(isJson ? await response.json() : {}), statusCode: response.status } as Response<Res>;

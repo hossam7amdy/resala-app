@@ -1,7 +1,7 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { listAllCategories } from '@/data/category';
-import { findProduct } from '@/data/product';
 import { Form } from '@/features/products/create-form';
+import { listAllCategories } from '@/fetch/category';
+import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';

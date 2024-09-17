@@ -1,6 +1,6 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { findCategoryById } from '@/data/category';
 import EditForm from '@/features/categories/edit-form';
+import { findCategoryById } from '@/fetch/category';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';

@@ -1,5 +1,5 @@
 import { Table } from '@/components';
-import { listCustomersFeedback } from '@/data/dashboard';
+import { listCustomersFeedback } from '@/fetch/dashboard';
 import { Card, Flex, Rate } from 'antd';
 import React from 'react';
 

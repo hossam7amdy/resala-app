@@ -1,5 +1,5 @@
-import { findStockById } from '@/data/stocks';
 import { FormSkeleton, SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
+import { findStockById } from '@/fetch/stocks';
 import { Card } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import { notFound } from 'next/navigation';

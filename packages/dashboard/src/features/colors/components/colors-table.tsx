@@ -1,8 +1,8 @@
 'use client';
 
-import { deleteColor } from '@/actions/color';
 import { PopconfirmDeleteButton, Table } from '@/components';
 import { StockColor } from '@/features/stocks';
+import { deleteColor } from '@/fetch/colors';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListColorsResponse } from '@resala/shared';
@@ -14,7 +14,6 @@ export const ColorsTable: React.FC<{ colors: ListColorsResponse['data'] }> = ({ 
   return (
     <Table
       pagination={{
-        current: 1,
         pageSize: 10,
         total: colors.length,
         position: ['bottomCenter'],

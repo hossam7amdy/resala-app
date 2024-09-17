@@ -1,5 +1,5 @@
-import { getUserById } from '@/data/user';
 import { EditForm } from '@/features/customers';
+import { getUserById } from '@/fetch/users';
 import { notFound } from 'next/navigation';
 
 const EditCustomerPage = async ({ params }: { params: { id: string } }) => {
