@@ -7,6 +7,8 @@ import type {
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   LoginRequest,
+  ResendVerificationEmailRequest,
+  ResendVerificationEmailResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
   VerifyEmailRequest,
@@ -73,9 +75,9 @@ export const resetPassword = async ({
   return response;
 };
 
-export const resendVerificationEmail = async (email: string) => {
-  return await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
+export const resendVerificationEmail = async (payload: ResendVerificationEmailRequest['body']) => {
+  return await callEndpoint<ResendVerificationEmailRequest, ResendVerificationEmailResponse>(
     ENDPOINT_CONFIGS.resendEmailVerification,
-    { body: { email } }
+    { body: payload }
   );
 };
