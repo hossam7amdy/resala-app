@@ -4,6 +4,7 @@ import { Flex } from 'antd';
 import Link from 'next/link';
 
 import { LoginForm } from './login-form';
+import { LoginWithGoogleButton } from './login-with-google-button';
 import styles from './page.module.css';
 
 const LoginPage = () => {
@@ -15,6 +16,7 @@ const LoginPage = () => {
         </div>
         <LoginForm />
         <Link href={ROUTES.FORGOT_PASSWORD}>Forget password?</Link>
+        <LoginWithGoogleButton />
       </Flex>
     </div>
   );
