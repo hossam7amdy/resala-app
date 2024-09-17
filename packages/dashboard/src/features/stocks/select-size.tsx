@@ -1,4 +1,4 @@
-import { listAllSizes } from '@/data/sizes';
+import { listAllSizes } from '@/fetch/sizes';
 import { Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 

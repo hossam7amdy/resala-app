@@ -1,5 +1,5 @@
-import { getOrdersStatus } from '@/data/dashboard';
 import { OrderStatusChart } from '@/features/dashboard/order-status-chart';
+import { getOrdersStatus } from '@/fetch/dashboard';
 import { Card } from 'antd';
 import React from 'react';
 

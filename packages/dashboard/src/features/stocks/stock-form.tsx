@@ -1,8 +1,8 @@
 'use client';
 
-import { uploadImages } from '@/actions/image';
-import { createStock, updateStock } from '@/actions/stock';
-import { listImages } from '@/data/images';
+import { listImages } from '@/fetch/images';
+import { uploadImages } from '@/fetch/images';
+import { createStock, updateStock } from '@/fetch/stocks';
 import { useMutation, useNotification } from '@/hooks';
 import type { DefaultResponseBody, Image } from '@resala/shared';
 import { Button, Flex, Form, InputNumber, Typography } from 'antd';

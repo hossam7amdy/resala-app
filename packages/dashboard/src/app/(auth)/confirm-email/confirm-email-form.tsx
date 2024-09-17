@@ -1,6 +1,6 @@
 'use client';
 
-import { verifyEmail } from '@/actions/auth';
+import { verifyEmail } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/utils/routes';
 import { Button, Card, Result } from 'antd';

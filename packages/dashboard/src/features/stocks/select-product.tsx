@@ -1,7 +1,7 @@
 'use client';
 
 import { DebounceSelect } from '@/components';
-import { listProducts } from '@/data/product';
+import { listProducts } from '@/fetch/products';
 import { Form } from 'antd';
 
 export const SelectProduct: React.FC = () => {
