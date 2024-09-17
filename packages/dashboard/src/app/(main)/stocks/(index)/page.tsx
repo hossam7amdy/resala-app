@@ -1,5 +1,5 @@
-import { listStocks } from '@/data/stocks';
 import { StocksTable } from '@/features/stocks';
+import { listStocks } from '@/fetch/stocks';
 import type { ListStocksRequest } from '@resala/shared';
 import React from 'react';
 

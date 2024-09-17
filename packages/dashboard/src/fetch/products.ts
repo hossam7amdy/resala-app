@@ -7,10 +7,39 @@ import type {
   CreateProductResponse,
   DeleteProductRequest,
   DeleteProductResponse,
+  GetProductRequest,
+  GetProductResponse,
+  ListProductsRequest,
+  ListProductsResponse,
   UpdateProductResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+
+export const listProducts = async (query: ListProductsRequest['query']) => {
+  const response = await callEndpoint<ListProductsRequest, ListProductsResponse>(
+    ENDPOINT_CONFIGS.listProducts,
+    {
+      query,
+      next: { tags: [ROUTES.PRODUCTS] },
+    }
+  );
+
+  return response.data;
+};
+
+export const findProduct = async (id: string | number) => {
+  try {
+    const response = await callEndpoint<GetProductRequest, GetProductResponse>(
+      ENDPOINT_CONFIGS.getProduct,
+      { params: { productId: id.toString() }, next: { tags: [ROUTES.PRODUCTS] } }
+    );
+
+    return response.data;
+  } catch (e) {
+    return null;
+  }
+};
 
 export const addProduct = async (formData: FormData) => {
   const image = formData.get('image');
@@ -27,7 +56,7 @@ export const addProduct = async (formData: FormData) => {
     { body: formData }
   );
 
-  revalidatePath(ROUTES.PRODUCTS);
+  revalidateTag(ROUTES.PRODUCTS);
   return response;
 };
 
@@ -46,7 +75,7 @@ export const updateProduct = async (id: number | string, formData: FormData) => 
     { params: { productId: +id }, body: formData }
   );
 
-  revalidatePath(ROUTES.PRODUCTS);
+  revalidateTag(ROUTES.PRODUCTS);
   return response;
 };
 
@@ -58,6 +87,6 @@ export const deleteProduct = async (id: number | string) => {
     }
   );
 
-  revalidatePath(ROUTES.PRODUCTS);
+  revalidateTag(ROUTES.PRODUCTS);
   return response;
 };

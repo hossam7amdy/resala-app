@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUser } from '@/actions/user';
+import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
 import { Role, type User, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';

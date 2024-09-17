@@ -1,4 +1,4 @@
-import { resendVerificationEmail } from '@/actions/auth';
+import { resendVerificationEmail } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { SyncOutlined } from '@ant-design/icons';
 import { Button } from 'antd';

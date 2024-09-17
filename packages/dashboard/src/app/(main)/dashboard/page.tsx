@@ -1,4 +1,4 @@
-import { getOverview } from '@/data/dashboard';
+import { getOverview } from '@/fetch/dashboard';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { Card, Col, Row, Statistic } from 'antd';
 

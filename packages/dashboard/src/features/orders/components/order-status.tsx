@@ -1,6 +1,6 @@
 'use client';
 
-import { updateOrderStatus } from '@/actions/order';
+import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse, OrderStatusType } from '@resala/shared';
 import { OrderStatus as OrderStatusEnum } from '@resala/shared';

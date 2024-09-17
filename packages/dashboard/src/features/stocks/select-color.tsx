@@ -1,5 +1,5 @@
-import { listAllColors } from '@/data/colors';
 import { ColorEditorModal } from '@/features/colors';
+import { listAllColors } from '@/fetch/colors';
 import { Flex, Select } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 

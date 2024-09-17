@@ -1,7 +1,7 @@
 'use client';
 
-import { logout } from '@/actions/auth';
 import { FullscreenSpinner } from '@/components';
+import { logout } from '@/fetch/auth';
 import { useMutation } from '@/hooks';
 import { LoadingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';

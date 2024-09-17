@@ -7,11 +7,33 @@ import type {
   CreateColorResponse,
   DeleteColorRequest,
   DeleteColorResponse,
+  GetColorRequest,
+  GetColorResponse,
+  ListColorsRequest,
+  ListColorsResponse,
   UpdateColorRequest,
   UpdateColorResponse,
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+
+export const listAllColors = async () => {
+  const response = await callEndpoint<ListColorsRequest, ListColorsResponse>(
+    ENDPOINT_CONFIGS.listColors,
+    { query: {}, next: { tags: [ROUTES.COLORS] } }
+  );
+
+  return response.data;
+};
+
+export const findColorById = async (id: string | number) => {
+  const response = await callEndpoint<GetColorRequest, GetColorResponse>(
+    ENDPOINT_CONFIGS.getColor,
+    { params: { colorId: id.toString() }, next: { tags: [ROUTES.COLORS] } }
+  );
+
+  return response.data;
+};
 
 export const createColor = async (data: CreateColorRequest['body']) => {
   const response = await callEndpoint<CreateColorRequest, CreateColorResponse>(
@@ -19,7 +41,7 @@ export const createColor = async (data: CreateColorRequest['body']) => {
     { body: data }
   );
 
-  revalidatePath(ROUTES.COLORS);
+  revalidateTag(ROUTES.COLORS);
   return response;
 };
 
@@ -32,7 +54,7 @@ export const updateColor = async (id: string | number, data: UpdateColorRequest[
     }
   );
 
-  revalidatePath(ROUTES.COLORS);
+  revalidateTag(ROUTES.COLORS);
   return response;
 };
 
@@ -42,6 +64,6 @@ export const deleteColor = async (id: string | number) => {
     { params: { colorId: id.toString() } }
   );
 
-  revalidatePath(ROUTES.COLORS);
+  revalidateTag(ROUTES.COLORS);
   return response;
 };

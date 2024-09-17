@@ -1,7 +1,7 @@
 'use client';
 
-import { deleteSize } from '@/actions/size';
 import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
+import { deleteSize } from '@/fetch/sizes';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListSizesResponse } from '@resala/shared';

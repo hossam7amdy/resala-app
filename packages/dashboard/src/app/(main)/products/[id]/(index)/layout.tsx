@@ -1,5 +1,5 @@
 import { BackButton } from '@/components';
-import { findProduct } from '@/data/product';
+import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/utils/routes';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';
 import type { Metadata } from 'next';

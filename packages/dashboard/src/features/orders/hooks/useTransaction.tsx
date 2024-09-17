@@ -1,6 +1,6 @@
 'use client';
 
-import { findPaymentById } from '@/data/payment';
+import { findPaymentById } from '@/fetch/payments';
 import { useQuery } from '@/hooks';
 
 export const useTransaction = (transactionId: string | null) => {

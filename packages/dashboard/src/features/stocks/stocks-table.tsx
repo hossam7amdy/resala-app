@@ -1,7 +1,7 @@
 'use client';
 
-import { deleteStock } from '@/actions/stock';
 import { Pagination, PopconfirmDeleteButton, Table } from '@/components';
+import { deleteStock } from '@/fetch/stocks';
 import type { ListStocksResponse } from '@resala/shared';
 import { Flex, Space } from 'antd';
 import React from 'react';

@@ -1,6 +1,5 @@
 'use client';
 
-import { deleteUser } from '@/actions/user';
 import {
   Pagination,
   PopconfirmDeleteButton,
@@ -8,6 +7,7 @@ import {
   Table,
   TableColumn,
 } from '@/components';
+import { deleteUser } from '@/fetch/users';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';

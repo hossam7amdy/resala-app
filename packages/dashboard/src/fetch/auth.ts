@@ -17,7 +17,7 @@ import type {
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
 
-import { callEndpoint } from '../fetch';
+import { callEndpoint } from '.';
 
 export const login = async (payload: LoginRequest['body']) => {
   try {
