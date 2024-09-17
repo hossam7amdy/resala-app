@@ -7,7 +7,7 @@ export const ResendEmailVerificationButton: React.FC<{ email: string }> = ({ ema
   const notification = useNotification();
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: () => resendVerificationEmail(email),
+    mutationFn: () => resendVerificationEmail({ email }),
     onSuccess: data => {
       notification.success(data?.message || 'Email verification sent successfully');
     },
