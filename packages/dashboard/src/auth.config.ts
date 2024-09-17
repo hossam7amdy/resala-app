@@ -6,11 +6,12 @@ import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 import type { AuthUser } from '../next-auth';
+import { configuration } from './config';
 
 export const refreshToken = async (refreshToken: string): Promise<RefreshTokenResponse> => {
   const { method, url } = ENDPOINT_CONFIGS.refresh;
 
-  const response = await fetch(`${process.env.API_HOST}${url}`, {
+  const response = await fetch(`${configuration.baseUrl}${url}`, {
     method: method.toUpperCase(),
     headers: {
       'Content-Type': 'application/json',
