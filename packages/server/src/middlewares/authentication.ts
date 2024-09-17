@@ -31,7 +31,7 @@ const validateJwt = (token: string, securityName: SecurityName = 'JWT_SECRET') =
 export const jwtParse: RequestHandler = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token || res.locals.user) return next();
+    if (!token || token === 'undefined' || res.locals.user) return next();
 
     res.locals.user = await validateJwt(token);
     return next();
