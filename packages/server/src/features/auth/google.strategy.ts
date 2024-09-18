@@ -1,4 +1,4 @@
-import { ENDPOINT_CONFIGS, type ProviderUser } from '@resala/shared';
+import { type ProviderUser } from '@resala/shared';
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
 import type { AuthenticateOptionsGoogle, Profile, VerifyCallback } from 'passport-google-oauth20';
@@ -7,7 +7,7 @@ import { type Configuration } from '../../configuration/index.js';
 
 export class GoogleStrategy {
   constructor(readonly config: Configuration['auth']['google']) {
-    const { clientId, clientSecret } = config;
+    const { clientId, clientSecret, callbackURL } = config;
     if (!clientId || !clientSecret) {
       throw new Error('Google client ID and client secret are required');
     }
@@ -15,7 +15,7 @@ export class GoogleStrategy {
     const strategyConfig = {
       clientID: clientId,
       clientSecret: clientSecret,
-      callbackURL: `${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
+      callbackURL: callbackURL,
       scope: ['profile', 'email'],
     };
 
