@@ -8,8 +8,8 @@ import {
   TableColumn,
 } from '@/components';
 import { deleteUser } from '@/fetch/users';
+import { ROUTES } from '@/routes';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
-import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListUsersResponse, User } from '@resala/shared';
 import { Button, Flex, Space, Tag } from 'antd';

@@ -1,7 +1,7 @@
 'use server';
 
 import { signIn, signOut } from '@/auth';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
   ForgotPasswordRequest,

@@ -2,7 +2,7 @@
 
 import { verifyEmail } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Button, Card, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';

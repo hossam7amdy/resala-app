@@ -1,5 +1,5 @@
 import { Logo } from '@/components';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
 import React from 'react';
