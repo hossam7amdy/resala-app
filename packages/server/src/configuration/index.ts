@@ -1,3 +1,4 @@
+import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { config } from 'dotenv';
 
 config({ path: process.env.DOTENV_CONFIG_PATH });
@@ -52,6 +53,7 @@ const configuration = {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.SERVER_URL ?? 'http://localhost:5000'}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
     },
   },
 };
