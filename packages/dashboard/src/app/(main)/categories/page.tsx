@@ -1,7 +1,7 @@
 import { Search } from '@/components';
 import { CategoryTable } from '@/features/categories/categories-table';
 import { listAllCategories } from '@/fetch/category';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';

@@ -1,4 +1,4 @@
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Header as AntHeader } from 'antd/es/layout/layout';
 import Link from 'next/link';
 

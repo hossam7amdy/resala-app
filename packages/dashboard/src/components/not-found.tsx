@@ -1,6 +1,6 @@
 'use client';
 
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';

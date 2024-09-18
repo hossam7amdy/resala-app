@@ -1,6 +1,6 @@
 'use client';
 
-import { configuration } from '@/config';
+import { configuration } from '@/configuration';
 import { GoogleOutlined } from '@ant-design/icons';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { Button } from 'antd';
