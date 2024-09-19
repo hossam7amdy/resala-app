@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
-import { configuration } from '@/config';
-import { ROUTES } from '@/utils/routes';
+import { configuration } from '@/configuration';
+import { ROUTES } from '@/routes';
 import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
 import { redirect } from 'next/navigation';
 

@@ -2,8 +2,8 @@
 
 import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
 import { deleteCategory } from '@/fetch/category';
+import { ROUTES } from '@/routes';
 import { formatDate } from '@/utils/date-time-formatter';
-import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { GetCategoryResponse, ListCategoriesResponse } from '@resala/shared';
 import { Button, Flex } from 'antd';

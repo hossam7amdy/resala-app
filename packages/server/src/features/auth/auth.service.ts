@@ -52,7 +52,6 @@ export class AuthService extends JwtManager {
         ...providerUser,
         phone: '',
         password: '',
-        isEmailVerified: true,
         role: 'CUSTOMER',
       },
       update: providerUser,

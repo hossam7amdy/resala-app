@@ -1,7 +1,7 @@
 'use client';
 
 import { Menu } from '@/components';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import {
   FileProtectOutlined,
   HomeOutlined,

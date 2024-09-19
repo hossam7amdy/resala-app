@@ -1,4 +1,5 @@
-import { PROTECTED_ROUTES, ROUTES } from '@/utils/routes';
+import { configuration } from '@/configuration';
+import { PROTECTED_ROUTES, ROUTES } from '@/routes';
 import type { RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
@@ -6,7 +7,6 @@ import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 import type { AuthUser } from '../next-auth';
-import { configuration } from './config';
 
 export const refreshToken = async (refreshToken: string): Promise<RefreshTokenResponse> => {
   const { method, url } = ENDPOINT_CONFIGS.refresh;

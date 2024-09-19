@@ -1,5 +1,5 @@
 import { Search } from '@/components';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';

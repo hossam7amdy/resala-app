@@ -8,7 +8,7 @@ export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
 export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 export type SignProvider = 'google';
-export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName'>;
+export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName' | 'isEmailVerified'>;
 export type JwtPayload = {
     id: string;
     email: string;
