@@ -22,17 +22,12 @@ export const getProfile = async () => {
 };
 
 export const getUserById = async (id: number | string) => {
-  try {
-    const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
-      params: { userId: id.toString() },
-      cache: 'no-store',
-    });
+  const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
+    params: { userId: id.toString() },
+    cache: 'no-store',
+  });
 
-    return response.data;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  return response.data;
 };
 
 export const listUsers = async (query: ListUsersRequest['query']) => {
