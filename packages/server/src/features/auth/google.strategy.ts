@@ -38,6 +38,7 @@ export class GoogleStrategy {
       email: profile.emails?.at(0)?.value,
       firstName: profile.name?.givenName,
       lastName: profile.name?.familyName,
+      isEmailVerified: profile.emails?.at(0)?.verified,
     } as ProviderUser;
 
     done(null, user);
