@@ -2,7 +2,7 @@
 
 import { resetPassword } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import { validationPatterns } from '@resala/shared';
 import { Button, Form, Input } from 'antd';
 import { useRouter } from 'next/navigation';

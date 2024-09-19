@@ -2,7 +2,7 @@
 
 import { callEndpoint } from '@/fetch';
 import { optimizeImages } from '@/lib/optimize-images';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import type {
   CreateImageResponse,
   DeleteImageRequest,
