@@ -1,1 +1,217 @@
-<p>profile works!</p>
+<div>
+<section
+  
+  class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
+>
+  <h1 class="h2 step-one">Step One ...</h1>
+  <h3 class="h3 mt-0">Information Delivery</h3>
+  <form  action="">
+    <div class="row justify-content-center">
+      <div  class="col-11 address-field">
+        <div  class="m-3">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="addressId"
+            id="method"
+            
+            value=""
+            formControlName="addressId"
+            
+          />
+          <label class="form-check-label check-address-lbl p-2" for="method"
+            >please choose Address</label
+          >
+        </div>
+        <fieldset class="" >
+          <div class="row">
+            <!-- col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 -->
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+              <label for="first-name" class="form-label">First Name</label>
+              <input
+                type="text"
+                id="first-name"
+                class="form-control"
+                formControlName="firstName"
+                name="firstName"
+                [placeholder]=""
+              />
+            </div>
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+              <label for="last-name" class="form-label">Last Name</label>
+              <input
+                type="text"
+                id="last-name"
+                class="form-control"
+                [placeholder]=""
+                formControlName="lastName"
+                name="lastName"
+              />
+            </div>
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
+              <label for="phone" class="form-label">Contact Number</label>
+              <input
+                type="text"
+                id="phone"
+                class="form-control"
+                [placeholder]=""
+                formControlName="phone"
+                name="phone"
+              />
+              <div
+                
+                class="alert text-danger">
+                <p >phone is required</p>
+                <p >
+                  Should be 11 digts sharp & start be 011,012,010,015
+                </p>
+              </div>
+            </div>
+
+            
+
+           
+          
+
+          
+  
+
+          
+           
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="street" class="form-label">Street</label>
+              <input
+                type="text"
+                id="street"
+                class="form-control"
+                [placeholder]=""
+                formControlName="street"
+                name="street"
+              />
+            </div>
+
+            <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="building" class="form-label">Building</label>
+              <input
+                type="text"
+                id="building"
+                class="form-control"
+                [placeholder]=""
+                formControlName="building"
+                name="building"
+              />
+            </div>
+          
+            <div class=" col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="floor" class="form-label">Floor</label>
+              <input
+                type="number"
+                id="floor"
+                class="form-control"
+                [placeholder]=""
+                formControlName="floor"
+                name="floor"
+              />
+              <div
+                
+                class="alert text-danger">
+               
+              </div>
+            </div>
+
+            <div class="mb-3 col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <label for="address-details" class="form-label">Address Details</label>
+              <input
+                type="text" 
+                id="address-details"
+                class="form-control"
+                [placeholder]=""
+                formControlName="address"
+                name="address"/>
+            </div>
+          
+        </div>
+      </fieldset>
+
+        <div class="edit-section ">
+          <button  class="custome-btn mx-3 px-3 rounded-3"
+           type="submit" >
+            <i class="fa-solid fa-plus fa-sm mr-2"></i>
+            <i class="fa-regular fa-address-card fa-xl"></i>
+          </button>
+          
+          <button
+            
+            class="custome-btn mx-3 px-3 rounded-3"
+            type="submit">
+          <i class="fa-solid fa-user-pen fa-xl"></i>
+          </button>
+          <!-- [disabled]="[isEdit == false]" -->
+          <button
+            
+           
+            class="custome-btn mx-3 px-3 rounded-3"
+            type="submit">
+          <span ><i class="fa-spin fas fa-spinner"></i></span>
+          <i class="fa-regular fa-floppy-disk fa-xl"></i>
+          </button>
+          
+          <button  class=" custome-btn mx-3 px-3 rounded-3" type="submit">
+            <i
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              class="fa-solid fa-trash fa-xl"
+            ></i>
+          </button>
+          <!--start checked delete all items -->
+
+          <!-- Button trigger modal -->
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">Do You Want Delete All Your Products !!</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn second-custom-btn"
+                    data-bs-dismiss="modal">
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!--end checked delete all items -->
+
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+</div>
+<!--End User Address's Form-->

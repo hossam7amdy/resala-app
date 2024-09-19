@@ -90,6 +90,13 @@ const routes: Routes = [
         title: 'Orders',
       },
 
+      {
+        path: 'login/callback',
+        loadComponent: () =>
+          import('./components/callback-social-accounts/callback-social-accounts.component').then(m => m.CallbackSocialAccountsComponent),
+        title: 'Google Account',
+      },
+
 
       // login 
 

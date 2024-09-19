@@ -26,6 +26,7 @@ export class CartService {
 
   // token = (`Bearer ${localStorage.getItem('etoken')}`);
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
+  
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 
   // baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;

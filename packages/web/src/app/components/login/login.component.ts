@@ -61,6 +61,10 @@ export class LoginComponent {
   //|| Validators.pattern(/^(?:\d{10}|\w+@\w+\.\w{2,3})$/)
   // /^01[0125][0-9]{8}$/
 
+// getUserInfo(firstName:string):void{
+//   this._AuthService.userNameLogged.next(firstName);
+// }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   handleForm(loginForm: FormGroup): void {
     this.isLoading = true;
@@ -78,7 +82,10 @@ export class LoginComponent {
             localStorage.setItem('etoken', response.data.accessToken);
             this._AuthService.decodeUser();
             this.successMsg = 'Logged already';
+            // this.getUserInfo(response.data.user.firstName);
+            // this._AuthService.userNameLogged.next(response.data.user.firstName);
             this.isLoading = false;
+            
 
             // this._Router.navigate(['/home']);
 
@@ -91,14 +98,17 @@ export class LoginComponent {
                 window.location.reload();
               });
               console.log('product id' + productId);
+             
             } else {
               console.log('product id' + productId);
 
               this._Router.navigate(['product-details/', productId]).then(() => {
                 window.location.reload();
+                
               });
               localStorage.removeItem('productId');
             }
+            
           }
         },
         error: err => {

@@ -81,11 +81,12 @@
           data-mdb-toggle="dropdown"
           aria-expanded="false">
             <i class="far far fa-user me-4 fs-5"></i>
-            <span>Login</span>
+            <span>{{userNameLogged}}</span>
           </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
-                <a  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign In</a>
+                <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign In</a>
+                <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign Out</a>
               </li> 
 
               <li>
