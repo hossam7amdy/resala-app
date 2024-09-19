@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 
 
@@ -26,11 +27,15 @@ export class NavBlankComponent implements OnInit {
     private _Categories:CategoriesService,
     private route:ActivatedRoute,
     private _Renderer:Renderer2,
-    private spinner:NgxSpinnerService
+    private spinner:NgxSpinnerService,
+    private UserProfile:UserService
   
   ) {}
 
   // attributes
+  userNameLogged:string='Login';
+  userId:any;
+  signOut:boolean= false;
   categoryList:any=[];
 
   cartNum: number = 0;
@@ -48,12 +53,32 @@ export class NavBlankComponent implements OnInit {
   
 
   ngOnInit(): void {
+
+    console.log("logs nav blank");
+    this._AuthService.decodeUser();
+    this.userId = this._AuthService.userInfo?.id;
+
     this._CartService.cartNumber.subscribe({
       next: response => {
         console.log('cart number', response);
         this.cartNum = response;
-      },
+      },error:(err)=>{
+        this.cartNum = 0;
+        console.log(err);
+      }
     });
+
+    this._AuthService.userNameLogged.subscribe({
+      next:response=>{
+        this.userNameLogged = response;
+        console.log(this.userNameLogged);
+      },error: err=>{
+        this.userNameLogged = 'Login';
+      }
+    })
+
+    this.getUserInfo(this.userId);
+
 
     this._CartService.getCartUser().subscribe({
       next: response => {
@@ -69,6 +94,8 @@ export class NavBlankComponent implements OnInit {
         console.log(err);
       }
     })
+
+    this.signOut = this._AuthService.signOut;
   }
 
   isTogglerOpend():void{
@@ -79,6 +106,17 @@ export class NavBlankComponent implements OnInit {
     }
   }
 
+  getUserInfo(userId:any):void{
+    this.UserProfile.getUserInfo(userId).subscribe({
+      next:(response)=>{
+        this._AuthService.userNameLogged = response.data.firstName;
+        this.userNameLogged = response.data.firstName;
+        console.log(response);
+      },error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
   
   reloadPage(id:any):void{
   this.spinner.show();
@@ -88,10 +126,18 @@ export class NavBlankComponent implements OnInit {
   }
   
 
-  signOut: boolean = this._AuthService.signOut;
+ 
 
   removeTokenSignOut(): void {
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
+    if(this._AuthService.signOut == null){
+      this.cartNum = 0;
+    }else{
+      this.cartNum = this._CartService.cartNumber.value;
+    }
+    
+
+    this.userNameLogged = 'Login';
   }
 }
