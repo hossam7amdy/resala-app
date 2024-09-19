@@ -25,6 +25,9 @@ import { SearchPipe } from 'src/app/core/pipe/search.pipe';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  UserProfile: any;
+  _AuthService: any;
+  userNameLogged: any;
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -66,6 +69,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     });
 
+    
+   
+
     // categories
     this._Categories.getCategories().subscribe({
       next: response => {
@@ -75,6 +81,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.spinner.hide();   
     }, 1000);
+  }
+  userId(userId: any) {
+    throw new Error('Method not implemented.');
   }
 
   // overlay
