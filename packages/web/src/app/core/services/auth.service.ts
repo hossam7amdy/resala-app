@@ -2,7 +2,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../shared/src/endpoints';
 import { environment } from 'src/environments/environment.development';
 @Injectable({
@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment.development';
 export class AuthService {
   constructor(private _HttpClient: HttpClient) {}
 
+userNameLogged:BehaviorSubject<string> = new BehaviorSubject('Login');
 
   myToken:any;
   // refactor free API url 
