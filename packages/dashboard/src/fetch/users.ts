@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@/auth';
 import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
 import type {
@@ -15,16 +16,15 @@ import type {
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
 
-export const getProfile = async () => {
-  const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser);
-
-  return response.data;
+export const getCurrentUser = async () => {
+  const data = await auth();
+  return getUserById(data?.user?.id ?? '');
 };
 
 export const getUserById = async (id: number | string) => {
   const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
     params: { userId: id.toString() },
-    cache: 'no-store',
+    next: { tags: [ROUTES.CUSTOMERS, ROUTES.EDIT_CUSTOMER(id)] },
   });
 
   return response.data;
@@ -49,6 +49,7 @@ export const updateUser = async (id: string | number, payload: UpdateUserRequest
   );
 
   revalidateTag(ROUTES.CUSTOMERS);
+  revalidateTag(ROUTES.EDIT_CUSTOMER(id));
   return response;
 };
 
