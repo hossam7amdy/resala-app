@@ -1,10 +1,10 @@
-import { Logo } from '@/components/ui/logo';
-import ROUTES from '@/lib/routes';
+import { Logo } from '@/components';
+import { ROUTES } from '@/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
-import EmailForm from './email-form';
+import { EmailForm } from './email-form';
 import styles from './page.module.css';
 
 const ForgotPasswordPage = () => {

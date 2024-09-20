@@ -25,7 +25,8 @@
               "../../node_modules/ngx-spinner/animations/ball-scale-multiple.css",
               "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "../../node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": ["../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           },
@@ -34,13 +35,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1000kb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "10kb"
                 }
               ],
               "outputHashing": "all"
@@ -51,7 +52,13 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -63,7 +70,11 @@
               "browserTarget": "freshcart:build:production"
             },
             "development": {
-              "browserTarget": "freshcart:build:development"
+              "browserTarget": "freshcart:build:development",
+              "ssl": false,
+              "sslKey": "ssl/server.key",
+              "sslCert": "ssl/server.crt"
+              
             }
           },
           "defaultConfiguration": "development"

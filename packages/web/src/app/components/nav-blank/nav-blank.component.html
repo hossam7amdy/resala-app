@@ -1,21 +1,4 @@
-<section>
-  <div class="overlay" *ngIf="onClick">
-    <div class="overlay-section row">
-      <i class="fa-solid fa-circle-xmark close" (click)="closeOverlay()"></i>
-      <div class="col-4 left-overlay">
-        <h3>Style</h3>
-        <p>Simple style</p>
-        <h1>Get</h1>
-        <h1>This</h1>
-        <h1>One!</h1>
-      </div>
-      <div class="col-md-8 img-overlay">
-        <img src="./assets/products/nekab.jpeg" alt="" />
-      </div>
-    </div>
-  </div>
-</section>
-<nav class="navbar fixed-top navbar-expand-xl navbar-light">
+<nav #navbar class="navbar fixed-top navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink=""
       ><img src="./assets/logo/logo.png" alt="logo" class="logo"
@@ -28,8 +11,12 @@
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
       aria-label="Toggle navigation"
+      (click)="isTogglerOpend()"
     >
-      <span class="navbar-toggler-icon"></span>
+      <i *ngIf="togglerOpend == false" class="fa-solid fa-bars"></i>
+      
+      <i *ngIf="togglerOpend == true" class="fa-solid fa-xmark"></i>
+
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- left nav -->
@@ -37,66 +24,91 @@
         <li class="nav-item mx-2">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/home">Home</a>
         </li>
+        
+       
 
         <li class="nav-item dropdown mx-2">
-          <a
-            class="nav-link dropdown-toggle"
-            id="navbarDropdown"
-            role="button"
-            routerLinkActive="active-link"
-            routerLink="/products"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            >Products</a
-          >
+          <a data-mdb-button-init
+            data-mdb-ripple-init data-mdb-dropdown-init class="nav-link dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-mdb-toggle="dropdown"
+            aria-expanded="false">
+            Categories
+          </a>
 
-          <ul class="dropdown-menu row" aria-labelledby="navbarDropdown">
-            <li class="col-4"><a class="dropdown-item" href="#">Nekab</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">3abayat</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Scarf</a></li>
-
-            <li class="col-4"><a class="dropdown-item" href="#">Dress</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Cab takm</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Ednaa</a></li>
-
-            <li class="col-4"><a class="dropdown-item" href="#">3abaya Khalejee</a></li>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li  *ngFor="let category of categoryList" >
+              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/category/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+            </li>
+            
           </ul>
         </li>
 
+
+        
+
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/categories"
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection"
             >Latest Collection</a
           >
         </li>
 
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/brands">New Offers</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">New Offers</a>
         </li>
       </ul>
 
       <!-- right nav -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <form class="d-flex">
+        <!-- <form class="d-flex">
           <i class="fa-solid fa-magnifying-glass icon-search"></i
           ><input class="form-control me-3 me-lg-3 search" type="search" aria-label="Search" />
-        </form>
+        </form> -->
 
-        <li *ngIf="signOut" class="nav-item me-3">
+        <!-- <li *ngIf="signOut" class="nav-item me-3">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/login"
             ><i class="far far fa-user me-4 fs-5"></i>
             <span (click)="removeTokenSignOut()">ٍSigout</span>
           </a>
+        </li> -->
+        <!-- *ngIf="signOut == false" -->
+        <li  class="nav-item dropdown mx-2 me-3">
+          <a data-mdb-button-init class="nav-link" routerLinkActive="active-link" routerLink="/login"
+          data-mdb-ripple-init data-mdb-dropdown-init class="nav-link dropdown-toggle" 
+          type="button"
+          id="dropdownMenuButton"
+          data-mdb-toggle="dropdown"
+          aria-expanded="false">
+            <i class="far far fa-user me-4 fs-5"></i>
+            <span>{{userNameLogged}}</span>
+          </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li>
+                <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign In</a>
+                <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign Out</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">Not a Member?</span> Register</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">Profile</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">Trace Your Order</a>
+              </li> 
+            </ul>
+          
         </li>
 
-        <li *ngIf="signOut == false" class="nav-item me-3">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/login"
-            ><i class="far far fa-user me-4 fs-5"></i> <span>Login</span>
-          </a>
-        </li>
 
         <li class="nav-item me-3">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/favorites"
-            ><i class="far fa-heart me-4 fs-5"></i> <span>Favorites</span>
+            ><i class="far fa-heart me-4 fs-5"></i>
+            <span>Favorites</span>
           </a>
         </li>
 
@@ -104,7 +116,9 @@
           <a class="nav-link" routerLinkActive="active-link" routerLink="/cart"
             ><i class="fas fa-shopping-bag me-3 fs-5"></i>
             <span class="shopping-text">Cart</span>
-            <span class="mini-basket-count"><span>0</span></span>
+            <span class="mini-basket-count"
+              ><span>{{ cartNum }}</span></span
+            >
           </a>
         </li>
       </ul>

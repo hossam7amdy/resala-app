@@ -1,5 +1,5 @@
 # Use node alpine image as base
-FROM node:22-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -22,10 +22,10 @@ RUN yarn build:shared
 RUN yarn build:server
 
 # Remove development dependencies
-RUN npm prune --omit=dev
+RUN yarn --production
 
 # Use node alpine image as base
-FROM node:22-alpine
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
@@ -36,6 +36,14 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages/server /app/packages/server
 COPY --from=build /app/packages/shared /app/packages/shared
 
+# Create logs and uploads directories
+RUN mkdir -p /app/packages/server/logs
+RUN mkdir -p /app/packages/server/uploads
+
+# Give ownership to node user
+RUN chown -R node:node /app/packages/server/logs
+RUN chown -R node:node /app/packages/server/uploads
+
 # Set user to node
 USER node
 
@@ -43,4 +51,4 @@ USER node
 EXPOSE 5000
 
 # Define command to run the app
-CMD ["yarn", "start:server:prod"]
+CMD ["yarn", "workspace", "@resala/server", "start"]

@@ -1,23 +1,22 @@
-import Form from '@/components/products/create-form';
-import BackButton from '@/components/ui/back-button';
-import FormSkeleton from '@/components/ui/form-skeleton';
-import { listAllCategories } from '@/data/category';
-import { findProductById } from '@/data/product';
-import ROUTES from '@/lib/routes';
-import { type GetCategoryResponse } from '@resala/shared';
+import { BackButton, FormSkeleton } from '@/components';
+import { Form } from '@/features/products/create-form';
+import { listAllCategories } from '@/fetch/category';
+import { findProduct } from '@/fetch/products';
+import { ROUTES } from '@/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 const EditProductPage = ({ params }: { params: { id: string } }) => {
   return (
-    <Row gutter={[10, 20]} style={{ padding: 20 }}>
+    <Row gutter={[10, 20]}>
       <Col span={24}>
         <Breadcrumb
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Edit Product' },
+            { title: 'Edit' },
           ]}
         />
       </Col>
@@ -33,21 +32,13 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
 };
 
 const EditProductForm = async ({ id }: { id: string }) => {
-  const [categories, product] = await Promise.all([listAllCategories(), findProductById(id)]);
+  const [categories, product] = await Promise.all([listAllCategories(), findProduct(id)]);
 
-  const flatCategories: Omit<GetCategoryResponse['data'], 'subCategories'>[] = [];
-  categories.forEach(category => {
-    const { subCategories, ...main } = category;
-    flatCategories.push(main);
+  if (!product) {
+    return notFound();
+  }
 
-    if (subCategories.length > 0) {
-      subCategories.forEach(sub => {
-        flatCategories.push(sub);
-      });
-    }
-  });
-
-  return <Form categories={flatCategories} product={product!} />;
+  return <Form categories={categories} product={product!} />;
 };
 
 export default EditProductPage;
