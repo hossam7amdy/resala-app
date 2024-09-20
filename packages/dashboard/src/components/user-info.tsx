@@ -1,13 +1,11 @@
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { Avatar, Skeleton, Space, Typography } from 'antd';
-import { useSession } from 'next-auth/react';
 import React from 'react';
 
 export const UserInfo: React.FC = () => {
-  const { data } = useSession();
+  const { user, isLoading } = useCurrentUser();
 
-  const user = data?.user;
-
-  if (!user) {
+  if (isLoading) {
     return (
       <Space>
         <Skeleton.Avatar active />
@@ -19,19 +17,19 @@ export const UserInfo: React.FC = () => {
   return (
     <Space>
       <Avatar size="large" shape="square">
-        {user.firstName.at(0)}
+        {user?.firstName.at(0)}
       </Avatar>
 
       <div>
         <Typography.Paragraph className="m-0 w-[200px]" ellipsis={{ tooltip: true }}>
-          {user.firstName} {user.lastName}
+          {user?.firstName} {user?.lastName}
         </Typography.Paragraph>
         <Typography.Paragraph
           type="secondary"
           className="text-xs font-normal m-0 w-[200px]"
           ellipsis={{ tooltip: true }}
         >
-          {user.email}
+          {user?.email}
         </Typography.Paragraph>
       </div>
     </Space>
