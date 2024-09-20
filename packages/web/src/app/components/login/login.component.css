@@ -13,6 +13,8 @@ section p {
 .form-item .custome-btn{
   background-color: #fff !important;
   color: #016373 !important;
+  text-decoration: none !important;
+  display: block;
 }
 .form-item label {
   color: #016373;
