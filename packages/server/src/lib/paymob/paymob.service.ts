@@ -4,18 +4,18 @@ import type { AxiosInstance } from 'axios';
 import axios from 'axios';
 import { Decimal } from 'decimal.js';
 
+import { configuration } from '../../configuration/index.js';
 import type { AuthenticateApiResponse, CheckoutApiResponse, CheckoutDto } from './payments.dtos.js';
 
 export class PaymobService {
   private readonly api: AxiosInstance;
-  private readonly serverUrl = process.env.SERVER_URL;
-  private readonly webUrl = process.env.WEB_APP_URL;
-  private readonly baseURL = 'https://accept.paymob.com';
-  private readonly apiToken = process.env.PAYMOB_API_TOKEN;
-  private readonly secretKey = process.env.PAYMOB_SECRET_KEY;
-  private readonly publicKey = process.env.PAYMOB_PUBLIC_KEY;
-  private readonly integrationId = +process.env.PAYMOB_INTEGRATION_ID;
-  private readonly checkoutLink = `https://accept.paymob.com/unifiedcheckout/?publicKey=${this.publicKey}`;
+  private readonly serverUrl = configuration.server.url;
+  private readonly webUrl = configuration.origin.web;
+  private readonly baseURL = configuration.payment.paymob.baseUrl;
+  private readonly apiToken = configuration.payment.paymob.apiToken;
+  private readonly secretKey = configuration.payment.paymob.secretKey;
+  private readonly integrationId = configuration.payment.paymob.integrationId;
+  private readonly checkoutLink = configuration.payment.paymob.checkoutLink;
 
   constructor() {
     this.api = axios.create({
