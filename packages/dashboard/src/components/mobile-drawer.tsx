@@ -21,7 +21,11 @@ export const MobileDrawer: React.FC<DrawerProps> = props => {
         title={<UserInfo />}
         placement="left"
         extra={<Button icon={<CloseOutlined />} onClick={toggleDrawer} />}
-        footer={<LogoutButton />}
+        footer={
+          <div onClick={toggleDrawer}>
+            <LogoutButton />
+          </div>
+        }
         onClose={toggleDrawer}
         classNames={{ body: 'px-0' }}
         {...props}

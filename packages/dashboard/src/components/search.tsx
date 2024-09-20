@@ -13,7 +13,7 @@ const SearchComponent: React.FC<SearchProps> = props => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleSearch = useDebounce((searchTerm: string) => {
+  const handleSearch = useDebounce(searchTerm => {
     const prevSearchTerm = params.get('search') || '';
 
     if (prevSearchTerm === searchTerm) return;
