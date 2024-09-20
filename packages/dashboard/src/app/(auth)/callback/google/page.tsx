@@ -12,8 +12,7 @@ const GoogleCallbackPage: React.FC<{
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      login({ accessToken, refreshToken } as any);
+      login({ accessToken, refreshToken } as never);
     }
   }, [accessToken, refreshToken]);
 

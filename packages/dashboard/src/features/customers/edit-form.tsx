@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 interface EditFormProps {
+  disable?: boolean;
   customer: Partial<User>;
 }
 
-export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
+export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer }) => {
   const router = useRouter();
 
   const [form] = Form.useForm();
@@ -34,6 +35,7 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
 
   return (
     <Form
+      disabled={disable}
       form={form}
       name="edit-customer"
       size="large"
@@ -105,7 +107,7 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
       >
         <Select
           placeholder="Select Role"
-          disabled={customer.role === Role.ADMIN}
+          disabled={customer.role === Role.ADMIN || disable}
           options={[
             { label: 'Admin', value: Role.ADMIN },
             { label: 'Moderator', value: Role.MODERATOR },

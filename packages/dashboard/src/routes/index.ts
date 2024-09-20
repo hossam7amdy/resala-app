@@ -8,6 +8,7 @@ export const ROUTES = {
   NOT_AUTHORIZED: '/not-authorized',
 
   DASHBOARD: '/dashboard',
+  PROFILE: '/profile',
 
   CATEGORIES: '/categories',
   CREATE_CATEGORY: '/categories/create',
@@ -34,6 +35,7 @@ export const ROUTES = {
 
 export const PROTECTED_ROUTES = [
   ROUTES.DASHBOARD,
+  ROUTES.PROFILE,
   ROUTES.CATEGORIES,
   ROUTES.PRODUCTS,
   ROUTES.STOCKS,
