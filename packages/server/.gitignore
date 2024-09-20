@@ -3,17 +3,19 @@ node_modules
 .npmrc
 
 # Keep environment variables out of version control
-.env
-.env.production
+.env*
 
 # Ignore the build directory
 dist
 
 # Ignore uploads
-uploads
+uploads/*
 
 # Ignore logs
-logs
+logs/*
 
 # Ignore test coverage
 coverage
+
+# Ignore certificates for HTTPS
+certs

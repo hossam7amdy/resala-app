@@ -1,1 +1,132 @@
-<p>cart works!</p>
+<section *ngIf="totalCount != 0; else emptyCart">
+  <div class="container">
+    <h2 class="cartTitle h2">My Cart {{ cartDetails.totalQuantity }} product</h2>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="form-check">
+          <button
+            [disabled]="totalCount == 0"
+            type="button"
+            class="btn mt-2 second-custom-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Delete All Items
+            <i class="fa-solid fa-trash"></i>
+          </button>
+          <!--start checked delete all items -->
+
+          <!-- Button trigger modal -->
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">Do You Want Delete All Your Products !!</div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn second-custom-btn"
+                    data-bs-dismiss="modal"
+                    (click)="[confirmationDel(), clearAllItems(removeAll)]"
+                    #removeAll
+                  >
+                    Yes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--end checked delete all items -->
+        </div>
+        <div class="card mb-4">
+          <div class="row g-0" *ngFor="let item of cartDetailsItems">
+            <div class="col-sm-2">
+              <img [src]="item.product.imageUrl" class="img-fluid w-100" alt="..." />
+            </div>
+            <div class="col-sm-7">
+              <div class="card-body">
+                <p class="">{{ item.stock.quantity }} IN STOCK</p>
+                <h5 class="card-title">{{ item.product.enName }}</h5>
+                <span class="text-uppercase">{{ item.stock.color.enName }}</span>
+                <span class="">
+                  - Size : <i class="bold small">{{ item.stock.size.name }}</i></span
+                >
+                <p class="fw-bold">{{ item.product.price }} EGP</p>
+                <button class="btn mt-2">
+                  <i
+                    (click)="removeItem(item.stock.id, remove)"
+                    #remove
+                    class="fa-solid fa-trash"
+                  ></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-sm-3 m-auto">
+              <div class="counter">
+                <button
+                  [disabled]="totalCount == 1"
+                  class="min-counter-btn fw-bold"
+                  (click)="changeCount(item.quantity - 1, item.stock.id, btnMin, btnPlus)"
+                  #btnMin
+                >
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span disabled min="1" data-min="1" class="fw-bold small px-2">{{
+                  item.quantity
+                }}</span>
+                <button
+                  class="plus-counter-btn fw-bold"
+                  (click)="changeCount(item.quantity + 1, item.stock.id, btnMin, btnPlus)"
+                  #btnPlus
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Check Out Summary</h5>
+            <p class="card-text">
+              Total Products Price <span class="total-price">{{ cartDetails.totalPrice }} EGP</span>
+            </p>
+            <button [disabled]="cartDetails.totalQuantity == 0" class="btn custome-btn p-0 border-0">
+              <a routerLink="/payment" class="btn custome-btn ">Order Now</a>
+            </button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template class="m-auto" #emptyCart>
+  <div class="emptyCartParent">
+    <h1 class="emptyCart text-uppercase">Your Cart Is Empty ...</h1>
+  </div>
+</ng-template>

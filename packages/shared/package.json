@@ -18,11 +18,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "rollup": "^4.16.1"
-  },
-  "engines": {
-    "node": ">=16",
-    "yarn": ">=1.22.00",
-    "npm": "use yarn instead"
+    "rollup": "^4.16.1",
+    "typescript": "^5.5.4"
   }
 }

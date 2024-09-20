@@ -6,12 +6,20 @@
   width: 100%;
 }
 
-.main-img {
-  padding: 10px 120px;
-}
+/* .owl-item,
+.ng-tns-c556756694-3,
+.ng-trigger,
+.ng-trigger-autoHeight,
+.active,
+.ng-star-inserted {
+  width: 200px !important;
+} */
 
 .main-img > img {
-  margin-bottom: 24px;
+  margin-bottom: 0;
+  /* width: 265.33px;
+  height: 450px; */
+  height: auto;
 }
 
 .price {
@@ -30,15 +38,16 @@
 }
 
 .img-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  height: 100px;
+  /* width: 132.7px;
+  height: 198.83px; */
   padding: 0;
+  cursor: pointer;
 }
 
-.img-content .w-100 {
-  height: 300px !important;
-}
+/* .img-content .w-100 {
+  height: 150px !important;
+} */
 
 /* NGXowl carowsel all cat*/
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:hover {
@@ -104,17 +113,17 @@
   color: #fff;
 } */
 
-.btn-check:checked + .btn,
+/* .btn-check:checked+.btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check) + .btn:active,
-.btn-check + .btn:hover {
+:not(.btn-check)+.btn:active,
+.btn-check+.btn:hover {
   color: #fff;
   background-color: #fbb935;
   border: 1px solid #fbb935;
   border-radius: 0;
-}
+} */
 
 .size {
   margin-top: 20px;
@@ -147,6 +156,7 @@
 
 .counter {
   padding: 5px 10px;
+  text-align: center;
 }
 
 .counter .min-counter-btn,
@@ -160,12 +170,13 @@
   font-size: 12px;
 }
 
+.counter .min-counter-btn:disabled {
+  cursor: not-allowed;
+}
+
 .counter .counter-text {
   background-color: #fff;
   color: #016373;
-  text-align: center;
-  padding-left: 21%;
-  width: 50%;
 }
 
 .add-cart-btn button {
@@ -179,9 +190,62 @@
 
 .add-cart-btn button:hover,
 .add-cart-btn button:active {
-  padding: 10px 0;
   color: #016373;
   font-weight: 500;
   background-color: #fff;
   border: 1px solid #ccc;
+}
+
+.add-cart-btn button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-check:checked + .btn {
+  border: 0;
+}
+
+.size-options-list {
+  margin-left: -8px;
+}
+
+.size-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #fff;
+  margin: 0 8px;
+  cursor: pointer;
+}
+
+.size-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
+}
+
+/* color option*/
+.color-options-list {
+  margin-left: -8px;
+}
+
+.color-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #fff;
+  margin: 0 8px 0px;
+  cursor: pointer;
+}
+
+.color-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
 }

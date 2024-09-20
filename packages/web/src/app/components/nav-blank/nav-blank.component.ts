@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
+import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CartService } from 'src/app/core/services/cart.service';
+import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { UserService } from 'src/app/core/services/user.service';
+
+
 
 @Component({
   selector: 'app-nav-blank',
@@ -10,21 +18,126 @@ import { AuthService } from 'src/app/core/services/auth.service';
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
-export class NavBlankComponent {
+export class NavBlankComponent implements OnInit {
+
   constructor(
     private _AuthService: AuthService,
-    private _Router: Router
+    private _Router: Router,
+    private _CartService: CartService,
+    private _Categories:CategoriesService,
+    private route:ActivatedRoute,
+    private _Renderer:Renderer2,
+    private spinner:NgxSpinnerService,
+    private UserProfile:UserService
+  
   ) {}
-  signOut: boolean = this._AuthService.signOut;
 
-  //attributes
-  onClick: boolean = true;
+  // attributes
+  userNameLogged:string='Login';
+  userId:any;
+  signOut:boolean= false;
+  categoryList:any=[];
+
+  cartNum: number = 0;
+  togglerOpend:boolean=false;
+
+  @ViewChild('navbar') navbarElement!:ElementRef
+  @HostListener('window:scroll')
+  onScroll():void{
+    if(scrollY > 600){
+      this._Renderer.setStyle(this.navbarElement.nativeElement,'top',0)
+    }else{
+      this._Renderer.removeStyle(this.navbarElement.nativeElement,'top')
+    }
+  }
+  
+
+  ngOnInit(): void {
+
+    console.log("logs nav blank");
+    this._AuthService.decodeUser();
+    this.userId = this._AuthService.userInfo?.id;
+
+    this._CartService.cartNumber.subscribe({
+      next: response => {
+        console.log('cart number', response);
+        this.cartNum = response;
+      },error:(err)=>{
+        this.cartNum = 0;
+        console.log(err);
+      }
+    });
+
+    this._AuthService.userNameLogged.subscribe({
+      next:response=>{
+        this.userNameLogged = response;
+        console.log(this.userNameLogged);
+      },error: err=>{
+        this.userNameLogged = 'Login';
+      }
+    })
+
+    this.getUserInfo(this.userId);
+
+
+    this._CartService.getCartUser().subscribe({
+      next: response => {
+        this.cartNum = response.data.totalQuantity;
+      },
+      error: () => {},
+    });
+
+    this._Categories.getCategories().subscribe({
+      next:(response)=>{
+        this.categoryList = response.data;
+      },error:(err)=>{
+        console.log(err);
+      }
+    })
+
+    this.signOut = this._AuthService.signOut;
+  }
+
+  isTogglerOpend():void{
+    if(this.togglerOpend == false){
+      this.togglerOpend = true
+    }else{
+      this.togglerOpend = false;
+    }
+  }
+
+  getUserInfo(userId:any):void{
+    this.UserProfile.getUserInfo(userId).subscribe({
+      next:(response)=>{
+        this._AuthService.userNameLogged = response.data.firstName;
+        this.userNameLogged = response.data.firstName;
+        console.log(response);
+      },error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
+  
+  reloadPage(id:any):void{
+  this.spinner.show();
+    window.location.replace(`/category/${id}`)
+    this.spinner.hide();
+   
+  }
+  
+
+ 
+
   removeTokenSignOut(): void {
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
-  }
+    if(this._AuthService.signOut == null){
+      this.cartNum = 0;
+    }else{
+      this.cartNum = this._CartService.cartNumber.value;
+    }
+    
 
-  closeOverlay() {
-    this.onClick = false;
+    this.userNameLogged = 'Login';
   }
 }
