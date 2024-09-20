@@ -1,7 +1,7 @@
 import type { GetPaymentResponse } from '@resala/shared';
 
 import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
-import type { CheckoutDto, PaymobService } from './paymob/index.js';
+import type { CheckoutDto, PaymobService } from '../../lib/paymob/index.js';
 
 export class PaymentService {
   constructor(private readonly paymobService: PaymobService) {}

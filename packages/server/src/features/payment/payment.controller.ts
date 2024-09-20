@@ -17,10 +17,10 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
+import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
-import { PaymobService } from './paymob/paymob.service.js';
 
 @Tags('Payment')
 @Security('JWT_SECRET')

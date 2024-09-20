@@ -33,8 +33,9 @@ const configuration = {
   },
   payment: {
     paymob: {
-      integrationId: process.env.PAYMOB_INTEGRATION_ID,
+      integrationId: _parseInt(process.env.PAYMOB_INTEGRATION_ID, 0),
       baseUrl: process.env.PAYMOB_BASE_URL || 'https://accept.paymob.com',
+      checkoutLink: `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}`,
       hmacKey: process.env.PAYMOB_HMAC_KEY,
       apiToken: process.env.PAYMOB_API_TOKEN,
       publicKey: process.env.PAYMOB_PUBLIC_KEY,
