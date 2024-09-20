@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // interfaces
   products: Product[] = [];
-  category: Category[] = [];
+  categories: Product[] = [];
 
   imgPlaceHolder: string = '';
 
@@ -61,8 +61,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
         console.log(response.data);
-        console.log('products', response.data.products);
+        console.log('products', response.data);
         this.products = response.data.products;
+        this.categories = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
