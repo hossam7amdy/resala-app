@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../shared/src/endpoints';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { environment } from 'src/environments/environment.development';
 
 @Injectable({
@@ -25,5 +25,11 @@ private getHeaders() {
 getUserInfo(userId:any):Observable<any>{
   const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.getUser],userId=userId)
   return this._HTTPClient.get(environment.BASE_URL+ url,this.getHeaders())
+}
+
+getUserOrders(userId:any):Observable<any>{
+
+  const {url} = withQueryParams(ENDPOINT_CONFIGS.listOrders,{userId:userId,limit:'5'})
+  return this._HTTPClient.get(environment.BASE_URL+url , this.getHeaders())
 }
 }

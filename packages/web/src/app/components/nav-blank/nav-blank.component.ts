@@ -120,7 +120,7 @@ export class NavBlankComponent implements OnInit {
   
   reloadPage(id:any):void{
   this.spinner.show();
-    window.location.replace(`/products/${id}`)
+    window.location.replace(`/category/${id}`)
     this.spinner.hide();
    
   }
