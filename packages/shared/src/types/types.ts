@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
@@ -65,7 +64,7 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  price: number | Decimal | string | any;
+  price: any; // Decimal type from 'decimal.js' lib
   imageKey: string;
   imageUrl: string;
   createdAt: Date;
@@ -126,9 +125,9 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  subtotal: number | Decimal | string | any;
-  discount: number | Decimal | string | any;
-  total: number | Decimal | string | any;
+  subtotal: any; // Decimal type from 'decimal.js' lib
+  discount: any; // Decimal type from 'decimal.js' lib
+  total: any; // Decimal type from 'decimal.js' lib
   orderStatus: OrderStatusType;
   transactionId: null | string;
   paymentMethod: PaymentMethodType;
@@ -142,7 +141,7 @@ export type OrderItem = {
   id: number;
   productId: number;
   stockId: number;
-  price: number | Decimal | string | any;
+  price: any; // Decimal type from 'decimal.js' lib
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -152,7 +151,7 @@ export type Shipping = {
   id: number;
   orderId: number;
   addressId: number;
-  cost: number | Decimal | string | any;
+  cost: any; // Decimal type from 'decimal.js' lib
   createdAt: Date;
   updatedAt: Date;
 };
