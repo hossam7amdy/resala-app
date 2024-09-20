@@ -41,10 +41,10 @@ const routes: Routes = [
       },
 
       {
-        path: 'products/:category-id',
+        path: 'category/:category-id',
         loadComponent: () =>
-          import('./components/products/products.component').then(m => m.ProductsComponent),
-        title: 'Products',
+          import('./components/categories/categories.component').then(m => m.CategoriesComponent),
+        title: 'Categories',
       },
 
       {
