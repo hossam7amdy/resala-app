@@ -37,13 +37,13 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { AddressService } from '../address/address.service.js';
 import { EmailNotification } from '../notification/email.notification.js';
 import { NotificationService } from '../notification/notification.service.js';
 import { PaymentService } from '../payment/payment.service.js';
-import { PaymobService } from '../payment/paymob/paymob.service.js';
 import { ShoppingService } from '../shopping/shopping.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { OrderService } from './order.service.js';
