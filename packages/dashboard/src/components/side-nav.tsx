@@ -1,9 +1,7 @@
+import { Logo, NavLinks, UserDropdown } from '@/components';
 import { ROUTES } from '@/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
-
-import { Logo, NavLinks } from '.';
-import { LogoutButton } from './logout-button';
 
 export const SideNav: React.FC = () => {
   return (
@@ -17,7 +15,7 @@ export const SideNav: React.FC = () => {
         <NavLinks />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <LogoutButton />
+        <UserDropdown />
       </div>
     </Flex>
   );

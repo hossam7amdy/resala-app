@@ -16,3 +16,4 @@ export { PopconfirmDeleteButton } from './popconfirm-delete-button';
 export { Image } from './image';
 export { Table } from './table';
 export { FullscreenSpinner } from './fullscreen-spinner';
+export { UserDropdown } from './user-dropdown';
