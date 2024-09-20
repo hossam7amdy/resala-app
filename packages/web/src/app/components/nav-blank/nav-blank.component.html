@@ -39,7 +39,7 @@
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li  *ngFor="let category of categoryList" >
-              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/products/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/category/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
             </li>
             
           </ul>
@@ -90,15 +90,15 @@
               </li> 
 
               <li>
-                <a  routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">Not a Member?</span> Register</a>
+                <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">Not a Member?</span> Register</a>
               </li> 
 
               <li>
-                <a  routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">Profile</a>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">Profile</a>
               </li> 
 
               <li>
-                <a  routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">Trace Your Order</a>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">Trace Your Order</a>
               </li> 
             </ul>
           

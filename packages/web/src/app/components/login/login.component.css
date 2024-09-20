@@ -16,6 +16,20 @@ section p {
   text-decoration: none !important;
   display: block;
 }
+
+@media (max-width:500px) {
+  .form-item .custome-btn {
+    font-size: 12px !important;
+  }
+}
+
+@media (max-width:500px) {
+  .form-item button a img{
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
 .form-item label {
   color: #016373;
 }
@@ -64,13 +78,13 @@ section p {
 
 /* Media query */
 
-@media (max-width:900px) {
+@media (max-width:1500px) {
   .w-25{
     width: 50% !important;
   }
 }
 
-@media (max-width:500px) {
+@media (max-width:750px) {
   .w-25{
     width: 75% !important;
   }
