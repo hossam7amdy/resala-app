@@ -1,1 +1,72 @@
-<p>latest-collection works!</p>
+<!-- section products -->
+<div
+  *ngIf="products.length < 1"
+  class="spinner-border text-warning justify-content-center text-center"
+  style="width: 3rem; height: 3rem; top: 50px"
+  role="status"
+>
+  <span class="visually-hidden">Loading...</span>
+</div>
+<section *ngIf="products.length > 0" class="">
+  <div class="container-fluid">
+    <h2 class="h1">Latest Collection</h2>
+
+    <div class="row justify-content-center text-center">
+      <div
+        *ngFor="let product of products "
+        class="mx-2 mb-3 px-0 col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2 justify-content-center text-center"
+      >
+
+        <div>
+         
+          <div class="parent-img-content">
+            <!-- currentProduct === product?.id -->
+            <header class="header-product">
+              <i
+                (click)="addPoductInWishList(product.id, favoritIcon)"
+                #favoritIcon
+                class="fa-regular fa-heart favourit-icon"
+              ></i>
+            </header>
+            <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
+              <p class="offer">Sale<span> 20%</span></p>
+
+              <img
+                class="w-100 image-products"
+                [src]="product.imageUrl"
+                [alt]="product.enName"
+                [title]="product.enName"
+              />
+            </div>
+            <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
+              <i class="fa-solid fa-bag-shopping shopping-icon"></i>
+            </footer>
+          </div>
+          <!--  -->
+          <div class="descrp">
+            <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
+              {{ product.enName }}
+            </h6>
+            <ngx-stars-rating
+            [rate]="rateNumber"
+            [options]="ratingOptions"
+            (onRate)="onClickRate($event)"
+            [starTemplate]="starCustomTemplate"
+          ></ngx-stars-rating>
+
+            <div class="rating">
+              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+              <ng-template #starCustomTemplate>
+                <span class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
+              </ng-template>
+            </div>
+
+            <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5">
+        
+    </div>  
+  </div>
+

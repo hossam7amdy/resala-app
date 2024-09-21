@@ -36,6 +36,7 @@ export class NavBlankComponent implements OnInit {
   userNameLogged:string='Login';
   userId:any;
   signOut:boolean= false;
+  isToken:string|null='';
   categoryList:any=[];
 
   cartNum: number = 0;
@@ -54,9 +55,18 @@ export class NavBlankComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log("logs nav blank");
-    this._AuthService.decodeUser();
-    this.userId = this._AuthService.userInfo?.id;
+   
+    // this.signOut = this._AuthService.signOut;
+    this.isToken = localStorage.getItem('etoken');
+    if(this.isToken == null || this.isToken == ''){
+      this.signOut = false;
+    }else{
+      
+      this._AuthService.decodeUser();
+      this.userId = this._AuthService.userInfo?.id;
+    }
+
+    this.getUserInfo(this.userId);
 
     this._CartService.cartNumber.subscribe({
       next: response => {
@@ -68,16 +78,16 @@ export class NavBlankComponent implements OnInit {
       }
     });
 
-    this._AuthService.userNameLogged.subscribe({
-      next:response=>{
-        this.userNameLogged = response;
-        console.log(this.userNameLogged);
-      },error: err=>{
-        this.userNameLogged = 'Login';
-      }
-    })
+    // this._AuthService.userNameLogged.subscribe({
+    //   next:response=>{
+    //     this.userNameLogged = response;
+    //     console.log(this.userNameLogged);
+    //   },error: err=>{
+    //     this.userNameLogged = 'Login';
+    //   }
+    // })
 
-    this.getUserInfo(this.userId);
+   
 
 
     this._CartService.getCartUser().subscribe({
@@ -95,7 +105,7 @@ export class NavBlankComponent implements OnInit {
       }
     })
 
-    this.signOut = this._AuthService.signOut;
+   
   }
 
   isTogglerOpend():void{
@@ -111,9 +121,13 @@ export class NavBlankComponent implements OnInit {
       next:(response)=>{
         this._AuthService.userNameLogged = response.data.firstName;
         this.userNameLogged = response.data.firstName;
-        console.log(response);
+        this.signOut = true;
+        console.log('user name' ,this.userNameLogged);
       },error:(err)=>{
         console.log(err);
+        if(err.status == 401 || err.status == 403){
+          this.signOut = false;
+        }
       }
     })
   }
