@@ -7,6 +7,8 @@ import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { ResendEmailVerificationButton } from './resend-email-verification-button';
+
 interface EditFormProps {
   disable?: boolean;
   customer: Partial<User>;
@@ -93,7 +95,15 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
         hasFeedback
         rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}
       >
-        <Input placeholder="example@mail.com" disabled />
+        <Input
+          disabled
+          placeholder="example@mail.com"
+          addonAfter={
+            !customer.isEmailVerified && (
+              <ResendEmailVerificationButton email={customer?.email ?? ''} />
+            )
+          }
+        />
       </Form.Item>
 
       <Form.Item
