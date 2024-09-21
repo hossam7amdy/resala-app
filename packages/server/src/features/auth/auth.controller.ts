@@ -103,12 +103,12 @@ export class AuthController extends Controller {
   @Middlewares([validate(RefreshTokenSchema)])
   public async refresh(@Body() body: RefreshTokenRequest['body']): Promise<RefreshTokenResponse> {
     const { token } = body;
-    const response = await this.authService.refreshToken(token);
+    const { accessToken } = await this.authService.refreshToken(token);
 
     return {
       success: true,
       data: {
-        accessToken: response.accessToken,
+        accessToken,
         refreshToken: token,
       },
     };

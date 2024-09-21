@@ -84,14 +84,9 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"User","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Decimal": {
-        "dataType": "refAlias",
-        "type": {"dataType":"string","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Product": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"price":{"dataType":"union","subSchemas":[{"dataType":"integer"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"enDescription":{"dataType":"string","required":true},"arDescription":{"dataType":"string","required":true},"enName":{"dataType":"string","required":true},"arName":{"dataType":"string","required":true},"categoryId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"price":{"dataType":"any","required":true},"enDescription":{"dataType":"string","required":true},"arDescription":{"dataType":"string","required":true},"enName":{"dataType":"string","required":true},"arName":{"dataType":"string","required":true},"categoryId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Color": {
@@ -326,12 +321,12 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Order": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"note":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"paymentStatus":{"ref":"PaymentStatusType","required":true},"paymentMethod":{"ref":"PaymentMethodType","required":true},"transactionId":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"orderStatus":{"ref":"OrderStatusType","required":true},"total":{"dataType":"union","subSchemas":[{"dataType":"integer"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"discount":{"dataType":"union","subSchemas":[{"dataType":"integer"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"subtotal":{"dataType":"union","subSchemas":[{"dataType":"integer"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"userId":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"integer"}],"required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"note":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"paymentStatus":{"ref":"PaymentStatusType","required":true},"paymentMethod":{"ref":"PaymentMethodType","required":true},"transactionId":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"orderStatus":{"ref":"OrderStatusType","required":true},"total":{"dataType":"any","required":true},"discount":{"dataType":"any","required":true},"subtotal":{"dataType":"any","required":true},"userId":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"integer"}],"required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OrderItem": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"quantity":{"dataType":"integer","required":true},"price":{"dataType":"union","subSchemas":[{"dataType":"integer"},{"ref":"Decimal"},{"dataType":"string"},{"dataType":"any"}],"required":true},"stockId":{"dataType":"integer","required":true},"productId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"quantity":{"dataType":"integer","required":true},"price":{"dataType":"any","required":true},"stockId":{"dataType":"integer","required":true},"productId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__": {
@@ -1343,7 +1338,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/reviews/:reviewId',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.getReview)),
 
@@ -1374,7 +1368,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/api/v1/reviews',
-            authenticateMiddleware([{"JWT_SECRET":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReviewController)),
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.listReviews)),
 
