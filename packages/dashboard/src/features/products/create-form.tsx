@@ -7,9 +7,11 @@ import { type Category, type Product, validationPatterns } from '@resala/shared'
 import {
   Form as AntForm,
   Button,
+  Col,
   Flex,
   Input,
   InputNumber,
+  Row,
   Select,
   Upload,
   type UploadFile,
@@ -100,70 +102,80 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
         />
       </AntForm.Item>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
-          name="enName"
-          label="English Name"
-          style={{ flex: 1 }}
-        >
-          <Input placeholder="Enter English name" minLength={2} maxLength={100} />
-        </AntForm.Item>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
-          name="arName"
-          label="الأسم بالعربية"
-          style={{ direction: 'rtl', flex: 1 }}
-        >
-          <Input placeholder="أكتب الأسم بالعربية" minLength={2} maxLength={100} />
-        </AntForm.Item>
-      </Flex>
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            name="enName"
+            label="English Name"
+            style={{ flex: 1 }}
+          >
+            <Input placeholder="Enter English name" minLength={2} maxLength={100} />
+          </AntForm.Item>
+        </Col>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
-          name="enDescription"
-          label="English Description"
-          style={{ flex: 1 }}
-        >
-          <Input.TextArea
-            minLength={5}
-            maxLength={500}
-            placeholder="Enter English description"
-            autoSize={{ minRows: 5, maxRows: 10 }}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
-          name="arDescription"
-          label="الوصف بالعربية"
-          style={{ direction: 'rtl', flex: 1 }}
-        >
-          <Input.TextArea
-            minLength={5}
-            maxLength={500}
-            placeholder="أكتب الوصف بالعربية"
-            autoSize={{ minRows: 5, maxRows: 10 }}
-          />
-        </AntForm.Item>
-      </Flex>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            name="arName"
+            label="الأسم بالعربية"
+            style={{ direction: 'rtl', flex: 1 }}
+          >
+            <Input placeholder="أكتب الأسم بالعربية" minLength={2} maxLength={100} />
+          </AntForm.Item>
+        </Col>
+      </Row>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true }]}
-          name="price"
-          label="Price"
-          style={{ flex: 1 }}
-        >
-          <InputNumber placeholder="Enter price" style={{ width: '100%' }} min={0} />
-        </AntForm.Item>
-        <div style={{ flex: 1 }}></div>
-      </Flex>
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            name="enDescription"
+            label="English Description"
+            style={{ flex: 1 }}
+          >
+            <Input.TextArea
+              minLength={5}
+              maxLength={500}
+              placeholder="Enter English description"
+              autoSize={{ minRows: 5, maxRows: 10 }}
+            />
+          </AntForm.Item>
+        </Col>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            name="arDescription"
+            label="الوصف بالعربية"
+            style={{ direction: 'rtl', flex: 1 }}
+          >
+            <Input.TextArea
+              minLength={5}
+              maxLength={500}
+              placeholder="أكتب الوصف بالعربية"
+              autoSize={{ minRows: 5, maxRows: 10 }}
+            />
+          </AntForm.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true }]}
+            name="price"
+            label="Price"
+            style={{ flex: 1 }}
+          >
+            <InputNumber placeholder="Enter price" style={{ width: '100%' }} min={0} />
+          </AntForm.Item>
+        </Col>
+      </Row>
 
       <AntForm.Item
         required

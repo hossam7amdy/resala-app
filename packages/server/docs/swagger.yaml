@@ -567,8 +567,7 @@ paths:
                 $ref: "#/components/schemas/ListReviewsResponse"
       tags:
         - Review
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: query
           name: page
@@ -663,8 +662,7 @@ paths:
                 $ref: "#/components/schemas/GetReviewResponse"
       tags:
         - Review
-      security:
-        - JWT_SECRET: []
+      security: []
       parameters:
         - in: path
           name: reviewId
@@ -2082,8 +2080,6 @@ components:
           required:
             - data
           type: object
-    Decimal:
-      type: string
     Product:
       properties:
         updatedAt:
@@ -2096,13 +2092,7 @@ components:
           type: string
         imageKey:
           type: string
-        price:
-          anyOf:
-            - type: integer
-              format: int32
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
+        price: {}
         enDescription:
           type: string
         arDescription:
@@ -2805,27 +2795,9 @@ components:
           nullable: true
         orderStatus:
           $ref: "#/components/schemas/OrderStatusType"
-        total:
-          anyOf:
-            - type: integer
-              format: int32
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
-        discount:
-          anyOf:
-            - type: integer
-              format: int32
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
-        subtotal:
-          anyOf:
-            - type: integer
-              format: int32
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
+        total: {}
+        discount: {}
+        subtotal: {}
         userId:
           type: integer
           format: int32
@@ -2858,13 +2830,7 @@ components:
         quantity:
           type: integer
           format: int32
-        price:
-          anyOf:
-            - type: integer
-              format: int32
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
+        price: {}
         stockId:
           type: integer
           format: int32
