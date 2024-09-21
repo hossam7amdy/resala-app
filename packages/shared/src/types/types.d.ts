@@ -1,4 +1,3 @@
-import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 import type { OffsetPageParamsSchema } from '../validations/index.js';
@@ -50,7 +49,7 @@ export type Product = {
     enName: string;
     arDescription: string;
     enDescription: string;
-    price: number | Decimal | string | any;
+    price: any;
     imageKey: string;
     imageUrl: string;
     createdAt: Date;
@@ -104,9 +103,9 @@ export type Wishlist = {
 export type Order = {
     id: number;
     userId: null | number;
-    subtotal: number | Decimal | string | any;
-    discount: number | Decimal | string | any;
-    total: number | Decimal | string | any;
+    subtotal: any;
+    discount: any;
+    total: any;
     orderStatus: OrderStatusType;
     transactionId: null | string;
     paymentMethod: PaymentMethodType;
@@ -119,7 +118,7 @@ export type OrderItem = {
     id: number;
     productId: number;
     stockId: number;
-    price: number | Decimal | string | any;
+    price: any;
     quantity: number;
     createdAt: Date;
     updatedAt: Date;
@@ -128,7 +127,7 @@ export type Shipping = {
     id: number;
     orderId: number;
     addressId: number;
-    cost: number | Decimal | string | any;
+    cost: any;
     createdAt: Date;
     updatedAt: Date;
 };

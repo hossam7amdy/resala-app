@@ -139,6 +139,7 @@ export type DeleteCategoryResponse = GetCategoryResponse;
 export type GetProductRequest = z.infer<typeof Schemas.GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
   data: Product & {
+    avgRating: number;
     category: Category;
   };
 };

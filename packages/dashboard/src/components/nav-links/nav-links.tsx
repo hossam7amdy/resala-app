@@ -16,7 +16,7 @@ import { usePathname } from 'next/navigation';
 const items = [
   {
     key: ROUTES.DASHBOARD,
-    label: <Link href={ROUTES.DASHBOARD}>Home</Link>,
+    label: <Link href={ROUTES.DASHBOARD}>Dashboard</Link>,
     icon: <HomeOutlined />,
   },
   {
