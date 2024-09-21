@@ -3,11 +3,12 @@
     <div class="overlay-section row">
       <i class="fa-solid fa-circle-xmark close" (click)="closeOverlay()"></i>
       <div class="col-4 left-overlay">
-        <h3>Style</h3>
-        <p>Simple style</p>
-        <h1>Get</h1>
-        <h1>This</h1>
-        <h1>One!</h1>
+        <h3 class="mini-tilte">Style</h3>
+        <p class="p-title">Simple style</p>
+        <h1 class="title">Get</h1>
+        <h1 class="title">This</h1>
+        
+        <h1 class="title">One!</h1>
       </div>
       <div class="col-md-8 img-overlay">
         <img src="./assets/products/nekab.jpeg" alt="" />
@@ -18,27 +19,76 @@
 
 <!-- section slider  -->
 
+
 <section class="slider">
   <owl-carousel-o [options]="mainSliderOptions" class="custom-owl">
     <ng-template carouselSlide>
-      <div class="row vh-100 half-slide">
+      <div class="row half-slide">
         <div class="col-6">
           <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
         </div>
         <div class="col-6 right-content">
           <div class="title-content">
-            <h1>Resala</h1>
+            <h1 class="hyper-title">Resala</h1>
+            <p class="">The Best Collection For Veiled Ladies</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template carouselSlide>
+      <div class="row half-slide">
+        <div class="col-6">
+          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+        </div>
+        <div class="col-6 right-content">
+          <div class="title-content">
+            <h1 class="hyper-title">Resala</h1>
             <p>The Best Collection For Veiled Ladies</p>
           </div>
         </div>
       </div>
     </ng-template>
-    <ng-template carouselSlide
-      ><img class="vh-100 w-100" src="./assets/main-slider/2.jpg" alt="Slide2"
-    /></ng-template>
-    <ng-template carouselSlide
-      ><img class="vh-100 w-100" src="./assets/main-slider/3.jpg" alt="Slide3"
-    /></ng-template>
+    <ng-template carouselSlide>
+      <div class="row half-slide">
+        <div class="col-6">
+          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+        </div>
+        <div class="col-6 right-content">
+          <div class="title-content">
+            <h1 class="hyper-title">Resala</h1>
+            <p>The Best Collection For Veiled Ladies</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template carouselSlide>
+      <div class="row half-slide">
+        <div class="col-6">
+          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+        </div>
+        <div class="col-6 right-content">
+          <div class="title-content">
+            <h1 class="hyper-title">Resala</h1>
+            <p>The Best Collection For Veiled Ladies</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template carouselSlide>
+      <div class="row half-slide">
+        <div class="col-6">
+          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+        </div>
+        <div class="col-6 right-content">
+          <div class="title-content">
+            <h1 class="hyper-title">Resala</h1>
+            <p>The Best Collection For Veiled Ladies</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </owl-carousel-o>
 </section>
 
@@ -48,9 +98,10 @@
     <div class="trends-title">
       <h2 class="h1">Trends Products</h2>
     </div>
-    <owl-carousel-o [options]="trendsSliderOptions">
-      <ng-template carouselSlide>
-        <div class="row w-100 justify-content-center text-center" style="height: 600px">
+    <div class="trend-parent">
+    <owl-carousel-o [options]="trendsSliderOptions" >
+      <ng-template carouselSlide >
+        <div class="row justify-content-center text-center">
           <div class="col-4 trends-slide">
             <a>
               <i class="fa-regular fa-heart favourit-icon"></i>
@@ -68,7 +119,8 @@
         </div>
       </ng-template>
       <ng-template carouselSlide>
-        <div class="row w-100 justify-content-center text-center" style="height: 600px">
+        <!-- style="height: 600px" -->
+        <div class="row w-100 justify-content-center text-center" >
           <div class="col-4 trends-slide">
             <a href="#">
               <i class="fa-regular fa-heart favourit-icon"></i>
@@ -87,6 +139,7 @@
       </ng-template>
     </owl-carousel-o>
   </div>
+  </div>
 </section>
 
 <!-- section products -->
@@ -104,9 +157,13 @@
 
     <div class="row justify-content-center text-center">
       <div
-        *ngFor="let product of products"
+        *ngFor="let product of products | paginate: { id: 'paginationTool',
+        itemsPerPage: pageLimit,
+        currentPage: currentPage,
+        totalItems: totalItems } "
         class="mx-2 mb-3 px-0 col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2 justify-content-center text-center"
       >
+
         <div>
           <!-- *ngIf="product.images.length !== 0" -->
           <!-- <p>{{product.category.enName}}</p>     -->
@@ -131,7 +188,7 @@
               ></i>
             </header>
             <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
-              <p class="offer">discount<span> 20%</span></p>
+              <p class="offer">Sale<span> 20%</span></p>
 
               <img
                 class="w-100 image-products"
@@ -149,19 +206,42 @@
             <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
               {{ product.enName }}
             </h6>
+            <ngx-stars-rating
+            [rate]="rateNumber"
+            [options]="ratingOptions"
+            (onRate)="onClickRate($event)"
+            [starTemplate]="starCustomTemplate"
+          ></ngx-stars-rating>
 
             <div class="rating">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
+              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+              <ng-template #starCustomTemplate>
+                <span class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
+              </ng-template>
             </div>
+
             <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
           </div>
         </div>
       </div>
-    </div>
+      <div class="mt-5">
+        <pagination-controls  id="paginationTool"
+                        (pageChange)="pageChanged($event)"
+                        (pageBoundsCorrection)="pageChanged($event)"
+                        [maxSize]="9"
+                        [directionLinks]="true"
+                        [autoHide]="false"
+                        [responsive]="true"
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        screenReaderPaginationLabel="Pagination"
+                        screenReaderPageLabel="page"
+                        screenReaderCurrentLabel="You're on page">
+      </pagination-controls>
+    </div>  
+  </div>
+
+  <!-- Categories -->
 
     <div class="container-fluid">
       <h2 class="h1">All Categories</h2>
@@ -170,54 +250,59 @@
         [options]="pobularProducts"
         class="justify-content-center text-center product"
       >
-        <ng-container *ngFor="let product of products">
+        <ng-container *ngFor="let category of categories">
           <ng-template carouselSlide>
             <!-- *ngIf="product.images.length !== 0" -->
             <div class="parent-img-content px-2">
-              <header [ngClass]="" class="header-product">
+              <!-- <header [ngClass]="" class="header-product">
                 <i
-                  (click)="addPoductInWishList(product.id, favoritIcon)"
+                  (click)="addPoductInWishList(category.id, favoritIcon)"
                   #favoritIcon
                   class="fa-regular fa-heart favourit-icon"
                 ></i>
-              </header>
+              </header> -->
 
               <div
                 class="img-content"
-                [routerLink]="['/product-details/', product.id]"
+                [routerLink]="['/category/', category.categoryId]"
                 role="button"
               >
-                <p class="offer">discount<span> 20%</span></p>
+                <!-- <p class="offer">Sale<span> 20%</span></p> -->
 
                 <img
                   class="w-100 image-products"
-                  [src]="product.imageUrl"
-                  [alt]="product.enName"
-                  [title]="product.enName"
+                  [src]="category.imageUrl"
+                  [alt]="category.enName"
+                  [title]="category.enName"
                 />
               </div>
 
-              <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
+              <!-- <footer class="footer-product" [routerLink]="['/product-details/', category.id]">
                 <i class="fa-solid fa-bag-shopping shopping-icon"></i>
-              </footer>
+              </footer> -->
             </div>
 
             <div class="descrp px-2">
-              <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
-                {{ product.enName }}
+              <h6 [routerLink]="['/category/', category.categoryId]" class="mb-0" role="button">
+                {{ category.category.enName }}
               </h6>
-              <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
+
+              <!-- <span class="price">{{ category.price }}<label class="currency"> EGP</label></span>
               <div class="rating">
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
-              </div>
+              </div> -->
+
             </div>
           </ng-template>
         </ng-container>
       </owl-carousel-o>
     </div>
   </div>
+
+
+  
 </section>

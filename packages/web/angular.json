@@ -35,13 +35,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1000kb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "10kb"
                 }
               ],
               "outputHashing": "all"
@@ -70,7 +70,11 @@
               "browserTarget": "freshcart:build:production"
             },
             "development": {
-              "browserTarget": "freshcart:build:development"
+              "browserTarget": "freshcart:build:development",
+              "ssl": false,
+              "sslKey": "ssl/server.key",
+              "sslCert": "ssl/server.crt"
+              
             }
           },
           "defaultConfiguration": "development"

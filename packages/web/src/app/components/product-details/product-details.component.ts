@@ -97,7 +97,7 @@ export class ProductDetailsComponent implements OnInit {
   getProductStock(id: any) {
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
-        this.productStock = res?.data;
+        this.productStock = res?.data.stocks;
 
         console.log('stock', this.productStock);
 
@@ -216,10 +216,11 @@ export class ProductDetailsComponent implements OnInit {
           this._CartService.cartNumber.next(res.data.totalQuantity);
           console.log('cart number :' + this._CartService.cartNumber);
           this._toaster.success('added one product successfuly');
+          this._Router.navigate(['/cart']);
         },
         error: err => {
           localStorage.setItem('productId', this.productId);
-          this._toaster.error(err.error.message); //'Should be Login'
+          this._toaster.error('please login !!'); //'Should be Login'
           this._Router.navigate(['/login']);
           console.log('response', productId, quantity, err);
         },

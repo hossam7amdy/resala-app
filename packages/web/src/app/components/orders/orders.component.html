@@ -1,0 +1,70 @@
+<section class="" style="background-color: #fff;">
+    <div class="container-fluid">
+        <h1 class="h1">My Orders</h1>
+    </div>
+    <div class="container py-5 ">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div *ngFor="let order of orders" class="col-12">
+          <div class="card card-stepper mb-2" style="border-radius: 10px;">
+  
+            <div class="card-body p-5">
+  
+              <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                  <h4 class="h4 main-color mb-0">Order Number <span class="font-weight-bold">{{order.id}}</span></h4>
+                  <h4 class="h4 main-color mb-0">Order Items <span class="font-weight-bold">{{order.orderItems.length}}</span></h4>
+                </div>
+                <div class="text-end">
+                    <h4 class="h4 main-color mb-0">Order Status <span class="font-weight-bold">{{order.orderStatus}}</span></h4>
+                  
+                </div>
+              </div>
+  
+              <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                <li [ngClass]="{thirdcolor: order.orderStatus !== 'CANCELLED'}"  class="step0 text-center" id="step1"></li>
+                <li [ngClass]="{thirdcolor: order.paymentStatus == 'PAID'}" class="step0 text-center" id="step2"></li>
+                <li [ngClass]="{thirdcolor: order.orderStatus == 'SHIPPED'}" class="step0 text-center" id="step3"></li>
+                <li [ngClass]="{thirdcolor : order.orderStatus == 'DELIVERED'}" class="step0 text-muted text-end" id="step4"></li>
+              </ul>
+  
+              <div class="d-flex justify-content-between">
+                <div class="d-lg-flex align-items-center defaultcolor" [ngClass]="{thirdcolor: order.orderStatus !== 'CANCELLED'}" >
+                  <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                  <div>
+                    <p class="fw-bold mb-1">Order</p>
+                    <p class="fw-bold mb-0">Processed</p>
+                  </div>
+                </div>
+                <div class="d-lg-flex align-items-center defaultcolor" [ngClass]="{thirdcolor: order.paymentStatus == 'PAID'}">
+                  <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0" ></i>
+                  <div>
+                    <p class=" fw-bold mb-1">Order</p>
+                    <p class=" fw-bold mb-0">Shipped</p>
+                  </div>
+                </div>
+                <div class="d-lg-flex align-items-center defaultcolor" [ngClass]="{thirdcolor: order.orderStatus == 'SHIPPED'}">
+                  <i class="fas fa-shipping-fast  fa-3x me-lg-4 mb-3 mb-lg-0 "></i>
+                  <div>
+                    <p class=" fw-bold mb-1">Order</p>
+                    <p  class=" fw-bold mb-0">En Route</p>
+                  </div>
+                </div>
+                <div class="d-lg-flex align-items-center defaultcolor" [ngClass]="{thirdcolor : order.orderStatus == 'DELIVERED'}">
+                  <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0" ></i>
+                  <div>
+                    <p  class=" fw-bold mb-1">Order</p>
+                    <p  class=" fw-bold mb-0">Arrived</p>
+                  </div>
+                </div>
+              </div>
+  
+             
+            </div>
+                <div class="text-end second-background-color w-100 p-1  mt-3">
+                    <h2 class="h2">Total Payed <span class="font-weight-bold">{{order.total}} LE</span></h2>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

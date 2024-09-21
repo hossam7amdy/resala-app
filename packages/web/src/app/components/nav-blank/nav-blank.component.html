@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-xl navbar-light">
+<nav #navbar class="navbar fixed-top navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink=""
       ><img src="./assets/logo/logo.png" alt="logo" class="logo"
@@ -11,8 +11,12 @@
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
       aria-label="Toggle navigation"
+      (click)="isTogglerOpend()"
     >
-      <span class="navbar-toggler-icon"></span>
+      <i *ngIf="togglerOpend == false" class="fa-solid fa-bars"></i>
+      
+      <i *ngIf="togglerOpend == true" class="fa-solid fa-xmark"></i>
+
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- left nav -->
@@ -30,57 +34,19 @@
             id="dropdownMenuButton"
             data-mdb-toggle="dropdown"
             aria-expanded="false">
-            Products
+            Categories
           </a>
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li  *ngFor="let category of categoryList" >
-              <a routerLinkActive="active-link" [routerLink]="['/products/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/category/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
             </li>
             
           </ul>
         </li>
 
 
-        <!--
-        <li class=""><a class="dropdown-item" href="#">3abayat</a></li>
-            <li class=""><a class="dropdown-item" href="#">Scarf</a></li>
-
-            <li class=""><a class="dropdown-item" href="#">Dress</a></li>
-            <li class=""><a class="dropdown-item" href="#">Cab takm</a></li>
-            <li class=""><a class="dropdown-item" href="#">Ednaa</a></li>
-
-            <li class=""><a class="dropdown-item" href="#">3abaya Khalejee</a></li>
         
-        
-        
-        
-        
-        <li class="nav-item dropdown mx-2">
-          <a
-            class="nav-link dropdown-toggle"
-            id="navbarDropdown"
-            role="button"
-            routerLinkActive="active-link"
-            routerLink="/products"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            >Products</a
-          >
-
-          <ul class="dropdown-menu row" aria-labelledby="navbarDropdown">
-            <li class="col-4"><a class="dropdown-item" href="#">Nekab</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">3abayat</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Scarf</a></li>
-
-            <li class="col-4"><a class="dropdown-item" href="#">Dress</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Cab takm</a></li>
-            <li class="col-4"><a class="dropdown-item" href="#">Ednaa</a></li>
-
-            <li class="col-4"><a class="dropdown-item" href="#">3abaya Khalejee</a></li>
-          </ul>
-        </li> -->
-
 
         <li class="nav-item mx-2">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection"
@@ -95,24 +61,49 @@
 
       <!-- right nav -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <form class="d-flex">
+        <!-- <form class="d-flex">
           <i class="fa-solid fa-magnifying-glass icon-search"></i
           ><input class="form-control me-3 me-lg-3 search" type="search" aria-label="Search" />
-        </form>
+        </form> -->
 
-        <li *ngIf="signOut" class="nav-item me-3">
+        <!-- <li *ngIf="signOut" class="nav-item me-3">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/login"
             ><i class="far far fa-user me-4 fs-5"></i>
             <span (click)="removeTokenSignOut()">ٍSigout</span>
           </a>
+        </li> -->
+        <!-- *ngIf="signOut == false" -->
+        <li  class="nav-item dropdown mx-2 me-3">
+          <a data-mdb-button-init class="nav-link" routerLinkActive="active-link" routerLink="/login"
+          data-mdb-ripple-init data-mdb-dropdown-init class="nav-link dropdown-toggle" 
+          type="button"
+          id="dropdownMenuButton"
+          data-mdb-toggle="dropdown"
+          aria-expanded="false">
+            <i class="far far fa-user me-4 fs-5"></i>
+            <span>{{userNameLogged}}</span>
+          </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li>
+                <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign In</a>
+                <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign Out</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">Not a Member?</span> Register</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">Profile</a>
+              </li> 
+
+              <li>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">Trace Your Order</a>
+              </li> 
+            </ul>
+          
         </li>
 
-        <li *ngIf="signOut == false" class="nav-item me-3">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/login"
-            ><i class="far far fa-user me-4 fs-5"></i>
-            <span>Login</span>
-          </a>
-        </li>
 
         <li class="nav-item me-3">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/favorites"
