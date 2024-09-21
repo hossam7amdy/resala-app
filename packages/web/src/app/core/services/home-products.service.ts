@@ -24,9 +24,9 @@ private getHeaders() {
 }
 
   // Products
-  getProducts(currentPage:string ='1'): Observable<any> {
+  getProducts(currentPage:string ='1', limitProducts:string = '10'): Observable<any> {
     console.log(this.getHeaders());
-    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{page:currentPage})
+    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{page:currentPage, limit:limitProducts})
     return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
     
   }
