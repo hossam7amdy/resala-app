@@ -2,6 +2,7 @@ import type { CorsOptions } from 'cors';
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import fs from 'fs';
+import helmet from 'helmet';
 import passport from 'passport';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
@@ -28,6 +29,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
 
   // Middlewares
   app.use(cors(corsConfig));
+  app.use(helmet());
   app.use(passport.initialize());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
