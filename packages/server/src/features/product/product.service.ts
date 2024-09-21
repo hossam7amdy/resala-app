@@ -19,10 +19,17 @@ export class ProductService {
   ) {}
 
   async get(id: number): Promise<GetProductResponse['data']> {
-    return await this.db.product.findUniqueOrThrow({
+    const avgRating = await this.db.review.aggregate({
+      where: { productId: id },
+      _avg: { rating: true },
+    });
+
+    const product = await this.db.product.findUniqueOrThrow({
       include: { category: true },
       where: { id },
     });
+
+    return { ...product, avgRating: avgRating._avg.rating ?? 0 };
   }
 
   async list({
@@ -33,8 +40,8 @@ export class ProductService {
   }: ListProductsRequest['query']): Promise<ListProductsResponse['data']> {
     const filters: Prisma.ProductWhereInput = {
       OR: [
-        { enName: { startsWith: search, mode: 'insensitive' } },
-        { arName: { startsWith: search, mode: 'insensitive' } },
+        { enName: { contains: search, mode: 'insensitive' } },
+        { arName: { contains: search, mode: 'insensitive' } },
       ],
       categoryId,
     };
@@ -50,9 +57,18 @@ export class ProductService {
       }),
     ]);
 
+    const avgRatings = await this.db.review.groupBy({
+      by: ['productId'],
+      _avg: { rating: true },
+      where: { productId: { in: products.map(product => product.id) } },
+    });
+
     return {
-      products,
       pagination: { page, limit, total },
+      products: products.map(product => ({
+        ...product,
+        avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
+      })),
     };
   }
 
