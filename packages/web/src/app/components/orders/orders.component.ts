@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from 'src/app/core/services/user.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-orders',
@@ -13,12 +14,14 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class OrdersComponent implements OnInit{
   constructor(
     private _UserDataService:UserService,
-    private _AuthService:AuthService
+    private _AuthService:AuthService,
+    private spinner : NgxSpinnerService
   )
   {}
   orders:any=[];
   activeClass ='defaultcolor';
   ngOnInit(): void {
+    this.spinner.show();
     this._AuthService.decodeUser()
     
     this._UserDataService.getUserOrders(this._AuthService.userInfo.id).subscribe({
@@ -29,6 +32,7 @@ export class OrdersComponent implements OnInit{
         console.log(err);
       }
     })
+    this.spinner.hide();
   }
 
   setActiveClass() {
