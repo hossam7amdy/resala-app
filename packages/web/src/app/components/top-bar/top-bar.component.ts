@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 import type { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
@@ -11,6 +11,23 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
   styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent {
+  constructor(
+    private _Renderer:Renderer2,
+
+  ){}
+
+  @ViewChild('topBar') navbarElement!:ElementRef
+  @HostListener('window:scroll')
+  onScroll():void{
+    if(scrollY > 600){
+      this._Renderer.setStyle(this.navbarElement.nativeElement,'opacity',0);
+      
+    }else{
+      this._Renderer.removeStyle(this.navbarElement.nativeElement,'opacity');
+      
+    }
+  }
+  
   // main slider
   topBarSlide: OwlOptions = {
     loop: true,

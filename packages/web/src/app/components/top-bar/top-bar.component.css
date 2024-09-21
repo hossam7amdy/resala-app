@@ -1,5 +1,8 @@
+
+
 .top-bar {
-  transition-duration: 0.3ms !important;
+  
+  transition:all ease-out 1s !important;
   padding: 5px !important;
   background-color: #14adc6 !important;
   position: fixed;
@@ -34,6 +37,11 @@ div {
   z-index: 99999;
   width: 20%;
 }
+@media(max-width:1200px){
+  .social-icon{
+    display: none;
+  }
+}
 
 .social-icon > i:hover {
   transition-duration: 0.4s;
@@ -62,3 +70,4 @@ button:not(:disabled) {
 .carousel-item {
   height: 0;
 }
+

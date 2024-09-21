@@ -1,4 +1,4 @@
-<section *ngIf="cartDetails.totalQuantity != 0; else emptyCart">
+<section *ngIf="totalCount != 0; else emptyCart">
   <div class="container">
     <h2 class="cartTitle h2">My Cart {{ cartDetails.totalQuantity }} product</h2>
   </div>
@@ -7,8 +7,9 @@
       <div class="col-lg-8">
         <div class="form-check">
           <button
+            [disabled]="totalCount == 0"
             type="button"
-            class="btn mt-2 btn-danger"
+            class="btn mt-2 second-custom-btn"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
@@ -45,7 +46,7 @@
                   </button>
                   <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn second-custom-btn"
                     data-bs-dismiss="modal"
                     (click)="[confirmationDel(), clearAllItems(removeAll)]"
                     #removeAll
@@ -84,6 +85,7 @@
             <div class="col-sm-3 m-auto">
               <div class="counter">
                 <button
+                  [disabled]="totalCount == 1"
                   class="min-counter-btn fw-bold"
                   (click)="changeCount(item.quantity - 1, item.stock.id, btnMin, btnPlus)"
                   #btnMin
@@ -112,7 +114,10 @@
             <p class="card-text">
               Total Products Price <span class="total-price">{{ cartDetails.totalPrice }} EGP</span>
             </p>
-            <a href="" routerLink="/payment" class="btn order-btn w-100">Order Now</a>
+            <button [disabled]="cartDetails.totalQuantity == 0" class="btn custome-btn p-0 border-0">
+              <a routerLink="/payment" class="btn custome-btn ">Order Now</a>
+            </button>
+            
           </div>
         </div>
       </div>

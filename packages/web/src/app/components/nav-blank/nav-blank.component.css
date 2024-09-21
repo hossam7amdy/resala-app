@@ -10,18 +10,24 @@
   top: 30px;
 }
 
+.navbar{
+  transition: top ease-in-out 0.5s;
+  view-transition-name: top;
+}
 nav .logo {
   width: 118.13px;
   height: 53.53px;
 }
 
+
 /* @media (min-width: 1200px)  */
-.navbar-expand-xl .navbar-nav .dropdown-menu {
+.navbar-expand-lg .navbar-nav .dropdown-menu {
   position: absolute;
   border: none !important;
   min-width: 300px !important;
   border-radius: 5px;
-  
+  overflow: auto;
+  max-height: 300px;
   /* margin-top: 10px; */
  
 }
@@ -33,7 +39,7 @@ nav .logo {
 
 .dropdown-menu .dropdown-item{
   color: #016373;
-  font-weight: bold;
+  font-weight: 500;
   
 }
 .dropdown-menu .dropdown-item:hover{
@@ -41,9 +47,28 @@ nav .logo {
   color: #fff;
 }
 
+
+/*login*/
+.not-member{
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+}
 /**/
+.navbar-toggler{
+  transition: all 1s ease-in-out;
+}
+.navbar-toggler i{
+  font-size: 30px !important;
+  color: #fff !important;
+}
+.navbar-toggler span{
+  color: #fff !important;
+}
 
-
+.navbar-toggler:focus{
+  box-shadow: none !important;
+}
 .dropdown:hover>.dropdown-menu {
   display: block;
 }
@@ -88,7 +113,11 @@ form .icon-search {
   border-radius: 5px;
   outline: none;
 }
-
+@media (max-width: 1300px) {
+  .search{
+    width: 250px;
+  }
+}
 .search:active,
 .search:focus {
   outline: none;
@@ -107,7 +136,7 @@ form .icon-search {
   background-color: #fbb935;
   top: 0;
   left: 25px;
-  z-index: 9999;
+  z-index: 99;
   text-align: center;
   line-height: 1.9;
   font-weight: bolder;
@@ -135,4 +164,11 @@ edit on bootstrap classes
 
 .nav-link {
   color: #fff;
+}
+@media (max-width:1300px) {
+  .nav-link,
+  .nav-link span{
+    font-size: 14px;
+    
+  }
 }
