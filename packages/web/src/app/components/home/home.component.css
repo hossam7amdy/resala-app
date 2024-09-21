@@ -440,6 +440,14 @@ section .overlay {
   cursor: pointer;
 }
 
+::ng-deep label.star[_ngcontent-ng-c205951347] {
+  float: right ;
+  padding: 2px !important;
+  font-size: 15px !important;
+  color: #ccc !important; 
+  transition: all .2s;
+  
+}
 .img-content .fa-plus {
   color: #14adc6;
   font-size: 20px;

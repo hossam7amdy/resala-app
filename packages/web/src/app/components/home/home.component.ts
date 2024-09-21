@@ -14,13 +14,16 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
-
+import { NgxStarRatingModule } from 'ngx-star-rating';
+import { ReviewsService } from 'src/app/core/services/reviews.service';
+import { NgxStarsRatingModule } from 'ngx-stars-rating';
+import { IRatingOptions } from 'ngx-stars-rating';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe ], //
+  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarRatingModule,NgxStarsRatingModule  ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -28,6 +31,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   UserProfile: any;
   _AuthService: any;
   userNameLogged: any;
+  productId:string='';
+  
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -35,8 +40,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner:NgxSpinnerService
+    private spinner:NgxSpinnerService,
+    private _Reviews:ReviewsService
+    
+
+       
   ) {}
+
+   //start Rating
+   public rateNumber: number = 2;
+    public ratingOptions: IRatingOptions = {
+        starsCount: 5,
+        hoverable: false,
+        clickable: false
+    };
+
+   
+
+  
+   //end Rating
 
   // interfaces
   products: Product[] = [];
@@ -46,6 +68,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // overlay
   onClick: boolean = false;
+
+  
 
     // pagination
     pageLimit:number =0;
@@ -70,22 +94,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     });
 
-    
-   
-
     // categories
     this._Categories.getCategories().subscribe({
       next: response => {
         console.log('categories', response.data);
       },
     });
+//Reviews
+    this._Reviews.getProductReview('1', '100').subscribe({
+      next:(res)=>{
+        console.log('Reviews',res)
+        this.rateNumber = res.data.reviews.rating;
+      },error:(err)=>{
+        console.log(err)
+      }
+    })
+
     setTimeout(() => {
       this.spinner.hide();   
     }, 1000);
   }
-  userId(userId: any) {
-    throw new Error('Method not implemented.');
-  }
+ 
 
   // overlay
   ngAfterViewInit(): void {
@@ -119,33 +148,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // categories slider
-  // categoryOptions: OwlOptions = {
-  //   loop: true,
-  //   mouseDrag: false,
-  //   touchDrag: false,
-  //   pullDrag: false,
-  //   dots: false,
-  //   autoWidth: true,
-  //   margin: 10,
-  //   navSpeed: 700,
-  //   navText: ['', ''],
-  //   responsive: {
-  //     0: {
-  //       items: 1,
-  //     },
-  //     400: {
-  //       items: 2,
-  //     },
-  //     740: {
-  //       items: 3,
-  //     },
-  //     940: {
-  //       items: 4,
-  //     },
-  //   },
-  //   nav: false,
-  // };
+ 
+  public onClickRate(rate: number): void {
+      console.log(rate, 'rate'); // Logs the clicked star number
+  }
 
   // main slider
   mainSliderOptions: OwlOptions = {
