@@ -206,14 +206,20 @@
             <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
               {{ product.enName }}
             </h6>
+            <ngx-stars-rating
+            [rate]="rateNumber"
+            [options]="ratingOptions"
+            (onRate)="onClickRate($event)"
+            [starTemplate]="starCustomTemplate"
+          ></ngx-stars-rating>
 
             <div class="rating">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
+              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+              <ng-template #starCustomTemplate>
+                <span class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
+              </ng-template>
             </div>
+
             <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
           </div>
         </div>
