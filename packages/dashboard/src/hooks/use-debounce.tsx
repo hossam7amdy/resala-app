@@ -10,15 +10,16 @@ import { useCallback, useRef } from 'react';
  * @returns Debounced function
  */
 export const useDebounce = (fn: (...args: unknown[]) => void, delay: number) => {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const tRef = useRef<NodeJS.Timeout | null>(null);
 
   return useCallback(
     (...args: unknown[]) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (tRef.current) {
+        clearTimeout(tRef.current);
       }
 
-      timeoutRef.current = setTimeout(() => {
+      tRef.current = setTimeout(() => {
+        tRef.current = null;
         fn(...args);
       }, delay);
     },
