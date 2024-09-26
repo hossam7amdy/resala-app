@@ -249,3 +249,10 @@
   background-color: #fbb935;
   color: #fff;
 }
+
+.card-body .p{
+  font-size: 12px;
+  padding-top: 0;
+  margin-bottom: 2px;
+  padding-bottom: 0;
+}

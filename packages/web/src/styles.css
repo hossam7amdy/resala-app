@@ -63,7 +63,7 @@ white
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   margin-top: 110px;
 }
 .main-color{

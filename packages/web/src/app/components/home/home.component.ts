@@ -15,7 +15,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { NgxStarRatingModule } from 'ngx-star-rating';
-import { ReviewsService } from 'src/app/core/services/reviews.service';
+
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 
@@ -23,7 +23,7 @@ import { IRatingOptions } from 'ngx-stars-rating';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarRatingModule,NgxStarsRatingModule  ], //
+  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarsRatingModule  ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -41,14 +41,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner:NgxSpinnerService,
-    private _Reviews:ReviewsService
+   
     
 
        
   ) {}
 
    //start Rating
-   public rateNumber: number = 2;
+   public rateNumber: number = 3;
     public ratingOptions: IRatingOptions = {
         starsCount: 5,
         hoverable: false,
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   
 
     // pagination
-    pageLimit:number =0;
+    pageLimit:number =2;
     currentPage:number = 1;
     totalItems:number=0;
   //favourit icons
@@ -91,6 +91,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        // this.rateNumber = response.data.products.avgRating;
       },
     });
 
@@ -101,14 +102,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     });
 //Reviews
-    this._Reviews.getProductReview('1', '100').subscribe({
-      next:(res)=>{
-        console.log('Reviews',res)
-        this.rateNumber = res.data.reviews.rating;
-      },error:(err)=>{
-        console.log(err)
-      }
-    })
+    // this._Reviews.getProductReview('1', '100').subscribe({
+    //   next:(res)=>{
+    //     console.log('Reviews',res)
+    //     this.rateNumber = res.data.reviews.rating;
+    //   },error:(err)=>{
+    //     console.log(err)
+    //   }
+    // })
 
     setTimeout(() => {
       this.spinner.hide();   
