@@ -8,14 +8,17 @@ import { RouterOutlet } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { ReviewsService } from 'src/app/core/services/reviews.service';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet],
+  imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet,NgxStarsRatingModule, CuttdatePipe],
 
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
@@ -30,7 +33,8 @@ export class ProductDetailsComponent implements OnInit {
     private _CartService: CartService,
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
-    private _Router: Router
+    private _Router: Router,
+    private _Reviews:ReviewsService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
@@ -63,6 +67,23 @@ export class ProductDetailsComponent implements OnInit {
   stockIdSize: string = '';
   quantity: string = '';
   isChooseSize: boolean = false;
+
+  // Reviews
+  productReview:any=[];
+  averageRate:number=0;
+  ratingTotal:number=0;
+  //start Rating
+  public rateNumber: number = 2;
+  public ratingOptions: IRatingOptions = {
+      starsCount: 5,
+      hoverable: false,
+      clickable: false
+  };
+
+ 
+
+
+ //end Rating
   ngOnInit(): void {
     // start code test
 
@@ -80,6 +101,21 @@ export class ProductDetailsComponent implements OnInit {
         console.log(err);
       },
     });
+
+    this._Reviews.getProductReview(this.productId,'10').subscribe({
+      next:(res)=>{
+
+        console.log('test');
+        console.log('review',res);
+        this.productReview = res.data.reviews;
+       
+      },error:(err)=>{
+
+      }
+    })
+
+    
+
   }
 
   getProductDetails(id: any) {
@@ -114,16 +150,11 @@ export class ProductDetailsComponent implements OnInit {
       },
     });
   }
-  // removeDuplicat() {
-  //   this.productStockColor = this.productStock;
-  //   this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any; }) => {
-  //     if (!a.find(data => data.colorId == b.colorId)) {
-  //       a.push(b)
-  //     }
-  //     return a
-  //   }, []);
-  //   console.log('after filter', this.productStockColor);
-  // }
+  
+
+  public onClickRate(rate: number): void {
+    console.log(rate, 'rate'); // Logs the clicked star number
+}
 
   mainImage: OwlOptions = {
     loop: false,
