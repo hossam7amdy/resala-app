@@ -103,10 +103,10 @@ i:focus {
 /*search */
 .search-btn{
   position: fixed;
-  top: 25%;
-  right: -3px;
+  top: 30%;
+  right: 0px;
   z-index: 9999;
-  width: 50px;
+  width: 40px;
   background-color: #fbb935;
   padding: 15px;
   border-radius: 25px 0px 0px 25px;
@@ -115,7 +115,7 @@ i:focus {
 }
 .search-btn:hover,
 .search-btn:active{
-  width: 70px;
+  width: 50px;
   right: -5px;
   transition: all 0.7 ease-in-out;
 }
