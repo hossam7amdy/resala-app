@@ -16,7 +16,7 @@ export class ReviewsService {
   private getHeaders() {
     const headers = new HttpHeaders({
       'ngrok-skip-browser-warning':  '69420',
-      'Authorization':`Bearer ${localStorage.getItem('etoken')}`
+      // 'Authorization':`Bearer ${localStorage.getItem('etoken')}`
     });
     return {headers};
   }
