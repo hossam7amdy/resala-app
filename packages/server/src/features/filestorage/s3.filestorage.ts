@@ -3,15 +3,13 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   HeadBucketCommand,
-  HeadObjectCommand,
-  ListObjectsV2Command,
   PutBucketPolicyCommand,
   PutObjectCommand,
   S3Client,
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
-import type { FileMetadata, IFileStorage } from './filestorage.interface.js';
+import type { IFileStorage } from './filestorage.interface.js';
 
 export class S3FileStorage implements IFileStorage {
   private readonly bucketName: string;
@@ -52,15 +50,11 @@ export class S3FileStorage implements IFileStorage {
     }
   }
 
-  // eslint-disable-next-line no-unused-vars
-  download(_key: string): Promise<Buffer> {
-    throw new Error('Method not implemented.');
-  }
-  async upload(fileBuffer: Buffer, key: string): Promise<string> {
+  async upload(file: Express.Multer.File, key: string): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
-      Body: fileBuffer,
+      Body: file.buffer,
       ACL: 'public-read',
     });
 
@@ -77,30 +71,7 @@ export class S3FileStorage implements IFileStorage {
 
     await this.client.send(command);
   }
-  async list(directory: string): Promise<string[]> {
-    const command = new ListObjectsV2Command({
-      Bucket: this.bucketName,
-      Prefix: directory,
-    });
 
-    const { Contents: contents } = await this.client.send(command);
-
-    return contents!.map(obj => obj.Key!);
-  }
-  async getMetadata(path: string): Promise<FileMetadata> {
-    const key = this.getFilenameFromUrl(path);
-
-    const command = new HeadObjectCommand({
-      Bucket: this.bucketName,
-      Key: key,
-    });
-    const obj = await this.client.send(command);
-
-    return {
-      size: obj.ContentLength!,
-      lastModified: obj.LastModified!,
-    };
-  }
   async deleteMany(keys: string[]) {
     const command = new DeleteObjectsCommand({
       Bucket: this.bucketName,
