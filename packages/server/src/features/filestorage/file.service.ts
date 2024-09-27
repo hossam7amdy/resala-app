@@ -13,7 +13,7 @@ export class FileService {
     const filename = `${uuid()}.${fileExtension}`;
     const key = directory ? `${directory}/${filename}` : filename;
 
-    const url = await this.fileStorage.upload(file.buffer, key);
+    const url = await this.fileStorage.upload(file, key);
     return { key, url };
   }
 
