@@ -10,7 +10,6 @@
     "test": "echo \"Error: no test specified\""
   },
   "dependencies": {
-    "@resala/shared": "file:../shared",
     "@ant-design/icons": "^5.3.6",
     "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.16.2",
