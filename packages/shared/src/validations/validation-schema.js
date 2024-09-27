@@ -448,6 +448,23 @@ export const CreateDiscountSchema = z.object({
     }, {
         message: 'Start date must not be in the past and end date must be greater than the start date.',
         path: ['startDate', 'endDate'], // Show validation error on both fields
+    })
+        .refine(data => {
+        if (data.type === 'BULK')
+            return data.minQty;
+        return true;
+    }, {
+        message: 'Minimum quantity is required for BULK discount type.',
+        path: ['minQty', 'type'],
+    })
+        .refine(data => {
+        if (data.type === 'BOGO') {
+            return data.minQty && data.amount === Math.trunc(data.amount);
+        }
+        return true;
+    }, {
+        message: 'Amount must be an integer for BOGO discount type.',
+        path: ['minQty', 'amount', 'type'],
     }),
 });
 export const UpdateDiscountSchema = z.object({
