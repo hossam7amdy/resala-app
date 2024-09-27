@@ -25,3 +25,10 @@ export var PaymentMethod;
     PaymentMethod["CASH"] = "CASH";
     PaymentMethod["CARD"] = "CARD";
 })(PaymentMethod || (PaymentMethod = {}));
+export var DiscountEnum;
+(function (DiscountEnum) {
+    DiscountEnum["PERCENTAGE"] = "PERCENTAGE";
+    DiscountEnum["FIXED"] = "FIXED";
+    DiscountEnum["BOGO"] = "BOGO";
+    DiscountEnum["BULK"] = "BULK";
+})(DiscountEnum || (DiscountEnum = {}));

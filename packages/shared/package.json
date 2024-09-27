@@ -12,7 +12,7 @@
   },
   "scripts": {
     "rollup": "rollup -c rollup.config.js",
-    "build": "yarn && tsc && yarn rollup"
+    "build": "tsc && yarn rollup"
   },
   "dependencies": {
     "zod": "^3.22.4"

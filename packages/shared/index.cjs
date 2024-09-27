@@ -567,6 +567,13 @@ exports.PaymentMethod = void 0;
     PaymentMethod["CASH"] = "CASH";
     PaymentMethod["CARD"] = "CARD";
 })(exports.PaymentMethod || (exports.PaymentMethod = {}));
+exports.DiscountEnum = void 0;
+(function (DiscountEnum) {
+    DiscountEnum["PERCENTAGE"] = "PERCENTAGE";
+    DiscountEnum["FIXED"] = "FIXED";
+    DiscountEnum["BOGO"] = "BOGO";
+    DiscountEnum["BULK"] = "BULK";
+})(exports.DiscountEnum || (exports.DiscountEnum = {}));
 
 const validationPatterns = {
     validatePasswordLength: {
@@ -1072,12 +1079,69 @@ const DeleteReviewSchema = zod.z.object({
             .transform(val => val.toString()),
     }),
 });
+// Discount Schemas
+const CreateDiscountSchema = zod.z.object({
+    body: zod.z
+        .object({
+        type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+        amount: zod.z.coerce.number().positive().min(0.1),
+        description: zod.z.string().max(250).optional(),
+        minQty: zod.z.coerce.number().positive().optional(),
+        isActive: zod.z.boolean().optional(),
+        isStoreWide: zod.z.boolean().optional(),
+        startDate: zod.z.string().datetime().optional(),
+        endDate: zod.z.string().datetime().optional(),
+        productIds: zod.z.array(zod.z.coerce.number().positive()).length(50).optional(),
+    })
+        .refine(data => {
+        if (!data.startDate || !data.endDate)
+            return true;
+        const startDate = new Date(data.startDate);
+        const endDate = new Date(data.endDate);
+        const now = new Date();
+        return startDate >= now && endDate > startDate;
+    }, {
+        message: 'Start date must not be in the past and end date must be greater than the start date.',
+        path: ['startDate', 'endDate'], // Show validation error on both fields
+    }),
+});
+const UpdateDiscountSchema = zod.z.object({
+    params: zod.z.object({
+        discountId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
+    }),
+    body: CreateDiscountSchema.shape.body,
+});
+const DeleteDiscountSchema = zod.z.object({
+    params: UpdateDiscountSchema.shape.params,
+});
+const ListDiscountsSchema = zod.z.object({
+    query: OffsetPageParamsSchema.extend({
+        type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
+        isActive: zod.z.boolean().optional(),
+        isStoreWide: zod.z.boolean().optional(),
+        startDate: zod.z.string().datetime().optional(),
+        endDate: zod.z.string().datetime().optional(),
+    }),
+});
+const GetDiscountSchema = zod.z.object({
+    params: zod.z.object({
+        discountId: zod.z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
+    }),
+    query: OffsetPageParamsSchema,
+});
 
 exports.ChangePasswordSchema = ChangePasswordSchema;
 exports.CreateAddressSchema = CreateAddressSchema;
 exports.CreateCartSchema = CreateCartSchema;
 exports.CreateCategorySchema = CreateCategorySchema;
 exports.CreateColorSchema = CreateColorSchema;
+exports.CreateDiscountSchema = CreateDiscountSchema;
 exports.CreateImageSchema = CreateImageSchema;
 exports.CreateOrderSchema = CreateOrderSchema;
 exports.CreateProductSchema = CreateProductSchema;
@@ -1089,6 +1153,7 @@ exports.DeleteAddressSchema = DeleteAddressSchema;
 exports.DeleteCartSchema = DeleteCartSchema;
 exports.DeleteCategorySchema = DeleteCategorySchema;
 exports.DeleteColorSchema = DeleteColorSchema;
+exports.DeleteDiscountSchema = DeleteDiscountSchema;
 exports.DeleteImageSchema = DeleteImageSchema;
 exports.DeleteOrderSchema = DeleteOrderSchema;
 exports.DeleteProductSchema = DeleteProductSchema;
@@ -1100,6 +1165,7 @@ exports.DeleteWishlistSchema = DeleteWishlistSchema;
 exports.ENDPOINT_CONFIGS = ENDPOINT_CONFIGS;
 exports.ForgotPasswordSchema = ForgotPasswordSchema;
 exports.GetCategorySchema = GetCategorySchema;
+exports.GetDiscountSchema = GetDiscountSchema;
 exports.GetOrderSchema = GetOrderSchema;
 exports.GetPaymentSchema = GetPaymentSchema;
 exports.GetProductSchema = GetProductSchema;
@@ -1107,6 +1173,7 @@ exports.GetReviewSchema = GetReviewSchema;
 exports.GetUserSchema = GetUserSchema;
 exports.GoogleLoginSchema = GoogleLoginSchema;
 exports.ListAddressSchema = ListAddressSchema;
+exports.ListDiscountsSchema = ListDiscountsSchema;
 exports.ListImagesSchema = ListImagesSchema;
 exports.ListOrdersSchema = ListOrdersSchema;
 exports.ListProductsSchema = ListProductsSchema;
@@ -1123,6 +1190,7 @@ exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;
 exports.UpdateCategorySchema = UpdateCategorySchema;
 exports.UpdateColorSchema = UpdateColorSchema;
+exports.UpdateDiscountSchema = UpdateDiscountSchema;
 exports.UpdateImageSchema = UpdateImageSchema;
 exports.UpdateOrderStatusSchema = UpdateOrderStatusSchema;
 exports.UpdateProductSchema = UpdateProductSchema;
