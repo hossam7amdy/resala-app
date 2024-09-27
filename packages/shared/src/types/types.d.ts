@@ -1,10 +1,11 @@
 import type { z } from 'zod';
-import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
+import type { DiscountEnum, OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
 import type { OffsetPageParamsSchema } from '../validations/index.js';
 export type RoleType = keyof typeof Role;
 export type OrderStatusType = keyof typeof OrderStatus;
 export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
+export type DiscountType = keyof typeof DiscountEnum;
 export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 export type SignProvider = 'google';
 export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName' | 'isEmailVerified'>;
@@ -152,6 +153,19 @@ export type Address = {
     phone: string;
     firstName: string;
     lastName: string;
+    createdAt: Date;
+    updatedAt: Date;
+};
+export type Discount = {
+    id: number;
+    type: DiscountType;
+    amount: any;
+    description: null | string;
+    minQty: null | number;
+    isActive: boolean;
+    isStoreWide: boolean;
+    startDate: null | Date;
+    endDate: null | Date;
     createdAt: Date;
     updatedAt: Date;
 };

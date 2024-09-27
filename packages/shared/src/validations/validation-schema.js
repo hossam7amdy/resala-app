@@ -424,3 +424,59 @@ export const DeleteReviewSchema = z.object({
             .transform(val => val.toString()),
     }),
 });
+// Discount Schemas
+export const CreateDiscountSchema = z.object({
+    body: z
+        .object({
+        type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+        amount: z.coerce.number().positive().min(0.1),
+        description: z.string().max(250).optional(),
+        minQty: z.coerce.number().positive().optional(),
+        isActive: z.boolean().optional(),
+        isStoreWide: z.boolean().optional(),
+        startDate: z.string().datetime().optional(),
+        endDate: z.string().datetime().optional(),
+        productIds: z.array(z.coerce.number().positive()).length(50).optional(),
+    })
+        .refine(data => {
+        if (!data.startDate || !data.endDate)
+            return true;
+        const startDate = new Date(data.startDate);
+        const endDate = new Date(data.endDate);
+        const now = new Date();
+        return startDate >= now && endDate > startDate;
+    }, {
+        message: 'Start date must not be in the past and end date must be greater than the start date.',
+        path: ['startDate', 'endDate'], // Show validation error on both fields
+    }),
+});
+export const UpdateDiscountSchema = z.object({
+    params: z.object({
+        discountId: z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
+    }),
+    body: CreateDiscountSchema.shape.body,
+});
+export const DeleteDiscountSchema = z.object({
+    params: UpdateDiscountSchema.shape.params,
+});
+export const ListDiscountsSchema = z.object({
+    query: OffsetPageParamsSchema.extend({
+        type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
+        isActive: z.boolean().optional(),
+        isStoreWide: z.boolean().optional(),
+        startDate: z.string().datetime().optional(),
+        endDate: z.string().datetime().optional(),
+    }),
+});
+export const GetDiscountSchema = z.object({
+    params: z.object({
+        discountId: z.coerce
+            .number()
+            .positive()
+            .transform(val => val.toString()),
+    }),
+    query: OffsetPageParamsSchema,
+});
