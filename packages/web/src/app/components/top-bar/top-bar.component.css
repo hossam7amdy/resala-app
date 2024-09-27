@@ -12,10 +12,11 @@
 
 .promo {
   color: #fff;
+  font-weight: bolder;
 }
 
 .promo-text {
-  color: #222;
+  color: #fff;
   margin: 0;
   text-align: center;
 }
