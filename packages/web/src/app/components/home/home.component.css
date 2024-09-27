@@ -205,7 +205,7 @@ section .overlay {
   .owl-theme .owl-nav.disabled + .owl-dots {
     position: absolute !important;
     bottom: 0% !important;
-    left: 49% !important;
+    left: 46% !important;
   }
 }
 
@@ -242,6 +242,56 @@ section .overlay {
 .trend-parent{
   height: auto;
 }
+.trend-parent{
+  margin-top: 90px;
+}
+.trends ::ng-deep .owl-carousel .owl-stage-outer{
+    position: relative;
+
+}
+.trends ::ng-deep .owl-theme .owl-nav{
+    position: absolute !important;
+    top: 50% !important;
+    width: 100% !important;
+}
+
+.trends ::ng-deep .owl-theme .owl-nav .owl-prev {
+    position: absolute;
+    left: -15%;
+    padding: 15px 25px;
+    font-size: 20px;
+}
+.trends ::ng-deep .owl-theme .owl-nav .owl-next {
+    position: absolute;
+    right: -15%;
+    padding: 15px 25px;
+    font-size: 20px;
+}
+@media (max-width:1000px) {
+  .trends ::ng-deep .owl-theme .owl-nav .owl-prev {
+    padding: 10px 20px;
+    font-size: 15px;
+    left: -10%;
+  }
+}
+@media (max-width:1000px) {
+  .trends ::ng-deep .owl-theme .owl-nav .owl-next {
+    padding: 10px 20px;
+    font-size: 15px;
+    right: -10%;
+  }
+}
+@media (max-width:800px) {
+  .trends ::ng-deep .owl-theme .owl-nav .owl-prev {
+    display: none;
+  }
+}
+@media (max-width:800px) {
+  .trends ::ng-deep .owl-theme .owl-nav .owl-next {
+    display: none;
+  }
+}
+
 @media (max-width: 576px){
   .trend-parent{
     height: 300px;
@@ -480,12 +530,12 @@ section .overlay {
   color: #016373;
 }
 
-.descrp .fa-star {
+/* .descrp .fa-star {
   color: #fbb935;
   font-weight: bold;
   font-size: 10px;
   margin-right: 2px;
-}
+} */
 /* NGX pagination*/
 
 

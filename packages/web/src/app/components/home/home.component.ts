@@ -15,21 +15,22 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { NgxStarRatingModule } from 'ngx-star-rating';
-import { ReviewsService } from 'src/app/core/services/reviews.service';
+
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
+import { TrendsService } from 'src/app/core/services/trends.service';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarRatingModule,NgxStarsRatingModule  ], //
+  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarsRatingModule  ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  UserProfile: any;
-  _AuthService: any;
+  // UserProfile: any;
+  // _AuthService: any;
   userNameLogged: any;
   productId:string='';
   
@@ -41,14 +42,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner:NgxSpinnerService,
-    private _Reviews:ReviewsService
+   private _Trend:TrendsService
     
 
        
   ) {}
 
+  // Trends
+  trendProducts:any=[];
+
    //start Rating
-   public rateNumber: number = 2;
+   public rateNumber: number = 3;
     public ratingOptions: IRatingOptions = {
         starsCount: 5,
         hoverable: false,
@@ -72,7 +76,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   
 
     // pagination
-    pageLimit:number =0;
+    pageLimit:number =2;
     currentPage:number = 1;
     totalItems:number=0;
   //favourit icons
@@ -81,6 +85,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.spinner.show();
+
+    //trend products
+    this._Trend.getTrendProducts().subscribe({
+      next:(res)=>{
+        this.trendProducts = res.data;
+        console.log('trends',res);
+      },error:(err)=>{
+
+      }
+    })
+
+
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
@@ -91,6 +107,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        // this.rateNumber = response.data.products.avgRating;
       },
     });
 
@@ -101,14 +118,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     });
 //Reviews
-    this._Reviews.getProductReview('1', '100').subscribe({
-      next:(res)=>{
-        console.log('Reviews',res)
-        this.rateNumber = res.data.reviews.rating;
-      },error:(err)=>{
-        console.log(err)
-      }
-    })
+    // this._Reviews.getProductReview('1', '100').subscribe({
+    //   next:(res)=>{
+    //     console.log('Reviews',res)
+    //     this.rateNumber = res.data.reviews.rating;
+    //   },error:(err)=>{
+    //     console.log(err)
+    //   }
+    // })
 
     setTimeout(() => {
       this.spinner.hide();   
@@ -162,7 +179,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dots: true,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
-    items: 1.1,
+    items: 1,
     nav: false,
     autoplay: true,
     autoplayTimeout: 5000,
@@ -180,13 +197,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     pullDrag: false,
     dots: true,
     navSpeed: 700,
-    navText: ['', ''],
-    items: 1,
-    nav: false,
+    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    items: 2,
+    autoWidth:false,
+    nav: true,
     autoplay: true,
     autoplayTimeout: 10000,
     autoplaySpeed: 10000,
-
+    margin:6,
     autoplayHoverPause: true,
   };
   //navText: ['', '>>'],

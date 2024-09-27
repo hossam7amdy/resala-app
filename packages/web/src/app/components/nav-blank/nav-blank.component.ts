@@ -143,6 +143,7 @@ export class NavBlankComponent implements OnInit {
  
 
   removeTokenSignOut(): void {
+    this.signOut = false;
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
     if(this._AuthService.signOut == null){
