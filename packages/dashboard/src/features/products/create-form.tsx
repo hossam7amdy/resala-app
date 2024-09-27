@@ -2,7 +2,7 @@
 
 import { addProduct, updateProduct } from '@/fetch/products';
 import { useMutation, useNotification } from '@/hooks';
-import { InboxOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { type Category, type Product, validationPatterns } from '@resala/shared';
 import {
   Form as AntForm,
@@ -16,6 +16,7 @@ import {
   Upload,
   type UploadFile,
 } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -86,6 +87,42 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
           : [],
       }}
     >
+      <AntForm.Item
+        required
+        name="image"
+        valuePropName="fileList"
+        rules={[{ required: true }]}
+        label="Product Image"
+        getValueFromEvent={args => {
+          if (Array.isArray(args)) {
+            return args;
+          }
+
+          return args?.fileList;
+        }}
+      >
+        <ImgCrop aspect={4 / 5}>
+          <Upload
+            maxCount={1}
+            accept="image/*"
+            listType="picture-card"
+            onPreview={() => null}
+            showUploadList={{
+              showRemoveIcon: true,
+              showPreviewIcon: false,
+            }}
+            onChange={({ fileList }) => {
+              form.setFieldsValue({ image: fileList });
+            }}
+          >
+            <button type="button" className="bg-transparent border-none cursor-pointer">
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </button>
+          </Upload>
+        </ImgCrop>
+      </AntForm.Item>
+
       <AntForm.Item name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select
           autoFocus
@@ -176,39 +213,6 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
           </AntForm.Item>
         </Col>
       </Row>
-
-      <AntForm.Item
-        required
-        name="image"
-        valuePropName="fileList"
-        rules={[{ required: true }]}
-        label="Product Image"
-        getValueFromEvent={args => {
-          if (Array.isArray(args)) {
-            return args;
-          }
-
-          return args?.fileList;
-        }}
-      >
-        <Upload.Dragger
-          maxCount={1}
-          name="images"
-          accept="image/*"
-          listType="picture"
-          onPreview={() => null}
-          beforeUpload={() => false}
-          showUploadList={{
-            showRemoveIcon: true,
-            showPreviewIcon: false,
-          }}
-        >
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        </Upload.Dragger>
-      </AntForm.Item>
 
       <Flex gap={10}>
         <AntForm.Item noStyle>

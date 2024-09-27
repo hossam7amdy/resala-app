@@ -60,23 +60,24 @@ model Category {
 }
 
 model Product {
-  id            Int         @id @default(autoincrement()) @db.Integer
-  categoryId    Int         @map("category_id") @db.Integer
-  arName        String      @unique @map("ar_name") @db.VarChar(50)
-  enName        String      @unique @map("en_name") @db.VarChar(50)
-  arDescription String      @map("ar_description") @db.VarChar(1000)
-  enDescription String      @map("en_description") @db.VarChar(1000)
-  price         Decimal     @db.Decimal(9, 2)
-  imageKey      String      @map("image_key") @db.VarChar(50)
-  imageUrl      String      @map("image_url") @db.VarChar(300)
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  category      Category    @relation(fields: [categoryId], references: [id])
-  stocks        Stock[]
-  wishlist      Wishlist[]
-  images        Image[]
-  reviews       Review[]
-  orderItems    OrderItem[]
+  id              Int               @id @default(autoincrement()) @db.Integer
+  categoryId      Int               @map("category_id") @db.Integer
+  arName          String            @unique @map("ar_name") @db.VarChar(50)
+  enName          String            @unique @map("en_name") @db.VarChar(50)
+  arDescription   String            @map("ar_description") @db.VarChar(1000)
+  enDescription   String            @map("en_description") @db.VarChar(1000)
+  price           Decimal           @db.Decimal(9, 2)
+  imageKey        String            @map("image_key") @db.VarChar(50)
+  imageUrl        String            @map("image_url") @db.VarChar(300)
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  category        Category          @relation(fields: [categoryId], references: [id])
+  stocks          Stock[]
+  wishlist        Wishlist[]
+  images          Image[]
+  reviews         Review[]
+  orderItems      OrderItem[]
+  discountProduct DiscountProduct[]
 
   @@map("product")
 }
@@ -252,6 +253,47 @@ model Address {
   shipping    Shipping?
 
   @@map("address")
+}
+
+// ------------------------------------------------ //
+//*             Discount Data                *//
+model Discount {
+  id              Int               @id @default(autoincrement()) @db.Integer
+  type            DiscountType      @map("type")
+  amount          Decimal           @db.Decimal(9, 2)
+  description     String?           @db.VarChar(250)
+  minQty          Int               @default(1) @map("min_qty")
+  isActive        Boolean           @default(true) @map("is_active")
+  isStoreWide     Boolean           @default(false) @map("is_store_wide")
+  startDate       DateTime?         @map("start_date")
+  endDate         DateTime?         @map("end_date")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  discountProduct DiscountProduct[]
+
+  @@map("discount")
+}
+
+model DiscountProduct {
+  discountId Int      @map("discount_id") @db.Integer
+  productId  Int      @map("product_id") @db.Integer
+  discount   Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([discountId, productId])
+  @@map("discount_product")
+}
+
+// ------------------------------------------------ //
+//*             Enums                *//
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+  BOGO
+  BULK
+
+  @@map("discount_type")
 }
 
 enum Role {
