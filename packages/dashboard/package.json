@@ -22,7 +22,6 @@
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
-    "resala": "file:..",
     "sharp": "0.32",
     "tailwind-merge": "^2.5.2"
   },

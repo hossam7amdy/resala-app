@@ -21,3 +21,9 @@ export declare enum PaymentMethod {
     CASH = "CASH",
     CARD = "CARD"
 }
+export declare enum DiscountEnum {
+    PERCENTAGE = "PERCENTAGE",
+    FIXED = "FIXED",
+    BOGO = "BOGO",
+    BULK = "BULK"
+}

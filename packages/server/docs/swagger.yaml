@@ -1194,6 +1194,218 @@ paths:
           required: true
           schema:
             type: string
+  /api/v1/discounts/{discountId}:
+    get:
+      operationId: Get
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetDiscountResponse"
+      tags:
+        - Discount
+      security: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: int32
+            type: integer
+    put:
+      operationId: Update
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateDiscountResponse"
+      description: Update a discount, only admins can update discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                productIds:
+                  items:
+                    type: integer
+                    format: int32
+                  type: array
+                minQty:
+                  type: integer
+                  format: int32
+                description:
+                  type: string
+                endDate:
+                  type: string
+                startDate:
+                  type: string
+                isStoreWide:
+                  type: boolean
+                isActive:
+                  type: boolean
+                amount:
+                  type: integer
+                  format: int32
+                type:
+                  type: string
+                  enum:
+                    - PERCENTAGE
+                    - FIXED
+                    - BOGO
+                    - BULK
+              type: object
+    delete:
+      operationId: Delete
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteDiscountResponse"
+      description: Delete a discount, only admins can delete discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+  /api/v1/discounts:
+    get:
+      operationId: List
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDiscountsResponse"
+      tags:
+        - Discount
+      security: []
+      parameters:
+        - in: query
+          name: endDate
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: isStoreWide
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: isActive
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+            enum:
+              - PERCENTAGE
+              - FIXED
+              - BOGO
+              - BULK
+    post:
+      operationId: Create
+      responses:
+        "201":
+          description: Discount created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDiscountResponse"
+      description: Create a new discount, only admins can create discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                productIds:
+                  items:
+                    type: integer
+                    format: int32
+                  type: array
+                minQty:
+                  type: integer
+                  format: int32
+                description:
+                  type: string
+                endDate:
+                  type: string
+                startDate:
+                  type: string
+                isStoreWide:
+                  type: boolean
+                isActive:
+                  type: boolean
+                amount:
+                  type: integer
+                  format: int32
+                type:
+                  type: string
+                  enum:
+                    - PERCENTAGE
+                    - FIXED
+                    - BOGO
+                    - BULK
+              type: object
   /api/v1/dashboard/overview:
     get:
       operationId: GetOverview
@@ -2636,8 +2848,12 @@ components:
                 - properties:
                     category:
                       $ref: "#/components/schemas/Category"
+                    avgRating:
+                      type: integer
+                      format: int32
                   required:
                     - category
+                    - avgRating
                   type: object
           required:
             - data
@@ -2657,8 +2873,12 @@ components:
                       - properties:
                           category:
                             $ref: "#/components/schemas/Category"
+                          avgRating:
+                            type: integer
+                            format: int32
                         required:
                           - category
+                          - avgRating
                         type: object
                   type: array
               required:
@@ -3091,6 +3311,110 @@ components:
           required:
             - data
           type: object
+    DiscountType:
+      type: string
+      enum:
+        - PERCENTAGE
+        - FIXED
+        - BOGO
+        - BULK
+      nullable: false
+    Discount:
+      properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        isStoreWide:
+          type: boolean
+        isActive:
+          type: boolean
+        minQty:
+          type: integer
+          format: int32
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        amount: {}
+        type:
+          $ref: "#/components/schemas/DiscountType"
+        id:
+          type: integer
+          format: int32
+      required:
+        - updatedAt
+        - createdAt
+        - endDate
+        - startDate
+        - isStoreWide
+        - isActive
+        - minQty
+        - description
+        - amount
+        - type
+        - id
+      type: object
+    GetDiscountResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              allOf:
+                - $ref: "#/components/schemas/Discount"
+                - properties:
+                    products:
+                      items:
+                        $ref: "#/components/schemas/Product"
+                      type: array
+                  required:
+                    - products
+                  type: object
+          required:
+            - data
+          type: object
+    ListDiscountsResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              properties:
+                pagination:
+                  $ref: "#/components/schemas/Pagination"
+                discounts:
+                  items:
+                    $ref: "#/components/schemas/Discount"
+                  type: array
+              required:
+                - pagination
+                - discounts
+              type: object
+          required:
+            - data
+          type: object
+    CreateDiscountResponse:
+      allOf:
+        - $ref: "#/components/schemas/DefaultResponseBody"
+        - properties:
+            data:
+              $ref: "#/components/schemas/Discount"
+          required:
+            - data
+          type: object
+    UpdateDiscountResponse:
+      $ref: "#/components/schemas/CreateDiscountResponse"
+    DeleteDiscountResponse:
+      $ref: "#/components/schemas/CreateDiscountResponse"
     GetDashboardOverviewResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"

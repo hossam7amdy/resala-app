@@ -11,6 +11,7 @@ import type {
   Cart,
   Category,
   Color,
+  Discount,
   Image,
   Order,
   OrderItem,
@@ -458,3 +459,30 @@ export type ListTopCustomersResponse = DefaultResponseBody & {
     user: User;
   }[];
 };
+
+// Discount types
+export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
+export type GetDiscountResponse = DefaultResponseBody & {
+  data: Discount & {
+    products: Product[];
+  };
+};
+
+export type ListDiscountsRequest = z.infer<typeof Schemas.ListDiscountsSchema>;
+export type ListDiscountsResponse = DefaultResponseBody & {
+  data: {
+    discounts: Discount[];
+    pagination: Pagination;
+  };
+};
+
+export type CreateDiscountRequest = z.infer<typeof Schemas.CreateDiscountSchema>;
+export type CreateDiscountResponse = DefaultResponseBody & {
+  data: Discount;
+};
+
+export type UpdateDiscountRequest = z.infer<typeof Schemas.UpdateDiscountSchema>;
+export type UpdateDiscountResponse = CreateDiscountResponse;
+
+export type DeleteDiscountRequest = z.infer<typeof Schemas.DeleteDiscountSchema>;
+export type DeleteDiscountResponse = CreateDiscountResponse;

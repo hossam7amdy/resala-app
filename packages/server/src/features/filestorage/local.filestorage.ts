@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-import type { FileMetadata, IFileStorage } from './filestorage.interface.js';
+import type { IFileStorage } from './filestorage.interface.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,18 +20,13 @@ export class LocalFileStorage implements IFileStorage {
     this.rootDirectory = options?.rootDirectory ?? 'uploads'; // Default rootDirectory
   }
 
-  async upload(buffer: Buffer, key: string): Promise<string> {
+  async upload(file: Express.Multer.File, key: string): Promise<string> {
     const path = this.getPath(key);
 
     await this.createDirectoryIfNotExist(dirname(path));
-    await fs.writeFile(path, buffer);
+    await fs.writeFile(path, new Uint8Array(file.buffer));
 
     return this.getPublicUrl(key);
-  }
-
-  async download(key: string): Promise<Buffer> {
-    const path = this.getPath(key);
-    return await fs.readFile(path);
   }
 
   async delete(key: string): Promise<void> {
@@ -41,21 +36,6 @@ export class LocalFileStorage implements IFileStorage {
 
   async deleteMany(keys: string[]): Promise<void> {
     await Promise.all(keys.map(key => this.delete(key)));
-  }
-
-  async list(key: string): Promise<string[]> {
-    const path = this.getPath(key);
-    const files = await fs.readdir(path);
-    return files.map(file => join(key, file));
-  }
-
-  async getMetadata(key: string): Promise<FileMetadata> {
-    const path = this.getPath(key);
-    const stat = await fs.stat(path);
-    return {
-      size: stat.size,
-      lastModified: stat.mtime,
-    };
   }
 
   async createDirectoryIfNotExist(path: string): Promise<'CREATED' | 'EXIST'> {
