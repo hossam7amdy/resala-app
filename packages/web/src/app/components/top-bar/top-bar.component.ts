@@ -40,8 +40,8 @@ export class TopBarComponent {
     items: 1,
     nav: false,
     autoplay: true,
-    autoplayTimeout: 5000,
-    autoplaySpeed: 3000,
+    autoplayTimeout: 10000,
+    autoplaySpeed: 20000,
 
     autoplayHoverPause: true,
   };

@@ -3174,6 +3174,7 @@
   dependencies:
     "@prisma/debug" "5.20.0"
 
+
 "@rc-component/color-picker@~1.5.3":
   version "1.5.3"
   resolved "https://registry.npmjs.org/@rc-component/color-picker/-/color-picker-1.5.3.tgz"

@@ -1,27 +1,35 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
 import { CartService } from 'src/app/core/services/cart.service';
+import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { ReviewsService } from 'src/app/core/services/reviews.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet],
+  imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet,NgxStarsRatingModule, CuttdatePipe, RouterLink],
 
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
 export class ProductDetailsComponent implements OnInit {
-  static productId: any;
+  // static productId: any;
+ 
+  
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -30,8 +38,14 @@ export class ProductDetailsComponent implements OnInit {
     private _CartService: CartService,
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
-    private _Router: Router
+    private _Router: Router,
+    private _Reviews:ReviewsService,
+    private _ProductsCategory:CategoriesService,
+    private _WishListService:WishListService,
+    private _Renderer:Renderer2,
+    private _Toaster: ToastrService,
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+  
 
   counterQuantity: number = 1;
 
@@ -63,6 +77,28 @@ export class ProductDetailsComponent implements OnInit {
   stockIdSize: string = '';
   quantity: string = '';
   isChooseSize: boolean = false;
+
+  // Reviews
+  productReview:any=[];
+  averageRate:number=0;
+  ratingTotal:number=0;
+  //start Rating
+  public rateNumber: number = 2;
+  public ratingOptions: IRatingOptions = {
+      starsCount: 5,
+      hoverable: false,
+      clickable: false
+  };
+
+ 
+
+
+ //end Rating
+
+//  Similar products
+productsCategory:any=[];
+categoryId:any;
+
   ngOnInit(): void {
     // start code test
 
@@ -80,6 +116,21 @@ export class ProductDetailsComponent implements OnInit {
         console.log(err);
       },
     });
+
+    this._Reviews.getProductReview(this.productId,'10').subscribe({
+      next:(res)=>{
+
+        console.log('test');
+        console.log('review',res);
+        this.productReview = res.data.reviews;
+       
+      },error:(err)=>{
+
+      }
+    })
+
+    
+
   }
 
   getProductDetails(id: any) {
@@ -87,10 +138,12 @@ export class ProductDetailsComponent implements OnInit {
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
-        console.log('productdetails', res.data);
+        this.categoryId = res?.data.categoryId;
+        console.log('productdetails', res.data ,'cat id'+ this.categoryId);
       },
       error: err => console.log(err),
       complete: () => this.getProductStock(id),
+      
     });
   }
 
@@ -111,20 +164,18 @@ export class ProductDetailsComponent implements OnInit {
 
         this.spinner.hide();
         console.log('after filter', this.productStockColor);
-      },
+      },complete:() => this.getProductsCategory(this.categoryId),
     });
   }
-  // removeDuplicat() {
-  //   this.productStockColor = this.productStock;
-  //   this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any; }) => {
-  //     if (!a.find(data => data.colorId == b.colorId)) {
-  //       a.push(b)
-  //     }
-  //     return a
-  //   }, []);
-  //   console.log('after filter', this.productStockColor);
-  // }
+  
 
+  public onClickRate(rate: number): void {
+    // Logs the clicked star number
+}
+goToReview(trarget:HTMLElement):void{
+  trarget.scrollIntoView({behavior:'smooth'});
+  // trarget.scrollTo({behavior:'smooth'})
+}
   mainImage: OwlOptions = {
     loop: false,
     mouseDrag: true,
@@ -231,4 +282,89 @@ export class ProductDetailsComponent implements OnInit {
 
     this._Renderer2.removeAttribute(element, 'disabled');
   }
+
+  // similar products
+  getProductsCategory(id:any): void {
+   
+    this._ProductsCategory.getCategoryProducts(id).subscribe({
+      next:(res)=>{
+        console.log('similar pro',res);
+        this.productsCategory = res.data.products;
+        
+      },error:err=>{
+        console.log(err);
+      }
+    })
+  }
+
+  
+similarProducts: OwlOptions = {
+  loop: true,
+  mouseDrag: true,
+  touchDrag: true,
+  pullDrag: true,
+  dots: true,
+  center: true,
+  margin: 5,
+  autoWidth: true,
+  navSpeed: 700,
+  navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+  responsive: {
+    0: {
+      items: 1,
+    },
+    
+    300: {
+      items: 1,
+    },
+
+    400: {
+      items: 2,
+    },
+
+    600: {
+      items: 3,
+    },
+    800: {
+      items: 4,
+    },
+    940: {
+      items: 4,
+    },
+    1150: {
+      items: 5,
+    },
+  },
+  nav: true,
+};
+
+//Add product in Wish list method
+addPoductInWishList(id: any, element: HTMLElement): void {
+  this._WishListService.postWishListItems(id).subscribe({
+    next: (response: any) => {
+      this._Renderer.setStyle(element, 'font-weight', 'bold');
+      this._Toaster.success('Added in Your Favorite List');
+      console.log(response);
+    },
+    error: (err: any) => {
+
+      this._Toaster.error('Should be Login !!');
+        this._Router.navigate(['/login']);
+      // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
+        
+      // } else {
+      //   this._Toaster.error(err.message);
+      // }
+      console.log(err);
+    },
+  });
 }
+
+reloadPage(id:any):void{
+  this.spinner.show();
+    window.location.replace(`/product-details/${id}`)
+    this.spinner.hide();
+   
+  }
+}
+
