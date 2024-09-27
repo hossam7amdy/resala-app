@@ -51,13 +51,22 @@
                       {{ products.enName }}
                     </h6>
         
-                    <div class="rating">
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                      <i class="fa-solid fa-star"></i>
-                    </div>
+                    <ngx-stars-rating
+                    [rate]="products.avgRating"
+                    [options]="ratingOptions"
+                    
+                    [starTemplate]="starCustomTemplate"
+                  ></ngx-stars-rating>
+      
+                  
+                    
+                  <div class="rating">
+                    <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+                    <ng-template #starCustomTemplate>
+                      <span  *ngIf="products.avgRating !== 0" class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
+                    </ng-template>
+                  </div>
+      
                     <span class="price">{{ products.price }}<label class="currency"> EGP</label></span>
                   </div>
                 </div>

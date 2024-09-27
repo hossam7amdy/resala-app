@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
@@ -10,7 +11,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxPaginationModule],
+  imports: [CommonModule, RouterLink, NgxPaginationModule,NgxStarsRatingModule],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
 })
@@ -29,6 +30,19 @@ export class CategoriesComponent implements OnInit {
   titleCategory:string = '';
   categoryId!:any;  // '!' to add initial value Undefined to this property
 
+   //start Rating
+   public rateNumber: number = 3;
+    public ratingOptions: IRatingOptions = {
+        starsCount: 5,
+        hoverable: false,
+        clickable: false
+    };
+
+   
+
+  
+   //end Rating
+   
     // pagination
     pageLimit:number =0;
     currentPage:number = 1;
