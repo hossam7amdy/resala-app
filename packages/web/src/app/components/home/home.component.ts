@@ -18,6 +18,7 @@ import { NgxStarRatingModule } from 'ngx-star-rating';
 
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
+import { TrendsService } from 'src/app/core/services/trends.service';
 
 
 @Component({
@@ -28,8 +29,8 @@ import { IRatingOptions } from 'ngx-stars-rating';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  UserProfile: any;
-  _AuthService: any;
+  // UserProfile: any;
+  // _AuthService: any;
   userNameLogged: any;
   productId:string='';
   
@@ -41,11 +42,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner:NgxSpinnerService,
-   
+   private _Trend:TrendsService
     
 
        
   ) {}
+
+  // Trends
+  trendProducts:any=[];
 
    //start Rating
    public rateNumber: number = 3;
@@ -81,6 +85,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.spinner.show();
+
+    //trend products
+    this._Trend.getTrendProducts().subscribe({
+      next:(res)=>{
+        this.trendProducts = res.data;
+        console.log('trends',res);
+      },error:(err)=>{
+
+      }
+    })
+
+
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
@@ -163,7 +179,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dots: true,
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
-    items: 1.1,
+    items: 1,
     nav: false,
     autoplay: true,
     autoplayTimeout: 5000,
@@ -181,13 +197,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
     pullDrag: false,
     dots: true,
     navSpeed: 700,
-    navText: ['', ''],
-    items: 1,
-    nav: false,
+    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    items: 2,
+    autoWidth:false,
+    nav: true,
     autoplay: true,
     autoplayTimeout: 10000,
     autoplaySpeed: 10000,
-
+    margin:6,
     autoplayHoverPause: true,
   };
   //navText: ['', '>>'],
