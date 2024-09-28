@@ -464,6 +464,7 @@ export type ListTopCustomersResponse = DefaultResponseBody & {
 export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
 export type GetDiscountResponse = DefaultResponseBody & {
   data: Discount & {
+    hasMore: boolean;
     products: Product[];
   };
 };
