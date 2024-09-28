@@ -93,6 +93,7 @@ export type GetProductResponse = DefaultResponseBody & {
     data: Product & {
         avgRating: number;
         category: Category;
+        discounts: Discount[];
     };
 };
 export type ListProductsRequest = z.infer<typeof Schemas.ListProductsSchema>;
