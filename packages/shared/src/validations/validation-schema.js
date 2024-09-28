@@ -434,20 +434,27 @@ export const CreateDiscountSchema = z.object({
         minQty: z.coerce.number().positive().optional(),
         isActive: z.boolean().optional(),
         isStoreWide: z.boolean().optional(),
-        startDate: z.string().datetime().optional(),
-        endDate: z.string().datetime().optional(),
-        productIds: z.array(z.coerce.number().positive()).length(50).optional(),
+        startDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+        endDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+        productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
+    }).refine(({ isStoreWide, productIds }) => {
+        return isStoreWide ? !productIds : !!productIds;
+    }, {
+        message: 'Please choose either store-wide or select specific products, but not both.',
+        path: ['productIds'],
     })
-        .refine(data => {
-        if (!data.startDate || !data.endDate)
-            return true;
-        const startDate = new Date(data.startDate);
-        const endDate = new Date(data.endDate);
-        const now = new Date();
-        return startDate >= now && endDate > startDate;
+        .refine(({ startDate, endDate }) => {
+        // if both startDate and endDate are provided, endDate must be greater than startDate
+        if (startDate && endDate) {
+            const start = new Date(startDate).getTime();
+            const end = new Date(endDate).getTime();
+            return end >= start;
+        }
+        // if endDate is provided, startDate must be provided
+        return endDate ? !!startDate : true;
     }, {
         message: 'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate', 'endDate'], // Show validation error on both fields
+        path: ['startDate'],
     })
         .refine(data => {
         if (data.type === 'BULK')
@@ -455,7 +462,7 @@ export const CreateDiscountSchema = z.object({
         return true;
     }, {
         message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty', 'type'],
+        path: ['minQty'],
     })
         .refine(data => {
         if (data.type === 'BOGO') {
@@ -464,7 +471,7 @@ export const CreateDiscountSchema = z.object({
         return true;
     }, {
         message: 'Amount must be an integer for BOGO discount type.',
-        path: ['minQty', 'amount', 'type'],
+        path: ['amount'],
     }),
 });
 export const UpdateDiscountSchema = z.object({
@@ -484,9 +491,19 @@ export const ListDiscountsSchema = z.object({
         type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
         isActive: z.boolean().optional(),
         isStoreWide: z.boolean().optional(),
-        startDate: z.string().datetime().optional(),
-        endDate: z.string().datetime().optional(),
-    }),
+        startDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+        endDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+    }).refine(data => {
+        if (!data.startDate || !data.endDate)
+            return true;
+        const startDate = new Date(data.startDate).getTime();
+        const endDate = new Date(data.endDate).getTime();
+        const now = new Date(new Date().toDateString()).getTime();
+        return startDate >= now && endDate >= startDate;
+    }, {
+        message: 'Start date must not be in the past and end date must be greater than the start date.',
+        path: ['startDate'],
+    })
 });
 export const GetDiscountSchema = z.object({
     params: z.object({
