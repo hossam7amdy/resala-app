@@ -59,8 +59,6 @@ export const errorHandler = (
       message: error.message,
     });
   } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    logger.error(error);
-
     const { code, message } = formatPrismaError(error);
 
     return res.status(code).json({

@@ -398,7 +398,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetDiscountResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Discount"},{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"refAlias","ref":"Product"},"required":true}}}],"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Discount"},{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"refAlias","ref":"Product"},"required":true},"hasMore":{"dataType":"boolean","required":true}}}],"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListDiscountsResponse": {
@@ -2026,7 +2026,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function DiscountController_list(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    queries: {"in":"queries","name":"queries","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"endDate":{"dataType":"string"},"startDate":{"dataType":"string"},"isStoreWide":{"dataType":"boolean"},"isActive":{"dataType":"boolean"},"limit":{"dataType":"integer"},"page":{"dataType":"integer"},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FIXED"]},{"dataType":"enum","enums":["BOGO"]},{"dataType":"enum","enums":["BULK"]}]}}},
+                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"endDate":{"dataType":"string"},"startDate":{"dataType":"string"},"isStoreWide":{"dataType":"boolean"},"isActive":{"dataType":"boolean"},"limit":{"dataType":"integer"},"page":{"dataType":"integer"},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FIXED"]},{"dataType":"enum","enums":["BOGO"]},{"dataType":"enum","enums":["BULK"]}]}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

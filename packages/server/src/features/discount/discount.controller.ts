@@ -63,9 +63,9 @@ export class DiscountController extends Controller {
   @Get()
   @Middlewares([validate(ListDiscountsSchema)])
   public async list(
-    @Queries() queries: ListDiscountsRequest['query']
+    @Queries() query: ListDiscountsRequest['query']
   ): Promise<ListDiscountsResponse> {
-    const { discounts, pagination } = await this.discountService.list(queries);
+    const { discounts, pagination } = await this.discountService.list(query);
 
     return { success: true, data: { pagination, discounts } };
   }

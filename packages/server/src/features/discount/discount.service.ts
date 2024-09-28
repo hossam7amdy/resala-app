@@ -11,9 +11,58 @@ import type {
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
+import { ConflictError, NotFoundError } from '../../errors/api.errors.js';
 
 export class DiscountService {
-  constructor(private readonly db: DataStore) {}
+  constructor(private readonly db: DataStore) { }
+
+  private async _checkProductsExist(productIds: number[]) {
+    if (productIds.length === 0) {
+      return Promise.resolve();
+    }
+
+    const productsExist = await this.db.product.findMany({
+      select: {
+        id: true,
+      },
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+    });
+
+    if (productsExist.length !== productIds.length) {
+      throw new NotFoundError('Some products do not exist');
+    }
+  }
+
+  private async _checkProductsDoNotHaveActiveDiscount(productIds: number[], discountId?: number) {
+    if (productIds.length === 0) {
+      return Promise.resolve();
+    }
+
+    const activeDiscounts = await this.db.discountProduct.findMany({
+      where: {
+        productId: {
+          in: productIds,
+        },
+        discount: {
+          id: {
+            not: discountId,
+          },
+          isActive: true,
+          endDate: {
+            gte: new Date(),
+          },
+        },
+      },
+    });
+
+    if (activeDiscounts.length > 0) {
+      throw new ConflictError('Some products already have active discounts');
+    }
+  }
 
   async get(
     discountId: string,
@@ -26,7 +75,7 @@ export class DiscountService {
             product: true,
           },
           skip: (page - 1) * limit,
-          take: limit,
+          take: limit + 1,
           orderBy: {
             discountId: 'desc',
           },
@@ -37,8 +86,15 @@ export class DiscountService {
       },
     });
 
+    const hasMore = discountProduct.length > limit;
+
+    if (hasMore) {
+      discountProduct.pop();
+    }
+
     return {
       ...discount,
+      hasMore,
       products: discountProduct.map(dp => dp.product),
     };
   }
@@ -50,12 +106,14 @@ export class DiscountService {
     isStoreWide,
     startDate,
     endDate,
+    type,
   }: ListDiscountsRequest['query']): Promise<ListDiscountsResponse['data']> {
     const whereFilter = {
+      type,
       isActive,
       isStoreWide,
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
+      startDate: startDate ? { gte: new Date(startDate) } : undefined,
+      endDate: endDate ? { lte: new Date(endDate) } : undefined,
     };
 
     const [count, discounts] = await this.db.$transaction([
@@ -92,11 +150,20 @@ export class DiscountService {
     productIds,
     ...data
   }: CreateDiscountRequest['body']): Promise<CreateDiscountResponse['data']> {
+    productIds ??= [];
+
+    await Promise.all([
+      this._checkProductsExist(productIds),
+      this._checkProductsDoNotHaveActiveDiscount(productIds),
+    ]);
+
     return await this.db.discount.create({
       data: {
         ...data,
         discountProduct: {
-          create: productIds?.length ? productIds.map(productId => ({ productId })) : undefined,
+          createMany: productIds.length ? {
+            data: productIds.map(productId => ({ productId })), skipDuplicates: true
+          } : undefined,
         },
       },
     });
@@ -106,13 +173,13 @@ export class DiscountService {
     discountId: string,
     { productIds, ...data }: UpdateDiscountRequest['body']
   ): Promise<UpdateDiscountResponse['data']> {
-    await this.db.discountProduct.deleteMany({
-      where: {
-        productId: {
-          notIn: productIds,
-        },
-      },
-    });
+    productIds ??= [];
+
+    await this.get(discountId, {});
+    await Promise.all([
+      this._checkProductsExist(productIds),
+      this._checkProductsDoNotHaveActiveDiscount(productIds, +discountId),
+    ]);
 
     return await this.db.discount.update({
       where: {
@@ -121,7 +188,14 @@ export class DiscountService {
       data: {
         ...data,
         discountProduct: {
-          create: productIds?.length ? productIds.map(productId => ({ productId })) : undefined,
+          createMany: productIds?.length ? {
+            data: productIds.map(productId => ({ productId })), skipDuplicates: true
+          } : undefined,
+          deleteMany: productIds?.length ? {
+            productId: {
+              notIn: productIds,
+            },
+          } : undefined,
         },
       },
     });

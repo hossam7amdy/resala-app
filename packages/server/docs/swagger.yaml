@@ -3377,8 +3377,11 @@ components:
                       items:
                         $ref: "#/components/schemas/Product"
                       type: array
+                    hasMore:
+                      type: boolean
                   required:
                     - products
+                    - hasMore
                   type: object
           required:
             - data
