@@ -2,6 +2,7 @@ import type {
   CreateDiscountRequest,
   CreateDiscountResponse,
   DeleteDiscountResponse,
+  GetCartResponse,
   GetDiscountRequest,
   GetDiscountResponse,
   ListDiscountsRequest,
@@ -14,7 +15,7 @@ import type { DataStore } from '../../datastore/index.js';
 import { ConflictError, NotFoundError } from '../../errors/api.errors.js';
 
 export class DiscountService {
-  constructor(private readonly db: DataStore) { }
+  constructor(private readonly db: DataStore) {}
 
   private async _checkProductsExist(productIds: number[]) {
     if (productIds.length === 0) {
@@ -161,9 +162,12 @@ export class DiscountService {
       data: {
         ...data,
         discountProduct: {
-          createMany: productIds.length ? {
-            data: productIds.map(productId => ({ productId })), skipDuplicates: true
-          } : undefined,
+          createMany: productIds.length
+            ? {
+                data: productIds.map(productId => ({ productId })),
+                skipDuplicates: true,
+              }
+            : undefined,
         },
       },
     });
@@ -188,14 +192,19 @@ export class DiscountService {
       data: {
         ...data,
         discountProduct: {
-          createMany: productIds?.length ? {
-            data: productIds.map(productId => ({ productId })), skipDuplicates: true
-          } : undefined,
-          deleteMany: productIds?.length ? {
-            productId: {
-              notIn: productIds,
-            },
-          } : undefined,
+          createMany: productIds?.length
+            ? {
+                data: productIds.map(productId => ({ productId })),
+                skipDuplicates: true,
+              }
+            : undefined,
+          deleteMany: productIds?.length
+            ? {
+                productId: {
+                  notIn: productIds,
+                },
+              }
+            : undefined,
         },
       },
     });
@@ -207,5 +216,76 @@ export class DiscountService {
         id: +discountId,
       },
     });
+  }
+
+  async applyDiscount(cart: GetCartResponse['data']): Promise<GetCartResponse['data']> {
+    // 1. Group cart items by product id
+    const groupedItems = cart.items.reduce(
+      (acc, item) => {
+        acc[item.product.id] = item;
+        return acc;
+      },
+      {} as Record<number, (typeof cart.items)[0]>
+    );
+
+    // 2. Get active discounts for the cart products
+    const productIds = Object.keys(groupedItems).map(Number);
+    const activeDiscounts = await this.db.discountProduct.findMany({
+      include: {
+        discount: true,
+      },
+      where: {
+        productId: { in: productIds },
+        discount: {
+          isActive: true,
+          OR: [
+            { startDate: null },
+            { endDate: null },
+            { startDate: { lte: new Date() } },
+            { endDate: { gte: new Date(new Date().toDateString()) } },
+          ],
+        },
+      },
+    });
+
+    // 3. Apply the highest discount for each product
+    let totalDiscount = 0;
+    const updatedItems = cart.items.map(item => {
+      const applicableDiscounts = activeDiscounts.filter(d => d.productId === item.product.id);
+
+      if (applicableDiscounts.length === 0) return item;
+
+      const highestDiscount = applicableDiscounts.reduce((max, d) =>
+        d.discount.amount > max.discount.amount ? d : max
+      );
+
+      const discountAmount =
+        highestDiscount.discount.type === 'PERCENTAGE'
+          ? highestDiscount.discount.amount.mul(item.product.price).round().toNumber() / 100
+          : highestDiscount.discount.amount.toNumber();
+
+      const discountedPrice = Math.max(item.product.price - discountAmount, 0);
+      totalDiscount += (item.product.price - discountedPrice) * item.quantity;
+
+      return {
+        ...item,
+        discountedPrice,
+        appliedDiscount: {
+          id: highestDiscount.discount.id,
+          amount: highestDiscount.discount.amount,
+          type: highestDiscount.discount.type,
+        },
+      };
+    });
+
+    // 4. Update cart totals
+    const updatedCart: GetCartResponse['data'] = {
+      ...cart,
+      items: updatedItems,
+      totalDiscount,
+      totalPrice: cart.totalPrice - totalDiscount,
+    };
+
+    return updatedCart;
   }
 }

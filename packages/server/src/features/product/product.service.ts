@@ -19,7 +19,7 @@ export class ProductService {
   constructor(
     private readonly db: DataStore,
     private readonly fileService: FileService
-  ) { }
+  ) {}
 
   async get(id: number): Promise<GetProductResponse['data']> {
     const avgRating = await this.db.review.aggregate({
@@ -122,7 +122,9 @@ export class ProductService {
     arName,
     file,
     ...payload
-  }: CreateProductRequest['body'] & { file: Express.Multer.File }): Promise<CreateProductResponse['data']> {
+  }: CreateProductRequest['body'] & { file: Express.Multer.File }): Promise<
+    CreateProductResponse['data']
+  > {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
     const product = await this.db.product.findFirst({
