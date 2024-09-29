@@ -2,6 +2,7 @@ import type { Prisma } from '@prisma/client';
 import type {
   Color,
   CreateStockRequest,
+  GetCartResponse,
   GetStockResponse,
   Image,
   ListStocksRequest,
@@ -90,23 +91,23 @@ export class StockService {
     };
   }
 
-  async decrease(stocks: { id: number; quantity: number }[]) {
+  async decrease(userCart: GetCartResponse['data']) {
     await this.db.$transaction(async trx => {
       const toUpdate = await trx.stock.findMany({
         where: {
-          id: { in: stocks.map(s => s.id) },
+          id: { in: userCart.items.map(s => s.stock.id) },
         },
       });
 
       toUpdate.forEach(stock => {
-        const stockData = stocks.find(s => s.id === stock.id);
+        const stockData = userCart.items.find(s => s.stock.id === stock.id);
 
         if (!stockData || stockData.quantity > stock.quantity) {
           throw new ConflictError('Not enough stock');
         }
       });
 
-      for (const stock of stocks) {
+      for (const stock of toUpdate) {
         await trx.stock.update({
           where: { id: stock.id },
           data: {

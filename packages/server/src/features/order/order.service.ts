@@ -1,17 +1,16 @@
 import type { Prisma } from '@prisma/client';
 import type {
-  CreateOrderRequest,
+  Address,
+  GetCartResponse,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
+  PaymentMethod,
   UpdateOrderRequest,
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import type { AddressService } from '../address/address.service.js';
-import type { ShoppingService } from '../shopping/shopping.service.js';
-import type { StockService } from '../stock/stock.service.js';
 
 const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
@@ -39,35 +38,20 @@ const ORDER_ATTRIBUTES = {
 };
 
 export class OrderService {
-  constructor(
-    private readonly db: DataStore,
-    private readonly addressService: AddressService,
-    private readonly stockService: StockService,
-    private readonly shoppingService: ShoppingService
-  ) {}
+  constructor(private readonly db: DataStore) {}
 
-  async create(userId: number, order: CreateOrderRequest['body']) {
-    const userCart = await this.shoppingService.cart.get(userId);
-
-    if (userCart.items.length === 0) {
+  async create(
+    { userId, paymentMethod, note }: { userId: number; paymentMethod: string; note?: string },
+    cart: GetCartResponse['data'],
+    address: Address
+  ) {
+    if (cart.items.length === 0) {
       throw new BadRequestError('Cart is empty');
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const { id: _, ...address } = await this.addressService.find(userId, order.addressId);
+    const subtotal = cart.totalPrice;
 
-    const subtotal = userCart.totalPrice;
-
-    await this.shoppingService.cart.deleteMany(userId);
-
-    await this.stockService.decrease(
-      userCart.items.map(item => ({
-        id: item.stock.id,
-        quantity: item.quantity,
-      }))
-    );
-
-    const orderItems = userCart.items.map(item => ({
+    const orderItems = cart.items.map(item => ({
       productId: item.product.id,
       stockId: item.stock.id,
       quantity: item.quantity,
@@ -76,23 +60,24 @@ export class OrderService {
       description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
 
+    const { id: _, ...addressWithoutId } = address;
     const newOrder = await this.db.order.create({
       data: {
         userId: userId,
         subtotal: subtotal,
         total: subtotal + SHIPPING,
-        note: order.note,
-        paymentMethod: order.paymentMethod,
+        note,
+        paymentMethod: paymentMethod as PaymentMethod,
         shippingDetails: {
           create: {
             address: {
-              create: address,
+              create: addressWithoutId,
             },
           },
         },
         orderItems: {
           createMany: {
-            data: userCart.items.map(item => ({
+            data: cart.items.map(item => ({
               productId: item.product.id,
               stockId: item.stock.id,
               quantity: item.quantity,
