@@ -3,6 +3,7 @@ import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -14,7 +15,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-nav-blank',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive,TranslateModule],
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
@@ -28,7 +29,8 @@ export class NavBlankComponent implements OnInit {
     private route:ActivatedRoute,
     private _Renderer:Renderer2,
     private spinner:NgxSpinnerService,
-    private UserProfile:UserService
+    private UserProfile:UserService,
+    public _Translate:TranslateService
   
   ) {}
 
@@ -43,18 +45,44 @@ export class NavBlankComponent implements OnInit {
   togglerOpend:boolean=false;
 
   @ViewChild('navbar') navbarElement!:ElementRef
+
   @HostListener('window:scroll')
-  onScroll():void{
+  onScrollSecond():void{
     if(scrollY > 600){
       this._Renderer.setStyle(this.navbarElement.nativeElement,'top',0)
+     
     }else{
       this._Renderer.removeStyle(this.navbarElement.nativeElement,'top')
+      
     }
   }
+currentLang:string='ar';
+langStorage:any =localStorage.getItem("language");
+switchLanguage(lang:string):void{
+  localStorage.setItem("language",lang);
+  this.langStorage = localStorage.getItem("language");
+  this._Translate.use(this.langStorage);
+
+  if(lang == 'ar'){
+    this.currentLang = 'en';
+  }else{
+    this.currentLang = 'ar';
+  }
+  console.log('Language'+lang, this.currentLang);
+  
+}
+  
   
 
   ngOnInit(): void {
 
+    if(this.langStorage === null){
+      this._Translate.defaultLang;
+      this.currentLang = 'ar';
+    }else{
+      this._Translate.use(this.langStorage);
+      ((this.langStorage === 'en' )? this.currentLang = 'ar' :this.currentLang = 'en');
+    }
    
     // this.signOut = this._AuthService.signOut;
     this.isToken = localStorage.getItem('etoken');
