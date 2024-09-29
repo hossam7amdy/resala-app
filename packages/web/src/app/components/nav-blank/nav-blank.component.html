@@ -1,4 +1,23 @@
-<nav #navbar class="navbar fixed-top navbar-expand-lg navbar-light">
+<!-- start second bar -->
+
+<section  #navbar class="fixed-top">
+<ul  class="nav justify-content-end">
+  <li class="nav-item">
+    <a   (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link py-1">Arabic</a>
+    <a  (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link py-1" >English</a>
+  </li>
+
+  
+ 
+  
+</ul>
+
+<!-- end second bar -->
+
+
+
+
+<nav  class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink=""
       ><img src="./assets/logo/logo.png" alt="logo" class="logo"
@@ -22,7 +41,7 @@
       <!-- left nav -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/home">Home</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/home">{{"nav-blank.Home" | translate}}</a>
         </li>
         
        
@@ -34,12 +53,12 @@
             id="dropdownMenuButton"
             data-mdb-toggle="dropdown"
             aria-expanded="false">
-            Categories
+            {{"nav-blank.Categories" | translate}}
           </a>
 
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li  *ngFor="let category of categoryList" >
-              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/category/',category.id]" class="dropdown-item" role="button">{{category.enName}}</a>
+              <a (click)="reloadPage(category.id)" routerLinkActive="active-link" [routerLink]="['/category/',category.id]" class="dropdown-item" role="button">{{_Translate.currentLang ==='ar'? category.arName:category.enName}}</a>
             </li>
             
           </ul>
@@ -50,12 +69,12 @@
 
         <li class="nav-item mx-2">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection"
-            >Latest Collection</a
+            >{{"nav-blank.LatestCollection"|translate}}</a
           >
         </li>
 
         <li class="nav-item mx-2">
-          <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">New Offers</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">{{"nav-blank.NewOffers"|translate}}</a>
         </li>
       </ul>
 
@@ -70,24 +89,24 @@
           data-mdb-toggle="dropdown"
           aria-expanded="false">
             <i class="far far fa-user me-4 fs-5"></i>
-            <span>{{userNameLogged}}</span>
+            <span>{{_Translate.currentLang === 'ar' ? (userNameLogged === 'Login'?'تسجيل دخول':userNameLogged):userNameLogged }}</span>
           </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li>
-                <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign In</a>
-                <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">Sign Out</a>
+                <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">{{"nav-blank.SignIn"|translate}}</a>
+                <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">{{"nav-blank.SignOut"|translate}}</a>
               </li> 
 
               <li>
-                <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">Not a Member?</span> Register</a>
+                <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">{{"nav-blank.NotaMember?"|translate}}</span> {{"nav-blank.Register"|translate}}</a>
               </li> 
 
               <li>
-                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">Profile</a>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">{{"nav-blank.Profile"|translate}}</a>
               </li> 
 
               <li>
-                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">Trace Your Order</a>
+                <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">{{"nav-blank.TraceYourOrder"|translate}}</a>
               </li> 
             </ul>
           
@@ -97,14 +116,14 @@
         <li class="nav-item me-3">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/favorites"
             ><i class="far fa-heart me-4 fs-5"></i>
-            <span>Favorites</span>
+            <span>{{"nav-blank.Favorites"|translate}}</span>
           </a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active-link" routerLink="/cart"
             ><i class="fas fa-shopping-bag me-3 fs-5"></i>
-            <span class="shopping-text">Cart</span>
+            <span class="shopping-text">{{"nav-blank.Cart"|translate}}</span>
             <span class="mini-basket-count"
               ><span>{{ cartNum }}</span></span
             >
@@ -114,3 +133,4 @@
     </div>
   </div>
 </nav>
+</section>

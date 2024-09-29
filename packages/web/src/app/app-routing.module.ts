@@ -22,7 +22,7 @@ const routes: Routes = [
       {
         path: 'new-offers',
         loadComponent: () =>
-          import('./components/brands/brands.component').then(m => m.BrandsComponent),
+          import('./components/offers/offers.component').then(m => m.OffersComponent),
         title: 'New Offers',
       },
 

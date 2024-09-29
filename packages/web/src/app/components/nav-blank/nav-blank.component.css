@@ -5,10 +5,21 @@
 } 
 */
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&family=Pacifico&family=Quicksand:wght@300..700&family=Titan+One&display=swap');
-
-.fixed-top {
+section.fixed-top{
   top: 30px;
 }
+.nav{
+  background-color: #fff;
+  z-index: 9999;
+}
+
+.nav .nav-link{
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+  
+}
+
 
 .navbar{
   transition: top ease-in-out 0.5s;
