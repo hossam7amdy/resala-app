@@ -12,38 +12,36 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, SearchPipe , NgxPaginationModule, RouterLink, FormsModule],
+  imports: [CommonModule, SearchPipe, NgxPaginationModule, RouterLink, FormsModule],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent {
   constructor(
-    private _HomeProducts:HomeProductsService,
-    private _WishListService:WishListService,
-    private _Renderer:Renderer2,
-    private _Toaster:ToastrService,
-    private _Router:Router
-  ){}
+    private _HomeProducts: HomeProductsService,
+    private _WishListService: WishListService,
+    private _Renderer: Renderer2,
+    private _Toaster: ToastrService,
+    private _Router: Router
+  ) {}
 
-  
-
-  isClickedSearch:boolean=false;
-  products:Product[]= [];
-  searchText:string='';
+  isClickedSearch: boolean = false;
+  products: Product[] = [];
+  searchText: string = '';
 
   scrollTop(): void {
     window.scrollTo(0, 0);
   }
-  toggleSearch():void{
+  toggleSearch(): void {
     this.isClickedSearch = true;
   }
 
-  closeSearch():void{
+  closeSearch(): void {
     this.isClickedSearch = false;
   }
 
-   //Add product in Wish list method
-   addPoductInWishList(id: any, element: HTMLElement): void {
+  //Add product in Wish list method
+  addPoductInWishList(id: any, element: HTMLElement): void {
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
@@ -51,11 +49,10 @@ export class FooterComponent {
         console.log(response);
       },
       error: err => {
-
         this._Toaster.error('Should be Login !!');
-          this._Router.navigate(['/login']);
+        this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-          
+
         // } else {
         //   this._Toaster.error(err.message);
         // }
@@ -64,19 +61,18 @@ export class FooterComponent {
     });
   }
 
-  searchProducts():void{
-    if(this.searchText !== ''){
+  searchProducts(): void {
+    if (this.searchText !== '') {
       this._HomeProducts.getProductsSearch(this.searchText).subscribe({
-        next:(response)=>{
+        next: response => {
           this.products = response.data.products;
           console.log(this.products);
           console.log(this.searchText);
-        },error:(err)=>{
+        },
+        error: err => {
           console.log(err);
-        }
-        
-      })
+        },
+      });
     }
-    
   }
 }

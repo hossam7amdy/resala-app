@@ -10,86 +10,75 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { UserService } from 'src/app/core/services/user.service';
 
-
-
 @Component({
   selector: 'app-nav-blank',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive,TranslateModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
 export class NavBlankComponent implements OnInit {
-
   constructor(
     private _AuthService: AuthService,
     private _Router: Router,
     private _CartService: CartService,
-    private _Categories:CategoriesService,
-    private route:ActivatedRoute,
-    private _Renderer:Renderer2,
-    private spinner:NgxSpinnerService,
-    private UserProfile:UserService,
-    public _Translate:TranslateService
-  
+    private _Categories: CategoriesService,
+    private route: ActivatedRoute,
+    private _Renderer: Renderer2,
+    private spinner: NgxSpinnerService,
+    private UserProfile: UserService,
+    public _Translate: TranslateService
   ) {}
 
   // attributes
-  userNameLogged:string='Login';
-  userId:any;
-  signOut:boolean= false;
-  isToken:string|null='';
-  categoryList:any=[];
+  userNameLogged: string = 'Login';
+  userId: any;
+  signOut: boolean = false;
+  isToken: string | null = '';
+  categoryList: any = [];
 
   cartNum: number = 0;
-  togglerOpend:boolean=false;
+  togglerOpend: boolean = false;
 
-  @ViewChild('navbar') navbarElement!:ElementRef
+  @ViewChild('navbar') navbarElement!: ElementRef;
 
   @HostListener('window:scroll')
-  onScrollSecond():void{
-    if(scrollY > 600){
-      this._Renderer.setStyle(this.navbarElement.nativeElement,'top',0)
-     
-    }else{
-      this._Renderer.removeStyle(this.navbarElement.nativeElement,'top')
-      
+  onScrollSecond(): void {
+    if (scrollY > 600) {
+      this._Renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
+    } else {
+      this._Renderer.removeStyle(this.navbarElement.nativeElement, 'top');
     }
   }
-currentLang:string='ar';
-langStorage:any =localStorage.getItem("language");
-switchLanguage(lang:string):void{
-  localStorage.setItem("language",lang);
-  this.langStorage = localStorage.getItem("language");
-  this._Translate.use(this.langStorage);
+  currentLang: string = 'ar';
+  langStorage: any = localStorage.getItem('language');
+  switchLanguage(lang: string): void {
+    localStorage.setItem('language', lang);
+    this.langStorage = localStorage.getItem('language');
+    this._Translate.use(this.langStorage);
 
-  if(lang == 'ar'){
-    this.currentLang = 'en';
-  }else{
-    this.currentLang = 'ar';
+    if (lang == 'ar') {
+      this.currentLang = 'en';
+    } else {
+      this.currentLang = 'ar';
+    }
+    console.log('Language' + lang, this.currentLang);
   }
-  console.log('Language'+lang, this.currentLang);
-  
-}
-  
-  
 
   ngOnInit(): void {
-
-    if(this.langStorage === null){
+    if (this.langStorage === null) {
       this._Translate.defaultLang;
       this.currentLang = 'ar';
-    }else{
+    } else {
       this._Translate.use(this.langStorage);
-      ((this.langStorage === 'en' )? this.currentLang = 'ar' :this.currentLang = 'en');
+      this.langStorage === 'en' ? (this.currentLang = 'ar') : (this.currentLang = 'en');
     }
-   
+
     // this.signOut = this._AuthService.signOut;
     this.isToken = localStorage.getItem('etoken');
-    if(this.isToken == null || this.isToken == ''){
+    if (this.isToken == null || this.isToken == '') {
       this.signOut = false;
-    }else{
-      
+    } else {
       this._AuthService.decodeUser();
       this.userId = this._AuthService.userInfo?.id;
     }
@@ -100,10 +89,11 @@ switchLanguage(lang:string):void{
       next: response => {
         console.log('cart number', response);
         this.cartNum = response;
-      },error:(err)=>{
+      },
+      error: err => {
         this.cartNum = 0;
         console.log(err);
-      }
+      },
     });
 
     // this._AuthService.userNameLogged.subscribe({
@@ -115,9 +105,6 @@ switchLanguage(lang:string):void{
     //   }
     // })
 
-   
-
-
     this._CartService.getCartUser().subscribe({
       next: response => {
         this.cartNum = response.data.totalQuantity;
@@ -126,60 +113,55 @@ switchLanguage(lang:string):void{
     });
 
     this._Categories.getCategories().subscribe({
-      next:(response)=>{
+      next: response => {
         this.categoryList = response.data;
-      },error:(err)=>{
+      },
+      error: err => {
         console.log(err);
-      }
-    })
-
-   
+      },
+    });
   }
 
-  isTogglerOpend():void{
-    if(this.togglerOpend == false){
-      this.togglerOpend = true
-    }else{
+  isTogglerOpend(): void {
+    if (this.togglerOpend == false) {
+      this.togglerOpend = true;
+    } else {
       this.togglerOpend = false;
     }
   }
 
-  getUserInfo(userId:any):void{
+  getUserInfo(userId: any): void {
     this.UserProfile.getUserInfo(userId).subscribe({
-      next:(response)=>{
+      next: response => {
         this._AuthService.userNameLogged = response.data.firstName;
         this.userNameLogged = response.data.firstName;
         this.signOut = true;
-        console.log('user name' ,this.userNameLogged);
-      },error:(err)=>{
+        console.log('user name', this.userNameLogged);
+      },
+      error: err => {
         console.log(err);
-        if(err.status == 401 || err.status == 403){
+        if (err.status == 401 || err.status == 403) {
           this.signOut = false;
         }
-      }
-    })
+      },
+    });
   }
-  
-  reloadPage(id:any):void{
-  this.spinner.show();
-    window.location.replace(`/category/${id}`)
-    this.spinner.hide();
-   
-  }
-  
 
- 
+  reloadPage(id: any): void {
+    this.spinner.show();
+    window.location.replace(`/category/${id}`);
+    this.spinner.hide();
+  }
 
   removeTokenSignOut(): void {
     this.signOut = false;
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
-    if(this._AuthService.signOut == null){
+    if (this._AuthService.signOut == null) {
       this.cartNum = 0;
-    }else{
+    } else {
       this.cartNum = this._CartService.cartNumber.value;
     }
-    
 
     this.userNameLogged = 'Login';
   }

@@ -114,10 +114,12 @@
             <p class="card-text">
               Total Products Price <span class="total-price">{{ cartDetails.totalPrice }} EGP</span>
             </p>
-            <button [disabled]="cartDetails.totalQuantity == 0" class="btn custome-btn p-0 border-0">
-              <a routerLink="/payment" class="btn custome-btn ">Order Now</a>
+            <button
+              [disabled]="cartDetails.totalQuantity == 0"
+              class="btn custome-btn p-0 border-0"
+            >
+              <a routerLink="/payment" class="btn custome-btn">Order Now</a>
             </button>
-            
           </div>
         </div>
       </div>

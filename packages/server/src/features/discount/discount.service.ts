@@ -11,16 +11,16 @@ import type {
   UpdateDiscountRequest,
   UpdateDiscountResponse,
 } from '@resala/shared';
+import { Decimal } from 'decimal.js';
 
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError, NotFoundError } from '../../errors/api.errors.js';
-import { Decimal } from 'decimal.js';
 
 type CartItem = GetCartResponse['data']['items'][number];
 type ProductDiscount = Discount & { discountProduct: { productId: number }[] };
 
 export class DiscountService {
-  constructor(private readonly db: DataStore) { }
+  constructor(private readonly db: DataStore) {}
 
   private async _checkProductsExist(productIds: number[]) {
     if (productIds.length === 0) {
@@ -94,7 +94,6 @@ export class DiscountService {
       where: {
         ...commonFilters,
         isStoreWide: false,
-
       },
     });
 
@@ -102,10 +101,13 @@ export class DiscountService {
       where: {
         ...commonFilters,
         isStoreWide: true,
-      }
-    })
+      },
+    });
 
-    const [productDiscounts, storeWideDiscounts] = await this.db.$transaction([productDiscountsPromise, storeWideDiscountsPromise]);
+    const [productDiscounts, storeWideDiscounts] = await this.db.$transaction([
+      productDiscountsPromise,
+      storeWideDiscountsPromise,
+    ]);
 
     return [...productDiscounts, ...storeWideDiscounts.map(d => ({ ...d, discountProduct: [] }))];
   }
@@ -134,7 +136,8 @@ export class DiscountService {
           const fullPriceCycles = Math.floor(item.quantity / cycleQuantity);
           const remainingItems = item.quantity % cycleQuantity;
 
-          const fullPriceItems = fullPriceCycles * buyQuantity + Math.min(remainingItems, buyQuantity);
+          const fullPriceItems =
+            fullPriceCycles * buyQuantity + Math.min(remainingItems, buyQuantity);
           discountedPrice = (fullPriceItems / item.quantity) * item.product.price;
           break;
       }
@@ -154,7 +157,10 @@ export class DiscountService {
 
   private _applyCartLevelDiscounts(items: CartItem[], discounts: ProductDiscount[]): CartItem[] {
     let bestDiscount: Discount | null = null;
-    let lowestTotalPrice = items.reduce((sum, item) => sum + item.discountedPrice! * item.quantity, 0);
+    let lowestTotalPrice = items.reduce(
+      (sum, item) => sum + item.discountedPrice! * item.quantity,
+      0
+    );
 
     for (const { discountProduct: _, ...discount } of discounts) {
       let discountedTotalPrice = lowestTotalPrice;
@@ -180,7 +186,9 @@ export class DiscountService {
     }
 
     if (bestDiscount) {
-      const discountFactor = lowestTotalPrice / items.reduce((sum, item) => sum + item.discountedPrice! * item.quantity, 0);
+      const discountFactor =
+        lowestTotalPrice /
+        items.reduce((sum, item) => sum + item.discountedPrice! * item.quantity, 0);
       return items.map(item => ({
         ...item,
         discountedPrice: item.discountedPrice! * discountFactor,
@@ -289,9 +297,9 @@ export class DiscountService {
         discountProduct: {
           createMany: productIds.length
             ? {
-              data: productIds.map(productId => ({ productId })),
-              skipDuplicates: true,
-            }
+                data: productIds.map(productId => ({ productId })),
+                skipDuplicates: true,
+              }
             : undefined,
         },
       },
@@ -319,16 +327,16 @@ export class DiscountService {
         discountProduct: {
           createMany: productIds?.length
             ? {
-              data: productIds.map(productId => ({ productId })),
-              skipDuplicates: true,
-            }
+                data: productIds.map(productId => ({ productId })),
+                skipDuplicates: true,
+              }
             : undefined,
           deleteMany: productIds?.length
             ? {
-              productId: {
-                notIn: productIds,
-              },
-            }
+                productId: {
+                  notIn: productIds,
+                },
+              }
             : undefined,
         },
       },
@@ -351,15 +359,23 @@ export class DiscountService {
     const productIds = [...new Set(cart.items.map(item => item.product.id))];
     const applicableDiscounts = await this._getApplicableDiscounts(productIds);
 
-    let updatedItems = cart.items.map(item => this._applyProductDiscount(item, applicableDiscounts));
+    let updatedItems = cart.items.map(item =>
+      this._applyProductDiscount(item, applicableDiscounts)
+    );
 
-    const cartLevelDiscounts = applicableDiscounts.filter(d => d.type === 'BULK' || d.type === 'FIXED');
+    const cartLevelDiscounts = applicableDiscounts.filter(
+      d => d.type === 'BULK' || d.type === 'FIXED'
+    );
     updatedItems = this._applyCartLevelDiscounts(updatedItems, cartLevelDiscounts);
 
-    const totalDiscount = updatedItems.reduce((sum, item) =>
-      sum + (item.product.price - item.discountedPrice!) * item.quantity, 0);
-    const totalPrice = updatedItems.reduce((sum, item) =>
-      sum + item.discountedPrice! * item.quantity, 0);
+    const totalDiscount = updatedItems.reduce(
+      (sum, item) => sum + (item.product.price - item.discountedPrice!) * item.quantity,
+      0
+    );
+    const totalPrice = updatedItems.reduce(
+      (sum, item) => sum + item.discountedPrice! * item.quantity,
+      0
+    );
 
     return {
       ...cart,
