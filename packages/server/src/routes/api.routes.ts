@@ -176,29 +176,29 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"GetSizeResponse","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_Cart.Exclude_keyofCart.stockId__": {
+    "Cart": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"integer","required":true},"quantity":{"dataType":"integer","required":true},"createdAt":{"dataType":"datetime","required":true},"updatedAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"quantity":{"dataType":"integer","required":true},"stockId":{"dataType":"integer","required":true},"userId":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Omit_Cart.stockId_": {
+    "DiscountType": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_Cart.Exclude_keyofCart.stockId__","validators":{}},
+        "type": {"dataType":"enum","enums":["PERCENTAGE","FIXED","BOGO","BULK"],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__": {
+    "Discount": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"integer","required":true},"quantity":{"dataType":"integer","required":true},"createdAt":{"dataType":"datetime","required":true},"updatedAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"endDate":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"startDate":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"isStoreWide":{"dataType":"boolean","required":true},"isActive":{"dataType":"boolean","required":true},"minQty":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"integer"}],"required":true},"description":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"amount":{"dataType":"any","required":true},"type":{"ref":"DiscountType","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Omit_Stock.colorId-or-sizeId-or-productId_": {
+    "Image": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__","validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"isPrimary":{"dataType":"boolean","required":true},"productId":{"dataType":"integer","required":true},"colorId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetCartResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"items":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Omit_Cart.stockId_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"stock":{"dataType":"intersection","subSchemas":[{"ref":"Omit_Stock.colorId-or-sizeId-or-productId_"},{"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"ref":"Size","required":true},"color":{"ref":"Color","required":true}}}],"required":true},"images":{"dataType":"array","array":{"dataType":"refAlias","ref":"Omit_Image.colorId-or-productId_"},"required":true},"product":{"ref":"Product","required":true}}}]},"required":true},"totalPrice":{"dataType":"integer","required":true},"totalQuantity":{"dataType":"integer","required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"items":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Cart"},{"dataType":"nestedObjectLiteral","nestedProperties":{"stock":{"dataType":"intersection","subSchemas":[{"ref":"Stock"},{"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"ref":"Size","required":true},"color":{"ref":"Color","required":true}}}],"required":true},"images":{"dataType":"array","array":{"dataType":"refAlias","ref":"Image"},"required":true},"product":{"ref":"Product","required":true},"appliedDiscount":{"ref":"Discount"},"discountedPrice":{"dataType":"integer"}}}]},"required":true},"totalDiscount":{"dataType":"integer"},"totalPrice":{"dataType":"integer","required":true},"totalQuantity":{"dataType":"integer","required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateCartResponse": {
@@ -273,12 +273,12 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetProductResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Product"},{"dataType":"nestedObjectLiteral","nestedProperties":{"category":{"ref":"Category","required":true},"avgRating":{"dataType":"integer","required":true}}}],"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Product"},{"dataType":"nestedObjectLiteral","nestedProperties":{"discounts":{"dataType":"array","array":{"dataType":"refAlias","ref":"Discount"},"required":true},"category":{"ref":"Category","required":true},"avgRating":{"dataType":"integer","required":true}}}],"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListProductsResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"pagination":{"ref":"Pagination","required":true},"products":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Product"},{"dataType":"nestedObjectLiteral","nestedProperties":{"category":{"ref":"Category","required":true},"avgRating":{"dataType":"integer","required":true}}}]},"required":true}},"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"pagination":{"ref":"Pagination","required":true},"products":{"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Product"},{"dataType":"nestedObjectLiteral","nestedProperties":{"discounts":{"dataType":"array","array":{"dataType":"refAlias","ref":"Discount"},"required":true},"category":{"ref":"Category","required":true},"avgRating":{"dataType":"integer","required":true}}}]},"required":true}},"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateProductResponse": {
@@ -366,11 +366,6 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"Order","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Image": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"datetime","required":true},"imageUrl":{"dataType":"string","required":true},"imageKey":{"dataType":"string","required":true},"isPrimary":{"dataType":"boolean","required":true},"productId":{"dataType":"integer","required":true},"colorId":{"dataType":"integer","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListImagesResponse": {
         "dataType": "refAlias",
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"array","array":{"dataType":"refAlias","ref":"Image"},"required":true}}}],"validators":{}},
@@ -386,19 +381,9 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"Image","required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DiscountType": {
-        "dataType": "refAlias",
-        "type": {"dataType":"enum","enums":["PERCENTAGE","FIXED","BOGO","BULK"],"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Discount": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"updatedAt":{"dataType":"datetime","required":true},"createdAt":{"dataType":"datetime","required":true},"endDate":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"startDate":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"datetime"}],"required":true},"isStoreWide":{"dataType":"boolean","required":true},"isActive":{"dataType":"boolean","required":true},"minQty":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"integer"}],"required":true},"description":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"string"}],"required":true},"amount":{"dataType":"any","required":true},"type":{"ref":"DiscountType","required":true},"id":{"dataType":"integer","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetDiscountResponse": {
         "dataType": "refAlias",
-        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Discount"},{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"refAlias","ref":"Product"},"required":true}}}],"required":true}}}],"validators":{}},
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"DefaultResponseBody"},{"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"intersection","subSchemas":[{"ref":"Discount"},{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"refAlias","ref":"Product"},"required":true},"pagination":{"ref":"Pagination","required":true}}}],"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListDiscountsResponse": {
@@ -2026,7 +2011,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
             async function DiscountController_list(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    queries: {"in":"queries","name":"queries","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"endDate":{"dataType":"string"},"startDate":{"dataType":"string"},"isStoreWide":{"dataType":"boolean"},"isActive":{"dataType":"boolean"},"limit":{"dataType":"integer"},"page":{"dataType":"integer"},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FIXED"]},{"dataType":"enum","enums":["BOGO"]},{"dataType":"enum","enums":["BULK"]}]}}},
+                    query: {"in":"queries","name":"query","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"endDate":{"dataType":"string"},"startDate":{"dataType":"string"},"isStoreWide":{"dataType":"boolean"},"isActive":{"dataType":"boolean"},"limit":{"dataType":"integer"},"page":{"dataType":"integer"},"type":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FIXED"]},{"dataType":"enum","enums":["BOGO"]},{"dataType":"enum","enums":["BULK"]}]}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
