@@ -1126,8 +1126,8 @@ const CreateDiscountSchema = zod.z.object({
       amount: zod.z.coerce.number().positive().min(0.1),
       description: zod.z.string().max(250).optional(),
       minQty: zod.z.coerce.number().positive().optional(),
-      isActive: zod.z.boolean().optional(),
-      isStoreWide: zod.z.boolean().optional(),
+      isActive: zod.z.coerce.boolean().optional(),
+      isStoreWide: zod.z.coerce.boolean().optional(),
       startDate: zod.z.coerce
         .date()
         .optional()
@@ -1140,7 +1140,10 @@ const CreateDiscountSchema = zod.z.object({
     })
     .refine(
       ({ type, productIds }) => {
-        return ['FIXED', 'BULK'].includes(type) && productIds === undefined;
+        if (['FIXED', 'BULK'].includes(type)) {
+          return productIds === undefined;
+        }
+        return true;
       },
       {
         message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
@@ -1211,8 +1214,8 @@ const DeleteDiscountSchema = zod.z.object({
 const ListDiscountsSchema = zod.z.object({
   query: OffsetPageParamsSchema.extend({
     type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
-    isActive: zod.z.boolean().optional(),
-    isStoreWide: zod.z.boolean().optional(),
+    isActive: zod.z.coerce.boolean().optional(),
+    isStoreWide: zod.z.coerce.boolean().optional(),
     startDate: zod.z.coerce
       .date()
       .optional()
