@@ -1,0 +1,23 @@
+{
+    "nav-blank":{
+        "Test":"Test",
+        "Home":"Home",
+        "Categories":"Categories",
+        "LatestCollection":"Latest Collection",
+        "NewOffers":"New Offers",
+        "SignIn":"Sign In",
+        "SignOut":"Sign Out",
+        "NotaMember?":"Not a Member?",
+        "Register":"Register",
+        "Profile":"Profile",
+        "TraceYourOrder":"Trace Your Order",
+        "Favorites":"Favorites",
+        "Cart":"Cart"
+    },
+    "top-bar":{
+        "firstOffer":"Free Shipping On Orders Over 1000EGP",
+        "secondOffer":"2Free Shipping On Orders Over 1000EGP",
+        "thirdOffer":"3Free Shipping On Orders Over 1000EGP"
+    }
+
+}
