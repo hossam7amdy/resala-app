@@ -6,8 +6,8 @@ export interface Product {
   category: CategoryProduct;
   images: Image[];
   id?: number;
-  categoryId?:number;
-  avgRating:number;
+  categoryId?: number;
+  avgRating: number;
 }
 
 export interface CategoryProduct {

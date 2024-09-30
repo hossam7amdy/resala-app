@@ -1,4 +1,4 @@
-import { SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
+import { SelectColor, SelectSize, StockForm } from '@/features/stocks';
 import { Card } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import { Suspense } from 'react';
@@ -20,7 +20,6 @@ const CreateStockPage: React.FC<{ searchParams?: { productId?: string } }> = ({ 
             <SelectColor />
           </Suspense>
         }
-        selectProduct={<SelectProduct />}
       />
     </Card>
   );

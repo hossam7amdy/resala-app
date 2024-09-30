@@ -1,24 +1,30 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+
+import {
+  ENDPOINT_CONFIGS,
+  Endpoints,
+  withParams,
+  withQueryParams,
+} from '../../../../../../shared/src/endpoints';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
   // baseurl = https://resala-app.onrender.com/
 
-   // refactor free API url 
- private getHeaders() {
-  const headers = new HttpHeaders({
-    'ngrok-skip-browser-warning':  '69420',
-    // 'Authorization':`Bearer ${localStorage.getItem('etoken')}`
-    
-  });
+  // refactor free API url
+  private getHeaders() {
+    const headers = new HttpHeaders({
+      'ngrok-skip-browser-warning': '69420',
+      // 'Authorization':`Bearer ${localStorage.getItem('etoken')}`
+    });
 
-  return {headers};
-}
+    return { headers };
+  }
 
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
@@ -32,8 +38,11 @@ export class CategoriesService {
     return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 
-  getCategoryProducts(id: any, currentPage:string ='1'): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts,{categoryId:id!, page:currentPage});
-    return this._HTTPClient.get(environment.BASE_URL + url , this.getHeaders());
+  getCategoryProducts(id: any, currentPage: string = '1'): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
+      categoryId: id!,
+      page: currentPage,
+    });
+    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 }
