@@ -1,0 +1,22 @@
+{
+   "nav-blank":{
+        "Test":"أختبار",
+        "Home":"الرئيسية",
+        "Categories":"منتجاتنا",
+        "LatestCollection":"أحدث الموديلات",
+        "NewOffers":"اقوى الخصومات",
+        "SignIn":"تسجيل دخول",
+        "SignOut":"تسجيل خروج",
+        "NotaMember?":"ليس لك حساب؟",
+        "Register":"تسجيل حساب",
+        "Profile":"ملفك الشخصي",
+        "TraceYourOrder":"تتبع طلباتك",
+        "Favorites":"المفضلة",
+        "Cart":"سلة التسوق"
+    },
+    "top-bar":{
+        "firstOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه",
+        "secondOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 2",
+        "thirdOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 3 "
+    }
+}
