@@ -1,4 +1,4 @@
-import { FormSkeleton, SelectColor, SelectProduct, SelectSize, StockForm } from '@/features/stocks';
+import { FormSkeleton, SelectColor, SelectSize, StockForm } from '@/features/stocks';
 import { findStockById } from '@/fetch/stocks';
 import { Card } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
@@ -41,7 +41,6 @@ const Form = async ({ id }: { id: string }) => {
           <SelectColor />
         </Suspense>
       }
-      selectProduct={<SelectProduct />}
     />
   );
 };
