@@ -1,10 +1,12 @@
 import type { CreateCartRequest, GetCartResponse } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
-import { NotFoundError } from '../../errors/api.errors.js';
+import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
+
+const MAX_CART_ITEMS = 25;
 
 export class CartService {
-  constructor(private readonly db: DataStore) {}
+  constructor(private readonly db: DataStore) { }
 
   async get(userId: number): Promise<GetCartResponse['data']> {
     const cart = await this.db.cart.findMany({
@@ -25,26 +27,15 @@ export class CartService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const cartItems = cart.map(item => ({
-      userId: item.userId,
-      quantity: item.quantity,
-      createdAt: item.stock.createdAt,
-      updatedAt: item.stock.updatedAt,
-      product: item.stock.product,
-      images: item.stock.color.images.map(img => ({
-        id: img.id,
-        imageKey: img.imageKey,
-        imageUrl: img.imageUrl,
-        isPrimary: img.isPrimary,
-        createdAt: img.createdAt,
-      })),
+    const cartItems = cart.map(({ userId, stock: { color: { images, ...color }, size, product, ...stock }, ...item }) => ({
+      ...item,
+      userId,
+      product,
+      images,
       stock: {
-        id: item.stock.id,
-        quantity: item.stock.quantity,
-        createdAt: item.stock.createdAt,
-        updatedAt: item.stock.updatedAt,
-        color: item.stock.color,
-        size: item.stock.size,
+        ...stock,
+        color,
+        size,
       },
     }));
 
@@ -66,16 +57,19 @@ export class CartService {
     { stockId, quantity }: CreateCartRequest['body']
   ): Promise<GetCartResponse['data']> {
     const stock = await this.db.stock.findUniqueOrThrow({ where: { id: stockId } });
-
     if (stock.quantity < quantity) {
       throw new NotFoundError('Not enough stock');
     }
 
-    const cart = { userId, stockId, quantity };
+    const userCart = await this.get(userId);
+    if (userCart.totalQuantity + quantity > MAX_CART_ITEMS) {
+      throw new BadRequestError(`Cart quantity limit reached ${MAX_CART_ITEMS} items`);
+    }
 
+    const cartData = { userId, stockId, quantity };
     await this.db.cart.upsert({
-      create: cart,
-      update: cart,
+      create: cartData,
+      update: cartData,
       where: {
         userId_stockId: { userId, stockId },
       },

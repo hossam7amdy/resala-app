@@ -62,8 +62,9 @@ export class ShoppingController extends Controller {
   ): Promise<CreateCartResponse> {
     const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.update(userId, body);
+    const updatedCart = await this.discountService.applyDiscount(cart);
 
-    return { success: true, data: cart };
+    return { success: true, data: updatedCart };
   }
 
   @Delete('cart/items/{stockId}')
@@ -73,8 +74,9 @@ export class ShoppingController extends Controller {
   ): Promise<DeleteCartResponse> {
     const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.delete(userId, +stockId);
+    const updatedCart = await this.discountService.applyDiscount(cart);
 
-    return { success: true, data: cart };
+    return { success: true, data: updatedCart };
   }
 
   @Delete('cart')
