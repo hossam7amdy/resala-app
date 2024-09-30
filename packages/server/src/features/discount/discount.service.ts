@@ -2,6 +2,7 @@ import type {
   CreateDiscountRequest,
   CreateDiscountResponse,
   DeleteDiscountResponse,
+  Discount,
   GetCartResponse,
   GetDiscountRequest,
   GetDiscountResponse,
@@ -13,9 +14,13 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError, NotFoundError } from '../../errors/api.errors.js';
+import { Decimal } from 'decimal.js';
+
+type CartItem = GetCartResponse['data']['items'][number];
+type ProductDiscount = Discount & { discountProduct: { productId: number }[] };
 
 export class DiscountService {
-  constructor(private readonly db: DataStore) {}
+  constructor(private readonly db: DataStore) { }
 
   private async _checkProductsExist(productIds: number[]) {
     if (productIds.length === 0) {
@@ -65,37 +70,157 @@ export class DiscountService {
     }
   }
 
-  async get(
-    discountId: string,
-    { page = 1, limit = 10 }: GetDiscountRequest['query']
-  ): Promise<GetDiscountResponse['data']> {
-    const { discountProduct, ...discount } = await this.db.discount.findUniqueOrThrow({
+  private async _getApplicableDiscounts(productIds: number[]) {
+    const commonFilters = {
+      isActive: true,
+      OR: [
+        { startDate: null },
+        { endDate: null },
+        { startDate: { lte: new Date() } },
+        { endDate: { gte: new Date(new Date().toDateString()) } },
+      ],
+    };
+
+    const productDiscountsPromise = this.db.discount.findMany({
       include: {
         discountProduct: {
-          include: {
-            product: true,
-          },
-          skip: (page - 1) * limit,
-          take: limit + 1,
-          orderBy: {
-            discountId: 'desc',
+          where: {
+            productId: {
+              in: productIds,
+            },
           },
         },
       },
       where: {
-        id: +discountId,
+        ...commonFilters,
+        isStoreWide: false,
+
       },
     });
 
-    const hasMore = discountProduct.length > limit;
+    const storeWideDiscountsPromise = this.db.discount.findMany({
+      where: {
+        ...commonFilters,
+        isStoreWide: true,
+      }
+    })
 
-    if (hasMore) {
-      discountProduct.pop();
+    const [productDiscounts, storeWideDiscounts] = await this.db.$transaction([productDiscountsPromise, storeWideDiscountsPromise]);
+
+    return [...productDiscounts, ...storeWideDiscounts.map(d => ({ ...d, discountProduct: [] }))];
+  }
+
+  private _applyProductDiscount(item: CartItem, discounts: ProductDiscount[]): CartItem {
+    let bestDiscount: Discount | null = null;
+    let lowestPrice = item.product.price;
+
+    for (const { discountProduct, ...discount } of discounts) {
+      if (!discount.isStoreWide && !discountProduct.some(dp => dp.productId === item.product.id)) {
+        continue;
+      }
+
+      let discountedPrice = item.product.price;
+
+      switch (discount.type) {
+        case 'PERCENTAGE':
+          discountedPrice = new Decimal(item.product.price)
+            .sub(new Decimal(item.product.price).mul(discount.amount).div(100))
+            .toNumber();
+          break;
+        case 'BOGO':
+          const buyQuantity = discount.amount.toNumber();
+          const freeQuantity = discount.minQty ?? 0;
+          const cycleQuantity = buyQuantity + freeQuantity;
+          const fullPriceCycles = Math.floor(item.quantity / cycleQuantity);
+          const remainingItems = item.quantity % cycleQuantity;
+
+          const fullPriceItems = fullPriceCycles * buyQuantity + Math.min(remainingItems, buyQuantity);
+          discountedPrice = (fullPriceItems / item.quantity) * item.product.price;
+          break;
+      }
+
+      if (discountedPrice < lowestPrice) {
+        lowestPrice = discountedPrice;
+        bestDiscount = discount;
+      }
     }
 
     return {
+      ...item,
+      discountedPrice: lowestPrice,
+      appliedDiscount: bestDiscount || undefined,
+    };
+  }
+
+  private _applyCartLevelDiscounts(items: CartItem[], discounts: ProductDiscount[]): CartItem[] {
+    let bestDiscount: Discount | null = null;
+    let lowestTotalPrice = items.reduce((sum, item) => sum + item.discountedPrice! * item.quantity, 0);
+
+    for (const { discountProduct: _, ...discount } of discounts) {
+      let discountedTotalPrice = lowestTotalPrice;
+
+      switch (discount.type) {
+        case 'FIXED':
+          discountedTotalPrice = Math.max(0, discountedTotalPrice - discount.amount.toNumber());
+          break;
+        case 'BULK':
+          const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+          if (totalQuantity >= (discount.minQty ?? 0)) {
+            discountedTotalPrice = new Decimal(discountedTotalPrice)
+              .sub(new Decimal(discountedTotalPrice).mul(discount.amount).div(100))
+              .toNumber();
+          }
+          break;
+      }
+
+      if (discountedTotalPrice < lowestTotalPrice) {
+        lowestTotalPrice = discountedTotalPrice;
+        bestDiscount = discount;
+      }
+    }
+
+    if (bestDiscount) {
+      const discountFactor = lowestTotalPrice / items.reduce((sum, item) => sum + item.discountedPrice! * item.quantity, 0);
+      return items.map(item => ({
+        ...item,
+        discountedPrice: item.discountedPrice! * discountFactor,
+        appliedDiscount: bestDiscount,
+      }));
+    }
+
+    return items;
+  }
+
+  async get(
+    id: string,
+    { page = 1, limit = 10 }: GetDiscountRequest['query']
+  ): Promise<GetDiscountResponse['data']> {
+    const discountId = +id;
+
+    const [productsCount, { discountProduct, ...discount }] = await this.db.$transaction([
+      this.db.discountProduct.count({ where: { discountId } }),
+      this.db.discount.findUniqueOrThrow({
+        include: {
+          discountProduct: {
+            include: {
+              product: true,
+            },
+            skip: (page - 1) * limit,
+            take: limit,
+            orderBy: {
+              discountId: 'desc',
+            },
+          },
+        },
+        where: {
+          id: discountId,
+        },
+      }),
+    ]);
+
+    return {
       ...discount,
-      hasMore,
+      pagination: { page, limit, total: productsCount },
       products: discountProduct.map(dp => dp.product),
     };
   }
@@ -164,9 +289,9 @@ export class DiscountService {
         discountProduct: {
           createMany: productIds.length
             ? {
-                data: productIds.map(productId => ({ productId })),
-                skipDuplicates: true,
-              }
+              data: productIds.map(productId => ({ productId })),
+              skipDuplicates: true,
+            }
             : undefined,
         },
       },
@@ -194,16 +319,16 @@ export class DiscountService {
         discountProduct: {
           createMany: productIds?.length
             ? {
-                data: productIds.map(productId => ({ productId })),
-                skipDuplicates: true,
-              }
+              data: productIds.map(productId => ({ productId })),
+              skipDuplicates: true,
+            }
             : undefined,
           deleteMany: productIds?.length
             ? {
-                productId: {
-                  notIn: productIds,
-                },
-              }
+              productId: {
+                notIn: productIds,
+              },
+            }
             : undefined,
         },
       },
@@ -219,73 +344,28 @@ export class DiscountService {
   }
 
   async applyDiscount(cart: GetCartResponse['data']): Promise<GetCartResponse['data']> {
-    // 1. Group cart items by product id
-    const groupedItems = cart.items.reduce(
-      (acc, item) => {
-        acc[item.product.id] = item;
-        return acc;
-      },
-      {} as Record<number, (typeof cart.items)[0]>
-    );
+    if (cart.items.length === 0) {
+      return cart;
+    }
 
-    // 2. Get active discounts for the cart products
-    const productIds = Object.keys(groupedItems).map(Number);
-    const activeDiscounts = await this.db.discountProduct.findMany({
-      include: {
-        discount: true,
-      },
-      where: {
-        productId: { in: productIds },
-        discount: {
-          isActive: true,
-          OR: [
-            { startDate: null },
-            { endDate: null },
-            { startDate: { lte: new Date() } },
-            { endDate: { gte: new Date(new Date().toDateString()) } },
-          ],
-        },
-      },
-    });
+    const productIds = [...new Set(cart.items.map(item => item.product.id))];
+    const applicableDiscounts = await this._getApplicableDiscounts(productIds);
 
-    // 3. Apply the highest discount for each product
-    let totalDiscount = 0;
-    const updatedItems = cart.items.map(item => {
-      const applicableDiscounts = activeDiscounts.filter(d => d.productId === item.product.id);
+    let updatedItems = cart.items.map(item => this._applyProductDiscount(item, applicableDiscounts));
 
-      if (applicableDiscounts.length === 0) return item;
+    const cartLevelDiscounts = applicableDiscounts.filter(d => d.type === 'BULK' || d.type === 'FIXED');
+    updatedItems = this._applyCartLevelDiscounts(updatedItems, cartLevelDiscounts);
 
-      const highestDiscount = applicableDiscounts.reduce((max, d) =>
-        d.discount.amount > max.discount.amount ? d : max
-      );
+    const totalDiscount = updatedItems.reduce((sum, item) =>
+      sum + (item.product.price - item.discountedPrice!) * item.quantity, 0);
+    const totalPrice = updatedItems.reduce((sum, item) =>
+      sum + item.discountedPrice! * item.quantity, 0);
 
-      const discountAmount =
-        highestDiscount.discount.type === 'PERCENTAGE'
-          ? highestDiscount.discount.amount.mul(item.product.price).round().toNumber() / 100
-          : highestDiscount.discount.amount.toNumber();
-
-      const discountedPrice = Math.max(item.product.price - discountAmount, 0);
-      totalDiscount += (item.product.price - discountedPrice) * item.quantity;
-
-      return {
-        ...item,
-        discountedPrice,
-        appliedDiscount: {
-          id: highestDiscount.discount.id,
-          amount: highestDiscount.discount.amount,
-          type: highestDiscount.discount.type,
-        },
-      };
-    });
-
-    // 4. Update cart totals
-    const updatedCart: GetCartResponse['data'] = {
+    return {
       ...cart,
       items: updatedItems,
       totalDiscount,
-      totalPrice: cart.totalPrice - totalDiscount,
+      totalPrice,
     };
-
-    return updatedCart;
   }
 }
