@@ -126,7 +126,7 @@ export enum Endpoints {
   listDiscounts = 'listDiscounts',
   createDiscount = 'createDiscount',
   updateDiscount = 'updateDiscount',
-  deleteDiscount = 'deleteDiscount'
+  deleteDiscount = 'deleteDiscount',
 }
 
 /**

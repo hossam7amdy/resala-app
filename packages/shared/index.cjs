@@ -1119,10 +1119,17 @@ const CreateDiscountSchema = zod.z.object({
         minQty: zod.z.coerce.number().positive().optional(),
         isActive: zod.z.boolean().optional(),
         isStoreWide: zod.z.boolean().optional(),
-        startDate: zod.z.coerce.date().optional().transform(val => val?.toISOString()),
-        endDate: zod.z.coerce.date().optional().transform(val => val?.toISOString()),
+        startDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
         productIds: zod.z.array(zod.z.coerce.number().positive()).min(1).max(50).optional(),
-    }).refine(({ isStoreWide, productIds }) => {
+    })
+        .refine(({ isStoreWide, productIds }) => {
         return isStoreWide ? !productIds : !!productIds;
     }, {
         message: 'Please choose either store-wide or select specific products, but not both.',
@@ -1176,8 +1183,14 @@ const ListDiscountsSchema = zod.z.object({
         type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
         isActive: zod.z.boolean().optional(),
         isStoreWide: zod.z.boolean().optional(),
-        startDate: zod.z.coerce.date().optional().transform(val => val?.toISOString()),
-        endDate: zod.z.coerce.date().optional().transform(val => val?.toISOString()),
+        startDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
     }).refine(data => {
         if (!data.startDate || !data.endDate)
             return true;
@@ -1188,7 +1201,7 @@ const ListDiscountsSchema = zod.z.object({
     }, {
         message: 'Start date must not be in the past and end date must be greater than the start date.',
         path: ['startDate'],
-    })
+    }),
 });
 const GetDiscountSchema = zod.z.object({
     params: zod.z.object({

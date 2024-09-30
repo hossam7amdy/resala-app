@@ -434,10 +434,17 @@ export const CreateDiscountSchema = z.object({
         minQty: z.coerce.number().positive().optional(),
         isActive: z.boolean().optional(),
         isStoreWide: z.boolean().optional(),
-        startDate: z.coerce.date().optional().transform(val => val?.toISOString()),
-        endDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+        startDate: z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
         productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
-    }).refine(({ isStoreWide, productIds }) => {
+    })
+        .refine(({ isStoreWide, productIds }) => {
         return isStoreWide ? !productIds : !!productIds;
     }, {
         message: 'Please choose either store-wide or select specific products, but not both.',
@@ -491,8 +498,14 @@ export const ListDiscountsSchema = z.object({
         type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
         isActive: z.boolean().optional(),
         isStoreWide: z.boolean().optional(),
-        startDate: z.coerce.date().optional().transform(val => val?.toISOString()),
-        endDate: z.coerce.date().optional().transform(val => val?.toISOString()),
+        startDate: z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
     }).refine(data => {
         if (!data.startDate || !data.endDate)
             return true;
@@ -503,7 +516,7 @@ export const ListDiscountsSchema = z.object({
     }, {
         message: 'Start date must not be in the past and end date must be greater than the start date.',
         path: ['startDate'],
-    })
+    }),
 });
 export const GetDiscountSchema = z.object({
     params: z.object({
