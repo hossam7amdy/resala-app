@@ -4,21 +4,27 @@
 <footer class="text-center pb-0">
   <div class="container">
     <div class="row mt-3 title">
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12  d-flex align-items-center justify-content-center our-service">
+      <div
+        class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center our-service"
+      >
         <i class="fas fas fa-store fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
           <h3 class="h3">Secure buy and payment</h3>
           <p class="p-footer">Free Shipping on some orders</p>
         </div>
       </div>
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center our-service">
+      <div
+        class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center our-service"
+      >
         <i class="fa-solid fa-sack-dollar fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
           <h3 class="h3">Cash on Delivery</h3>
           <p class="p-footer">Receive for free</p>
         </div>
       </div>
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center our-service">
+      <div
+        class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex align-items-center justify-content-center our-service"
+      >
         <i class="fa-solid fa-arrows-spin fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
           <h3 class="h3">Easy & Free Return</h3>
@@ -86,24 +92,32 @@
   <!-- fixed buttons -->
   <!-- search section  -->
   <!-- routerLink="/search" -->
-  <div class="search-btn"  (click)="[toggleSearch(), searchProducts()]">
-    <i class="fa-solid fa-magnifying-glass "></i>
+  <div class="search-btn" (click)="[toggleSearch(), searchProducts()]">
+    <i class="fa-solid fa-magnifying-glass"></i>
   </div>
   <section *ngIf="isClickedSearch" class="search-form">
-  
-      <div class="parent-search">
-        <form class="d-flex ">
-          <i class="fa-solid fa-magnifying-glass icon-search"></i> 
-          <input (keydown)="searchProducts()" placeholder="Search" name="search-text" [(ngModel)]="searchText" class="form-control  search" type="text" aria-label="Search" />
-          <i class="fa-solid fa-xmark search-close" (click)="closeSearch()"></i>
-        </form>
+    <div class="parent-search">
+      <form class="d-flex">
+        <i class="fa-solid fa-magnifying-glass icon-search"></i>
+        <input
+          (keydown)="searchProducts()"
+          placeholder="Search"
+          name="search-text"
+          [(ngModel)]="searchText"
+          class="form-control search"
+          type="text"
+          aria-label="Search"
+        />
+        <i class="fa-solid fa-xmark search-close" (click)="closeSearch()"></i>
+      </form>
 
-        <div class="products-search row">
-          <div *ngFor="let product of products |search:searchText "
-           class="col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2">
-           <div (click)="closeSearch()">
-            
-            <div class="parent-img-content w-100 ">
+      <div class="products-search row">
+        <div
+          *ngFor="let product of products | search: searchText"
+          class="col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2"
+        >
+          <div (click)="closeSearch()">
+            <div class="parent-img-content w-100">
               <header class="header-product">
                 <i
                   (click)="addPoductInWishList(product.id, favoritIcon)"
@@ -111,9 +125,12 @@
                   class="fa-regular fa-heart favourit-icon"
                 ></i>
               </header>
-              
-              <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
-  
+
+              <div
+                class="img-content"
+                [routerLink]="['/product-details/', product.id]"
+                role="button"
+              >
                 <img
                   class="w-100 image-products"
                   [src]="product.imageUrl"
@@ -123,12 +140,12 @@
               </div>
             </div>
             <!--  -->
-            
+
             <div class="descrp">
               <h6 [routerLink]="['/product-details/', product.id]" class="h4 mb-0" role="button">
                 {{ product.enName }}
               </h6>
-  
+
               <div class="rating">
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
@@ -139,18 +156,12 @@
               <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
             </div>
           </div>
-          </div>
-  
         </div>
-      
-
       </div>
-     
-      
-     
+    </div>
   </section>
 
-<!-- scroll section  -->
+  <!-- scroll section  -->
   <button (click)="scrollTop()" class="btn-up"><i class="fa-solid fa-arrow-up"></i></button>
   <a class="whats-icon" href="https://wa.me/+201100858627"><i class="fab fa-whatsapp"></i></a>
 </footer>

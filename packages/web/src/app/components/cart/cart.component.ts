@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import  { OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
-import  { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import  { ToastrService } from 'ngx-toastr';
-import  { CartService } from 'src/app/core/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -20,7 +20,7 @@ export class CartComponent implements OnInit {
   cartDetailsItems: any = [];
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-  
+
   // quantity attr
   counterQuantity: number = 1;
   constructor(
@@ -28,26 +28,25 @@ export class CartComponent implements OnInit {
     private _Renderer: Renderer2,
     private _toaster: ToastrService,
     private _Router: Router,
-    private spinner:NgxSpinnerService
+    private spinner: NgxSpinnerService
   ) {}
-  totalCount:number = 0;
+  totalCount: number = 0;
 
   ngOnInit(): void {
-    
     this.spinner.show();
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
-        this.totalCount=response.data.totalQuantity;
+        this.totalCount = response.data.totalQuantity;
       },
       error: err => {
         console.log(err);
       },
     });
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 2000);
   }
 
@@ -58,7 +57,6 @@ export class CartComponent implements OnInit {
   }
 
   minCounterQuantity(): void {
-    
     if (this.counterQuantity > 1) {
       this.counterQuantity--;
     } else {
@@ -98,7 +96,7 @@ export class CartComponent implements OnInit {
       count = 1;
     }
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 500);
   }
 
@@ -121,7 +119,7 @@ export class CartComponent implements OnInit {
     });
 
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
 
@@ -153,7 +151,7 @@ export class CartComponent implements OnInit {
       });
     }
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
 }

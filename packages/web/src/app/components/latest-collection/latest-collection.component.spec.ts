@@ -8,7 +8,7 @@ describe('LatestCollectionComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [LatestCollectionComponent]
+      imports: [LatestCollectionComponent],
     });
     fixture = TestBed.createComponent(LatestCollectionComponent);
     component = fixture.componentInstance;

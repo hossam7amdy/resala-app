@@ -4,6 +4,7 @@ import { Menu } from '@/components';
 import { ROUTES } from '@/routes';
 import {
   FileProtectOutlined,
+  GiftOutlined,
   HomeOutlined,
   ProductOutlined,
   SkinOutlined,
@@ -43,6 +44,11 @@ const items = [
     key: ROUTES.CUSTOMERS,
     label: <Link href={ROUTES.CUSTOMERS}>Customers</Link>,
     icon: <UserOutlined />,
+  },
+  {
+    key: ROUTES.DISCOUNTS,
+    label: <Link href={ROUTES.DISCOUNTS}>Discounts</Link>,
+    icon: <GiftOutlined />,
   },
 ];
 

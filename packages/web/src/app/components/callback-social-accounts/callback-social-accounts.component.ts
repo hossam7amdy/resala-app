@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -8,26 +8,24 @@ import { AuthService } from 'src/app/core/services/auth.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './callback-social-accounts.component.html',
-  styleUrls: ['./callback-social-accounts.component.css']
+  styleUrls: ['./callback-social-accounts.component.css'],
 })
 export class CallbackSocialAccountsComponent implements OnInit {
-  
   constructor(
-    private route:ActivatedRoute,
-    private _AuthService:AuthService,
-    private _Router:Router
-  ){}
+    private route: ActivatedRoute,
+    private _AuthService: AuthService,
+    private _Router: Router
+  ) {}
 
-  tokenFromSocial:string= '';
-  
+  tokenFromSocial: string = '';
+
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(token=>{
+    this.route.queryParams.subscribe(token => {
       this.tokenFromSocial = token['accessToken'];
-      console.log('token', this.tokenFromSocial)
-    })
+      console.log('token', this.tokenFromSocial);
+    });
 
-    if(this.tokenFromSocial !== ''){
+    if (this.tokenFromSocial !== '') {
       localStorage.setItem('etoken', this.tokenFromSocial);
       this._AuthService.decodeUser();
       const productId = localStorage.getItem('productId');
@@ -36,18 +34,14 @@ export class CallbackSocialAccountsComponent implements OnInit {
           window.location.reload();
         });
         console.log('product id' + productId);
-       
       } else {
         console.log('product id' + productId);
 
         this._Router.navigate(['product-details/', productId]).then(() => {
           window.location.reload();
-          
         });
         localStorage.removeItem('productId');
       }
     }
-
   }
-
 }

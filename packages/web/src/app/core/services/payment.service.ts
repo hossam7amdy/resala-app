@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Query } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+
+import {
+  ENDPOINT_CONFIGS,
+  Endpoints,
+  withParams,
+  withQueryParams,
+} from '../../../../../shared/src/endpoints';
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +17,15 @@ import { environment } from 'src/environments/environment.development';
 export class PaymentService {
   constructor(private _HttpClient: HttpClient) {}
 
-  // refactor free API url 
- private getHeaders() {
-  const headers = new HttpHeaders({
-    'ngrok-skip-browser-warning':  '69420',
-    'Authorization':`Bearer ${localStorage.getItem('etoken')}`
-    
-  });
+  // refactor free API url
+  private getHeaders() {
+    const headers = new HttpHeaders({
+      'ngrok-skip-browser-warning': '69420',
+      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
+    });
 
-  return {headers};
-}
+    return { headers };
+  }
 
   // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
@@ -46,26 +51,26 @@ export class PaymentService {
   registerUserAddress(userAddress: any): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createAddress]);
     console.log(userAddress.userId);
-    return this._HttpClient.post(environment.BASE_URL + url, userAddress, 
-      this.getHeaders()
-  );
+    return this._HttpClient.post(environment.BASE_URL + url, userAddress, this.getHeaders());
   }
 
-  getListAddressUser(id:any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress,{userId:id});
+  getListAddressUser(id: any): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress, { userId: id });
     return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 
-  deleteUserAddress(userId:any , addressId:any ):Observable<any>{
-   const withParamsConfig :any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress],addressId=addressId)
-   const {url} = withQueryParams(withParamsConfig,{userId:userId})
-    return this._HttpClient.delete(environment.BASE_URL + url,this.getHeaders())
+  deleteUserAddress(userId: any, addressId: any): Observable<any> {
+    const withParamsConfig: any = withParams(
+      ENDPOINT_CONFIGS[Endpoints.deleteAddress],
+      (addressId = addressId)
+    );
+    const { url } = withQueryParams(withParamsConfig, { userId: userId });
+    return this._HttpClient.delete(environment.BASE_URL + url, this.getHeaders());
   }
 
-  updateUserAddress(addressId:any, userAddress:object):Observable<any>{
-    const {url} = withParams(ENDPOINT_CONFIGS[Endpoints.updateAddress],addressId+'')
-    return this._HttpClient.put(environment.BASE_URL+url,userAddress,this.getHeaders()
-    )
+  updateUserAddress(addressId: any, userAddress: object): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.updateAddress], addressId + '');
+    return this._HttpClient.put(environment.BASE_URL + url, userAddress, this.getHeaders());
   }
 
   userOrder(userAddressId: number, payInfo: string, note: string): Observable<any> {
@@ -76,7 +81,6 @@ export class PaymentService {
         addressId: userAddressId,
         paymentMethod: payInfo,
         note: note,
-        
       },
       this.getHeaders()
     );
