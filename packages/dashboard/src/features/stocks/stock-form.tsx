@@ -1,5 +1,6 @@
 'use client';
 
+import { SelectProductAsync } from '@/components/select-product-async';
 import { listImages } from '@/fetch/images';
 import { uploadImages } from '@/fetch/images';
 import { createStock, updateStock } from '@/fetch/stocks';
@@ -29,14 +30,8 @@ interface StockFormProps {
   }>;
   selectSize: React.ReactNode;
   selectColor: React.ReactNode;
-  selectProduct: React.ReactNode;
 }
-export const StockForm: React.FC<StockFormProps> = ({
-  stock,
-  selectColor,
-  selectSize,
-  selectProduct,
-}) => {
+export const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize }) => {
   const router = useRouter();
 
   const [form] = Form.useForm<FormValues>();
@@ -116,7 +111,9 @@ export const StockForm: React.FC<StockFormProps> = ({
     >
       <Typography.Title level={5}>{isCreate ? 'Create New Stock' : `Edit Stock`}</Typography.Title>
 
-      {selectProduct}
+      <Form.Item name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
+        <SelectProductAsync autoFocus allowClear />
+      </Form.Item>
 
       {selectColor}
 

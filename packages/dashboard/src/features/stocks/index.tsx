@@ -2,7 +2,6 @@ export * from './stock-form';
 export * from './stock-form-skeleton';
 export * from './stock-color-images';
 export * from './stocks-table';
-export * from './select-product';
 export * from './select-color';
 export * from './select-size';
 export * from './stock-sizes';

@@ -31,6 +31,11 @@ export const ROUTES = {
 
   CUSTOMERS: '/customers',
   EDIT_CUSTOMER: (id: string | number) => `/customers/${id}/edit`,
+
+  DISCOUNTS: '/discounts',
+  CREATE_DISCOUNT: '/discounts/create',
+  EDIT_DISCOUNT: (id: string | number) => `/discounts/${id}/edit`,
+  DISCOUNT_PRODUCTS: (id: string | number) => `/discounts/${id}/products`,
 } as const;
 
 export const PROTECTED_ROUTES = [
@@ -44,4 +49,5 @@ export const PROTECTED_ROUTES = [
   ROUTES.ORDERS,
   ROUTES.CUSTOMERS,
   ROUTES.NOT_AUTHORIZED,
+  ROUTES.DISCOUNTS,
 ];
