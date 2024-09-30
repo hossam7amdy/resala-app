@@ -7,31 +7,28 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 @Component({
   selector: 'app-top-bar',
   standalone: true,
-  imports: [CommonModule, CarouselModule,TranslateModule],
+  imports: [CommonModule, CarouselModule, TranslateModule],
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent {
   constructor(
-    private _Renderer:Renderer2,
-    private _Translate:TranslateService
-
-  ){
-    this._Translate.setDefaultLang('en')
+    private _Renderer: Renderer2,
+    private _Translate: TranslateService
+  ) {
+    this._Translate.setDefaultLang('en');
   }
 
-  @ViewChild('topBar') navbarElement!:ElementRef
+  @ViewChild('topBar') navbarElement!: ElementRef;
   @HostListener('window:scroll')
-  onScroll():void{
-    if(scrollY > 600){
-      this._Renderer.setStyle(this.navbarElement.nativeElement,'opacity',0);
-      
-    }else{
-      this._Renderer.removeStyle(this.navbarElement.nativeElement,'opacity');
-      
+  onScroll(): void {
+    if (scrollY > 600) {
+      this._Renderer.setStyle(this.navbarElement.nativeElement, 'opacity', 0);
+    } else {
+      this._Renderer.removeStyle(this.navbarElement.nativeElement, 'opacity');
     }
   }
-  
+
   // main slider
   topBarSlide: OwlOptions = {
     loop: true,

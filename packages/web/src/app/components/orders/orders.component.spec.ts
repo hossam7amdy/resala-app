@@ -8,7 +8,7 @@ describe('OrdersComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [OrdersComponent]
+      imports: [OrdersComponent],
     });
     fixture = TestBed.createComponent(OrdersComponent);
     component = fixture.componentInstance;

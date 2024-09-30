@@ -6,7 +6,7 @@ import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
 const MAX_CART_ITEMS = 25;
 
 export class CartService {
-  constructor(private readonly db: DataStore) { }
+  constructor(private readonly db: DataStore) {}
 
   async get(userId: number): Promise<GetCartResponse['data']> {
     const cart = await this.db.cart.findMany({
@@ -27,17 +27,28 @@ export class CartService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const cartItems = cart.map(({ userId, stock: { color: { images, ...color }, size, product, ...stock }, ...item }) => ({
-      ...item,
-      userId,
-      product,
-      images,
-      stock: {
-        ...stock,
-        color,
-        size,
-      },
-    }));
+    const cartItems = cart.map(
+      ({
+        userId,
+        stock: {
+          color: { images, ...color },
+          size,
+          product,
+          ...stock
+        },
+        ...item
+      }) => ({
+        ...item,
+        userId,
+        product,
+        images,
+        stock: {
+          ...stock,
+          color,
+          size,
+        },
+      })
+    );
 
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const totalPrice = cartItems.reduce(
