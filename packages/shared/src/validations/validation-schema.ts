@@ -498,30 +498,53 @@ export const DeleteReviewSchema = z.object({
 export const CreateDiscountSchema = z.object({
   body: z
     .object({
-      type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+      type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'] as const),
       amount: z.coerce.number().positive().min(0.1),
       description: z.string().max(250).optional(),
       minQty: z.coerce.number().positive().optional(),
       isActive: z.boolean().optional(),
       isStoreWide: z.boolean().optional(),
-      startDate: z.string().datetime().optional(),
-      endDate: z.string().datetime().optional(),
-      productIds: z.array(z.coerce.number().positive()).length(50).optional(),
+      startDate: z.coerce
+        .date()
+        .optional()
+        .transform(val => val?.toISOString()),
+      endDate: z.coerce
+        .date()
+        .optional()
+        .transform(val => val?.toISOString()),
+      productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
+    }).refine(({ type, productIds }) => {
+      return ['FIXED', 'BULK'].includes(type) && productIds === undefined
+    }, {
+      message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
+      path: ['productIds'],
     })
     .refine(
-      data => {
-        if (!data.startDate || !data.endDate) return true;
+      ({ isStoreWide, productIds }) => {
+        return isStoreWide ? !productIds : !!productIds;
+      },
+      {
+        message: 'Please choose either store-wide or select specific products, but not both.',
+        path: ['productIds'],
+      }
+    )
+    .refine(
+      ({ startDate, endDate }) => {
+        // if both startDate and endDate are provided, endDate must be greater than startDate
+        if (startDate && endDate) {
+          const start = new Date(startDate).getTime();
+          const end = new Date(endDate).getTime();
 
-        const startDate = new Date(data.startDate);
-        const endDate = new Date(data.endDate);
-        const now = new Date();
+          return end >= start;
+        }
 
-        return startDate >= now && endDate > startDate;
+        // if endDate is provided, startDate must be provided
+        return endDate ? !!startDate : true;
       },
       {
         message:
           'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate', 'endDate'], // Show validation error on both fields
+        path: ['startDate'],
       }
     )
     .refine(
@@ -531,7 +554,7 @@ export const CreateDiscountSchema = z.object({
       },
       {
         message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty', 'type'],
+        path: ['minQty'],
       }
     )
     .refine(
@@ -543,7 +566,7 @@ export const CreateDiscountSchema = z.object({
       },
       {
         message: 'Amount must be an integer for BOGO discount type.',
-        path: ['minQty', 'amount', 'type'],
+        path: ['amount'],
       }
     ),
 });
@@ -567,9 +590,30 @@ export const ListDiscountsSchema = z.object({
     type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
     isActive: z.boolean().optional(),
     isStoreWide: z.boolean().optional(),
-    startDate: z.string().datetime().optional(),
-    endDate: z.string().datetime().optional(),
-  }),
+    startDate: z.coerce
+      .date()
+      .optional()
+      .transform(val => val?.toISOString()),
+    endDate: z.coerce
+      .date()
+      .optional()
+      .transform(val => val?.toISOString()),
+  }).refine(
+    data => {
+      if (!data.startDate || !data.endDate) return true;
+
+      const startDate = new Date(data.startDate).getTime();
+      const endDate = new Date(data.endDate).getTime();
+      const now = new Date(new Date().toDateString()).getTime();
+
+      return startDate >= now && endDate >= startDate;
+    },
+    {
+      message:
+        'Start date must not be in the past and end date must be greater than the start date.',
+      path: ['startDate'],
+    }
+  ),
 });
 
 export const GetDiscountSchema = z.object({

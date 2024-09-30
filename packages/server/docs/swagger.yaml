@@ -2584,55 +2584,113 @@ components:
       $ref: "#/components/schemas/GetSizeResponse"
     DeleteSizeResponse:
       $ref: "#/components/schemas/GetSizeResponse"
-    Pick_Cart.Exclude_keyofCart.stockId__:
+    Cart:
       properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        quantity:
+          type: integer
+          format: int32
+        stockId:
+          type: integer
+          format: int32
         userId:
           type: integer
           format: int32
-        quantity:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
+      required:
+        - updatedAt
+        - createdAt
+        - quantity
+        - stockId
+        - userId
+      type: object
+    DiscountType:
+      type: string
+      enum:
+        - PERCENTAGE
+        - FIXED
+        - BOGO
+        - BULK
+      nullable: false
+    Discount:
+      properties:
         updatedAt:
           type: string
           format: date-time
-      required:
-        - userId
-        - quantity
-        - createdAt
-        - updatedAt
-      type: object
-      description: From T, pick a set of properties whose keys are in the union K
-    Omit_Cart.stockId_:
-      $ref: "#/components/schemas/Pick_Cart.Exclude_keyofCart.stockId__"
-      description: Construct a type with the properties of T except for those in type K.
-    Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__:
-      properties:
+        createdAt:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        isStoreWide:
+          type: boolean
+        isActive:
+          type: boolean
+        minQty:
+          type: integer
+          format: int32
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        amount: {}
+        type:
+          $ref: "#/components/schemas/DiscountType"
         id:
           type: integer
           format: int32
-        quantity:
-          type: integer
-          format: int32
+      required:
+        - updatedAt
+        - createdAt
+        - endDate
+        - startDate
+        - isStoreWide
+        - isActive
+        - minQty
+        - description
+        - amount
+        - type
+        - id
+      type: object
+    Image:
+      properties:
         createdAt:
           type: string
           format: date-time
-        updatedAt:
+        imageUrl:
           type: string
-          format: date-time
+        imageKey:
+          type: string
+        isPrimary:
+          type: boolean
+        productId:
+          type: integer
+          format: int32
+        colorId:
+          type: integer
+          format: int32
+        id:
+          type: integer
+          format: int32
       required:
-        - id
-        - quantity
         - createdAt
-        - updatedAt
+        - imageUrl
+        - imageKey
+        - isPrimary
+        - productId
+        - colorId
+        - id
       type: object
-      description: From T, pick a set of properties whose keys are in the union K
-    Omit_Stock.colorId-or-sizeId-or-productId_:
-      $ref: "#/components/schemas/Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-\
-        productId__"
-      description: Construct a type with the properties of T except for those in type K.
     GetCartResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"
@@ -2642,11 +2700,11 @@ components:
                 items:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Omit_Cart.stockId_"
+                      - $ref: "#/components/schemas/Cart"
                       - properties:
                           stock:
                             allOf:
-                              - $ref: "#/components/schemas/Omit_Stock.colorId-or-sizeId-or-productId_"
+                              - $ref: "#/components/schemas/Stock"
                               - properties:
                                   size:
                                     $ref: "#/components/schemas/Size"
@@ -2658,16 +2716,24 @@ components:
                                 type: object
                           images:
                             items:
-                              $ref: "#/components/schemas/Omit_Image.colorId-or-productId_"
+                              $ref: "#/components/schemas/Image"
                             type: array
                           product:
                             $ref: "#/components/schemas/Product"
+                          appliedDiscount:
+                            $ref: "#/components/schemas/Discount"
+                          discountedPrice:
+                            type: integer
+                            format: int32
                         required:
                           - stock
                           - images
                           - product
                         type: object
                   type: array
+                totalDiscount:
+                  type: integer
+                  format: int32
                 totalPrice:
                   type: integer
                   format: int32
@@ -2846,12 +2912,17 @@ components:
               allOf:
                 - $ref: "#/components/schemas/Product"
                 - properties:
+                    discounts:
+                      items:
+                        $ref: "#/components/schemas/Discount"
+                      type: array
                     category:
                       $ref: "#/components/schemas/Category"
                     avgRating:
                       type: integer
                       format: int32
                   required:
+                    - discounts
                     - category
                     - avgRating
                   type: object
@@ -2871,12 +2942,17 @@ components:
                     allOf:
                       - $ref: "#/components/schemas/Product"
                       - properties:
+                          discounts:
+                            items:
+                              $ref: "#/components/schemas/Discount"
+                            type: array
                           category:
                             $ref: "#/components/schemas/Category"
                           avgRating:
                             type: integer
                             format: int32
                         required:
+                          - discounts
                           - category
                           - avgRating
                         type: object
@@ -3260,35 +3336,6 @@ components:
           required:
             - data
           type: object
-    Image:
-      properties:
-        createdAt:
-          type: string
-          format: date-time
-        imageUrl:
-          type: string
-        imageKey:
-          type: string
-        isPrimary:
-          type: boolean
-        productId:
-          type: integer
-          format: int32
-        colorId:
-          type: integer
-          format: int32
-        id:
-          type: integer
-          format: int32
-      required:
-        - createdAt
-        - imageUrl
-        - imageKey
-        - isPrimary
-        - productId
-        - colorId
-        - id
-      type: object
     ListImagesResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"
@@ -3311,60 +3358,6 @@ components:
           required:
             - data
           type: object
-    DiscountType:
-      type: string
-      enum:
-        - PERCENTAGE
-        - FIXED
-        - BOGO
-        - BULK
-      nullable: false
-    Discount:
-      properties:
-        updatedAt:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-          nullable: true
-        startDate:
-          type: string
-          format: date-time
-          nullable: true
-        isStoreWide:
-          type: boolean
-        isActive:
-          type: boolean
-        minQty:
-          type: integer
-          format: int32
-          nullable: true
-        description:
-          type: string
-          nullable: true
-        amount: {}
-        type:
-          $ref: "#/components/schemas/DiscountType"
-        id:
-          type: integer
-          format: int32
-      required:
-        - updatedAt
-        - createdAt
-        - endDate
-        - startDate
-        - isStoreWide
-        - isActive
-        - minQty
-        - description
-        - amount
-        - type
-        - id
-      type: object
     GetDiscountResponse:
       allOf:
         - $ref: "#/components/schemas/DefaultResponseBody"
@@ -3377,8 +3370,11 @@ components:
                       items:
                         $ref: "#/components/schemas/Product"
                       type: array
+                    pagination:
+                      $ref: "#/components/schemas/Pagination"
                   required:
                     - products
+                    - pagination
                   type: object
           required:
             - data

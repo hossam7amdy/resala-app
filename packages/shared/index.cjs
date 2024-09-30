@@ -101,6 +101,12 @@ exports.Endpoints = void 0;
     Endpoints["listCustomersFeedback"] = "listCustomersFeedback";
     Endpoints["listTopCustomers"] = "listTopCustomers";
     Endpoints["listTopProducts"] = "listTopProducts";
+    // discount endpoints
+    Endpoints["getDiscount"] = "getDiscount";
+    Endpoints["listDiscounts"] = "listDiscounts";
+    Endpoints["createDiscount"] = "createDiscount";
+    Endpoints["updateDiscount"] = "updateDiscount";
+    Endpoints["deleteDiscount"] = "deleteDiscount";
 })(exports.Endpoints || (exports.Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -537,6 +543,30 @@ const ENDPOINT_CONFIGS = {
     [exports.Endpoints.listTopProducts]: {
         url: '/api/v1/dashboard/top-products',
         method: 'get',
+    },
+    // discount endpoints
+    [exports.Endpoints.getDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'get',
+    },
+    [exports.Endpoints.listDiscounts]: {
+        url: '/api/v1/discounts',
+        method: 'get',
+    },
+    [exports.Endpoints.createDiscount]: {
+        url: '/api/v1/discounts',
+        method: 'post',
+        auth: true,
+    },
+    [exports.Endpoints.updateDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'put',
+        auth: true,
+    },
+    [exports.Endpoints.deleteDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'delete',
+        auth: true,
     },
 };
 
@@ -1089,20 +1119,39 @@ const CreateDiscountSchema = zod.z.object({
         minQty: zod.z.coerce.number().positive().optional(),
         isActive: zod.z.boolean().optional(),
         isStoreWide: zod.z.boolean().optional(),
-        startDate: zod.z.string().datetime().optional(),
-        endDate: zod.z.string().datetime().optional(),
-        productIds: zod.z.array(zod.z.coerce.number().positive()).length(50).optional(),
+        startDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        productIds: zod.z.array(zod.z.coerce.number().positive()).min(1).max(50).optional(),
+    }).refine(({ type, productIds }) => {
+        return ['FIXED', 'BULK'].includes(type) && productIds === undefined;
+    }, {
+        message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
+        path: ['productIds'],
     })
-        .refine(data => {
-        if (!data.startDate || !data.endDate)
-            return true;
-        const startDate = new Date(data.startDate);
-        const endDate = new Date(data.endDate);
-        const now = new Date();
-        return startDate >= now && endDate > startDate;
+        .refine(({ isStoreWide, productIds }) => {
+        return isStoreWide ? !productIds : !!productIds;
+    }, {
+        message: 'Please choose either store-wide or select specific products, but not both.',
+        path: ['productIds'],
+    })
+        .refine(({ startDate, endDate }) => {
+        // if both startDate and endDate are provided, endDate must be greater than startDate
+        if (startDate && endDate) {
+            const start = new Date(startDate).getTime();
+            const end = new Date(endDate).getTime();
+            return end >= start;
+        }
+        // if endDate is provided, startDate must be provided
+        return endDate ? !!startDate : true;
     }, {
         message: 'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate', 'endDate'], // Show validation error on both fields
+        path: ['startDate'],
     })
         .refine(data => {
         if (data.type === 'BULK')
@@ -1110,7 +1159,7 @@ const CreateDiscountSchema = zod.z.object({
         return true;
     }, {
         message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty', 'type'],
+        path: ['minQty'],
     })
         .refine(data => {
         if (data.type === 'BOGO') {
@@ -1119,7 +1168,7 @@ const CreateDiscountSchema = zod.z.object({
         return true;
     }, {
         message: 'Amount must be an integer for BOGO discount type.',
-        path: ['minQty', 'amount', 'type'],
+        path: ['amount'],
     }),
 });
 const UpdateDiscountSchema = zod.z.object({
@@ -1139,8 +1188,24 @@ const ListDiscountsSchema = zod.z.object({
         type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
         isActive: zod.z.boolean().optional(),
         isStoreWide: zod.z.boolean().optional(),
-        startDate: zod.z.string().datetime().optional(),
-        endDate: zod.z.string().datetime().optional(),
+        startDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+        endDate: zod.z.coerce
+            .date()
+            .optional()
+            .transform(val => val?.toISOString()),
+    }).refine(data => {
+        if (!data.startDate || !data.endDate)
+            return true;
+        const startDate = new Date(data.startDate).getTime();
+        const endDate = new Date(data.endDate).getTime();
+        const now = new Date(new Date().toDateString()).getTime();
+        return startDate >= now && endDate >= startDate;
+    }, {
+        message: 'Start date must not be in the past and end date must be greater than the start date.',
+        path: ['startDate'],
     }),
 });
 const GetDiscountSchema = zod.z.object({

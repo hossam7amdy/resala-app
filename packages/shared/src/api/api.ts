@@ -142,6 +142,7 @@ export type GetProductResponse = DefaultResponseBody & {
   data: Product & {
     avgRating: number;
     category: Category;
+    discounts: Discount[];
   };
 };
 
@@ -259,10 +260,13 @@ export type GetCartResponse = DefaultResponseBody & {
   data: {
     totalQuantity: number;
     totalPrice: number;
-    items: (Omit<Cart, 'stockId'> & {
+    totalDiscount?: number;
+    items: (Cart & {
+      discountedPrice?: number;
+      appliedDiscount?: Discount;
       product: Product;
-      images: Omit<Image, 'colorId' | 'productId'>[];
-      stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+      images: Image[];
+      stock: Stock & {
         color: Color;
         size: Size;
       };
@@ -464,6 +468,7 @@ export type ListTopCustomersResponse = DefaultResponseBody & {
 export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
 export type GetDiscountResponse = DefaultResponseBody & {
   data: Discount & {
+    pagination: Pagination;
     products: Product[];
   };
 };

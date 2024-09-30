@@ -97,6 +97,12 @@ export var Endpoints;
     Endpoints["listCustomersFeedback"] = "listCustomersFeedback";
     Endpoints["listTopCustomers"] = "listTopCustomers";
     Endpoints["listTopProducts"] = "listTopProducts";
+    // discount endpoints
+    Endpoints["getDiscount"] = "getDiscount";
+    Endpoints["listDiscounts"] = "listDiscounts";
+    Endpoints["createDiscount"] = "createDiscount";
+    Endpoints["updateDiscount"] = "updateDiscount";
+    Endpoints["deleteDiscount"] = "deleteDiscount";
 })(Endpoints || (Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -533,5 +539,29 @@ export const ENDPOINT_CONFIGS = {
     [Endpoints.listTopProducts]: {
         url: '/api/v1/dashboard/top-products',
         method: 'get',
+    },
+    // discount endpoints
+    [Endpoints.getDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'get',
+    },
+    [Endpoints.listDiscounts]: {
+        url: '/api/v1/discounts',
+        method: 'get',
+    },
+    [Endpoints.createDiscount]: {
+        url: '/api/v1/discounts',
+        method: 'post',
+        auth: true,
+    },
+    [Endpoints.updateDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'put',
+        auth: true,
+    },
+    [Endpoints.deleteDiscount]: {
+        url: '/api/v1/discounts/{discountId}',
+        method: 'delete',
+        auth: true,
     },
 };

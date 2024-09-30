@@ -1543,15 +1543,15 @@ export declare const DeleteReviewSchema: z.ZodObject<{
     };
 }>;
 export declare const CreateDiscountSchema: z.ZodObject<{
-    body: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodObject<{
+    body: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodObject<{
         type: z.ZodEnum<["PERCENTAGE", "FIXED", "BOGO", "BULK"]>;
         amount: z.ZodNumber;
         description: z.ZodOptional<z.ZodString>;
         minQty: z.ZodOptional<z.ZodNumber>;
         isActive: z.ZodOptional<z.ZodBoolean>;
         isStoreWide: z.ZodOptional<z.ZodBoolean>;
-        startDate: z.ZodOptional<z.ZodString>;
-        endDate: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
+        endDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
         productIds: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
     }, "strip", z.ZodTypeAny, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1570,8 +1570,8 @@ export declare const CreateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1590,8 +1590,8 @@ export declare const CreateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1610,8 +1610,8 @@ export declare const CreateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1630,8 +1630,48 @@ export declare const CreateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
+        productIds?: number[] | undefined;
+    }>, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
         startDate?: string | undefined;
         endDate?: string | undefined;
+        productIds?: number[] | undefined;
+    }, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
+        productIds?: number[] | undefined;
+    }>, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: string | undefined;
+        endDate?: string | undefined;
+        productIds?: number[] | undefined;
+    }, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -1654,8 +1694,8 @@ export declare const CreateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     };
 }>;
@@ -1667,15 +1707,15 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
     }, {
         discountId: number;
     }>;
-    body: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodObject<{
+    body: z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodEffects<z.ZodObject<{
         type: z.ZodEnum<["PERCENTAGE", "FIXED", "BOGO", "BULK"]>;
         amount: z.ZodNumber;
         description: z.ZodOptional<z.ZodString>;
         minQty: z.ZodOptional<z.ZodNumber>;
         isActive: z.ZodOptional<z.ZodBoolean>;
         isStoreWide: z.ZodOptional<z.ZodBoolean>;
-        startDate: z.ZodOptional<z.ZodString>;
-        endDate: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
+        endDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
         productIds: z.ZodOptional<z.ZodArray<z.ZodNumber, "many">>;
     }, "strip", z.ZodTypeAny, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1694,8 +1734,8 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1714,8 +1754,8 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1734,8 +1774,8 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>, {
         type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
@@ -1754,8 +1794,48 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
+        productIds?: number[] | undefined;
+    }>, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
         startDate?: string | undefined;
         endDate?: string | undefined;
+        productIds?: number[] | undefined;
+    }, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
+        productIds?: number[] | undefined;
+    }>, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: string | undefined;
+        endDate?: string | undefined;
+        productIds?: number[] | undefined;
+    }, {
+        type: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK";
+        amount: number;
+        description?: string | undefined;
+        minQty?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
@@ -1784,8 +1864,8 @@ export declare const UpdateDiscountSchema: z.ZodObject<{
         minQty?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
         productIds?: number[] | undefined;
     };
 }>;
@@ -1807,15 +1887,15 @@ export declare const DeleteDiscountSchema: z.ZodObject<{
     };
 }>;
 export declare const ListDiscountsSchema: z.ZodObject<{
-    query: z.ZodObject<z.objectUtil.extendShape<{
+    query: z.ZodEffects<z.ZodObject<z.objectUtil.extendShape<{
         page: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
         limit: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
     }, {
         type: z.ZodOptional<z.ZodEnum<["PERCENTAGE", "FIXED", "BOGO", "BULK"]>>;
         isActive: z.ZodOptional<z.ZodBoolean>;
         isStoreWide: z.ZodOptional<z.ZodBoolean>;
-        startDate: z.ZodOptional<z.ZodString>;
-        endDate: z.ZodOptional<z.ZodString>;
+        startDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
+        endDate: z.ZodEffects<z.ZodOptional<z.ZodDate>, string | undefined, Date | undefined>;
     }>, "strip", z.ZodTypeAny, {
         type?: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK" | undefined;
         page?: number | undefined;
@@ -1830,8 +1910,24 @@ export declare const ListDiscountsSchema: z.ZodObject<{
         limit?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
+    }>, {
+        type?: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK" | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
         startDate?: string | undefined;
         endDate?: string | undefined;
+    }, {
+        type?: "PERCENTAGE" | "FIXED" | "BOGO" | "BULK" | undefined;
+        page?: number | undefined;
+        limit?: number | undefined;
+        isActive?: boolean | undefined;
+        isStoreWide?: boolean | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     query: {
@@ -1850,8 +1946,8 @@ export declare const ListDiscountsSchema: z.ZodObject<{
         limit?: number | undefined;
         isActive?: boolean | undefined;
         isStoreWide?: boolean | undefined;
-        startDate?: string | undefined;
-        endDate?: string | undefined;
+        startDate?: Date | undefined;
+        endDate?: Date | undefined;
     };
 }>;
 export declare const GetDiscountSchema: z.ZodObject<{
