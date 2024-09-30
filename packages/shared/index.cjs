@@ -1128,6 +1128,11 @@ const CreateDiscountSchema = zod.z.object({
             .optional()
             .transform(val => val?.toISOString()),
         productIds: zod.z.array(zod.z.coerce.number().positive()).min(1).max(50).optional(),
+    }).refine(({ type, productIds }) => {
+        return ['FIXED', 'BULK'].includes(type) && productIds === undefined;
+    }, {
+        message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
+        path: ['productIds'],
     })
         .refine(({ isStoreWide, productIds }) => {
         return isStoreWide ? !productIds : !!productIds;

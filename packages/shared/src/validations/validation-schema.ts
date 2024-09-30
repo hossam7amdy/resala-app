@@ -498,7 +498,7 @@ export const DeleteReviewSchema = z.object({
 export const CreateDiscountSchema = z.object({
   body: z
     .object({
-      type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+      type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'] as const),
       amount: z.coerce.number().positive().min(0.1),
       description: z.string().max(250).optional(),
       minQty: z.coerce.number().positive().optional(),
@@ -513,6 +513,11 @@ export const CreateDiscountSchema = z.object({
         .optional()
         .transform(val => val?.toISOString()),
       productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
+    }).refine(({ type, productIds }) => {
+      return ['FIXED', 'BULK'].includes(type) && productIds === undefined
+    }, {
+      message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
+      path: ['productIds'],
     })
     .refine(
       ({ isStoreWide, productIds }) => {
