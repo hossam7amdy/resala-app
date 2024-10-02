@@ -43,6 +43,25 @@ export class DiscountService {
     }
   }
 
+  private async _checkAnyStoreWideDiscountIsActive() {
+    const activeStoreWideDiscounts = await this.db.discount.findMany({
+      where: {
+        isStoreWide: true,
+        isActive: true,
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(new Date().toDateString()),
+        },
+      },
+    });
+
+    if (activeStoreWideDiscounts.length > 0) {
+      throw new ConflictError('There is already an active store-wide discount');
+    }
+  }
+
   private async _checkProductsDoNotHaveActiveDiscount(productIds: number[], discountId?: number) {
     if (productIds.length === 0) {
       return Promise.resolve();
@@ -289,6 +308,7 @@ export class DiscountService {
     await Promise.all([
       this._checkProductsExist(productIds),
       this._checkProductsDoNotHaveActiveDiscount(productIds),
+      data.isStoreWide ? this._checkAnyStoreWideDiscountIsActive() : Promise.resolve(),
     ]);
 
     return await this.db.discount.create({
