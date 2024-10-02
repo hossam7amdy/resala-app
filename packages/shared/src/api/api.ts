@@ -476,7 +476,7 @@ export type GetDiscountResponse = DefaultResponseBody & {
 export type ListDiscountsRequest = z.infer<typeof Schemas.ListDiscountsSchema>;
 export type ListDiscountsResponse = DefaultResponseBody & {
   data: {
-    discounts: Discount[];
+    discounts: (Discount & { productsCount: number })[];
     pagination: Pagination;
   };
 };

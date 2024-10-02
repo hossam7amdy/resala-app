@@ -195,7 +195,7 @@ export type Discount = {
   type: DiscountType;
   amount: any; // Decimal type from 'decimal.js' lib
   description: null | string;
-  minQty: null | number;
+  minQty: number;
   isActive: boolean;
   isStoreWide: boolean;
   startDate: null | Date;
