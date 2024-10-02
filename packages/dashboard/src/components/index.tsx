@@ -17,3 +17,5 @@ export { Image } from './image';
 export { Table } from './table';
 export { FullscreenSpinner } from './fullscreen-spinner';
 export { UserDropdown } from './user-dropdown';
+export { IconLink } from './icon-link';
+export { NotificationError } from './notification-error';

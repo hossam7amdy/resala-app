@@ -16,14 +16,16 @@ import type {
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
+import { notFound } from 'next/navigation';
 
 export const listAllDiscounts = async (query: ListDiscountsRequest['query']) => {
-  const response = await callEndpoint<ListDiscountsRequest, ListDiscountsResponse>(
+  return await callEndpoint<ListDiscountsRequest, ListDiscountsResponse>(
     ENDPOINT_CONFIGS.listDiscounts,
-    { query, next: { tags: [ROUTES.DISCOUNTS] } }
+    {
+      query,
+      next: { tags: [ROUTES.DISCOUNTS] },
+    }
   );
-
-  return response.data;
 };
 
 export const findDiscountById = async (id: string, query: GetDiscountRequest['query']) => {
@@ -31,6 +33,10 @@ export const findDiscountById = async (id: string, query: GetDiscountRequest['qu
     ENDPOINT_CONFIGS.getDiscount,
     { params: { discountId: id.toString() }, query, next: { tags: [ROUTES.DISCOUNTS] } }
   );
+
+  if (response.statusCode === 404) {
+    return notFound();
+  }
 
   return response.data;
 };

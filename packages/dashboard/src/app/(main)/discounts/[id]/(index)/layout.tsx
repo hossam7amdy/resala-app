@@ -7,14 +7,14 @@ import Link from 'next/link';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Edit discount',
+  title: 'Discount products',
 };
 
-interface EditDiscountLayoutProps {
+interface DiscountProductsPageProps {
   params: Params;
   children: React.ReactNode;
 }
-const EditDiscountLayout: React.FC<EditDiscountLayoutProps> = ({ params, children }) => {
+const DiscountProductsLayout: React.FC<DiscountProductsPageProps> = ({ params, children }) => {
   return (
     <Row gutter={[10, 30]}>
       <Col span={24}>
@@ -23,7 +23,7 @@ const EditDiscountLayout: React.FC<EditDiscountLayoutProps> = ({ params, childre
             { title: <BackButton /> },
             { title: <Link href={ROUTES.DISCOUNTS}>Discounts</Link> },
             { title: params.id },
-            { title: 'Edit' },
+            { title: 'products' },
           ]}
         />
       </Col>
@@ -32,4 +32,4 @@ const EditDiscountLayout: React.FC<EditDiscountLayoutProps> = ({ params, childre
   );
 };
 
-export default EditDiscountLayout;
+export default DiscountProductsLayout;

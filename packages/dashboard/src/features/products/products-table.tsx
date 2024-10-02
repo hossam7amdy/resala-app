@@ -1,24 +1,21 @@
 'use client';
 
-import { Image, PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
+import { IconLink, Image, PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import { deleteProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
-import { EditOutlined, SelectOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Button, Space } from 'antd';
+import { Button, Space, Table } from 'antd';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['products'] }> = ({
   products,
 }) => {
-  const router = useRouter();
-
   return (
-    <Table
+    <Table<Product>
       dataSource={products}
       rowKey={record => record.id}
       rowClassName={() => 'table-row-pointer'}
@@ -55,11 +52,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
           onCell: () => ({
             onClick: e => e.stopPropagation(),
           }),
-          render: (id: number) => (
-            <Button size="small" type="link" onClick={() => router.push(ROUTES.PRODUCT_STOCKS(id))}>
-              {id} <SelectOutlined className="rotate-90" />
-            </Button>
-          ),
+          render: (id: number) => <IconLink href={ROUTES.PRODUCT_STOCKS(id)}>{id}</IconLink>,
         },
         {
           title: 'Image',

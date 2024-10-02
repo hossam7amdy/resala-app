@@ -1,9 +1,9 @@
 'use client';
 
 import { SelectProductAsync } from '@/components/select-product-async';
-import { createDiscount } from '@/fetch/discount';
+import { createDiscount, updateDiscount } from '@/fetch/discount';
 import { useMutation, useNotification } from '@/hooks';
-import type { CreateDiscountRequest, Discount } from '@resala/shared';
+import type { CreateDiscountRequest } from '@resala/shared';
 import {
   Button,
   Card,
@@ -17,28 +17,31 @@ import {
   Row,
   Select,
 } from 'antd';
+import dayjs from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-type FormValues = CreateDiscountRequest['body'] & {
-  dateRange: [Date, Date];
-};
-
 const { RangePicker } = DatePicker;
 
+type FormValues = CreateDiscountRequest['body'] & {
+  dateRange: [Dayjs, Dayjs];
+};
+
 interface DiscountEditorProps {
-  discount?: Discount;
-  productIds?: number[];
+  id?: string;
+  discount?: CreateDiscountRequest['body'];
 }
-export const DiscountEditor: React.FC<DiscountEditorProps> = ({ discount, productIds }) => {
+export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) => {
   const [form] = Form.useForm();
   const { back } = useRouter();
   const { success, error } = useNotification();
   const { mutate, isLoading } = useMutation({
-    mutationFn: createDiscount,
-    onSuccess: () => {
+    mutationFn: !id ? createDiscount : updateDiscount.bind(null, id),
+    onSuccess: data => {
+      id && back();
       form.resetFields();
-      success('Discount created successfully');
+      success(data?.message ?? 'Discount has been submitted successfully');
     },
     onError: e => {
       error(e.message);
@@ -53,25 +56,28 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ discount, produc
     const [start, end] = dateRange;
 
     return mutate({
-      startDate: new Date(start).toISOString(),
-      endDate: new Date(end).toISOString(),
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
       ...values,
     });
   };
 
   return (
-    <Card title="Create new discount">
+    <Card title="Discount editor">
       <Form
         size="large"
-        name="create-discount"
+        name="discount-editor"
         layout="vertical"
         form={form}
         onFinish={onFinish}
         initialValues={{
           ...discount,
-          productIds,
           isActive: discount?.isActive ?? true,
           isStoreWide: discount?.isStoreWide ?? false,
+          dateRange: [
+            discount?.startDate && dayjs(discount.startDate),
+            discount?.endDate && dayjs(discount.endDate),
+          ],
         }}
       >
         <Form.Item name="isStoreWide" rules={[{ required: true }]}>
@@ -104,7 +110,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ discount, produc
           <Col span={12}>
             <Form.Item
               name="minQty"
-              label={isBogo ? 'Buy X' : 'Minimum Quantity'}
+              label={isBogo ? 'Buy X' : 'Quantity'}
               rules={[{ required: true }]}
             >
               <InputNumber placeholder="10" className="w-full" min={1} />
@@ -136,7 +142,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ discount, produc
         </Form.Item>
 
         <Form.Item name="isActive" valuePropName="checked">
-          <Checkbox>Is active</Checkbox>
+          <Checkbox>Is Active</Checkbox>
         </Form.Item>
 
         <Form.Item>
