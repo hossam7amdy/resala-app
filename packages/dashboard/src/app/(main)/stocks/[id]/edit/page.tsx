@@ -1,11 +1,12 @@
 import { FormSkeleton, SelectColor, SelectSize, StockForm } from '@/features/stocks';
 import { findStockById } from '@/fetch/stocks';
+import type { Params } from '@/types';
 import { Card } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import { notFound } from 'next/navigation';
 import React, { Suspense } from 'react';
 
-const EditStockPage = ({ params }: { params: { id: string } }) => {
+const EditStockPage = ({ params }: { params: Params }) => {
   return (
     <Card>
       <Suspense fallback={<FormSkeleton />}>

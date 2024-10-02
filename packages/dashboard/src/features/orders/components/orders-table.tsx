@@ -1,10 +1,10 @@
 'use client';
 
-import { Pagination, Table, TableColumn } from '@/components';
+import { Pagination, TableColumn } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import type { ListOrdersResponse } from '@resala/shared';
-import { Flex } from 'antd';
+import { Flex, Table } from 'antd';
 
 import { CancelOrder } from './cancel-order';
 import { OrderDetails } from './order-details';
@@ -18,7 +18,7 @@ interface TableProps {
 export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
-      <Table
+      <Table<ListOrdersResponse['data']['orders'][number]>
         rowClassName={() => 'table-row-pointer'}
         rowKey={record => record.id}
         pagination={false}
@@ -84,7 +84,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
         />
       </Table>
       <Flex justify="center">
-        <Pagination totalPages={total} />
+        <Pagination total={total} />
       </Flex>
     </Flex>
   );

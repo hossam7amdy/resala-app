@@ -62,3 +62,10 @@ body {
     color-scheme: light;
   }
 }
+
+@media (max-width: 480px) {
+  .ant-picker-panels {
+    width: 320px;
+    overflow-x: auto;
+  }
+}

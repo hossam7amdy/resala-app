@@ -1,17 +1,17 @@
 'use client';
 
-import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
+import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import { deleteSize } from '@/fetch/sizes';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListSizesResponse } from '@resala/shared';
-import { Space } from 'antd';
+import { Space, Table } from 'antd';
 
 import { SizeEditorModal } from './size-editor-modal';
 
 export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ sizes }) => {
   return (
-    <Table
+    <Table<ListSizesResponse['data'][number]>
       dataSource={sizes}
       pagination={{
         current: 1,

@@ -48,7 +48,7 @@ const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
           actions: <DeleteButton id={review.id} userId={review.userId!} />,
         }))}
       />
-      <Pagination totalPages={pagination.total} />
+      <Pagination total={pagination.total} />
     </Flex>
   );
 };
