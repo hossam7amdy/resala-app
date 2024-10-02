@@ -2639,7 +2639,6 @@ components:
         minQty:
           type: integer
           format: int32
-          nullable: true
         description:
           type: string
           nullable: true
@@ -3389,7 +3388,15 @@ components:
                   $ref: "#/components/schemas/Pagination"
                 discounts:
                   items:
-                    $ref: "#/components/schemas/Discount"
+                    allOf:
+                      - $ref: "#/components/schemas/Discount"
+                      - properties:
+                          productsCount:
+                            type: integer
+                            format: int32
+                        required:
+                          - productsCount
+                        type: object
                   type: array
               required:
                 - pagination
