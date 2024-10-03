@@ -493,11 +493,7 @@ const models: TsoaRoute.Models = {
         },
         isStoreWide: { dataType: 'boolean', required: true },
         isActive: { dataType: 'boolean', required: true },
-        minQty: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'integer' }],
-          required: true,
-        },
+        minQty: { dataType: 'integer', required: true },
         description: {
           dataType: 'union',
           subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
@@ -1337,7 +1333,18 @@ const models: TsoaRoute.Models = {
                 pagination: { ref: 'Pagination', required: true },
                 discounts: {
                   dataType: 'array',
-                  array: { dataType: 'refAlias', ref: 'Discount' },
+                  array: {
+                    dataType: 'intersection',
+                    subSchemas: [
+                      { ref: 'Discount' },
+                      {
+                        dataType: 'nestedObjectLiteral',
+                        nestedProperties: {
+                          productsCount: { dataType: 'integer', required: true },
+                        },
+                      },
+                    ],
+                  },
                   required: true,
                 },
               },

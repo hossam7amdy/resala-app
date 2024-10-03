@@ -1,5 +1,6 @@
 'use client';
 
+import { FormSkeleton } from '@/components';
 import { EditForm } from '@/features/customers';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { EditOutlined } from '@ant-design/icons';
@@ -13,13 +14,13 @@ const ProfilePage: React.FC = () => {
   const toggle = () => setCanEdit(e => !e);
 
   return (
-    <Card title="My profile" loading={isLoading}>
+    <Card title="My profile">
       <Flex justify="end" className="mb-5">
-        <Button icon={<EditOutlined />} type="primary" size="large" onClick={toggle}>
+        <Button icon={<EditOutlined />} type="primary" onClick={toggle}>
           {canEdit ? 'Disable' : 'Enable'} edit
         </Button>
       </Flex>
-      <EditForm disable={!canEdit} customer={user ?? {}} />
+      {isLoading ? <FormSkeleton /> : <EditForm disable={!canEdit} customer={user ?? {}} />}
     </Card>
   );
 };
