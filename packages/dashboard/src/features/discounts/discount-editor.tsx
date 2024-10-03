@@ -138,7 +138,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
           label="Discount period"
           rules={[{ type: 'array' as const, required: true }]}
         >
-          <RangePicker className="w-full" />
+          <RangePicker inputReadOnly className="w-full" />
         </Form.Item>
 
         <Form.Item name="isActive" valuePropName="checked">
