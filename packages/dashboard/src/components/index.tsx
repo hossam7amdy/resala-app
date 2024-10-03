@@ -19,3 +19,4 @@ export { FullscreenSpinner } from './fullscreen-spinner';
 export { UserDropdown } from './user-dropdown';
 export { IconLink } from './icon-link';
 export { NotificationError } from './notification-error';
+export { TableSkeleton } from './table-skeleton';
