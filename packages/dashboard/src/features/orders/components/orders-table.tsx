@@ -1,10 +1,10 @@
 'use client';
 
-import { Pagination, TableColumn } from '@/components';
+import { Pagination, Table, TableColumn } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
 import type { ListOrdersResponse } from '@resala/shared';
-import { Flex, Table } from 'antd';
+import { Flex } from 'antd';
 
 import { CancelOrder } from './cancel-order';
 import { OrderDetails } from './order-details';
@@ -28,9 +28,10 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="ID" dataIndex="id" width="9%" />
+        <TableColumn title="ID" dataIndex="id" width={50} />
         <TableColumn
-          width="13%"
+          ellipsis
+          width={100}
           title="Client"
           dataIndex="user"
           render={user => (
@@ -41,14 +42,14 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           )}
         />
         <TableColumn
-          width="13%"
+          width={125}
           title="Amount"
           dataIndex="total"
           render={amount => formatCurrency(amount)}
         />
-        <TableColumn width="13%" title="Method" dataIndex="paymentMethod" />
+        <TableColumn width={75} title="Method" dataIndex="paymentMethod" />
         <TableColumn
-          width="13%"
+          width={125}
           title="Payment Status"
           render={order => <PaymentStatus order={order} />}
           onCell={() => ({
@@ -56,7 +57,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           })}
         />
         <TableColumn
-          width="13%"
+          width={125}
           title="Order Status"
           render={order => <OrderStatus order={order} />}
           onCell={() => ({
@@ -64,7 +65,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           })}
         />
         <TableColumn
-          width="13%"
+          width={125}
           title="Created Time"
           dataIndex="createdAt"
           render={date => (
@@ -75,7 +76,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           )}
         />
         <TableColumn
-          width="13%"
+          width={100}
           title="Actions"
           render={order => <CancelOrder order={order} />}
           onCell={() => ({
