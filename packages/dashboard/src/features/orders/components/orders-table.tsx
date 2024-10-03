@@ -28,10 +28,8 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="ID" dataIndex="id" width={50} />
         <TableColumn
           ellipsis
-          width={100}
           title="Client"
           dataIndex="user"
           render={user => (
@@ -41,15 +39,9 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
             </Flex>
           )}
         />
+        <TableColumn title="Amount" dataIndex="total" render={amount => formatCurrency(amount)} />
         <TableColumn
-          width={125}
-          title="Amount"
-          dataIndex="total"
-          render={amount => formatCurrency(amount)}
-        />
-        <TableColumn width={75} title="Method" dataIndex="paymentMethod" />
-        <TableColumn
-          width={125}
+          width={150}
           title="Payment Status"
           render={order => <PaymentStatus order={order} />}
           onCell={() => ({
@@ -57,15 +49,14 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           })}
         />
         <TableColumn
-          width={125}
           title="Order Status"
+          width={150}
           render={order => <OrderStatus order={order} />}
           onCell={() => ({
             onClick: e => e.stopPropagation(),
           })}
         />
         <TableColumn
-          width={125}
           title="Created Time"
           dataIndex="createdAt"
           render={date => (
@@ -76,7 +67,6 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           )}
         />
         <TableColumn
-          width={100}
           title="Actions"
           render={order => <CancelOrder order={order} />}
           onCell={() => ({
