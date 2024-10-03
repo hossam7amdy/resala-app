@@ -9,11 +9,10 @@ export const useCurrentUser = () => {
   useEffect(() => {
     (async () => {
       try {
-        setIsLoading(true);
         const user = await getCurrentUser();
         setUser(user);
       } finally {
-        // setIsLoading(false);
+        setIsLoading(false);
       }
     })();
   }, []);
