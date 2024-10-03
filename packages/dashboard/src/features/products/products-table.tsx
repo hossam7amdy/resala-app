@@ -1,13 +1,13 @@
 'use client';
 
-import { IconLink, Image, PopconfirmDeleteButton, ResalaTooltip } from '@/components';
+import { IconLink, Image, PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
 import { deleteProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Button, Space, Table } from 'antd';
+import { Button, Space } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
@@ -49,6 +49,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
         {
           title: 'ID',
           dataIndex: 'id',
+          width: 75,
           onCell: () => ({
             onClick: e => e.stopPropagation(),
           }),
