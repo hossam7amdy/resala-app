@@ -45,7 +45,7 @@ body {
   font-family: var(--font-sans);
 }
 
-.error-list > li {
+.error-list>li {
   margin-left: 30px;
 }
 
@@ -63,9 +63,9 @@ body {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .ant-picker-panels {
-    width: 320px;
+    width: 85dvw;
     overflow-x: auto;
   }
 }
