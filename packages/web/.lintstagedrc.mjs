@@ -1,4 +1,4 @@
-import baseConfig from '../../.lintstagedrc.js';
+import baseConfig from '../../.lintstagedrc.mjs';
 
 export default {
   ...baseConfig,
