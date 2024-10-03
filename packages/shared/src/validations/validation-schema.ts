@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { validationPatterns } from '../patterns/index.js';
+import { OffsetPageParamsSchema } from './common.schema.js';
 
 const UserSchema = z.object({
   email: z.string().min(5).max(128).email(),
@@ -25,12 +26,6 @@ const UserSchema = z.object({
       validationPatterns.passwordContainsUpperCaseCharacter.pattern,
       validationPatterns.passwordContainsUpperCaseCharacter.message
     ),
-});
-
-// Offset page schema
-export const OffsetPageParamsSchema = z.object({
-  page: z.coerce.number().positive().default(1).optional(),
-  limit: z.coerce.number().positive().max(100).default(10).optional(),
 });
 
 // Auth Schemas
@@ -492,143 +487,4 @@ export const DeleteReviewSchema = z.object({
       .positive()
       .transform(val => val.toString()),
   }),
-});
-
-// Discount Schemas
-export const CreateDiscountSchema = z.object({
-  body: z
-    .object({
-      type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'] as const),
-      amount: z.coerce.number().positive().min(0.1),
-      description: z.string().max(250).optional(),
-      minQty: z.coerce.number().positive().optional(),
-      isActive: z.coerce.boolean().optional(),
-      isStoreWide: z.coerce.boolean().optional(),
-      startDate: z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      endDate: z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
-    })
-    .refine(
-      ({ type, productIds }) => {
-        if (['FIXED', 'BULK'].includes(type)) {
-          return productIds === undefined;
-        }
-        return true;
-      },
-      {
-        message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ isStoreWide, productIds }) => {
-        return isStoreWide ? !productIds : !!productIds;
-      },
-      {
-        message: 'Please choose either store-wide or select specific products, but not both.',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ startDate, endDate }) => {
-        // if both startDate and endDate are provided, endDate must be greater than startDate
-        if (startDate && endDate) {
-          const start = new Date(startDate).getTime();
-          const end = new Date(endDate).getTime();
-
-          return end >= start;
-        }
-
-        // if endDate is provided, startDate must be provided
-        return endDate ? !!startDate : true;
-      },
-      {
-        message:
-          'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BULK') return data.minQty;
-        return true;
-      },
-      {
-        message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BOGO') {
-          return data.minQty && data.amount === Math.trunc(data.amount);
-        }
-        return true;
-      },
-      {
-        message: 'Amount must be an integer for BOGO discount type.',
-        path: ['amount'],
-      }
-    ),
-});
-
-export const UpdateDiscountSchema = z.object({
-  params: z.object({
-    discountId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
-  }),
-  body: CreateDiscountSchema.shape.body,
-});
-
-export const DeleteDiscountSchema = z.object({
-  params: UpdateDiscountSchema.shape.params,
-});
-
-export const ListDiscountsSchema = z.object({
-  query: OffsetPageParamsSchema.extend({
-    type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
-    isActive: z.coerce.boolean().optional(),
-    isStoreWide: z.coerce.boolean().optional(),
-    startDate: z.coerce
-      .date()
-      .optional()
-      .transform(val => val?.toISOString()),
-    endDate: z.coerce
-      .date()
-      .optional()
-      .transform(val => val?.toISOString()),
-  }).refine(
-    data => {
-      if (!data.startDate || !data.endDate) return true;
-
-      const startDate = new Date(data.startDate).getTime();
-      const endDate = new Date(data.endDate).getTime();
-      const now = new Date(new Date().toDateString()).getTime();
-
-      return startDate >= now && endDate >= startDate;
-    },
-    {
-      message:
-        'Start date must not be in the past and end date must be greater than the start date.',
-      path: ['startDate'],
-    }
-  ),
-});
-
-export const GetDiscountSchema = z.object({
-  params: z.object({
-    discountId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
-  }),
-  query: OffsetPageParamsSchema,
 });

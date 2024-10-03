@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 export const useCurrentUser = () => {
   const [user, setUser] = useState<User>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -13,7 +13,7 @@ export const useCurrentUser = () => {
         const user = await getCurrentUser();
         setUser(user);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     })();
   }, []);

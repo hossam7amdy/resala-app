@@ -169,7 +169,7 @@ export type Discount = {
   type: DiscountType;
   amount: any;
   description: null | string;
-  minQty: null | number;
+  minQty: number;
   isActive: boolean;
   isStoreWide: boolean;
   startDate: null | Date;

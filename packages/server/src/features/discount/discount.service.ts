@@ -43,6 +43,26 @@ export class DiscountService {
     }
   }
 
+  private async _checkAnyStoreWideDiscountIsActive(discountId?: number) {
+    const activeStoreWideDiscounts = await this.db.discount.findMany({
+      where: {
+        id: { not: discountId },
+        isStoreWide: true,
+        isActive: true,
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(new Date().toDateString()),
+        },
+      },
+    });
+
+    if (activeStoreWideDiscounts.length > 0) {
+      throw new ConflictError('There is already an active store-wide discount');
+    }
+  }
+
   private async _checkProductsDoNotHaveActiveDiscount(productIds: number[], discountId?: number) {
     if (productIds.length === 0) {
       return Promise.resolve();
@@ -58,8 +78,11 @@ export class DiscountService {
             not: discountId,
           },
           isActive: true,
+          startDate: {
+            lte: new Date(),
+          },
           endDate: {
-            gte: new Date(),
+            gte: new Date(new Date().toDateString()),
           },
         },
       },
@@ -129,7 +152,7 @@ export class DiscountService {
             .sub(new Decimal(item.product.price).mul(discount.amount).div(100))
             .toNumber();
           break;
-        case 'BOGO':
+        case 'BOGO': {
           const buyQuantity = discount.amount.toNumber();
           const freeQuantity = discount.minQty ?? 0;
           const cycleQuantity = buyQuantity + freeQuantity;
@@ -140,6 +163,7 @@ export class DiscountService {
             fullPriceCycles * buyQuantity + Math.min(remainingItems, buyQuantity);
           discountedPrice = (fullPriceItems / item.quantity) * item.product.price;
           break;
+        }
       }
 
       if (discountedPrice < lowestPrice) {
@@ -156,27 +180,34 @@ export class DiscountService {
   }
 
   private _applyCartLevelDiscounts(items: CartItem[], discounts: ProductDiscount[]): CartItem[] {
+    const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
+
     let bestDiscount: Discount | null = null;
     let lowestTotalPrice = items.reduce(
       (sum, item) => sum + item.discountedPrice! * item.quantity,
       0
     );
 
+    // eslint-disable-next-line no-unused-vars
     for (const { discountProduct: _, ...discount } of discounts) {
       let discountedTotalPrice = lowestTotalPrice;
 
       switch (discount.type) {
-        case 'FIXED':
-          discountedTotalPrice = Math.max(0, discountedTotalPrice - discount.amount.toNumber());
-          break;
-        case 'BULK':
-          const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-          if (totalQuantity >= (discount.minQty ?? 0)) {
-            discountedTotalPrice = new Decimal(discountedTotalPrice)
-              .sub(new Decimal(discountedTotalPrice).mul(discount.amount).div(100))
-              .toNumber();
+        case 'FIXED': {
+          const fixedPrice = discount.minQty ?? 0;
+          if (totalPrice >= fixedPrice) {
+            discountedTotalPrice = Math.max(0, discountedTotalPrice - discount.amount.toNumber());
           }
           break;
+        }
+        case 'BULK': {
+          const fixedQty = discount.minQty ?? 0;
+          if (totalQty >= fixedQty) {
+            discountedTotalPrice = Math.max(0, discountedTotalPrice - discount.amount.toNumber());
+          }
+          break;
+        }
       }
 
       if (discountedTotalPrice < lowestTotalPrice) {
@@ -289,6 +320,7 @@ export class DiscountService {
     await Promise.all([
       this._checkProductsExist(productIds),
       this._checkProductsDoNotHaveActiveDiscount(productIds),
+      data.isStoreWide ? this._checkAnyStoreWideDiscountIsActive() : Promise.resolve(),
     ]);
 
     return await this.db.discount.create({
@@ -316,6 +348,7 @@ export class DiscountService {
     await Promise.all([
       this._checkProductsExist(productIds),
       this._checkProductsDoNotHaveActiveDiscount(productIds, +discountId),
+      data.isStoreWide ? this._checkAnyStoreWideDiscountIsActive(+discountId) : Promise.resolve(),
     ]);
 
     return await this.db.discount.update({
@@ -380,8 +413,8 @@ export class DiscountService {
     return {
       ...cart,
       items: updatedItems,
-      totalDiscount,
-      totalPrice,
+      totalDiscount: Math.round(totalDiscount),
+      totalPrice: Math.round(totalPrice),
     };
   }
 }

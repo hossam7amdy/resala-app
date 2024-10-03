@@ -685,6 +685,11 @@ const validationPatterns = {
   },
 };
 
+const OffsetPageParamsSchema = zod.z.object({
+  page: zod.z.coerce.number().positive().default(1).optional(),
+  limit: zod.z.coerce.number().positive().max(100).default(10).optional(),
+});
+
 const UserSchema = zod.z.object({
   email: zod.z.string().min(5).max(128).email(),
   isVerified: zod.z.boolean().optional(),
@@ -708,11 +713,6 @@ const UserSchema = zod.z.object({
       validationPatterns.passwordContainsUpperCaseCharacter.pattern,
       validationPatterns.passwordContainsUpperCaseCharacter.message
     ),
-});
-// Offset page schema
-const OffsetPageParamsSchema = zod.z.object({
-  page: zod.z.coerce.number().positive().default(1).optional(),
-  limit: zod.z.coerce.number().positive().max(100).default(10).optional(),
 });
 // Auth Schemas
 const LoginSchema = zod.z.object({
@@ -1118,11 +1118,12 @@ const DeleteReviewSchema = zod.z.object({
       .transform(val => val.toString()),
   }),
 });
-// Discount Schemas
+
+const discountTypes = ['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'];
 const CreateDiscountSchema = zod.z.object({
   body: zod.z
     .object({
-      type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+      type: zod.z.enum(discountTypes),
       amount: zod.z.coerce.number().positive().min(0.1),
       description: zod.z.string().max(250).optional(),
       minQty: zod.z.coerce.number().positive().optional(),
@@ -1213,29 +1214,39 @@ const DeleteDiscountSchema = zod.z.object({
 });
 const ListDiscountsSchema = zod.z.object({
   query: OffsetPageParamsSchema.extend({
-    type: zod.z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']).optional(),
-    isActive: zod.z.coerce.boolean().optional(),
-    isStoreWide: zod.z.coerce.boolean().optional(),
+    type: zod.z
+      .enum([...discountTypes, ''])
+      .optional()
+      .transform(val => val || undefined),
+    isActive: zod.z
+      .string()
+      .optional()
+      .transform(val => (val ? val === 'true' : undefined)),
+    isStoreWide: zod.z
+      .string()
+      .optional()
+      .transform(val => (val ? val === 'true' : undefined)),
     startDate: zod.z.coerce
-      .date()
+      .string()
       .optional()
-      .transform(val => val?.toISOString()),
+      .refine(date => {
+        if (!date) return true;
+        return zod.z.string().date().safeParse(date).success;
+      }),
     endDate: zod.z.coerce
-      .date()
+      .string()
       .optional()
-      .transform(val => val?.toISOString()),
+      .refine(date => {
+        if (!date) return true;
+        return zod.z.string().date().safeParse(date).success;
+      }),
   }).refine(
-    data => {
-      if (!data.startDate || !data.endDate) return true;
-      const startDate = new Date(data.startDate).getTime();
-      const endDate = new Date(data.endDate).getTime();
-      const now = new Date(new Date().toDateString()).getTime();
-      return startDate >= now && endDate >= startDate;
+    ({ startDate, endDate }) => {
+      if (!startDate || !endDate) return true;
+      return new Date(endDate).getTime() >= new Date(startDate).getTime();
     },
     {
-      message:
-        'Start date must not be in the past and end date must be greater than the start date.',
-      path: ['startDate'],
+      message: 'Start date must be greater than or equal to end date.',
     }
   ),
 });
