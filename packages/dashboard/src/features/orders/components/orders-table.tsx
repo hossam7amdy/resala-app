@@ -19,6 +19,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
       <Table<ListOrdersResponse['data']['orders'][number]>
+        scroll={{ x: 768, y: 500 }}
         rowClassName={() => 'table-row-pointer'}
         rowKey={record => record.id}
         pagination={false}

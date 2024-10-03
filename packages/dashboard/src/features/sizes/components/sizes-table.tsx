@@ -12,6 +12,7 @@ import { SizeEditorModal } from './size-editor-modal';
 export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ sizes }) => {
   return (
     <Table<ListSizesResponse['data'][number]>
+      scroll={{ x: 768, y: 500 }}
       dataSource={sizes}
       pagination={{
         current: 1,

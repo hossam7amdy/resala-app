@@ -16,6 +16,8 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
 }) => {
   return (
     <Table<Product>
+      scroll={{ x: 768, y: 500 }}
+      className="w-full"
       dataSource={products}
       rowKey={record => record.id}
       rowClassName={() => 'table-row-pointer'}

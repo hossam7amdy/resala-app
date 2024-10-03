@@ -13,6 +13,7 @@ export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, 
   return (
     <Flex vertical gap={10}>
       <Table<GetStockResponse['data']>
+        scroll={{ x: 768, y: 500 }}
         rowClassName={() => 'table-row-pointer'}
         bordered
         rowKey={s => `${s.product.id}-${s.color.id}`}
