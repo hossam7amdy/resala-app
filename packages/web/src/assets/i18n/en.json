@@ -18,5 +18,42 @@
     "firstOffer": "Free Shipping On Orders Over 1000EGP",
     "secondOffer": "2Free Shipping On Orders Over 1000EGP",
     "thirdOffer": "3Free Shipping On Orders Over 1000EGP"
+  },
+
+  "home": {
+    "popUpProduct": {
+      "miniTitle": "Style",
+      "pTitle": "Simple style",
+      "stBigTitle": "Get",
+      "ndBigTitle": "This",
+      "rdBigTitle": "One!"
+    },
+    "mainSlider": {
+      "stSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "ndSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "rdSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "urSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "veSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      }
+    },
+    "trends": {
+      "mainTitle": "Trends Products"
+    },
+    "allProducts": {},
+    "allCategories": {}
   }
 }

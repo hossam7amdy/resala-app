@@ -3,6 +3,7 @@ import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -14,6 +15,7 @@ import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
 import { TrendsService } from 'src/app/core/services/trends.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
@@ -27,6 +29,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     NgxPaginationModule,
     SearchPipe,
     NgxStarsRatingModule,
+    TranslateModule,
   ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -45,8 +48,27 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner: NgxSpinnerService,
-    private _Trend: TrendsService
+    private _Trend: TrendsService,
+    public _Translate: TranslateService,
+    private _RTLStatus: Translate_Service
   ) {}
+  langStorage: any = localStorage.getItem('language');
+  // Change page Direction as per Selected Lang
+  changePageDirection(): boolean {
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+    console.log('topbar rtlFun', rtlStat);
+    return rtlStat;
+  }
 
   // Trends
   trendProducts: any = [];
@@ -173,7 +195,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     autoplay: true,
     autoplayTimeout: 5000,
     autoplaySpeed: 3000,
-
+    rtl: this.changePageDirection(),
     autoplayHoverPause: true,
   };
 
@@ -195,6 +217,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     autoplaySpeed: 10000,
     margin: 6,
     autoplayHoverPause: true,
+    rtl: this.changePageDirection(),
   };
   //navText: ['', '>>'],
 
@@ -208,7 +231,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     margin: 5,
     autoWidth: true,
     navSpeed: 700,
+
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    rtl: this.changePageDirection(),
     responsive: {
       0: {
         items: 1,
