@@ -69,8 +69,7 @@ export class RegisterComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  handleForm(registerForm: FormGroup): void {
+  handleForm(_registerForm: FormGroup): void {
     this.isLoading = true;
 
     const userData = this.registerForm.value;
