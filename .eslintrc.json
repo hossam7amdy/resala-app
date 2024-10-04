@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true
@@ -9,8 +10,7 @@
     "**/dist",
     "packages/shared/**/*.d.ts",
     "packages/shared/**/*.js",
-    "packages/shared/**/*.cjs",
-    "packages/web/"
+    "packages/shared/**/*.cjs"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
