@@ -23,10 +23,6 @@ export declare const validationPatterns: {
     pattern: RegExp;
     message: string;
   };
-  validateName: {
-    pattern: RegExp;
-    message: string;
-  };
   validateURL: {
     pattern: RegExp;
     message: string;
@@ -48,10 +44,6 @@ export declare const validationPatterns: {
     message: string;
   };
   validateLatinDigits: {
-    pattern: RegExp;
-    message: string;
-  };
-  validateLngLat: {
     pattern: RegExp;
     message: string;
   };
