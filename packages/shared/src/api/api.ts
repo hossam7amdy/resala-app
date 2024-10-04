@@ -11,11 +11,11 @@ import type {
   Cart,
   Category,
   Color,
+  Discount,
   Image,
   Order,
   OrderItem,
   Pagination,
-  Payment,
   Product,
   Review,
   Shipping,
@@ -26,8 +26,8 @@ import type {
 } from '../types/index.js';
 import type * as Schemas from '../validations/index.js';
 
-export type DefaultRequestQuery = {
-  query: Partial<z.infer<typeof Schemas.DefaultQuerySchema>['query']>;
+export type ListRequestQuery = {
+  query: z.infer<typeof Schemas.OffsetPageParamsSchema>;
 };
 
 export type DefaultResponseBody = {
@@ -39,12 +39,14 @@ export type DefaultResponseBody = {
 export type LoginRequest = z.infer<typeof Schemas.LoginSchema>;
 export type LoginResponse = DefaultResponseBody & {
   data: {
-    expiresAt: Date;
     accessToken: string;
     refreshToken: string;
     user: User;
   };
 };
+
+export type GoogleLoginRequest = z.infer<typeof Schemas.GoogleLoginSchema>;
+export type GoogleLoginResponse = undefined;
 
 export type RegisterRequest = z.infer<typeof Schemas.RegisterSchema>;
 export type RegisterResponse = DefaultResponseBody;
@@ -52,7 +54,6 @@ export type RegisterResponse = DefaultResponseBody;
 export type RefreshTokenRequest = z.infer<typeof Schemas.RefreshTokenSchema>;
 export type RefreshTokenResponse = DefaultResponseBody & {
   data: {
-    expiresAt: Date;
     accessToken: string;
     refreshToken: string;
   };
@@ -61,16 +62,11 @@ export type RefreshTokenResponse = DefaultResponseBody & {
 export type VerifyEmailRequest = z.infer<typeof Schemas.VerifyEmailSchema>;
 export type VerifyEmailResponse = DefaultResponseBody;
 
-export type ResendVerificationEmailRequest = undefined;
+export type ResendVerificationEmailRequest = z.infer<typeof Schemas.ResendVerificationSchema>;
 export type ResendVerificationEmailResponse = DefaultResponseBody;
 
 export type ForgotPasswordRequest = z.infer<typeof Schemas.ForgotPasswordSchema>;
-export type ForgotPasswordResponse = DefaultResponseBody & {
-  data: {
-    resetToken: string;
-    expiresAt: Date;
-  };
-};
+export type ForgotPasswordResponse = DefaultResponseBody;
 
 export type ResetPasswordRequest = z.infer<typeof Schemas.ResetPasswordSchema>;
 export type ResetPasswordResponse = DefaultResponseBody;
@@ -84,7 +80,7 @@ export type GetUserResponse = DefaultResponseBody & {
   data: User;
 };
 
-export type ListUsersRequest = z.infer<typeof Schemas.DefaultQuerySchema>;
+export type ListUsersRequest = z.infer<typeof Schemas.ListUsersSchema>;
 export type ListUsersResponse = DefaultResponseBody & {
   data: {
     pagination: Pagination;
@@ -126,7 +122,7 @@ export type GetCategoryResponse = DefaultResponseBody & {
   data: Category;
 };
 
-export type ListCategoriesRequest = DefaultRequestQuery;
+export type ListCategoriesRequest = ListRequestQuery;
 export type ListCategoriesResponse = DefaultResponseBody & {
   data: GetCategoryResponse['data'][];
 };
@@ -144,7 +140,9 @@ export type DeleteCategoryResponse = GetCategoryResponse;
 export type GetProductRequest = z.infer<typeof Schemas.GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
   data: Product & {
+    avgRating: number;
     category: Category;
+    discounts: Discount[];
   };
 };
 
@@ -173,7 +171,7 @@ export type GetColorResponse = DefaultResponseBody & {
   data: Color;
 };
 
-export type ListColorsRequest = DefaultRequestQuery;
+export type ListColorsRequest = ListRequestQuery;
 export type ListColorsResponse = DefaultResponseBody & {
   data: GetColorResponse['data'][];
 };
@@ -193,7 +191,7 @@ export type GetSizeResponse = DefaultResponseBody & {
   data: Size;
 };
 
-export type ListSizesRequest = DefaultRequestQuery;
+export type ListSizesRequest = ListRequestQuery;
 export type ListSizesResponse = DefaultResponseBody & {
   data: GetSizeResponse['data'][];
 };
@@ -262,10 +260,13 @@ export type GetCartResponse = DefaultResponseBody & {
   data: {
     totalQuantity: number;
     totalPrice: number;
-    items: (Omit<Cart, 'stockId'> & {
+    totalDiscount?: number;
+    items: (Cart & {
+      discountedPrice?: number;
+      appliedDiscount?: Discount;
       product: Product;
-      images: Omit<Image, 'colorId' | 'productId'>[];
-      stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+      images: Image[];
+      stock: Stock & {
         color: Color;
         size: Size;
       };
@@ -303,9 +304,12 @@ export type CreateOrderResponse = DefaultResponseBody & {
 export type GetOrderRequest = z.infer<typeof Schemas.GetOrderSchema>;
 export type GetOrderResponse = DefaultResponseBody & {
   data: Order & {
-    user: User | null;
-    orderItems: OrderItem[];
-    paymentDetails: Payment | null;
+    user: User;
+    orderItems: (OrderItem & {
+      product: Product;
+      color: string;
+      size: string;
+    })[];
     shippingDetails: (Omit<Shipping, 'addressId' | 'orderId'> & { address: Address }) | null;
   };
 };
@@ -361,8 +365,7 @@ export type RefundPaymentResponse = DefaultResponseBody;
 export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;
 export type GetReviewResponse = DefaultResponseBody & {
   data: Review & {
-    user: User | null;
-    product: Product;
+    user: User;
   };
 };
 
@@ -384,3 +387,107 @@ export type UpdateReviewResponse = CreateReviewResponse;
 
 export type DeleteReviewRequest = z.infer<typeof Schemas.DeleteReviewSchema>;
 export type DeleteReviewResponse = CreateReviewResponse;
+
+// Dashboard types
+export type GetDashboardOverviewRequest = undefined;
+export type GetDashboardOverviewResponse = DefaultResponseBody & {
+  data: {
+    totalProducts: number;
+    totalOrders: number;
+    totalCustomers: number;
+    totalSales: number;
+    totalRefund: number;
+    totalRevenue: number;
+  };
+};
+
+export type GetSalesTrendsRequest = undefined;
+export type GetSalesTrendsResponse = DefaultResponseBody & {
+  data: {
+    trends: {
+      date: string;
+      sales: number;
+    }[];
+  };
+};
+
+export type GetOrdersStatusRequest = undefined;
+export type GetOrdersStatusResponse = DefaultResponseBody & {
+  data: {
+    pending: number;
+    shipped: number;
+    delivered: number;
+    canceled: number;
+    fulfilled: number;
+  };
+};
+
+export type GetInventoryStatusRequest = undefined;
+export type GetInventoryStatusResponse = DefaultResponseBody & {
+  data: {
+    lowStock: {
+      stockRemaining: number;
+      product: Product;
+      color: Color;
+      size: Size;
+    }[];
+    outOfStock: {
+      product: Product;
+      color: Color;
+      size: Size;
+    }[];
+  };
+};
+
+export type ListCustomersFeedbackRequest = undefined;
+export type ListCustomersFeedbackResponse = DefaultResponseBody & {
+  data: {
+    averageRating: number;
+    recentFeedback: (Review & {
+      user: User;
+      product: Product;
+    })[];
+  };
+};
+
+export type ListTopProductsRequest = undefined;
+export type ListTopProductsResponse = DefaultResponseBody & {
+  data: { unitsSold: number; product: Product }[];
+};
+
+export type ListTopCustomersRequest = undefined;
+export type ListTopCustomersResponse = DefaultResponseBody & {
+  data: {
+    totalPaid: number;
+    totalOrders: number;
+    user: User;
+  }[];
+};
+
+// Discount types
+export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
+export type GetDiscountResponse = DefaultResponseBody & {
+  data: Discount & {
+    pagination: Pagination;
+    products: Product[];
+  };
+};
+
+export type ListDiscountsRequest = z.infer<typeof Schemas.ListDiscountsSchema>;
+export type ListDiscountsResponse = DefaultResponseBody & {
+  data: {
+    discounts: (Discount & { productsCount: number })[];
+    pagination: Pagination;
+  };
+};
+
+export type CreateDiscountRequest = z.infer<typeof Schemas.CreateDiscountSchema>;
+export type CreateDiscountResponse = DefaultResponseBody & {
+  data: Discount;
+};
+
+export type UpdateDiscountRequest = z.infer<typeof Schemas.UpdateDiscountSchema>;
+export type UpdateDiscountResponse = CreateDiscountResponse;
+
+export type DeleteDiscountRequest = z.infer<typeof Schemas.DeleteDiscountSchema>;
+export type DeleteDiscountResponse = CreateDiscountResponse;

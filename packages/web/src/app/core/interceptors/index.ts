@@ -12,4 +12,3 @@ export const httpInterceptors = [
   // { provide: HTTP_INTERCEPTORS, useClass: RouterLoaderInterceptor, multi: true, },
   // { provide: HTTP_INTERCEPTORS, useClass: HttpLoadingInterceptor, multi: true },
 ];
-

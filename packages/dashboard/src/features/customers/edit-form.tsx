@@ -1,17 +1,20 @@
 'use client';
 
-import { updateUser } from '@/actions/user';
+import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
 import { Role, type User, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { ResendEmailVerificationButton } from './resend-email-verification-button';
+
 interface EditFormProps {
+  disable?: boolean;
   customer: Partial<User>;
 }
 
-export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
+export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer }) => {
   const router = useRouter();
 
   const [form] = Form.useForm();
@@ -34,6 +37,7 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
 
   return (
     <Form
+      disabled={disable}
       form={form}
       name="edit-customer"
       size="large"
@@ -91,7 +95,15 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
         hasFeedback
         rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}
       >
-        <Input placeholder="example@mail.com" disabled />
+        <Input
+          disabled
+          placeholder="example@mail.com"
+          addonAfter={
+            !customer.isEmailVerified && (
+              <ResendEmailVerificationButton email={customer?.email ?? ''} />
+            )
+          }
+        />
       </Form.Item>
 
       <Form.Item
@@ -105,7 +117,7 @@ export const EditForm: React.FC<EditFormProps> = ({ customer }) => {
       >
         <Select
           placeholder="Select Role"
-          disabled={customer.role === Role.ADMIN}
+          disabled={customer.role === Role.ADMIN || disable}
           options={[
             { label: 'Admin', value: Role.ADMIN },
             { label: 'Moderator', value: Role.MODERATOR },

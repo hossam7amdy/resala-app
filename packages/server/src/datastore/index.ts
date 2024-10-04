@@ -8,7 +8,14 @@ export const initDb = async (datasourceUrl?: string) => {
   if (!db) {
     console.log('Initializing database...');
 
-    db = new DataStore({ datasourceUrl });
+    db = new DataStore({
+      datasourceUrl,
+      omit: {
+        user: {
+          password: true,
+        },
+      },
+    });
   }
 
   await db.$connect();

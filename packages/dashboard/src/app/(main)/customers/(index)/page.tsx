@@ -1,16 +1,9 @@
-import { listUsersPaginated } from '@/data/user';
 import { CustomersTable } from '@/features/customers';
+import { listUsers } from '@/fetch/users';
+import type { ListUsersRequest } from '@resala/shared';
 
-const CustomerPage = async ({
-  searchParams,
-}: {
-  searchParams?: { page?: string; limit?: string; query?: string };
-}) => {
-  const page = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
-  const query = searchParams?.query || '';
-
-  const { users, pagination } = await listUsersPaginated({ page, limit, query });
+const CustomerPage = async ({ searchParams }: { searchParams?: ListUsersRequest['query'] }) => {
+  const { users, pagination } = await listUsers(searchParams ?? {});
 
   return <CustomersTable users={users} pagination={pagination} />;
 };

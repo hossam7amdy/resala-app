@@ -12,9 +12,15 @@ import { AddressController } from './../features/address/address.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../features/auth/auth.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { GoogleOAuthController } from './../features/auth/google-oauth.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CategoryController } from './../features/category/category.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ColorController } from './../features/color/color.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DashboardController } from './../features/dashboard/dashboard.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DiscountController } from './../features/discount/discount.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImageController } from './../features/image/image.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -77,10 +83,11 @@ const models: TsoaRoute.Models = {
         role: { ref: 'RoleType', required: true },
         lastName: { dataType: 'string', required: true },
         firstName: { dataType: 'string', required: true },
+        isPhoneVerified: { dataType: 'boolean', required: true },
         phone: { dataType: 'string', required: true },
-        isVerified: { dataType: 'boolean', required: true },
+        isEmailVerified: { dataType: 'boolean', required: true },
         email: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -106,9 +113,9 @@ const models: TsoaRoute.Models = {
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        total: { dataType: 'double', required: true },
-        limit: { dataType: 'double', required: true },
-        page: { dataType: 'double', required: true },
+        total: { dataType: 'integer', required: true },
+        limit: { dataType: 'integer', required: true },
+        page: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -162,11 +169,6 @@ const models: TsoaRoute.Models = {
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Decimal: {
-    dataType: 'refAlias',
-    type: { dataType: 'string', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   Product: {
     dataType: 'refAlias',
     type: {
@@ -176,22 +178,13 @@ const models: TsoaRoute.Models = {
         createdAt: { dataType: 'datetime', required: true },
         imageUrl: { dataType: 'string', required: true },
         imageKey: { dataType: 'string', required: true },
-        price: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
+        price: { dataType: 'any', required: true },
         enDescription: { dataType: 'string', required: true },
         arDescription: { dataType: 'string', required: true },
         enName: { dataType: 'string', required: true },
         arName: { dataType: 'string', required: true },
-        categoryId: { dataType: 'double', required: true },
-        id: { dataType: 'double', required: true },
+        categoryId: { dataType: 'integer', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -207,7 +200,7 @@ const models: TsoaRoute.Models = {
         enName: { dataType: 'string', required: true },
         arName: { dataType: 'string', required: true },
         code: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -218,8 +211,8 @@ const models: TsoaRoute.Models = {
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        sizeId: { dataType: 'double', required: true },
-        quantity: { dataType: 'double', required: true },
+        sizeId: { dataType: 'integer', required: true },
+        quantity: { dataType: 'integer', required: true },
         createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
       },
@@ -237,7 +230,7 @@ const models: TsoaRoute.Models = {
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
         createdAt: { dataType: 'datetime', required: true },
         isPrimary: { dataType: 'boolean', required: true },
         imageKey: { dataType: 'string', required: true },
@@ -279,7 +272,7 @@ const models: TsoaRoute.Models = {
                         dataType: 'nestedObjectLiteral',
                         nestedProperties: {
                           size: { dataType: 'string', required: true },
-                          stockId: { dataType: 'double', required: true },
+                          stockId: { dataType: 'integer', required: true },
                         },
                       },
                     ],
@@ -330,7 +323,7 @@ const models: TsoaRoute.Models = {
                               dataType: 'nestedObjectLiteral',
                               nestedProperties: {
                                 size: { dataType: 'string', required: true },
-                                stockId: { dataType: 'double', required: true },
+                                stockId: { dataType: 'integer', required: true },
                               },
                             },
                           ],
@@ -361,11 +354,11 @@ const models: TsoaRoute.Models = {
       nestedProperties: {
         updatedAt: { dataType: 'datetime', required: true },
         createdAt: { dataType: 'datetime', required: true },
-        quantity: { dataType: 'double', required: true },
-        sizeId: { dataType: 'double', required: true },
-        colorId: { dataType: 'double', required: true },
-        productId: { dataType: 'double', required: true },
-        id: { dataType: 'double', required: true },
+        quantity: { dataType: 'integer', required: true },
+        sizeId: { dataType: 'integer', required: true },
+        colorId: { dataType: 'integer', required: true },
+        productId: { dataType: 'integer', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -404,7 +397,7 @@ const models: TsoaRoute.Models = {
         updatedAt: { dataType: 'datetime', required: true },
         createdAt: { dataType: 'datetime', required: true },
         name: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -461,42 +454,74 @@ const models: TsoaRoute.Models = {
     type: { ref: 'GetSizeResponse', validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  'Pick_Cart.Exclude_keyofCart.stockId__': {
+  Cart: {
     dataType: 'refAlias',
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        userId: { dataType: 'double', required: true },
-        quantity: { dataType: 'double', required: true },
-        createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        quantity: { dataType: 'integer', required: true },
+        stockId: { dataType: 'integer', required: true },
+        userId: { dataType: 'integer', required: true },
       },
       validators: {},
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  'Omit_Cart.stockId_': {
+  DiscountType: {
     dataType: 'refAlias',
-    type: { ref: 'Pick_Cart.Exclude_keyofCart.stockId__', validators: {} },
+    type: { dataType: 'enum', enums: ['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'], validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  'Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__': {
+  Discount: {
     dataType: 'refAlias',
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        id: { dataType: 'double', required: true },
-        quantity: { dataType: 'double', required: true },
-        createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
+        createdAt: { dataType: 'datetime', required: true },
+        endDate: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'datetime' }],
+          required: true,
+        },
+        startDate: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'datetime' }],
+          required: true,
+        },
+        isStoreWide: { dataType: 'boolean', required: true },
+        isActive: { dataType: 'boolean', required: true },
+        minQty: { dataType: 'integer', required: true },
+        description: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
+        amount: { dataType: 'any', required: true },
+        type: { ref: 'DiscountType', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  'Omit_Stock.colorId-or-sizeId-or-productId_': {
+  Image: {
     dataType: 'refAlias',
-    type: { ref: 'Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__', validators: {} },
+    type: {
+      dataType: 'nestedObjectLiteral',
+      nestedProperties: {
+        createdAt: { dataType: 'datetime', required: true },
+        imageUrl: { dataType: 'string', required: true },
+        imageKey: { dataType: 'string', required: true },
+        isPrimary: { dataType: 'boolean', required: true },
+        productId: { dataType: 'integer', required: true },
+        colorId: { dataType: 'integer', required: true },
+        id: { dataType: 'integer', required: true },
+      },
+      validators: {},
+    },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   GetCartResponse: {
@@ -516,14 +541,14 @@ const models: TsoaRoute.Models = {
                   array: {
                     dataType: 'intersection',
                     subSchemas: [
-                      { ref: 'Omit_Cart.stockId_' },
+                      { ref: 'Cart' },
                       {
                         dataType: 'nestedObjectLiteral',
                         nestedProperties: {
                           stock: {
                             dataType: 'intersection',
                             subSchemas: [
-                              { ref: 'Omit_Stock.colorId-or-sizeId-or-productId_' },
+                              { ref: 'Stock' },
                               {
                                 dataType: 'nestedObjectLiteral',
                                 nestedProperties: {
@@ -536,21 +561,21 @@ const models: TsoaRoute.Models = {
                           },
                           images: {
                             dataType: 'array',
-                            array: {
-                              dataType: 'refAlias',
-                              ref: 'Omit_Image.colorId-or-productId_',
-                            },
+                            array: { dataType: 'refAlias', ref: 'Image' },
                             required: true,
                           },
                           product: { ref: 'Product', required: true },
+                          appliedDiscount: { ref: 'Discount' },
+                          discountedPrice: { dataType: 'integer' },
                         },
                       },
                     ],
                   },
                   required: true,
                 },
-                totalPrice: { dataType: 'double', required: true },
-                totalQuantity: { dataType: 'double', required: true },
+                totalDiscount: { dataType: 'integer' },
+                totalPrice: { dataType: 'integer', required: true },
+                totalQuantity: { dataType: 'integer', required: true },
               },
               required: true,
             },
@@ -576,7 +601,7 @@ const models: TsoaRoute.Models = {
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        userId: { dataType: 'double', required: true },
+        userId: { dataType: 'integer', required: true },
         createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
       },
@@ -641,14 +666,14 @@ const models: TsoaRoute.Models = {
           subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
           required: true,
         },
-        rating: { dataType: 'double', required: true },
+        rating: { dataType: 'integer', required: true },
         userId: {
           dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'integer' }],
           required: true,
         },
-        productId: { dataType: 'double', required: true },
-        id: { dataType: 'double', required: true },
+        productId: { dataType: 'integer', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -694,14 +719,7 @@ const models: TsoaRoute.Models = {
                 { ref: 'Review' },
                 {
                   dataType: 'nestedObjectLiteral',
-                  nestedProperties: {
-                    product: { ref: 'Product', required: true },
-                    user: {
-                      dataType: 'union',
-                      subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
-                      required: true,
-                    },
-                  },
+                  nestedProperties: { user: { ref: 'User', required: true } },
                 },
               ],
               required: true,
@@ -733,14 +751,7 @@ const models: TsoaRoute.Models = {
                       { ref: 'Review' },
                       {
                         dataType: 'nestedObjectLiteral',
-                        nestedProperties: {
-                          product: { ref: 'Product', required: true },
-                          user: {
-                            dataType: 'union',
-                            subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
-                            required: true,
-                          },
-                        },
+                        nestedProperties: { user: { ref: 'User', required: true } },
                       },
                     ],
                   },
@@ -766,7 +777,7 @@ const models: TsoaRoute.Models = {
         createdAt: { dataType: 'datetime', required: true },
         enName: { dataType: 'string', required: true },
         arName: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -787,7 +798,15 @@ const models: TsoaRoute.Models = {
                 { ref: 'Product' },
                 {
                   dataType: 'nestedObjectLiteral',
-                  nestedProperties: { category: { ref: 'Category', required: true } },
+                  nestedProperties: {
+                    discounts: {
+                      dataType: 'array',
+                      array: { dataType: 'refAlias', ref: 'Discount' },
+                      required: true,
+                    },
+                    category: { ref: 'Category', required: true },
+                    avgRating: { dataType: 'integer', required: true },
+                  },
                 },
               ],
               required: true,
@@ -820,7 +839,15 @@ const models: TsoaRoute.Models = {
                       { ref: 'Product' },
                       {
                         dataType: 'nestedObjectLiteral',
-                        nestedProperties: { category: { ref: 'Category', required: true } },
+                        nestedProperties: {
+                          discounts: {
+                            dataType: 'array',
+                            array: { dataType: 'refAlias', ref: 'Discount' },
+                            required: true,
+                          },
+                          category: { ref: 'Category', required: true },
+                          avgRating: { dataType: 'integer', required: true },
+                        },
                       },
                     ],
                   },
@@ -875,8 +902,8 @@ const models: TsoaRoute.Models = {
               nestedProperties: {
                 created_at: { dataType: 'string', required: true },
                 has_parent_transaction: { dataType: 'boolean', required: true },
-                profile_id: { dataType: 'double', required: true },
-                integration_id: { dataType: 'double', required: true },
+                profile_id: { dataType: 'integer', required: true },
+                integration_id: { dataType: 'integer', required: true },
                 is_3d_secure: { dataType: 'boolean', required: true },
                 is_refunded: { dataType: 'boolean', required: true },
                 is_voided: { dataType: 'boolean', required: true },
@@ -884,9 +911,9 @@ const models: TsoaRoute.Models = {
                 is_capture: { dataType: 'boolean', required: true },
                 is_auth: { dataType: 'boolean', required: true },
                 success: { dataType: 'boolean', required: true },
-                amount_cents: { dataType: 'double', required: true },
+                amount_cents: { dataType: 'integer', required: true },
                 pending: { dataType: 'boolean', required: true },
-                id: { dataType: 'double', required: true },
+                id: { dataType: 'integer', required: true },
               },
               additionalProperties: { dataType: 'any' },
               required: true,
@@ -955,43 +982,21 @@ const models: TsoaRoute.Models = {
         },
         paymentStatus: { ref: 'PaymentStatusType', required: true },
         paymentMethod: { ref: 'PaymentMethodType', required: true },
+        transactionId: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
         orderStatus: { ref: 'OrderStatusType', required: true },
-        total: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
-        discount: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
-        subtotal: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
+        total: { dataType: 'any', required: true },
+        discount: { dataType: 'any', required: true },
+        subtotal: { dataType: 'any', required: true },
         userId: {
           dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'integer' }],
           required: true,
         },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -1004,52 +1009,11 @@ const models: TsoaRoute.Models = {
       nestedProperties: {
         updatedAt: { dataType: 'datetime', required: true },
         createdAt: { dataType: 'datetime', required: true },
-        quantity: { dataType: 'double', required: true },
-        imageUrl: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'string' }, { dataType: 'enum', enums: [null] }],
-          required: true,
-        },
-        price: {
-          dataType: 'union',
-          subSchemas: [
-            { dataType: 'double' },
-            { ref: 'Decimal' },
-            { dataType: 'string' },
-            { dataType: 'any' },
-          ],
-          required: true,
-        },
-        size: { dataType: 'string', required: true },
-        color: { dataType: 'string', required: true },
-        name: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
-      },
-      validators: {},
-    },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Payment: {
-    dataType: 'refAlias',
-    type: {
-      dataType: 'nestedObjectLiteral',
-      nestedProperties: {
-        transactionOrderId: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'enum', enums: [null] }],
-          required: true,
-        },
-        transactionId: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'double' }, { dataType: 'enum', enums: [null] }],
-          required: true,
-        },
-        paymentLink: {
-          dataType: 'union',
-          subSchemas: [{ dataType: 'string' }, { dataType: 'enum', enums: [null] }],
-          required: true,
-        },
-        orderId: { dataType: 'double', required: true },
+        quantity: { dataType: 'integer', required: true },
+        price: { dataType: 'any', required: true },
+        stockId: { dataType: 'integer', required: true },
+        productId: { dataType: 'integer', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -1060,7 +1024,7 @@ const models: TsoaRoute.Models = {
     type: {
       dataType: 'nestedObjectLiteral',
       nestedProperties: {
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
         createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
         cost: { dataType: 'any', required: true },
@@ -1091,7 +1055,7 @@ const models: TsoaRoute.Models = {
         },
         floor: {
           dataType: 'union',
-          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'double' }],
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'integer' }],
           required: true,
         },
         building: {
@@ -1103,7 +1067,7 @@ const models: TsoaRoute.Models = {
         city: { dataType: 'string', required: true },
         state: { dataType: 'string', required: true },
         country: { dataType: 'string', required: true },
-        id: { dataType: 'double', required: true },
+        id: { dataType: 'integer', required: true },
       },
       validators: {},
     },
@@ -1142,21 +1106,25 @@ const models: TsoaRoute.Models = {
                       ],
                       required: true,
                     },
-                    paymentDetails: {
-                      dataType: 'union',
-                      subSchemas: [{ ref: 'Payment' }, { dataType: 'enum', enums: [null] }],
-                      required: true,
-                    },
                     orderItems: {
                       dataType: 'array',
-                      array: { dataType: 'refAlias', ref: 'OrderItem' },
+                      array: {
+                        dataType: 'intersection',
+                        subSchemas: [
+                          { ref: 'OrderItem' },
+                          {
+                            dataType: 'nestedObjectLiteral',
+                            nestedProperties: {
+                              size: { dataType: 'string', required: true },
+                              color: { dataType: 'string', required: true },
+                              product: { ref: 'Product', required: true },
+                            },
+                          },
+                        ],
+                      },
                       required: true,
                     },
-                    user: {
-                      dataType: 'union',
-                      subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
-                      required: true,
-                    },
+                    user: { ref: 'User', required: true },
                   },
                 },
               ],
@@ -1209,21 +1177,25 @@ const models: TsoaRoute.Models = {
                             ],
                             required: true,
                           },
-                          paymentDetails: {
-                            dataType: 'union',
-                            subSchemas: [{ ref: 'Payment' }, { dataType: 'enum', enums: [null] }],
-                            required: true,
-                          },
                           orderItems: {
                             dataType: 'array',
-                            array: { dataType: 'refAlias', ref: 'OrderItem' },
+                            array: {
+                              dataType: 'intersection',
+                              subSchemas: [
+                                { ref: 'OrderItem' },
+                                {
+                                  dataType: 'nestedObjectLiteral',
+                                  nestedProperties: {
+                                    size: { dataType: 'string', required: true },
+                                    color: { dataType: 'string', required: true },
+                                    product: { ref: 'Product', required: true },
+                                  },
+                                },
+                              ],
+                            },
                             required: true,
                           },
-                          user: {
-                            dataType: 'union',
-                            subSchemas: [{ ref: 'User' }, { dataType: 'enum', enums: [null] }],
-                            required: true,
-                          },
+                          user: { ref: 'User', required: true },
                         },
                       },
                     ],
@@ -1271,28 +1243,6 @@ const models: TsoaRoute.Models = {
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  CreateImageResponse: {
-    dataType: 'refAlias',
-    type: { ref: 'DefaultResponseBody', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  Image: {
-    dataType: 'refAlias',
-    type: {
-      dataType: 'nestedObjectLiteral',
-      nestedProperties: {
-        createdAt: { dataType: 'datetime', required: true },
-        imageUrl: { dataType: 'string', required: true },
-        imageKey: { dataType: 'string', required: true },
-        isPrimary: { dataType: 'boolean', required: true },
-        productId: { dataType: 'double', required: true },
-        colorId: { dataType: 'double', required: true },
-        id: { dataType: 'double', required: true },
-      },
-      validators: {},
-    },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   ListImagesResponse: {
     dataType: 'refAlias',
     type: {
@@ -1314,6 +1264,11 @@ const models: TsoaRoute.Models = {
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateImageResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'DefaultResponseBody', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   UpdateImageResponse: {
     dataType: 'refAlias',
     type: {
@@ -1323,6 +1278,334 @@ const models: TsoaRoute.Models = {
         {
           dataType: 'nestedObjectLiteral',
           nestedProperties: { data: { ref: 'Image', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetDiscountResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'intersection',
+              subSchemas: [
+                { ref: 'Discount' },
+                {
+                  dataType: 'nestedObjectLiteral',
+                  nestedProperties: {
+                    products: {
+                      dataType: 'array',
+                      array: { dataType: 'refAlias', ref: 'Product' },
+                      required: true,
+                    },
+                    pagination: { ref: 'Pagination', required: true },
+                  },
+                },
+              ],
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListDiscountsResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                pagination: { ref: 'Pagination', required: true },
+                discounts: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'intersection',
+                    subSchemas: [
+                      { ref: 'Discount' },
+                      {
+                        dataType: 'nestedObjectLiteral',
+                        nestedProperties: {
+                          productsCount: { dataType: 'integer', required: true },
+                        },
+                      },
+                    ],
+                  },
+                  required: true,
+                },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  CreateDiscountResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { data: { ref: 'Discount', required: true } },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  UpdateDiscountResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'CreateDiscountResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  DeleteDiscountResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'CreateDiscountResponse', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetDashboardOverviewResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                totalRevenue: { dataType: 'integer', required: true },
+                totalRefund: { dataType: 'integer', required: true },
+                totalSales: { dataType: 'integer', required: true },
+                totalCustomers: { dataType: 'integer', required: true },
+                totalOrders: { dataType: 'integer', required: true },
+                totalProducts: { dataType: 'integer', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListTopProductsResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'array',
+              array: {
+                dataType: 'nestedObjectLiteral',
+                nestedProperties: {
+                  product: { ref: 'Product', required: true },
+                  unitsSold: { dataType: 'integer', required: true },
+                },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetSalesTrendsResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                trends: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'nestedObjectLiteral',
+                    nestedProperties: {
+                      sales: { dataType: 'integer', required: true },
+                      date: { dataType: 'string', required: true },
+                    },
+                  },
+                  required: true,
+                },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetOrdersStatusResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                fulfilled: { dataType: 'integer', required: true },
+                canceled: { dataType: 'integer', required: true },
+                delivered: { dataType: 'integer', required: true },
+                shipped: { dataType: 'integer', required: true },
+                pending: { dataType: 'integer', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  GetInventoryStatusResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                outOfStock: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'nestedObjectLiteral',
+                    nestedProperties: {
+                      size: { ref: 'Size', required: true },
+                      color: { ref: 'Color', required: true },
+                      product: { ref: 'Product', required: true },
+                    },
+                  },
+                  required: true,
+                },
+                lowStock: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'nestedObjectLiteral',
+                    nestedProperties: {
+                      size: { ref: 'Size', required: true },
+                      color: { ref: 'Color', required: true },
+                      product: { ref: 'Product', required: true },
+                      stockRemaining: { dataType: 'integer', required: true },
+                    },
+                  },
+                  required: true,
+                },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListCustomersFeedbackResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'nestedObjectLiteral',
+              nestedProperties: {
+                recentFeedback: {
+                  dataType: 'array',
+                  array: {
+                    dataType: 'intersection',
+                    subSchemas: [
+                      { ref: 'Review' },
+                      {
+                        dataType: 'nestedObjectLiteral',
+                        nestedProperties: {
+                          product: { ref: 'Product', required: true },
+                          user: { ref: 'User', required: true },
+                        },
+                      },
+                    ],
+                  },
+                  required: true,
+                },
+                averageRating: { dataType: 'integer', required: true },
+              },
+              required: true,
+            },
+          },
+        },
+      ],
+      validators: {},
+    },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ListTopCustomersResponse: {
+    dataType: 'refAlias',
+    type: {
+      dataType: 'intersection',
+      subSchemas: [
+        { ref: 'DefaultResponseBody' },
+        {
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            data: {
+              dataType: 'array',
+              array: {
+                dataType: 'nestedObjectLiteral',
+                nestedProperties: {
+                  user: { ref: 'User', required: true },
+                  totalOrders: { dataType: 'integer', required: true },
+                  totalPaid: { dataType: 'integer', required: true },
+                },
+              },
+              required: true,
+            },
+          },
         },
       ],
       validators: {},
@@ -1446,7 +1729,6 @@ const models: TsoaRoute.Models = {
                 user: { ref: 'User', required: true },
                 refreshToken: { dataType: 'string', required: true },
                 accessToken: { dataType: 'string', required: true },
-                expiresAt: { dataType: 'datetime', required: true },
               },
               required: true,
             },
@@ -1476,7 +1758,6 @@ const models: TsoaRoute.Models = {
               nestedProperties: {
                 refreshToken: { dataType: 'string', required: true },
                 accessToken: { dataType: 'string', required: true },
-                expiresAt: { dataType: 'datetime', required: true },
               },
               required: true,
             },
@@ -1494,29 +1775,15 @@ const models: TsoaRoute.Models = {
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   ForgotPasswordResponse: {
     dataType: 'refAlias',
-    type: {
-      dataType: 'intersection',
-      subSchemas: [
-        { ref: 'DefaultResponseBody' },
-        {
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            data: {
-              dataType: 'nestedObjectLiteral',
-              nestedProperties: {
-                expiresAt: { dataType: 'datetime', required: true },
-                resetToken: { dataType: 'string', required: true },
-              },
-              required: true,
-            },
-          },
-        },
-      ],
-      validators: {},
-    },
+    type: { ref: 'DefaultResponseBody', validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   ResetPasswordResponse: {
+    dataType: 'refAlias',
+    type: { ref: 'DefaultResponseBody', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  ChangePasswordResponse: {
     dataType: 'refAlias',
     type: { ref: 'DefaultResponseBody', validators: {} },
   },
@@ -1595,7 +1862,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
   app.get(
     '/api/v1/users/:userId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(UserController),
     ...fetchMiddlewares<RequestHandler>(UserController.prototype.getUser),
 
@@ -1628,23 +1895,15 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/users',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(UserController),
     ...fetchMiddlewares<RequestHandler>(UserController.prototype.listUsers),
 
     async function UserController_listUsers(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        listUserDto: {
-          in: 'queries',
-          name: 'listUserDto',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            limit: { dataType: 'double' },
-            page: { dataType: 'double' },
-            query: { dataType: 'string' },
-          },
-        },
+        page: { default: 1, in: 'query', name: 'page', dataType: 'integer' },
+        limit: { default: 10, in: 'query', name: 'limit', dataType: 'integer' },
+        search: { in: 'query', name: 'search', dataType: 'string' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1671,7 +1930,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/users/:userId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(UserController),
     ...fetchMiddlewares<RequestHandler>(UserController.prototype.deleteUser),
 
@@ -1704,12 +1963,13 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/users/:userId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(UserController),
     ...fetchMiddlewares<RequestHandler>(UserController.prototype.updateUser),
 
     async function UserController_updateUser(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
         userId: { in: 'path', name: 'userId', required: true, dataType: 'string' },
         body: {
           in: 'body',
@@ -1794,18 +2054,10 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function StockController_list(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            productId: { dataType: 'double' },
-            limit: { dataType: 'double' },
-            page: { dataType: 'double' },
-            query: { dataType: 'string' },
-          },
-        },
+        page: { default: 1, in: 'query', name: 'page', dataType: 'integer' },
+        limit: { default: 10, in: 'query', name: 'limit', dataType: 'integer' },
+        search: { in: 'query', name: 'search', dataType: 'string' },
+        productId: { in: 'query', name: 'productId', dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1832,7 +2084,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/stocks',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(StockController),
     ...fetchMiddlewares<RequestHandler>(StockController.prototype.create),
 
@@ -1844,10 +2096,10 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
-            quantity: { dataType: 'double' },
-            sizeId: { dataType: 'double' },
-            productId: { dataType: 'double' },
-            colorId: { dataType: 'double' },
+            quantity: { dataType: 'integer' },
+            sizeId: { dataType: 'integer' },
+            productId: { dataType: 'integer' },
+            colorId: { dataType: 'integer' },
           },
         },
       };
@@ -1876,7 +2128,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/stocks/:stockId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(StockController),
     ...fetchMiddlewares<RequestHandler>(StockController.prototype.update),
 
@@ -1889,10 +2141,10 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
-            quantity: { dataType: 'double' },
-            sizeId: { dataType: 'double' },
-            productId: { dataType: 'double' },
-            colorId: { dataType: 'double' },
+            quantity: { dataType: 'integer' },
+            sizeId: { dataType: 'integer' },
+            productId: { dataType: 'integer' },
+            colorId: { dataType: 'integer' },
           },
         },
       };
@@ -1921,7 +2173,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/stocks/:stockId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(StockController),
     ...fetchMiddlewares<RequestHandler>(StockController.prototype.delete),
 
@@ -2016,7 +2268,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/sizes',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(SizeController),
     ...fetchMiddlewares<RequestHandler>(SizeController.prototype.create),
 
@@ -2055,7 +2307,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/sizes/:sizeId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(SizeController),
     ...fetchMiddlewares<RequestHandler>(SizeController.prototype.update),
 
@@ -2095,7 +2347,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/sizes/:sizeId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(SizeController),
     ...fetchMiddlewares<RequestHandler>(SizeController.prototype.delete),
 
@@ -2128,7 +2380,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/cart',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.getCart),
 
@@ -2161,7 +2413,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/cart/items',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addItemToCart),
 
@@ -2177,7 +2429,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'body',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { stockId: { dataType: 'double' }, quantity: { dataType: 'double' } },
+          nestedProperties: { stockId: { dataType: 'integer' }, quantity: { dataType: 'integer' } },
         },
       };
 
@@ -2205,7 +2457,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/cart/items/:stockId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeItemFromCart),
 
@@ -2243,7 +2495,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/cart',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.clearCart),
 
@@ -2280,7 +2532,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/wishlist',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.getWishlist),
 
@@ -2317,7 +2569,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/wishlist/items',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addProductToWishlist),
 
@@ -2333,7 +2585,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'body',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { productId: { dataType: 'double' } },
+          nestedProperties: { productId: { dataType: 'integer' } },
         },
       };
 
@@ -2361,7 +2613,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/wishlist/items/:productId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeProductFromWishlist),
 
@@ -2399,7 +2651,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/wishlist',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.clearWishlist),
 
@@ -2436,7 +2688,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/reviews',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ReviewController),
     ...fetchMiddlewares<RequestHandler>(ReviewController.prototype.createReview),
 
@@ -2453,9 +2705,9 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
             comment: { dataType: 'string' },
-            rating: { dataType: 'double' },
-            productId: { dataType: 'double' },
-            userId: { dataType: 'double' },
+            rating: { dataType: 'integer' },
+            productId: { dataType: 'integer' },
+            userId: { dataType: 'integer' },
           },
         },
       };
@@ -2484,7 +2736,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/reviews/:reviewId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ReviewController),
     ...fetchMiddlewares<RequestHandler>(ReviewController.prototype.updateReview),
 
@@ -2502,9 +2754,9 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
             comment: { dataType: 'string' },
-            rating: { dataType: 'double' },
-            productId: { dataType: 'double' },
-            userId: { dataType: 'double' },
+            rating: { dataType: 'integer' },
+            productId: { dataType: 'integer' },
+            userId: { dataType: 'integer' },
           },
         },
       };
@@ -2533,7 +2785,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/reviews/:reviewId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ReviewController),
     ...fetchMiddlewares<RequestHandler>(ReviewController.prototype.deleteReview),
 
@@ -2577,7 +2829,6 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/reviews/:reviewId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ReviewController),
     ...fetchMiddlewares<RequestHandler>(ReviewController.prototype.getReview),
 
@@ -2610,7 +2861,6 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/reviews',
-    authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ReviewController),
     ...fetchMiddlewares<RequestHandler>(ReviewController.prototype.listReviews),
 
@@ -2620,18 +2870,9 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            productId: { dataType: 'double' },
-            limit: { dataType: 'double' },
-            page: { dataType: 'double' },
-            query: { dataType: 'string' },
-          },
-        },
+        page: { default: 1, in: 'query', name: 'page', dataType: 'integer' },
+        limit: { default: 10, in: 'query', name: 'limit', dataType: 'integer' },
+        productId: { in: 'query', name: 'productId', required: true, dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2695,18 +2936,10 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
     async function ProductController_list(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            categoryId: { dataType: 'double' },
-            limit: { dataType: 'double' },
-            page: { dataType: 'double' },
-            query: { dataType: 'string' },
-          },
-        },
+        page: { default: 1, in: 'query', name: 'page', dataType: 'integer' },
+        limit: { default: 10, in: 'query', name: 'limit', dataType: 'integer' },
+        search: { in: 'query', name: 'search', dataType: 'string' },
+        categoryId: { in: 'query', name: 'categoryId', dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2733,7 +2966,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/products',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     upload.fields([{ name: 'image', maxCount: 1 }]),
     ...fetchMiddlewares<RequestHandler>(ProductController),
     ...fetchMiddlewares<RequestHandler>(ProductController.prototype.create),
@@ -2783,7 +3016,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/products/:productId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     upload.fields([{ name: 'image', maxCount: 1 }]),
     ...fetchMiddlewares<RequestHandler>(ProductController),
     ...fetchMiddlewares<RequestHandler>(ProductController.prototype.update),
@@ -2807,7 +3040,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           dataType: 'string',
         },
         price: { in: 'formData', name: 'price', required: true, dataType: 'string' },
-        image: { in: 'formData', name: 'image', required: true, dataType: 'file' },
+        image: { in: 'formData', name: 'image', dataType: 'file' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2834,7 +3067,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/products/:productId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ProductController),
     ...fetchMiddlewares<RequestHandler>(ProductController.prototype.delete),
 
@@ -2867,7 +3100,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/payments/:transactionId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(PaymentController),
     ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.get),
 
@@ -2900,7 +3133,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/payments/void',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(PaymentController),
     ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.void),
 
@@ -2911,7 +3144,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'body',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { transactionId: { dataType: 'double' } },
+          nestedProperties: { transactionId: { dataType: 'string' } },
         },
       };
 
@@ -2939,7 +3172,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/payments/refund',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(PaymentController),
     ...fetchMiddlewares<RequestHandler>(PaymentController.prototype.refund),
 
@@ -2951,8 +3184,8 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
-            amount: { dataType: 'double' },
-            transactionId: { dataType: 'double' },
+            amount: { dataType: 'integer' },
+            transactionId: { dataType: 'string' },
           },
         },
       };
@@ -2981,7 +3214,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/orders',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(OrderController),
     ...fetchMiddlewares<RequestHandler>(OrderController.prototype.create),
 
@@ -2994,7 +3227,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
-            addressId: { dataType: 'double' },
+            addressId: { dataType: 'integer' },
             note: { dataType: 'string' },
             paymentMethod: {
               dataType: 'union',
@@ -3031,7 +3264,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/orders/:orderId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(OrderController),
     ...fetchMiddlewares<RequestHandler>(OrderController.prototype.get),
 
@@ -3064,24 +3297,16 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/orders',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(OrderController),
     ...fetchMiddlewares<RequestHandler>(OrderController.prototype.list),
 
     async function OrderController_list(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: {
-            userId: { dataType: 'double' },
-            limit: { dataType: 'double' },
-            page: { dataType: 'double' },
-            query: { dataType: 'string' },
-          },
-        },
+        page: { default: 1, in: 'query', name: 'page', dataType: 'integer' },
+        limit: { default: 10, in: 'query', name: 'limit', dataType: 'integer' },
+        search: { in: 'query', name: 'search', dataType: 'string' },
+        userId: { in: 'query', name: 'userId', dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -3108,7 +3333,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/orders/:orderId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(OrderController),
     ...fetchMiddlewares<RequestHandler>(OrderController.prototype.delete),
 
@@ -3148,7 +3373,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.patch(
     '/api/v1/orders/:orderId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(OrderController),
     ...fetchMiddlewares<RequestHandler>(OrderController.prototype.updateStatus),
 
@@ -3211,9 +3436,51 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     }
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/images',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(ImageController),
+    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.list),
+
+    async function ImageController_list(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        query: {
+          in: 'queries',
+          name: 'query',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            productId: { dataType: 'integer' },
+            colorId: { dataType: 'integer' },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new ImageController();
+
+        await templateService.apiHandler({
+          methodName: 'list',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/images',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     upload.fields([{ name: 'images' }]),
     ...fetchMiddlewares<RequestHandler>(ImageController),
     ...fetchMiddlewares<RequestHandler>(ImageController.prototype.create),
@@ -3253,56 +3520,18 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     }
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  app.get(
-    '/api/v1/images',
-    ...fetchMiddlewares<RequestHandler>(ImageController),
-    ...fetchMiddlewares<RequestHandler>(ImageController.prototype.list),
-
-    async function ImageController_list(request: ExRequest, response: ExResponse, next: any) {
-      const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: { productId: { dataType: 'double' }, colorId: { dataType: 'double' } },
-        },
-      };
-
-      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-        const controller = new ImageController();
-
-        await templateService.apiHandler({
-          methodName: 'list',
-          controller,
-          response,
-          next,
-          validatedArgs,
-          successStatus: undefined,
-        });
-      } catch (err) {
-        return next(err);
-      }
-    }
-  );
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.patch(
     '/api/v1/images/:imageId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ImageController),
     ...fetchMiddlewares<RequestHandler>(ImageController.prototype.update),
 
     async function ImageController_update(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
         imageId: { in: 'path', name: 'imageId', required: true, dataType: 'string' },
-        _: {
+        body: {
           in: 'body',
-          name: '_',
+          name: 'body',
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: { isPrimary: { dataType: 'boolean' } },
@@ -3333,7 +3562,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/images/:imageId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ImageController),
     ...fetchMiddlewares<RequestHandler>(ImageController.prototype.delete),
 
@@ -3352,6 +3581,491 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
         await templateService.apiHandler({
           methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/discounts/:discountId',
+    ...fetchMiddlewares<RequestHandler>(DiscountController),
+    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.get),
+
+    async function DiscountController_get(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        discountId: { in: 'path', name: 'discountId', required: true, dataType: 'string' },
+        queries: {
+          in: 'queries',
+          name: 'queries',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { limit: { dataType: 'integer' }, page: { dataType: 'integer' } },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DiscountController();
+
+        await templateService.apiHandler({
+          methodName: 'get',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/discounts',
+    ...fetchMiddlewares<RequestHandler>(DiscountController),
+    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.list),
+
+    async function DiscountController_list(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        query: {
+          in: 'queries',
+          name: 'query',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            endDate: { dataType: 'string' },
+            startDate: { dataType: 'string' },
+            isStoreWide: { dataType: 'boolean' },
+            isActive: { dataType: 'boolean' },
+            limit: { dataType: 'integer' },
+            page: { dataType: 'integer' },
+            type: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['PERCENTAGE'] },
+                { dataType: 'enum', enums: ['FIXED'] },
+                { dataType: 'enum', enums: ['BOGO'] },
+                { dataType: 'enum', enums: ['BULK'] },
+              ],
+            },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DiscountController();
+
+        await templateService.apiHandler({
+          methodName: 'list',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
+    '/api/v1/discounts',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DiscountController),
+    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.create),
+
+    async function DiscountController_create(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            productIds: { dataType: 'array', array: { dataType: 'integer' } },
+            minQty: { dataType: 'integer' },
+            description: { dataType: 'string' },
+            endDate: { dataType: 'string' },
+            startDate: { dataType: 'string' },
+            isStoreWide: { dataType: 'boolean' },
+            isActive: { dataType: 'boolean' },
+            amount: { dataType: 'integer' },
+            type: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['PERCENTAGE'] },
+                { dataType: 'enum', enums: ['FIXED'] },
+                { dataType: 'enum', enums: ['BOGO'] },
+                { dataType: 'enum', enums: ['BULK'] },
+              ],
+            },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DiscountController();
+
+        await templateService.apiHandler({
+          methodName: 'create',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: 201,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.put(
+    '/api/v1/discounts/:discountId',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DiscountController),
+    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.update),
+
+    async function DiscountController_update(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        discountId: { in: 'path', name: 'discountId', required: true, dataType: 'string' },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            productIds: { dataType: 'array', array: { dataType: 'integer' } },
+            minQty: { dataType: 'integer' },
+            description: { dataType: 'string' },
+            endDate: { dataType: 'string' },
+            startDate: { dataType: 'string' },
+            isStoreWide: { dataType: 'boolean' },
+            isActive: { dataType: 'boolean' },
+            amount: { dataType: 'integer' },
+            type: {
+              dataType: 'union',
+              subSchemas: [
+                { dataType: 'enum', enums: ['PERCENTAGE'] },
+                { dataType: 'enum', enums: ['FIXED'] },
+                { dataType: 'enum', enums: ['BOGO'] },
+                { dataType: 'enum', enums: ['BULK'] },
+              ],
+            },
+          },
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DiscountController();
+
+        await templateService.apiHandler({
+          methodName: 'update',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.delete(
+    '/api/v1/discounts/:discountId',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DiscountController),
+    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.delete),
+
+    async function DiscountController_delete(request: ExRequest, response: ExResponse, next: any) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        discountId: { in: 'path', name: 'discountId', required: true, dataType: 'string' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DiscountController();
+
+        await templateService.apiHandler({
+          methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/overview',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.getOverview),
+
+    async function DashboardController_getOverview(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'getOverview',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/top-products',
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.listTopProducts),
+
+    async function DashboardController_listTopProducts(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'listTopProducts',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/sales-trends',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.getSalesTrend),
+
+    async function DashboardController_getSalesTrend(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'getSalesTrend',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/orders-status',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.getOrderStatus),
+
+    async function DashboardController_getOrderStatus(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'getOrderStatus',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/inventory-status',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.getInventoryStatus),
+
+    async function DashboardController_getInventoryStatus(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'getInventoryStatus',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/customers-feedback',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.listCustomersFeedback),
+
+    async function DashboardController_listCustomersFeedback(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'listCustomersFeedback',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/api/v1/dashboard/top-customers',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(DashboardController),
+    ...fetchMiddlewares<RequestHandler>(DashboardController.prototype.listTopCustomers),
+
+    async function DashboardController_listTopCustomers(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {};
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new DashboardController();
+
+        await templateService.apiHandler({
+          methodName: 'listTopCustomers',
           controller,
           response,
           next,
@@ -3428,7 +4142,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/colors',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ColorController),
     ...fetchMiddlewares<RequestHandler>(ColorController.prototype.create),
 
@@ -3471,7 +4185,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/colors/:colorId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ColorController),
     ...fetchMiddlewares<RequestHandler>(ColorController.prototype.update),
 
@@ -3515,7 +4229,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/colors/:colorId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(ColorController),
     ...fetchMiddlewares<RequestHandler>(ColorController.prototype.delete),
 
@@ -3610,7 +4324,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/categories',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(CategoryController),
     ...fetchMiddlewares<RequestHandler>(CategoryController.prototype.create),
 
@@ -3649,7 +4363,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/categories/:categoryId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(CategoryController),
     ...fetchMiddlewares<RequestHandler>(CategoryController.prototype.update),
 
@@ -3689,7 +4403,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/categories/:categoryId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(CategoryController),
     ...fetchMiddlewares<RequestHandler>(CategoryController.prototype.delete),
 
@@ -3708,6 +4422,79 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
         await templateService.apiHandler({
           methodName: 'delete',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/auth/google',
+    ...fetchMiddlewares<RequestHandler>(GoogleOAuthController),
+    ...fetchMiddlewares<RequestHandler>(GoogleOAuthController.prototype.googleAuth),
+
+    async function GoogleOAuthController_googleAuth(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
+        redirectUrl: { in: 'query', name: 'redirectUrl', dataType: 'string' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new GoogleOAuthController();
+
+        await templateService.apiHandler({
+          methodName: 'googleAuth',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.get(
+    '/auth/google/callback',
+    ...fetchMiddlewares<RequestHandler>(GoogleOAuthController),
+    ...fetchMiddlewares<RequestHandler>(GoogleOAuthController.prototype.googleCallback),
+
+    async function GoogleOAuthController_googleCallback(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new GoogleOAuthController();
+
+        await templateService.apiHandler({
+          methodName: 'googleCallback',
           controller,
           response,
           next,
@@ -3840,20 +4627,15 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     }
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  app.get(
+  app.post(
     '/api/v1/auth/verify-email',
+    authenticateMiddleware([{ JWT_VERIFY: [] }]),
     ...fetchMiddlewares<RequestHandler>(AuthController),
     ...fetchMiddlewares<RequestHandler>(AuthController.prototype.verifyEmail),
 
     async function AuthController_verifyEmail(request: ExRequest, response: ExResponse, next: any) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: { token: { dataType: 'string' }, email: { dataType: 'string' } },
-        },
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -3894,7 +4676,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           name: 'body',
           required: true,
           dataType: 'nestedObjectLiteral',
-          nestedProperties: { email: { dataType: 'string' } },
+          nestedProperties: { redirectUrl: { dataType: 'string' }, email: { dataType: 'string' } },
         },
       };
 
@@ -3922,7 +4704,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/auth/reset-password',
-    authenticateMiddleware([{ jwt_auth: ['reset_password'] }]),
+    authenticateMiddleware([{ JWT_RESET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AuthController),
     ...fetchMiddlewares<RequestHandler>(AuthController.prototype.resetPassword),
 
@@ -3938,9 +4720,8 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
-            password: { dataType: 'string' },
-            email: { dataType: 'string' },
-            code: { dataType: 'string' },
+            confirmNewPassword: { dataType: 'string' },
+            newPassword: { dataType: 'string' },
           },
         },
         req: { in: 'request', name: 'req', required: true, dataType: 'object' },
@@ -3968,9 +4749,56 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     }
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  app.get(
+  app.patch(
+    '/api/v1/auth/change-password',
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
+    ...fetchMiddlewares<RequestHandler>(AuthController),
+    ...fetchMiddlewares<RequestHandler>(AuthController.prototype.changePassword),
+
+    async function AuthController_changePassword(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: {
+            oldPassword: { dataType: 'string' },
+            newPassword: { dataType: 'string' },
+          },
+        },
+        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+        const controller = new AuthController();
+
+        await templateService.apiHandler({
+          methodName: 'changePassword',
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.post(
     '/api/v1/auth/resend-email-verification',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AuthController),
     ...fetchMiddlewares<RequestHandler>(AuthController.prototype.resendVerificationEmail),
 
@@ -3980,7 +4808,13 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        req: { in: 'request', name: 'req', required: true, dataType: 'object' },
+        body: {
+          in: 'body',
+          name: 'body',
+          required: true,
+          dataType: 'nestedObjectLiteral',
+          nestedProperties: { email: { dataType: 'string' } },
+        },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -4007,7 +4841,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
     '/api/v1/addresses',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AddressController),
     ...fetchMiddlewares<RequestHandler>(AddressController.prototype.listUserAddress),
 
@@ -4017,7 +4851,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
       next: any
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
-        userId: { in: 'query', name: 'userId', required: true, dataType: 'double' },
+        userId: { in: 'query', name: 'userId', required: true, dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -4044,7 +4878,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
     '/api/v1/addresses',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AddressController),
     ...fetchMiddlewares<RequestHandler>(AddressController.prototype.createUserAddress),
 
@@ -4061,7 +4895,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
             address: { dataType: 'string' },
-            floor: { dataType: 'double' },
+            floor: { dataType: 'integer' },
             building: { dataType: 'string' },
             country: { dataType: 'string' },
             street: { dataType: 'string' },
@@ -4070,7 +4904,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
             lastName: { dataType: 'string' },
             firstName: { dataType: 'string' },
             phone: { dataType: 'string' },
-            userId: { dataType: 'double' },
+            userId: { dataType: 'integer' },
           },
         },
       };
@@ -4099,7 +4933,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.put(
     '/api/v1/addresses/:addressId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AddressController),
     ...fetchMiddlewares<RequestHandler>(AddressController.prototype.updateUserAddress),
 
@@ -4117,7 +4951,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
             address: { dataType: 'string' },
-            floor: { dataType: 'double' },
+            floor: { dataType: 'integer' },
             building: { dataType: 'string' },
             country: { dataType: 'string' },
             street: { dataType: 'string' },
@@ -4126,7 +4960,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
             lastName: { dataType: 'string' },
             firstName: { dataType: 'string' },
             phone: { dataType: 'string' },
-            userId: { dataType: 'double' },
+            userId: { dataType: 'integer' },
           },
         },
       };
@@ -4155,7 +4989,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
     '/api/v1/addresses/:addressId',
-    authenticateMiddleware([{ jwt_auth: [] }]),
+    authenticateMiddleware([{ JWT_SECRET: [] }]),
     ...fetchMiddlewares<RequestHandler>(AddressController),
     ...fetchMiddlewares<RequestHandler>(AddressController.prototype.deleteUserAddress),
 
@@ -4166,13 +5000,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
     ) {
       const args: Record<string, TsoaRoute.ParameterSchema> = {
         addressId: { in: 'path', name: 'addressId', required: true, dataType: 'string' },
-        _: {
-          in: 'queries',
-          name: '_',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: { userId: { dataType: 'string', required: true } },
-        },
+        userId: { in: 'query', name: 'userId', required: true, dataType: 'integer' },
       };
 
       // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

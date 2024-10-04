@@ -1,7 +1,7 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { listAllCategories } from '@/data/category';
 import { Form } from '@/features/products/create-form';
-import { ROUTES } from '@/utils/routes';
+import { listAllCategories } from '@/fetch/category';
+import { ROUTES } from '@/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { Suspense } from 'react';

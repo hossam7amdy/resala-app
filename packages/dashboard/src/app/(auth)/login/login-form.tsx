@@ -1,6 +1,6 @@
 'use client';
 
-import { login } from '@/actions/auth';
+import { login } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { Button, Form, Input } from 'antd';
 

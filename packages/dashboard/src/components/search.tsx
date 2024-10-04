@@ -13,15 +13,15 @@ const SearchComponent: React.FC<SearchProps> = props => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleSearch = useDebounce((value: string) => {
-    const query = params.get('query') || '';
+  const handleSearch = useDebounce(searchTerm => {
+    const prevSearchTerm = params.get('search') || '';
 
-    if (query === value) return;
+    if (prevSearchTerm === searchTerm) return;
 
-    router.replace(`${pathname}?query=${value}`);
+    router.replace(`${pathname}?search=${searchTerm}`);
   }, 500);
 
-  const defaultValue = params.get('query') || '';
+  const defaultValue = params.get('search') || '';
   return (
     <AntSearch
       allowClear

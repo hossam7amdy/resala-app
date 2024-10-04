@@ -2,6 +2,7 @@ import type { Prisma } from '@prisma/client';
 import type {
   Color,
   CreateStockRequest,
+  GetCartResponse,
   GetStockResponse,
   Image,
   ListStocksRequest,
@@ -45,18 +46,18 @@ export class StockService {
   }
 
   async list({
-    page,
-    limit,
-    query,
+    page = 1,
+    limit = 10,
     productId,
+    search = '',
   }: ListStocksRequest['query']): Promise<ListStocksResponse['data']> {
     const filters: Prisma.StockWhereInput = {
       OR: [
-        { product: { arName: { contains: query, mode: 'insensitive' } } },
-        { product: { enName: { contains: query, mode: 'insensitive' } } },
-        { color: { arName: { contains: query, mode: 'insensitive' } } },
-        { color: { enName: { contains: query, mode: 'insensitive' } } },
-        { size: { name: { contains: query, mode: 'insensitive' } } },
+        { product: { arName: { contains: search, mode: 'insensitive' } } },
+        { product: { enName: { contains: search, mode: 'insensitive' } } },
+        { color: { arName: { contains: search, mode: 'insensitive' } } },
+        { color: { enName: { contains: search, mode: 'insensitive' } } },
+        { size: { name: { contains: search, mode: 'insensitive' } } },
       ],
       productId,
     };
@@ -90,23 +91,23 @@ export class StockService {
     };
   }
 
-  async decrease(stocks: { id: number; quantity: number }[]) {
+  async decrease(userCart: GetCartResponse['data']) {
     await this.db.$transaction(async trx => {
       const toUpdate = await trx.stock.findMany({
         where: {
-          id: { in: stocks.map(s => s.id) },
+          id: { in: userCart.items.map(s => s.stock.id) },
         },
       });
 
       toUpdate.forEach(stock => {
-        const stockData = stocks.find(s => s.id === stock.id);
+        const stockData = userCart.items.find(s => s.stock.id === stock.id);
 
         if (!stockData || stockData.quantity > stock.quantity) {
           throw new ConflictError('Not enough stock');
         }
       });
 
-      for (const stock of stocks) {
+      for (const stock of toUpdate) {
         await trx.stock.update({
           where: { id: stock.id },
           data: {
@@ -151,6 +152,7 @@ export class StockService {
     return {
       product,
       color: colorData,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
       images: images.map(({ colorId, productId, ...rest }) => ({ ...rest })),
       sizes: [
         {
@@ -182,7 +184,7 @@ export class StockService {
       {} as Record<string, GetStockResponse['data']>
     );
 
-    return Object.values(stocks).toSorted(
+    return Object.values(stocks).sort(
       (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
     );
   }

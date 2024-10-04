@@ -1,10 +1,11 @@
 'use client';
 
-import { uploadImages } from '@/actions/image';
-import { createStock, updateStock } from '@/actions/stock';
-import { listImages } from '@/data/images';
+import { SelectProductAsync } from '@/components/select-product-async';
+import { listImages } from '@/fetch/images';
+import { uploadImages } from '@/fetch/images';
+import { createStock, updateStock } from '@/fetch/stocks';
 import { useMutation, useNotification } from '@/hooks';
-import type { Image } from '@resala/shared';
+import type { DefaultResponseBody, Image } from '@resala/shared';
 import { Button, Flex, Form, InputNumber, Typography } from 'antd';
 import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -29,14 +30,8 @@ interface StockFormProps {
   }>;
   selectSize: React.ReactNode;
   selectColor: React.ReactNode;
-  selectProduct: React.ReactNode;
 }
-export const StockForm: React.FC<StockFormProps> = ({
-  stock,
-  selectColor,
-  selectSize,
-  selectProduct,
-}) => {
+export const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, selectSize }) => {
   const router = useRouter();
 
   const [form] = Form.useForm<FormValues>();
@@ -68,7 +63,7 @@ export const StockForm: React.FC<StockFormProps> = ({
   const handleSubmit = async (values: FormValues) => {
     const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
 
-    const promiseAll: Promise<unknown>[] = [submit(values)];
+    const promiseAll: Promise<DefaultResponseBody & { statusCode: number }>[] = [submit(values)];
 
     const newFiles = fileList.filter(file => file.status === 'done' && !file.url);
 
@@ -116,7 +111,9 @@ export const StockForm: React.FC<StockFormProps> = ({
     >
       <Typography.Title level={5}>{isCreate ? 'Create New Stock' : `Edit Stock`}</Typography.Title>
 
-      {selectProduct}
+      <Form.Item name="productId" label="Product" rules={[{ required: true }]} hasFeedback>
+        <SelectProductAsync autoFocus allowClear />
+      </Form.Item>
 
       {selectColor}
 

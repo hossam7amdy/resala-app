@@ -4,8 +4,8 @@ import React from 'react';
 
 import { OrderDetailsTab } from './order-details-tab';
 import { PaymentActionsButtons } from './payment-action-buttons';
-import { PaymentDetailsTab } from './payment-details-tab';
 import { ShippingDetailsTab } from './shipping-details-tab';
+import { TransactionDetails } from './transaction-details';
 
 export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ order }) => {
   return (
@@ -24,17 +24,17 @@ export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ or
           children: <OrderDetailsTab order={order} />,
         },
         {
-          key: 'payment',
-          tabKey: 'payment',
-          label: 'Payment Details',
-          children: <PaymentDetailsTab payment={order.paymentDetails!} />,
-          disabled: !order.paymentDetails,
+          key: order.transactionId || 'transaction',
+          tabKey: 'transaction',
+          label: 'Transaction Details',
+          children: <TransactionDetails transactionId={order.transactionId!} />,
+          disabled: !order.transactionId,
         },
       ]}
       tabBarExtraContent={
-        order.paymentDetails && (
+        order.transactionId && (
           <PaymentActionsButtons
-            payment={order.paymentDetails}
+            transactionId={order.transactionId}
             orderDate={`${order.createdAt}`}
             orderAmount={order.total}
             paymentStatus={order.paymentStatus}

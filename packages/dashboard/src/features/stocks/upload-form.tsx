@@ -1,4 +1,4 @@
-import { uploadImages } from '@/actions/image';
+import { uploadImages } from '@/fetch/images';
 import { useMutation, useNotification } from '@/hooks';
 import type { Image } from '@resala/shared';
 import { Button, Flex, Form } from 'antd';

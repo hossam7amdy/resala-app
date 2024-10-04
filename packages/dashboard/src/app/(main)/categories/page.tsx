@@ -1,8 +1,8 @@
-import { Search } from '@/components';
-import { listAllCategories } from '@/data/category';
+import { Search, TableSkeleton } from '@/components';
 import { CategoryTable } from '@/features/categories/categories-table';
-import { ROUTES } from '@/utils/routes';
-import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
+import { listAllCategories } from '@/fetch/category';
+import { ROUTES } from '@/routes';
+import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   title: 'Categories',
 };
 
-const CategoryPage = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = searchParams.query || '';
+const CategoryPage = async ({ searchParams }: { searchParams: { search?: string } }) => {
+  const search = searchParams.search || '';
   const categories = await listAllCategories();
 
   return (
@@ -29,8 +29,8 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
         </Flex>
       </Col>
       <Col span={24}>
-        <Suspense fallback={<Table loading />}>
-          <CategoryTable query={query} categories={categories} />
+        <Suspense fallback={<TableSkeleton />}>
+          <CategoryTable search={search} categories={categories} />
         </Suspense>
       </Col>
     </Row>

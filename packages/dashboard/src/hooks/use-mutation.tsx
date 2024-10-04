@@ -1,18 +1,25 @@
 'use client';
 
+import { logout } from '@/fetch/auth';
+import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
+type Success<T> = ({ statusCode: number; success: boolean } & T) | void;
+type Error = { statusCode: number; success: boolean; message: string };
+
 type MutationOptions<Data, Variables> = {
-  mutationFn: (variables: Variables) => Promise<Data>;
+  mutationFn: (variables: Variables) => Promise<Success<Data>>;
+  onSuccess?: (data: Success<Data>, variables: Variables) => void;
   onError?: (error: Error) => void;
-  onSuccess?: (data: Data, variables: Variables) => void;
 };
 
 type MutationResult<Data, Variables> = {
   mutate: (variables: Variables) => Promise<void>;
   isLoading: boolean;
-  data?: Data | null;
-  error?: Error | null;
+  data?: Success<Data>;
+  error?: Error;
+  isSuccess: boolean;
+  isError: boolean;
 };
 
 export const useMutation = <Data, Variables>({
@@ -21,40 +28,47 @@ export const useMutation = <Data, Variables>({
   onSuccess = () => {},
 }: MutationOptions<Data, Variables>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<Data | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [data, setData] = useState<Success<Data>>();
+  const [error, setError] = useState<Error>();
 
   const mutate = useCallback(
     async (variables: Variables) => {
       setIsLoading(true);
-      setData(null);
-      setError(null);
+      setData(undefined);
+      setError(undefined);
 
       try {
         const result = await mutationFn(variables);
 
-        // @ts-expect-error - This is a valid check
-        if (result?.success === true) {
-          setData(result);
-          onSuccess(result, variables);
-          // @ts-expect-error - This is a valid check
-        } else if (result?.success === false) {
-          // @ts-expect-error - This is a valid check
-          const errorObj = new Error(result?.message || 'An error occurred');
+        if (result instanceof Object && !result.success) {
+          throw result;
+        }
 
-          setError(errorObj);
-          onError(errorObj);
+        const successResult = (result ?? {}) as Success<Data>;
+
+        setData(successResult);
+        onSuccess(successResult, variables);
+      } catch (e) {
+        const error = e as Error;
+
+        setError(error);
+        onError(error);
+
+        if ([401, 403].includes(error.statusCode)) {
+          await sleep(2000).then(logout);
         }
       } finally {
         setIsLoading(false);
       }
     },
-    [mutationFn, onSuccess, onError]
+    [mutationFn, onError, onSuccess]
   );
 
   return {
     mutate,
     isLoading,
+    isError: !!error,
+    isSuccess: !!data,
     data,
     error,
   };

@@ -1,8 +1,6 @@
-import { Table } from 'antd';
+import { TableSkeleton } from '@/components';
 import React from 'react';
 
-const Loading = () => {
-  return <Table loading />;
-};
+const Loading = () => <TableSkeleton />;
 
 export default Loading;

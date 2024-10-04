@@ -2,15 +2,12 @@
 
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDateTime } from '@/utils/date-time-formatter';
-import type { Payment } from '@resala/shared';
-import { Col, Divider, Flex, Row, Spin, Typography } from 'antd';
+import { Col, Empty, Flex, Row, Spin, Typography } from 'antd';
 import React from 'react';
 
 import { useTransaction } from '..';
 
-export const TransactionDetails: React.FC<{ payment: Payment }> = ({
-  payment: { transactionId },
-}) => {
+export const TransactionDetails: React.FC<{ transactionId: string }> = ({ transactionId }) => {
   const { isLoading, data } = useTransaction(transactionId);
 
   if (isLoading) {
@@ -22,13 +19,11 @@ export const TransactionDetails: React.FC<{ payment: Payment }> = ({
   }
 
   if (!data) {
-    return null;
+    return <Empty />;
   }
 
   return (
     <Row>
-      <Divider>Transaction Details</Divider>
-
       <Col span={12}>
         <Flex gap={5}>
           <div>

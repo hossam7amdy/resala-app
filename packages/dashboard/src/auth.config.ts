@@ -1,31 +1,25 @@
+import { configuration } from '@/configuration';
+import { PROTECTED_ROUTES, ROUTES } from '@/routes';
+import type { RefreshTokenRequest, RefreshTokenResponse } from '@resala/shared';
+import { ENDPOINT_CONFIGS } from '@resala/shared';
+import { jwtDecode } from 'jwt-decode';
 import type { NextAuthConfig } from 'next-auth';
+import { NextResponse } from 'next/server';
 
-import { PROTECTED_ROUTES, ROUTES } from './utils/routes';
+import type { AuthUser } from '../next-auth';
 
-export const parseJwt = (token: string) => {
-  try {
-    // atob: decodes base64 strings
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
-    return null;
-  }
-};
+export const refreshToken = async (refreshToken: string): Promise<RefreshTokenResponse> => {
+  const { method, url } = ENDPOINT_CONFIGS.refresh;
 
-export const getIsTokenValid = (token: string) => {
-  if (!token) return false;
+  const response = await fetch(`${configuration.baseUrl}${url}`, {
+    method: method.toUpperCase(),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: refreshToken } as RefreshTokenRequest['body']),
+  });
 
-  const jwtExpireTimestamp = parseJwt(token).exp;
-
-  console.log('parseJwt', parseJwt(token));
-
-  const jwtExpireDateTime = new Date(jwtExpireTimestamp * 1000);
-
-  if (jwtExpireDateTime < new Date()) {
-    console.log('API token expired');
-    return false;
-  }
-
-  return true;
+  return response.json();
 };
 
 export const authConfig = {
@@ -36,30 +30,64 @@ export const authConfig = {
     strategy: 'jwt',
   },
   callbacks: {
-    authorized: ({ auth, request: { nextUrl } }) => {
+    authorized: ({ auth, request: { url, nextUrl, headers } }) => {
+      // Store current request url in a custom header, which you can read later
+      // https://stackoverflow.com/questions/75362636/how-can-i-get-the-url-pathname-on-a-server-component-next-js-13
+      const requestHeaders = new Headers(headers);
+      const pathname = new URL(url).pathname;
+      requestHeaders.set('x-pathname', pathname);
+
       const isLoggedIn = !!auth?.user;
 
       const isOnDashboard = PROTECTED_ROUTES.some(route => nextUrl.pathname.startsWith(route));
 
       if (isOnDashboard) {
-        if (isLoggedIn) return true;
+        if (isLoggedIn)
+          return NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          });
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
         return Response.redirect(new URL(ROUTES.DASHBOARD, nextUrl));
       }
-      return true;
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     },
-    jwt: ({ token, user }) => {
-      return { ...token, ...user };
+    jwt: async ({ token, user }) => {
+      if (user) {
+        const { accessToken, refreshToken, ...userProps } = user;
+
+        token.user = userProps as AuthUser;
+
+        token.accessToken = accessToken;
+        token.refreshToken = refreshToken;
+        token.expiresAt = jwtDecode(accessToken).exp ?? 0;
+      } else if (Date.now() / 1000 >= (jwtDecode(token.accessToken)?.exp ?? 0)) {
+        try {
+          if (!token.refreshToken) throw new Error('Missing refresh token');
+
+          const { data } = await refreshToken(token.refreshToken);
+
+          token.accessToken = data.accessToken;
+          token.refreshToken = data.refreshToken;
+          token.expiresAt = jwtDecode(data.accessToken).exp ?? 0;
+        } catch (e) {
+          token.error = 'RefreshTokenError';
+        }
+      }
+      return token;
     },
-    // @ts-expect-error - This is a valid callback
+    // @ts-expect-error `token` is defined in `jwt` callback
     session: ({ session, token }) => {
-      session.user = token.user;
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      session.expiresAt = token.expiresAt;
-      session.expires = new Date(token.expiresAt).toISOString();
-      return session;
+      if (token.error === 'RefreshTokenError') {
+        return { user: null };
+      }
+      return { ...session, ...token };
     },
   },
   providers: [], // Add providers with an empty array for now

@@ -18,10 +18,10 @@ interface TableProps {
 export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
   return (
     <Flex vertical gap={10}>
-      <Table
+      <Table<ListOrdersResponse['data']['orders'][number]>
+        scroll={{ x: 768, y: 500 }}
         rowClassName={() => 'table-row-pointer'}
         rowKey={record => record.id}
-        scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={orders}
         expandable={{
@@ -29,9 +29,8 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
-        <TableColumn title="ID" dataIndex="id" width="9%" />
         <TableColumn
-          width="13%"
+          ellipsis
           title="Client"
           dataIndex="user"
           render={user => (
@@ -41,15 +40,9 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
             </Flex>
           )}
         />
+        <TableColumn title="Amount" dataIndex="total" render={amount => formatCurrency(amount)} />
         <TableColumn
-          width="13%"
-          title="Amount"
-          dataIndex="total"
-          render={amount => formatCurrency(amount)}
-        />
-        <TableColumn width="13%" title="Method" dataIndex="paymentMethod" />
-        <TableColumn
-          width="13%"
+          width={150}
           title="Payment Status"
           render={order => <PaymentStatus order={order} />}
           onCell={() => ({
@@ -57,15 +50,14 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           })}
         />
         <TableColumn
-          width="13%"
           title="Order Status"
+          width={150}
           render={order => <OrderStatus order={order} />}
           onCell={() => ({
             onClick: e => e.stopPropagation(),
           })}
         />
         <TableColumn
-          width="13%"
           title="Created Time"
           dataIndex="createdAt"
           render={date => (
@@ -76,7 +68,6 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           )}
         />
         <TableColumn
-          width="13%"
           title="Actions"
           render={order => <CancelOrder order={order} />}
           onCell={() => ({
@@ -85,7 +76,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
         />
       </Table>
       <Flex justify="center">
-        <Pagination totalPages={total} />
+        <Pagination total={total} />
       </Flex>
     </Flex>
   );

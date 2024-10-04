@@ -1,8 +1,8 @@
 'use client';
 
-import { deleteStock } from '@/actions/stock';
 import { Pagination, PopconfirmDeleteButton } from '@/components';
-import type { ListStocksResponse } from '@resala/shared';
+import { deleteStock } from '@/fetch/stocks';
+import type { GetStockResponse, ListStocksResponse } from '@resala/shared';
 import { Flex, Space, Table } from 'antd';
 import React from 'react';
 
@@ -12,11 +12,11 @@ import { UploadModal } from './upload-modal';
 export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, stocks }) => {
   return (
     <Flex vertical gap={10}>
-      <Table
+      <Table<GetStockResponse['data']>
+        scroll={{ x: 768, y: 500 }}
         rowClassName={() => 'table-row-pointer'}
         bordered
         rowKey={s => `${s.product.id}-${s.color.id}`}
-        scroll={{ x: true, y: 500 }}
         pagination={false}
         dataSource={stocks}
         expandable={{
@@ -101,7 +101,7 @@ export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, 
         ]}
       />
       <Flex justify="center">
-        <Pagination totalPages={pagination.total} />
+        <Pagination total={pagination.total} />
       </Flex>
     </Flex>
   );

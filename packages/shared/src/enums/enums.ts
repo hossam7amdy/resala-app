@@ -24,3 +24,10 @@ export enum PaymentMethod {
   CASH = 'CASH',
   CARD = 'CARD',
 }
+
+export enum DiscountEnum {
+  PERCENTAGE = 'PERCENTAGE',
+  FIXED = 'FIXED',
+  BOGO = 'BOGO',
+  BULK = 'BULK',
+}

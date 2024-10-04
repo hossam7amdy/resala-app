@@ -3,21 +3,19 @@ import type { INotification } from './notification.interface.js';
 export class NotificationService {
   constructor(private readonly mailer: INotification) {}
 
-  async sendVerificationEmail(email: string, token: string) {
-    const href = `${process.env.SERVER_URL}/api/v1/auth/verify-email?token=${token}&email=${email}`;
-
+  async sendVerificationEmail(email: string, link: string) {
     return await this.mailer.send(
       email,
       'Email Verification',
-      `<p>Click <a href="${href}" target="_blank">here</a> to verify your email</p>`
+      `<p>Click <a href="${link}" target="_blank">here</a> to verify your email</p>`
     );
   }
 
-  async sendResetPasswordEmail(email: string, resetCode: string) {
+  async sendResetPasswordEmail(email: string, link: string) {
     return await this.mailer.send(
       email,
       'Reset your password',
-      `Your reset code is: <b>${resetCode}</b>`
+      `<p>Click <a href="${link}" target="_blank">here</a> to reset your password</p>`
     );
   }
 

@@ -5,6 +5,7 @@ declare global {
       PORT: string;
       SERVER_URL: string;
       WEB_APP_URL: string;
+      ADMIN_DASHBOARD_URL: string;
 
       JWT_SECRET: string;
       JWT_REFRESH: string;
@@ -15,10 +16,6 @@ declare global {
 
       MAIL_USER: string;
       MAIL_PASS: string;
-
-      TWILIO_ACCOUNT_SID: string;
-      TWILIO_AUTH_TOKEN: string;
-      TWILIO_PHONE_NUMBER: string;
 
       PAYMOB_INTEGRATION_ID: string;
       PAYMOB_API_URL: string;

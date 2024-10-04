@@ -41,15 +41,13 @@ export class FavoritesComponent implements OnInit {
     });
 
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
   // remove favorite icone
   removeFavoriteIcon(productId: string): void {
-    
     this.productId = productId;
     console.log(this.productId);
-   
   }
 
   // delete my favorite product
@@ -67,7 +65,7 @@ export class FavoritesComponent implements OnInit {
     });
 
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
 }

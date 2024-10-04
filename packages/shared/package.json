@@ -12,13 +12,12 @@
   },
   "scripts": {
     "rollup": "rollup -c rollup.config.js",
-    "build": "yarn && tsc && yarn rollup"
+    "build": "tsc && yarn rollup"
   },
   "dependencies": {
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "rollup": "^4.16.1",
-    "typescript": "^5.5.4"
+    "rollup": "^4.16.1"
   }
 }

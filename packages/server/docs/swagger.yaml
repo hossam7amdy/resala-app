@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: "@resala/server"
+  title: '@resala/server'
   version: 1.0.0
   description: Resala server
   license:
@@ -12,16 +12,16 @@ paths:
     get:
       operationId: GetUser
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetUserResponse"
+                $ref: '#/components/schemas/GetUserResponse'
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -31,16 +31,16 @@ paths:
     delete:
       operationId: DeleteUser
       responses:
-        "200":
+        '200':
           description: User deleted successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteUserResponse"
+                $ref: '#/components/schemas/DeleteUserResponse'
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -50,16 +50,16 @@ paths:
     put:
       operationId: UpdateUser
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateUserResponse"
+                $ref: '#/components/schemas/UpdateUserResponse'
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: userId
@@ -91,31 +91,33 @@ paths:
     get:
       operationId: ListUsers
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListUsersResponse"
+                $ref: '#/components/schemas/ListUsersResponse'
       tags:
         - User
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
-        - in: query
-          name: limit
-          required: false
-          schema:
-            format: double
-            type: number
         - in: query
           name: page
           required: false
           schema:
-            format: double
-            type: number
+            default: 1
+            format: int32
+            type: integer
         - in: query
-          name: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            format: int32
+            type: integer
+        - in: query
+          name: search
           required: false
           schema:
             type: string
@@ -123,12 +125,12 @@ paths:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetStockResponse"
+                $ref: '#/components/schemas/GetStockResponse'
       tags:
         - Stock
       security: []
@@ -141,16 +143,16 @@ paths:
     put:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateStockResponse"
+                $ref: '#/components/schemas/UpdateStockResponse'
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -164,31 +166,31 @@ paths:
             schema:
               properties:
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 sizeId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 colorId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteStockResponse"
+                $ref: '#/components/schemas/DeleteStockResponse'
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -199,52 +201,54 @@ paths:
     get:
       operationId: List
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListStocksResponse"
+                $ref: '#/components/schemas/ListStocksResponse'
       tags:
         - Stock
       security: []
       parameters:
         - in: query
-          name: productId
+          name: page
           required: false
           schema:
-            format: double
-            type: number
+            default: 1
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
-            format: double
-            type: number
+            default: 10
+            format: int32
+            type: integer
         - in: query
-          name: page
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: query
+          name: search
           required: false
           schema:
             type: string
+        - in: query
+          name: productId
+          required: false
+          schema:
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Stock created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateStockResponse"
+                $ref: '#/components/schemas/CreateStockResponse'
       tags:
         - Stock
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -253,28 +257,28 @@ paths:
             schema:
               properties:
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 sizeId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 colorId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/sizes/{sizeId}:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetSizeResponse"
+                $ref: '#/components/schemas/GetSizeResponse'
       tags:
         - Size
       security: []
@@ -287,16 +291,16 @@ paths:
     put:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateSizeResponse"
+                $ref: '#/components/schemas/UpdateSizeResponse'
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: sizeId
@@ -315,16 +319,16 @@ paths:
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteSizeResponse"
+                $ref: '#/components/schemas/DeleteSizeResponse'
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: sizeId
@@ -335,12 +339,12 @@ paths:
     get:
       operationId: List
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListSizesResponse"
+                $ref: '#/components/schemas/ListSizesResponse'
       tags:
         - Size
       security: []
@@ -348,16 +352,16 @@ paths:
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Size created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateSizeResponse"
+                $ref: '#/components/schemas/CreateSizeResponse'
       tags:
         - Size
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -372,45 +376,45 @@ paths:
     get:
       operationId: GetCart
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetCartResponse"
+                $ref: '#/components/schemas/GetCartResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
     delete:
       operationId: ClearCart
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteCartResponse"
+                $ref: '#/components/schemas/DeleteCartResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
   /api/v1/cart/items:
     post:
       operationId: AddItemToCart
       responses:
-        "201":
+        '201':
           description: Item added to cart
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateCartResponse"
+                $ref: '#/components/schemas/CreateCartResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -419,26 +423,26 @@ paths:
             schema:
               properties:
                 stockId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 quantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/cart/items/{stockId}:
     delete:
       operationId: RemoveItemFromCart
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteCartResponse"
+                $ref: '#/components/schemas/DeleteCartResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: stockId
@@ -449,45 +453,45 @@ paths:
     get:
       operationId: GetWishlist
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetWishlistResponse"
+                $ref: '#/components/schemas/GetWishlistResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
     delete:
       operationId: ClearWishlist
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteWishlistResponse"
+                $ref: '#/components/schemas/DeleteWishlistResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
   /api/v1/wishlist/items:
     post:
       operationId: AddProductToWishlist
       responses:
-        "201":
+        '201':
           description: Item added to wishlist
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateWishlistResponse"
+                $ref: '#/components/schemas/CreateWishlistResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -496,23 +500,23 @@ paths:
             schema:
               properties:
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/wishlist/items/{productId}:
     delete:
       operationId: RemoveProductFromWishlist
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteWishlistResponse"
+                $ref: '#/components/schemas/DeleteWishlistResponse'
       tags:
         - Shopping
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -523,16 +527,16 @@ paths:
     post:
       operationId: CreateReview
       responses:
-        "201":
+        '201':
           description: Review created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateReviewResponse"
+                $ref: '#/components/schemas/CreateReviewResponse'
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -543,66 +547,62 @@ paths:
                 comment:
                   type: string
                 rating:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     get:
       operationId: ListReviews
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListReviewsResponse"
+                $ref: '#/components/schemas/ListReviewsResponse'
       tags:
         - Review
-      security:
-        - jwt_auth: []
+      security: []
       parameters:
-        - in: query
-          name: productId
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: limit
-          required: false
-          schema:
-            format: double
-            type: number
         - in: query
           name: page
           required: false
           schema:
-            format: double
-            type: number
+            default: 1
+            format: int32
+            type: integer
         - in: query
-          name: query
+          name: limit
           required: false
           schema:
-            type: string
+            default: 10
+            format: int32
+            type: integer
+        - in: query
+          name: productId
+          required: true
+          schema:
+            format: int32
+            type: integer
   /api/v1/reviews/{reviewId}:
     put:
       operationId: UpdateReview
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateReviewResponse"
+                $ref: '#/components/schemas/UpdateReviewResponse'
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: reviewId
@@ -618,28 +618,28 @@ paths:
                 comment:
                   type: string
                 rating:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 productId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: DeleteReview
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteReviewResponse"
+                $ref: '#/components/schemas/DeleteReviewResponse'
       tags:
         - Review
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: reviewId
@@ -654,16 +654,15 @@ paths:
     get:
       operationId: GetReview
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetReviewResponse"
+                $ref: '#/components/schemas/GetReviewResponse'
       tags:
         - Review
-      security:
-        - jwt_auth: []
+      security: []
       parameters:
         - in: path
           name: reviewId
@@ -674,12 +673,12 @@ paths:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetProductResponse"
+                $ref: '#/components/schemas/GetProductResponse'
       tags:
         - Product
       security: []
@@ -692,17 +691,17 @@ paths:
     put:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateProductResponse"
+                $ref: '#/components/schemas/UpdateProductResponse'
       description: Update a product, only admins can update products
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -738,21 +737,20 @@ paths:
                 - arDescription
                 - enDescription
                 - price
-                - image
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteProductResponse"
+                $ref: '#/components/schemas/DeleteProductResponse'
       description: Delete a product, only admins can delete products
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: productId
@@ -763,53 +761,55 @@ paths:
     get:
       operationId: List
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListProductsResponse"
+                $ref: '#/components/schemas/ListProductsResponse'
       tags:
         - Product
       security: []
       parameters:
         - in: query
-          name: categoryId
+          name: page
           required: false
           schema:
-            format: double
-            type: number
+            default: 1
+            format: int32
+            type: integer
         - in: query
           name: limit
           required: false
           schema:
-            format: double
-            type: number
+            default: 10
+            format: int32
+            type: integer
         - in: query
-          name: page
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: query
+          name: search
           required: false
           schema:
             type: string
+        - in: query
+          name: categoryId
+          required: false
+          schema:
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Product created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateProductResponse"
+                $ref: '#/components/schemas/CreateProductResponse'
       description: Create a new product, only admins can create products
       tags:
         - Product
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -845,16 +845,16 @@ paths:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetPaymentResponse"
+                $ref: '#/components/schemas/GetPaymentResponse'
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: transactionId
@@ -865,7 +865,7 @@ paths:
     post:
       operationId: Void
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -879,7 +879,7 @@ paths:
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -888,14 +888,13 @@ paths:
             schema:
               properties:
                 transactionId:
-                  type: number
-                  format: double
+                  type: string
               type: object
   /api/v1/payments/refund:
     post:
       operationId: Refund
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
@@ -909,7 +908,7 @@ paths:
       tags:
         - Payment
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -918,27 +917,26 @@ paths:
             schema:
               properties:
                 amount:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 transactionId:
-                  type: number
-                  format: double
+                  type: string
               type: object
   /api/v1/orders:
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Order created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateOrderResponse"
+                $ref: '#/components/schemas/CreateOrderResponse'
       description: Creates a new order for current authenticated user
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -947,8 +945,8 @@ paths:
             schema:
               properties:
                 addressId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 note:
                   type: string
                 paymentMethod:
@@ -960,56 +958,58 @@ paths:
     get:
       operationId: List
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListOrdersResponse"
+                $ref: '#/components/schemas/ListOrdersResponse'
       description: List orders with pagination
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
-        - in: query
-          name: userId
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: limit
-          required: false
-          schema:
-            format: double
-            type: number
         - in: query
           name: page
           required: false
           schema:
-            format: double
-            type: number
+            default: 1
+            format: int32
+            type: integer
         - in: query
-          name: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            format: int32
+            type: integer
+        - in: query
+          name: search
           required: false
           schema:
             type: string
+        - in: query
+          name: userId
+          required: false
+          schema:
+            format: int32
+            type: integer
   /api/v1/orders/{orderId}:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetOrderResponse"
+                $ref: '#/components/schemas/GetOrderResponse'
       description: Get order details **Only admins can access this endpoint**
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1019,18 +1019,18 @@ paths:
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteOrderResponse"
+                $ref: '#/components/schemas/DeleteOrderResponse'
       description: Delete order, Order details will not deleted from database, it will
         just marked as canceled **Only admins can access this endpoint**
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1045,17 +1045,17 @@ paths:
     patch:
       operationId: UpdateStatus
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateOrderResponse"
+                $ref: '#/components/schemas/UpdateOrderResponse'
       description: Update order status **Only admins can access this endpoint**
       tags:
         - Order
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: orderId
@@ -1086,19 +1086,45 @@ paths:
                     - CANCELLED
               type: object
   /api/v1/images:
+    get:
+      operationId: List
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListImagesResponse'
+      tags:
+        - Image
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: query
+          name: productId
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: colorId
+          required: false
+          schema:
+            format: int32
+            type: integer
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Image created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateImageResponse"
+                $ref: '#/components/schemas/CreateImageResponse'
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1120,45 +1146,20 @@ paths:
                 - colorId
                 - productId
                 - images
-    get:
-      operationId: List
-      responses:
-        "200":
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListImagesResponse"
-      tags:
-        - Image
-      security: []
-      parameters:
-        - in: query
-          name: productId
-          required: false
-          schema:
-            format: double
-            type: number
-        - in: query
-          name: colorId
-          required: false
-          schema:
-            format: double
-            type: number
   /api/v1/images/{imageId}:
     patch:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateImageResponse"
+                $ref: '#/components/schemas/UpdateImageResponse'
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: imageId
@@ -1177,32 +1178,361 @@ paths:
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateImageResponse"
+                $ref: '#/components/schemas/UpdateImageResponse'
       tags:
         - Image
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: imageId
           required: true
           schema:
             type: string
-  /api/v1/colors/{colorId}:
+  /api/v1/discounts/{discountId}:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetColorResponse"
+                $ref: '#/components/schemas/GetDiscountResponse'
+      tags:
+        - Discount
+      security: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: int32
+            type: integer
+    put:
+      operationId: Update
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDiscountResponse'
+      description: Update a discount, only admins can update discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                productIds:
+                  items:
+                    type: integer
+                    format: int32
+                  type: array
+                minQty:
+                  type: integer
+                  format: int32
+                description:
+                  type: string
+                endDate:
+                  type: string
+                startDate:
+                  type: string
+                isStoreWide:
+                  type: boolean
+                isActive:
+                  type: boolean
+                amount:
+                  type: integer
+                  format: int32
+                type:
+                  type: string
+                  enum:
+                    - PERCENTAGE
+                    - FIXED
+                    - BOGO
+                    - BULK
+              type: object
+    delete:
+      operationId: Delete
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteDiscountResponse'
+      description: Delete a discount, only admins can delete discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters:
+        - in: path
+          name: discountId
+          required: true
+          schema:
+            type: string
+  /api/v1/discounts:
+    get:
+      operationId: List
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDiscountsResponse'
+      tags:
+        - Discount
+      security: []
+      parameters:
+        - in: query
+          name: endDate
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: isStoreWide
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: isActive
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: limit
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: page
+          required: false
+          schema:
+            format: int32
+            type: integer
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+            enum:
+              - PERCENTAGE
+              - FIXED
+              - BOGO
+              - BULK
+    post:
+      operationId: Create
+      responses:
+        '201':
+          description: Discount created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDiscountResponse'
+      description: Create a new discount, only admins can create discount
+      tags:
+        - Discount
+      security:
+        - JWT_SECRET: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                productIds:
+                  items:
+                    type: integer
+                    format: int32
+                  type: array
+                minQty:
+                  type: integer
+                  format: int32
+                description:
+                  type: string
+                endDate:
+                  type: string
+                startDate:
+                  type: string
+                isStoreWide:
+                  type: boolean
+                isActive:
+                  type: boolean
+                amount:
+                  type: integer
+                  format: int32
+                type:
+                  type: string
+                  enum:
+                    - PERCENTAGE
+                    - FIXED
+                    - BOGO
+                    - BULK
+              type: object
+  /api/v1/dashboard/overview:
+    get:
+      operationId: GetOverview
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDashboardOverviewResponse'
+      description: "* returns an overview of the store's performance data for the
+        specified period of time (daily, weekly, or monthly), if omitted will
+        return all data"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/top-products:
+    get:
+      operationId: ListTopProducts
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTopProductsResponse'
+      description: '* returns the list of top selling products for the specified
+        period of time (daily, weekly, or monthly)'
+      tags:
+        - Dashboard
+      security: []
+      parameters: []
+  /api/v1/dashboard/sales-trends:
+    get:
+      operationId: GetSalesTrend
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSalesTrendsResponse'
+      description: '* returns the sales trend data for the specified period of time
+        (daily, weekly, or monthly)'
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/orders-status:
+    get:
+      operationId: GetOrderStatus
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrdersStatusResponse'
+      description: '* returns the order status data for the specified period of time
+        (daily, weekly, or monthly)'
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/inventory-status:
+    get:
+      operationId: GetInventoryStatus
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInventoryStatusResponse'
+      description: '* returns the inventory status data'
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/customers-feedback:
+    get:
+      operationId: ListCustomersFeedback
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCustomersFeedbackResponse'
+      description: "* returns the list of customers' feedback"
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/dashboard/top-customers:
+    get:
+      operationId: ListTopCustomers
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTopCustomersResponse'
+      description: '* returns the list of top customers for the specified period of
+        time (daily, weekly, or monthly)'
+      tags:
+        - Dashboard
+      security:
+        - JWT_SECRET: []
+      parameters: []
+  /api/v1/colors/{colorId}:
+    get:
+      operationId: Get
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetColorResponse'
       tags:
         - Color
       security: []
@@ -1215,16 +1545,16 @@ paths:
     put:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateColorResponse"
+                $ref: '#/components/schemas/UpdateColorResponse'
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: colorId
@@ -1247,16 +1577,16 @@ paths:
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteColorResponse"
+                $ref: '#/components/schemas/DeleteColorResponse'
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: colorId
@@ -1267,12 +1597,12 @@ paths:
     get:
       operationId: Lists
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListColorsResponse"
+                $ref: '#/components/schemas/ListColorsResponse'
       tags:
         - Color
       security: []
@@ -1280,16 +1610,16 @@ paths:
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Color created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateColorResponse"
+                $ref: '#/components/schemas/CreateColorResponse'
       tags:
         - Color
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1308,12 +1638,12 @@ paths:
     get:
       operationId: Get
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetCategoryResponse"
+                $ref: '#/components/schemas/GetCategoryResponse'
       tags:
         - Category
       security: []
@@ -1326,17 +1656,17 @@ paths:
     put:
       operationId: Update
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateCategoryResponse"
+                $ref: '#/components/schemas/UpdateCategoryResponse'
       description: Update a category, only admins can update categories
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: categoryId
@@ -1357,17 +1687,17 @@ paths:
     delete:
       operationId: Delete
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteCategoryResponse"
+                $ref: '#/components/schemas/DeleteCategoryResponse'
       description: Delete a category, only admins can delete categories
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: categoryId
@@ -1378,12 +1708,12 @@ paths:
     get:
       operationId: List
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListCategoriesResponse"
+                $ref: '#/components/schemas/ListCategoriesResponse'
       tags:
         - Category
       security: []
@@ -1391,17 +1721,17 @@ paths:
     post:
       operationId: Create
       responses:
-        "201":
+        '201':
           description: Category created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateCategoryResponse"
+                $ref: '#/components/schemas/CreateCategoryResponse'
       description: Create a new category, only admins can create categories
       tags:
         - Category
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1414,16 +1744,68 @@ paths:
                 arName:
                   type: string
               type: object
+  /auth/google:
+    get:
+      operationId: GoogleAuth
+      responses:
+        '204':
+          description: No content
+      description: >-
+        This endpoint redirects the user to Google's and initiates the Google
+        OAuth2 login flow.
+
+
+        - The `redirectUrl` query parameter should be passed in the request, the
+        `redirectUrl` should be a URL encoded.
+
+        - The frontend should implement a route that listens to the
+        `redirectUrl` and extracts the `accessToken` and `refreshToken` from the
+        query parameters.
+
+
+        **Example:**
+
+
+        1. _Request_ - Redirect the user to Google's login page:
+
+        ```ts
+
+        const redirectUrl =
+        encodeURIComponent('http://localhost:3000/login/callback');
+
+        window.location.href =
+        `http://localhost:3000/auth/google?redirectUrl=${redirectUrl}`;
+
+        ```
+
+        2. _Response_ - Google redirects the user to the `redirectUrl` with the
+        tokens as query parameters:
+
+        ```ts
+
+        // http://localhost:3000/login/callback?accessToken=...&refreshToken=...
+
+        ```
+      tags:
+        - Auth
+      security: []
+      parameters:
+        - description: '- The URL to redirect the user to after the login is successful.'
+          in: query
+          name: redirectUrl
+          required: false
+          schema:
+            type: string
   /api/v1/auth/login:
     post:
       operationId: Login
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponse"
+                $ref: '#/components/schemas/LoginResponse'
       tags:
         - Auth
       security: []
@@ -1443,12 +1825,20 @@ paths:
     post:
       operationId: Register
       responses:
-        "201":
+        '201':
           description: User registered successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegisterResponse"
+                $ref: '#/components/schemas/RegisterResponse'
+      description: >-
+        Register a new user. Sends a verification email to the user's email.
+
+        Frontend should implement a `/confirm-email` route that takes the token
+        as a query parameter.
+
+        This route should call the `verifyEmail` endpoint with `Authorization`
+        header set to the token.
       tags:
         - Auth
       security: []
@@ -1474,12 +1864,12 @@ paths:
     post:
       operationId: Refresh
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RefreshTokenResponse"
+                $ref: '#/components/schemas/RefreshTokenResponse'
       tags:
         - Auth
       security: []
@@ -1494,39 +1884,44 @@ paths:
                   type: string
               type: object
   /api/v1/auth/verify-email:
-    get:
+    post:
       operationId: VerifyEmail
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VerifyEmailResponse"
+                $ref: '#/components/schemas/VerifyEmailResponse'
+      description: >-
+        Verify the user's email using the token sent to their email. This
+        endpoint should be called from the frontend after the user clicks the
+        verification link.
+
+        The token should be passed in the header as `Bearer` token.
       tags:
         - Auth
-      security: []
-      parameters:
-        - in: query
-          name: token
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: email
-          required: false
-          schema:
-            type: string
+      security:
+        - JWT_VERIFY: []
+      parameters: []
   /api/v1/auth/forgot-password:
     post:
       operationId: ForgotPassword
       responses:
-        "200":
+        '200':
           description: Password reset code sent successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ForgotPasswordResponse"
+                $ref: '#/components/schemas/ForgotPasswordResponse'
+      description: >-
+        Send a password reset link to the user's email, containing a reset
+        token.
+
+        Frontend should implement a `/reset-password` route that takes the token
+        as a query parameter, and a form to reset the password
+
+        calling the `resetPassword` endpoint.
       tags:
         - Auth
       security: []
@@ -1537,6 +1932,8 @@ paths:
           application/json:
             schema:
               properties:
+                redirectUrl:
+                  type: string
                 email:
                   type: string
               type: object
@@ -1544,17 +1941,27 @@ paths:
     post:
       operationId: ResetPassword
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResetPasswordResponse"
+                $ref: '#/components/schemas/ResetPasswordResponse'
+      description: >-
+        Reset the user's password using the token sent to their email. This
+        endpoint should be called from the frontend after the user clicks the
+        reset link.
+
+        The token should be passed in the header as `Bearer` token.
+
+        The new password should be passed in the body.
+
+        After resetting the password, send a confirmation email to the user's
+        email.
       tags:
         - Auth
       security:
-        - jwt_auth:
-            - reset_password
+        - JWT_RESET: []
       parameters: []
       requestBody:
         required: true
@@ -1562,62 +1969,101 @@ paths:
           application/json:
             schema:
               properties:
-                password:
+                confirmNewPassword:
                   type: string
-                email:
-                  type: string
-                code:
+                newPassword:
                   type: string
               type: object
-  /api/v1/auth/resend-email-verification:
-    get:
-      operationId: ResendVerificationEmail
+  /api/v1/auth/change-password:
+    patch:
+      operationId: ChangePassword
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResendVerificationEmailResponse"
+                $ref: '#/components/schemas/ChangePasswordResponse'
       tags:
         - Auth
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+              type: object
+  /api/v1/auth/resend-email-verification:
+    post:
+      operationId: ResendVerificationEmail
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendVerificationEmailResponse'
+      description: >-
+        Resend the email verification link to the user's email. This is useful
+        if the user didn't receive the email the first time.
+
+        Frontend should implement a `/confirm-email` route that takes the token
+        as a query parameter. This route should call the `verifyEmail` endpoint.
+      tags:
+        - Auth
+      security:
+        - JWT_SECRET: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+              type: object
   /api/v1/addresses:
     get:
       operationId: ListUserAddress
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ListAddressResponse"
+                $ref: '#/components/schemas/ListAddressResponse'
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: query
           name: userId
           required: true
           schema:
-            format: double
-            type: number
+            format: int32
+            type: integer
     post:
       operationId: CreateUserAddress
       responses:
-        "201":
+        '201':
           description: Address created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateAddressResponse"
+                $ref: '#/components/schemas/CreateAddressResponse'
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters: []
       requestBody:
         required: true
@@ -1628,8 +2074,8 @@ paths:
                 address:
                   type: string
                 floor:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 building:
                   type: string
                 country:
@@ -1647,23 +2093,23 @@ paths:
                 phone:
                   type: string
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
   /api/v1/addresses/{addressId}:
     put:
       operationId: UpdateUserAddress
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateAddressResponse"
+                $ref: '#/components/schemas/UpdateAddressResponse'
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: addressId
@@ -1679,8 +2125,8 @@ paths:
                 address:
                   type: string
                 floor:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 building:
                   type: string
                 country:
@@ -1698,22 +2144,22 @@ paths:
                 phone:
                   type: string
                 userId:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               type: object
     delete:
       operationId: DeleteUserAddress
       responses:
-        "200":
+        '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteAddressResponse"
+                $ref: '#/components/schemas/DeleteAddressResponse'
       tags:
         - Address
       security:
-        - jwt_auth: []
+        - JWT_SECRET: []
       parameters:
         - in: path
           name: addressId
@@ -1724,7 +2170,8 @@ paths:
           name: userId
           required: true
           schema:
-            type: string
+            format: int32
+            type: integer
 components:
   examples: {}
   headers: {}
@@ -1761,20 +2208,22 @@ components:
           format: date-time
           nullable: true
         role:
-          $ref: "#/components/schemas/RoleType"
+          $ref: '#/components/schemas/RoleType'
         lastName:
           type: string
         firstName:
           type: string
+        isPhoneVerified:
+          type: boolean
         phone:
           type: string
-        isVerified:
+        isEmailVerified:
           type: boolean
         email:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1782,31 +2231,32 @@ components:
         - role
         - lastName
         - firstName
+        - isPhoneVerified
         - phone
-        - isVerified
+        - isEmailVerified
         - email
         - id
       type: object
     GetUserResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/User'
           required:
             - data
           type: object
     Pagination:
       properties:
         total:
-          type: number
-          format: double
+          type: integer
+          format: int32
         limit:
-          type: number
-          format: double
+          type: integer
+          format: int32
         page:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - total
         - limit
@@ -1814,16 +2264,16 @@ components:
       type: object
     ListUsersResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 users:
                   items:
-                    $ref: "#/components/schemas/User"
+                    $ref: '#/components/schemas/User'
                   type: array
                 pagination:
-                  $ref: "#/components/schemas/Pagination"
+                  $ref: '#/components/schemas/Pagination'
               required:
                 - users
                 - pagination
@@ -1832,18 +2282,16 @@ components:
             - data
           type: object
     DeleteUserResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
+      $ref: '#/components/schemas/DefaultResponseBody'
     UpdateUserResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/User"
+              $ref: '#/components/schemas/User'
           required:
             - data
           type: object
-    Decimal:
-      type: string
     Product:
       properties:
         updatedAt:
@@ -1856,13 +2304,7 @@ components:
           type: string
         imageKey:
           type: string
-        price:
-          anyOf:
-            - type: number
-              format: double
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
+        price: {}
         enDescription:
           type: string
         arDescription:
@@ -1872,11 +2314,11 @@ components:
         arName:
           type: string
         categoryId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1905,8 +2347,8 @@ components:
         code:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -1918,11 +2360,11 @@ components:
     Pick_Stock.Exclude_keyofStock.id-or-colorId-or-productId__:
       properties:
         sizeId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -1943,8 +2385,8 @@ components:
     Pick_Image.Exclude_keyofImage.colorId-or-productId__:
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -1968,33 +2410,33 @@ components:
       description: Construct a type with the properties of T except for those in type K.
     GetStockResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 images:
                   items:
-                    $ref: "#/components/schemas/Omit_Image.colorId-or-productId_"
+                    $ref: '#/components/schemas/Omit_Image.colorId-or-productId_'
                   type: array
                 sizes:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Omit_Stock.id-or-colorId-or-productId_"
+                      - $ref: '#/components/schemas/Omit_Stock.id-or-colorId-or-productId_'
                       - properties:
                           size:
                             type: string
                           stockId:
-                            type: number
-                            format: double
+                            type: integer
+                            format: int32
                         required:
                           - size
                           - stockId
                         type: object
                   type: array
                 color:
-                  $ref: "#/components/schemas/Color"
+                  $ref: '#/components/schemas/Color'
                 product:
-                  $ref: "#/components/schemas/Product"
+                  $ref: '#/components/schemas/Product'
               required:
                 - images
                 - sizes
@@ -2006,7 +2448,7 @@ components:
           type: object
     ListStocksResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
@@ -2015,27 +2457,27 @@ components:
                     properties:
                       images:
                         items:
-                          $ref: "#/components/schemas/Omit_Image.colorId-or-productId_"
+                          $ref: '#/components/schemas/Omit_Image.colorId-or-productId_'
                         type: array
                       sizes:
                         items:
                           allOf:
-                            - $ref: "#/components/schemas/Omit_Stock.id-or-colorId-or-productId_"
+                            - $ref: '#/components/schemas/Omit_Stock.id-or-colorId-or-productId_'
                             - properties:
                                 size:
                                   type: string
                                 stockId:
-                                  type: number
-                                  format: double
+                                  type: integer
+                                  format: int32
                               required:
                                 - size
                                 - stockId
                               type: object
                         type: array
                       color:
-                        $ref: "#/components/schemas/Color"
+                        $ref: '#/components/schemas/Color'
                       product:
-                        $ref: "#/components/schemas/Product"
+                        $ref: '#/components/schemas/Product'
                     required:
                       - images
                       - sizes
@@ -2044,7 +2486,7 @@ components:
                     type: object
                   type: array
                 pagination:
-                  $ref: "#/components/schemas/Pagination"
+                  $ref: '#/components/schemas/Pagination'
               required:
                 - stocks
                 - pagination
@@ -2061,20 +2503,20 @@ components:
           type: string
           format: date-time
         quantity:
-          type: number
-          format: double
+          type: integer
+          format: int32
         sizeId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         colorId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         productId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2086,17 +2528,17 @@ components:
       type: object
     CreateStockResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Stock"
+              $ref: '#/components/schemas/Stock'
           required:
             - data
           type: object
     UpdateStockResponse:
-      $ref: "#/components/schemas/CreateStockResponse"
+      $ref: '#/components/schemas/CreateStockResponse'
     DeleteStockResponse:
-      $ref: "#/components/schemas/CreateStockResponse"
+      $ref: '#/components/schemas/CreateStockResponse'
     Size:
       properties:
         updatedAt:
@@ -2108,8 +2550,8 @@ components:
         name:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2118,120 +2560,185 @@ components:
       type: object
     GetSizeResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Size"
+              $ref: '#/components/schemas/Size'
           required:
             - data
           type: object
     ListSizesResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
-                $ref: "#/components/schemas/Size"
+                $ref: '#/components/schemas/Size'
               type: array
           required:
             - data
           type: object
     CreateSizeResponse:
-      $ref: "#/components/schemas/GetSizeResponse"
+      $ref: '#/components/schemas/GetSizeResponse'
     UpdateSizeResponse:
-      $ref: "#/components/schemas/GetSizeResponse"
+      $ref: '#/components/schemas/GetSizeResponse'
     DeleteSizeResponse:
-      $ref: "#/components/schemas/GetSizeResponse"
-    Pick_Cart.Exclude_keyofCart.stockId__:
+      $ref: '#/components/schemas/GetSizeResponse'
+    Cart:
       properties:
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        quantity:
+          type: integer
+          format: int32
+        stockId:
+          type: integer
+          format: int32
         userId:
-          type: number
-          format: double
-        quantity:
-          type: number
-          format: double
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+          type: integer
+          format: int32
       required:
+        - updatedAt
+        - createdAt
+        - quantity
+        - stockId
         - userId
-        - quantity
-        - createdAt
-        - updatedAt
       type: object
-      description: From T, pick a set of properties whose keys are in the union K
-    Omit_Cart.stockId_:
-      $ref: "#/components/schemas/Pick_Cart.Exclude_keyofCart.stockId__"
-      description: Construct a type with the properties of T except for those in type K.
-    Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-productId__:
+    DiscountType:
+      type: string
+      enum:
+        - PERCENTAGE
+        - FIXED
+        - BOGO
+        - BULK
+      nullable: false
+    Discount:
       properties:
-        id:
-          type: number
-          format: double
-        quantity:
-          type: number
-          format: double
-        createdAt:
-          type: string
-          format: date-time
         updatedAt:
           type: string
           format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+          nullable: true
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        isStoreWide:
+          type: boolean
+        isActive:
+          type: boolean
+        minQty:
+          type: integer
+          format: int32
+        description:
+          type: string
+          nullable: true
+        amount: {}
+        type:
+          $ref: '#/components/schemas/DiscountType'
+        id:
+          type: integer
+          format: int32
       required:
-        - id
-        - quantity
-        - createdAt
         - updatedAt
+        - createdAt
+        - endDate
+        - startDate
+        - isStoreWide
+        - isActive
+        - minQty
+        - description
+        - amount
+        - type
+        - id
       type: object
-      description: From T, pick a set of properties whose keys are in the union K
-    Omit_Stock.colorId-or-sizeId-or-productId_:
-      $ref: "#/components/schemas/Pick_Stock.Exclude_keyofStock.colorId-or-sizeId-or-\
-        productId__"
-      description: Construct a type with the properties of T except for those in type K.
+    Image:
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        imageUrl:
+          type: string
+        imageKey:
+          type: string
+        isPrimary:
+          type: boolean
+        productId:
+          type: integer
+          format: int32
+        colorId:
+          type: integer
+          format: int32
+        id:
+          type: integer
+          format: int32
+      required:
+        - createdAt
+        - imageUrl
+        - imageKey
+        - isPrimary
+        - productId
+        - colorId
+        - id
+      type: object
     GetCartResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 items:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Omit_Cart.stockId_"
+                      - $ref: '#/components/schemas/Cart'
                       - properties:
                           stock:
                             allOf:
-                              - $ref: "#/components/schemas/Omit_Stock.colorId-or-sizeId-or-productId_"
+                              - $ref: '#/components/schemas/Stock'
                               - properties:
                                   size:
-                                    $ref: "#/components/schemas/Size"
+                                    $ref: '#/components/schemas/Size'
                                   color:
-                                    $ref: "#/components/schemas/Color"
+                                    $ref: '#/components/schemas/Color'
                                 required:
                                   - size
                                   - color
                                 type: object
                           images:
                             items:
-                              $ref: "#/components/schemas/Omit_Image.colorId-or-productId_"
+                              $ref: '#/components/schemas/Image'
                             type: array
                           product:
-                            $ref: "#/components/schemas/Product"
+                            $ref: '#/components/schemas/Product'
+                          appliedDiscount:
+                            $ref: '#/components/schemas/Discount'
+                          discountedPrice:
+                            type: integer
+                            format: int32
                         required:
                           - stock
                           - images
                           - product
                         type: object
                   type: array
+                totalDiscount:
+                  type: integer
+                  format: int32
                 totalPrice:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 totalQuantity:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               required:
                 - items
                 - totalPrice
@@ -2241,14 +2748,14 @@ components:
             - data
           type: object
     CreateCartResponse:
-      $ref: "#/components/schemas/GetCartResponse"
+      $ref: '#/components/schemas/GetCartResponse'
     DeleteCartResponse:
-      $ref: "#/components/schemas/GetCartResponse"
+      $ref: '#/components/schemas/GetCartResponse'
     Pick_Wishlist.Exclude_keyofWishlist.productId__:
       properties:
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2262,19 +2769,19 @@ components:
       type: object
       description: From T, pick a set of properties whose keys are in the union K
     Omit_Wishlist.productId_:
-      $ref: "#/components/schemas/Pick_Wishlist.Exclude_keyofWishlist.productId__"
+      $ref: '#/components/schemas/Pick_Wishlist.Exclude_keyofWishlist.productId__'
       description: Construct a type with the properties of T except for those in type K.
     GetWishlistResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
                 allOf:
-                  - $ref: "#/components/schemas/Omit_Wishlist.productId_"
+                  - $ref: '#/components/schemas/Omit_Wishlist.productId_'
                   - properties:
                       product:
-                        $ref: "#/components/schemas/Product"
+                        $ref: '#/components/schemas/Product'
                     required:
                       - product
                     type: object
@@ -2283,9 +2790,9 @@ components:
             - data
           type: object
     CreateWishlistResponse:
-      $ref: "#/components/schemas/GetWishlistResponse"
+      $ref: '#/components/schemas/GetWishlistResponse'
     DeleteWishlistResponse:
-      $ref: "#/components/schemas/GetWishlistResponse"
+      $ref: '#/components/schemas/GetWishlistResponse'
     Review:
       properties:
         updatedAt:
@@ -2298,18 +2805,18 @@ components:
           type: string
           nullable: true
         rating:
-          type: number
-          format: double
+          type: integer
+          format: int32
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         productId:
-          type: number
-          format: double
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2321,33 +2828,28 @@ components:
       type: object
     CreateReviewResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Review"
+              $ref: '#/components/schemas/Review'
           required:
             - data
           type: object
     UpdateReviewResponse:
-      $ref: "#/components/schemas/CreateReviewResponse"
+      $ref: '#/components/schemas/CreateReviewResponse'
     DeleteReviewResponse:
-      $ref: "#/components/schemas/CreateReviewResponse"
+      $ref: '#/components/schemas/CreateReviewResponse'
     GetReviewResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               allOf:
-                - $ref: "#/components/schemas/Review"
+                - $ref: '#/components/schemas/Review'
                 - properties:
-                    product:
-                      $ref: "#/components/schemas/Product"
                     user:
-                      allOf:
-                        - $ref: "#/components/schemas/User"
-                      nullable: true
+                      $ref: '#/components/schemas/User'
                   required:
-                    - product
                     - user
                   type: object
           required:
@@ -2355,28 +2857,23 @@ components:
           type: object
     ListReviewsResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 reviews:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Review"
+                      - $ref: '#/components/schemas/Review'
                       - properties:
-                          product:
-                            $ref: "#/components/schemas/Product"
                           user:
-                            allOf:
-                              - $ref: "#/components/schemas/User"
-                            nullable: true
+                            $ref: '#/components/schemas/User'
                         required:
-                          - product
                           - user
                         type: object
                   type: array
                 pagination:
-                  $ref: "#/components/schemas/Pagination"
+                  $ref: '#/components/schemas/Pagination'
               required:
                 - reviews
                 - pagination
@@ -2397,8 +2894,8 @@ components:
         arName:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2408,37 +2905,55 @@ components:
       type: object
     GetProductResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               allOf:
-                - $ref: "#/components/schemas/Product"
+                - $ref: '#/components/schemas/Product'
                 - properties:
+                    discounts:
+                      items:
+                        $ref: '#/components/schemas/Discount'
+                      type: array
                     category:
-                      $ref: "#/components/schemas/Category"
+                      $ref: '#/components/schemas/Category'
+                    avgRating:
+                      type: integer
+                      format: int32
                   required:
+                    - discounts
                     - category
+                    - avgRating
                   type: object
           required:
             - data
           type: object
     ListProductsResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 pagination:
-                  $ref: "#/components/schemas/Pagination"
+                  $ref: '#/components/schemas/Pagination'
                 products:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Product"
+                      - $ref: '#/components/schemas/Product'
                       - properties:
+                          discounts:
+                            items:
+                              $ref: '#/components/schemas/Discount'
+                            type: array
                           category:
-                            $ref: "#/components/schemas/Category"
+                            $ref: '#/components/schemas/Category'
+                          avgRating:
+                            type: integer
+                            format: int32
                         required:
+                          - discounts
                           - category
+                          - avgRating
                         type: object
                   type: array
               required:
@@ -2450,20 +2965,20 @@ components:
           type: object
     CreateProductResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Product"
+              $ref: '#/components/schemas/Product'
           required:
             - data
           type: object
     UpdateProductResponse:
-      $ref: "#/components/schemas/CreateProductResponse"
+      $ref: '#/components/schemas/CreateProductResponse'
     DeleteProductResponse:
-      $ref: "#/components/schemas/CreateProductResponse"
+      $ref: '#/components/schemas/CreateProductResponse'
     GetPaymentResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
@@ -2472,11 +2987,11 @@ components:
                 has_parent_transaction:
                   type: boolean
                 profile_id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 integration_id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 is_3d_secure:
                   type: boolean
                 is_refunded:
@@ -2492,13 +3007,13 @@ components:
                 success:
                   type: boolean
                 amount_cents:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
                 pending:
                   type: boolean
                 id:
-                  type: number
-                  format: double
+                  type: integer
+                  format: int32
               additionalProperties: {}
               required:
                 - created_at
@@ -2521,7 +3036,7 @@ components:
           type: object
     CreateOrderResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
@@ -2567,45 +3082,31 @@ components:
           type: string
           nullable: true
         paymentStatus:
-          $ref: "#/components/schemas/PaymentStatusType"
+          $ref: '#/components/schemas/PaymentStatusType'
         paymentMethod:
-          $ref: "#/components/schemas/PaymentMethodType"
+          $ref: '#/components/schemas/PaymentMethodType'
+        transactionId:
+          type: string
+          nullable: true
         orderStatus:
-          $ref: "#/components/schemas/OrderStatusType"
-        total:
-          anyOf:
-            - type: number
-              format: double
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
-        discount:
-          anyOf:
-            - type: number
-              format: double
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
-        subtotal:
-          anyOf:
-            - type: number
-              format: double
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
+          $ref: '#/components/schemas/OrderStatusType'
+        total: {}
+        discount: {}
+        subtotal: {}
         userId:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
         - note
         - paymentStatus
         - paymentMethod
+        - transactionId
         - orderStatus
         - total
         - discount
@@ -2622,65 +3123,32 @@ components:
           type: string
           format: date-time
         quantity:
-          type: number
-          format: double
-        imageUrl:
-          type: string
-          nullable: true
-        price:
-          anyOf:
-            - type: number
-              format: double
-            - $ref: "#/components/schemas/Decimal"
-            - type: string
-            - {}
-        size:
-          type: string
-        color:
-          type: string
-        name:
-          type: string
+          type: integer
+          format: int32
+        price: {}
+        stockId:
+          type: integer
+          format: int32
+        productId:
+          type: integer
+          format: int32
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
         - quantity
-        - imageUrl
         - price
-        - size
-        - color
-        - name
+        - stockId
+        - productId
         - id
-      type: object
-    Payment:
-      properties:
-        transactionOrderId:
-          type: number
-          format: double
-          nullable: true
-        transactionId:
-          type: number
-          format: double
-          nullable: true
-        paymentLink:
-          type: string
-          nullable: true
-        orderId:
-          type: number
-          format: double
-      required:
-        - transactionOrderId
-        - transactionId
-        - paymentLink
-        - orderId
       type: object
     Pick_Shipping.Exclude_keyofShipping.addressId-or-orderId__:
       properties:
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
         createdAt:
           type: string
           format: date-time
@@ -2717,8 +3185,8 @@ components:
           type: string
           nullable: true
         floor:
-          type: number
-          format: double
+          type: integer
+          format: int32
           nullable: true
         building:
           type: string
@@ -2732,8 +3200,8 @@ components:
         country:
           type: string
         id:
-          type: number
-          format: double
+          type: integer
+          format: int32
       required:
         - updatedAt
         - createdAt
@@ -2751,37 +3219,43 @@ components:
       type: object
     GetOrderResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               allOf:
-                - $ref: "#/components/schemas/Order"
+                - $ref: '#/components/schemas/Order'
                 - properties:
                     shippingDetails:
                       allOf:
-                        - $ref: "#/components/schemas/Omit_Shipping.addressId-or-orderId_"
+                        - $ref: '#/components/schemas/Omit_Shipping.addressId-or-orderId_'
                         - properties:
                             address:
-                              $ref: "#/components/schemas/Address"
+                              $ref: '#/components/schemas/Address'
                           required:
                             - address
                           type: object
                       nullable: true
-                    paymentDetails:
-                      allOf:
-                        - $ref: "#/components/schemas/Payment"
-                      nullable: true
                     orderItems:
                       items:
-                        $ref: "#/components/schemas/OrderItem"
+                        allOf:
+                          - $ref: '#/components/schemas/OrderItem'
+                          - properties:
+                              size:
+                                type: string
+                              color:
+                                type: string
+                              product:
+                                $ref: '#/components/schemas/Product'
+                            required:
+                              - size
+                              - color
+                              - product
+                            type: object
                       type: array
                     user:
-                      allOf:
-                        - $ref: "#/components/schemas/User"
-                      nullable: true
+                      $ref: '#/components/schemas/User'
                   required:
                     - shippingDetails
-                    - paymentDetails
                     - orderItems
                     - user
                   type: object
@@ -2790,46 +3264,52 @@ components:
           type: object
     ListOrdersResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 orders:
                   items:
                     allOf:
-                      - $ref: "#/components/schemas/Order"
+                      - $ref: '#/components/schemas/Order'
                       - properties:
                           shippingDetails:
                             allOf:
-                              - $ref: "#/components/schemas/Omit_Shipping.addressId-or-orderId_"
+                              - $ref: '#/components/schemas/Omit_Shipping.addressId-or-orderId_'
                               - properties:
                                   address:
-                                    $ref: "#/components/schemas/Address"
+                                    $ref: '#/components/schemas/Address'
                                 required:
                                   - address
                                 type: object
                             nullable: true
-                          paymentDetails:
-                            allOf:
-                              - $ref: "#/components/schemas/Payment"
-                            nullable: true
                           orderItems:
                             items:
-                              $ref: "#/components/schemas/OrderItem"
+                              allOf:
+                                - $ref: '#/components/schemas/OrderItem'
+                                - properties:
+                                    size:
+                                      type: string
+                                    color:
+                                      type: string
+                                    product:
+                                      $ref: '#/components/schemas/Product'
+                                  required:
+                                    - size
+                                    - color
+                                    - product
+                                  type: object
                             type: array
                           user:
-                            allOf:
-                              - $ref: "#/components/schemas/User"
-                            nullable: true
+                            $ref: '#/components/schemas/User'
                         required:
                           - shippingDetails
-                          - paymentDetails
                           - orderItems
                           - user
                         type: object
                   type: array
                 pagination:
-                  $ref: "#/components/schemas/Pagination"
+                  $ref: '#/components/schemas/Pagination'
               required:
                 - orders
                 - pagination
@@ -2839,154 +3319,394 @@ components:
           type: object
     DeleteOrderResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Order"
+              $ref: '#/components/schemas/Order'
           required:
             - data
           type: object
     UpdateOrderResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Order"
+              $ref: '#/components/schemas/Order'
           required:
             - data
           type: object
-    CreateImageResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
-    Image:
-      properties:
-        createdAt:
-          type: string
-          format: date-time
-        imageUrl:
-          type: string
-        imageKey:
-          type: string
-        isPrimary:
-          type: boolean
-        productId:
-          type: number
-          format: double
-        colorId:
-          type: number
-          format: double
-        id:
-          type: number
-          format: double
-      required:
-        - createdAt
-        - imageUrl
-        - imageKey
-        - isPrimary
-        - productId
-        - colorId
-        - id
-      type: object
     ListImagesResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
-                $ref: "#/components/schemas/Image"
+                $ref: '#/components/schemas/Image'
               type: array
           required:
             - data
           type: object
+    CreateImageResponse:
+      $ref: '#/components/schemas/DefaultResponseBody'
     UpdateImageResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Image"
+              $ref: '#/components/schemas/Image'
+          required:
+            - data
+          type: object
+    GetDiscountResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/Discount'
+                - properties:
+                    products:
+                      items:
+                        $ref: '#/components/schemas/Product'
+                      type: array
+                    pagination:
+                      $ref: '#/components/schemas/Pagination'
+                  required:
+                    - products
+                    - pagination
+                  type: object
+          required:
+            - data
+          type: object
+    ListDiscountsResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                pagination:
+                  $ref: '#/components/schemas/Pagination'
+                discounts:
+                  items:
+                    allOf:
+                      - $ref: '#/components/schemas/Discount'
+                      - properties:
+                          productsCount:
+                            type: integer
+                            format: int32
+                        required:
+                          - productsCount
+                        type: object
+                  type: array
+              required:
+                - pagination
+                - discounts
+              type: object
+          required:
+            - data
+          type: object
+    CreateDiscountResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              $ref: '#/components/schemas/Discount'
+          required:
+            - data
+          type: object
+    UpdateDiscountResponse:
+      $ref: '#/components/schemas/CreateDiscountResponse'
+    DeleteDiscountResponse:
+      $ref: '#/components/schemas/CreateDiscountResponse'
+    GetDashboardOverviewResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                totalRevenue:
+                  type: integer
+                  format: int32
+                totalRefund:
+                  type: integer
+                  format: int32
+                totalSales:
+                  type: integer
+                  format: int32
+                totalCustomers:
+                  type: integer
+                  format: int32
+                totalOrders:
+                  type: integer
+                  format: int32
+                totalProducts:
+                  type: integer
+                  format: int32
+              required:
+                - totalRevenue
+                - totalRefund
+                - totalSales
+                - totalCustomers
+                - totalOrders
+                - totalProducts
+              type: object
+          required:
+            - data
+          type: object
+    ListTopProductsResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              items:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/Product'
+                  unitsSold:
+                    type: integer
+                    format: int32
+                required:
+                  - product
+                  - unitsSold
+                type: object
+              type: array
+          required:
+            - data
+          type: object
+    GetSalesTrendsResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                trends:
+                  items:
+                    properties:
+                      sales:
+                        type: integer
+                        format: int32
+                      date:
+                        type: string
+                    required:
+                      - sales
+                      - date
+                    type: object
+                  type: array
+              required:
+                - trends
+              type: object
+          required:
+            - data
+          type: object
+    GetOrdersStatusResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                fulfilled:
+                  type: integer
+                  format: int32
+                canceled:
+                  type: integer
+                  format: int32
+                delivered:
+                  type: integer
+                  format: int32
+                shipped:
+                  type: integer
+                  format: int32
+                pending:
+                  type: integer
+                  format: int32
+              required:
+                - fulfilled
+                - canceled
+                - delivered
+                - shipped
+                - pending
+              type: object
+          required:
+            - data
+          type: object
+    GetInventoryStatusResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                outOfStock:
+                  items:
+                    properties:
+                      size:
+                        $ref: '#/components/schemas/Size'
+                      color:
+                        $ref: '#/components/schemas/Color'
+                      product:
+                        $ref: '#/components/schemas/Product'
+                    required:
+                      - size
+                      - color
+                      - product
+                    type: object
+                  type: array
+                lowStock:
+                  items:
+                    properties:
+                      size:
+                        $ref: '#/components/schemas/Size'
+                      color:
+                        $ref: '#/components/schemas/Color'
+                      product:
+                        $ref: '#/components/schemas/Product'
+                      stockRemaining:
+                        type: integer
+                        format: int32
+                    required:
+                      - size
+                      - color
+                      - product
+                      - stockRemaining
+                    type: object
+                  type: array
+              required:
+                - outOfStock
+                - lowStock
+              type: object
+          required:
+            - data
+          type: object
+    ListCustomersFeedbackResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              properties:
+                recentFeedback:
+                  items:
+                    allOf:
+                      - $ref: '#/components/schemas/Review'
+                      - properties:
+                          product:
+                            $ref: '#/components/schemas/Product'
+                          user:
+                            $ref: '#/components/schemas/User'
+                        required:
+                          - product
+                          - user
+                        type: object
+                  type: array
+                averageRating:
+                  type: integer
+                  format: int32
+              required:
+                - recentFeedback
+                - averageRating
+              type: object
+          required:
+            - data
+          type: object
+    ListTopCustomersResponse:
+      allOf:
+        - $ref: '#/components/schemas/DefaultResponseBody'
+        - properties:
+            data:
+              items:
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  totalOrders:
+                    type: integer
+                    format: int32
+                  totalPaid:
+                    type: integer
+                    format: int32
+                required:
+                  - user
+                  - totalOrders
+                  - totalPaid
+                type: object
+              type: array
           required:
             - data
           type: object
     GetColorResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Color"
+              $ref: '#/components/schemas/Color'
           required:
             - data
           type: object
     ListColorsResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
-                $ref: "#/components/schemas/Color"
+                $ref: '#/components/schemas/Color'
               type: array
           required:
             - data
           type: object
     CreateColorResponse:
-      $ref: "#/components/schemas/GetColorResponse"
+      $ref: '#/components/schemas/GetColorResponse'
     UpdateColorResponse:
-      $ref: "#/components/schemas/GetColorResponse"
+      $ref: '#/components/schemas/GetColorResponse'
     DeleteColorResponse:
-      $ref: "#/components/schemas/GetColorResponse"
+      $ref: '#/components/schemas/GetColorResponse'
     GetCategoryResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Category"
+              $ref: '#/components/schemas/Category'
           required:
             - data
           type: object
     ListCategoriesResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
-                $ref: "#/components/schemas/Category"
+                $ref: '#/components/schemas/Category'
               type: array
           required:
             - data
           type: object
     CreateCategoryResponse:
-      $ref: "#/components/schemas/GetCategoryResponse"
+      $ref: '#/components/schemas/GetCategoryResponse'
     UpdateCategoryResponse:
-      $ref: "#/components/schemas/GetCategoryResponse"
+      $ref: '#/components/schemas/GetCategoryResponse'
     DeleteCategoryResponse:
-      $ref: "#/components/schemas/GetCategoryResponse"
+      $ref: '#/components/schemas/GetCategoryResponse'
     LoginResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
                 user:
-                  $ref: "#/components/schemas/User"
+                  $ref: '#/components/schemas/User'
                 refreshToken:
                   type: string
                 accessToken:
                   type: string
-                expiresAt:
-                  type: string
-                  format: date-time
               required:
                 - user
                 - refreshToken
                 - accessToken
-                - expiresAt
               type: object
           required:
             - data
           type: object
     RegisterResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
+      $ref: '#/components/schemas/DefaultResponseBody'
     RefreshTokenResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               properties:
@@ -2994,76 +3714,66 @@ components:
                   type: string
                 accessToken:
                   type: string
-                expiresAt:
-                  type: string
-                  format: date-time
               required:
                 - refreshToken
                 - accessToken
-                - expiresAt
               type: object
           required:
             - data
           type: object
     VerifyEmailResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
+      $ref: '#/components/schemas/DefaultResponseBody'
     ForgotPasswordResponse:
-      allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
-        - properties:
-            data:
-              properties:
-                expiresAt:
-                  type: string
-                  format: date-time
-                resetToken:
-                  type: string
-              required:
-                - expiresAt
-                - resetToken
-              type: object
-          required:
-            - data
-          type: object
+      $ref: '#/components/schemas/DefaultResponseBody'
     ResetPasswordResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
+      $ref: '#/components/schemas/DefaultResponseBody'
+    ChangePasswordResponse:
+      $ref: '#/components/schemas/DefaultResponseBody'
     ResendVerificationEmailResponse:
-      $ref: "#/components/schemas/DefaultResponseBody"
+      $ref: '#/components/schemas/DefaultResponseBody'
     ListAddressResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
               items:
-                $ref: "#/components/schemas/Address"
+                $ref: '#/components/schemas/Address'
               type: array
           required:
             - data
           type: object
     GetAddressResponse:
       allOf:
-        - $ref: "#/components/schemas/DefaultResponseBody"
+        - $ref: '#/components/schemas/DefaultResponseBody'
         - properties:
             data:
-              $ref: "#/components/schemas/Address"
+              $ref: '#/components/schemas/Address'
           required:
             - data
           type: object
     CreateAddressResponse:
-      $ref: "#/components/schemas/GetAddressResponse"
+      $ref: '#/components/schemas/GetAddressResponse'
     UpdateAddressResponse:
-      $ref: "#/components/schemas/GetAddressResponse"
+      $ref: '#/components/schemas/GetAddressResponse'
     DeleteAddressResponse:
-      $ref: "#/components/schemas/GetAddressResponse"
+      $ref: '#/components/schemas/GetAddressResponse'
   securitySchemes:
-    jwt_auth:
+    JWT_SECRET:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    JWT_VERIFY:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    JWT_RESET:
       type: http
       scheme: bearer
       bearerFormat: JWT
 servers:
   - url: http://localhost:5000
     description: Local development
+  - url: https://tender-krill-flying.ngrok-free.app
+    description: Development server
   - url: http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
     description: Development server (http)
-  - url: https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
-    description: Development server (https)

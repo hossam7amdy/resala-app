@@ -20,6 +20,7 @@ export type EndpointConfig = {
 export enum Endpoints {
   // auth endpoints
   login = 'login',
+  loginWithGoogle = 'loginWithGoogle',
   register = 'register',
   refresh = 'refresh',
   forgotPassword = 'forgotPassword',
@@ -110,6 +111,22 @@ export enum Endpoints {
   createReview = 'createReview',
   updateReview = 'updateReview',
   deleteReview = 'deleteReview',
+
+  // dashboard summery
+  getDashboardOverview = 'getDashboardOverview',
+  getInventoryStatus = 'getInventoryStatus',
+  getOrdersStatus = 'getOrdersStatus',
+  getSalesTrends = 'getSalesTrends',
+  listCustomersFeedback = 'listCustomersFeedback',
+  listTopCustomers = 'listTopCustomers',
+  listTopProducts = 'listTopProducts',
+
+  // discount endpoints
+  getDiscount = 'getDiscount',
+  listDiscounts = 'listDiscounts',
+  createDiscount = 'createDiscount',
+  updateDiscount = 'updateDiscount',
+  deleteDiscount = 'deleteDiscount',
 }
 
 /**
@@ -155,9 +172,10 @@ export const withParams = (endpoint: EndpointConfig, ...params: string[]): Endpo
  */
 export const withQueryParams = (
   endpoint: EndpointConfig,
-  query: Record<string, string>
+  query: Record<string, unknown>
 ): EndpointConfig => {
-  const url = endpoint.url.concat('?', new URLSearchParams(query).toString());
+  const searchParams = new URLSearchParams(query as Record<string, string>);
+  const url = endpoint.url.concat('?', searchParams.toString());
   return {
     url: url.toString(),
     method: endpoint.method,
@@ -183,6 +201,10 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     url: '/api/v1/auth/login',
     sensitive: true,
   },
+  [Endpoints.loginWithGoogle]: {
+    method: 'get',
+    url: '/auth/google',
+  },
   [Endpoints.register]: {
     method: 'post',
     url: '/api/v1/auth/register',
@@ -204,8 +226,9 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
   [Endpoints.verifyEmail]: {
-    method: 'get',
+    method: 'post',
     url: '/api/v1/auth/verify-email',
+    auth: true,
   },
   [Endpoints.changePassword]: {
     method: 'patch',
@@ -214,7 +237,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
   [Endpoints.resendEmailVerification]: {
-    method: 'get',
+    method: 'post',
     url: '/api/v1/auth/resend-email-verification',
     auth: true,
   },
@@ -519,9 +542,72 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   [Endpoints.getReview]: {
     url: '/api/v1/reviews/{reviewId}',
     method: 'get',
+    auth: true,
   },
   [Endpoints.listReviews]: {
     url: '/api/v1/reviews',
     method: 'get',
+    auth: true,
+  },
+
+  // dashboard endpoints
+  [Endpoints.getDashboardOverview]: {
+    url: '/api/v1/dashboard/overview',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getInventoryStatus]: {
+    url: '/api/v1/dashboard/inventory-status',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getOrdersStatus]: {
+    url: '/api/v1/dashboard/orders-status',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.getSalesTrends]: {
+    url: '/api/v1/dashboard/sales-trends',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listCustomersFeedback]: {
+    url: '/api/v1/dashboard/customers-feedback',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listTopCustomers]: {
+    url: '/api/v1/dashboard/top-customers',
+    method: 'get',
+    auth: true,
+  },
+  [Endpoints.listTopProducts]: {
+    url: '/api/v1/dashboard/top-products',
+    method: 'get',
+  },
+
+  // discount endpoints
+  [Endpoints.getDiscount]: {
+    url: '/api/v1/discounts/{discountId}',
+    method: 'get',
+  },
+  [Endpoints.listDiscounts]: {
+    url: '/api/v1/discounts',
+    method: 'get',
+  },
+  [Endpoints.createDiscount]: {
+    url: '/api/v1/discounts',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.updateDiscount]: {
+    url: '/api/v1/discounts/{discountId}',
+    method: 'put',
+    auth: true,
+  },
+  [Endpoints.deleteDiscount]: {
+    url: '/api/v1/discounts/{discountId}',
+    method: 'delete',
+    auth: true,
   },
 };

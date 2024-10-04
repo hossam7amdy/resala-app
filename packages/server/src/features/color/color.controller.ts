@@ -25,12 +25,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { ColorService } from './color.service.js';
 
 @Tags('Color')
 @Route('api/v1/colors')
+@Middlewares([jwtParse])
 export class ColorController extends Controller {
   private readonly colorService: ColorService;
 
@@ -54,9 +56,9 @@ export class ColorController extends Controller {
   }
 
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Color created successfully')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateColorSchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateColorSchema)])
   public async create(@Body() body: CreateColorRequest['body']): Promise<CreateColorResponse> {
     const color = await this.colorService.create(body);
 
@@ -64,8 +66,8 @@ export class ColorController extends Controller {
   }
 
   @Put('{colorId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateColorSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateColorSchema)])
   public async update(
     @Path() colorId: string,
     @Body() body: UpdateColorRequest['body']
@@ -76,7 +78,7 @@ export class ColorController extends Controller {
   }
 
   @Delete('{colorId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() colorId: string): Promise<DeleteColorResponse> {
     const color = await this.colorService.delete(+colorId);

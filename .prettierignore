@@ -1,11 +1,7 @@
-# package.json
-node_modules
+# Ignore artifacts:
+**/.angular
+**/.dist
+**/.next
 
-# Build the project
-dist
-build
-.next
-
-# Angular Cache Busting
-.angular
-docs
+# web package
+packages/web/docs

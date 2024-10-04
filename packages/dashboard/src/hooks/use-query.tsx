@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 type QueryOptions<Data> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  queryFn: (...variables: any) => Promise<Data>;
+  queryFn: (...variables: unknown[]) => Promise<Data>;
   enabled?: boolean;
 };
 
@@ -34,8 +33,7 @@ export const useQuery = <Data,>({
     } finally {
       setIsLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [queryFn]);
 
   useEffect(() => {
     if (enabled) {

@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 
 import { createExpressApp } from './app.js';
+import { configuration } from './configuration/index.js';
 import { initDb } from './datastore/index.js';
 
 dotenv.config();
@@ -13,10 +14,10 @@ dotenv.config();
 
   const httpServer = createServer(app);
 
-  const { PORT, NODE_ENV } = process.env;
+  const { port, env } = configuration.server;
 
-  httpServer.listen(+PORT, () => {
-    console.log(`server is running on ${NODE_ENV} mode on http://localhost:${PORT}`);
+  httpServer.listen(port, () => {
+    console.log(`server is running on ${env} mode on http://localhost:${port}`);
   });
 })();
 

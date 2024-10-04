@@ -9,19 +9,6 @@ import type {
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError } from '../../errors/api.errors.js';
 
-const SELECT = {
-  id: true,
-  email: true,
-  isVerified: true,
-  phone: true,
-  firstName: true,
-  lastName: true,
-  role: true,
-  lastLogin: true,
-  createdAt: true,
-  updatedAt: true,
-};
-
 export class ReviewService {
   constructor(private readonly db: DataStore) {}
 
@@ -44,9 +31,9 @@ export class ReviewService {
     });
   }
 
-  async update(reviewId: number, review: UpdateReviewRequest['body'] & { userId: number }) {
+  async update(reviewId: number, { userId, ...review }: UpdateReviewRequest['body']) {
     return await this.db.review.update({
-      where: { id: reviewId },
+      where: { id: reviewId, userId },
       data: review,
     });
   }
@@ -60,31 +47,23 @@ export class ReviewService {
   async find(reviewId: number): Promise<GetReviewResponse['data']> {
     return await this.db.review.findUniqueOrThrow({
       where: { id: reviewId },
-      include: {
-        product: true,
-        user: { select: SELECT },
-      },
+      include: { user: true },
     });
   }
 
   async list({
-    page,
-    limit,
+    page = 1,
+    limit = 10,
     productId,
   }: ListReviewsRequest['query']): Promise<ListReviewsResponse['data']> {
     const [count, reviews] = await this.db.$transaction([
       this.db.review.count({ where: { productId } }),
       this.db.review.findMany({
-        include: {
-          product: true,
-          user: { select: SELECT },
-        },
+        include: { user: true },
         where: { productId },
         skip: page - 1,
         take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
+        orderBy: { createdAt: 'desc' },
       }),
     ]);
 

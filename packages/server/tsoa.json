@@ -1,5 +1,6 @@
 {
   "entryFile": "src/app.ts",
+  "defaultNumberType": "integer",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/features/**/*.controller.ts"],
   "spec": {
@@ -10,7 +11,17 @@
     "spec": {
       "components": {
         "securitySchemes": {
-          "jwt_auth": {
+          "JWT_SECRET": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          },
+          "JWT_VERIFY": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          },
+          "JWT_RESET": {
             "type": "http",
             "scheme": "bearer",
             "bearerFormat": "JWT"
@@ -23,12 +34,12 @@
           "description": "Local development"
         },
         {
-          "url": "http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
-          "description": "Development server (http)"
+          "url": "https://tender-krill-flying.ngrok-free.app",
+          "description": "Development server"
         },
         {
-          "url": "https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
-          "description": "Development server (https)"
+          "url": "http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
+          "description": "Development server (http)"
         }
       ]
     }

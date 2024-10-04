@@ -1,9 +1,10 @@
 'use client';
 
 import { Menu } from '@/components';
-import { ROUTES } from '@/utils/routes';
+import { ROUTES } from '@/routes';
 import {
   FileProtectOutlined,
+  GiftOutlined,
   HomeOutlined,
   ProductOutlined,
   SkinOutlined,
@@ -16,7 +17,7 @@ import { usePathname } from 'next/navigation';
 const items = [
   {
     key: ROUTES.DASHBOARD,
-    label: <Link href={ROUTES.DASHBOARD}>Home</Link>,
+    label: <Link href={ROUTES.DASHBOARD}>Dashboard</Link>,
     icon: <HomeOutlined />,
   },
   {
@@ -43,6 +44,11 @@ const items = [
     key: ROUTES.CUSTOMERS,
     label: <Link href={ROUTES.CUSTOMERS}>Customers</Link>,
     icon: <UserOutlined />,
+  },
+  {
+    key: ROUTES.DISCOUNTS,
+    label: <Link href={ROUTES.DISCOUNTS}>Discounts</Link>,
+    icon: <GiftOutlined />,
   },
 ];
 

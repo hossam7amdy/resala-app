@@ -6,7 +6,8 @@ import { ValidateError } from 'tsoa/dist/index.js';
 import { ZodError } from 'zod';
 
 import { APIError } from '../errors/api.errors.js';
-import { logger } from '../logger/index.js';
+import { logger } from '../lib/logger.js';
+import { formatPrismaError } from '../utils/prismaErrors.js';
 import { formatZodError } from '../utils/zodErrors.js';
 
 /**
@@ -32,8 +33,7 @@ export const errorHandler = (
       message: error.message,
     });
   } else if (error instanceof ValidateError) {
-    console.error('Caught a validation error:', error);
-    return res.status(400).json({
+    return res.status(422).json({
       success: false,
       message: error.message,
       details: error.fields,
@@ -59,32 +59,11 @@ export const errorHandler = (
       message: error.message,
     });
   } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (error.code) {
-      case 'P2002':
-        return res
-          .status(409)
-          .json({ success: false, message: `Duplicate field value: ${error.meta?.target}` });
-      case 'P2014':
-        return res
-          .status(400)
-          .json({ success: false, message: `Invalid ID: ${error.meta?.target}` });
-      case 'P2003':
-        return res
-          .status(400)
-          .json({ success: false, message: `Invalid input data: ${error.meta?.cause ?? ''}` });
-      case 'P2025':
-        return res
-          .status(404)
-          .json({ success: false, message: error.meta?.cause ?? error.message });
-      default:
-        return res
-          .status(400)
-          .json({ success: false, message: `Something went wrong: ${error.message}` });
-    }
-  } else if (error instanceof Prisma.PrismaClientValidationError) {
-    return res.status(400).json({
+    const { code, message } = formatPrismaError(error);
+
+    return res.status(code).json({
       success: false,
-      message: error.cause ?? 'Invalid input data',
+      message,
     });
   }
 
