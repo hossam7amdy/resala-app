@@ -136,6 +136,10 @@ font-size: 25px;
   height: 100vh;
   background-color: #fff;
   z-index: 999;
+
+}
+.parent-search{
+  margin-top: 70px;
 }
 .search-form .parent-search{
   position: absolute;
