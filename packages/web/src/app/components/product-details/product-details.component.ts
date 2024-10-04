@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -124,7 +124,6 @@ export class ProductDetailsComponent implements OnInit {
         console.log('review', res);
         this.productReview = res.data.reviews;
       },
-      error: err => {},
     });
   }
 
@@ -165,6 +164,7 @@ export class ProductDetailsComponent implements OnInit {
 
   public onClickRate(rate: number): void {
     // Logs the clicked star number
+    console.log('rate', rate);
   }
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });

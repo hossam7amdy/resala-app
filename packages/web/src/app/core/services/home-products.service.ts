@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENDPOINT_CONFIGS, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-
-import {
-  ENDPOINT_CONFIGS,
-  Endpoints,
-  withParams,
-  withQueryParams,
-} from '../../../../../shared/src/endpoints';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +45,7 @@ export class HomeProductsService {
   //Product Details
   getProductDetails(id: any): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.getProduct, { productId: id! });
-    return this._HttpClient.get(`${environment.BASE_URL}/api/v1/products/${id}`, this.getHeaders());
+    return this._HttpClient.get(`${environment.BASE_URL}${url}`, this.getHeaders());
   }
 
   getProductStock(id: string | null): Observable<any> {

@@ -60,6 +60,7 @@ export class OrderService {
       description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
 
+    // eslint-disable-next-line no-unused-vars
     const { id: _, ...addressWithoutId } = address;
     const newOrder = await this.db.order.create({
       data: {

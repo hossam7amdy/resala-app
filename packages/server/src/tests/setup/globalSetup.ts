@@ -1,6 +1,5 @@
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 
-import { initDb } from '../../datastore';
 import { execAsync } from '../../utils/execAsync';
 
 export const setup = async () => {

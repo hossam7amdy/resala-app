@@ -1,4 +1,4 @@
-import type { z } from 'zod';
+import { z } from 'zod';
 
 export declare const LoginSchema: z.ZodObject<
   {
