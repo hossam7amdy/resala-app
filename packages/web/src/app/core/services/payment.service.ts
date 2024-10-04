@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, Query } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-
-import {
-  ENDPOINT_CONFIGS,
-  Endpoints,
-  withParams,
-  withQueryParams,
-} from '../../../../../shared/src/endpoints';
 
 @Injectable({
   providedIn: 'root',
@@ -60,11 +53,8 @@ export class PaymentService {
   }
 
   deleteUserAddress(userId: any, addressId: any): Observable<any> {
-    const withParamsConfig: any = withParams(
-      ENDPOINT_CONFIGS[Endpoints.deleteAddress],
-      (addressId = addressId)
-    );
-    const { url } = withQueryParams(withParamsConfig, { userId: userId });
+    const withParamsConfig: any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress], addressId);
+    const { url } = withQueryParams(withParamsConfig, { userId });
     return this._HttpClient.delete(environment.BASE_URL + url, this.getHeaders());
   }
 

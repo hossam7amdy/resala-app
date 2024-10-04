@@ -136,7 +136,7 @@ export class DiscountService {
   }
 
   private _applyProductDiscount(item: CartItem, discounts: ProductDiscount[]): CartItem {
-    let bestDiscount: Discount | null = null;
+    let bestDiscount: Discount | undefined;
     let lowestPrice = item.product.price;
 
     for (const { discountProduct, ...discount } of discounts) {
@@ -175,7 +175,7 @@ export class DiscountService {
     return {
       ...item,
       discountedPrice: lowestPrice,
-      appliedDiscount: bestDiscount || undefined,
+      appliedDiscount: bestDiscount,
     };
   }
 
@@ -183,7 +183,7 @@ export class DiscountService {
     const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
     const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
 
-    let bestDiscount: Discount | null = null;
+    let bestDiscount: Discount | undefined;
     let lowestTotalPrice = items.reduce(
       (sum, item) => sum + item.discountedPrice! * item.quantity,
       0
