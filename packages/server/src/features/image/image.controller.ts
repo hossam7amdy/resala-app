@@ -1,11 +1,11 @@
-import {
-  type CreateImageResponse,
-  CreateImageSchema,
-  type ListImagesRequest,
-  type ListImagesResponse,
+import type {
+  CreateImageResponse,
+  ListImagesRequest,
+  ListImagesResponse,
   UpdateImageRequest,
-  type UpdateImageResponse,
+  UpdateImageResponse,
 } from '@resala/shared';
+import { CreateImageSchema } from '@resala/shared';
 import {
   Body,
   Controller,
@@ -26,12 +26,14 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
+import { validateImage } from '../../middlewares/uploadHandler.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ImageService } from './image.service.js';
 
 @Tags('Image')
 @Route('api/v1/images')
+@Security('JWT_SECRET')
 export class ImageController extends Controller {
   private readonly imageService: ImageService;
 
@@ -42,8 +44,14 @@ export class ImageController extends Controller {
     this.imageService = new ImageService(db, fileService);
   }
 
+  @Get()
+  public async list(@Queries() query: ListImagesRequest['query']): Promise<ListImagesResponse> {
+    const images = await this.imageService.list(query);
+
+    return { success: true, data: images };
+  }
+
   @Post()
-  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   @SuccessResponse('201', 'Image created successfully')
   public async create(
@@ -51,6 +59,8 @@ export class ImageController extends Controller {
     @FormField() productId: number | string,
     @UploadedFiles() images: Express.Multer.File[]
   ): Promise<CreateImageResponse> {
+    images.forEach(image => validateImage(image));
+
     const { body } = await CreateImageSchema.parseAsync({
       body: {
         colorId,
@@ -66,27 +76,18 @@ export class ImageController extends Controller {
     return { success: true };
   }
 
-  @Get()
-  public async list(@Queries() query: ListImagesRequest['query']): Promise<ListImagesResponse> {
-    const images = await this.imageService.list(query);
-
-    return { success: true, data: images };
-  }
-
   @Patch('{imageId}')
-  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() imageId: string,
-    @Body() _: UpdateImageRequest['body']
+    @Body() body: UpdateImageRequest['body']
   ): Promise<UpdateImageResponse> {
-    const image = await this.imageService.updatePrimary(+imageId);
+    const image = await this.imageService.updatePrimary(+imageId, body.isPrimary);
 
     return { success: true, data: image };
   }
 
   @Delete('{imageId}')
-  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() imageId: string): Promise<UpdateImageResponse> {
     const image = await this.imageService.delete(+imageId);

@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
-import type { OrderStatus, PaymentMethod, PaymentStatus, Role } from '../enums/index.js';
-import type { DefaultQuerySchema } from '../validations/index.js';
+import type {
+  DiscountEnum,
+  OrderStatus,
+  PaymentMethod,
+  PaymentStatus,
+  Role,
+} from '../enums/index.js';
+import type { OffsetPageParamsSchema } from '../validations/index.js';
 
 export type RoleType = keyof typeof Role;
 
@@ -13,7 +18,19 @@ export type PaymentStatusType = keyof typeof PaymentStatus;
 
 export type PaymentMethodType = keyof typeof PaymentMethod;
 
-export type DefaultFilters = z.infer<typeof DefaultQuerySchema>['query'];
+export type DiscountType = keyof typeof DiscountEnum;
+
+export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
+
+export type SignProvider = 'google';
+
+export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName' | 'isEmailVerified'>;
+
+export type JwtPayload = {
+  id: string;
+  email: string;
+  strategy?: 'credentials' | SignProvider;
+};
 
 export type Pagination = {
   page: number;
@@ -24,8 +41,9 @@ export type Pagination = {
 export type User = {
   id: number;
   email: string;
-  isVerified: boolean;
+  isEmailVerified: boolean;
   phone: string;
+  isPhoneVerified: boolean;
   firstName: string;
   lastName: string;
   role: RoleType;
@@ -54,7 +72,7 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  price: number | Decimal | string | any;
+  price: any; // Decimal type from 'decimal.js' lib
   imageKey: string;
   imageUrl: string;
   createdAt: Date;
@@ -115,10 +133,11 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  subtotal: number | Decimal | string | any;
-  discount: number | Decimal | string | any;
-  total: number | Decimal | string | any;
+  subtotal: any; // Decimal type from 'decimal.js' lib
+  discount: any; // Decimal type from 'decimal.js' lib
+  total: any; // Decimal type from 'decimal.js' lib
   orderStatus: OrderStatusType;
+  transactionId: null | string;
   paymentMethod: PaymentMethodType;
   paymentStatus: PaymentStatusType;
   note: null | string;
@@ -128,11 +147,9 @@ export type Order = {
 
 export type OrderItem = {
   id: number;
-  name: string;
-  color: string;
-  size: string;
-  price: number | Decimal | string | any;
-  imageUrl: string | null;
+  productId: number;
+  stockId: number;
+  price: any; // Decimal type from 'decimal.js' lib
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -142,16 +159,9 @@ export type Shipping = {
   id: number;
   orderId: number;
   addressId: number;
-  cost: number | Decimal | string | any;
+  cost: any; // Decimal type from 'decimal.js' lib
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type Payment = {
-  orderId: number;
-  paymentLink: string | null;
-  transactionId: number | null;
-  transactionOrderId: number | null;
 };
 
 export type Review = {
@@ -180,12 +190,16 @@ export type Address = {
   updatedAt: Date;
 };
 
-export type Notification = {
+export type Discount = {
   id: number;
-  userId: number;
-  title: string;
-  content: string;
-  isRead: boolean;
+  type: DiscountType;
+  amount: any; // Decimal type from 'decimal.js' lib
+  description: null | string;
+  minQty: number;
+  isActive: boolean;
+  isStoreWide: boolean;
+  startDate: null | Date;
+  endDate: null | Date;
   createdAt: Date;
   updatedAt: Date;
 };

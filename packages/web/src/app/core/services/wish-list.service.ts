@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams } from '../../../../../shared/src/endpoints';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -9,22 +9,18 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class WishListService {
-  constructor(private _HttpClient: HttpClient,
-    
-  ) {}
+  constructor(private _HttpClient: HttpClient) {}
 
- // refactor free API url 
- private getHeaders() {
-  const headers = new HttpHeaders({
-    'ngrok-skip-browser-warning':  '69420',
-    'Authorization':`Bearer ${localStorage.getItem('etoken')}`
-    
-  });
+  // refactor free API url
+  private getHeaders() {
+    const headers = new HttpHeaders({
+      'ngrok-skip-browser-warning': '69420',
+      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
+    });
 
-  return {headers};
-}
+    return { headers };
+  }
 
-  
   //base URL
   // baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
 

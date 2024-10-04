@@ -9,17 +9,17 @@ import { useCallback, useRef } from 'react';
  * @param delay Delay in milliseconds
  * @returns Debounced function
  */
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-export const useDebounce = (fn: (...args: any) => void, delay: number) => {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+export const useDebounce = (fn: (...args: unknown[]) => void, delay: number) => {
+  const tRef = useRef<NodeJS.Timeout | null>(null);
 
   return useCallback(
-    (...args: any[]) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+    (...args: unknown[]) => {
+      if (tRef.current) {
+        clearTimeout(tRef.current);
       }
 
-      timeoutRef.current = setTimeout(() => {
+      tRef.current = setTimeout(() => {
+        tRef.current = null;
         fn(...args);
       }, delay);
     },

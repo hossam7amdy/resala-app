@@ -3,36 +3,34 @@ import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { ToastrService } from 'ngx-toastr';
-import { Category } from 'src/app/core/interfaces/category';
-import { Product } from 'src/app/core/interfaces/product';
-import { CategoriesService } from 'src/app/core/services/categories/categories.service';
-import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { WishListService } from 'src/app/core/services/wish-list.service';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { SearchPipe } from 'src/app/core/pipe/search.pipe';
-import { NgxStarRatingModule } from 'ngx-star-rating';
-
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
-import { TrendsService } from 'src/app/core/services/trends.service';
+import { ToastrService } from 'ngx-toastr';
+import { Product } from 'src/app/core/interfaces/product';
+import { SearchPipe } from 'src/app/core/pipe/search.pipe';
+import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-
+import { TrendsService } from 'src/app/core/services/trends.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, 
-    CarouselModule, 
-    RouterLink, 
-    NgxPaginationModule, 
+  imports: [
+    CommonModule,
+    CarouselModule,
+    RouterLink,
+    NgxPaginationModule,
     SearchPipe,
     NgxStarsRatingModule,
-    TranslateModule,  ], //
+    TranslateModule,
+  ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -40,8 +38,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // UserProfile: any;
   // _AuthService: any;
   userNameLogged: any;
-  productId:string='';
-  
+  productId: string = '';
+
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -49,48 +47,41 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner:NgxSpinnerService,
-    private _Trend:TrendsService,
-    public _Translate:TranslateService,
-    private _RTLStatus:Translate_Service
-    
-
-       
+    private spinner: NgxSpinnerService,
+    private _Trend: TrendsService,
+    public _Translate: TranslateService,
+    private _RTLStatus: Translate_Service
   ) {}
-langStorage:any= localStorage.getItem("language")
+  langStorage: any = localStorage.getItem('language');
   // Change page Direction as per Selected Lang
-changePageDirection():boolean {
-  const html = document.getElementsByTagName('html')[0];
-  let rtlStat:boolean;
-  if (this._RTLStatus.rTLStatus.value === "ar") {
-    html.dir = 'rtl';
-    html.lang = "ar";
-    rtlStat = true;
-  } else {
-    html.dir = 'ltr';
-    html.lang = "en";
-    rtlStat = false;
+  changePageDirection(): boolean {
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+    console.log('topbar rtlFun', rtlStat);
+    return rtlStat;
   }
-  console.log('topbar rtlFun',rtlStat);
-  return rtlStat
-
-}
 
   // Trends
-  trendProducts:any=[];
+  trendProducts: any = [];
 
-   //start Rating
-   public rateNumber: number = 3;
-    public ratingOptions: IRatingOptions = {
-        starsCount: 5,
-        hoverable: false,
-        clickable: false
-    };
+  //start Rating
+  public rateNumber: number = 3;
+  public ratingOptions: IRatingOptions = {
+    starsCount: 5,
+    hoverable: false,
+    clickable: false,
+  };
 
-   
-
-  
-   //end Rating
+  //end Rating
 
   // interfaces
   products: Product[] = [];
@@ -101,12 +92,10 @@ changePageDirection():boolean {
   // overlay
   onClick: boolean = false;
 
-  
-
-    // pagination
-    pageLimit:number =2;
-    currentPage:number = 1;
-    totalItems:number=0;
+  // pagination
+  pageLimit: number = 2;
+  currentPage: number = 1;
+  totalItems: number = 0;
   //favourit icons
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
@@ -116,14 +105,11 @@ changePageDirection():boolean {
 
     //trend products
     this._Trend.getTrendProducts().subscribe({
-      next:(res)=>{
+      next: res => {
         this.trendProducts = res.data;
-        console.log('trends',res);
-      },error:(err)=>{
-
-      }
-    })
-
+        console.log('trends', res);
+      },
+    });
 
     //  products
     this._HomeProductsService.getProducts().subscribe({
@@ -145,7 +131,7 @@ changePageDirection():boolean {
         console.log('categories', response.data);
       },
     });
-//Reviews
+    //Reviews
     // this._Reviews.getProductReview('1', '100').subscribe({
     //   next:(res)=>{
     //     console.log('Reviews',res)
@@ -156,10 +142,9 @@ changePageDirection():boolean {
     // })
 
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
- 
 
   // overlay
   ngAfterViewInit(): void {
@@ -180,11 +165,10 @@ changePageDirection():boolean {
         console.log(response);
       },
       error: err => {
-
         this._Toaster.error('Should be Login !!');
-          this._Router.navigate(['/login']);
+        this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-          
+
         // } else {
         //   this._Toaster.error(err.message);
         // }
@@ -193,9 +177,8 @@ changePageDirection():boolean {
     });
   }
 
- 
   public onClickRate(rate: number): void {
-      console.log(rate, 'rate'); // Logs the clicked star number
+    console.log(rate, 'rate'); // Logs the clicked star number
   }
 
   // main slider
@@ -212,7 +195,7 @@ changePageDirection():boolean {
     autoplay: true,
     autoplayTimeout: 5000,
     autoplaySpeed: 3000,
-    rtl:this.changePageDirection(),
+    rtl: this.changePageDirection(),
     autoplayHoverPause: true,
   };
 
@@ -227,14 +210,14 @@ changePageDirection():boolean {
     navSpeed: 700,
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 2,
-    autoWidth:false,
+    autoWidth: false,
     nav: true,
     autoplay: true,
     autoplayTimeout: 10000,
     autoplaySpeed: 10000,
-    margin:6,
+    margin: 6,
     autoplayHoverPause: true,
-    rtl:this.changePageDirection(),
+    rtl: this.changePageDirection(),
   };
   //navText: ['', '>>'],
 
@@ -248,14 +231,14 @@ changePageDirection():boolean {
     margin: 5,
     autoWidth: true,
     navSpeed: 700,
-    
+
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
-    rtl:this.changePageDirection(),
+    rtl: this.changePageDirection(),
     responsive: {
       0: {
         items: 1,
       },
-      
+
       300: {
         items: 1,
       },
@@ -280,12 +263,11 @@ changePageDirection():boolean {
     nav: true,
   };
 
-
   // pagination Method
 
-  pageChanged(event:any){
-     //  products
-     this._HomeProductsService.getProducts(event).subscribe({
+  pageChanged(event: any) {
+    //  products
+    this._HomeProductsService.getProducts(event).subscribe({
       next: response => {
         console.log(event);
         console.log('products', response.data.products);

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { validationPatterns } from '../patterns/index.js';
+import { OffsetPageParamsSchema } from './common.schema.js';
 
 const UserSchema = z.object({
   email: z.string().min(5).max(128).email(),
@@ -27,34 +28,17 @@ const UserSchema = z.object({
     ),
 });
 
-// Pagination Schema
-export const DefaultQuerySchema = z.object({
-  query: z.object({
-    page: z.coerce
-      .number()
-      .positive()
-      .optional()
-      .transform(val => val || 1),
-    limit: z.coerce
-      .number()
-      .positive()
-      .max(100)
-      .optional()
-      .transform(val => val || 10),
-    query: z
-      .string()
-      .min(0)
-      .max(50)
-      .optional()
-      .transform(val => val || ''),
-  }),
-});
-
 // Auth Schemas
 export const LoginSchema = z.object({
   body: z.object({
-    sign: z.string(),
+    sign: z.string().min(3),
     password: z.string(),
+  }),
+});
+
+export const GoogleLoginSchema = z.object({
+  query: z.object({
+    redirectUrl: z.string().url().max(200).optional(),
   }),
 });
 
@@ -68,6 +52,12 @@ export const RegisterSchema = z.object({
   }),
 });
 
+export const ResendVerificationSchema = z.object({
+  body: z.object({
+    email: UserSchema.shape.email,
+  }),
+});
+
 export const RefreshTokenSchema = z.object({
   body: z.object({
     token: z.string().min(80),
@@ -75,17 +65,13 @@ export const RefreshTokenSchema = z.object({
 });
 
 export const VerifyEmailSchema = z.object({
-  query: z.object({
-    email: UserSchema.shape.email,
-    token: z.string().min(80),
-  }),
+  body: z.object({}),
 });
 
 export const ResetPasswordSchema = z.object({
   body: z.object({
-    email: UserSchema.shape.email,
-    code: z.string().length(6),
-    password: UserSchema.shape.password,
+    newPassword: UserSchema.shape.password,
+    confirmNewPassword: UserSchema.shape.password,
   }),
 });
 
@@ -99,6 +85,7 @@ export const ChangePasswordSchema = z.object({
 export const ForgotPasswordSchema = z.object({
   body: z.object({
     email: UserSchema.shape.email,
+    redirectUrl: z.string().url().max(100).optional(),
   }),
 });
 
@@ -109,6 +96,12 @@ export const GetUserSchema = z.object({
       .number()
       .positive()
       .transform(val => val.toString()),
+  }),
+});
+
+export const ListUsersSchema = z.object({
+  query: OffsetPageParamsSchema.extend({
+    search: z.string().max(100).default('').optional(),
   }),
 });
 
@@ -155,7 +148,10 @@ export const CreateAddressSchema = z.object({
 
 export const ListAddressSchema = z.object({
   query: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce
+      .number()
+      .positive()
+      .transform(val => val.toString()),
   }),
 });
 
@@ -227,7 +223,8 @@ export const GetProductSchema = z.object({
 });
 
 export const ListProductsSchema = z.object({
-  query: DefaultQuerySchema.shape.query.extend({
+  query: OffsetPageParamsSchema.extend({
+    search: z.string().max(100).optional(),
     categoryId: z.coerce.number().positive().optional(),
   }),
 });
@@ -266,7 +263,8 @@ export const DeleteStockSchema = z.object({
 });
 
 export const ListStocksSchema = z.object({
-  query: DefaultQuerySchema.shape.query.extend({
+  query: OffsetPageParamsSchema.extend({
+    search: z.string().max(100).optional(),
     productId: z.coerce.number().positive().optional(),
   }),
 });
@@ -402,8 +400,9 @@ export const GetOrderSchema = z.object({
 });
 
 export const ListOrdersSchema = z.object({
-  query: DefaultQuerySchema.shape.query.extend({
+  query: OffsetPageParamsSchema.extend({
     userId: z.coerce.number().positive().optional(),
+    search: z.string().max(100).optional(),
   }),
 });
 
@@ -433,22 +432,19 @@ export const DeleteOrderSchema = z.object({
 // Payment Schemas
 export const GetPaymentSchema = z.object({
   params: z.object({
-    transactionId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    transactionId: z.string(),
   }),
 });
 
 export const VoidPaymentSchema = z.object({
   body: z.object({
-    transactionId: z.coerce.number().positive(),
+    transactionId: z.string(),
   }),
 });
 
 export const RefundPaymentSchema = z.object({
   body: z.object({
-    transactionId: z.coerce.number().positive(),
+    transactionId: z.string(),
     amount: z.coerce.number().positive(),
   }),
 });
@@ -473,7 +469,7 @@ export const GetReviewSchema = z.object({
 });
 
 export const ListReviewsSchema = z.object({
-  query: DefaultQuerySchema.shape.query.extend({
+  query: OffsetPageParamsSchema.extend({
     productId: z.coerce.number().positive().optional(),
   }),
 });

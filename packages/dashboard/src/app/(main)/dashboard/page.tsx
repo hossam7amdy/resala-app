@@ -1,43 +1,42 @@
-import { Breadcrumb, Card, Col, Row, Statistic } from 'antd';
-import type { Metadata } from 'next';
+import { getOverview } from '@/fetch/dashboard';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { Card, Col, Row, Statistic } from 'antd';
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-};
+const DashboardPage = async () => {
+  const { totalProducts, totalOrders, totalCustomers, totalSales, totalRefund, totalRevenue } =
+    await getOverview();
 
-const DashboardPage = () => {
   return (
     <Row gutter={[10, 20]}>
-      <Col span={24}>
-        <Breadcrumb items={[{ title: 'Dashboard' }]} />
-      </Col>
-
-      <Col span={6}>
-        <Card style={{ height: 200 }}>
-          <Statistic title="Active Users" />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Customers" value={totalCustomers} />
         </Card>
       </Col>
-      <Col span={6}>
-        <Card style={{ height: 200 }}>
-          <Statistic title="Total Sales" />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Products" value={totalProducts} />
         </Card>
       </Col>
-      <Col span={6}>
-        <Card style={{ height: 200 }}>
-          <Statistic title="Total Orders" />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Orders" value={totalOrders} />
         </Card>
       </Col>
-      <Col span={6}>
-        <Card style={{ height: 200 }}>
-          <Statistic title="Total Products" />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Sales" value={formatCurrency(totalSales)} />
         </Card>
       </Col>
-
-      <Col span={12}>
-        <Card style={{ height: 400 }} />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Revenue" value={formatCurrency(totalRevenue)} />
+        </Card>
       </Col>
-      <Col span={12}>
-        <Card style={{ height: 400 }} />
+      <Col span={24} sm={{ span: 12 }} md={{ span: 8 }}>
+        <Card hoverable className="h-[200px] cursor-default">
+          <Statistic title="Total Refund" value={formatCurrency(totalRefund)} />
+        </Card>
       </Col>
     </Row>
   );

@@ -63,19 +63,24 @@
         <p class="p">{{ productDetails.enDescription }}</p>
         <span class="price">{{ productDetails.price }}<label class="currency"> EGP</label></span>
         <ngx-stars-rating
-            [rate]="productDetails.avgRating"
-            [options]="ratingOptions"
-            (onRate)="onClickRate($event)"
-            
-            [starTemplate]="starCustomTemplate"
-          ></ngx-stars-rating>
+          [rate]="productDetails.avgRating"
+          [options]="ratingOptions"
+          (onRate)="onClickRate($event)"
+          [starTemplate]="starCustomTemplate"
+        ></ngx-stars-rating>
 
-            <div class="rating">
-              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
-              <ng-template #starCustomTemplate>
-                <span (click)="goToReview(target)"#target class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
-              </ng-template>
-            </div>
+        <div class="rating">
+          <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+          <ng-template #starCustomTemplate>
+            <span
+              (click)="goToReview(target)"
+              #target
+              class="material-symbols-outlined"
+              style="font-size: 15px"
+              ><i class="fa-solid fa-star"></i
+            ></span>
+          </ng-template>
+        </div>
         <span class="sub-text">Tax included. Shipping calculated at checkout.</span>
 
         <h3 class="h4">Color</h3>
@@ -95,7 +100,7 @@
                   [
                     onColorChange(product, i),
                     isChooseColorFun(),
-                    owlCar.to(productStock[i].images[0]?.imageUrl)
+                    owlCar.to(productStock[i].images[0]?.imageUrl),
                   ]
                 "
                 for="btncolor"
@@ -209,38 +214,40 @@
     </div>
 
     <!--start Reviews -->
-    <div  class="card mt-4">
+    <div class="card mt-4">
       <div class="card-header">
         <h4 class="h3">Testimonials & Ratings</h4>
       </div>
-      <div  *ngFor="let review of productReview" class="card-body">
+      <div *ngFor="let review of productReview" class="card-body">
         <blockquote class="blockquote mb-0">
-          <h4 class="h4 fw-bold">{{review.user.firstName}} </h4>
-          <p class="p">{{review.createdAt|cuttdate}}</p>
-          
+          <h4 class="h4 fw-bold">{{ review.user.firstName }}</h4>
+          <p class="p">{{ review.createdAt | cuttdate }}</p>
+
           <ngx-stars-rating
             [rate]="review.rating"
             [options]="ratingOptions"
-             
-            
             [starTemplate]="allReviews"
           ></ngx-stars-rating>
 
-            <div #target class="rating">
-              <ng-template #allReviews>
-                <span class="material-symbols-outlined" style="font-size: 20px"><i class="fa-solid fa-star"></i></span>
-              </ng-template>
-            </div>
-         
-            <h4 class="h4 fw-bold mb-3">{{productDetails.enName}}</h4>
-          <footer  class="blockquote-footer"><cite title="Source Title">{{review.comment}}</cite></footer>
+          <div #target class="rating">
+            <ng-template #allReviews>
+              <span class="material-symbols-outlined" style="font-size: 20px"
+                ><i class="fa-solid fa-star"></i
+              ></span>
+            </ng-template>
+          </div>
+
+          <h4 class="h4 fw-bold mb-3">{{ productDetails.enName }}</h4>
+          <footer class="blockquote-footer">
+            <cite title="Source Title">{{ review.comment }}</cite>
+          </footer>
         </blockquote>
       </div>
     </div>
-   
-     <!--end Reviews -->
 
-       <!-- Similar Products -->
+    <!--end Reviews -->
+
+    <!-- Similar Products -->
 
     <div *ngIf="productsCategory.length > 3" class="container-fluid">
       <h2 class="h1">Similar Products</h2>
@@ -253,7 +260,6 @@
           <ng-template carouselSlide>
             <!-- *ngIf="product.images.length !== 0" -->
             <div>
-              
               <div class="parent-img-content">
                 <!-- currentProduct === product?.id -->
                 <header class="header-product">
@@ -263,9 +269,14 @@
                     class="fa-regular fa-heart favourit-icon"
                   ></i>
                 </header>
-                <div class="img-content" (click)="reloadPage(product.id)" [routerLink]="['/product-details/', product.id]" role="button">
+                <div
+                  class="img-content"
+                  (click)="reloadPage(product.id)"
+                  [routerLink]="['/product-details/', product.id]"
+                  role="button"
+                >
                   <p class="offer">Sale<span> 20%</span></p>
-    
+
                   <img
                     class="w-100 image-products"
                     [src]="product.imageUrl"
@@ -273,32 +284,43 @@
                     [title]="product.enName"
                   />
                 </div>
-                <footer (click)="reloadPage(product.id)" class="footer-product" [routerLink]="['/product-details/', product.id]">
+                <footer
+                  (click)="reloadPage(product.id)"
+                  class="footer-product"
+                  [routerLink]="['/product-details/', product.id]"
+                >
                   <i class="fa-solid fa-bag-shopping shopping-icon"></i>
                 </footer>
               </div>
               <!--  -->
               <div class="descrp">
-                <h6 (click)="reloadPage(product.id)"  [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
+                <h6
+                  (click)="reloadPage(product.id)"
+                  [routerLink]="['/product-details/', product.id]"
+                  class="mb-0"
+                  role="button"
+                >
                   {{ product.enName }}
                 </h6>
-    
+
                 <ngx-stars-rating
-                [rate]="product.avgRating"
-                [options]="ratingOptions"
-                
-                [starTemplate]="starCustomTemplate"
-              ></ngx-stars-rating>
-  
-              
-                
-              <div class="rating">
-                <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
-                <ng-template #starCustomTemplate>
-                  <span  *ngIf="product.avgRating !== 0" class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
-                </ng-template>
-              </div>
-  
+                  [rate]="product.avgRating"
+                  [options]="ratingOptions"
+                  [starTemplate]="starCustomTemplate"
+                ></ngx-stars-rating>
+
+                <div class="rating">
+                  <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+                  <ng-template #starCustomTemplate>
+                    <span
+                      *ngIf="product.avgRating !== 0"
+                      class="material-symbols-outlined"
+                      style="font-size: 15px"
+                      ><i class="fa-solid fa-star"></i
+                    ></span>
+                  </ng-template>
+                </div>
+
                 <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
               </div>
             </div>

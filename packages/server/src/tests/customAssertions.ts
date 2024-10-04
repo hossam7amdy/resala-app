@@ -8,7 +8,8 @@ export const userAssertions: GetUserResponse['data'] = {
   lastName: expect.any(String),
   phone: expect.any(String),
   role: expect.any(String),
-  isVerified: expect.any(Boolean),
+  isEmailVerified: expect.any(Boolean),
+  isPhoneVerified: expect.any(Boolean),
   // @ts-expect-error custom matcher
   lastLogin: expect.toBeNullOrString(),
   createdAt: expect.any(String),

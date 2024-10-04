@@ -1,23 +1,26 @@
 'use client';
 
-import { deleteUser } from '@/actions/user';
-import { Pagination, PopconfirmDeleteButton, ResalaTooltip, TableColumn } from '@/components';
+import {
+  Pagination,
+  PopconfirmDeleteButton,
+  ResalaTooltip,
+  Table,
+  TableColumn,
+} from '@/components';
+import { deleteUser } from '@/fetch/users';
+import { ROUTES } from '@/routes';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
-import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListUsersResponse, User } from '@resala/shared';
-import { Button, Flex, Space, Table, Tag } from 'antd';
+import { Button, Flex, Space, Tag } from 'antd';
 import Link from 'next/link';
+
+import { ResendEmailVerificationButton } from './resend-email-verification-button';
 
 export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
   return (
     <Flex vertical gap={10}>
-      <Table
-        rowKey={record => record.id}
-        scroll={{ x: true, y: 500 }}
-        pagination={false}
-        dataSource={users}
-      >
+      <Table rowKey={record => record.id} pagination={false} dataSource={users}>
         <TableColumn width="12%" title="First name" dataIndex="firstName" />
         <TableColumn width="12%" title="Last name" dataIndex="lastName" />
         <TableColumn width="12%" title="Phone" dataIndex="phone" />
@@ -26,9 +29,12 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
         <TableColumn
           width="10%"
           title="Verified"
-          dataIndex="isVerified"
-          render={isVerified => (
-            <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
+          dataIndex="isEmailVerified"
+          render={(isVerified: boolean, user: User) => (
+            <Flex>
+              <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
+              {!isVerified && <ResendEmailVerificationButton email={user.email} />}
+            </Flex>
           )}
         />
         <TableColumn
@@ -74,7 +80,7 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
         />
       </Table>
       <Flex justify="center">
-        <Pagination totalPages={pagination.total} />
+        <Pagination total={pagination.total} />
       </Flex>
     </Flex>
   );

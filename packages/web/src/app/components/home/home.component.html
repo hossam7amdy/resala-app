@@ -3,12 +3,12 @@
     <div class="overlay-section row">
       <i class="fa-solid fa-circle-xmark close" (click)="closeOverlay()"></i>
       <div class="col-4 left-overlay" [lang]="langStorage">
-        <h3 class="mini-tilte">{{"home.popUpProduct.miniTitle"|translate}}</h3>
-        <p class="p-title">{{"home.popUpProduct.pTitle"|translate}}</p>
-        <h1 class="title">{{"home.popUpProduct.stBigTitle"|translate}}</h1>
-        <h1 class="title">{{"home.popUpProduct.ndBigTitle"|translate}}</h1>
-        
-        <h1 class="title">{{"home.popUpProduct.rdBigTitle"|translate}}</h1>
+        <h3 class="mini-tilte">{{ 'home.popUpProduct.miniTitle' | translate }}</h3>
+        <p class="p-title">{{ 'home.popUpProduct.pTitle' | translate }}</p>
+        <h1 class="title">{{ 'home.popUpProduct.stBigTitle' | translate }}</h1>
+        <h1 class="title">{{ 'home.popUpProduct.ndBigTitle' | translate }}</h1>
+
+        <h1 class="title">{{ 'home.popUpProduct.rdBigTitle' | translate }}</h1>
       </div>
       <div class="col-md-8 img-overlay" [lang]="langStorage">
         <img src="./assets/products/nekab.jpeg" [lang]="langStorage" alt="" />
@@ -19,7 +19,6 @@
 
 <!-- section slider  -->
 
-
 <section class="slider">
   <owl-carousel-o [options]="mainSliderOptions" class="custom-owl">
     <ng-template carouselSlide>
@@ -29,8 +28,8 @@
         </div>
         <div class="col-6 right-content">
           <div class="title-content">
-            <h1 class="hyper-title">{{"home.mainSlider.stSlide.hyperTitle" |translate}}</h1>
-            <p class="">{{"home.mainSlider.stSlide.pTitle" |translate}}</p>
+            <h1 class="hyper-title">{{ 'home.mainSlider.stSlide.hyperTitle' | translate }}</h1>
+            <p class="">{{ 'home.mainSlider.stSlide.pTitle' | translate }}</p>
           </div>
         </div>
       </div>
@@ -42,8 +41,8 @@
         </div>
         <div class="col-6 right-content">
           <div class="title-content">
-            <h1 class="hyper-title">{{"home.mainSlider.ndSlide.hyperTitle" |translate}}</h1>
-            <p>{{"home.mainSlider.ndSlide.pTitle" |translate}}</p>
+            <h1 class="hyper-title">{{ 'home.mainSlider.ndSlide.hyperTitle' | translate }}</h1>
+            <p>{{ 'home.mainSlider.ndSlide.pTitle' | translate }}</p>
           </div>
         </div>
       </div>
@@ -55,22 +54,8 @@
         </div>
         <div class="col-6 right-content">
           <div class="title-content">
-            <h1 class="hyper-title">{{"home.mainSlider.rdSlide.hyperTitle" |translate}}</h1>
-            <p>{{"home.mainSlider.rdSlide.pTitle" |translate}}</p>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-
-    <ng-template carouselSlide>
-      <div class="row half-slide">
-        <div class="col-6">
-          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
-        </div>
-        <div class="col-6 right-content">
-          <div class="title-content">
-            <h1 class="hyper-title">{{"home.mainSlider.urSlide.hyperTitle" |translate}}</h1>
-            <p>{{"home.mainSlider.urSlide.pTitle" |translate}}</p>
+            <h1 class="hyper-title">{{ 'home.mainSlider.rdSlide.hyperTitle' | translate }}</h1>
+            <p>{{ 'home.mainSlider.rdSlide.pTitle' | translate }}</p>
           </div>
         </div>
       </div>
@@ -83,8 +68,22 @@
         </div>
         <div class="col-6 right-content">
           <div class="title-content">
-            <h1 class="hyper-title">{{"home.mainSlider.veSlide.hyperTitle" |translate}}</h1>
-            <p>{{"home.mainSlider.veSlide.pTitle" |translate}}</p>
+            <h1 class="hyper-title">{{ 'home.mainSlider.urSlide.hyperTitle' | translate }}</h1>
+            <p>{{ 'home.mainSlider.urSlide.pTitle' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template carouselSlide>
+      <div class="row half-slide">
+        <div class="col-6">
+          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+        </div>
+        <div class="col-6 right-content">
+          <div class="title-content">
+            <h1 class="hyper-title">{{ 'home.mainSlider.veSlide.hyperTitle' | translate }}</h1>
+            <p>{{ 'home.mainSlider.veSlide.pTitle' | translate }}</p>
           </div>
         </div>
       </div>
@@ -96,30 +95,33 @@
 <section class="trends">
   <div class="content">
     <div class="trends-title">
-      <h2 class="h1">{{"home.trends.mainTitle"|translate}}</h2>
+      <h2 class="h1">{{ 'home.trends.mainTitle' | translate }}</h2>
     </div>
-    <div class="trend-parent  container">
-    <owl-carousel-o [options]="trendsSliderOptions" >
-      <ng-container *ngFor="let trend of trendProducts">
-      <ng-template carouselSlide  >
-        <div class="row justify-content-center text-center px-2">
-         
-          <div class=" trends-slide">
-            
-              <i
-                (click)="addPoductInWishList(trend.product.id, favoritIcon)"
-                #favoritIcon
-                class="fa-regular fa-heart favourit-icon"
-              ></i>
-              <img [routerLink]="['/product-details/', trend.product.id]" [src]="trend.product.imageUrl" [alt]= "_Translate.currentLang ==='ar'? trend.product.arName:trend.product.enName" class="img-trend " />
-              
-            
-          </div>
-        </div>
-      </ng-template>
-    </ng-container>
-    </owl-carousel-o>
-  </div>
+    <div class="trend-parent container">
+      <owl-carousel-o [options]="trendsSliderOptions">
+        <ng-container *ngFor="let trend of trendProducts">
+          <ng-template carouselSlide>
+            <div class="row justify-content-center text-center px-2">
+              <div class="trends-slide">
+                <i
+                  (click)="addPoductInWishList(trend.product.id, favoritIcon)"
+                  #favoritIcon
+                  class="fa-regular fa-heart favourit-icon"
+                ></i>
+                <img
+                  [routerLink]="['/product-details/', trend.product.id]"
+                  [src]="trend.product.imageUrl"
+                  [alt]="
+                    _Translate.currentLang === 'ar' ? trend.product.arName : trend.product.enName
+                  "
+                  class="img-trend"
+                />
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
   </div>
 </section>
 
@@ -138,15 +140,19 @@
 
     <div class="row justify-content-center text-center">
       <div
-        *ngFor="let product of products | paginate: { id: 'paginationTool',
-        itemsPerPage: pageLimit,
-        currentPage: currentPage,
-        totalItems: totalItems } "
+        *ngFor="
+          let product of products
+            | paginate
+              : {
+                  id: 'paginationTool',
+                  itemsPerPage: pageLimit,
+                  currentPage: currentPage,
+                  totalItems: totalItems,
+                }
+        "
         class="mx-2 mb-3 px-0 col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2 justify-content-center text-center"
       >
-
         <div>
-         
           <div class="parent-img-content">
             <!-- currentProduct === product?.id -->
             <header class="header-product">
@@ -175,20 +181,23 @@
             <h6 [routerLink]="['/product-details/', product.id]" class="mb-0" role="button">
               {{ product.enName }}
             </h6>
-           
-              <ngx-stars-rating
+
+            <ngx-stars-rating
               [rate]="product.avgRating"
               [options]="ratingOptions"
               (onRate)="onClickRate($event)"
               [starTemplate]="starCustomTemplate"
             ></ngx-stars-rating>
 
-            
-              
             <div class="rating">
               <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
               <ng-template #starCustomTemplate>
-                <span  *ngIf="product.avgRating !== 0" class="material-symbols-outlined" style="font-size: 15px"><i class="fa-solid fa-star"></i></span>
+                <span
+                  *ngIf="product.avgRating !== 0"
+                  class="material-symbols-outlined"
+                  style="font-size: 15px"
+                  ><i class="fa-solid fa-star"></i
+                ></span>
               </ng-template>
             </div>
 
@@ -197,24 +206,25 @@
         </div>
       </div>
       <div class="mt-5">
-        <pagination-controls  id="paginationTool"
-                        (pageChange)="pageChanged($event)"
-                        (pageBoundsCorrection)="pageChanged($event)"
-                        [maxSize]="9"
-                        [directionLinks]="true"
-                        [autoHide]="false"
-                        [responsive]="true"
-                        previousLabel="Previous"
-                        nextLabel="Next"
-                        screenReaderPaginationLabel="Pagination"
-                        screenReaderPageLabel="page"
-                        screenReaderCurrentLabel="You're on page">
-      </pagination-controls>
-    </div>  
-  </div>
+        <pagination-controls
+          id="paginationTool"
+          (pageChange)="pageChanged($event)"
+          (pageBoundsCorrection)="pageChanged($event)"
+          [maxSize]="9"
+          [directionLinks]="true"
+          [autoHide]="false"
+          [responsive]="true"
+          previousLabel="Previous"
+          nextLabel="Next"
+          screenReaderPaginationLabel="Pagination"
+          screenReaderPageLabel="page"
+          screenReaderCurrentLabel="You're on page"
+        >
+        </pagination-controls>
+      </div>
+    </div>
 
-  
-  <!-- Categories -->
+    <!-- Categories -->
 
     <div class="container-fluid">
       <h2 class="h1">All Categories</h2>
@@ -259,7 +269,6 @@
               <h6 [routerLink]="['/category/', category.categoryId]" class="mb-0" role="button">
                 {{ category.category.enName }}
               </h6>
-
             </div>
           </ng-template>
         </ng-container>
@@ -267,7 +276,4 @@
     </div>
     <!-- end categories -->
   </div>
-
-
-  
 </section>

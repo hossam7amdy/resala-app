@@ -3,7 +3,7 @@
 import { useDebounce } from '@/hooks';
 import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface DebounceSelectProps<ValueType>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
@@ -22,13 +22,14 @@ export const DebounceSelect = <
   const [options, setOptions] = useState<ValueType[]>([]);
   const fetchRef = useRef(0);
 
-  const debounceFetcher = useDebounce((value: string) => {
-    fetchRef.current += 1;
-    const fetchId = fetchRef.current;
-    setOptions([]);
-    setFetching(true);
+  const fetcherCallback = useCallback(
+    async (value: unknown) => {
+      fetchRef.current += 1;
+      const fetchId = fetchRef.current;
+      setOptions([]);
+      setFetching(true);
 
-    fetchOptions(value).then(newOptions => {
+      const newOptions = await fetchOptions(value as string);
       if (fetchId !== fetchRef.current) {
         // for fetch callback order
         return;
@@ -36,16 +37,19 @@ export const DebounceSelect = <
 
       setOptions(newOptions);
       setFetching(false);
-    });
-  }, debounceTimeout);
+    },
+    [fetchOptions]
+  );
 
-  useEffect(debounceFetcher, []); // fetch on mount
+  const debounceFetcher = useDebounce(fetcherCallback, debounceTimeout);
+
+  useEffect(debounceFetcher, [debounceFetcher]);
 
   return (
     <Select
       showSearch
       onSearch={debounceFetcher}
-      notFoundContent={fetching ? <Spin size="small" /> : null}
+      notFoundContent={fetching ? <Spin size="small" /> : undefined}
       options={options}
       loading={fetching}
       {...props}

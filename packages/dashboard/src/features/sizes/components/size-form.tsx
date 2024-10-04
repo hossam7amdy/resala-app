@@ -41,11 +41,11 @@ export const SizeForm: React.FC<SizeFormProps> = ({ size, onCancel }) => {
 
       <Form.Item>
         <Flex gap={10}>
-          <Button type="primary" htmlType="submit" block loading={isLoading}>
-            {size?.id ? 'Update' : 'Create'}
-          </Button>
           <Button type="default" onClick={onCancel} block disabled={isLoading}>
             Cancel
+          </Button>
+          <Button type="primary" htmlType="submit" block loading={isLoading}>
+            {size?.id ? 'Update' : 'Create'}
           </Button>
         </Flex>
       </Form.Item>

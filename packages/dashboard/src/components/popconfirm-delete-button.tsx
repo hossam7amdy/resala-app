@@ -6,11 +6,10 @@ import { Button, Popconfirm } from 'antd';
 import type { PopconfirmProps } from 'antd';
 import React from 'react';
 
-import { ResalaTooltip } from '.';
-
 interface PopconfirmDeleteButtonProps extends Omit<PopconfirmProps, 'title'> {
   title?: PopconfirmProps['title'];
-  onConfirmDelete: () => Promise<void>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onConfirmDelete: () => Promise<any>;
 }
 
 export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
@@ -47,9 +46,7 @@ export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      <ResalaTooltip title="Delete">
-        <Button size="small" danger type="link" icon={<DeleteFilled />} disabled={disabled} />
-      </ResalaTooltip>
+      <Button size="small" danger type="link" icon={<DeleteFilled />} disabled={disabled} />
     </Popconfirm>
   );
 };

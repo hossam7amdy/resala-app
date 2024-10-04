@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -20,16 +20,21 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, CarouselModule, FormsModule, RouterOutlet,NgxStarsRatingModule, CuttdatePipe, RouterLink],
+  imports: [
+    CommonModule,
+    CarouselModule,
+    FormsModule,
+    RouterOutlet,
+    NgxStarsRatingModule,
+    CuttdatePipe,
+    RouterLink,
+  ],
 
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
 export class ProductDetailsComponent implements OnInit {
   // static productId: any;
- 
-  
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -39,13 +44,12 @@ export class ProductDetailsComponent implements OnInit {
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
     private _Router: Router,
-    private _Reviews:ReviewsService,
-    private _ProductsCategory:CategoriesService,
-    private _WishListService:WishListService,
-    private _Renderer:Renderer2,
-    private _Toaster: ToastrService,
+    private _Reviews: ReviewsService,
+    private _ProductsCategory: CategoriesService,
+    private _WishListService: WishListService,
+    private _Renderer: Renderer2,
+    private _Toaster: ToastrService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
-  
 
   counterQuantity: number = 1;
 
@@ -79,25 +83,22 @@ export class ProductDetailsComponent implements OnInit {
   isChooseSize: boolean = false;
 
   // Reviews
-  productReview:any=[];
-  averageRate:number=0;
-  ratingTotal:number=0;
+  productReview: any = [];
+  averageRate: number = 0;
+  ratingTotal: number = 0;
   //start Rating
   public rateNumber: number = 2;
   public ratingOptions: IRatingOptions = {
-      starsCount: 5,
-      hoverable: false,
-      clickable: false
+    starsCount: 5,
+    hoverable: false,
+    clickable: false,
   };
 
- 
+  //end Rating
 
-
- //end Rating
-
-//  Similar products
-productsCategory:any=[];
-categoryId:any;
+  //  Similar products
+  productsCategory: any = [];
+  categoryId: any;
 
   ngOnInit(): void {
     // start code test
@@ -117,20 +118,13 @@ categoryId:any;
       },
     });
 
-    this._Reviews.getProductReview(this.productId,'10').subscribe({
-      next:(res)=>{
-
+    this._Reviews.getProductReview(this.productId, '10').subscribe({
+      next: res => {
         console.log('test');
-        console.log('review',res);
+        console.log('review', res);
         this.productReview = res.data.reviews;
-       
-      },error:(err)=>{
-
-      }
-    })
-
-    
-
+      },
+    });
   }
 
   getProductDetails(id: any) {
@@ -139,11 +133,10 @@ categoryId:any;
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
         this.categoryId = res?.data.categoryId;
-        console.log('productdetails', res.data ,'cat id'+ this.categoryId);
+        console.log('productdetails', res.data, 'cat id' + this.categoryId);
       },
       error: err => console.log(err),
       complete: () => this.getProductStock(id),
-      
     });
   }
 
@@ -164,18 +157,19 @@ categoryId:any;
 
         this.spinner.hide();
         console.log('after filter', this.productStockColor);
-      },complete:() => this.getProductsCategory(this.categoryId),
+      },
+      complete: () => this.getProductsCategory(this.categoryId),
     });
   }
-  
 
   public onClickRate(rate: number): void {
     // Logs the clicked star number
-}
-goToReview(trarget:HTMLElement):void{
-  trarget.scrollIntoView({behavior:'smooth'});
-  // trarget.scrollTo({behavior:'smooth'})
-}
+    console.log('rate', rate);
+  }
+  goToReview(trarget: HTMLElement): void {
+    trarget.scrollIntoView({ behavior: 'smooth' });
+    // trarget.scrollTo({behavior:'smooth'})
+  }
   mainImage: OwlOptions = {
     loop: false,
     mouseDrag: true,
@@ -284,87 +278,82 @@ goToReview(trarget:HTMLElement):void{
   }
 
   // similar products
-  getProductsCategory(id:any): void {
-   
+  getProductsCategory(id: any): void {
     this._ProductsCategory.getCategoryProducts(id).subscribe({
-      next:(res)=>{
-        console.log('similar pro',res);
+      next: res => {
+        console.log('similar pro', res);
         this.productsCategory = res.data.products;
-        
-      },error:err=>{
+      },
+      error: err => {
         console.log(err);
-      }
-    })
+      },
+    });
   }
 
-  
-similarProducts: OwlOptions = {
-  loop: true,
-  mouseDrag: true,
-  touchDrag: true,
-  pullDrag: true,
-  dots: true,
-  center: true,
-  margin: 5,
-  autoWidth: true,
-  navSpeed: 700,
-  navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
-  responsive: {
-    0: {
-      items: 1,
-    },
-    
-    300: {
-      items: 1,
-    },
+  similarProducts: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: true,
+    center: true,
+    margin: 5,
+    autoWidth: true,
+    navSpeed: 700,
+    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    responsive: {
+      0: {
+        items: 1,
+      },
 
-    400: {
-      items: 2,
-    },
+      300: {
+        items: 1,
+      },
 
-    600: {
-      items: 3,
-    },
-    800: {
-      items: 4,
-    },
-    940: {
-      items: 4,
-    },
-    1150: {
-      items: 5,
-    },
-  },
-  nav: true,
-};
+      400: {
+        items: 2,
+      },
 
-//Add product in Wish list method
-addPoductInWishList(id: any, element: HTMLElement): void {
-  this._WishListService.postWishListItems(id).subscribe({
-    next: (response: any) => {
-      this._Renderer.setStyle(element, 'font-weight', 'bold');
-      this._Toaster.success('Added in Your Favorite List');
-      console.log(response);
+      600: {
+        items: 3,
+      },
+      800: {
+        items: 4,
+      },
+      940: {
+        items: 4,
+      },
+      1150: {
+        items: 5,
+      },
     },
-    error: (err: any) => {
+    nav: true,
+  };
 
-      this._Toaster.error('Should be Login !!');
+  //Add product in Wish list method
+  addPoductInWishList(id: any, element: HTMLElement): void {
+    this._WishListService.postWishListItems(id).subscribe({
+      next: (response: any) => {
+        this._Renderer.setStyle(element, 'font-weight', 'bold');
+        this._Toaster.success('Added in Your Favorite List');
+        console.log(response);
+      },
+      error: (err: any) => {
+        this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
-      // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-        
-      // } else {
-      //   this._Toaster.error(err.message);
-      // }
-      console.log(err);
-    },
-  });
-}
+        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
 
-reloadPage(id:any):void{
-  this.spinner.show();
-    window.location.replace(`/product-details/${id}`)
+        // } else {
+        //   this._Toaster.error(err.message);
+        // }
+        console.log(err);
+      },
+    });
+  }
+
+  reloadPage(id: any): void {
+    this.spinner.show();
+    window.location.replace(`/product-details/${id}`);
     this.spinner.hide();
-   
   }
 }
-

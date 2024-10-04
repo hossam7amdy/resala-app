@@ -1,64 +1,59 @@
 {
-   "nav-blank":{
-        "Test":"أختبار",
-        "Home":"الرئيسية",
-        "Categories":"منتجاتنا",
-        "LatestCollection":"أحدث الموديلات",
-        "NewOffers":"اقوى الخصومات",
-        "SignIn":"تسجيل دخول",
-        "SignOut":"تسجيل خروج",
-        "NotaMember?":"ليس لك حساب؟",
-        "Register":"تسجيل حساب",
-        "Profile":"ملفك الشخصي",
-        "TraceYourOrder":"تتبع طلباتك",
-        "Favorites":"المفضلة",
-        "Cart":"سلة التسوق"
+  "nav-blank": {
+    "Test": "أختبار",
+    "Home": "الرئيسية",
+    "Categories": "منتجاتنا",
+    "LatestCollection": "أحدث الموديلات",
+    "NewOffers": "اقوى الخصومات",
+    "SignIn": "تسجيل دخول",
+    "SignOut": "تسجيل خروج",
+    "NotaMember?": "ليس لك حساب؟",
+    "Register": "تسجيل حساب",
+    "Profile": "ملفك الشخصي",
+    "TraceYourOrder": "تتبع طلباتك",
+    "Favorites": "المفضلة",
+    "Cart": "سلة التسوق"
+  },
+  "top-bar": {
+    "firstOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه",
+    "secondOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه 2",
+    "thirdOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه 3 "
+  },
+
+  "home": {
+    "popUpProduct": {
+      "miniTitle": "موديل جديد",
+      "pTitle": "قصه راقية صنع من اجلك",
+      "stBigTitle": "احصلي",
+      "ndBigTitle": "عليها",
+      "rdBigTitle": "الان!"
     },
-    "top-bar":{
-        "firstOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه",
-        "secondOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 2",
-        "thirdOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 3 "
+    "mainSlider": {
+      "stSlide": {
+        "hyperTitle": "رسالة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "ndSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "rdSlide": {
+        "hyperTitle": "رسالة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "urSlide": {
+        "hyperTitle": "رسالة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "veSlide": {
+        "hyperTitle": "رسالة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      }
     },
-
-    "home":{
-        "popUpProduct":{
-            "miniTitle":"موديل جديد",
-            "pTitle":"قصه راقية صنع من اجلك",
-            "stBigTitle":"احصلي",
-            "ndBigTitle":"عليها",
-            "rdBigTitle":"الان!"
-        },
-        "mainSlider":{
-            "stSlide":{
-                "hyperTitle":"رسالة",
-                "pTitle":"افضل الموديلات لملابس المحجبات"
-            },
-            "ndSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"افضل الموديلات لملابس المحجبات"
-            },
-            "rdSlide":{
-                "hyperTitle":"رسالة",
-                "pTitle":"افضل الموديلات لملابس المحجبات"
-            },
-            "urSlide":{
-                "hyperTitle":"رسالة",
-                "pTitle":"افضل الموديلات لملابس المحجبات"
-            },
-            "veSlide":{
-                "hyperTitle":"رسالة",
-                "pTitle":"افضل الموديلات لملابس المحجبات"
-            }
-        },
-        "trends":{
-            "mainTitle":"الأكثر مبيعاً"
-            
-        },
-        "allProducts":{
-
-        },
-        "allCategories":{
-
-        }
-    }
+    "trends": {
+      "mainTitle": "الأكثر مبيعاً"
+    },
+    "allProducts": {},
+    "allCategories": {}
+  }
 }

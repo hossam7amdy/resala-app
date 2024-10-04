@@ -1,6 +1,6 @@
-import { listAllColors } from '@/data/colors';
 import { ColorsTable } from '@/features/colors';
 import { ColorEditorModal } from '@/features/colors';
+import { listAllColors } from '@/fetch/colors';
 import { Col, Flex, Row } from 'antd';
 
 const ColorsPage = async () => {

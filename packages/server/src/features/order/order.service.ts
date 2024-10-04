@@ -1,36 +1,31 @@
 import type { Prisma } from '@prisma/client';
 import type {
-  CreateOrderRequest,
+  Address,
+  GetCartResponse,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
+  PaymentMethod,
   UpdateOrderRequest,
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import { AddressService } from '../address/address.service.js';
-import type { ShoppingService } from '../shopping/shopping.service.js';
-import type { StockService } from '../stock/stock.service.js';
 
 const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
-  orderItems: true,
-  paymentDetails: true,
-  user: {
-    select: {
-      id: true,
-      email: true,
-      isVerified: true,
-      phone: true,
-      firstName: true,
-      lastName: true,
-      role: true,
-      lastLogin: true,
-      createdAt: true,
-      updatedAt: true,
+  orderItems: {
+    include: {
+      product: true,
+      stock: {
+        select: {
+          size: { select: { name: true } },
+          color: { select: { enName: true } },
+        },
+      },
     },
   },
+  user: true,
   shippingDetails: {
     select: {
       id: true,
@@ -43,83 +38,73 @@ const ORDER_ATTRIBUTES = {
 };
 
 export class OrderService {
-  constructor(
-    private readonly db: DataStore,
-    private readonly addressService: AddressService,
-    private readonly stockService: StockService,
-    private readonly shoppingService: ShoppingService
-  ) {}
+  constructor(private readonly db: DataStore) {}
 
-  async create(userId: number, order: CreateOrderRequest['body']) {
-    const userCart = await this.shoppingService.cart.get(userId);
-
-    if (userCart.items.length === 0) {
+  async create(
+    { userId, paymentMethod, note }: { userId: number; paymentMethod: string; note?: string },
+    cart: GetCartResponse['data'],
+    address: Address
+  ) {
+    if (cart.items.length === 0) {
       throw new BadRequestError('Cart is empty');
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const { id: _, ...address } = await this.addressService.find(userId, order.addressId);
+    const subtotal = cart.totalPrice;
 
-    const subtotal = userCart.totalPrice;
-
-    await this.shoppingService.cart.deleteMany(userId);
-
-    await this.stockService.decrease(
-      userCart.items.map(item => ({
-        id: item.stock.id,
-        quantity: item.quantity,
-      }))
-    );
-
-    let orderItems = userCart.items.map(item => ({
-      name: item.product.enName,
-      price: item.product.price,
-      color: item.stock.color.enName,
-      size: item.stock.size.name,
+    const orderItems = cart.items.map(item => ({
+      productId: item.product.id,
+      stockId: item.stock.id,
       quantity: item.quantity,
-      imageUrl: item.images.find(img => img.isPrimary)?.imageUrl || null,
+      price: item.product.price,
+      productName: `${item.product.enName} | ${item.product.arName}`,
+      description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
-    const newOrder = await this.db.$transaction(async tx => {
-      const newOrder = await tx.order.create({
-        data: {
-          userId: userId,
-          subtotal: subtotal,
-          total: subtotal + SHIPPING,
-          note: order.note,
-          paymentMethod: order.paymentMethod,
-        },
-      });
-      await tx.orderItem.createMany({
-        data: orderItems.map(item => ({ ...item, orderId: newOrder.id })),
-      });
-      const { id: addressId } = await tx.address.create({
-        data: address,
-      });
-      await tx.shipping.create({
-        data: {
-          orderId: newOrder.id,
-          addressId: addressId,
-          cost: SHIPPING,
-        },
-      });
 
-      return newOrder;
+    // eslint-disable-next-line no-unused-vars
+    const { id: _, ...addressWithoutId } = address;
+    const newOrder = await this.db.order.create({
+      data: {
+        userId: userId,
+        subtotal: subtotal,
+        total: subtotal + SHIPPING,
+        note,
+        paymentMethod: paymentMethod as PaymentMethod,
+        shippingDetails: {
+          create: {
+            address: {
+              create: addressWithoutId,
+            },
+          },
+        },
+        orderItems: {
+          createMany: {
+            data: cart.items.map(item => ({
+              productId: item.product.id,
+              stockId: item.stock.id,
+              quantity: item.quantity,
+              price: item.product.price,
+            })),
+          },
+        },
+      },
     });
 
     return { ...newOrder, shipping: SHIPPING, items: orderItems, address };
   }
 
   async list({
-    limit,
-    page,
-    query,
+    page = 1,
+    limit = 10,
+    search = '',
     userId,
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {
       OR: [
-        { id: { equals: Number(query) || undefined } },
-        { user: { email: { startsWith: query } } },
-        { user: { phone: { startsWith: query } } },
+        { user: { email: { startsWith: search } } },
+        { user: { phone: { startsWith: search } } },
+        {
+          orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
+        },
       ],
       userId: userId,
     };
@@ -137,12 +122,31 @@ export class OrderService {
 
     return {
       pagination: { total: count, page, limit },
-      orders,
+      orders: orders.map(order => ({
+        ...order,
+        orderItems: order.orderItems.map(({ stock, ...item }) => ({
+          ...item,
+          color: stock.color.enName,
+          size: stock.size.name,
+        })),
+      })),
     };
   }
 
   async find(id: number): Promise<GetOrderResponse['data']> {
-    return await this.db.order.findUniqueOrThrow({ where: { id }, include: ORDER_ATTRIBUTES });
+    const order = await this.db.order.findUniqueOrThrow({
+      where: { id },
+      include: ORDER_ATTRIBUTES,
+    });
+
+    return {
+      ...order,
+      orderItems: order.orderItems.map(({ stock, ...item }) => ({
+        ...item,
+        color: stock.color.enName,
+        size: stock.size.name,
+      })),
+    };
   }
 
   async update(id: number, order: UpdateOrderRequest['body']) {

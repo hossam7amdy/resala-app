@@ -7,7 +7,6 @@ import {
   DeleteReviewSchema,
   type GetReviewResponse,
   GetReviewSchema,
-  type ListReviewsRequest,
   type ListReviewsResponse,
   ListReviewsSchema,
   type UpdateReviewRequest,
@@ -24,6 +23,7 @@ import {
   Post,
   Put,
   Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -31,14 +31,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { authorizeAccess } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { jwtParse } from '../../middlewares/authentication.js';
+import { authorization } from '../../middlewares/authorization.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { ReviewService } from './review.service.js';
 
 @Tags('Review')
 @Route('api/v1/reviews')
-@Security('jwt_auth')
-@Middlewares([authorizeAccess])
+@Middlewares([jwtParse, authorization])
 export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;
 
@@ -48,8 +48,9 @@ export class ReviewController extends Controller {
   }
 
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Review created')
-  @Middlewares([requestValidator(CreateReviewSchema)])
+  @Middlewares([validate(CreateReviewSchema)])
   public async createReview(
     @Body() body: CreateReviewRequest['body']
   ): Promise<CreateReviewResponse> {
@@ -59,7 +60,8 @@ export class ReviewController extends Controller {
   }
 
   @Put('{reviewId}')
-  @Middlewares([requestValidator(UpdateReviewSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([validate(UpdateReviewSchema)])
   public async updateReview(
     @Path() reviewId: string,
     @Body() body: UpdateReviewRequest['body']
@@ -70,7 +72,8 @@ export class ReviewController extends Controller {
   }
 
   @Delete('{reviewId}')
-  @Middlewares([requestValidator(DeleteReviewSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([validate(DeleteReviewSchema)])
   public async deleteReview(
     @Path() reviewId: string,
     @Queries() query: DeleteReviewRequest['query']
@@ -81,7 +84,7 @@ export class ReviewController extends Controller {
   }
 
   @Get('{reviewId}')
-  @Middlewares([requestValidator(GetReviewSchema)])
+  @Middlewares([validate(GetReviewSchema)])
   public async getReview(@Path() reviewId: string): Promise<GetReviewResponse> {
     const review = await this.reviewService.find(+reviewId);
 
@@ -89,11 +92,17 @@ export class ReviewController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListReviewsSchema)])
+  @Middlewares([validate(ListReviewsSchema)])
   public async listReviews(
-    @Queries() query: ListReviewsRequest['query']
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() productId: number
   ): Promise<ListReviewsResponse> {
-    const { reviews, pagination } = await this.reviewService.list(query);
+    const { reviews, pagination } = await this.reviewService.list({
+      page,
+      limit,
+      productId: +productId,
+    });
 
     return {
       success: true,

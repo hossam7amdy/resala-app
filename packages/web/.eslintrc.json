@@ -1,0 +1,30 @@
+{
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@angular-eslint/recommended"],
+      "rules": {
+        // Add your custom TypeScript or Angular ESLint rules here
+        "@angular-eslint/component-class-suffix": ["error", { "suffixes": ["Component"] }],
+        "@angular-eslint/directive-class-suffix": ["error", { "suffixes": ["Directive"] }],
+        "@angular-eslint/use-pipe-transform-interface": "error",
+        "@angular-eslint/no-input-rename": "error",
+        "@angular-eslint/no-output-rename": "error",
+        "@angular-eslint/prefer-on-push-component-change-detection": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/consistent-type-imports": "off"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        // Add your custom HTML template ESLint rules here
+        "@angular-eslint/template/banana-in-a-box": "error",
+        "@angular-eslint/template/no-negated-async": "error",
+        "@angular-eslint/template/accessibility-elements-content": "warn",
+        "@angular-eslint/template/accessibility-valid-aria": "error"
+      }
+    }
+  ]
+}

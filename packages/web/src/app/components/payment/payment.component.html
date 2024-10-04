@@ -64,7 +64,8 @@
               />
               <div
                 *ngIf="userAddresses.get('phone')?.errors && userAddresses.get('phone')?.touched"
-                class="alert text-danger">
+                class="alert text-danger"
+              >
                 <p *ngIf="userAddresses.get('phone')?.getError('required')">phone is required</p>
                 <p *ngIf="userAddresses.get('phone')?.getError('pattern')">
                   Should be 11 digts sharp & start be 011,012,010,015
@@ -112,9 +113,7 @@
                 </p>
               </div>
             </div>
-          
 
-          
             <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
               <label for="state" class="form-label">State</label>
               <input
@@ -146,7 +145,9 @@
                 <option *ngFor="let cities of allCities">{{ cities }}</option>
               </select>
               <div
-                *ngIf="userAddresses.get('city')?.errors != null && userAddresses.get('city')?.touched"
+                *ngIf="
+                  userAddresses.get('city')?.errors != null && userAddresses.get('city')?.touched
+                "
                 class="alert text-danger"
               >
                 <p *ngIf="userAddresses.get('city')?.getError('required')">
@@ -178,8 +179,8 @@
                 name="building"
               />
             </div>
-          
-            <div class=" col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="floor" class="form-label">Floor</label>
               <input
                 type="number"
@@ -190,51 +191,65 @@
                 name="floor"
               />
               <div
-                *ngIf="userAddresses.get('floor')?.errors != null && userAddresses.get('floor')?.touched"
-                class="alert text-danger">
-                <p *ngIf="userAddresses.get('floor')?.getError('required')">this field is required !!!</p>
+                *ngIf="
+                  userAddresses.get('floor')?.errors != null && userAddresses.get('floor')?.touched
+                "
+                class="alert text-danger"
+              >
+                <p *ngIf="userAddresses.get('floor')?.getError('required')">
+                  this field is required !!!
+                </p>
               </div>
             </div>
 
             <div class="mb-3 col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <label for="address-details" class="form-label">Address Details</label>
               <input
-                type="text" 
+                type="text"
                 id="address-details"
                 class="form-control"
                 [placeholder]="userAddress.address"
                 formControlName="address"
-                name="address"/>
+                name="address"
+              />
             </div>
-          
-        </div>
-      </fieldset>
+          </div>
+        </fieldset>
 
-        <div class="edit-section ">
-          <button (click)="addNewAddressFun(target)" #target [disabled]="isEdit" *ngIf="getUserAddress.length != 3" class="custome-btn mx-3 px-3 rounded-3"
-           type="submit" >
+        <div class="edit-section">
+          <button
+            (click)="addNewAddressFun(target)"
+            #target
+            [disabled]="isEdit"
+            *ngIf="getUserAddress.length != 3"
+            class="custome-btn mx-3 px-3 rounded-3"
+            type="submit"
+          >
             <i class="fa-solid fa-plus fa-sm mr-2"></i>
             <i class="fa-regular fa-address-card fa-xl"></i>
           </button>
-          
+
           <button
             (click)="editAddressForm(i)"
-            [disabled]="isEdit ==  true"
+            [disabled]="isEdit == true"
             class="custome-btn mx-3 px-3 rounded-3"
-            type="submit">
-          <i class="fa-solid fa-user-pen fa-xl"></i>
+            type="submit"
+          >
+            <i class="fa-solid fa-user-pen fa-xl"></i>
           </button>
           <!-- [disabled]="[isEdit == false]" -->
           <button
-            (click)="updateAddress(userAddress.id,userAddresses,update)"#update
+            (click)="updateAddress(userAddress.id, userAddresses, update)"
+            #update
             [disabled]="userAddresses.invalid"
             class="custome-btn mx-3 px-3 rounded-3"
-            type="submit">
-          <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
-          <i class="fa-regular fa-floppy-disk fa-xl"></i>
+            type="submit"
+          >
+            <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
+            <i class="fa-regular fa-floppy-disk fa-xl"></i>
           </button>
-          
-          <button [disabled]="isEdit" class=" custome-btn mx-3 px-3 rounded-3" type="submit">
+
+          <button [disabled]="isEdit" class="custome-btn mx-3 px-3 rounded-3" type="submit">
             <i
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
@@ -282,9 +297,8 @@
               </div>
             </div>
           </div>
-        
-          <!--end checked delete all items -->
 
+          <!--end checked delete all items -->
         </div>
       </div>
     </div>
@@ -292,11 +306,9 @@
 </section>
 <!--End User Address's Form-->
 
-
-
 <!--Start Register New Address User Form-->
 <section
-  *ngIf="getUserAddress.length < 3 && (addNew == true ||firstRegister == true)"
+  *ngIf="getUserAddress.length < 3 && (addNew == true || firstRegister == true)"
   class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
   <h1 class="h2 step-one">Step One ...</h1>
@@ -304,8 +316,7 @@
 
   <!-- (ngSubmit)="handleForm(addressForm, btn)"  -->
 
-  <form  [formGroup]="addressForm" class="row g-3 px-5">
-    
+  <form [formGroup]="addressForm" class="row g-3 px-5">
     <div #target class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
       <label for="firstName" class="form-label">First Name</label>
       <input type="text" formControlName="firstName" class="form-control" id="firstName" />
@@ -368,7 +379,8 @@
       </select>
       <div
         *ngIf="addressForm.get('state')?.errors != null && addressForm.get('state')?.touched"
-        class="alert text-danger p-0 m-0">
+        class="alert text-danger p-0 m-0"
+      >
         <p *ngIf="addressForm.get('state')?.getError('required')">this field is required !!!</p>
       </div>
     </div>
@@ -440,20 +452,12 @@
 </section>
 <!--End Register New Address User Form-->
 
-
-
-
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
-<section
-  *ngIf="addressId !== 0"
-  class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
->
+<section *ngIf="addressId !== 0" class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
   <h1 class="h2 step-one">Step Two ...</h1>
   <h3 class="h3 mt-0">Payment Method</h3>
   <form [formGroup]="payForm" class="row g-3 px-5">
-    
-
     <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
       <input
         class="form-check-input"
@@ -466,7 +470,6 @@
         formControlName="paymentMethod"
       />
       <label class="form-check-label check-address-lbl p-2" for="method">{{ method }}</label>
-
     </div>
     <p>payment method{{ paymentSelected }}</p>
 
@@ -485,13 +488,7 @@
     </div>
     <!-- [disabled]="payForm.invalid" -->
     <div class="pay-btn col-12">
-      <button
-        
-        (click)="creatOrder(payForm,btn)"
-        #btn
-        type="submit"
-        class="w-100 submit mt-3"
-      >
+      <button (click)="creatOrder(payForm, btn)" #btn type="submit" class="w-100 submit mt-3">
         Submit
         <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
       </button>

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --primary-color: rgb(2, 99, 117);
   --primary-color-light: rgb(2, 99, 117, 0.1);
@@ -15,11 +19,12 @@
 }
 
 * {
+  margin: 0;
+  padding: 0;
+
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -ms-box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 
   scrollbar-width: thin;
 }
@@ -55,5 +60,12 @@ body {
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;
+  }
+}
+
+@media (max-width: 576px) {
+  .ant-picker-panels {
+    width: 85dvw;
+    overflow-x: auto;
   }
 }

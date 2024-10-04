@@ -1,5 +1,5 @@
-import { deleteImage, setDefaultImage } from '@/actions/image';
 import { ResalaTooltip } from '@/components';
+import { deleteImage, setDefaultImage } from '@/fetch/images';
 import { DeleteOutlined, LoadingOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import type { Image } from '@resala/shared';
 import { Button, Dropdown } from 'antd';

@@ -2,12 +2,16 @@ import type { CorsOptions } from 'cors';
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import fs from 'fs';
+import helmet from 'helmet';
+import passport from 'passport';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
+import { configuration } from './configuration/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import { apiRequestLogger } from './middlewares/requestLogger.js';
+import { loggerHandler } from './middlewares/loggerHandler.js';
 import { RegisterRoutes } from './routes/api.routes.js';
+import { views } from './views/index.js';
 import { postPay } from './webhooks/paymob.js';
 
 const swaggerDocument = fs.readFileSync('docs/swagger.yaml', 'utf8');
@@ -20,11 +24,13 @@ export const createExpressApp = (logRequests: boolean = true) => {
   app.set('view engine', 'ejs');
 
   const corsConfig: CorsOptions = {
-    origin: '*',
+    origin: [configuration.origin.allowedList],
   };
 
   // Middlewares
   app.use(cors(corsConfig));
+  app.use(helmet());
+  app.use(passport.initialize());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static('uploads')); // serve uploaded files
@@ -39,7 +45,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
     })
   );
 
-  if (logRequests) app.use(apiRequestLogger);
+  if (logRequests) app.use(loggerHandler);
 
   RegisterRoutes(app); // Register TSOA routes
 
@@ -57,31 +63,9 @@ export const createExpressApp = (logRequests: boolean = true) => {
     return res.sendFile(filepath, { root: 'uploads' });
   });
 
-  // Catch all routes
-  app.get('/', (_, res) => {
-    const uptimeInSeconds = process.uptime();
+  app.use(views);
 
-    // Convert uptime to a more readable format
-    const hours = Math.floor(uptimeInSeconds / 3600)
-      .toString()
-      .padStart(2, '0');
-    const minutes = Math.floor((uptimeInSeconds % 3600) / 60)
-      .toString()
-      .padStart(2, '0');
-    const seconds = Math.floor(uptimeInSeconds % 60)
-      .toString()
-      .padStart(2, '0');
-
-    const uptime = `${hours}h ${minutes}m ${seconds}s`; // e.g. 1h 30m 15s
-
-    const year = new Date().getFullYear();
-
-    const webAppUrl = process.env.WEB_APP_URL || 'http://localhost:4200';
-    const adminDashboardUrl = process.env.ADMIN_DASHBOARD_URL || 'http://localhost:3000';
-
-    return res.render('index', { uptime, year, webAppUrl, adminDashboardUrl });
-  });
-
+  // Catch all (unmatched) routes
   app.use((_, res) => {
     return res.status(404).send('Not found');
   });

@@ -1,11 +1,14 @@
 'use client';
 
-import { findPaymentById } from '@/data/payment';
+import { findPaymentById } from '@/fetch/payments';
 import { useQuery } from '@/hooks';
+import { useCallback } from 'react';
 
-export const useTransaction = (transactionId: number | null) => {
+export const useTransaction = (transactionId: string | null) => {
+  const findPaymentByIdCb = useCallback(() => findPaymentById(transactionId!), [transactionId]);
+
   const { isLoading, error, data, refetch } = useQuery({
-    queryFn: () => findPaymentById(transactionId!),
+    queryFn: findPaymentByIdCb,
     enabled: !!transactionId,
   });
 

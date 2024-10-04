@@ -1,6 +1,6 @@
 export class APIError extends Error {
   constructor(
-    public statusCode: 400 | 401 | 403 | 404 | 409 | 500,
+    public statusCode: 400 | 401 | 403 | 404 | 409 | 429 | 500,
     message: string
   ) {
     super(message);
@@ -18,6 +18,12 @@ export class BadRequestError extends APIError {
 export class NotFoundError extends APIError {
   constructor(message = 'Resource not found') {
     super(404, message);
+  }
+}
+
+export class RateLimitError extends APIError {
+  constructor(message = 'Too many requests. Please try again later.') {
+    super(429, message);
   }
 }
 

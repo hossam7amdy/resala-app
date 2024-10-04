@@ -3,7 +3,6 @@ import {
   CreateProductSchema,
   type DeleteProductResponse,
   type GetProductResponse,
-  type ListProductsRequest,
   type ListProductsResponse,
   ListProductsSchema,
   type UpdateProductResponse,
@@ -18,7 +17,7 @@ import {
   Path,
   Post,
   Put,
-  Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -27,13 +26,16 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validateImage } from '../../middlewares/uploadHandler.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { FileService } from '../filestorage/file.service.js';
 import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
 
 @Tags('Product')
+@Middlewares([jwtParse])
 @Route('api/v1/products')
 export class ProductController extends Controller {
   private readonly productService: ProductService;
@@ -53,17 +55,27 @@ export class ProductController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListProductsSchema)])
-  public async list(@Queries() query: ListProductsRequest['query']): Promise<ListProductsResponse> {
-    const { products, pagination } = await this.productService.list(query);
+  @Middlewares([validate(ListProductsSchema)])
+  public async list(
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string,
+    @Query() categoryId?: number
+  ): Promise<ListProductsResponse> {
+    const { products, pagination } = await this.productService.list({
+      page,
+      limit,
+      search,
+      categoryId,
+    });
 
     return { success: true, data: { pagination, products } };
   }
 
   /** Create a new product, only admins can create products */
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Product created')
-  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
     @FormField() categoryId: string,
@@ -74,6 +86,8 @@ export class ProductController extends Controller {
     @FormField() price: number,
     @UploadedFile() image: Express.Multer.File
   ): Promise<CreateProductResponse> {
+    validateImage(image);
+
     const { body } = await CreateProductSchema.parseAsync({
       body: { categoryId, arName, enName, arDescription, enDescription, price },
     });
@@ -85,7 +99,7 @@ export class ProductController extends Controller {
 
   /** Update a product, only admins can update products */
   @Put('{productId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() productId: string,
@@ -95,8 +109,10 @@ export class ProductController extends Controller {
     @FormField() arDescription: string,
     @FormField() enDescription: string,
     @FormField() price: number,
-    @UploadedFile() image: Express.Multer.File
+    @UploadedFile() image?: Express.Multer.File
   ): Promise<UpdateProductResponse> {
+    image && validateImage(image);
+
     const { body } = await UpdateProductSchema.parseAsync({
       params: { productId },
       body: { categoryId, arName, enName, arDescription, enDescription, price },
@@ -109,7 +125,7 @@ export class ProductController extends Controller {
 
   /** Delete a product, only admins can delete products */
   @Delete('{productId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() productId: string): Promise<DeleteProductResponse> {
     const data = await this.productService.delete(+productId);

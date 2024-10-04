@@ -4,7 +4,6 @@ import {
   CreateStockSchema,
   type DeleteStockResponse,
   type GetStockResponse,
-  type ListStocksRequest,
   type ListStocksResponse,
   ListStocksSchema,
   type UpdateStockRequest,
@@ -20,7 +19,7 @@ import {
   Path,
   Post,
   Put,
-  Queries,
+  Query,
   Route,
   Security,
   SuccessResponse,
@@ -28,12 +27,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { StockService } from './stock.service.js';
 
 @Tags('Stock')
 @Route('api/v1/stocks')
+@Middlewares([jwtParse])
 export class StockController extends Controller {
   private readonly stockService: StockService;
 
@@ -50,9 +51,19 @@ export class StockController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListStocksSchema)])
-  async list(@Queries() query: ListStocksRequest['query']): Promise<ListStocksResponse> {
-    const { stocks, pagination } = await this.stockService.list(query);
+  @Middlewares([validate(ListStocksSchema)])
+  async list(
+    @Query() page: number = 1,
+    @Query() limit: number = 10,
+    @Query() search?: string,
+    @Query() productId?: number
+  ): Promise<ListStocksResponse> {
+    const { stocks, pagination } = await this.stockService.list({
+      page,
+      limit,
+      search,
+      productId,
+    });
 
     return {
       success: true,
@@ -61,8 +72,8 @@ export class StockController extends Controller {
   }
 
   @Post()
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateStockSchema)])
   @SuccessResponse('201', 'Stock created successfully')
   async create(@Body() body: CreateStockRequest['body']): Promise<CreateStockResponse> {
     const stock = await this.stockService.create(body);
@@ -71,8 +82,8 @@ export class StockController extends Controller {
   }
 
   @Put('{stockId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateStockSchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateStockSchema)])
   async update(
     @Path() stockId: string,
     @Body() body: UpdateStockRequest['body']
@@ -83,7 +94,7 @@ export class StockController extends Controller {
   }
 
   @Delete('{stockId}')
-  @Security('jwt_auth')
+  @Security('JWT_SECRET')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   async delete(@Path() stockId: string): Promise<DeleteStockResponse> {
     const stock = await this.stockService.delete(+stockId);

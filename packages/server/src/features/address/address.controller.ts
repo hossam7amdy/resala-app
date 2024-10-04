@@ -1,13 +1,15 @@
-import {
+import type {
   CreateAddressRequest,
-  type CreateAddressResponse,
-  CreateAddressSchema,
-  type DeleteAddressResponse,
-  DeleteAddressSchema,
-  type ListAddressResponse,
-  ListAddressSchema,
+  CreateAddressResponse,
+  DeleteAddressResponse,
+  ListAddressResponse,
   UpdateAddressRequest,
-  type UpdateAddressResponse,
+  UpdateAddressResponse,
+} from '@resala/shared';
+import {
+  CreateAddressSchema,
+  DeleteAddressSchema,
+  ListAddressSchema,
   UpdateAddressSchema,
 } from '@resala/shared';
 import {
@@ -19,7 +21,6 @@ import {
   Path,
   Post,
   Put,
-  Queries,
   Query,
   Route,
   Security,
@@ -28,14 +29,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { authorizeAccess } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { authorization } from '../../middlewares/authorization.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { AddressService } from './address.service.js';
 
 @Tags('Address')
 @Route('api/v1/addresses')
-@Security('jwt_auth')
-@Middlewares([authorizeAccess])
+@Security('JWT_SECRET')
+@Middlewares([authorization])
 export class AddressController extends Controller {
   private readonly addressService: AddressService;
 
@@ -45,7 +46,7 @@ export class AddressController extends Controller {
   }
 
   @Get()
-  @Middlewares([requestValidator(ListAddressSchema)])
+  @Middlewares([validate(ListAddressSchema)])
   public async listUserAddress(@Query() userId: number): Promise<ListAddressResponse> {
     const addresses = await this.addressService.list(userId);
 
@@ -53,7 +54,7 @@ export class AddressController extends Controller {
   }
 
   @Post()
-  @Middlewares([requestValidator(CreateAddressSchema)])
+  @Middlewares([validate(CreateAddressSchema)])
   @SuccessResponse('201', 'Address created')
   public async createUserAddress(
     @Body() body: CreateAddressRequest['body']
@@ -64,7 +65,7 @@ export class AddressController extends Controller {
   }
 
   @Put('{addressId}')
-  @Middlewares([requestValidator(UpdateAddressSchema)])
+  @Middlewares([validate(UpdateAddressSchema)])
   public async updateUserAddress(
     @Path() addressId: string,
     @Body() body: UpdateAddressRequest['body']
@@ -75,12 +76,12 @@ export class AddressController extends Controller {
   }
 
   @Delete('{addressId}')
-  @Middlewares([requestValidator(DeleteAddressSchema)])
+  @Middlewares([validate(DeleteAddressSchema)])
   public async deleteUserAddress(
     @Path() addressId: string,
-    @Queries() _: { userId: string }
+    @Query() userId: number
   ): Promise<DeleteAddressResponse> {
-    const address = await this.addressService.delete(+addressId);
+    const address = await this.addressService.delete(+addressId, +userId);
 
     return { success: true, data: address };
   }

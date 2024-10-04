@@ -1,6 +1,6 @@
 import {
   type GetPaymentResponse,
-  RefundPaymentRequest,
+  type RefundPaymentRequest,
   RefundPaymentSchema,
   type VoidPaymentRequest,
   VoidPaymentSchema,
@@ -17,34 +17,32 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
-import { db } from '../../datastore/index.js';
+import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { PaymentService } from './payment.service.js';
-import { PaymobService } from './paymob/paymob.service.js';
 
 @Tags('Payment')
+@Security('JWT_SECRET')
 @Route('api/v1/payments')
+@Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
 export class PaymentController extends Controller {
   private readonly paymentService: PaymentService;
 
   constructor() {
     super();
-    this.paymentService = new PaymentService(db, new PaymobService());
+    this.paymentService = new PaymentService(new PaymobService());
   }
 
   @Get('{transactionId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async get(@Path() transactionId: string): Promise<GetPaymentResponse> {
-    const payment = await this.paymentService.retrieve(+transactionId);
+    const payment = await this.paymentService.retrieve(transactionId);
 
     return { success: true, data: payment };
   }
 
   @Post('void')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(VoidPaymentSchema)])
+  @Middlewares([validate(VoidPaymentSchema)])
   public async void(@Body() body: VoidPaymentRequest['body']) {
     const transactionId = body.transactionId;
 
@@ -54,8 +52,7 @@ export class PaymentController extends Controller {
   }
 
   @Post('refund')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(RefundPaymentSchema)])
+  @Middlewares([validate(RefundPaymentSchema)])
   public async refund(@Body() body: RefundPaymentRequest['body']) {
     const { transactionId, amount } = body;
 

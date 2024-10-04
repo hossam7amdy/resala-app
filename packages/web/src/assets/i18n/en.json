@@ -1,66 +1,59 @@
 {
-    "nav-blank":{
-        "Test":"Test",
-        "Home":"Home",
-        "Categories":"Categories",
-        "LatestCollection":"Latest Collection",
-        "NewOffers":"New Offers",
-        "SignIn":"Sign In",
-        "SignOut":"Sign Out",
-        "NotaMember?":"Not a Member?",
-        "Register":"Register",
-        "Profile":"Profile",
-        "TraceYourOrder":"Trace Your Order",
-        "Favorites":"Favorites",
-        "Cart":"Cart"
+  "nav-blank": {
+    "Test": "Test",
+    "Home": "Home",
+    "Categories": "Categories",
+    "LatestCollection": "Latest Collection",
+    "NewOffers": "New Offers",
+    "SignIn": "Sign In",
+    "SignOut": "Sign Out",
+    "NotaMember?": "Not a Member?",
+    "Register": "Register",
+    "Profile": "Profile",
+    "TraceYourOrder": "Trace Your Order",
+    "Favorites": "Favorites",
+    "Cart": "Cart"
+  },
+  "top-bar": {
+    "firstOffer": "Free Shipping On Orders Over 1000EGP",
+    "secondOffer": "2Free Shipping On Orders Over 1000EGP",
+    "thirdOffer": "3Free Shipping On Orders Over 1000EGP"
+  },
+
+  "home": {
+    "popUpProduct": {
+      "miniTitle": "Style",
+      "pTitle": "Simple style",
+      "stBigTitle": "Get",
+      "ndBigTitle": "This",
+      "rdBigTitle": "One!"
     },
-    "top-bar":{
-        "firstOffer":"Free Shipping On Orders Over 1000EGP",
-        "secondOffer":"2Free Shipping On Orders Over 1000EGP",
-        "thirdOffer":"3Free Shipping On Orders Over 1000EGP"
+    "mainSlider": {
+      "stSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "ndSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "rdSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "urSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "veSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      }
     },
-
-    "home":{
-        "popUpProduct":{
-            "miniTitle":"Style",
-            "pTitle":"Simple style",
-            "stBigTitle":"Get",
-            "ndBigTitle":"This",
-            "rdBigTitle":"One!"
-        },
-        "mainSlider":{
-            "stSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"The Best Collection For Veiled Ladies"
-            },
-            "ndSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"The Best Collection For Veiled Ladies"
-            },
-            "rdSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"The Best Collection For Veiled Ladies"
-            },
-            "urSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"The Best Collection For Veiled Ladies"
-            },
-            "veSlide":{
-                "hyperTitle":"Resala",
-                "pTitle":"The Best Collection For Veiled Ladies"
-            }
-        },
-        "trends":{
-            "mainTitle":"Trends Products"
-
-        },
-        "allProducts":{
-
-        },
-        "allCategories":{
-
-        }
-    }
-
-
+    "trends": {
+      "mainTitle": "Trends Products"
+    },
+    "allProducts": {},
+    "allCategories": {}
+  }
 }

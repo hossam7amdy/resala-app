@@ -1,15 +1,11 @@
+import { classnames } from '@/lib/classnames';
 import React from 'react';
 
 export const StockColor: React.FC<{ color: string }> = ({ color }) => {
   return (
-    <div
+    <span
+      className={classnames('inline-block p-1 w-3 h-3 border border-solid border-[#eee]')}
       style={{
-        display: 'inline-block',
-        padding: 5,
-        width: 15,
-        height: 15,
-        border: '1px solid #eee',
-        fontSize: 'large',
         backgroundColor: color,
       }}
     />

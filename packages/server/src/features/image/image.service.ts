@@ -96,12 +96,12 @@ export class ImageService {
   private async checkColorLimits(
     productId: number,
     colorId: number,
-    filesLen: number,
+    filesCount: number,
     limit: number = 5
   ) {
     const existingImages = await this.list({ productId, colorId });
 
-    if (existingImages.length + filesLen > limit) {
+    if (existingImages.length + filesCount > limit) {
       throw new BadRequestError(`Exceeded images limit of ${limit} per color`);
     }
   }

@@ -1,26 +1,25 @@
 'use client';
 
-import { deleteCategory } from '@/actions/category';
-import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
+import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
+import { deleteCategory } from '@/fetch/category';
+import { ROUTES } from '@/routes';
 import { formatDate } from '@/utils/date-time-formatter';
-import { ROUTES } from '@/utils/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { GetCategoryResponse, ListCategoriesResponse } from '@resala/shared';
-import { Button, Flex, Table } from 'antd';
+import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
 export const CategoryTable: React.FC<{
-  query: string | undefined;
+  search: string | undefined;
   categories: ListCategoriesResponse['data'];
-}> = ({ categories, query = '' }) => {
+}> = ({ categories, search = '' }) => {
   const filteredCategories = categories.filter(category => {
-    if (category.enName.toLowerCase().includes(query.toLowerCase())) return true;
-    if (category.arName.toLowerCase().includes(query.toLowerCase())) return true;
+    if (category.enName.toLowerCase().includes(search.toLowerCase())) return true;
+    if (category.arName.toLowerCase().includes(search.toLowerCase())) return true;
   });
 
   return (
     <Table
-      scroll={{ x: true, y: 500 }}
       pagination={{ total: filteredCategories.length, position: ['bottomCenter'] }}
       columns={[
         { title: 'English', dataIndex: 'enName' },

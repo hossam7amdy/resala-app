@@ -74,7 +74,6 @@
               "ssl": false,
               "sslKey": "ssl/server.key",
               "sslCert": "ssl/server.crt"
-              
             }
           },
           "defaultConfiguration": "development"
@@ -83,6 +82,12 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "freshcart:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "test": {

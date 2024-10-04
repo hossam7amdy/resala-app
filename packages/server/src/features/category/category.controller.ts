@@ -27,12 +27,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
-import { requestValidator } from '../../middlewares/requestValidator.js';
+import { validate } from '../../middlewares/validateHandler.js';
 import { CategoryService } from './category.service.js';
 
 @Tags('Category')
 @Route('api/v1/categories')
+@Middlewares([jwtParse])
 export class CategoryController extends Controller {
   private readonly categoryService: CategoryService;
 
@@ -42,7 +44,7 @@ export class CategoryController extends Controller {
   }
 
   @Get('{categoryId}')
-  @Middlewares([requestValidator(GetCategorySchema)])
+  @Middlewares([validate(GetCategorySchema)])
   public async get(@Path() categoryId: string): Promise<GetCategoryResponse> {
     const category = await this.categoryService.find(+categoryId);
 
@@ -58,9 +60,9 @@ export class CategoryController extends Controller {
 
   /** Create a new category, only admins can create categories */
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Category created')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(CreateCategorySchema)])
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(CreateCategorySchema)])
   public async create(
     @Body() body: CreateCategoryRequest['body']
   ): Promise<CreateCategoryResponse> {
@@ -71,8 +73,8 @@ export class CategoryController extends Controller {
 
   /** Update a category, only admins can update categories */
   @Put('{categoryId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(UpdateCategorySchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(UpdateCategorySchema)])
   public async update(
     @Path() categoryId: string,
     @Body() body: UpdateCategoryRequest['body']
@@ -84,8 +86,8 @@ export class CategoryController extends Controller {
 
   /** Delete a category, only admins can delete categories */
   @Delete('{categoryId}')
-  @Security('jwt_auth')
-  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), requestValidator(DeleteCategorySchema)])
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteCategorySchema)])
   public async delete(@Path() categoryId: string): Promise<DeleteCategoryResponse> {
     const category = await this.categoryService.delete(+categoryId);
 
