@@ -189,7 +189,6 @@ export class DiscountService {
       0
     );
 
-    // eslint-disable-next-line no-unused-vars
     for (const { discountProduct: _, ...discount } of discounts) {
       let discountedTotalPrice = lowestTotalPrice;
 
