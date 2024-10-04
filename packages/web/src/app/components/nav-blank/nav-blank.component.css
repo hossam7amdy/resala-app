@@ -13,14 +13,21 @@ section.fixed-top{
   z-index: 9999;
 }
 
-.nav .nav-link{
+/* .nav .nav-link{
   color: black;
   font-weight: bold;
   font-size: 14px;
   
+} */
+.upper-nav .lang{
+  color: black !important;
+  font-weight: 900;
 }
 
 
+/* .navbar:lang(ar){
+  text-align: right;
+} */
 .navbar{
   transition: top ease-in-out 0.5s;
   view-transition-name: top;
@@ -53,7 +60,9 @@ nav .logo {
   font-weight: 500;
   
 }
-.dropdown-menu .dropdown-item:hover{
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:active,
+.dropdown-menu .dropdown-item:focus{
   background-color: #fbb935;
   color: #fff;
 }
@@ -103,6 +112,7 @@ nav .logo {
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
   color: #fff;
+  background-color: #fbb935;
 }
 
 form {
@@ -137,7 +147,16 @@ form .icon-search {
 
 .nav-link {
   position: relative;
+  cursor: pointer;
 }
+.upper-nav .nav-link{
+  color: #016373;
+}
+/* .upper-nav .nav-link:active,
+.upper-nav .nav-link:focus{
+  color: #fff;
+  background-color: #fbb935;
+} */
 
 .nav-link .mini-basket-count {
   position: absolute;
@@ -145,8 +164,9 @@ form .icon-search {
   height: 18px;
   border-radius: 9px;
   background-color: #fbb935;
+  color: #fff;
   top: 0;
-  left: 25px;
+  left: 30px;
   z-index: 99;
   text-align: center;
   line-height: 1.9;

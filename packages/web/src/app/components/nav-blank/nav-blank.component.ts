@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 
@@ -30,8 +31,8 @@ export class NavBlankComponent implements OnInit {
     private _Renderer:Renderer2,
     private spinner:NgxSpinnerService,
     private UserProfile:UserService,
-    public _Translate:TranslateService
-  
+    public _Translate:TranslateService,
+    private _RTLStatus:Translate_Service
   ) {}
 
   // attributes
@@ -58,20 +59,28 @@ export class NavBlankComponent implements OnInit {
   }
 currentLang:string='ar';
 langStorage:any =localStorage.getItem("language");
+
 switchLanguage(lang:string):void{
   localStorage.setItem("language",lang);
   this.langStorage = localStorage.getItem("language");
+  window.location.reload();
   this._Translate.use(this.langStorage);
-
+  this.changePageDirection(lang);
   if(lang == 'ar'){
     this.currentLang = 'en';
+    this._RTLStatus.rTLStatus.next(lang)
+   
   }else{
     this.currentLang = 'ar';
+    this._RTLStatus.rTLStatus.next(lang)
+    
   }
+  
   console.log('Language'+lang, this.currentLang);
   
 }
-  
+
+
   
 
   ngOnInit(): void {
@@ -79,10 +88,18 @@ switchLanguage(lang:string):void{
     if(this.langStorage === null){
       this._Translate.defaultLang;
       this.currentLang = 'ar';
+      
     }else{
       this._Translate.use(this.langStorage);
-      ((this.langStorage === 'en' )? this.currentLang = 'ar' :this.currentLang = 'en');
+        if(this.langStorage === 'en'){
+          this.currentLang = 'ar';
+          
+        }else{
+          this.currentLang = 'en';
+          
+        }  
     }
+    this.changePageDirection(this.langStorage);
    
     // this.signOut = this._AuthService.signOut;
     this.isToken = localStorage.getItem('etoken');
@@ -106,14 +123,6 @@ switchLanguage(lang:string):void{
       }
     });
 
-    // this._AuthService.userNameLogged.subscribe({
-    //   next:response=>{
-    //     this.userNameLogged = response;
-    //     console.log(this.userNameLogged);
-    //   },error: err=>{
-    //     this.userNameLogged = 'Login';
-    //   }
-    // })
 
    
 
@@ -135,6 +144,21 @@ switchLanguage(lang:string):void{
 
    
   }
+
+  // Change page Direction as per Selected Lang
+changePageDirection(lang: string) {
+  const html = document.getElementsByTagName('html')[0];
+  if (lang === "ar") {
+    html.dir = 'rtl';
+    html.lang = "ar";
+    
+  } else {
+    html.dir = 'ltr';
+    html.lang = "en";
+   
+  }
+}
+  
 
   isTogglerOpend():void{
     if(this.togglerOpend == false){

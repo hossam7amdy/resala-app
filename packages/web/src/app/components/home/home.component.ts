@@ -19,12 +19,20 @@ import { NgxStarRatingModule } from 'ngx-star-rating';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { TrendsService } from 'src/app/core/services/trends.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink, NgxPaginationModule, SearchPipe,NgxStarsRatingModule  ], //
+  imports: [CommonModule, 
+    CarouselModule, 
+    RouterLink, 
+    NgxPaginationModule, 
+    SearchPipe,
+    NgxStarsRatingModule,
+    TranslateModule,  ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -42,11 +50,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner:NgxSpinnerService,
-   private _Trend:TrendsService
+    private _Trend:TrendsService,
+    public _Translate:TranslateService,
+    private _RTLStatus:Translate_Service
     
 
        
   ) {}
+langStorage:any= localStorage.getItem("language")
+  // Change page Direction as per Selected Lang
+changePageDirection():boolean {
+  const html = document.getElementsByTagName('html')[0];
+  let rtlStat:boolean;
+  if (this._RTLStatus.rTLStatus.value === "ar") {
+    html.dir = 'rtl';
+    html.lang = "ar";
+    rtlStat = true;
+  } else {
+    html.dir = 'ltr';
+    html.lang = "en";
+    rtlStat = false;
+  }
+  console.log('topbar rtlFun',rtlStat);
+  return rtlStat
+
+}
 
   // Trends
   trendProducts:any=[];
@@ -184,7 +212,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     autoplay: true,
     autoplayTimeout: 5000,
     autoplaySpeed: 3000,
-
+    rtl:this.changePageDirection(),
     autoplayHoverPause: true,
   };
 
@@ -206,6 +234,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     autoplaySpeed: 10000,
     margin:6,
     autoplayHoverPause: true,
+    rtl:this.changePageDirection(),
   };
   //navText: ['', '>>'],
 
@@ -219,7 +248,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     margin: 5,
     autoWidth: true,
     navSpeed: 700,
+    
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
+    rtl:this.changePageDirection(),
     responsive: {
       0: {
         items: 1,

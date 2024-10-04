@@ -1,17 +1,70 @@
 <!-- start second bar -->
 
 <section  #navbar class="fixed-top">
-<ul  class="nav justify-content-end">
+  <div class="upper-nav">
+<!-- <ul  class="nav justify-content-end">
   <li class="nav-item">
     <a   (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link py-1">Arabic</a>
     <a  (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link py-1" >English</a>
   </li>
+</ul> -->
+<!-- right nav -->
+<ul class="nav ms-auto p-0 pt-1 mb-lg-0 justify-content-center">
+  
+  <li class="nav-item mx-4 me-3">
+    <a   (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link lang">Ar</a>
+    <a  (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link lang" >En</a>
+  </li>
+        
+  <li  class="nav-item dropdown ">
+    <a data-mdb-button-init class="nav-link"  routerLink="/login"
+    data-mdb-ripple-init data-mdb-dropdown-init class="nav-link dropdown-toggle" 
+    type="button"
+    id="dropdownMenuButton"
+    data-mdb-toggle="dropdown"
+    aria-expanded="false">
+      <i class="far far fa-user me-2 fs-5"></i>
+      <span>{{(userNameLogged === 'Login'?'':userNameLogged) }}</span>
+    </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li>
+          <a  *ngIf="signOut == false"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">{{"nav-blank.SignIn"|translate}}</a>
+          <a  *ngIf="signOut" (click)="removeTokenSignOut()"  routerLinkActive="active-link" routerLink="/login" class="dropdown-item" role="button">{{"nav-blank.SignOut"|translate}}</a>
+        </li> 
 
-  
- 
-  
+        <li>
+          <a *ngIf="signOut == false" routerLinkActive="active-link" routerLink="/register" class="dropdown-item" role="button"><span class="not-member">{{"nav-blank.NotaMember?"|translate}}</span> {{"nav-blank.Register"|translate}}</a>
+        </li> 
+
+        <li>
+          <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/profile" class="dropdown-item" role="button">{{"nav-blank.Profile"|translate}}</a>
+        </li> 
+
+        <li>
+          <a *ngIf="signOut" routerLinkActive="active-link" routerLink="/orders" class="dropdown-item" role="button">{{"nav-blank.TraceYourOrder"|translate}}</a>
+        </li> 
+      </ul>
+    
+  </li>
+
+
+  <li class="nav-item ">
+    <a class="nav-link" routerLink="/favorites"
+      ><i class="far fa-heart me-2 fs-5"></i>
+      <!-- <span>{{"nav-blank.Favorites"|translate}}</span> -->
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" routerLink="/cart">
+      <i class="fas fa-shopping-bag me-2 fs-5"></i>
+      <!-- <span class="shopping-text">{{"nav-blank.Cart"|translate}}</span> -->
+      <span class="mini-basket-count"
+        ><span>{{ cartNum }}</span></span>
+    </a>
+  </li>
 </ul>
-
+</div>
 <!-- end second bar -->
 
 
@@ -79,7 +132,7 @@
       </ul>
 
       <!-- right nav -->
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <!-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         
         <li  class="nav-item dropdown mx-2 me-3">
           <a data-mdb-button-init class="nav-link" routerLinkActive="active-link" routerLink="/login"
@@ -129,7 +182,7 @@
             >
           </a>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </nav>
