@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withQueryParams } from '@resala/shared';
+import { ENDPOINT_CONFIGS, withParams, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -44,7 +44,7 @@ export class HomeProductsService {
 
   //Product Details
   getProductDetails(id: any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.getProduct, { productId: id! });
+    const { url } = withParams(ENDPOINT_CONFIGS.getProduct, id);
     return this._HttpClient.get(`${environment.BASE_URL}${url}`, this.getHeaders());
   }
 
