@@ -184,7 +184,7 @@ export class StockService {
       {} as Record<string, GetStockResponse['data']>
     );
 
-    return Object.values(stocks).toSorted(
+    return Object.values(stocks).sort(
       (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
     );
   }

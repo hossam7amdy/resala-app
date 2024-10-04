@@ -7,11 +7,9 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgxStarRatingModule } from 'ngx-star-rating';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
-import { Category } from 'src/app/core/interfaces/category';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
@@ -89,7 +87,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.trendProducts = res.data;
         console.log('trends', res);
       },
-      error: err => {},
     });
 
     //  products
