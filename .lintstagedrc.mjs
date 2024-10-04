@@ -1,3 +1,3 @@
 export default {
-  '*.{js,jsx,ts,tsx,mjs,cjs,json}': 'prettier --write .',
+  'packages/**/*.{ts,tsx,json}': ['yarn format:fix', 'yarn lint:fix'],
 };
