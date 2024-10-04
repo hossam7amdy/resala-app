@@ -1,16 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-
-import {
-  ENDPOINT_CONFIGS,
-  Endpoints,
-  withParams,
-  withQueryParams,
-} from '../../../../../shared/src/endpoints';
 
 @Injectable({
   providedIn: 'root',
@@ -58,10 +51,7 @@ export class CartService {
   // remove item
   removeCartItem(productId: string): Observable<any> {
     const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.removeItemFromCart], productId + '');
-    return this.http.delete(
-      environment.BASE_URL + `/api/v1/cart/items/${productId}`,
-      this.getHeaders()
-    );
+    return this.http.delete(environment.BASE_URL + url, this.getHeaders());
   }
 
   // remove All Items from User

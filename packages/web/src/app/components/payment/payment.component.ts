@@ -4,7 +4,7 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -211,7 +211,7 @@ export class PaymentComponent implements OnInit {
   editAddressForm(index: any): void {
     this.isEdit = true;
     this.editIndex = index;
-    let userNumberId = Number(this.userLoginId); // parsing to number
+    const userNumberId = Number(this.userLoginId); // parsing to number
     console.log(typeof userNumberId);
     this.userAddresses.patchValue({ userId: userNumberId });
   }
