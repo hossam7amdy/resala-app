@@ -57,6 +57,18 @@ section .overlay {
   border-radius: 0 10px 10px 0;
   cursor: pointer;
 }
+.overlay .img-overlay img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0px 0px 10px #fff;
+}
+.overlay .img-overlay:lang(ar){
+  border-radius: 10px 0 0 10px;
+}
+.overlay .img-overlay img:lang(ar){
+  border-radius: 10px 0 0 10px;
+}
 @media (max-width: 1199px){
   .overlay .img-overlay{
     width: 348px;
@@ -122,6 +134,9 @@ section .overlay {
   color: #016373;
   cursor: pointer;
 }
+.overlay-section .left-overlay:lang(ar){
+  border-radius:0px 10px 10px 0px;
+}
 
 .overlay-section .left-overlay .mini-tilte {
   margin-top: 100px;
@@ -159,12 +174,7 @@ section .overlay {
       font-size: 25px;
       }
   }
-.overlay .img-overlay img {
-  width: 100%;
-  height: 100%;
-  border-radius: 0 10px 10px 0;
-  box-shadow: 0px 0px 10px #fff;
-}
+
 @media (max-width: 550px){
   .overlay-section .left-overlay .p-title{
     font-size: 10px;
@@ -309,11 +319,13 @@ section .overlay {
   color: #fff;
 }
 
-.trends-slide a {
+.trends-slide {
   position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-.trends-slide a .favourit-icon {
+.trends-slide .favourit-icon {
   position: absolute;
   top: 2%;
   right: 2%;
@@ -321,23 +333,23 @@ section .overlay {
   cursor: pointer;
 }
 
-.trends-slide a .favourit-icon::before {
+.trends-slide .favourit-icon::before {
   background-color: #fff;
   padding: 5px;
   border-radius: 50%;
 }
 @media (max-width:800px) {
-  .trends-slide a .favourit-icon{
+  .trends-slide .favourit-icon{
     top: 2%;
   right: 2%;
   font-size: 20px;
   }
-  .trends-slide a .favourit-icon::before{
+  .trends-slide .favourit-icon::before{
     padding: 3px;
   }
 }
 @media (max-width:500px) {
-  .trends-slide a .favourit-icon{
+  .trends-slide .favourit-icon{
    
   font-size: 15px;
   
@@ -348,7 +360,7 @@ section .overlay {
 }
 
 
-.trends-slide a .shopping-icon {
+.trends-slide .shopping-icon {
   position: absolute;
   bottom: 2%;
   right: 2%;
@@ -357,14 +369,14 @@ section .overlay {
   cursor: pointer;
 }
 @media (max-width:800px) {
-  .trends-slide a .shopping-icon{
+  .trends-slide .shopping-icon{
     bottom: 2%;
   right: 2%;
   font-size: 20px;
   }
 }
 @media (max-width:500px) {
-  .trends-slide a .shopping-icon{
+  .trends-slide  .shopping-icon{
    
   font-size: 15px;
   }

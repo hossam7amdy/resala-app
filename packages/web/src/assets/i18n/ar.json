@@ -18,5 +18,47 @@
         "firstOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه",
         "secondOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 2",
         "thirdOffer":"شحن مجاني لو اشتريت بأكثر 1000 جنيه 3 "
+    },
+
+    "home":{
+        "popUpProduct":{
+            "miniTitle":"موديل جديد",
+            "pTitle":"قصه راقية صنع من اجلك",
+            "stBigTitle":"احصلي",
+            "ndBigTitle":"عليها",
+            "rdBigTitle":"الان!"
+        },
+        "mainSlider":{
+            "stSlide":{
+                "hyperTitle":"رسالة",
+                "pTitle":"افضل الموديلات لملابس المحجبات"
+            },
+            "ndSlide":{
+                "hyperTitle":"Resala",
+                "pTitle":"افضل الموديلات لملابس المحجبات"
+            },
+            "rdSlide":{
+                "hyperTitle":"رسالة",
+                "pTitle":"افضل الموديلات لملابس المحجبات"
+            },
+            "urSlide":{
+                "hyperTitle":"رسالة",
+                "pTitle":"افضل الموديلات لملابس المحجبات"
+            },
+            "veSlide":{
+                "hyperTitle":"رسالة",
+                "pTitle":"افضل الموديلات لملابس المحجبات"
+            }
+        },
+        "trends":{
+            "mainTitle":"الأكثر مبيعاً"
+            
+        },
+        "allProducts":{
+
+        },
+        "allCategories":{
+
+        }
     }
 }
