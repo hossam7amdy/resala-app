@@ -19,10 +19,12 @@ footer {
   cursor: pointer;
   color: #efefef;
 }
+
 .our-service {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
 .title h3,
 h4 {
   font-weight: bold;
@@ -35,14 +37,17 @@ h4 {
   padding: 0;
   margin: 0;
 }
+
 .p-footer {
   font-size: 14px;
 }
+
 @media (max-width: 992px) {
   .p-footer {
     font-size: 10px;
   }
 }
+
 @media (max-width: 576px) {
   .p-footer {
     font-size: 10px;
@@ -66,14 +71,17 @@ nav a {
   cursor: pointer;
   font-size: 12px;
 }
+
 @media (max-width: 576px) {
   nav a {
     font-size: 8px;
   }
 }
+
 .nav-link {
   margin: var(--bs-nav-link-margin-y) var(--bs-nav-link-margin-x);
 }
+
 nav a:hover,
 i:hover,
 nav a:active,
@@ -104,7 +112,7 @@ i:focus {
 .search-btn {
   position: fixed;
   top: 30%;
-  right: 0px;
+  right: -10px;
   z-index: 9999;
   width: 50px;
   background-color: #fbb935;
@@ -113,11 +121,13 @@ i:focus {
   cursor: pointer;
   transition: all 0.7 ease-in-out;
 }
+
 .search-btn:hover,
 .search-btn:active {
-  width: 55px;
+  right: -5px;
   transition: all 0.7 ease-in-out;
 }
+
 .search-btn i {
   color: #fff;
   font-size: 25px;
@@ -128,6 +138,7 @@ i:focus {
     font-size: 20px;
   }
 }
+
 .search-form {
   position: fixed;
   top: 0;
@@ -136,16 +147,23 @@ i:focus {
   background-color: #fff;
   z-index: 999;
 }
+
+.parent-search {
+  margin-top: 70px;
+}
+
 .search-form .parent-search {
   position: absolute;
   top: 20%;
   /* left: 25%; */
   width: 100%;
 }
+
 .parent-search form {
   width: 80%;
   margin: auto;
 }
+
 .search-form .icon-search {
   color: #fbb935;
   font-size: 30px;
@@ -163,6 +181,7 @@ i:focus {
   border-radius: 0px;
   outline: none;
 }
+
 .search-form .search-close {
   color: #016373;
   border: none;
@@ -171,6 +190,7 @@ i:focus {
   margin-top: 10px;
   cursor: pointer;
 }
+
 @media (max-width: 1300px) {
   /* .search-form  .search{
     width: 250px;
