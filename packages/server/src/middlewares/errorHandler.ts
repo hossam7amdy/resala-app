@@ -20,13 +20,7 @@ export const asyncHandler = (fn: RequestHandler): RequestHandler => {
 };
 
 /** @description error middleware */
-export const errorHandler = (
-  error: Error,
-  _req: Request,
-  res: Response,
-  // eslint-disable-next-line no-unused-vars
-  _next: NextFunction
-) => {
+export const errorHandler = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (error instanceof APIError) {
     return res.status(error.statusCode).json({
       success: false,

@@ -152,8 +152,7 @@ export class StockService {
     return {
       product,
       color: colorData,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-      images: images.map(({ colorId, productId, ...rest }) => ({ ...rest })),
+      images: images.map(({ colorId: _colorId, productId: _productId, ...rest }) => ({ ...rest })),
       sizes: [
         {
           stockId: stockData.id,

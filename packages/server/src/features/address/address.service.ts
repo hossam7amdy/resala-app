@@ -43,7 +43,6 @@ export class AddressService {
     return userAddr?.address ?? null;
   }
 
-  // eslint-disable-next-line no-unused-vars
   async update(addressId: number, { userId: _, ...payload }: UpdateAddressRequest['body']) {
     return await this.db.address.update({
       data: payload,
