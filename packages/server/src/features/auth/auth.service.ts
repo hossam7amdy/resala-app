@@ -50,7 +50,6 @@ export class AuthService extends JwtManager {
     const { id, email } = await this.db.user.upsert({
       create: {
         ...providerUser,
-        phone: '',
         password: '',
         role: 'CUSTOMER',
       },
