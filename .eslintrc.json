@@ -7,7 +7,9 @@
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "ignorePatterns": [
     "**/node_modules",
+    "**/.next",
     "**/dist",
+    "**/docs",
     "packages/shared/**/*.d.ts",
     "packages/shared/**/*.js",
     "packages/shared/**/*.cjs"
@@ -21,7 +23,7 @@
   "plugins": ["@typescript-eslint", "prefer-arrow"],
   "rules": {
     "prefer-arrow/prefer-arrow-functions": "warn",
-    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }

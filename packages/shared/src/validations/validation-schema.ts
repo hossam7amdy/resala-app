@@ -1,3 +1,4 @@
+import { Decimal } from 'decimal.js';
 import { z } from 'zod';
 
 import { validationPatterns } from '../patterns/index.js';
@@ -204,7 +205,10 @@ export const CreateProductSchema = z.object({
     enName: z.string().min(2).max(100),
     arDescription: z.string().max(500),
     enDescription: z.string().max(500),
-    price: z.coerce.number().positive(),
+    price: z.coerce
+      .number()
+      .positive()
+      .transform(p => new Decimal(p)),
   }),
 });
 
