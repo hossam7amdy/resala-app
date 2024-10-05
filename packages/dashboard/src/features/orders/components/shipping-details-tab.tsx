@@ -56,7 +56,7 @@ export const ShippingDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> =
             </Typography.Paragraph>
             <Typography.Paragraph>: {order?.user?.email}</Typography.Paragraph>
             <Typography.Paragraph>
-              : {formatCurrency(order?.shippingDetails?.cost)}
+              : {formatCurrency(+(order?.shippingDetails?.cost ?? 0))}
             </Typography.Paragraph>
           </div>
         </Flex>
