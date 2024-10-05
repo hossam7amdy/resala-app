@@ -65,8 +65,7 @@ export class LoginComponent {
   //   this._AuthService.userNameLogged.next(firstName);
   // }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  handleForm(loginForm: FormGroup): void {
+  handleForm(_loginForm: FormGroup): void {
     this.isLoading = true;
 
     const userData = this.loginForm.value;
