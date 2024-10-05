@@ -6,7 +6,6 @@ import type {
   GetProductResponse,
   ListProductsRequest,
   ListProductsResponse,
-  Product,
   UpdateProductRequest,
   UpdateProductResponse,
 } from '@resala/shared';
@@ -154,15 +153,21 @@ export class ProductService {
 
     const { imageKey } = await this.get(id);
 
+    let fileData = { key: imageKey, url: '' };
     if (file) {
       await this.fileService.deleteFile(imageKey);
 
-      const { key, url } = await this.fileService.uploadFile(file);
-
-      product = { ...product, imageKey: key, imageUrl: url } as Product;
+      fileData = await this.fileService.uploadFile(file);
     }
 
-    return await this.db.product.update({ where: { id }, data: product });
+    return await this.db.product.update({
+      where: { id },
+      data: {
+        ...product,
+        imageKey: fileData.key,
+        imageUrl: fileData.url,
+      },
+    });
   }
 
   async delete(id: number): Promise<DeleteProductResponse['data']> {

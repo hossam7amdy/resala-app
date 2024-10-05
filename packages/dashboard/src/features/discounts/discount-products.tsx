@@ -15,7 +15,7 @@ export const DiscountProducts: React.FC<DiscountProductsProps> = ({ products, ..
       dataSource={products.map(p => ({
         ...p,
         key: p.id,
-        price: formatCurrency(p.price),
+        price: formatCurrency(+p.price),
         date: formatDate(new Date(p.createdAt)),
         image: <Image src={p.imageUrl} width={75} alt={p.enDescription} />,
       }))}

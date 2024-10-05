@@ -7,6 +7,7 @@ import type {
   ListTopCustomersResponse,
   ListTopProductsResponse,
 } from '@resala/shared';
+import { Decimal } from 'decimal.js';
 
 import type { DataStore } from '../../datastore/index.js';
 import {
@@ -182,7 +183,7 @@ export class DashboardService {
         categoryId: p.category_id,
         arName: p.ar_name,
         enName: p.en_name,
-        price: p.price,
+        price: new Decimal(p.price),
         arDescription: p.ar_description,
         enDescription: p.en_description,
         imageUrl: p.image_url,

@@ -2217,6 +2217,7 @@ components:
           type: boolean
         phone:
           type: string
+          nullable: true
         isEmailVerified:
           type: boolean
         email:
@@ -2292,6 +2293,8 @@ components:
           required:
             - data
           type: object
+    Decimal:
+      type: string
     Product:
       properties:
         updatedAt:
@@ -2304,7 +2307,8 @@ components:
           type: string
         imageKey:
           type: string
-        price: {}
+        price:
+          $ref: '#/components/schemas/Decimal'
         enDescription:
           type: string
         arDescription:
@@ -2642,7 +2646,8 @@ components:
         description:
           type: string
           nullable: true
-        amount: {}
+        amount:
+          $ref: '#/components/schemas/Decimal'
         type:
           $ref: '#/components/schemas/DiscountType'
         id:
@@ -3090,9 +3095,12 @@ components:
           nullable: true
         orderStatus:
           $ref: '#/components/schemas/OrderStatusType'
-        total: {}
-        discount: {}
-        subtotal: {}
+        total:
+          $ref: '#/components/schemas/Decimal'
+        discount:
+          $ref: '#/components/schemas/Decimal'
+        subtotal:
+          $ref: '#/components/schemas/Decimal'
         userId:
           type: integer
           format: int32
@@ -3125,7 +3133,8 @@ components:
         quantity:
           type: integer
           format: int32
-        price: {}
+        price:
+          $ref: '#/components/schemas/Decimal'
         stockId:
           type: integer
           format: int32
@@ -3155,7 +3164,8 @@ components:
         updatedAt:
           type: string
           format: date-time
-        cost: {}
+        cost:
+          $ref: '#/components/schemas/Decimal'
       required:
         - id
         - createdAt

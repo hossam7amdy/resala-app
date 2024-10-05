@@ -11,7 +11,6 @@ import type {
   UpdateDiscountRequest,
   UpdateDiscountResponse,
 } from '@resala/shared';
-import { Decimal } from 'decimal.js';
 
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError, NotFoundError } from '../../errors/api.errors.js';
@@ -148,9 +147,10 @@ export class DiscountService {
 
       switch (discount.type) {
         case 'PERCENTAGE':
-          discountedPrice = new Decimal(item.product.price)
-            .sub(new Decimal(item.product.price).mul(discount.amount).div(100))
-            .toNumber();
+          discountedPrice = item.product.price.sub(
+            item.product.price.mul(discount.amount).div(100)
+          );
+
           break;
         case 'BOGO': {
           const buyQuantity = discount.amount.toNumber();
@@ -161,7 +161,7 @@ export class DiscountService {
 
           const fullPriceItems =
             fullPriceCycles * buyQuantity + Math.min(remainingItems, buyQuantity);
-          discountedPrice = (fullPriceItems / item.quantity) * item.product.price;
+          discountedPrice = item.product.price.mul(fullPriceItems / item.quantity);
           break;
         }
       }
@@ -174,13 +174,16 @@ export class DiscountService {
 
     return {
       ...item,
-      discountedPrice: lowestPrice,
+      discountedPrice: lowestPrice.toNumber(),
       appliedDiscount: bestDiscount,
     };
   }
 
   private _applyCartLevelDiscounts(items: CartItem[], discounts: ProductDiscount[]): CartItem[] {
-    const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const totalPrice = items.reduce(
+      (sum, item) => sum + item.product.price.mul(item.quantity).toNumber(),
+      0
+    );
     const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
 
     let bestDiscount: Discount | undefined;
@@ -401,7 +404,8 @@ export class DiscountService {
     updatedItems = this._applyCartLevelDiscounts(updatedItems, cartLevelDiscounts);
 
     const totalDiscount = updatedItems.reduce(
-      (sum, item) => sum + (item.product.price - item.discountedPrice!) * item.quantity,
+      (sum, item) =>
+        sum + item.product.price.sub(item.discountedPrice!).mul(item.quantity).toNumber(),
       0
     );
     const totalPrice = updatedItems.reduce(

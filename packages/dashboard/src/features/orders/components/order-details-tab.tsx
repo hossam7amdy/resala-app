@@ -14,7 +14,7 @@ export const OrderDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = ({
           <List.Item
             extra={
               <Flex gap={3}>
-                <Typography.Text>{formatCurrency(item.price)}</Typography.Text>
+                <Typography.Text>{formatCurrency(+item.price)}</Typography.Text>
                 <Typography.Text strong>x {item.quantity}</Typography.Text>
               </Flex>
             }

@@ -36,7 +36,7 @@ export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ or
           <PaymentActionsButtons
             transactionId={order.transactionId}
             orderDate={`${order.createdAt}`}
-            orderAmount={order.total}
+            orderAmount={+order.total}
             paymentStatus={order.paymentStatus}
           />
         )
