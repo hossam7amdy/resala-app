@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import dotenv from 'dotenv';
 import { createServer } from 'http';
 
@@ -22,11 +23,11 @@ dotenv.config();
 })();
 
 process.on('unhandledRejection', reason => {
-  console.log('UNHANDLED REJECTION! 💥 Shutting down...', reason);
+  console.error('UNHANDLED REJECTION! 💥 Shutting down...', reason);
   process.exit(1);
 });
 
 process.on('uncaughtException', reason => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...', reason);
+  console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...', reason);
   process.exit(1);
 });

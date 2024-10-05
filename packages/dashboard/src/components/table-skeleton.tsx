@@ -1,11 +1,11 @@
-import { Table } from 'antd';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import React from 'react';
+
+import { Table } from './table';
 
 export const TableSkeleton: React.FC = () => {
   return (
     <Table
-      scroll={{ x: 'auto' }}
       columns={[
         { title: '', dataIndex: '1' },
         { title: '', dataIndex: '2' },

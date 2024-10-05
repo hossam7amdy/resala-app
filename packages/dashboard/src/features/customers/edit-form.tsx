@@ -2,6 +2,7 @@
 
 import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { Role, type User, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -16,6 +17,7 @@ interface EditFormProps {
 
 export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer }) => {
   const router = useRouter();
+  const { user, isLoading: isLoadingCurrentUser } = useCurrentUser();
 
   const [form] = Form.useForm();
 
@@ -34,6 +36,9 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
       notification.error(error.message);
     },
   });
+
+  const disableRoleField =
+    isLoadingCurrentUser || disable || user?.id === customer.id || user?.role !== Role.ADMIN;
 
   return (
     <Form
@@ -117,7 +122,7 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
       >
         <Select
           placeholder="Select Role"
-          disabled={customer.role === Role.ADMIN || disable}
+          disabled={disableRoleField}
           options={[
             { label: 'Admin', value: Role.ADMIN },
             { label: 'Moderator', value: Role.MODERATOR },

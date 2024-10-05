@@ -13,7 +13,7 @@ const EditDiscountPage = async ({ params }: { params: Params }) => {
         isStoreWide: discount.isStoreWide,
         type: discount.type,
         minQty: discount.minQty,
-        amount: discount.amount,
+        amount: +discount.amount,
         startDate: discount.startDate?.toString(),
         endDate: discount.endDate?.toString(),
         productIds: products.map(({ id }) => id),

@@ -1,13 +1,15 @@
 import { ResalaTooltip } from '@/components';
 import { deleteImage, setDefaultImage } from '@/fetch/images';
+import { useNotification } from '@/hooks';
 import { DeleteOutlined, LoadingOutlined, MoreOutlined, PushpinOutlined } from '@ant-design/icons';
 import type { Image } from '@resala/shared';
 import { Button, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 
 export const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image }) => {
-  const [loading, setLoading] = React.useState<'primary' | 'delete' | undefined>();
+  const { error } = useNotification();
+  const [loading, setLoading] = useState<'primary' | 'delete' | undefined>();
 
   const items: MenuProps['items'] = [
     {
@@ -20,7 +22,7 @@ export const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image })
           setLoading('primary');
           await setDefaultImage(image.id.toString(), image.productId.toString());
         } catch (e) {
-          console.log(e);
+          error((e as Error)?.message);
         } finally {
           setLoading(undefined);
         }
@@ -37,7 +39,7 @@ export const MoreMenu: React.FC<{ image: Omit<Image, 'colorId'> }> = ({ image })
           setLoading('delete');
           await deleteImage(image.id.toString(), image.productId.toString());
         } catch (e) {
-          console.log(e);
+          error((e as Error)?.message);
         } finally {
           setLoading(undefined);
         }

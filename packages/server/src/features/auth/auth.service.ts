@@ -47,15 +47,16 @@ export class AuthService extends JwtManager {
       throw new NotFoundError('User not found');
     }
 
+    const user = { ...providerUser, lastLogin: new Date() };
+
     const { id, email } = await this.db.user.upsert({
       create: {
-        ...providerUser,
-        phone: '',
+        ...user,
         password: '',
         role: 'CUSTOMER',
       },
-      update: providerUser,
-      where: { email: providerUser.email },
+      update: user,
+      where: { email: user.email },
     });
 
     const jwtPayload = { id: id.toString(), email, strategy: provider };
