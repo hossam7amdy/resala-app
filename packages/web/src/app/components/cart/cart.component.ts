@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';

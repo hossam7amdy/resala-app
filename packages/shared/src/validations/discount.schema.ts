@@ -1,3 +1,4 @@
+import { Decimal } from 'decimal.js';
 import { z } from 'zod';
 
 import { OffsetPageParamsSchema } from './common.schema.js';
@@ -8,7 +9,11 @@ export const CreateDiscountSchema = z.object({
   body: z
     .object({
       type: z.enum(discountTypes),
-      amount: z.coerce.number().positive().min(0.1),
+      amount: z.coerce
+        .number()
+        .positive()
+        .min(0.1)
+        .transform(d => new Decimal(d)),
       description: z.string().max(250).optional(),
       minQty: z.coerce.number().positive().optional(),
       isActive: z.coerce.boolean().optional(),
@@ -76,7 +81,7 @@ export const CreateDiscountSchema = z.object({
     .refine(
       data => {
         if (data.type === 'BOGO') {
-          return data.minQty && data.amount === Math.trunc(data.amount);
+          return data.minQty && data.amount === data.amount.trunc();
         }
         return true;
       },
