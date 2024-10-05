@@ -12,6 +12,7 @@ export const ErrorBoundary: React.FC<{
 }> = ({ error, reset }) => {
   useEffect(() => {
     // Optionally log the error to an error reporting service
+    // eslint-disable-next-line no-console
     console.error('ErrorBoundary:', error);
   }, [error]);
 
