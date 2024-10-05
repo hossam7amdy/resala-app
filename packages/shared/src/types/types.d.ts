@@ -1,3 +1,4 @@
+import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
 import type {
@@ -31,7 +32,7 @@ export type User = {
   id: number;
   email: string;
   isEmailVerified: boolean;
-  phone: string;
+  phone: null | string;
   isPhoneVerified: boolean;
   firstName: string;
   lastName: string;
@@ -58,7 +59,7 @@ export type Product = {
   enName: string;
   arDescription: string;
   enDescription: string;
-  price: any;
+  price: Decimal;
   imageKey: string;
   imageUrl: string;
   createdAt: Date;
@@ -112,9 +113,9 @@ export type Wishlist = {
 export type Order = {
   id: number;
   userId: null | number;
-  subtotal: any;
-  discount: any;
-  total: any;
+  subtotal: Decimal;
+  discount: Decimal;
+  total: Decimal;
   orderStatus: OrderStatusType;
   transactionId: null | string;
   paymentMethod: PaymentMethodType;
@@ -127,7 +128,7 @@ export type OrderItem = {
   id: number;
   productId: number;
   stockId: number;
-  price: any;
+  price: Decimal;
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
@@ -136,7 +137,7 @@ export type Shipping = {
   id: number;
   orderId: number;
   addressId: number;
-  cost: any;
+  cost: Decimal;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -167,7 +168,7 @@ export type Address = {
 export type Discount = {
   id: number;
   type: DiscountType;
-  amount: any;
+  amount: Decimal;
   description: null | string;
   minQty: number;
   isActive: boolean;

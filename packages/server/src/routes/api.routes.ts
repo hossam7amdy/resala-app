@@ -84,7 +84,11 @@ const models: TsoaRoute.Models = {
         lastName: { dataType: 'string', required: true },
         firstName: { dataType: 'string', required: true },
         isPhoneVerified: { dataType: 'boolean', required: true },
-        phone: { dataType: 'string', required: true },
+        phone: {
+          dataType: 'union',
+          subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
+          required: true,
+        },
         isEmailVerified: { dataType: 'boolean', required: true },
         email: { dataType: 'string', required: true },
         id: { dataType: 'integer', required: true },
@@ -169,6 +173,11 @@ const models: TsoaRoute.Models = {
     },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Decimal: {
+    dataType: 'refAlias',
+    type: { dataType: 'string', validators: {} },
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   Product: {
     dataType: 'refAlias',
     type: {
@@ -178,7 +187,7 @@ const models: TsoaRoute.Models = {
         createdAt: { dataType: 'datetime', required: true },
         imageUrl: { dataType: 'string', required: true },
         imageKey: { dataType: 'string', required: true },
-        price: { dataType: 'any', required: true },
+        price: { ref: 'Decimal', required: true },
         enDescription: { dataType: 'string', required: true },
         arDescription: { dataType: 'string', required: true },
         enName: { dataType: 'string', required: true },
@@ -499,7 +508,7 @@ const models: TsoaRoute.Models = {
           subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'string' }],
           required: true,
         },
-        amount: { dataType: 'any', required: true },
+        amount: { ref: 'Decimal', required: true },
         type: { ref: 'DiscountType', required: true },
         id: { dataType: 'integer', required: true },
       },
@@ -988,9 +997,9 @@ const models: TsoaRoute.Models = {
           required: true,
         },
         orderStatus: { ref: 'OrderStatusType', required: true },
-        total: { dataType: 'any', required: true },
-        discount: { dataType: 'any', required: true },
-        subtotal: { dataType: 'any', required: true },
+        total: { ref: 'Decimal', required: true },
+        discount: { ref: 'Decimal', required: true },
+        subtotal: { ref: 'Decimal', required: true },
         userId: {
           dataType: 'union',
           subSchemas: [{ dataType: 'enum', enums: [null] }, { dataType: 'integer' }],
@@ -1010,7 +1019,7 @@ const models: TsoaRoute.Models = {
         updatedAt: { dataType: 'datetime', required: true },
         createdAt: { dataType: 'datetime', required: true },
         quantity: { dataType: 'integer', required: true },
-        price: { dataType: 'any', required: true },
+        price: { ref: 'Decimal', required: true },
         stockId: { dataType: 'integer', required: true },
         productId: { dataType: 'integer', required: true },
         id: { dataType: 'integer', required: true },
@@ -1027,7 +1036,7 @@ const models: TsoaRoute.Models = {
         id: { dataType: 'integer', required: true },
         createdAt: { dataType: 'datetime', required: true },
         updatedAt: { dataType: 'datetime', required: true },
-        cost: { dataType: 'any', required: true },
+        cost: { ref: 'Decimal', required: true },
       },
       validators: {},
     },
