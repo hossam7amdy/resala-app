@@ -42,7 +42,7 @@ export type User = {
   id: number;
   email: string;
   isEmailVerified: boolean;
-  phone: string;
+  phone: null | string;
   isPhoneVerified: boolean;
   firstName: string;
   lastName: string;
