@@ -148,7 +148,6 @@ export class OrderController extends Controller {
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteOrderSchema)])
   public async delete(
     @Path() orderId: string,
-    // eslint-disable-next-line no-unused-vars
     @Queries() _: DeleteOrderRequest['query']
   ): Promise<DeleteOrderResponse> {
     // cancel order
