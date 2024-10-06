@@ -408,3 +408,9 @@ export type UpdateDiscountRequest = z.infer<typeof Schemas.UpdateDiscountSchema>
 export type UpdateDiscountResponse = CreateDiscountResponse;
 export type DeleteDiscountRequest = z.infer<typeof Schemas.DeleteDiscountSchema>;
 export type DeleteDiscountResponse = CreateDiscountResponse;
+export type AddProductsToDiscountRequest = z.infer<typeof Schemas.AddProductsToDiscountSchema>;
+export type AddProductsToDiscountResponse = DefaultResponseBody;
+export type RemoveProductsFromDiscountRequest = z.infer<
+  typeof Schemas.RemoveProductsFromDiscountSchema
+>;
+export type RemoveProductsFromDiscountResponse = DefaultResponseBody;
