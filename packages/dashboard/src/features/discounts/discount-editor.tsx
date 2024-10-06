@@ -27,11 +27,11 @@ const { RangePicker } = DatePicker;
 type FormValues = CreateDiscountRequest['body'] & {
   dateRange: [Dayjs, Dayjs];
 };
-
 interface DiscountEditorProps {
   id?: string;
   discount?: CreateDiscountRequest['body'];
 }
+
 export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) => {
   const [form] = Form.useForm();
   const { back } = useRouter();
@@ -48,9 +48,10 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
     },
   });
 
-  const isProductSpecific = !Form.useWatch('isStoreWide', form);
-  const isBogo = Form.useWatch('type', form) === 'BOGO';
+  const qty = Form.useWatch('minQty', form) ?? 0;
+  const amount = Form.useWatch('amount', form) ?? 0;
   const isPercentage = Form.useWatch('type', form) === 'PERCENTAGE';
+  const isProductSpecific = Form.useWatch('isStoreWide', form) === false;
 
   const onFinish = ({ dateRange, ...values }: FormValues) => {
     const [start, end] = dateRange;
@@ -61,6 +62,8 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
       ...values,
     });
   };
+
+  const shouldDisplayProductIds = isProductSpecific && !id;
 
   return (
     <Card title="Discount editor">
@@ -87,7 +90,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
           </Radio.Group>
         </Form.Item>
 
-        {isProductSpecific && (
+        {shouldDisplayProductIds && (
           <Form.Item name="productIds" label="Select Products" rules={[{ required: true }]}>
             <SelectProductAsync autoFocus mode="multiple" />
           </Form.Item>
@@ -98,10 +101,8 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
             allowClear
             placeholder="Select discount type"
             options={[
+              { label: 'BOGO', value: 'BOGO' },
               { label: 'Percentage', value: 'PERCENTAGE' },
-              { label: 'Buy X Get Y', value: 'BOGO' },
-              { label: 'Fixed', value: 'FIXED', disabled: isProductSpecific },
-              { label: 'Bulk', value: 'BULK', disabled: isProductSpecific },
             ]}
           />
         </Form.Item>
@@ -110,7 +111,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
           <Col span={12}>
             <Form.Item
               name="minQty"
-              label={isBogo ? 'Buy X' : 'Quantity'}
+              label={`Buy ${qty} ${qty > 1 ? 'items' : 'item'}`}
               rules={[{ required: true }]}
             >
               <InputNumber placeholder="10" className="w-full" min={1} />
@@ -120,7 +121,11 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
           <Col span={12}>
             <Form.Item
               name="amount"
-              label={isBogo ? 'Get Y' : 'Amount'}
+              label={
+                isPercentage
+                  ? `${amount}% off`
+                  : `Get ${amount} ${amount > 1 ? 'items' : 'item'} free`
+              }
               rules={[{ required: true }]}
             >
               <InputNumber
