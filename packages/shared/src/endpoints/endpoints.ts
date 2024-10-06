@@ -127,6 +127,8 @@ export enum Endpoints {
   createDiscount = 'createDiscount',
   updateDiscount = 'updateDiscount',
   deleteDiscount = 'deleteDiscount',
+  addProductsToDiscount = 'addProductsToDiscount',
+  removeProductsFromDiscount = 'removeProductsFromDiscount',
 }
 
 /**
@@ -607,6 +609,16 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
   [Endpoints.deleteDiscount]: {
     url: '/api/v1/discounts/{discountId}',
+    method: 'delete',
+    auth: true,
+  },
+  [Endpoints.addProductsToDiscount]: {
+    url: '/api/v1/discounts/{discountId}/products',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.removeProductsFromDiscount]: {
+    url: '/api/v1/discounts/{discountId}/products',
     method: 'delete',
     auth: true,
   },
