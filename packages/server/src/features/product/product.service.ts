@@ -151,9 +151,9 @@ export class ProductService {
   ): Promise<UpdateProductResponse['data']> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 
-    const { imageKey } = await this.get(id);
+    const { imageKey, imageUrl } = await this.get(id);
 
-    let fileData = { key: imageKey, url: '' };
+    let fileData = { key: imageKey, url: imageUrl };
     if (file) {
       await this.fileService.deleteFile(imageKey);
 
