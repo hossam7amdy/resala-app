@@ -96,6 +96,8 @@ export declare enum Endpoints {
   createDiscount = 'createDiscount',
   updateDiscount = 'updateDiscount',
   deleteDiscount = 'deleteDiscount',
+  addProductsToDiscount = 'addProductsToDiscount',
+  removeProductsFromDiscount = 'removeProductsFromDiscount',
 }
 /**
  * Function to add params to the endpoint url
