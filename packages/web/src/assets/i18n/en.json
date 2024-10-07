@@ -53,7 +53,45 @@
     "trends": {
       "mainTitle": "Trends Products"
     },
-    "allProducts": {},
-    "allCategories": {}
+    "allProducts": {
+      "mainTitle": "Pobular Products",
+      "sale": "Sale",
+      "currency": "EGP"
+    },
+    "allCategories": {
+      "mainTitle": "Categories"
+    }
+  },
+  "footer": {
+    "mainTitle": "Online veiled clothing store",
+    "firstTitle": "Secure buy and payment",
+    "firstP": "Free Shipping on some orders",
+
+    "secondTitle": "Cash on Delivery",
+    "secondP": "Easy Received & Payment",
+
+    "thirdTitle": "Easy & Free Return",
+    "thirdP": "Return within 14 days",
+
+    "quickLinks": {
+      "accounts": "Accounts",
+      "register": "Create Account",
+      "login": "Login",
+      "profile": "Your Profile",
+      "orders": "Orders",
+      "createOrder": "Create Order",
+      "followOrder": "Follow order",
+      "editCart": "Edit Your Cart",
+      "cancelOrder": "Cancel order",
+      "returnPolicy": "Return Policy"
+    },
+    "aboutUs": {
+      "title": "About us",
+      "ourStory": "Our Story",
+      "termsConditions": "Terms and Conditions"
+    },
+    "contactUs": {
+      "title": "Contact Us"
+    }
   }
 }

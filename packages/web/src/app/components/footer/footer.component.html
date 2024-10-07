@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <h1 class="h1">Online veiled clothing store</h1>
+  <h1 class="h1">{{ 'footer.mainTitle' | translate }}</h1>
 </div>
 <footer class="text-center pb-0">
   <div class="container">
@@ -9,8 +9,8 @@
       >
         <i class="fas fas fa-store fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
-          <h3 class="h3">Secure buy and payment</h3>
-          <p class="p-footer">Free Shipping on some orders</p>
+          <h3 class="h3 mb-1">{{ 'footer.firstTitle' | translate }}</h3>
+          <p class="p-footer">{{ 'footer.firstP' | translate }}</p>
         </div>
       </div>
       <div
@@ -18,8 +18,8 @@
       >
         <i class="fa-solid fa-sack-dollar fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
-          <h3 class="h3">Cash on Delivery</h3>
-          <p class="p-footer">Receive for free</p>
+          <h3 class="h3 mb-1">{{ 'footer.secondTitle' | translate }}</h3>
+          <p class="p-footer">{{ 'footer.secondP' | translate }}</p>
         </div>
       </div>
       <div
@@ -27,52 +27,74 @@
       >
         <i class="fa-solid fa-arrows-spin fa-2xl me-3 hover-title"></i>
         <div class="hover-title">
-          <h3 class="h3">Easy & Free Return</h3>
-          <p class="p-footer">Return within 14 days</p>
+          <h3 class="h3 mb-1">{{ 'footer.thirdTitle' | translate }}</h3>
+          <p class="p-footer">{{ 'footer.thirdP' | translate }}</p>
         </div>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-xl-3 col-sm-4 col-xs-6 mb-5">
         <nav class="nav flex-column">
-          <h4 class="h4">Accounts</h4>
-          <a class="nav-link active" aria-current="page" routerlink="">Create Account</a>
-          <a class="nav-link" routerlink="">Login</a>
-          <a class="nav-link" routerlink="">Logout</a>
-          <a class="nav-link" routerlink="">Edit your profile</a>
-          <a class="nav-link" routerlink="">Forget password</a>
+          <h4 class="h4">{{ 'footer.quickLinks.accounts' | translate }}</h4>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/register">{{
+            'footer.quickLinks.register' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/login">{{
+            'footer.quickLinks.login' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/profile">{{
+            'footer.quickLinks.profile' | translate
+          }}</a>
         </nav>
       </div>
       <div class="col-xl-3 col-sm-4 col-xs-6 mb-5">
         <nav class="nav flex-column">
-          <h4 class="h4">Orders</h4>
-          <a class="nav-link active" aria-current="page" routerlink="">Create Order</a>
-          <a class="nav-link" routerlink="">Follow order</a>
-          <a class="nav-link" routerlink="">Edit order</a>
-          <a class="nav-link" routerlink="">Cancel order</a>
+          <h4 class="h4">{{ 'footer.quickLinks.orders' | translate }}</h4>
+          <a class="nav-link" aria-current="page" routerlink="/home">{{
+            'footer.quickLinks.createOrder' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/orders">{{
+            'footer.quickLinks.followOrder' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/cart">{{
+            'footer.quickLinks.editCart' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="">{{
+            'footer.quickLinks.cancelOrder' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="">{{
+            'footer.quickLinks.returnPolicy' | translate
+          }}</a>
         </nav>
       </div>
       <div class="col-xl-3 col-sm-4 col-xs-6 mb-5">
         <nav class="nav flex-column">
-          <h4 class="h4">Products</h4>
-          <a class="nav-link active" aria-current="page" routerlink="">3bayat</a>
-          <a class="nav-link" routerlink="">Esdal</a>
-          <a class="nav-link" routerlink="">Nekab</a>
-          <a class="nav-link" routerlink="">Tonek</a>
-          <a class="nav-link" routerlink="">Cab</a>
-          <a class="nav-link" routerlink="">Kheimar</a>
+          <h4 class="h4">{{ 'footer.aboutUs.title' | translate }}</h4>
+          <a class="nav-link active" aria-current="page" routerLink="/home">{{
+            'footer.aboutUs.ourStory' | translate
+          }}</a>
+          <a class="nav-link" routerLinkActive="active-link" routerLink="/home">{{
+            'footer.aboutUs.termsConditions' | translate
+          }}</a>
         </nav>
       </div>
       <div class="col-xl-3 col-sm-4 col-xs-6 mb-5">
         <nav class="nav flex-column">
-          <h4 class="h4">Contact Us</h4>
+          <h4 class="h4">{{ 'footer.contactUs.title' | translate }}</h4>
 
-          <a class="nav-link" routerlink="">
-            <i class="fab fa-facebook mx-2"></i>
-            <i class="fab fab fa-instagram mx-2"></i>
-            <i class="fab fab fa-whatsapp mx-2"></i>
+          <div class="nav-link" routerlink="">
+            <a class="mx-2" href=""><i class="fab fa-facebook mx-2"></i></a>
+            <a class="mx-2" href=""><i class="fab fab fa-instagram mx-2"></i></a>
+            <a class="mx-2" href="https://wa.me/+201100858627"
+              ><i class="fab fab fa-whatsapp mx-2"></i
+            ></a>
+          </div>
+          <a class="nav-link" routerLinkActive="active-link" routerLink=""
+            >resala_hejab&#64;gmail.com</a
+          >
+          <a class="navbar-brand" routerLinkActive="active-link" routerLink="/home">
+            <img src="./assets/logo/logo.png" alt="logo" class="logo" />
           </a>
-          <a class="nav-link" routerlink="">resala_hejab&#64;gmail.com</a>
         </nav>
       </div>
     </div>

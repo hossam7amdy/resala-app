@@ -228,12 +228,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     pullDrag: true,
     dots: true,
     center: true,
+
     margin: 5,
     autoWidth: true,
+    nav: true,
     navSpeed: 700,
 
-    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
-    rtl: this.changePageDirection(),
     responsive: {
       0: {
         items: 1,
@@ -260,7 +260,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
         items: 5,
       },
     },
-    nav: true,
+    rtl: this.changePageDirection(),
+    navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
   };
 
   // pagination Method
