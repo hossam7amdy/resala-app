@@ -243,11 +243,12 @@ export class DiscountService {
     discountId: string,
     data: UpdateDiscountRequest['body']
   ): Promise<UpdateDiscountResponse['data']> {
-    await this.get(discountId, {});
+    const discount = await this.get(discountId, {});
 
-    await (data.isStoreWide
-      ? this._checkAnyStoreWideDiscountIsActive(+discountId)
-      : Promise.resolve());
+    const isStoreWideActive = data.isStoreWide || discount.isStoreWide;
+    if (isStoreWideActive && data.isActive) {
+      await this._checkAnyStoreWideDiscountIsActive(+discountId);
+    }
 
     return await this.db.discount.update({
       data,
