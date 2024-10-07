@@ -1,10 +1,23 @@
-import type { INotification } from './notification.interface.js';
+import { Nodemailer } from './nodemailer.js';
 
-export class NotificationService {
-  constructor(private readonly mailer: INotification) {}
+export class EmailService {
+  private _mailer: Nodemailer;
+  private static _instance: EmailService;
+
+  protected constructor() {
+    this._mailer = new Nodemailer();
+  }
+
+  static getInstance() {
+    if (!this._instance) {
+      this._instance = new EmailService();
+    }
+
+    return this._instance;
+  }
 
   async sendVerificationEmail(email: string, link: string) {
-    return await this.mailer.send(
+    return await this._mailer.send(
       email,
       'Email Verification',
       `<p>Click <a href="${link}" target="_blank">here</a> to verify your email</p>`
@@ -12,7 +25,7 @@ export class NotificationService {
   }
 
   async sendResetPasswordEmail(email: string, link: string) {
-    return await this.mailer.send(
+    return await this._mailer.send(
       email,
       'Reset your password',
       `<p>Click <a href="${link}" target="_blank">here</a> to reset your password</p>`
@@ -20,7 +33,7 @@ export class NotificationService {
   }
 
   async sendResetConfirmationEmail(email: string) {
-    return await this.mailer.send(
+    return await this._mailer.send(
       email,
       'Password reset successful',
       'Your password has been reset successfully'
@@ -28,7 +41,7 @@ export class NotificationService {
   }
 
   async sendOrderConfirmationEmail(email: string, orderId: number, status: string) {
-    return await this.mailer.send(
+    return await this._mailer.send(
       email,
       'Order Confirmation',
       `Your order with ID: ${orderId} has been updated to ${status}`
@@ -36,7 +49,7 @@ export class NotificationService {
   }
 
   async sendOrderCancellationEmail(email: string, orderId: number) {
-    return await this.mailer.send(
+    return await this._mailer.send(
       email,
       'Order Cancellation',
       `Your order with id ${orderId} has been cancelled`

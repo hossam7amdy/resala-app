@@ -12,12 +12,12 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError } from '../../errors/api.errors.js';
-import type { FileService } from '../filestorage/file.service.js';
+import type { FileStorage } from '../../services/index.js';
 
 export class ProductService {
   constructor(
     private readonly db: DataStore,
-    private readonly fileService: FileService
+    private readonly fileService: FileStorage
   ) {}
 
   async get(id: number): Promise<GetProductResponse['data']> {

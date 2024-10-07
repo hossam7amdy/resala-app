@@ -19,7 +19,7 @@ import {
 
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
-import { PaymobService } from '../../services/paymob/paymob.service.js';
+import { PaymobService } from '../../services/index.js';
 import { PaymentService } from './payment.service.js';
 
 @Tags('Payment')

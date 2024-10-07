@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
 
-import type { INotification } from './notification.interface.js';
-
-export class EmailNotification implements INotification {
+export class Nodemailer {
   private readonly transporter: nodemailer.Transporter;
 
   constructor() {
