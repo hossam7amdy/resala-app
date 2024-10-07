@@ -9,9 +9,7 @@ import {
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
-import type { IFileStorage } from './filestorage.interface.js';
-
-export class S3FileStorage implements IFileStorage {
+export class S3Service {
   private readonly bucketName: string;
   private readonly client: S3Client;
 

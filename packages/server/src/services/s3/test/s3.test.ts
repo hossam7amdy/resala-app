@@ -4,14 +4,12 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   HeadBucketCommand,
-  HeadObjectCommand,
-  ListObjectsV2Command,
   PutBucketPolicyCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { S3FileStorage } from '../s3.filestorage';
+import { S3Service } from '../s3';
 
 vi.mock('@aws-sdk/client-s3', () => {
   const mS3Client = {
@@ -33,10 +31,10 @@ vi.mock('@aws-sdk/client-s3', () => {
 describe('S3FileStorage', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let s3Client: any;
-  let s3ClientWrapper: S3FileStorage;
+  let s3ClientWrapper: S3Service;
 
   const mockBucketName = 'test-bucket';
-  const mockFileBuffer = Buffer.from('test-file');
+  const mockMulterFile = { buffer: Buffer.from('test') } as Express.Multer.File;
   const mockFilename = 'test-file.txt';
   const mockPath = 'https://s3.amazonaws.com/test-bucket/test-file.txt';
   const mockS3BaseUrl = 'https://s3.amazonaws.com/test-bucket';
@@ -49,7 +47,7 @@ describe('S3FileStorage', () => {
     process.env.AWS_SECRET_ACCESS_KEY = 'fake-secret-access-key';
 
     s3Client = new Client();
-    s3ClientWrapper = new S3FileStorage();
+    s3ClientWrapper = new S3Service();
   });
 
   describe('createBucketIfNotExist', () => {
@@ -75,12 +73,12 @@ describe('S3FileStorage', () => {
     it('should upload the file and return the public URL', async () => {
       s3Client.send.mockResolvedValueOnce({});
 
-      const result = await s3ClientWrapper.upload(mockFileBuffer, mockFilename);
+      const result = await s3ClientWrapper.upload(mockMulterFile, mockFilename);
       expect(result).toBe(`${mockS3BaseUrl}/${mockFilename}`);
       expect(PutObjectCommand).toHaveBeenCalledWith({
         Bucket: mockBucketName,
         Key: mockFilename,
-        Body: mockFileBuffer,
+        Body: mockMulterFile,
         ACL: 'public-read',
       });
     });
@@ -92,40 +90,6 @@ describe('S3FileStorage', () => {
 
       await s3ClientWrapper.delete(mockPath);
       expect(DeleteObjectCommand).toHaveBeenCalledWith({
-        Bucket: mockBucketName,
-        Key: mockFilename,
-      });
-    });
-  });
-
-  describe('listFiles', () => {
-    it('should list files in the specified directory', async () => {
-      const mockFiles = [{ Key: 'file1.txt' }, { Key: 'file2.txt' }];
-      s3Client.send.mockResolvedValueOnce({ Contents: mockFiles });
-
-      const result = await s3ClientWrapper.list('directory');
-      expect(result).toEqual(['file1.txt', 'file2.txt']);
-      expect(ListObjectsV2Command).toHaveBeenCalledWith({
-        Bucket: mockBucketName,
-        Prefix: 'directory',
-      });
-    });
-  });
-
-  describe('getFileMetadata', () => {
-    it('should return file metadata', async () => {
-      const mockMetadata = {
-        ContentLength: 12345,
-        LastModified: new Date(),
-      };
-      s3Client.send.mockResolvedValueOnce(mockMetadata);
-
-      const result = await s3ClientWrapper.getMetadata(mockPath);
-      expect(result).toEqual({
-        size: mockMetadata.ContentLength,
-        lastModified: mockMetadata.LastModified,
-      });
-      expect(HeadObjectCommand).toHaveBeenCalledWith({
         Bucket: mockBucketName,
         Key: mockFilename,
       });
