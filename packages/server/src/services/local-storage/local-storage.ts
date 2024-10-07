@@ -2,8 +2,6 @@ import fs from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-import type { IFileStorage } from './filestorage.interface.js';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -11,7 +9,7 @@ interface LocalStorageOptions {
   baseUrl?: string;
   rootDirectory?: string;
 }
-export class LocalFileStorage implements IFileStorage {
+export class LocalStorage {
   private readonly baseUrl: string;
   private readonly rootDirectory: string;
 
