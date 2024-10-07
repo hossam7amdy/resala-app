@@ -129,6 +129,11 @@ section {
     padding: 5px 7px;
   }
 }
+@media (max-width: 500px) {
+  .shopping-icon::before {
+    padding: 5px 7px;
+  }
+}
 .img-content .w-100 {
   height: auto !important;
 }
@@ -138,12 +143,12 @@ section {
   color: #016373;
 }
 
-.descrp .fa-star {
-  color: #fbb935;
-  font-weight: bold;
-  font-size: 10px;
-  margin-right: 2px;
-}
+/* .descrp .fa-star {
+    color: #fbb935;
+    font-weight: bold;
+    font-size: 10px;
+    margin-right: 2px;
+  } */
 /* NGX pagination*/
 
 /* NGXowl carowsel all cat*/

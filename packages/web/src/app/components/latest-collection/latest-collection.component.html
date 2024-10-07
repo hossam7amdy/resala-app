@@ -46,7 +46,7 @@
               {{ product.enName }}
             </h6>
             <ngx-stars-rating
-              [rate]="rateNumber"
+              [rate]="product.avgRating"
               [options]="ratingOptions"
               (onRate)="onClickRate($event)"
               [starTemplate]="starCustomTemplate"
@@ -55,7 +55,10 @@
             <div class="rating">
               <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
               <ng-template #starCustomTemplate>
-                <span class="material-symbols-outlined" style="font-size: 15px"
+                <span
+                  *ngIf="product.avgRating !== 0"
+                  class="material-symbols-outlined"
+                  style="font-size: 15px"
                   ><i class="fa-solid fa-star"></i
                 ></span>
               </ng-template>
