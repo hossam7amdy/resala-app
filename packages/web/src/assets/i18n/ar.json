@@ -30,30 +30,68 @@
     },
     "mainSlider": {
       "stSlide": {
-        "hyperTitle": "رسالة",
+        "hyperTitle": "رسـالـة",
         "pTitle": "افضل الموديلات لملابس المحجبات"
       },
       "ndSlide": {
-        "hyperTitle": "Resala",
+        "hyperTitle": "رسـالـة",
         "pTitle": "افضل الموديلات لملابس المحجبات"
       },
       "rdSlide": {
-        "hyperTitle": "رسالة",
+        "hyperTitle": "رسـالـة",
         "pTitle": "افضل الموديلات لملابس المحجبات"
       },
       "urSlide": {
-        "hyperTitle": "رسالة",
+        "hyperTitle": "رسـالـة",
         "pTitle": "افضل الموديلات لملابس المحجبات"
       },
       "veSlide": {
-        "hyperTitle": "رسالة",
+        "hyperTitle": "رسـالـة",
         "pTitle": "افضل الموديلات لملابس المحجبات"
       }
     },
     "trends": {
-      "mainTitle": "الأكثر مبيعاً"
+      "mainTitle": "الأكـثـر مـبـيـعاً"
     },
-    "allProducts": {},
-    "allCategories": {}
+    "allProducts": {
+      "mainTitle": "منتجاتنا",
+      "sale": "خصم",
+      "currency": "ج م"
+    },
+    "allCategories": {
+      "mainTitle": "جـمـيع الفـئات"
+    }
+  },
+  "footer": {
+    "mainTitle": "متجر ملابس محجبات اون لاين",
+    "firstTitle": "شراء ودفع آمن",
+    "firstP": "شحن مجاني لبعض الطلبات",
+
+    "secondTitle": "الدفع عند الاستلام",
+    "secondP": "دفع واستلام سهل",
+
+    "thirdTitle": "استرجاع سهل",
+    "thirdP": "استرجاع خلال 14يوم",
+
+    "quickLinks": {
+      "accounts": "الحسابات",
+      "register": "تسجيل حساب جديد",
+      "login": "تسجيل دخول",
+      "profile": "ملفك الشخصى",
+      "orders": "الطلبات",
+      "createOrder": "كيف تنشئ طلبية",
+      "followOrder": "تتبع طلبك",
+      "editCart": "التعديل على قائمتك",
+      "cancelOrder": "إلغاء طلبية",
+      "returnPolicy": "سياسة الاسترجاع"
+    },
+    "aboutUs": {
+      "title": "مـن نـحـن",
+      "ourStory": "نـبـذه عـنـا",
+      "termsConditions": "الشروط والاحكام"
+    },
+    "contactUs": {
+      "title": "تواصل مـعـنا"
+    }
   }
 }

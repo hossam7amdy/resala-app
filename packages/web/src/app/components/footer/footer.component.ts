@@ -2,17 +2,26 @@ import { CommonModule } from '@angular/common';
 import { Component, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, SearchPipe, NgxPaginationModule, RouterLink, FormsModule],
+  imports: [
+    CommonModule,
+    SearchPipe,
+    NgxPaginationModule,
+    RouterLink,
+    FormsModule,
+    TranslateModule,
+  ],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css'],
 })
@@ -22,7 +31,9 @@ export class FooterComponent {
     private _WishListService: WishListService,
     private _Renderer: Renderer2,
     private _Toaster: ToastrService,
-    private _Router: Router
+    private _Router: Router,
+    public _Translate: TranslateService,
+    private _RTLStatus: Translate_Service
   ) {}
 
   isClickedSearch: boolean = false;

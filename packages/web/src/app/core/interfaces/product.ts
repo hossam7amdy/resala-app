@@ -8,10 +8,12 @@ export interface Product {
   id?: number;
   categoryId?: number;
   avgRating: number;
+  arName: string;
 }
 
 export interface CategoryProduct {
   enName: string;
+  arName: string;
 }
 
 export interface Image {
