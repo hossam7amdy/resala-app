@@ -37,9 +37,9 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
+import { PaymobService } from '../../services/paymob/paymob.service.js';
 import { AddressService } from '../address/address.service.js';
 import { DiscountService } from '../discount/discount.service.js';
 import { EmailNotification } from '../notification/email.notification.js';
@@ -95,18 +95,18 @@ export class OrderController extends Controller {
     await this.stockService.decrease(discountedUserCart);
 
     try {
-      const { items, shipping, ...order } = await this.orderService.create(
-        { userId: user.id, ...body },
-        discountedUserCart,
-        address
-      );
+      const {
+        items: _,
+        shipping,
+        ...order
+      } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
 
       let payment;
       if (paymentMethod === 'CARD') {
         payment = await this.paymentService.checkout({
           user,
           order: { shipping, ...order },
-          items,
+          cart: discountedUserCart,
           shipping: address,
         });
       }
