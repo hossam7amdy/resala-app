@@ -52,25 +52,26 @@ export class PaymobService {
     user,
     order,
     shipping,
-    items,
+    cart,
   }: CheckoutDto): Promise<{ payment_link: string } & CheckoutApiResponse> {
     const headers = {
       Authorization: `Token ${this.secretKey}`,
     };
 
-    const orderItems = items.map(item => ({
-      name: item.productName,
-      amount: +item.price * 100,
-      description: item.description,
-      quantity: item.quantity,
-    }));
-
-    orderItems.push({
-      name: 'Shipping',
-      amount: +order.shipping * 100,
-      description: 'Shipping fees',
-      quantity: 1,
-    });
+    const orderItems = [
+      {
+        name: 'Resala cart items',
+        amount: cart.totalPrice * 100,
+        description: `Purchasing for ${cart.totalQuantity} items`,
+        quantity: 1,
+      },
+      {
+        name: 'Shipping',
+        amount: +order.shipping * 100,
+        description: 'Shipping fees',
+        quantity: 1,
+      },
+    ];
 
     const body = {
       currency: 'EGP',
