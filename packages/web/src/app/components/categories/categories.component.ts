@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -10,7 +10,6 @@ import { CategoriesService } from 'src/app/core/services/categories/categories.s
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-categories',
   standalone: true,
   imports: [CommonModule, RouterLink, NgxPaginationModule, NgxStarsRatingModule, TranslateModule],
