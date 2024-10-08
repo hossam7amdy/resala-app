@@ -62,7 +62,18 @@
         <div class="card mb-4">
           <div class="row g-0" *ngFor="let item of cartDetailsItems">
             <div class="col-sm-2">
-              <img [src]="item.product.imageUrl" class="img-fluid w-100" alt="..." />
+              <img
+                *ngIf="item.images.length > 0"
+                [src]="item.images[0].imageUrl"
+                class="img-fluid w-100"
+                alt="..."
+              />
+              <img
+                *ngIf="item.images.length == 0"
+                [src]="item.product.imageUrl"
+                class="img-fluid w-100"
+                alt="..."
+              />
             </div>
             <div class="col-sm-7">
               <div class="card-body">
@@ -72,7 +83,12 @@
                 <span class="">
                   - Size : <i class="bold small">{{ item.stock.size.name }}</i></span
                 >
-                <p class="fw-bold">{{ item.product.price }} EGP</p>
+                <p *ngIf="item.discountedPrice == 0" class="fw-bold currency">
+                  {{ item.product.price }} EGP
+                </p>
+                <p *ngIf="item.discountedPrice != 0" class="fw-bold currency">
+                  {{ item.discountedPrice }} EGP
+                </p>
                 <button class="btn mt-2">
                   <i
                     (click)="removeItem(item.stock.id, remove)"
@@ -85,7 +101,7 @@
             <div class="col-sm-3 m-auto">
               <div class="counter">
                 <button
-                  [disabled]="totalCount == 1"
+                  [disabled]="item.quantity == 1"
                   class="min-counter-btn fw-bold"
                   (click)="changeCount(item.quantity - 1, item.stock.id, btnMin, btnPlus)"
                   #btnMin
@@ -96,12 +112,14 @@
                   item.quantity
                 }}</span>
                 <button
+                  [disabled]="item.stock.quantity == 0"
                   class="plus-counter-btn fw-bold"
                   (click)="changeCount(item.quantity + 1, item.stock.id, btnMin, btnPlus)"
                   #btnPlus
                 >
                   <i class="fa-solid fa-plus"></i>
                 </button>
+                <p *ngIf="item.stock.quantity == 0" class="p">Latest One Stock</p>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -27,6 +28,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     NgxStarsRatingModule,
     CuttdatePipe,
     RouterLink,
+    TranslateModule,
   ],
 
   templateUrl: './product-details.component.html',
@@ -51,6 +53,7 @@ export class ProductDetailsComponent implements OnInit {
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
+  priceAfterSale: number = 0;
 
   productId!: any; // '!' to add initial value Undefined to this property 'productId'
 
