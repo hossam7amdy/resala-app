@@ -1,105 +1,118 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs/promises';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import path from 'path';
+import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { LocalStorage } from '../local-storage.js';
-
-vi.mock('fs/promises');
-vi.mock('path', () => ({
-  dirname: vi.fn(),
-  join: vi.fn(),
-}));
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { LocalStorage } from '../local-storage';
 
 describe('LocalStorage', () => {
   let localStorage: LocalStorage;
-  const baseUrl = 'http://example.com';
-  const rootDirectory = 'test_uploads';
-  const multerFile = { buffer: Buffer.from('test') } as Express.Multer.File;
-  const key = 'test_file.txt';
+  const testRootDirectory = 'test_uploads';
+  const baseUrl = 'http://localhost:5000';
 
   beforeEach(() => {
-    localStorage = new LocalStorage({ baseUrl, rootDirectory });
-    vi.clearAllMocks();
+    localStorage = new LocalStorage({ baseUrl, rootDirectory: testRootDirectory });
   });
 
-  describe('uploadFile', () => {
-    it('should upload a multerFile and return its public URL', async () => {
-      const path = join(__dirname, '..', '..', '..', rootDirectory, key);
-      const publicUrl = `${baseUrl}/${rootDirectory}/${key}`;
+  afterAll(async () => {
+    // Clean up the test directory after all tests
+    try {
+      await fs.rm(path.join(process.cwd(), testRootDirectory), { recursive: true, force: true });
+    } catch (error) {
+      console.error('Error cleaning up test directory:', error);
+    }
+  });
 
-      vi.spyOn(localStorage as any, 'getPath').mockImplementation(() => path);
-      vi.spyOn(localStorage as any, 'getPublicUrl').mockImplementation(() => publicUrl);
-      vi.spyOn(localStorage, 'createDirectoryIfNotExist').mockResolvedValue('CREATED');
+  it('should write a file to the correct path and delete it', async () => {
+    const testFile = {
+      buffer: Buffer.from('test content'),
+      originalname: 'test.txt',
+    } as Express.Multer.File;
 
-      const result = await localStorage.upload(multerFile, key);
+    const key = 'test-file.txt';
 
-      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
-      expect(localStorage.createDirectoryIfNotExist).toHaveBeenCalledWith(dirname(path));
-      expect(fs.writeFile).toHaveBeenCalledWith(path, multerFile);
-      expect(result).toBe(publicUrl);
+    // Upload the file
+    const uploadedUrl = await localStorage.upload(testFile, key);
+
+    // Check if the file exists
+    const filePath = path.join(process.cwd(), testRootDirectory, key);
+    const fileExists = await fs
+      .access(filePath)
+      .then(() => true)
+      .catch(() => false);
+    expect(fileExists).toBe(true);
+
+    // Check if the content is correct
+    const fileContent = await fs.readFile(filePath, 'utf-8');
+    expect(fileContent).toBe('test content');
+
+    // Check if the returned URL is correct
+    expect(uploadedUrl).toBe(`${baseUrl}/${testRootDirectory}/${key}`);
+
+    // Delete the file
+    await localStorage.delete(key);
+
+    // Check if the file has been deleted
+    const fileExistsAfterDelete = await fs
+      .access(filePath)
+      .then(() => true)
+      .catch(() => false);
+    expect(fileExistsAfterDelete).toBe(false);
+  });
+
+  it('should create a directory if it does not exist', async () => {
+    const testDir = path.join(process.cwd(), testRootDirectory, 'nested', 'dir');
+
+    const result = await localStorage.createDirectoryIfNotExist(testDir);
+    expect(result).toBe('CREATED');
+
+    const dirExists = await fs
+      .access(testDir)
+      .then(() => true)
+      .catch(() => false);
+    expect(dirExists).toBe(true);
+
+    // Clean up
+    await fs.rm(path.join(process.cwd(), testRootDirectory, 'nested'), {
+      recursive: true,
+      force: true,
     });
   });
 
-  describe('deleteFile', () => {
-    it('should delete a file', async () => {
-      const path = join(__dirname, '..', '..', '..', rootDirectory, key);
+  it('should return EXIST if directory already exists', async () => {
+    const testDir = path.join(process.cwd(), testRootDirectory, 'existing');
+    await fs.mkdir(testDir, { recursive: true });
 
-      vi.spyOn(localStorage as any, 'getPath').mockReturnValue(path);
+    const result = await localStorage.createDirectoryIfNotExist(testDir);
+    expect(result).toBe('EXIST');
 
-      await localStorage.delete(key);
-
-      expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
-      expect(fs.unlink).toHaveBeenCalledWith(path);
-    });
+    // Clean up
+    await fs.rm(testDir, { recursive: true, force: true });
   });
 
-  describe('deleteFiles', () => {
-    it('should delete multiple files', async () => {
-      const keys = ['file1.txt', 'file2.txt'];
-      const paths = keys.map(key => join(__dirname, '..', '..', '..', rootDirectory, key));
+  it('should delete multiple files', async () => {
+    const testFiles = [
+      { buffer: Buffer.from('content1'), originalname: 'file1.txt' },
+      { buffer: Buffer.from('content2'), originalname: 'file2.txt' },
+    ] as Express.Multer.File[];
 
-      vi.spyOn(localStorage as any, 'getPath').mockImplementation(key =>
-        join(__dirname, '..', '..', '..', rootDirectory, key as string)
-      );
+    const keys = ['file1.txt', 'file2.txt'];
 
-      await localStorage.deleteMany(keys);
+    // Upload files
+    for (let i = 0; i < testFiles.length; i++) {
+      await localStorage.upload(testFiles[i], keys[i]);
+    }
 
-      keys.forEach((key, index) => {
-        expect((localStorage as any).getPath).toHaveBeenCalledWith(key);
-        expect(fs.unlink).toHaveBeenCalledWith(paths[index]);
-      });
-    });
-  });
+    // Delete multiple files
+    await localStorage.deleteMany(keys);
 
-  describe('createDirectoryIfNotExist', () => {
-    it('should create a directory if it does not exist', async () => {
-      const path = join(__dirname, '..', '..', '..', rootDirectory, 'new_dir');
-
-      (fs.access as Mock).mockRejectedValue(new Error('Directory does not exist'));
-      (fs.mkdir as Mock).mockResolvedValue(undefined);
-
-      const result = await localStorage.createDirectoryIfNotExist(path);
-
-      expect(fs.access).toHaveBeenCalledWith(path);
-      expect(fs.mkdir).toHaveBeenCalledWith(path, { recursive: true });
-      expect(result).toBe('CREATED');
-    });
-
-    it('should return EXIST if the directory already exists', async () => {
-      const path = join(__dirname, '..', '..', '..', rootDirectory, 'existing_dir');
-
-      (fs.access as Mock).mockResolvedValue('EXIST');
-
-      const result = await localStorage.createDirectoryIfNotExist(path);
-
-      expect(fs.access).toHaveBeenCalledWith(path);
-      expect(fs.mkdir).not.toHaveBeenCalled();
-      expect(result).toBe('EXIST');
-    });
+    // Check if files have been deleted
+    for (const key of keys) {
+      const filePath = path.join(process.cwd(), testRootDirectory, key);
+      const fileExists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
+      expect(fileExists).toBe(false);
+    }
   });
 });
