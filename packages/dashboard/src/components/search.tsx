@@ -6,7 +6,7 @@ import SkeletonInput from 'antd/es/skeleton/Input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
-interface SearchProps extends Omit<AntSearchProps, 'onChange'> {}
+type SearchProps = Omit<AntSearchProps, 'onChange'>;
 
 const SearchComponent: React.FC<SearchProps> = props => {
   const params = useSearchParams();

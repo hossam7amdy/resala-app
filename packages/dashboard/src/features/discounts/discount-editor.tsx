@@ -39,7 +39,7 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
   const { mutate, isLoading } = useMutation({
     mutationFn: !id ? createDiscount : updateDiscount.bind(null, id),
     onSuccess: data => {
-      id && back();
+      if (id) back();
       form.resetFields();
       success(data?.message ?? 'Discount has been submitted successfully');
     },
