@@ -3,6 +3,7 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
@@ -15,7 +16,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-latest-collection',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxStarsRatingModule],
+  imports: [CommonModule, RouterLink, NgxStarsRatingModule, TranslateModule],
   templateUrl: './latest-collection.component.html',
   styleUrls: ['./latest-collection.component.css'],
 })
