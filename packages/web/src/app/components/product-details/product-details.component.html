@@ -61,7 +61,23 @@
       <div class="col-sm-12 col-md-4">
         <h2 class="h2">{{ productDetails.enName }}</h2>
         <p class="p">{{ productDetails.enDescription }}</p>
-        <span class="price">{{ productDetails.price }}<label class="currency"> EGP</label></span>
+
+        <div *ngFor="let discount of productDetails.discounts">
+          <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
+            <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
+          </h4>
+          <span *ngIf="discount.length < 0 && discount.type != 'PERCENTAGE'" class="price"
+            >{{ productDetails.price }}<label class="currency"> EGP</label></span
+          >
+          <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
+            >{{ productDetails.price }}<s class="p px-0">EGP</s></s
+          >
+          <br />
+          <span *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="price fa-lg"
+            >{{ productDetails.price - productDetails.price * (discount.amount / 100)
+            }}<label class="currency"> EGP</label></span
+          >
+        </div>
         <ngx-stars-rating
           [rate]="productDetails.avgRating"
           [options]="ratingOptions"
@@ -275,7 +291,15 @@
                   [routerLink]="['/product-details/', product.id]"
                   role="button"
                 >
-                  <p class="offer">Sale<span> 20%</span></p>
+                  <div *ngFor="let discount of product.discounts">
+                    <p
+                      *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true"
+                      class="offer"
+                    >
+                      {{ 'home.allProducts.sale' | translate }}
+                      <span> {{ discount.amount }}%</span>
+                    </p>
+                  </div>
 
                   <img
                     class="w-100 image-products"

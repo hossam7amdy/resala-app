@@ -27,7 +27,12 @@
               ></i>
             </header>
             <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
-              <p class="offer">Sale<span> 20%</span></p>
+              <div *ngFor="let discount of product.discounts">
+                <p *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
+                  {{ 'home.allProducts.sale' | translate }}
+                  <span> {{ discount.amount }}%</span>
+                </p>
+              </div>
 
               <img
                 class="w-100 image-products"

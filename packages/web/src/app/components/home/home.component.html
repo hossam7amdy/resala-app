@@ -112,6 +112,7 @@
                   #favoritIcon
                   class="fa-regular fa-heart favourit-icon"
                 ></i>
+
                 <img
                   [routerLink]="['/product-details/', trend.product.id]"
                   [src]="trend.product.imageUrl"
@@ -158,7 +159,6 @@
       >
         <div>
           <div class="parent-img-content">
-            <!-- currentProduct === product?.id -->
             <header class="header-product">
               <i
                 (click)="addPoductInWishList(product.id, favoritIcon)"
@@ -167,7 +167,12 @@
               ></i>
             </header>
             <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
-              <p class="offer">{{ 'home.allProducts.sale' | translate }}<span> 20%</span></p>
+              <div *ngFor="let discount of product.discounts">
+                <p *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
+                  {{ 'home.allProducts.sale' | translate }}
+                  <span> {{ discount.amount }}%</span>
+                </p>
+              </div>
 
               <img
                 class="w-100 image-products"
