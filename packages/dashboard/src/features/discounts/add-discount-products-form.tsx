@@ -22,11 +22,11 @@ export const AddDiscountProductsForm: React.FC<AddDiscountProductsFormProps> = (
     onSuccess: () => {
       success('Products have been added to the discount successfully');
       form.resetFields();
-      onFinished && onFinished();
+      onFinished?.();
     },
     onError: e => {
       error(e.message);
-      onCanceled && onCanceled();
+      onCanceled?.();
     },
   });
 
