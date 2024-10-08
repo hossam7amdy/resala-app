@@ -32,7 +32,9 @@
 }
 
 /********************************/
-
+.offer {
+  color: #fbb935;
+}
 .porduct img {
   background-size: cover;
 }
