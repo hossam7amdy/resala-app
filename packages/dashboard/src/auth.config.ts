@@ -76,7 +76,7 @@ export const authConfig = {
           token.accessToken = data.accessToken;
           token.refreshToken = data.refreshToken;
           token.expiresAt = jwtDecode(data.accessToken).exp ?? 0;
-        } catch (e) {
+        } catch {
           token.error = 'RefreshTokenError';
         }
       }

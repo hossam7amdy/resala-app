@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
@@ -11,7 +12,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxPaginationModule, NgxStarsRatingModule],
+  imports: [CommonModule, RouterLink, NgxPaginationModule, NgxStarsRatingModule, TranslateModule],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
 })

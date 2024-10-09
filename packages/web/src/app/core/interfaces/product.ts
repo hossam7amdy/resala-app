@@ -9,6 +9,13 @@ export interface Product {
   categoryId?: number;
   avgRating: number;
   arName: string;
+  discounts: [
+    {
+      amount: string;
+      type: string;
+      isActive: boolean;
+    },
+  ];
 }
 
 export interface CategoryProduct {
