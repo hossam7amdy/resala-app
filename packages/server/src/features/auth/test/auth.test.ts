@@ -4,9 +4,9 @@ import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { initDb } from '../../../datastore/index.js';
-import { jwtSign } from '../../../lib/jwt.js';
 import { userAssertions } from '../../../tests/customAssertions.js';
 import { getTestServer } from '../../../tests/testServer.js';
+import { JwtManager } from '../jwt.manager.js';
 
 const ADMIN_USER = {
   email: 'admin@resala.com',
@@ -284,7 +284,7 @@ describe('TEST /auth endpoints', () => {
     });
 
     it('should reset password with wrong data', async () => {
-      const token = jwtSign({ id: '2', email: CUSTOMER_USER.email }, 'JWT_RESET', {
+      const token = new JwtManager().sign({ id: '2', email: CUSTOMER_USER.email }, 'JWT_RESET', {
         expiresIn: '10m',
       });
 
