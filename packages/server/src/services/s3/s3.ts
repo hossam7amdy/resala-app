@@ -9,28 +9,32 @@ import {
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
+import { configuration } from '../../configuration/index.js';
+
+const defaultOptions = {
+  region: configuration.blobStorage.region,
+  accessKeyId: configuration.blobStorage.accessKey,
+  secretAccessKey: configuration.blobStorage.accessSecret,
+  endpoint: configuration.blobStorage.endpoint,
+  forcePathStyle: configuration.blobStorage.forcePathStyle,
+};
+
 export class S3Service {
   private readonly bucketName: string;
+  private readonly baseUrl: string;
   private readonly client: S3Client;
 
   constructor(
-    clientConfig: S3ClientConfig = {
-      region: process.env.S3_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-      endpoint: process.env.S3_ENDPOINT,
-      forcePathStyle: process.env.NODE_ENV !== 'production',
-    },
-    bucketName: string = process.env.S3_BUCKET
+    clientConfig: S3ClientConfig = defaultOptions,
+    bucketName: string = configuration.blobStorage.bucketName
   ) {
     this.bucketName = bucketName;
+    this.baseUrl = configuration.blobStorage.baseUrl;
     this.client = new S3Client(clientConfig);
 
     (async () => {
-      await this.createBucketIfNotExist(process.env.S3_BUCKET);
-      await this.makeBucketPublicRead(process.env.S3_BUCKET);
+      await this.createBucketIfNotExist(bucketName);
+      await this.makeBucketPublicRead(bucketName);
     })();
   }
 
@@ -82,10 +86,10 @@ export class S3Service {
   }
 
   private getPublicUrl(key: string) {
-    return `${process.env.S3_BASE_URL}/${key}`;
+    return `${this.baseUrl}/${key}`;
   }
   private getFilenameFromUrl(url: string) {
-    return url.replace(`${process.env.S3_BASE_URL}/`, '');
+    return url.replace(`${this.baseUrl}/`, '');
   }
 
   private async makeBucketPublicRead(bucketName: string) {
