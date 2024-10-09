@@ -56,6 +56,8 @@
     "allProducts": {
       "mainTitle": "Pobular Products",
       "sale": "Sale",
+      "buyBogo": "Buy ",
+      "getBogo": " Get ",
       "currency": "EGP"
     },
     "allCategories": {
@@ -93,5 +95,10 @@
     "contactUs": {
       "title": "Contact Us"
     }
+  },
+  "categories": {},
+  "latestCollection": {},
+  "offers": {
+    "mainTitle": "Our Offers"
   }
 }
