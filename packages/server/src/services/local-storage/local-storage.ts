@@ -1,9 +1,5 @@
 import fs from 'fs/promises';
 import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 interface LocalStorageOptions {
   baseUrl?: string;
@@ -55,6 +51,6 @@ export class LocalStorage {
   }
 
   private get path(): string {
-    return join(__dirname, '..', '..', '..', this.rootDirectory);
+    return join(process.cwd(), this.rootDirectory);
   }
 }
