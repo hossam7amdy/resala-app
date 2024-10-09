@@ -7,6 +7,10 @@ const _parseInt = (envVar: string | undefined, defaultValue: number): number => 
   return envVar && parseInt(envVar) ? parseInt(envVar) : defaultValue;
 };
 
+const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boolean => {
+  return envVar && envVar.toLowerCase() === 'true' ? true : defaultValue;
+};
+
 const configuration = {
   origin: {
     web: process.env.WEB_URL || 'http://localhost:4200',
@@ -45,6 +49,7 @@ const configuration = {
   blobStorage: {
     accessKey: process.env.AWS_ACCESS_KEY_ID,
     accessSecret: process.env.AWS_SECRET_ACCESS_KEY,
+    forcePathStyle: _parseBoolean(process.env.S3_FORCE_PATH_STYLE, false),
     region: process.env.S3_REGION || 'eu-north-1',
     bucketName: process.env.S3_BUCKET || 'resala-bucket',
     endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
@@ -65,7 +70,7 @@ const _validateConfig = (config: { [key: string]: any }, path: string) => {
   for (const key in config) {
     if (typeof config[key] === 'object') {
       _validateConfig(config[key], `${path}.${key}`);
-    } else if (!config[key]) {
+    } else if (config[key] === undefined) {
       console.warn(`Missing environment variable: ${path}.${key}`);
     }
   }
