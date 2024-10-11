@@ -94,6 +94,10 @@ p {
   font-size: 20px;
   cursor: pointer;
 }
+.shopping-icon:lang(ar) {
+  right: auto;
+  left: 4.5%;
+}
 
 .img-content .fa-plus {
   color: #14adc6;
@@ -117,7 +121,9 @@ p {
   text-align: left;
   color: #016373;
 }
-
+.descrp:lang(ar) {
+  text-align: right;
+}
 /*  */
 /* NGX pagination*/
 

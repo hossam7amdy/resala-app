@@ -55,7 +55,11 @@
     },
     "allProducts": {
       "mainTitle": "Pobular Products",
+      "previousLabel": "Previous",
+      "nextLabel": "Next",
       "sale": "Sale",
+      "buyBogo": "Buy ",
+      "getBogo": " Get ",
       "currency": "EGP"
     },
     "allCategories": {
@@ -93,5 +97,51 @@
     "contactUs": {
       "title": "Contact Us"
     }
+  },
+  "categories": {},
+  "latestCollection": {
+    "mainTitle": "Latest Collection"
+  },
+  "offers": {
+    "mainTitle": "Our Offers"
+  },
+  "favorites": {
+    "mainTitle": "My Favourites Products",
+    "confirmDeleteTitle": "Confirm Delete",
+    "questionDelete": "Do You Want Delete This Product From Your Favorite List ?",
+    "questionDeleteCancel": "Cancel",
+    "questionDeleteYes": "Yes"
+  },
+  "login": {
+    "mainTitle": "Login Now",
+    "googleAccount": "Continue With Google Account",
+    "chooseLogin": "Or sign in with your Email / phone",
+    "username": "Email / Phone",
+    "emailRequired": "Email is required",
+    "mobValidate": "This Not matching as mobile number",
+    "password": "Password",
+    "pwRequired": "Password is required",
+    "notValid": "Email or Password Not Valid!!",
+    "forgotPW": "Forgot Password",
+    "loginBtn": "Login"
+  },
+  "profile": {
+    "mainTitle": "My Profile",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "shoppingBtn": "Go Shopping"
+  },
+  "orders": {
+    "mainTitle": "My Orders",
+    "orderNo": "Order Number",
+    "itemsNum": "Order Items",
+    "orderTitle": "Order",
+    "firstNdStep": "Processed",
+    "preNdShipping": "Processed Shipping",
+    "enRoute": "En Route",
+    "arrived": "Arrived",
+    "totalPaid": "Total Payed"
   }
 }

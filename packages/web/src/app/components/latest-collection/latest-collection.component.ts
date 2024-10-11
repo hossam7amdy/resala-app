@@ -3,7 +3,7 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
@@ -28,7 +28,8 @@ export class LatestCollectionComponent implements OnInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     private spinner: NgxSpinnerService,
-    private _Reviews: ReviewsService
+    private _Reviews: ReviewsService,
+    public _Translate: TranslateService
   ) {}
   UserProfile: any;
 

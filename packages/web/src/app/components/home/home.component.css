@@ -699,16 +699,7 @@ section .overlay {
 .descrp:lang(ar) {
   text-align: right;
 }
-/* .descrp .price:lang(ar){
-  text-align: right;
-} */
 
-/* .descrp .fa-star {
-  color: #fbb935;
-  font-weight: bold;
-  font-size: 10px;
-  margin-right: 2px;
-} */
 /* NGX pagination*/
 
 ::ng-deep .ngx-pagination .current {
@@ -738,4 +729,37 @@ section .overlay {
   cursor: pointer;
   border-radius: 0px;
   font-weight: bold;
+}
+
+/* Discounts*/
+.discounts .container {
+  background-image: url(../../../assets/discounts/433898072.jpg);
+  background-size: cover;
+  padding: 0;
+}
+.discounts .content-offer {
+  background-color: #14aec68b;
+  padding: 20px;
+  min-height: 400px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+@media (max-width: 780px) {
+  .discounts .content-offer {
+    min-height: 200px;
+  }
+}
+@media (max-width: 350px) {
+  .discounts .content-offer {
+    min-height: 100px;
+  }
+}
+.discounts .content-offer .h2 {
+  margin-bottom: 5px !important;
+  color: #fff !important;
+}
+.discounts .content-offer .p {
+  color: #efefef !important;
 }

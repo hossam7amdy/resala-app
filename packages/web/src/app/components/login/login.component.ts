@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 import { ProductDetailsComponent } from '../product-details/product-details.component';
@@ -11,14 +12,21 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProductDetailsComponent, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProductDetailsComponent,
+    RouterLink,
+    TranslateModule,
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   constructor(
     private _AuthService: AuthService,
-    private _Router: Router
+    private _Router: Router,
+    public _Translate: TranslateService
     // private _productDetailsComponent: ProductDetailsComponent
   ) {}
 
@@ -31,6 +39,7 @@ export class LoginComponent {
 
   errMsg: string = '';
   successMsg: string = '';
+  successMsgAr: string = '';
   isLoading: boolean = false;
 
   //properity => Return to product details page after login
@@ -81,6 +90,7 @@ export class LoginComponent {
             localStorage.setItem('etoken', response.data.accessToken);
             this._AuthService.decodeUser();
             this.successMsg = 'Logged already';
+            this.successMsgAr = 'تم تسجيل الدخول بنجاح';
             // this.getUserInfo(response.data.user.firstName);
             // this._AuthService.userNameLogged.next(response.data.user.firstName);
             this.isLoading = false;

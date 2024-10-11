@@ -158,7 +158,7 @@
         class="mx-2 mb-3 px-0 col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2 justify-content-center text-center"
       >
         <div>
-          <div class="parent-img-content">
+          <div class="parent-img-content w-100">
             <header class="header-product">
               <i
                 (click)="addPoductInWishList(product.id, favoritIcon)"
@@ -177,8 +177,8 @@
               <img
                 class="w-100 image-products"
                 [src]="product.imageUrl"
-                [alt]="product.enName"
-                [title]="product.enName"
+                [alt]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
+                [title]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
               />
             </div>
             <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
@@ -204,7 +204,6 @@
             ></ngx-stars-rating>
 
             <div class="rating">
-              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
               <ng-template #starCustomTemplate>
                 <span
                   *ngIf="product.avgRating !== 0"
@@ -230,8 +229,8 @@
           [directionLinks]="true"
           [autoHide]="false"
           [responsive]="true"
-          previousLabel="Previous"
-          nextLabel="Next"
+          previousLabel="{{ 'home.allProducts.previousLabel' | translate }}"
+          nextLabel="{{ 'home.allProducts.nextLabel' | translate }}"
           screenReaderPaginationLabel="Pagination"
           screenReaderPageLabel="page"
           screenReaderCurrentLabel="You're on page"
@@ -240,6 +239,16 @@
       </div>
     </div>
 
+    <section class="discounts">
+      <div class="container">
+        <div class="content-offer" routerLink="/new-offers" routerLinkActive="active-link">
+          <div class="title m-auto">
+            <h2 class="h2">Look Up Our Offers !!</h2>
+            <p class="p">Happy Deals</p>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- Categories -->
 
     <div class="container-fluid">
