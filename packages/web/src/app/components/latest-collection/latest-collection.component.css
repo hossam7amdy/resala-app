@@ -98,6 +98,10 @@ section {
   font-size: 20px;
   cursor: pointer;
 }
+.shopping-icon:lang(ar) {
+  right: auto;
+  left: 4.5%;
+}
 
 ::ng-deep label.star[_ngcontent-ng-c205951347] {
   float: right;
@@ -142,13 +146,10 @@ section {
   text-align: left;
   color: #016373;
 }
+.descrp:lang(ar) {
+  text-align: right;
+}
 
-/* .descrp .fa-star {
-    color: #fbb935;
-    font-weight: bold;
-    font-size: 10px;
-    margin-right: 2px;
-  } */
 /* NGX pagination*/
 
 /* NGXowl carowsel all cat*/

@@ -14,6 +14,7 @@ export interface Product {
       amount: string;
       type: string;
       isActive: boolean;
+      minQty: number;
     },
   ];
 }

@@ -1,1 +1,81 @@
-<p>offers works!</p>
+<section class="offers">
+  <div class="container-fluid">
+    <h1 class="offer-title h1">{{ 'offers.mainTitle' | translate }}</h1>
+    <div class="row justify-content-center text-center">
+      <div
+        *ngFor="let product of products | customefillter"
+        class="mx-2 mb-3 px-0 col-xs-12 col-sm-4 col-md-3 col-lg-3 col-xl-2 justify-content-center text-center"
+      >
+        <div>
+          <div class="parent-img-content">
+            <header class="header-product">
+              <i
+                (click)="addPoductInWishList(product.id, favoritIcon)"
+                #favoritIcon
+                class="fa-regular fa-heart favourit-icon"
+              ></i>
+            </header>
+            <div class="img-content" [routerLink]="['/product-details/', product.id]" role="button">
+              <div *ngFor="let discount of product.discounts">
+                <p *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
+                  {{ 'home.allProducts.sale' | translate }}
+                  <span> {{ discount.amount }}%</span>
+                </p>
+
+                <p *ngIf="discount.type == 'BOGO' && discount.isActive == true" class="offer">
+                  <span
+                    >{{ 'home.allProducts.buyBogo' | translate }} {{ discount.minQty
+                    }}{{ 'home.allProducts.getBogo' | translate }}{{ discount.amount }}</span
+                  >
+                </p>
+              </div>
+
+              <img
+                class="w-100 image-products"
+                [src]="product.imageUrl"
+                [alt]="product.enName"
+                [title]="product.enName"
+              />
+            </div>
+            <footer class="footer-product" [routerLink]="['/product-details/', product.id]">
+              <i [lang]="_Translate.currentLang" class="fa-solid fa-bag-shopping shopping-icon"></i>
+            </footer>
+          </div>
+          <!--  -->
+          <div class="descrp">
+            <h6
+              [lang]="_Translate.currentLang"
+              [routerLink]="['/product-details/', product.id]"
+              class="mb-0"
+              role="button"
+            >
+              {{ _Translate.currentLang === 'ar' ? product.arName : product.enName }}
+            </h6>
+
+            <ngx-stars-rating
+              [rate]="product.avgRating"
+              [options]="ratingOptions"
+              [starTemplate]="starCustomTemplate"
+            ></ngx-stars-rating>
+
+            <div class="rating">
+              <!-- <ngx-star-rating [disabled]="true" [id]="'rating'"></ngx-star-rating> -->
+              <ng-template #starCustomTemplate>
+                <span
+                  *ngIf="product.avgRating !== 0"
+                  class="material-symbols-outlined"
+                  style="font-size: 15px"
+                  ><i class="fa-solid fa-star"></i
+                ></span>
+              </ng-template>
+            </div>
+            <span class="price" [lang]="_Translate.currentLang"
+              >{{ product.price }}
+              <label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

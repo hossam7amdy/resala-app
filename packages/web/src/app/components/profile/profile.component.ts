@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -8,7 +9,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -16,7 +17,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   constructor(
     private _UserInfo: UserService,
     private _AuthService: AuthService,
-    private _Spinner: NgxSpinnerService
+    private _Spinner: NgxSpinnerService,
+    public _Translate: TranslateService
   ) {}
 
   userInfo: any = {};

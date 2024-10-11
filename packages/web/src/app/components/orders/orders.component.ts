@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -7,7 +8,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
 })
@@ -15,7 +16,8 @@ export class OrdersComponent implements OnInit {
   constructor(
     private _UserDataService: UserService,
     private _AuthService: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService
   ) {}
   orders: any = [];
   activeClass = 'defaultcolor';
