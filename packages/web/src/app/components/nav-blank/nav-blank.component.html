@@ -150,7 +150,11 @@
               {{ 'nav-blank.Categories' | translate }}
             </a>
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <ul
+              class="dropdown-menu"
+              aria-labelledby="dropdownMenuButton"
+              [lang]="_Translate.currentLang"
+            >
               <li *ngFor="let category of categoryList">
                 <a
                   (click)="reloadPage(category.id)"

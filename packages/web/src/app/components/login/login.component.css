@@ -95,3 +95,7 @@ section p {
     width: 90% !important;
   }
 }
+
+.form-item .password-input i:lang(ar) {
+  right: 92%;
+}
