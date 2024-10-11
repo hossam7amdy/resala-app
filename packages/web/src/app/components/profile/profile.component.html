@@ -1,10 +1,10 @@
 <div class="profile">
   <section *ngIf="userInfo != {}" class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
-    <h1 class="my-3">My Profile</h1>
+    <h1 class="my-3">{{ 'profile.mainTitle' | translate }}</h1>
     <form class="form">
       <fieldset disabled>
         <div class="form-item">
-          <label for="firstName">First Name</label>
+          <label for="firstName">{{ 'profile.firstName' | translate }}</label>
           <input
             type="text"
             formControlName="firstName"
@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-item">
-          <label for="lastName">Last Name</label>
+          <label for="lastName">{{ 'profile.lastName' | translate }}</label>
           <input
             type="text"
             formControlName="lastName"
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form-item">
-          <label for="email">Email</label>
+          <label for="email">{{ 'profile.email' | translate }}</label>
           <input
             type="email"
             formControlName="email"
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-item">
-          <label for="phone">Phone</label>
+          <label for="phone">{{ 'profile.phone' | translate }}</label>
           <input
             type="text"
             formControlName="phone"
@@ -48,7 +48,7 @@
         </div>
       </fieldset>
       <button routerLink="/home" type="button" class="custome-btn mt-3">
-        Go Shopping <i class="fa-solid fa-bag-shopping"></i>
+        {{ 'profile.shoppingBtn' | translate }} <i class="fa-solid fa-bag-shopping"></i>
       </button>
     </form>
   </section>

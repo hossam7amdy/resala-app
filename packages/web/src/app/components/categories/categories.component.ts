@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
@@ -24,11 +24,13 @@ export class CategoriesComponent implements OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService
   ) {}
 
   allProductsCategory: any = [];
   titleCategory: string = '';
+  arTitleCategory: string = '';
   categoryId!: any; // '!' to add initial value Undefined to this property
 
   //start Rating
@@ -59,6 +61,7 @@ export class CategoriesComponent implements OnInit {
       next: response => {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
+        this.arTitleCategory = response.data.products[0].category.arName;
         console.log('title & categ id', this.titleCategory);
         console.log('category-products', this.allProductsCategory);
         this.pageLimit = response.data.pagination.limit;

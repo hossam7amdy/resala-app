@@ -1,6 +1,6 @@
 <section *ngIf="myProducts.length != 0; else emptyCart">
   <div class="container-fluid">
-    <h1 class="h2">My Favourites Products</h1>
+    <h1 class="h1">{{ 'favorites.mainTitle' | translate }}</h1>
     <div class="my-products row justify-content-center text-center">
       <div
         *ngFor="let product of myProducts"
@@ -27,7 +27,9 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      {{ 'favorites.confirmDeleteTitle' | translate }}
+                    </h5>
                     <button
                       type="button"
                       class="btn-close"
@@ -36,11 +38,11 @@
                     ></button>
                   </div>
                   <div class="modal-body">
-                    Do You Want Delete This Product From Your Favorite List ?
+                    {{ 'favorites.questionDelete' | translate }}
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                      Cancel
+                      {{ 'favorites.questionDeleteCancel' | translate }}
                     </button>
                     <button
                       type="button"
@@ -48,7 +50,7 @@
                       data-bs-dismiss="modal"
                       (click)="deletePoductInWishList()"
                     >
-                      Yes
+                      {{ 'favorites.questionDeleteYes' | translate }}
                     </button>
                   </div>
                 </div>
@@ -61,39 +63,67 @@
             [routerLink]="['/product-details/', product.product.id]"
             role="button"
           >
-            <p class="offer">discount<span> 20%</span></p>
+            <!-- <div *ngFor="let discount of product.product.discounts">
+            <p *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
+              {{ 'home.allProducts.sale' | translate }}
+              <span> {{ discount.amount }}%</span>
+            </p>
+          </div> -->
 
             <img
               class="w-100 image-products"
               [src]="product.product.imageUrl"
-              [alt]="product.product.enName"
-              [title]="product.product.enName"
+              [alt]="
+                _Translate.currentLang == 'ar' ? product.product.arName : product.product.enName
+              "
+              [title]="
+                _Translate.currentLang == 'ar' ? product.product.arName : product.product.enName
+              "
             />
           </div>
           <footer class="footer-product" [routerLink]="['/product-details/', product.product.id]">
-            <i class="fa-solid fa-bag-shopping shopping-icon"></i>
+            <i [lang]="_Translate.currentLang" class="fa-solid fa-bag-shopping shopping-icon"></i>
           </footer>
         </div>
 
         <div class="descrp">
-          <h6 [routerLink]="['/product-details/', product.product.id]" class="mb-0" role="button">
-            {{ product.product.enName }}
+          <h6
+            [lang]="_Translate.currentLang"
+            [routerLink]="['/product-details/', product.product.id]"
+            class="mb-0"
+            role="button"
+          >
+            {{ _Translate.currentLang === 'ar' ? product.product.arName : product.product.enName }}
           </h6>
+          <!-- 
+          <ngx-stars-rating
+            [rate]="product.product.avgRating"
+            [options]="ratingOptions"
+            [starTemplate]="starCustomTemplate"
+          ></ngx-stars-rating> -->
 
-          <div class="rating">
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-            <i class="fa-solid fa-star"></i>
-          </div>
+          <!-- <div class="rating">
+            <ng-template #starCustomTemplate>
+              <span
+                *ngIf="product.avgRating !== 0"
+                class="material-symbols-outlined"
+                style="font-size: 15px"
+                ><i class="fa-solid fa-star"></i
+              ></span>
+            </ng-template>
+          </div> -->
+
+          <span class="price" [lang]="_Translate.currentLang"
+            >{{ product.product.price }}
+            <label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
+          >
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<ng-template class="m-auto" #emptyCart>
+<ng-template class="d-flex justify-content-center text-center" #emptyCart>
   <div class="emptyCartParent">
     <i class="fa-regular fa-heart favourit-icon"></i>
     <h1 class="emptyCart text-uppercase">Your Favourites List Is Empty ...</h1>

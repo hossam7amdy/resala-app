@@ -699,16 +699,7 @@ section .overlay {
 .descrp:lang(ar) {
   text-align: right;
 }
-/* .descrp .price:lang(ar){
-  text-align: right;
-} */
 
-/* .descrp .fa-star {
-  color: #fbb935;
-  font-weight: bold;
-  font-size: 10px;
-  margin-right: 2px;
-} */
 /* NGX pagination*/
 
 ::ng-deep .ngx-pagination .current {

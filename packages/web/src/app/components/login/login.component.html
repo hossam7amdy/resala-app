@@ -1,5 +1,5 @@
 <section class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
-  <h1 class="my-3">Login Now</h1>
+  <h1 class="my-3">{{ 'login.mainTitle' | translate }}</h1>
   <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
     <div class="form-item">
       <button class="btn w-100">
@@ -9,68 +9,84 @@
             style="width: 25px; height: 25px"
             alt="Google"
           />
-          Continue With Google Account</a
+          {{ 'login.googleAccount' | translate }}</a
         >
       </button>
-      <p class="p text-center">Or sign in with your Email / phone</p>
+      <p class="p text-center">{{ 'login.chooseLogin' | translate }}</p>
 
-      <label for="email">Email / Phone</label>
+      <label for="email">{{ 'login.username' | translate }}</label>
 
       <input
         type="text"
         formControlName="sign"
         class="form-control"
         id="email"
-        placeholder="Email or Phone"
+        placeholder="{{ 'login.username' | translate }}"
       />
 
       <div
         *ngIf="loginForm.get('sign')?.errors && loginForm.get('sign')?.touched"
         class="alert text-danger"
       >
-        <p *ngIf="loginForm.get('sign')?.getError('required')">Email is required</p>
+        <p *ngIf="loginForm.get('sign')?.getError('required')">
+          {{ 'login.emailRequired' | translate }}
+        </p>
         <!-- <p *ngIf="loginForm.get('sign')?.getError('email')">This Not matching as Email</p> -->
-        <p *ngIf="loginForm.get('sign')?.getError('pattern')">This Not matching as mobile number</p>
+        <p *ngIf="loginForm.get('sign')?.getError('pattern')">
+          {{ 'login.mobValidate' | translate }}
+        </p>
       </div>
     </div>
 
     <div class="form-item">
-      <label for="password">Password</label>
+      <label for="password">{{ 'login.password' | translate }}</label>
       <div class="password-input">
         <input
           [type]="showPW ? 'text' : 'password'"
           formControlName="password"
-          placeholder="Password"
+          placeholder="{{ 'login.password' | translate }}"
           class="form-control"
           id="password"
         />
-        <i class="fa-regular fa-eye" *ngIf="!showPW" (click)="togglePW()"></i>
-        <i class="far fa-eye-slash" *ngIf="showPW" (click)="togglePW()"></i>
+        <i
+          [lang]="_Translate.currentLang"
+          class="fa-regular fa-eye"
+          *ngIf="!showPW"
+          (click)="togglePW()"
+        ></i>
+        <i
+          [lang]="_Translate.currentLang"
+          class="far fa-eye-slash"
+          *ngIf="showPW"
+          (click)="togglePW()"
+        ></i>
       </div>
       <div
         *ngIf="loginForm.get('password')?.errors && loginForm.get('password')?.touched"
         class="alert text-danger"
       >
-        <p *ngIf="loginForm.get('password')?.getError('required')">Password is required</p>
+        <p *ngIf="loginForm.get('password')?.getError('required')">
+          {{ 'login.pwRequired' | translate }}
+        </p>
 
         <p *ngIf="loginForm.get('password')?.getError('pattern')">
-          Should be contain symbols & chars & numbers and Not less 8 chars
+          {{ 'login.notValid' | translate }}
         </p>
-        <p *ngIf="loginForm.get('password')?.getError('minLength()')">Should be 8 Chars at least</p>
-        <p *ngIf="loginForm.get('password')?.getError('maxLength()')">Should be 8 Chars sharp</p>
       </div>
     </div>
 
     <div class="forgot">
-      <p routerLink="/forgot-password">Forgot Password</p>
+      <p routerLink="/forgot-password">{{ 'login.forgotPW' | translate }}</p>
     </div>
 
     <button [disabled]="loginForm.invalid" type="submit" class="mt-3 custome-btn">
-      Login
+      {{ 'login.loginBtn' | translate }}
       <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
     </button>
 
-    <p *ngIf="successMsg" class="alert text-green mx-auto">{{ successMsg }}</p>
+    <p *ngIf="successMsg" class="alert text-green mx-auto">
+      {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
+    </p>
     <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
   </form>
 </section>

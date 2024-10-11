@@ -55,6 +55,8 @@
     },
     "allProducts": {
       "mainTitle": "منتجاتنا",
+      "previousLabel": "السابق",
+      "nextLabel": "التالي",
       "sale": "خصم",
       "buyBogo": "اشتري ",
       "getBogo": " احصل ",
@@ -97,8 +99,49 @@
     }
   },
   "categories": {},
-  "latestCollection": {},
+  "latestCollection": {
+    "mainTitle": "وصل حديثاً"
+  },
   "offers": {
     "mainTitle": "عـروضـنـا"
+  },
+  "favorites": {
+    "mainTitle": "قائمة منتجاتي المفضلة",
+    "confirmDeleteTitle": "تأكيد الحذف",
+    "questionDelete": "هل تريد حذف المنتج من المفضلة؟",
+    "questionDeleteCancel": "إلغاء",
+    "questionDeleteYes": "نعم"
+  },
+  "login": {
+    "mainTitle": "سجل دخول الان",
+    "googleAccount": "سجل دخول من خلال حسابك فى جوجل",
+    "chooseLogin": "أو تسجيل دخول بأستخدام الايميل او رقم هاتفك",
+    "username": "ادخل رقم هاتفك أو الايميل",
+    "emailRequired": "حقل الايميل مطلوب",
+    "mobValidate": "ليس رقم صحيحاً",
+    "password": "كلمة المرور",
+    "pwRequired": "كلمة المرور مطلوبة",
+    "notValid": "الايميل او الباسوورد غير صحيحا !! ",
+    "forgotPW": "هل نسيت الرقم السري؟",
+    "loginBtn": "تسجيل دخول"
+  },
+  "profile": {
+    "mainTitle": "الملف الشخصي",
+    "firstName": "الإسم الاول",
+    "lastName": "الإسم الثاني",
+    "email": "الإيميل",
+    "phone": "رقم الموبايل",
+    "shoppingBtn": "تسوق الان"
+  },
+  "orders": {
+    "mainTitle": "طلبياتي",
+    "orderNo": "رقم الطلبية",
+    "itemsNum": "عدد المنتجات",
+    "orderTitle": "الطلبية",
+    "firstNdStep": "تم تجهيز",
+    "preNdShipping": "فى تجهيزها للشحن",
+    "enRoute": "فى طريقها إليك",
+    "arrived": "تم توصيل",
+    "totalPaid": "إجمالى المدفوع"
   }
 }

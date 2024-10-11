@@ -48,6 +48,9 @@ nav .logo {
   max-height: 300px;
   /* margin-top: 10px; */
 }
+.navbar-expand-lg .navbar-nav .dropdown-menu:lang(ar) {
+  text-align: right;
+}
 
 .navbar-expand-xl .navbar-nav .dropdown-menu li:hover {
   background-color: #fbb935;
