@@ -1,36 +1,45 @@
 import {
   CreateBucketCommand,
+  DeleteBucketCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
   HeadBucketCommand,
+  HeadObjectCommand,
   PutBucketPolicyCommand,
   PutObjectCommand,
   S3Client,
   type S3ClientConfig,
 } from '@aws-sdk/client-s3';
 
+import { configuration } from '../../configuration/index.js';
+
+const defaultOptions: S3ClientConfig = {
+  region: configuration.blobStorage.region,
+  endpoint: configuration.blobStorage.endpoint,
+  forcePathStyle: configuration.blobStorage.forcePathStyle,
+  credentials: {
+    accessKeyId: configuration.blobStorage.accessKey,
+    secretAccessKey: configuration.blobStorage.accessSecret,
+  },
+};
+
 export class S3Service {
   private readonly bucketName: string;
+  private readonly baseUrl: string;
   private readonly client: S3Client;
 
   constructor(
-    clientConfig: S3ClientConfig = {
-      region: process.env.S3_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-      endpoint: process.env.S3_ENDPOINT,
-      forcePathStyle: process.env.NODE_ENV !== 'production',
-    },
-    bucketName: string = process.env.S3_BUCKET
+    config: S3ClientConfig = defaultOptions,
+    baseUrl: string = configuration.blobStorage.baseUrl,
+    bucketName: string = configuration.blobStorage.bucketName
   ) {
+    this.baseUrl = baseUrl;
     this.bucketName = bucketName;
-    this.client = new S3Client(clientConfig);
+    this.client = new S3Client(config);
 
     (async () => {
-      await this.createBucketIfNotExist(process.env.S3_BUCKET);
-      await this.makeBucketPublicRead(process.env.S3_BUCKET);
+      await this.createBucketIfNotExist(bucketName);
+      await this.makeBucketPublicRead(bucketName);
     })();
   }
 
@@ -48,6 +57,27 @@ export class S3Service {
     }
   }
 
+  async deleteBucket(bucketName: string): Promise<boolean> {
+    const command = new DeleteBucketCommand({ Bucket: bucketName });
+    const response = await this.client.send(command);
+
+    return response.$metadata.httpStatusCode === 204;
+  }
+
+  async exists(key: string): Promise<boolean> {
+    const command = new HeadObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+
+    try {
+      await this.client.send(command);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   async upload(file: Express.Multer.File, key: string): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
@@ -59,6 +89,7 @@ export class S3Service {
     await this.client.send(command);
     return this.getPublicUrl(key);
   }
+
   async delete(path: string): Promise<void> {
     const key = this.getFilenameFromUrl(path);
 
@@ -82,10 +113,10 @@ export class S3Service {
   }
 
   private getPublicUrl(key: string) {
-    return `${process.env.S3_BASE_URL}/${key}`;
+    return `${this.baseUrl}/${key}`;
   }
   private getFilenameFromUrl(url: string) {
-    return url.replace(`${process.env.S3_BASE_URL}/`, '');
+    return url.replace(`${this.baseUrl}/`, '');
   }
 
   private async makeBucketPublicRead(bucketName: string) {

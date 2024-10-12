@@ -34,11 +34,7 @@ export class FileStorage {
   async uploadFiles(files: Express.Multer.File[], directory?: string) {
     if (!files || !files.length) throw new BadRequestError('No files provided');
 
-    return await Promise.all(
-      files.map(async file => {
-        return await this.uploadFile(file, directory);
-      })
-    );
+    return await Promise.all(files.map(file => this.uploadFile(file, directory)));
   }
 
   async deleteFile(key: string) {

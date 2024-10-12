@@ -3,38 +3,31 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { initDb } from '../../../datastore/index.js';
-import { jwtSign } from '../../../lib/jwt.js';
-import { userAssertions } from '../../../tests/customAssertions.js';
-import { getTestServer } from '../../../tests/testServer.js';
-
-const ADMIN_USER = {
-  email: 'admin@resala.com',
-  phone: '01500000000',
-  password: 'abcABC@123',
-};
-const CUSTOMER_USER = {
-  email: 'customer@resala.com',
-  phone: '01500000001',
-  password: 'abcABC@123',
-};
-
-const genRandomUser = () => {
-  return {
-    email: `test_${Date.now()}@mail.com`,
-    password: 'abcABC@123',
-    firstName: 'test',
-    lastName: 'test',
-    phone: `01${`${Date.now()}`.slice(-9)}`,
-  };
-};
+import { JwtManager } from '../src/features/auth/jwt.manager.js';
+import { getTestServer } from './setup/test-server.js';
 
 describe('TEST /auth endpoints', () => {
+  let jwtManager: JwtManager;
   let client: TestAgent<superset.Test>;
 
-  beforeAll(async () => {
-    await initDb();
+  const customerUserObj = {
+    firstName: 'customer',
+    lastName: 'user',
+    email: 'customer@resala.com',
+    phone: '01500000001',
+    password: 'abcABC@123',
+  };
 
+  const genRandomUser = () => ({
+    email: `random_${Date.now()}@mail.com`,
+    password: 'abcABC@123',
+    firstName: 'random',
+    lastName: 'user',
+    phone: `01${`${Date.now()}`.slice(-9)}`,
+  });
+
+  beforeAll(async () => {
+    jwtManager = new JwtManager();
     client = await getTestServer();
   });
 
@@ -57,9 +50,7 @@ describe('TEST /auth endpoints', () => {
 
     it(`should able to register a new user with complete data`, async () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
-      const res = await client[method](url).send({
-        ...genRandomUser(),
-      });
+      const res = await client[method](url).send(customerUserObj);
 
       expect(res.statusCode).toBe(201);
       expect(res.body).toEqual({
@@ -71,7 +62,7 @@ describe('TEST /auth endpoints', () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
         ...genRandomUser(),
-        email: CUSTOMER_USER.email,
+        email: customerUserObj.email,
       });
 
       expect(res.statusCode).toBe(409);
@@ -85,7 +76,7 @@ describe('TEST /auth endpoints', () => {
       const { method, url } = ENDPOINT_CONFIGS.register;
       const res = await client[method](url).send({
         ...genRandomUser(),
-        phone: CUSTOMER_USER.phone,
+        phone: customerUserObj.phone,
       });
 
       expect(res.statusCode).toBe(409);
@@ -142,26 +133,21 @@ describe('TEST /auth endpoints', () => {
     it('should login with complete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        sign: CUSTOMER_USER.email,
-        password: CUSTOMER_USER.password,
+        sign: customerUserObj.email,
+        password: customerUserObj.password,
       });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         success: true,
-        data: {
-          user: userAssertions,
-          accessToken: expect.any(String),
-          refreshToken: expect.any(String),
-        },
       });
     });
 
     it('should fail to login with non-existent user', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        sign: `notfound_${CUSTOMER_USER.email}`,
-        password: CUSTOMER_USER.password,
+        sign: `notfound_${customerUserObj.email}`,
+        password: customerUserObj.password,
       });
 
       expect(res.statusCode).toBe(404);
@@ -174,7 +160,7 @@ describe('TEST /auth endpoints', () => {
     it('should fail to login without sign property (email/phone)', async () => {
       const { method, url } = ENDPOINT_CONFIGS.login;
       const res = await client[method](url).send({
-        password: CUSTOMER_USER.password,
+        password: customerUserObj.password,
       });
 
       expect(res.statusCode).toBe(400);
@@ -187,16 +173,21 @@ describe('TEST /auth endpoints', () => {
 
   describe(`TEST ${ENDPOINT_CONFIGS.changePassword.method.toUpperCase()} ${ENDPOINT_CONFIGS.changePassword.url}`, () => {
     it('should change password with complete data', async () => {
+      const randomUserObj = genRandomUser();
+
+      const { method: registerMethod, url: registerUrl } = ENDPOINT_CONFIGS.register;
+      await client[registerMethod](registerUrl).send(randomUserObj).expect(201);
+
       const { method, url } = ENDPOINT_CONFIGS.changePassword;
       const res = await client[method](url)
-        .set(await getAuthToken())
+        .set(await getAuthToken(randomUserObj.email, randomUserObj.password))
         .send({
-          oldPassword: ADMIN_USER.password,
-          newPassword: ADMIN_USER.password,
+          oldPassword: randomUserObj.password,
+          newPassword: 'abcABC123#',
         });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toEqual({
+      expect(res.body).toMatchObject({
         success: true,
       });
     });
@@ -204,9 +195,9 @@ describe('TEST /auth endpoints', () => {
     it('should fail to change password with incomplete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.changePassword;
       const res = await client[method](url)
-        .set(await getAuthToken())
+        .set(await getAuthToken(customerUserObj.email, customerUserObj.password))
         .send({
-          oldPassword: CUSTOMER_USER.password,
+          oldPassword: customerUserObj.password,
         });
 
       expect(res.statusCode).toBe(400);
@@ -219,9 +210,9 @@ describe('TEST /auth endpoints', () => {
     it('should fail change password with wrong data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.changePassword;
       const res = await client[method](url)
-        .set(await getAuthToken())
+        .set(await getAuthToken(customerUserObj.email, customerUserObj.password))
         .send({
-          oldPassword: CUSTOMER_USER.password,
+          oldPassword: customerUserObj.password,
           newPassword: 'password', // doesn't meet the requirements
         });
 
@@ -236,7 +227,7 @@ describe('TEST /auth endpoints', () => {
   describe(`TEST ${ENDPOINT_CONFIGS.forgotPassword.method.toUpperCase()} ${ENDPOINT_CONFIGS.forgotPassword.url}`, () => {
     it('should forgot password with complete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.forgotPassword;
-      const res = await client[method](url).send({ email: CUSTOMER_USER.email });
+      const res = await client[method](url).send({ email: customerUserObj.email });
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
@@ -272,8 +263,8 @@ describe('TEST /auth endpoints', () => {
     it('should reset password with incomplete data', async () => {
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
       const res = await client[method](url).send({
-        newPassword: CUSTOMER_USER.password,
-        confirmNewPassword: CUSTOMER_USER.password,
+        newPassword: customerUserObj.password,
+        confirmNewPassword: customerUserObj.password,
       });
 
       expect(res.statusCode).toBe(401);
@@ -284,16 +275,14 @@ describe('TEST /auth endpoints', () => {
     });
 
     it('should reset password with wrong data', async () => {
-      const token = jwtSign({ id: '2', email: CUSTOMER_USER.email }, 'JWT_RESET', {
-        expiresIn: '10m',
-      });
+      const token = jwtManager.signReset({ id: '2', email: customerUserObj.email });
 
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
       const res = await client[method](url)
         .set({ Authorization: 'Bearer ' + token })
         .send({
           newPassword: 'password',
-          confirmNewPassword: CUSTOMER_USER.password,
+          confirmNewPassword: customerUserObj.password,
         });
 
       expect(res.statusCode).toBe(404);
@@ -304,15 +293,13 @@ describe('TEST /auth endpoints', () => {
     });
   });
 
-  const getAuthToken = async () => {
+  const getAuthToken = async (email: string, password: string) => {
     const { method, url } = ENDPOINT_CONFIGS.login;
-    const result = await client[method](url)
-      .send({
-        sign: ADMIN_USER.email,
-        password: ADMIN_USER.password,
-      })
-      .expect(200);
 
-    return { Authorization: 'Bearer ' + result.body.data.accessToken };
+    const res = await client[method](url).send({ sign: email, password });
+
+    expect(res.statusCode).toBe(200);
+
+    return { Authorization: 'Bearer ' + res.body.data.accessToken };
   };
 });

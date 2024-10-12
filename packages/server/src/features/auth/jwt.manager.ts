@@ -2,9 +2,10 @@ import type { JwtPayload } from '@resala/shared';
 import jwt from 'jsonwebtoken';
 
 import type { Configuration } from '../../configuration/index.js';
+import { configuration } from '../../configuration/index.js';
 
 export class JwtManager {
-  constructor(readonly config: Configuration['jwt']) {}
+  constructor(readonly config: Configuration['jwt'] = configuration.jwt) {}
 
   sign(payload: jwt.JwtPayload, secret: jwt.Secret, options: jwt.SignOptions = {}): string {
     return jwt.sign(payload, secret, options);
