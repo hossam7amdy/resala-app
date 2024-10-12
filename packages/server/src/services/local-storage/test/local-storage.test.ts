@@ -35,10 +35,7 @@ describe('LocalStorage', () => {
 
     // Check if the file exists
     const filePath = path.join(process.cwd(), testRootDirectory, key);
-    const fileExists = await fs
-      .access(filePath)
-      .then(() => true)
-      .catch(() => false);
+    const fileExists = await localStorage.exists(key);
     expect(fileExists).toBe(true);
 
     // Check if the content is correct
@@ -52,10 +49,7 @@ describe('LocalStorage', () => {
     await localStorage.delete(key);
 
     // Check if the file has been deleted
-    const fileExistsAfterDelete = await fs
-      .access(filePath)
-      .then(() => true)
-      .catch(() => false);
+    const fileExistsAfterDelete = await localStorage.exists(key);
     expect(fileExistsAfterDelete).toBe(false);
   });
 
@@ -107,11 +101,7 @@ describe('LocalStorage', () => {
 
     // Check if files have been deleted
     for (const key of keys) {
-      const filePath = path.join(process.cwd(), testRootDirectory, key);
-      const fileExists = await fs
-        .access(filePath)
-        .then(() => true)
-        .catch(() => false);
+      const fileExists = await localStorage.exists(key);
       expect(fileExists).toBe(false);
     }
   });

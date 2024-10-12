@@ -1,17 +1,25 @@
 import fs from 'fs/promises';
 import { dirname, join } from 'path';
 
+import { configuration } from '../../configuration/index.js';
+
 interface LocalStorageOptions {
   baseUrl?: string;
   rootDirectory?: string;
 }
+
+const defaultOptions = {
+  baseUrl: configuration.server.url,
+  rootDirectory: 'uploads',
+};
+
 export class LocalStorage {
   private readonly baseUrl: string;
   private readonly rootDirectory: string;
 
-  constructor(options?: LocalStorageOptions) {
-    this.baseUrl = options?.baseUrl ?? process.env.SERVER_URL;
-    this.rootDirectory = options?.rootDirectory ?? 'uploads'; // Default rootDirectory
+  constructor(options: LocalStorageOptions = defaultOptions) {
+    this.baseUrl = options.baseUrl ?? defaultOptions.baseUrl;
+    this.rootDirectory = options.rootDirectory ?? defaultOptions.rootDirectory;
   }
 
   async upload(file: Express.Multer.File, key: string): Promise<string> {
@@ -40,6 +48,14 @@ export class LocalStorage {
       await fs.mkdir(path, { recursive: true });
       return 'CREATED';
     }
+  }
+
+  async exists(key: string): Promise<boolean> {
+    const path = this.getPath(key);
+    return fs
+      .stat(path)
+      .then(() => true)
+      .catch(() => false);
   }
 
   private getPublicUrl(key: string): string {

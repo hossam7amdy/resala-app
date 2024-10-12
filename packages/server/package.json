@@ -9,13 +9,14 @@
     "build": "yarn db:generate && tsc",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
-    "test": "DOTENV_CONFIG_PATH=.env.test vitest -c ./vitest.config.ts",
     "db:generate": "yarn prisma generate && tsc",
     "db:seed": "tsx src/datastore/prisma/seed.ts",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:reset": "prisma migrate reset --force",
-    "routes:generate": "tsoa spec-and-routes && tsx src/routes/api.routes.fix.ts && tsc"
+    "routes:generate": "tsoa spec-and-routes && tsx src/routes/api.routes.fix.ts && tsc",
+    "test:unit": "vitest -c ./vitest.config.unit.ts",
+    "test:int": "vitest -c ./vitest.config.int.ts"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
@@ -47,6 +48,7 @@
     "yaml": "^2.5.1"
   },
   "devDependencies": {
+    "@testcontainers/localstack": "^10.13.2",
     "@testcontainers/postgresql": "^10.13.2",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
