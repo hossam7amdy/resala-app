@@ -1,15 +1,12 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import type { DataStore } from '../../datastore/index.js';
-import { initDb } from '../../datastore/index.js';
-import { JwtManager } from '../../features/auth/jwt.manager.js';
-import { getTestServer } from '../setup/testServer.js';
+import { JwtManager } from '../src/features/auth/jwt.manager.js';
+import { getTestServer } from './setup/test-server.js';
 
 describe('TEST /auth endpoints', () => {
-  let db: DataStore;
   let jwtManager: JwtManager;
   let client: TestAgent<superset.Test>;
 
@@ -30,13 +27,8 @@ describe('TEST /auth endpoints', () => {
   });
 
   beforeAll(async () => {
-    db = await initDb();
     jwtManager = new JwtManager();
     client = await getTestServer();
-  });
-
-  afterAll(async () => {
-    await db.user.deleteMany();
   });
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
