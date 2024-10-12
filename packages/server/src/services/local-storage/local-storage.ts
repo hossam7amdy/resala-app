@@ -50,6 +50,14 @@ export class LocalStorage {
     }
   }
 
+  async exists(key: string): Promise<boolean> {
+    const path = this.getPath(key);
+    return fs
+      .stat(path)
+      .then(() => true)
+      .catch(() => false);
+  }
+
   private getPublicUrl(key: string): string {
     return `${this.baseUrl}/${this.rootDirectory}/${key}`;
   }

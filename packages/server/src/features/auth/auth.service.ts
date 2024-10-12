@@ -4,7 +4,7 @@ import type { Configuration } from '../../configuration/index.js';
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError, NotFoundError } from '../../errors/api.errors.js';
 import { hashPassword, verifyPassword } from '../../lib/password.js';
-import { JwtManager } from './index.js';
+import { JwtManager } from './jwt.manager.js';
 
 export class AuthService extends JwtManager {
   constructor(
