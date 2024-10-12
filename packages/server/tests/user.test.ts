@@ -1,13 +1,12 @@
 import { ENDPOINT_CONFIGS, Role, withParams } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { type DataStore, initDb } from '../../datastore/index.js';
-import { getTestServer } from '../setup/testServer.js';
+import { db } from '../src/datastore/index.js';
+import { getTestServer } from './setup/test-server.js';
 
 describe('TEST /users endpoint', () => {
-  let db: DataStore;
   let client: TestAgent<superset.Test>;
 
   let adminUserId: number;
@@ -38,7 +37,6 @@ describe('TEST /users endpoint', () => {
   };
 
   beforeAll(async () => {
-    db = await initDb();
     client = await getTestServer();
 
     await Promise.all([
@@ -59,10 +57,6 @@ describe('TEST /users endpoint', () => {
     duplicateUserId = duplicateData.user.id;
 
     await giveAdminPermissions(adminUserId);
-  });
-
-  afterAll(async () => {
-    await db.user.deleteMany();
   });
 
   it('should get current logged in user', async () => {

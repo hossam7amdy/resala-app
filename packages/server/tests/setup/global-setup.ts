@@ -1,19 +1,15 @@
 import { LocalstackContainer } from '@testcontainers/localstack';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 
-import { execAsync } from '../../utils/execAsync';
+import { execAsync } from '../../src/utils/execAsync';
 
 export const setup = async () => {
-  console.log('🟡 - Waiting for database to be ready...');
+  console.log('🟡 - Waiting for test containers to be ready...');
 
   const pgContainer = await new PostgreSqlContainer().start();
   process.env.DATABASE_URL = pgContainer.getConnectionUri();
 
   await execAsync('yarn db:migrate');
-
-  console.log('🟢 - Database is ready!');
-
-  console.log('🟡 - Waiting for s3 to be ready...');
 
   const localstackContainer = await new LocalstackContainer().start();
   process.env.S3_BUCKET = 'test';
@@ -24,14 +20,12 @@ export const setup = async () => {
   process.env.AWS_SECRET_ACCESS_KEY = 'test';
   process.env.S3_FORCE_PATH_STYLE = 'true';
 
-  console.log('🟢 - S3 is ready!');
+  console.log('🟢 - Test containers is ready');
 
   return async () => {
-    console.log('🟡 - Stopping containers...');
-
     await pgContainer.stop();
     await localstackContainer.stop();
 
-    console.log('🔴 - Stopped containers');
+    console.log('🔴 - Test containers stopped');
   };
 };

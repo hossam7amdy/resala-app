@@ -1,15 +1,10 @@
-import dotenv from 'dotenv';
 import { defineConfig } from 'vitest/config';
-
-dotenv.config({ path: '.env.test' });
 
 export default defineConfig({
   test: {
-    name: 'resala/server - [ Test ]',
+    name: 'resala/server - [ Unit Tests ]',
     environment: 'node',
     include: ['src/**/*.test.ts'],
-    setupFiles: [],
-    globalSetup: 'src/tests/setup/globalSetup.ts',
   },
   resolve: {
     alias: {
@@ -19,7 +14,6 @@ export default defineConfig({
       middlewares: '/src/middlewares',
       services: '/src/services',
       datastore: '/src/datastore',
-      tests: '/src/tests',
       utils: '/src/utils',
     },
   },

@@ -1,13 +1,11 @@
 import { ENDPOINT_CONFIGS, withParams, withQueryParams } from '@resala/shared';
 import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { type DataStore, initDb } from '../../datastore/index.js';
-import { getTestServer } from '../setup/testServer.js';
+import { getTestServer } from './setup/test-server.js';
 
 describe('TEST /addresses endpoint', () => {
-  let db: DataStore;
   let client: TestAgent<superset.Test>;
 
   let userId: number;
@@ -26,7 +24,6 @@ describe('TEST /addresses endpoint', () => {
   const address = 'address'; // optional,
 
   beforeAll(async () => {
-    db = await initDb();
     client = await getTestServer();
 
     await registerNewUser({
@@ -39,10 +36,6 @@ describe('TEST /addresses endpoint', () => {
 
     const { data } = await loginUser(email, password);
     userId = data.user.id;
-  });
-
-  afterAll(async () => {
-    await db.address.deleteMany();
   });
 
   it('should get current logged in user', async () => {
