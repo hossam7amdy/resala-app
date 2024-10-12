@@ -29,13 +29,14 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Pull image from docker hub
-        run: |
-          docker pull hossam7amdy/resala-server:${{ github.sha }}
-      - name: Delete old container
+      - name: Delete old container and prune images
         run: |
           docker stop resala-server || true
           docker rm resala-server || true
+          docker image prune -f --filter "until=24h" || true
+      - name: Pull image from docker hub
+        run: |
+          docker pull hossam7amdy/resala-server:${{ github.sha }}
       - name: Run new container
         run: |
-          docker run --env-file /home/ec2-user/secrets/.env -d -p 80:80 --name resala-server hossam7amdy/resala-server:${{ github.sha }}
+          docker run --env-file /home/ec2-user/secrets/.env -d --restart unless-stopped -p 80:80 --name resala-server hossam7amdy/resala-server:${{ github.sha }}
