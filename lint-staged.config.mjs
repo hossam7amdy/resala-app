@@ -1,3 +1,4 @@
 export default {
-  '*': ['yarn format:fix', 'yarn lint:fix'],
+  '*': ['yarn format:fix'],
+  'packages/**/*.{ts,tsx,spec.ts,test.ts}': ['yarn lint:fix'],
 };

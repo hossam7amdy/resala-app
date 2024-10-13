@@ -28,7 +28,9 @@
     "start:web": "yarn workspace @resala/web start",
     "start:server:dev": "yarn workspace @resala/server dev",
     "start:server": "yarn workspace @resala/server start",
-    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
+    "docker:build:server": "docker build -t resala-server . -f Dockerfile.server",
+    "compose:down": "docker-compose down",
+    "compose:up": "docker-compose up -d"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
