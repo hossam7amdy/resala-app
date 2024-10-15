@@ -49,11 +49,11 @@ const configuration = {
   blobStorage: {
     accessKey: process.env.AWS_ACCESS_KEY_ID,
     accessSecret: process.env.AWS_SECRET_ACCESS_KEY,
-    forcePathStyle: _parseBoolean(process.env.S3_FORCE_PATH_STYLE, false),
     region: process.env.S3_REGION || 'eu-north-1',
     bucketName: process.env.S3_BUCKET || 'resala-bucket',
-    endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
     baseUrl: process.env.S3_BASE_URL || 'http://localhost:9000/resala-app',
+    endpoint: process.env.S3_ENDPOINT, // only used for minio
+    forcePathStyle: _parseBoolean(process.env.S3_FORCE_PATH_STYLE, false),
   },
   auth: {
     google: {
