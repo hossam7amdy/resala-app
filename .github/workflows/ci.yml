@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Use Node.js version
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+      - name: yarn format and lint
+        run: |
+          yarn
+          yarn lint:check
+          yarn format:check
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+
+      s3:
+        image: minio/minio
+        env:
+          MINIO_ROOT_USER: minio_key
+          MINIO_ROOT_PASSWORD: minio_secret
+        ports:
+          - 9000:9000
+          - 9001:9001
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Use Node.js version
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+      - name: yarn install and test
+        run: |
+          yarn
+          yarn test
+        env:
+          S3_ENDPOINT: http://s3:9000
+          DATABASE_URL: postgres://postgres:postgres@db:5432/resala
