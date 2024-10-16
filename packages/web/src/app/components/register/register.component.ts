@@ -2,19 +2,21 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   constructor(
     private _AuthService: AuthService,
-    private _Router: Router
+    private _Router: Router,
+    public _Translate: TranslateService
   ) {}
 
   //show password
@@ -25,6 +27,7 @@ export class RegisterComponent {
 
   errMsg: string = '';
   successMsg: string = '';
+  successMsgAr: string = '';
   isLoading: boolean = false;
 
   // can use FormBulder instead of  new FormGroup (lookup leson 9)
@@ -80,6 +83,7 @@ export class RegisterComponent {
         next: response => {
           if (response.success == true) {
             this.successMsg = 'Registration successfuly';
+            this.successMsgAr = 'تم تسجيل الحساب بنجاح';
             this.isLoading = false;
             this._Router.navigate(['/login']);
           }
