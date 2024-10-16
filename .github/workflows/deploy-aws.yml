@@ -1,13 +1,19 @@
 name: Deploy to AWS EC2
 
 on:
-  push:
+  pull_request:
     branches:
+      - main
       - develop
   workflow_dispatch:
 
+env:
+  IMAGE_TAG: ${{ github.sha }}
+  IMAGE_NAME: hossam7amdy/resala-server
+  CONTAINER_NAME: resala-server
+
 jobs:
-  build:
+  docker-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +28,11 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t hossam7amdy/resala-server:${{ github.sha }} . -f Dockerfile.server
-          docker push hossam7amdy/resala-server:${{ github.sha }}
+          docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} . -f Dockerfile.server
+          docker push ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
   deploy:
-    needs: build
+    needs: docker-build
     runs-on: self-hosted
     steps:
       - name: Delete old images
@@ -35,13 +41,13 @@ jobs:
 
       - name: Stop and delete old container
         run: |
-          docker stop resala-server || true
-          docker rm resala-server || true
+          docker stop ${{ env.CONTAINER_NAME }} || true
+          docker rm ${{ env.CONTAINER_NAME }} || true
 
       - name: Pull image from docker hub
         run: |
-          docker pull hossam7amdy/resala-server:${{ github.sha }}
+          docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: Run new container
         run: |
-          docker run --env-file /home/ec2-user/.env --name resala-server -dp 80:80 hossam7amdy/resala-server:${{ github.sha }}
+          docker run --env-file /home/ec2-user/.env --name ${{ env.CONTAINER_NAME }} -dp 80:80 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
