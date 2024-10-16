@@ -10,6 +10,7 @@ dotenv.config();
 
 (async () => {
   await initDb();
+  console.log('Database connected 🚀');
 
   const app = createExpressApp();
 
@@ -18,7 +19,7 @@ dotenv.config();
   const { port, env } = configuration.server;
 
   httpServer.listen(port, () => {
-    console.log(`server is running on ${env} mode on http://localhost:${port}`);
+    console.log(`server is running on ${env} mode on http://localhost:${port} 🚀`);
   });
 })();
 
