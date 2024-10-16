@@ -22,7 +22,9 @@ section p {
   right: 2%;
   color: #ccc;
 }
-
+.password-input i:lang(ar) {
+  right: 90%;
+}
 .submit:disabled {
   cursor: text;
   background-color: #ccc;

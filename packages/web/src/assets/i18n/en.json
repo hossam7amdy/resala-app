@@ -143,5 +143,55 @@
     "enRoute": "En Route",
     "arrived": "Arrived",
     "totalPaid": "Total Payed"
+  },
+  "register": {
+    "mainTitle": "Register Now",
+    "firstName": "First Name",
+    "nameRequired": "Named is required",
+    "nameLength": "The Name Min Length 2",
+    "namePattern": "Should be not contain symbols & less 2 chars and only spaces",
+    "lastName": "Last Name",
+    "password": "Password",
+    "pwRequired": "Password is required",
+    "pwPattern": "Should be contain symbols & chars & numbers and Not less 8 chars",
+    "pwMinLen": "Should be 8 Chars at least",
+    "pwMaxLen": "Should be 8 Chars sharp",
+    "email": "Email",
+    "emailRequired": "Email is required",
+    "emailPattern": "This Not matching as Email",
+    "phone": "Phone",
+    "phoneRequired": "phone is required",
+    "phonePatttern": "Should be 11 digts sharp & start be 011,012,010,015",
+    "registerBtn": "Register"
+  },
+  "productDetails": {
+    "empty": "Sorry !! this product not found stock ...",
+    "taxScript": "Tax included. Shipping calculated at checkout.",
+    "color": "Color",
+    "size": "Size",
+    "quantity": "Quantity",
+    "addToCart": "ADD TO CART",
+    "reviews": {
+      "mainTitle": "Testimonials & Ratings"
+    },
+    "similarProducts": {
+      "mainTitle": "Similar Products"
+    }
+  },
+  "cart": {
+    "mainTitleFirstSlice": "My Cart",
+    "mainTitleNdSlice": "Product",
+    "deleteAllBtn": "Delete All Items",
+    "confirmDeleteAllItems": "Confirm Delete",
+    "confirmDeleteQuestion": "Do You Want Delete All Your Products !!",
+    "cancelBtn": "Cancel",
+    "yesBtn": "Yes",
+    "stockQnt": "In Stock",
+    "sizeTitle": "Size",
+    "latestStock": "Latest One Stock",
+    "checkoutBtn": "Check Out Summary",
+    "totalProPrice": "Total Products Price",
+    "orderBtn": "Order Now",
+    "cartEmptyTitle": "Your Cart Is Empty ..."
   }
 }
