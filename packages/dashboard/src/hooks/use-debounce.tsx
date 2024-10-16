@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useRef } from 'react';
 
 /**
@@ -7,12 +9,11 @@ import { useCallback, useRef } from 'react';
  * @param delay Delay in milliseconds
  * @returns Debounced function
  */
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-export const useDebounce = (fn: (args?: any) => void, delay: number) => {
+export const useDebounce = (fn: (...args: unknown[]) => void, delay: number) => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   return useCallback(
-    (...args: any[]) => {
+    (...args: unknown[]) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }

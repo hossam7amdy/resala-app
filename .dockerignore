@@ -3,13 +3,11 @@
 **README.md
 **.gitignore
 **.git
+**/certs
 
 # Server files
-packages/server/scripts
-packages/server/uploads
+packages/server/uploads/*
+packages/server/logs/*
 packages/server/.env*
-packages/server/docker-compose.yml
-packages/server/tests
-packages/server/vitest.config*
 
 # Client files

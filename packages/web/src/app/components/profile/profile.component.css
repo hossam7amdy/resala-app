@@ -1,0 +1,45 @@
+
+
+section {
+    background-color: #fff;
+    color: #016373;
+  }
+  section p {
+    margin-bottom: 0;
+  }
+  .form-item {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .form-item label {
+    color: #016373;
+  }
+  
+  .form-item .form-control{
+    border-radius: 0;
+    border: none;
+    border-bottom: 0.5px solid #999;
+  }
+  .form-item .form-control:disabled{
+    background-color: #fff;
+  }
+  
+  /* Media Query*/
+  
+  @media (max-width:1200px) {
+    .w-25{
+      width: 50% !important;
+    }
+  }
+  
+  @media (max-width:700px) {
+    .w-25{
+      width: 75% !important;
+    }
+  }
+  
+  @media (max-width:300px) {
+    .w-25{
+      width: 90% !important;
+    }
+  }
