@@ -47,8 +47,6 @@ jobs:
           MINIO_SECRET_KEY: minio123
         ports:
           - 9000:9000
-        options: >-
-          server /data
     env:
       DATABASE_URL: postgres://user:password@localhost:5432/test_db
       S3_ENDPOINT: http://localhost:9000
