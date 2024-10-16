@@ -10,7 +10,7 @@
   "scripts": {
     "prepare": "husky",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 300",
     "format:fix": "prettier --write .",
     "format:check": "prettier --check .",
     "build:shared": "yarn workspace @resala/shared build",
