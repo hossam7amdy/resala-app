@@ -1,4 +1,4 @@
-<h1 *ngIf="productStock.length == 0">Sorry !! this product not found stock ...</h1>
+<h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
     <div class="row img-product">
@@ -12,8 +12,12 @@
                   <img
                     [src]="image.imageUrl"
                     class="image-products"
-                    [alt]="productDetails.enName"
-                    [title]="productDetails.enName"
+                    [alt]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    [title]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
                   />
                 </div>
               </ng-template>
@@ -49,8 +53,12 @@
                   <img
                     [src]="image?.imageUrl"
                     class="w-100 image-products"
-                    [alt]="productDetails.enName"
-                    [title]="productDetails.enName"
+                    [alt]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    [title]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
                   />
                 </div>
               </div>
@@ -59,23 +67,33 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-4">
-        <h2 class="h2">{{ productDetails.enName }}</h2>
-        <p class="p">{{ productDetails.enDescription }}</p>
+        <h2 class="h2">
+          {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
+        </h2>
+        <p class="p">
+          {{
+            _Translate.currentLang == 'ar'
+              ? productDetails.arDescription
+              : productDetails.enDescription
+          }}
+        </p>
 
         <div *ngFor="let discount of productDetails.discounts">
           <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
             <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
           </h4>
           <span *ngIf="discount.length < 0 && discount.type != 'PERCENTAGE'" class="price"
-            >{{ productDetails.price }}<label class="currency"> EGP</label></span
+            >{{ productDetails.price
+            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
           >
           <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
-            >{{ productDetails.price }}<s class="p px-0">EGP</s></s
+            >{{ productDetails.price
+            }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s
           >
           <br />
           <span *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="price fa-lg"
             >{{ productDetails.price - productDetails.price * (discount.amount / 100)
-            }}<label class="currency"> EGP</label></span
+            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
           >
         </div>
         <ngx-stars-rating
@@ -97,9 +115,9 @@
             ></span>
           </ng-template>
         </div>
-        <span class="sub-text">Tax included. Shipping calculated at checkout.</span>
+        <span class="sub-text">{{ 'productDetails.taxScript' | translate }}</span>
 
-        <h3 class="h4">Color</h3>
+        <h3 class="h4">{{ 'productDetails.color' | translate }}</h3>
         <div class="d-flex flex-wrap color-options-list">
           <ng-container *ngFor="let product of productStockColor; let i = index">
             <div [ngClass]="{ active: currentColor === product?.color?.id }" class="color-option">
@@ -121,7 +139,7 @@
                 "
                 for="btncolor"
               >
-                {{ product.color.enName }}
+                {{ _Translate.currentLang == 'ar' ? product.color.arName : product.color.enName }}
               </label>
             </div>
           </ng-container>
@@ -142,7 +160,7 @@
          -->
         <!-- [ngStyle]="{'background-color':colors.color.code}" -->
 
-        <h3 class="h4">Size</h3>
+        <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
             <div *ngFor="let size of product.sizes">
@@ -197,7 +215,7 @@
           </div>
         </section>
          -->
-        <h4 class="h4">Quantity</h4>
+        <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
         <section class="quantity">
           <div class="counter">
             <button
@@ -222,9 +240,9 @@
             #addToCartBtn
             class="w-100"
           >
-            ADD TO CART
+            {{ 'productDetails.addToCart' | translate }}
           </button>
-          <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label>
+          <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
         </div>
       </div>
     </div>
@@ -232,7 +250,7 @@
     <!--start Reviews -->
     <div class="card mt-4">
       <div class="card-header">
-        <h4 class="h3">Testimonials & Ratings</h4>
+        <h4 class="h3">{{ 'productDetails.reviews.mainTitle' | translate }}</h4>
       </div>
       <div *ngFor="let review of productReview" class="card-body">
         <blockquote class="blockquote mb-0">
@@ -253,7 +271,9 @@
             </ng-template>
           </div>
 
-          <h4 class="h4 fw-bold mb-3">{{ productDetails.enName }}</h4>
+          <h4 class="h4 fw-bold mb-3">
+            {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
+          </h4>
           <footer class="blockquote-footer">
             <cite title="Source Title">{{ review.comment }}</cite>
           </footer>
@@ -266,7 +286,7 @@
     <!-- Similar Products -->
 
     <div *ngIf="productsCategory.length > 3" class="container-fluid">
-      <h2 class="h1">Similar Products</h2>
+      <h2 class="h1">{{ 'productDetails.similarProducts.mainTitle' | translate }}</h2>
 
       <owl-carousel-o
         [options]="similarProducts"
@@ -304,8 +324,8 @@
                   <img
                     class="w-100 image-products"
                     [src]="product.imageUrl"
-                    [alt]="product.enName"
-                    [title]="product.enName"
+                    [alt]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
+                    [title]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
                   />
                 </div>
                 <footer
@@ -324,7 +344,7 @@
                   class="mb-0"
                   role="button"
                 >
-                  {{ product.enName }}
+                  {{ _Translate.currentLang == 'ar' ? product.arName : product.enName }}
                 </h6>
 
                 <ngx-stars-rating
@@ -345,7 +365,12 @@
                   </ng-template>
                 </div>
 
-                <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
+                <span class="price"
+                  >{{ product.price
+                  }}<label class="currency">
+                    {{ 'home.allProducts.currency' | translate }}</label
+                  ></span
+                >
               </div>
             </div>
           </ng-template>

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,6 +15,7 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
@@ -49,8 +50,27 @@ export class ProductDetailsComponent implements OnInit {
     private _ProductsCategory: CategoriesService,
     private _WishListService: WishListService,
     private _Renderer: Renderer2,
-    private _Toaster: ToastrService
+    private _Toaster: ToastrService,
+    private _RTLStatus: Translate_Service,
+    public _Translate: TranslateService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+
+  // Change page Direction as per Selected Lang
+  changePageDirection(): boolean {
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+    console.log('topbar rtlFun', rtlStat);
+    return rtlStat;
+  }
 
   counterQuantity: number = 1;
   priceAfterSale: number = 0;
@@ -182,6 +202,7 @@ export class ProductDetailsComponent implements OnInit {
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
     nav: false,
+    rtl: this.changePageDirection(),
   };
 
   // carousel mini images
@@ -192,6 +213,7 @@ export class ProductDetailsComponent implements OnInit {
     pullDrag: true,
     dots: false,
     navSpeed: 700,
+    rtl: this.changePageDirection(),
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
       0: {
@@ -302,6 +324,7 @@ export class ProductDetailsComponent implements OnInit {
     margin: 5,
     autoWidth: true,
     navSpeed: 700,
+    rtl: this.changePageDirection(),
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
       0: {
