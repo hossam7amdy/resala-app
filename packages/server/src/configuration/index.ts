@@ -1,7 +1,4 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { config } from 'dotenv';
-
-config({ path: process.env.DOTENV_CONFIG_PATH });
 
 const _parseInt = (envVar: string | undefined, defaultValue: number): number => {
   return envVar && parseInt(envVar) ? parseInt(envVar) : defaultValue;
@@ -23,10 +20,10 @@ const configuration = {
     url: process.env.SERVER_URL || 'http://localhost:5000',
   },
   jwt: {
-    secret: process.env.JWT_SECRET || 'jwt-secret',
-    refresh: process.env.JWT_REFRESH || 'refresh-secret',
-    reset: process.env.JWT_RESET || 'reset-secret',
-    verify: process.env.JWT_VERIFY || 'verify-secret',
+    secret: process.env.JWT_SECRET,
+    refresh: process.env.JWT_REFRESH,
+    reset: process.env.JWT_RESET,
+    verify: process.env.JWT_VERIFY,
   },
   db: {
     url: process.env.DATABASE_URL,
@@ -66,17 +63,15 @@ const configuration = {
 
 /** Recursively loop through the configuration object and log warnings for missing environment variables */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _validateConfig = (config: { [key: string]: any }, path: string) => {
+const checkConfigurations = (config: { [key: string]: any }, path: string) => {
   for (const key in config) {
     if (typeof config[key] === 'object') {
-      _validateConfig(config[key], `${path}.${key}`);
+      checkConfigurations(config[key], `${path}.${key}`);
     } else if (config[key] === undefined) {
       console.warn(`Missing environment variable: ${path}.${key}`);
     }
   }
 };
 
-_validateConfig(configuration, 'configuration');
-
 export type Configuration = typeof configuration;
-export { configuration };
+export { configuration, checkConfigurations };
