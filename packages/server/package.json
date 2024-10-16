@@ -16,7 +16,8 @@
     "db:migrate:reset": "prisma migrate reset --force",
     "routes:generate": "tsoa spec-and-routes && tsx src/routes/api.routes.fix.ts && tsc",
     "test:unit": "vitest -c ./vitest.config.unit.ts",
-    "test:int": "vitest -c ./vitest.config.int.ts"
+    "test:int": "vitest -c ./vitest.config.int.ts",
+    "test": "npm-run-all --parallel test:unit test:int"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
