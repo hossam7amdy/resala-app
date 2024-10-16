@@ -1,3 +1,4 @@
+import { ResalaTooltip } from '@/components';
 import { resendVerificationEmail } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { SyncOutlined } from '@ant-design/icons';
@@ -17,6 +18,8 @@ export const ResendEmailVerificationButton: React.FC<{ email: string }> = ({ ema
   });
 
   return (
-    <Button type="text" size="small" icon={<SyncOutlined spin={isLoading} />} onClick={mutate} />
+    <ResalaTooltip title="Resend verification email">
+      <Button type="text" size="small" icon={<SyncOutlined spin={isLoading} />} onClick={mutate} />
+    </ResalaTooltip>
   );
 };

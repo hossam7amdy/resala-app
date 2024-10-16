@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 
 export const useCurrentUser = () => {
   const [user, setUser] = useState<User>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        setIsLoading(true);
         const user = await getCurrentUser();
         setUser(user);
       } finally {

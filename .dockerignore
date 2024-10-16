@@ -4,10 +4,17 @@
 **.gitignore
 **.git
 **/certs
+.dockerignore
+npm-debug.log
+README.md
 
 # Server files
 packages/server/uploads/*
 packages/server/logs/*
 packages/server/.env*
 
-# Client files
+# Dashboard files
+Dockerfile*
+packages/dashboard/.env*
+packages/dashboard/.next
+packages/dashboard/.out

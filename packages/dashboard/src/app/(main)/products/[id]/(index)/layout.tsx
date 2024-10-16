@@ -1,17 +1,14 @@
 import { BackButton } from '@/components';
 import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
+import type { Params } from '@/types';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: { params: Params }): Promise<Metadata> => {
   const id = params.id;
 
   const product = await findProduct(id);
@@ -22,7 +19,7 @@ export const generateMetadata = async ({
 };
 
 interface LayoutProps {
-  params: { id: string };
+  params: Params;
   children: React.ReactNode;
 }
 

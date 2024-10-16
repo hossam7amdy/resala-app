@@ -31,14 +31,14 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { jwtParse } from '../../middlewares/authentication.js';
 import { authorization } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { ReviewService } from './review.service.js';
 
 @Tags('Review')
 @Route('api/v1/reviews')
-@Security('JWT_SECRET')
-@Middlewares([authorization])
+@Middlewares([jwtParse, authorization])
 export class ReviewController extends Controller {
   private readonly reviewService: ReviewService;
 
@@ -48,6 +48,7 @@ export class ReviewController extends Controller {
   }
 
   @Post()
+  @Security('JWT_SECRET')
   @SuccessResponse('201', 'Review created')
   @Middlewares([validate(CreateReviewSchema)])
   public async createReview(
@@ -59,6 +60,7 @@ export class ReviewController extends Controller {
   }
 
   @Put('{reviewId}')
+  @Security('JWT_SECRET')
   @Middlewares([validate(UpdateReviewSchema)])
   public async updateReview(
     @Path() reviewId: string,
@@ -70,6 +72,7 @@ export class ReviewController extends Controller {
   }
 
   @Delete('{reviewId}')
+  @Security('JWT_SECRET')
   @Middlewares([validate(DeleteReviewSchema)])
   public async deleteReview(
     @Path() reviewId: string,

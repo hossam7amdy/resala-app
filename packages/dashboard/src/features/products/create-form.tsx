@@ -2,18 +2,21 @@
 
 import { addProduct, updateProduct } from '@/fetch/products';
 import { useMutation, useNotification } from '@/hooks';
-import { InboxOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { type Category, type Product, validationPatterns } from '@resala/shared';
 import {
   Form as AntForm,
   Button,
+  Col,
   Flex,
   Input,
   InputNumber,
+  Row,
   Select,
   Upload,
   type UploadFile,
 } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -45,7 +48,7 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
       const { image, ...rest } = values;
 
       const formData = new FormData();
-      image[0]?.originFileObj && formData.append('image', image[0].originFileObj);
+      if (image[0]?.originFileObj) formData.append('image', image[0].originFileObj);
 
       Object.entries(rest).forEach(([key, value]) => {
         formData.append(key, value.toString());
@@ -63,7 +66,7 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
 
       notification.success('Product updated successfully');
 
-      isEdit ? router.back() : null;
+      if (isEdit) router.back();
     },
     onError: error => {
       notification.error(error.message);
@@ -84,6 +87,42 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
           : [],
       }}
     >
+      <AntForm.Item
+        required
+        name="image"
+        valuePropName="fileList"
+        rules={[{ required: true }]}
+        label="Product Image"
+        getValueFromEvent={args => {
+          if (Array.isArray(args)) {
+            return args;
+          }
+
+          return args?.fileList;
+        }}
+      >
+        <ImgCrop aspect={4 / 5}>
+          <Upload
+            maxCount={1}
+            accept="image/*"
+            listType="picture-card"
+            onPreview={() => null}
+            showUploadList={{
+              showRemoveIcon: true,
+              showPreviewIcon: false,
+            }}
+            onChange={({ fileList }) => {
+              form.setFieldsValue({ image: fileList });
+            }}
+          >
+            <button type="button" className="bg-transparent border-none cursor-pointer">
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </button>
+          </Upload>
+        </ImgCrop>
+      </AntForm.Item>
+
       <AntForm.Item name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select
           autoFocus
@@ -100,103 +139,80 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
         />
       </AntForm.Item>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
-          name="enName"
-          label="English Name"
-          style={{ flex: 1 }}
-        >
-          <Input placeholder="Enter English name" minLength={2} maxLength={100} />
-        </AntForm.Item>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
-          name="arName"
-          label="الأسم بالعربية"
-          style={{ direction: 'rtl', flex: 1 }}
-        >
-          <Input placeholder="أكتب الأسم بالعربية" minLength={2} maxLength={100} />
-        </AntForm.Item>
-      </Flex>
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            name="enName"
+            label="English Name"
+            style={{ flex: 1 }}
+          >
+            <Input placeholder="Enter English name" minLength={2} maxLength={100} />
+          </AntForm.Item>
+        </Col>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
-          name="enDescription"
-          label="English Description"
-          style={{ flex: 1 }}
-        >
-          <Input.TextArea
-            minLength={5}
-            maxLength={500}
-            placeholder="Enter English description"
-            autoSize={{ minRows: 5, maxRows: 10 }}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          required
-          rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
-          name="arDescription"
-          label="الوصف بالعربية"
-          style={{ direction: 'rtl', flex: 1 }}
-        >
-          <Input.TextArea
-            minLength={5}
-            maxLength={500}
-            placeholder="أكتب الوصف بالعربية"
-            autoSize={{ minRows: 5, maxRows: 10 }}
-          />
-        </AntForm.Item>
-      </Flex>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            name="arName"
+            label="الأسم بالعربية"
+            style={{ direction: 'rtl', flex: 1 }}
+          >
+            <Input placeholder="أكتب الأسم بالعربية" minLength={2} maxLength={100} />
+          </AntForm.Item>
+        </Col>
+      </Row>
 
-      <Flex gap={10}>
-        <AntForm.Item
-          required
-          rules={[{ required: true }]}
-          name="price"
-          label="Price"
-          style={{ flex: 1 }}
-        >
-          <InputNumber placeholder="Enter price" style={{ width: '100%' }} min={0} />
-        </AntForm.Item>
-        <div style={{ flex: 1 }}></div>
-      </Flex>
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            name="enDescription"
+            label="English Description"
+            style={{ flex: 1 }}
+          >
+            <Input.TextArea
+              minLength={5}
+              maxLength={500}
+              placeholder="Enter English description"
+              autoSize={{ minRows: 5, maxRows: 10 }}
+            />
+          </AntForm.Item>
+        </Col>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            name="arDescription"
+            label="الوصف بالعربية"
+            style={{ direction: 'rtl', flex: 1 }}
+          >
+            <Input.TextArea
+              minLength={5}
+              maxLength={500}
+              placeholder="أكتب الوصف بالعربية"
+              autoSize={{ minRows: 5, maxRows: 10 }}
+            />
+          </AntForm.Item>
+        </Col>
+      </Row>
 
-      <AntForm.Item
-        required
-        name="image"
-        valuePropName="fileList"
-        rules={[{ required: true }]}
-        label="Product Image"
-        getValueFromEvent={args => {
-          if (Array.isArray(args)) {
-            return args;
-          }
-
-          return args?.fileList;
-        }}
-      >
-        <Upload.Dragger
-          maxCount={1}
-          name="images"
-          accept="image/*"
-          listType="picture"
-          onPreview={() => null}
-          beforeUpload={() => false}
-          showUploadList={{
-            showRemoveIcon: true,
-            showPreviewIcon: false,
-          }}
-        >
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        </Upload.Dragger>
-      </AntForm.Item>
+      <Row gutter={10}>
+        <Col span={24} md={{ span: 12 }}>
+          <AntForm.Item
+            required
+            rules={[{ required: true }]}
+            name="price"
+            label="Price"
+            style={{ flex: 1 }}
+          >
+            <InputNumber placeholder="Enter price" style={{ width: '100%' }} min={0} />
+          </AntForm.Item>
+        </Col>
+      </Row>
 
       <Flex gap={10}>
         <AntForm.Item noStyle>

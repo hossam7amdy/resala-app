@@ -1,4 +1,4 @@
-import { Col, Flex, Row } from 'antd';
+import { Col, Row } from 'antd';
 import SkeletonButton from 'antd/es/skeleton/Button';
 import SkeletonInput from 'antd/es/skeleton/Input';
 
@@ -9,18 +9,18 @@ export const FormSkeleton: React.FC = () => {
         <SkeletonInput active block />
       </Col>
 
-      <Col span={24}>
-        <Flex gap={10}>
-          <SkeletonInput active block />
-          <SkeletonInput active block />
-        </Flex>
+      <Col span={24} className="flex gap-3">
+        <SkeletonButton active block />
+        <SkeletonButton active block />
       </Col>
 
       <Col span={24}>
-        <Flex gap={10}>
-          <SkeletonButton block active />
-          <SkeletonButton block active />
-        </Flex>
+        <SkeletonInput active block />
+      </Col>
+
+      <Col span={6}></Col>
+      <Col span={12} className="flex justify-center">
+        <SkeletonButton active block />
       </Col>
     </Row>
   );

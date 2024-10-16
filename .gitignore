@@ -1,4 +1,17 @@
-.env*
-.vscode
-node_modules
-package-lock.json
+# Ignore node_modules:
+**/node_modules
+
+# Ignore artifacts:
+**/dist
+**/.angular
+**/.next
+
+# Environments files:
+**/.env*
+**/next-env.d.ts
+
+# Logs:
+**/logs
+
+# Uploads:
+**/uploads

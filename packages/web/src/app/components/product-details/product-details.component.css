@@ -32,7 +32,9 @@
 }
 
 /********************************/
-
+.offer {
+  color: #fbb935;
+}
 .porduct img {
   background-size: cover;
 }
@@ -248,4 +250,168 @@
   /* border-color: #000; */
   background-color: #fbb935;
   color: #fff;
+}
+
+.card-body .p {
+  font-size: 12px;
+  padding-top: 0;
+  margin-bottom: 2px;
+  padding-bottom: 0;
+}
+
+/*carowsel ngx*/
+::ng-deep .ngx-pagination .current {
+  padding: 8px 16px !important;
+  background: #016373 !important;
+  color: #fefefe;
+  cursor: default;
+}
+
+/* Products*/
+
+.porduct {
+  display: block;
+  position: relative;
+}
+
+.porduct .parent-img-content img {
+  background-size: cover;
+}
+
+.parent-img-content {
+  position: relative;
+  width: 100%;
+}
+
+.parent-img-content .img-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+@media (max-width: 576px) {
+  .parent-img-content .col-xs-12 {
+    width: 51%;
+  }
+}
+
+.parent-img-content .img-content .offer {
+  background-color: #14adc6;
+  color: #fff;
+  position: absolute;
+  top: 1%;
+  left: -3%;
+  padding: 5px;
+  margin: 0;
+  z-index: 55;
+}
+
+.parent-img-content .img-content .offer span {
+  font-weight: bold;
+}
+
+.parent-img-content .img-content .offer::after {
+  content: '';
+  position: absolute;
+  background-color: #14adc6;
+  width: 23px;
+  height: 23px;
+  top: 5px;
+  right: -12px;
+  transform: rotate(45deg);
+
+  z-index: -1;
+}
+
+.parent-img-content .favourit-icon {
+  position: absolute;
+  top: 2.5%;
+  right: 4.5%;
+  color: #fbb935;
+  font-size: 20px;
+  z-index: 10;
+  font-weight: lighter;
+  cursor: pointer;
+  text-shadow: 0 2px 2px rgba(251, 170, 49, 0.308);
+}
+
+.parent-img-content .favourit-icon::before {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.parent-img-content .header-product.active i {
+  font-weight: bold;
+}
+
+.parent-img-content .shopping-icon {
+  position: absolute;
+  bottom: 3.5%;
+  right: 4.5%;
+  color: #fbb935;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+::ng-deep label.star[_ngcontent-ng-c205951347] {
+  float: right;
+  padding: 2px !important;
+  font-size: 15px !important;
+  color: #ccc !important;
+  transition: all 0.2s;
+}
+.parent-img-content .img-content .fa-plus {
+  color: #14adc6;
+  font-size: 20px;
+  position: absolute;
+  top: 7px;
+  right: 13px;
+}
+
+.parent-img-content .shopping-icon::before {
+  background-color: #fff;
+  padding: 8px 10px;
+  border-radius: 50%;
+}
+@media (max-width: 800px) {
+  .parent-img-content .shopping-icon::before {
+    padding: 6px 8px;
+  }
+}
+@media (max-width: 500px) {
+  .parent-img-content .shopping-icon::before {
+    padding: 5px 7px;
+  }
+}
+.parent-img-content .img-content .w-100 {
+  height: auto !important;
+}
+
+.descrp {
+  text-align: left;
+  color: #016373;
+}
+
+/* NGXowl carowsel all cat*/
+::ng-deep .owl-theme .owl-nav [class*='owl-']:hover,
+::ng-deep .owl-theme .owl-nav [class*='owl-']:focus,
+::ng-deep .owl-theme .owl-nav [class*='owl-']:active {
+  background: #fbb935;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+::ng-deep .owl-theme .owl-nav [class*='owl-'] {
+  color: #fff;
+  font-size: 14px;
+  margin: 5px;
+  padding: 9px 12px;
+  background: #016373;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 0px;
+  font-weight: bold;
 }

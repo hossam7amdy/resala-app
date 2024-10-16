@@ -22,7 +22,7 @@ const routes: Routes = [
       {
         path: 'new-offers',
         loadComponent: () =>
-          import('./components/brands/brands.component').then(m => m.BrandsComponent),
+          import('./components/offers/offers.component').then(m => m.OffersComponent),
         title: 'New Offers',
       },
 
@@ -34,10 +34,12 @@ const routes: Routes = [
       },
 
       {
-      path: 'latest-collection',
-      loadComponent: () =>
-        import('./components/latest-collection/latest-collection.component').then(m => m.LatestCollectionComponent),
-      title: 'Latest Collection',
+        path: 'latest-collection',
+        loadComponent: () =>
+          import('./components/latest-collection/latest-collection.component').then(
+            m => m.LatestCollectionComponent
+          ),
+        title: 'Latest Collection',
       },
 
       {
@@ -93,12 +95,13 @@ const routes: Routes = [
       {
         path: 'login/callback',
         loadComponent: () =>
-          import('./components/callback-social-accounts/callback-social-accounts.component').then(m => m.CallbackSocialAccountsComponent),
+          import('./components/callback-social-accounts/callback-social-accounts.component').then(
+            m => m.CallbackSocialAccountsComponent
+          ),
         title: 'Google Account',
       },
 
-
-      // login 
+      // login
 
       {
         path: 'login',
@@ -116,14 +119,18 @@ const routes: Routes = [
       {
         path: 'forgot-password',
         loadComponent: () =>
-          import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+          import('./components/forgot-password/forgot-password.component').then(
+            m => m.ForgotPasswordComponent
+          ),
         title: 'Forgot Password',
       },
 
       {
         path: 'reset-password',
         loadComponent: () =>
-          import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+          import('./components/reset-password/reset-password.component').then(
+            m => m.ResetPasswordComponent
+          ),
         title: 'Reset Password',
       },
 
@@ -134,11 +141,7 @@ const routes: Routes = [
         title: 'Profile',
       },
 
-
-
       // end login
-
-      
     ],
   },
 

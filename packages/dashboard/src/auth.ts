@@ -71,8 +71,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
           };
-        } catch (e) {
-          console.log('authorize error', e);
+        } catch {
           return null;
         }
       },

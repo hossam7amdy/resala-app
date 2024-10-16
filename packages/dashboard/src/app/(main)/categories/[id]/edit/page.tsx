@@ -2,12 +2,13 @@ import { BackButton, FormSkeleton } from '@/components';
 import EditForm from '@/features/categories/edit-form';
 import { findCategoryById } from '@/fetch/category';
 import { ROUTES } from '@/routes';
+import type { Params } from '@/types';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
+const EditCategoryPage = async ({ params }: { params: Params }) => {
   return (
     <Row gutter={[10, 50]}>
       <Col span={24}>
@@ -30,7 +31,7 @@ const EditCategoryPage = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-const EditCategoryForm = async ({ id }: { id: string }) => {
+const EditCategoryForm = async ({ id }: Params) => {
   const category = await findCategoryById(id);
 
   if (!category) {

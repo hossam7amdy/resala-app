@@ -1,0 +1,147 @@
+{
+  "nav-blank": {
+    "Test": "Test",
+    "Home": "Home",
+    "Categories": "Categories",
+    "LatestCollection": "Latest Collection",
+    "NewOffers": "New Offers",
+    "SignIn": "Sign In",
+    "SignOut": "Sign Out",
+    "NotaMember?": "Not a Member?",
+    "Register": "Register",
+    "Profile": "Profile",
+    "TraceYourOrder": "Trace Your Order",
+    "Favorites": "Favorites",
+    "Cart": "Cart"
+  },
+  "top-bar": {
+    "firstOffer": "Free Shipping On Orders Over 1000EGP",
+    "secondOffer": "2Free Shipping On Orders Over 1000EGP",
+    "thirdOffer": "3Free Shipping On Orders Over 1000EGP"
+  },
+
+  "home": {
+    "popUpProduct": {
+      "miniTitle": "Style",
+      "pTitle": "Simple style",
+      "stBigTitle": "Get",
+      "ndBigTitle": "This",
+      "rdBigTitle": "One!"
+    },
+    "mainSlider": {
+      "stSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "ndSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "rdSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "urSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      },
+      "veSlide": {
+        "hyperTitle": "Resala",
+        "pTitle": "The Best Collection For Veiled Ladies"
+      }
+    },
+    "trends": {
+      "mainTitle": "Trends Products"
+    },
+    "allProducts": {
+      "mainTitle": "Pobular Products",
+      "previousLabel": "Previous",
+      "nextLabel": "Next",
+      "sale": "Sale",
+      "buyBogo": "Buy ",
+      "getBogo": " Get ",
+      "currency": "EGP"
+    },
+    "allCategories": {
+      "mainTitle": "Categories"
+    }
+  },
+  "footer": {
+    "mainTitle": "Online veiled clothing store",
+    "firstTitle": "Secure buy and payment",
+    "firstP": "Free Shipping on some orders",
+
+    "secondTitle": "Cash on Delivery",
+    "secondP": "Easy Received & Payment",
+
+    "thirdTitle": "Easy & Free Return",
+    "thirdP": "Return within 14 days",
+
+    "quickLinks": {
+      "accounts": "Accounts",
+      "register": "Create Account",
+      "login": "Login",
+      "profile": "Your Profile",
+      "orders": "Orders",
+      "createOrder": "Create Order",
+      "followOrder": "Follow order",
+      "editCart": "Edit Your Cart",
+      "cancelOrder": "Cancel order",
+      "returnPolicy": "Return Policy"
+    },
+    "aboutUs": {
+      "title": "About us",
+      "ourStory": "Our Story",
+      "termsConditions": "Terms and Conditions"
+    },
+    "contactUs": {
+      "title": "Contact Us"
+    }
+  },
+  "categories": {},
+  "latestCollection": {
+    "mainTitle": "Latest Collection"
+  },
+  "offers": {
+    "mainTitle": "Our Offers"
+  },
+  "favorites": {
+    "mainTitle": "My Favourites Products",
+    "confirmDeleteTitle": "Confirm Delete",
+    "questionDelete": "Do You Want Delete This Product From Your Favorite List ?",
+    "questionDeleteCancel": "Cancel",
+    "questionDeleteYes": "Yes"
+  },
+  "login": {
+    "mainTitle": "Login Now",
+    "googleAccount": "Continue With Google Account",
+    "chooseLogin": "Or sign in with your Email / phone",
+    "username": "Email / Phone",
+    "emailRequired": "Email is required",
+    "mobValidate": "This Not matching as mobile number",
+    "password": "Password",
+    "pwRequired": "Password is required",
+    "notValid": "Email or Password Not Valid!!",
+    "forgotPW": "Forgot Password",
+    "loginBtn": "Login"
+  },
+  "profile": {
+    "mainTitle": "My Profile",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "shoppingBtn": "Go Shopping"
+  },
+  "orders": {
+    "mainTitle": "My Orders",
+    "orderNo": "Order Number",
+    "itemsNum": "Order Items",
+    "orderTitle": "Order",
+    "firstNdStep": "Processed",
+    "preNdShipping": "Processed Shipping",
+    "enRoute": "En Route",
+    "arrived": "Arrived",
+    "totalPaid": "Total Payed"
+  }
+}

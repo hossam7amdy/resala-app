@@ -29,22 +29,6 @@ export const validationPatterns = {
     message: 'Only characters (a-z), (A-Z), (0-9), -, _, . are available',
   },
 
-  /*
-      \p{Pd} - dash connectors
-      \p{Pc} - connector punctuations
-      \p{Cf} - invisible formatting indicator
-      \p{L} - any alphabetic character
-      Useful links:
-      https://stackoverflow.com/questions/4323386/multi-language-input-validation-with-utf-8-encoding
-      https://stackoverflow.com/questions/280712/javascript-unicode-regexes
-      https://stackoverflow.com/questions/6377407/how-to-validate-both-chinese-unicode-and-english-name
-  */
-  validateName: {
-    // eslint-disable-next-line
-    pattern: /^(\p{L}|\p{Pd}|\p{Cf}|\p{Pc}|['\s]){2,}$/gu,
-    message: 'Invalid name',
-  },
-
   validateURL: {
     // eslint-disable-next-line
     pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/, // url, ssh url, ip
@@ -75,11 +59,6 @@ export const validationPatterns = {
   validateLatinDigits: {
     pattern: /^[0-9]+$/g,
     message: 'Only Latin numbers are allowed',
-  },
-
-  validateLngLat: {
-    pattern: /^[+-]?[0-9]*\.?[0-9]+/gm,
-    message: 'Invalid latitude/longitude point',
   },
 
   validateArabicCharacters: {

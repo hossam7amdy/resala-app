@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -69,8 +68,7 @@ export class RegisterComponent {
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  handleForm(registerForm: FormGroup): void {
+  handleForm(_registerForm: FormGroup): void {
     this.isLoading = true;
 
     const userData = this.registerForm.value;

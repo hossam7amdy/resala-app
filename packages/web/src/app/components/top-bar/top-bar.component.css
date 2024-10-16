@@ -1,8 +1,5 @@
-
-
 .top-bar {
-  
-  transition:all ease-out 1s !important;
+  transition: all ease-out 1s !important;
   padding: 5px !important;
   background-color: #14adc6 !important;
   position: fixed;
@@ -12,10 +9,11 @@
 
 .promo {
   color: #fff;
+  font-weight: bolder;
 }
 
 .promo-text {
-  color: #222;
+  color: #fff;
   margin: 0;
   text-align: center;
 }
@@ -37,8 +35,8 @@ div {
   z-index: 99999;
   width: 20%;
 }
-@media(max-width:1200px){
-  .social-icon{
+@media (max-width: 1200px) {
+  .social-icon {
     display: none;
   }
 }
@@ -70,4 +68,3 @@ button:not(:disabled) {
 .carousel-item {
   height: 0;
 }
-

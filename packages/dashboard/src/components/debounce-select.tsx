@@ -23,13 +23,13 @@ export const DebounceSelect = <
   const fetchRef = useRef(0);
 
   const fetcherCallback = useCallback(
-    async (value: string) => {
+    async (value: unknown) => {
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
       setOptions([]);
       setFetching(true);
 
-      const newOptions = await fetchOptions(value);
+      const newOptions = await fetchOptions(value as string);
       if (fetchId !== fetchRef.current) {
         // for fetch callback order
         return;
@@ -41,7 +41,7 @@ export const DebounceSelect = <
     [fetchOptions]
   );
 
-  const debounceFetcher = useDebounce(value => fetcherCallback(value as string), debounceTimeout);
+  const debounceFetcher = useDebounce(fetcherCallback, debounceTimeout);
 
   useEffect(debounceFetcher, [debounceFetcher]);
 

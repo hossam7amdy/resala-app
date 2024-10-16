@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { validationPatterns } from '../patterns/index.js';
+import { OffsetPageParamsSchema } from './common.schema.js';
 
 const UserSchema = z.object({
   email: z.string().min(5).max(128).email(),
@@ -25,12 +26,6 @@ const UserSchema = z.object({
       validationPatterns.passwordContainsUpperCaseCharacter.pattern,
       validationPatterns.passwordContainsUpperCaseCharacter.message
     ),
-});
-
-// Offset page schema
-export const OffsetPageParamsSchema = z.object({
-  page: z.coerce.number().positive().default(1).optional(),
-  limit: z.coerce.number().positive().max(100).default(10).optional(),
 });
 
 // Auth Schemas
