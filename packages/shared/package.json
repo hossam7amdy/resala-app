@@ -12,7 +12,8 @@
   },
   "scripts": {
     "rollup": "rollup -c rollup.config.js",
-    "build": "tsc && yarn rollup"
+    "build": "tsc && yarn rollup",
+    "test": "echo \"No tests specified for shared\" && exit 0"
   },
   "dependencies": {
     "zod": "^3.23.8"

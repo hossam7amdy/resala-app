@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --no-cache",
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"No tests specified for dashboard\" && exit 0"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
