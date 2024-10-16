@@ -10,7 +10,7 @@ const ProductPage = async ({ searchParams }: { searchParams?: ListRequestQuery['
   return (
     <Flex vertical align="center" gap={10}>
       <ProductsTable products={products} />
-      <Pagination totalPages={pagination.total} />
+      <Pagination total={pagination.total} />
     </Flex>
   );
 };

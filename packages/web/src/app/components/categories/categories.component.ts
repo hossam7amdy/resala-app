@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
@@ -10,67 +12,73 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxPaginationModule],
+  imports: [CommonModule, RouterLink, NgxPaginationModule, NgxStarsRatingModule, TranslateModule],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
 })
 export class CategoriesComponent implements OnInit {
   constructor(
-    private route:ActivatedRoute,
-    private _Categories:CategoriesService,
+    private route: ActivatedRoute,
+    private _Categories: CategoriesService,
     private _WishListService: WishListService,
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner:NgxSpinnerService
-  ){}
-  
-  allProductsCategory:any = [];
-  titleCategory:string = '';
-  categoryId!:any;  // '!' to add initial value Undefined to this property
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService
+  ) {}
 
-    // pagination
-    pageLimit:number =0;
-    currentPage:number = 1;
-    totalItems:number=0;
+  allProductsCategory: any = [];
+  titleCategory: string = '';
+  arTitleCategory: string = '';
+  categoryId!: any; // '!' to add initial value Undefined to this property
+
+  //start Rating
+  public rateNumber: number = 3;
+  public ratingOptions: IRatingOptions = {
+    starsCount: 5,
+    hoverable: false,
+    clickable: false,
+  };
+
+  //end Rating
+
+  // pagination
+  pageLimit: number = 0;
+  currentPage: number = 1;
+  totalItems: number = 0;
 
   ngOnInit(): void {
-    this.spinner.show();  
-    
-    
-    this.route.paramMap.subscribe(params =>(this.categoryId = params.get('category-id')));
+    this.spinner.show();
+
+    this.route.paramMap.subscribe(params => (this.categoryId = params.get('category-id')));
     console.log('category id', this.categoryId);
     this.allCategoryProducts(this.categoryId);
-
-   
   }
 
-
-
- 
-  allCategoryProducts(id:any):void{
-    
+  allCategoryProducts(id: any): void {
     this._Categories.getCategoryProducts(id).subscribe({
-      next:(response)=>{
-        this.allProductsCategory = response.data.products
+      next: response => {
+        this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
-        console.log('title & categ id',this.titleCategory);
-        console.log('category-products',this.allProductsCategory);
+        this.arTitleCategory = response.data.products[0].category.arName;
+        console.log('title & categ id', this.titleCategory);
+        console.log('category-products', this.allProductsCategory);
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
-      },error:(err)=>{
+      },
+      error: err => {
         console.log(err);
-      }
-    })
+      },
+    });
     setTimeout(() => {
-      this.spinner.hide();   
+      this.spinner.hide();
     }, 1000);
   }
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
-    
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
@@ -88,24 +96,25 @@ export class CategoriesComponent implements OnInit {
       },
     });
   }
-// pagination Method
+  // pagination Method
 
-pageChanged(event:any){
-  //  products
-  this.spinner.show();
-  this._Categories.getCategoryProducts(this.categoryId, event).subscribe({
-    next:(response)=>{
-      this.allProductsCategory = response.data.products
-      this.titleCategory = response.data.products[0].category.enName;
-      console.log('title',this.titleCategory);
-      console.log('category-products',this.allProductsCategory);
-      this.pageLimit = response.data.pagination.limit;
-      this.currentPage = response.data.pagination.page;
-      this.totalItems = response.data.pagination.total;
-    },error:(err)=>{
-      console.log(err);
-    }
-  })
-  this.spinner.hide();
-}
+  pageChanged(event: any) {
+    //  products
+    this.spinner.show();
+    this._Categories.getCategoryProducts(this.categoryId, event).subscribe({
+      next: response => {
+        this.allProductsCategory = response.data.products;
+        this.titleCategory = response.data.products[0].category.enName;
+        console.log('title', this.titleCategory);
+        console.log('category-products', this.allProductsCategory);
+        this.pageLimit = response.data.pagination.limit;
+        this.currentPage = response.data.pagination.page;
+        this.totalItems = response.data.pagination.total;
+      },
+      error: err => {
+        console.log(err);
+      },
+    });
+    this.spinner.hide();
+  }
 }

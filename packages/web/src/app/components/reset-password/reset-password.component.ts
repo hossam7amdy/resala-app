@@ -1,47 +1,45 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './reset-password.component.html',
-  styleUrls: ['./reset-password.component.css']
+  styleUrls: ['./reset-password.component.css'],
 })
-export class ResetPasswordComponent implements OnInit{
+export class ResetPasswordComponent implements OnInit {
   constructor(
-    private spinner:NgxSpinnerService,
-    private _AuthService:AuthService,
-    private route:ActivatedRoute,
-    private toaster:ToastrService
-  ){}
+    private spinner: NgxSpinnerService,
+    private _AuthService: AuthService,
+    private route: ActivatedRoute,
+    private toaster: ToastrService
+  ) {}
 
-  newToken:string='';
+  newToken: string = '';
   ngOnInit(): void {
-    this.route.queryParams.subscribe(queryParam =>{
+    this.route.queryParams.subscribe(queryParam => {
       console.log(queryParam);
       this.newToken = queryParam['token'];
       console.log('token', this.newToken);
-    })
+    });
   }
-
 
   showPW: any;
   togglePW() {
     this.showPW = !this.showPW;
   }
 
-  isLoading:boolean=false;
-  successMsg:string ='';
-  errMsg:string = '';
-  
-  resetPw:FormGroup = new FormGroup({
+  isLoading: boolean = false;
+  successMsg: string = '';
+  errMsg: string = '';
+
+  resetPw: FormGroup = new FormGroup({
     newPassword: new FormControl(
       '',
       Validators.compose([
@@ -63,24 +61,23 @@ export class ResetPasswordComponent implements OnInit{
         Validators.pattern(/[A-Z]/),
         Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>/?]/),
         Validators.minLength(8),
-        
       ])
     ),
+  });
 
-  })
-
-  changePw():void{
+  changePw(): void {
     this.isLoading = true;
     this._AuthService.resetPassword(this.resetPw.value, this.newToken).subscribe({
-      next:(response)=>{
-        console.log('response',response)
+      next: response => {
+        console.log('response', response);
         this.isLoading = false;
         this.toaster.success('Changed Your Password Successfuly');
-      },error:(err)=>{
+      },
+      error: err => {
         console.log(err);
-        this.toaster.error(err.error.message)
+        this.toaster.error(err.error.message);
         this.isLoading = false;
-      }
-    })
+      },
+    });
   }
 }

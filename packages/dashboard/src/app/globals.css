@@ -45,7 +45,7 @@ body {
   font-family: var(--font-sans);
 }
 
-.error-list>li {
+.error-list > li {
   margin-left: 30px;
 }
 
@@ -60,5 +60,12 @@ body {
 @media (prefers-color-scheme: light) {
   html {
     color-scheme: light;
+  }
+}
+
+@media (max-width: 576px) {
+  .ant-picker-panels {
+    width: 85dvw;
+    overflow-x: auto;
   }
 }

@@ -4,7 +4,7 @@ import type { RequestHandler } from 'express';
 import { ForbiddenError } from '../errors/api.errors.js';
 
 export const authorization: RequestHandler = (req, res, next) => {
-  const { id, role } = res.locals.user;
+  const { id, role } = res.locals.user ?? {};
   const userId = req.params.userId ?? req.body.userId ?? req.query.userId;
 
   const notAuthorized = userId && userId.toString() !== id?.toString();

@@ -11,6 +11,7 @@ import type {
   Cart,
   Category,
   Color,
+  Discount,
   Image,
   Order,
   OrderItem,
@@ -139,7 +140,9 @@ export type DeleteCategoryResponse = GetCategoryResponse;
 export type GetProductRequest = z.infer<typeof Schemas.GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
   data: Product & {
+    avgRating: number;
     category: Category;
+    discounts: Discount[];
   };
 };
 
@@ -257,10 +260,13 @@ export type GetCartResponse = DefaultResponseBody & {
   data: {
     totalQuantity: number;
     totalPrice: number;
-    items: (Omit<Cart, 'stockId'> & {
+    totalDiscount?: number;
+    items: (Cart & {
+      discountedPrice?: number;
+      appliedDiscount?: Discount;
       product: Product;
-      images: Omit<Image, 'colorId' | 'productId'>[];
-      stock: Omit<Stock, 'colorId' | 'sizeId' | 'productId'> & {
+      images: Image[];
+      stock: Stock & {
         color: Color;
         size: Size;
       };
@@ -457,3 +463,39 @@ export type ListTopCustomersResponse = DefaultResponseBody & {
     user: User;
   }[];
 };
+
+// Discount types
+export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
+export type GetDiscountResponse = DefaultResponseBody & {
+  data: Discount & {
+    pagination: Pagination;
+    products: Product[];
+  };
+};
+
+export type ListDiscountsRequest = z.infer<typeof Schemas.ListDiscountsSchema>;
+export type ListDiscountsResponse = DefaultResponseBody & {
+  data: {
+    discounts: (Discount & { productsCount: number })[];
+    pagination: Pagination;
+  };
+};
+
+export type CreateDiscountRequest = z.infer<typeof Schemas.CreateDiscountSchema>;
+export type CreateDiscountResponse = DefaultResponseBody & {
+  data: Discount;
+};
+
+export type UpdateDiscountRequest = z.infer<typeof Schemas.UpdateDiscountSchema>;
+export type UpdateDiscountResponse = CreateDiscountResponse;
+
+export type DeleteDiscountRequest = z.infer<typeof Schemas.DeleteDiscountSchema>;
+export type DeleteDiscountResponse = CreateDiscountResponse;
+
+export type AddProductsToDiscountRequest = z.infer<typeof Schemas.AddProductsToDiscountSchema>;
+export type AddProductsToDiscountResponse = DefaultResponseBody;
+
+export type RemoveProductsFromDiscountRequest = z.infer<
+  typeof Schemas.RemoveProductsFromDiscountSchema
+>;
+export type RemoveProductsFromDiscountResponse = DefaultResponseBody;

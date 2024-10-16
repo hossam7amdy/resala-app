@@ -2,13 +2,14 @@
 
 import { ROUTES } from '@/routes';
 import { Button, Result } from 'antd';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export const NotFound: React.FC<{ message: string }> = ({
   message = 'Sorry, the page you visited does not exist.',
 }) => {
-  const router = useRouter();
+  const { replace } = useRouter();
   const [timer, setTimer] = useState(5);
 
   useEffect(() => {
@@ -21,9 +22,9 @@ export const NotFound: React.FC<{ message: string }> = ({
 
   useEffect(() => {
     if (timer === 0) {
-      router.push(ROUTES.DASHBOARD);
+      replace(ROUTES.DASHBOARD);
     }
-  }, [router, timer]);
+  }, [replace, timer]);
 
   return (
     <Result
@@ -31,9 +32,11 @@ export const NotFound: React.FC<{ message: string }> = ({
       title="404"
       subTitle={message}
       extra={
-        <Button size="large" type="primary" onClick={() => router.push(ROUTES.DASHBOARD)}>
-          Back Home
-        </Button>
+        <Link replace href={ROUTES.DASHBOARD}>
+          <Button size="large" type="primary">
+            Back Home
+          </Button>
+        </Link>
       }
     >
       <p className="text-center font-semibold">Redirecting in {timer} seconds...</p>

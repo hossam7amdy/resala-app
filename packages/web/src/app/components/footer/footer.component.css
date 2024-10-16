@@ -16,14 +16,17 @@ footer {
 .hover-title:hover,
 .hover-title:focus,
 .hover-title:active {
-  cursor: pointer;
+  cursor: default;
   color: #efefef;
 }
-.our-service{
+
+.our-service {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.title h3,h4 {
+
+.title h3,
+h4 {
   font-weight: bold;
   margin: 0;
   color: #fff;
@@ -34,18 +37,20 @@ footer {
   padding: 0;
   margin: 0;
 }
-.p-footer{
+
+.p-footer {
   font-size: 14px;
 }
-@media (max-width: 992px){
-  .p-footer{
+
+@media (max-width: 992px) {
+  .p-footer {
     font-size: 10px;
   }
 }
-@media (max-width: 576px){
-  .p-footer{
-    font-size: 10px ;
 
+@media (max-width: 576px) {
+  .p-footer {
+    font-size: 10px;
   }
 }
 
@@ -66,14 +71,17 @@ nav a {
   cursor: pointer;
   font-size: 12px;
 }
-@media (max-width: 576px){
-  nav a{
-    font-size: 8px ;
+
+@media (max-width: 576px) {
+  nav a {
+    font-size: 8px;
   }
 }
-.nav-link{
+
+.nav-link {
   margin: var(--bs-nav-link-margin-y) var(--bs-nav-link-margin-x);
 }
+
 nav a:hover,
 i:hover,
 nav a:active,
@@ -81,6 +89,11 @@ i:active,
 nav a:focus,
 i:focus {
   color: #efefef;
+}
+
+nav .logo {
+  width: 118.13px;
+  height: 53.53px;
 }
 
 .powerd {
@@ -101,10 +114,10 @@ i:focus {
 /* Fixed buttons on scroll*/
 
 /*search */
-.search-btn{
+.search-btn {
   position: fixed;
-  top: 25%;
-  right: -3px;
+  top: 30%;
+  right: -10px;
   z-index: 9999;
   width: 50px;
   background-color: #fbb935;
@@ -113,24 +126,25 @@ i:focus {
   cursor: pointer;
   transition: all 0.7 ease-in-out;
 }
+
 .search-btn:hover,
-.search-btn:active{
-  width: 70px;
+.search-btn:active {
   right: -5px;
   transition: all 0.7 ease-in-out;
 }
-.search-btn i{
-color: #fff;
-font-size: 25px;
+
+.search-btn i {
+  color: #fff;
+  font-size: 25px;
 }
 
-
-@media (max-width:600px) {
-  .search-btn i{
+@media (max-width: 600px) {
+  .search-btn i {
     font-size: 20px;
   }
 }
-.search-form{
+
+.search-form {
   position: fixed;
   top: 0;
   width: 100%;
@@ -138,54 +152,58 @@ font-size: 25px;
   background-color: #fff;
   z-index: 999;
 }
-.search-form .parent-search{
+
+.parent-search {
+  margin-top: 70px;
+}
+
+.search-form .parent-search {
   position: absolute;
   top: 20%;
   /* left: 25%; */
   width: 100%;
 }
-.parent-search form{
+
+.parent-search form {
   width: 80%;
   margin: auto;
-
 }
+
 .search-form .icon-search {
   color: #fbb935;
-    font-size: 30px;
-    margin-top: 10px;
-    font-weight: 600 !important;
-
+  font-size: 30px;
+  margin-top: 10px;
+  font-weight: 600 !important;
 }
 
-.search-form  .search {
+.search-form .search {
   background-color: transparent;
-    border: none;
-    border-bottom: 0.5px solid #016373;
-    color: #016373;
-    font-size: 30px;
-    width: 100%;
-    border-radius: 0px;
-    outline: none;
-    
-   
-}
-.search-form .search-close{
+  border: none;
+  border-bottom: 0.5px solid #016373;
   color: #016373;
-    border: none;
-    font-size: 30px;
-    font-weight: 600 !important;
-    margin-top: 10px;
-    cursor: pointer;
+  font-size: 30px;
+  width: 100%;
+  border-radius: 0px;
+  outline: none;
 }
+
+.search-form .search-close {
+  color: #016373;
+  border: none;
+  font-size: 30px;
+  font-weight: 600 !important;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 @media (max-width: 1300px) {
   /* .search-form  .search{
     width: 250px;
   } */
 }
 
-
-.search-form  .search:active,
-.search-form  .search:focus {
+.search-form .search:active,
+.search-form .search:focus {
   outline: none;
   box-shadow: none;
 }
@@ -196,7 +214,6 @@ font-size: 25px;
   overflow-x: scroll;
   float: left;
   margin-left: 5%;
-  
 }
 
 .descrp {
@@ -210,7 +227,6 @@ font-size: 25px;
   font-size: 10px;
   margin-right: 2px;
 }
-
 
 .btn-up {
   position: fixed;

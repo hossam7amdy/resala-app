@@ -1,8 +1,8 @@
-import { Search } from '@/components';
+import { Search, TableSkeleton } from '@/components';
 import { CategoryTable } from '@/features/categories/categories-table';
 import { listAllCategories } from '@/fetch/category';
 import { ROUTES } from '@/routes';
-import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
+import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -29,7 +29,7 @@ const CategoryPage = async ({ searchParams }: { searchParams: { search?: string 
         </Flex>
       </Col>
       <Col span={24}>
-        <Suspense fallback={<Table loading />}>
+        <Suspense fallback={<TableSkeleton />}>
           <CategoryTable search={search} categories={categories} />
         </Suspense>
       </Col>

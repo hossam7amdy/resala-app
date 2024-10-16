@@ -8,7 +8,7 @@ describe('CallbackSocialAccountsComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CallbackSocialAccountsComponent]
+      imports: [CallbackSocialAccountsComponent],
     });
     fixture = TestBed.createComponent(CallbackSocialAccountsComponent);
     component = fixture.componentInstance;

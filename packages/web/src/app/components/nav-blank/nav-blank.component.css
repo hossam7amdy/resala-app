@@ -6,19 +6,37 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&family=Pacifico&family=Quicksand:wght@300..700&family=Titan+One&display=swap');
 
-.fixed-top {
+section.fixed-top {
   top: 30px;
 }
 
-.navbar{
+.nav {
+  background-color: #fff;
+  z-index: 9999;
+}
+
+/* .nav .nav-link {
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+} */
+.upper-nav .lang {
+  color: black !important;
+  font-weight: 900;
+}
+
+/* .navbar:lang(ar){
+  text-align: right;
+} */
+.navbar {
   transition: top ease-in-out 0.5s;
   view-transition-name: top;
 }
+
 nav .logo {
   width: 118.13px;
   height: 53.53px;
 }
-
 
 /* @media (min-width: 1200px)  */
 .navbar-expand-lg .navbar-nav .dropdown-menu {
@@ -29,55 +47,60 @@ nav .logo {
   overflow: auto;
   max-height: 300px;
   /* margin-top: 10px; */
- 
 }
-
+.navbar-expand-lg .navbar-nav .dropdown-menu:lang(ar) {
+  text-align: right;
+}
 
 .navbar-expand-xl .navbar-nav .dropdown-menu li:hover {
   background-color: #fbb935;
 }
 
-.dropdown-menu .dropdown-item{
+.dropdown-menu .dropdown-item {
   color: #016373;
   font-weight: 500;
-  
 }
-.dropdown-menu .dropdown-item:hover{
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:active,
+.dropdown-menu .dropdown-item:focus {
   background-color: #fbb935;
   color: #fff;
 }
 
-
 /*login*/
-.not-member{
+.not-member {
   font-size: 12px;
   font-weight: bold;
   color: black;
 }
+
 /**/
-.navbar-toggler{
+.navbar-toggler {
   transition: all 1s ease-in-out;
 }
-.navbar-toggler i{
+
+.navbar-toggler i {
   font-size: 30px !important;
   color: #fff !important;
 }
-.navbar-toggler span{
+
+.navbar-toggler span {
   color: #fff !important;
 }
 
-.navbar-toggler:focus{
+.navbar-toggler:focus {
   box-shadow: none !important;
 }
-.dropdown:hover>.dropdown-menu {
+
+.dropdown:hover > .dropdown-menu {
   display: block;
 }
 
-.dropdown>.dropdown-toggle:active {
+.dropdown > .dropdown-toggle:active {
   /*Without this, clicking will make it sticky*/
-    pointer-events: none;
+  pointer-events: none;
 }
-
 
 .active-link {
   color: #fff;
@@ -92,6 +115,7 @@ nav .logo {
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
   color: #fff;
+  background-color: #fbb935;
 }
 
 form {
@@ -113,11 +137,13 @@ form .icon-search {
   border-radius: 5px;
   outline: none;
 }
+
 @media (max-width: 1300px) {
-  .search{
+  .search {
     width: 250px;
   }
 }
+
 .search:active,
 .search:focus {
   outline: none;
@@ -126,7 +152,18 @@ form .icon-search {
 
 .nav-link {
   position: relative;
+  cursor: pointer;
 }
+
+.upper-nav .nav-link {
+  color: #016373;
+}
+
+/* .upper-nav .nav-link:active,
+.upper-nav .nav-link:focus{
+  color: #fff;
+  background-color: #fbb935;
+} */
 
 .nav-link .mini-basket-count {
   position: absolute;
@@ -134,8 +171,9 @@ form .icon-search {
   height: 18px;
   border-radius: 9px;
   background-color: #fbb935;
+  color: #fff;
   top: 0;
-  left: 25px;
+  left: 30px;
   z-index: 99;
   text-align: center;
   line-height: 1.9;
@@ -165,10 +203,10 @@ edit on bootstrap classes
 .nav-link {
   color: #fff;
 }
-@media (max-width:1300px) {
+
+@media (max-width: 1300px) {
   .nav-link,
-  .nav-link span{
+  .nav-link span {
     font-size: 14px;
-    
   }
 }

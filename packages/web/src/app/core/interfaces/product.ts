@@ -6,11 +6,22 @@ export interface Product {
   category: CategoryProduct;
   images: Image[];
   id?: number;
-  categoryId?:number;
+  categoryId?: number;
+  avgRating: number;
+  arName: string;
+  discounts: [
+    {
+      amount: string;
+      type: string;
+      isActive: boolean;
+      minQty: number;
+    },
+  ];
 }
 
 export interface CategoryProduct {
   enName: string;
+  arName: string;
 }
 
 export interface Image {

@@ -1,0 +1,147 @@
+{
+  "nav-blank": {
+    "Test": "أختبار",
+    "Home": "الرئيسية",
+    "Categories": "منتجاتنا",
+    "LatestCollection": "أحدث الموديلات",
+    "NewOffers": "اقوى الخصومات",
+    "SignIn": "تسجيل دخول",
+    "SignOut": "تسجيل خروج",
+    "NotaMember?": "ليس لك حساب؟",
+    "Register": "تسجيل حساب",
+    "Profile": "ملفك الشخصي",
+    "TraceYourOrder": "تتبع طلباتك",
+    "Favorites": "المفضلة",
+    "Cart": "سلة التسوق"
+  },
+  "top-bar": {
+    "firstOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه",
+    "secondOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه 2",
+    "thirdOffer": "شحن مجاني لو اشتريت بأكثر 1000 جنيه 3 "
+  },
+
+  "home": {
+    "popUpProduct": {
+      "miniTitle": "موديل جديد",
+      "pTitle": "قصه راقية صنع من اجلك",
+      "stBigTitle": "احصلي",
+      "ndBigTitle": "عليها",
+      "rdBigTitle": "الان!"
+    },
+    "mainSlider": {
+      "stSlide": {
+        "hyperTitle": "رسـالـة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "ndSlide": {
+        "hyperTitle": "رسـالـة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "rdSlide": {
+        "hyperTitle": "رسـالـة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "urSlide": {
+        "hyperTitle": "رسـالـة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      },
+      "veSlide": {
+        "hyperTitle": "رسـالـة",
+        "pTitle": "افضل الموديلات لملابس المحجبات"
+      }
+    },
+    "trends": {
+      "mainTitle": "الأكـثـر مـبـيـعاً"
+    },
+    "allProducts": {
+      "mainTitle": "منتجاتنا",
+      "previousLabel": "السابق",
+      "nextLabel": "التالي",
+      "sale": "خصم",
+      "buyBogo": "اشتري ",
+      "getBogo": " احصل ",
+      "currency": "ج م"
+    },
+    "allCategories": {
+      "mainTitle": "جـمـيع الفـئات"
+    }
+  },
+  "footer": {
+    "mainTitle": "متجر ملابس محجبات اون لاين",
+    "firstTitle": "شراء ودفع آمن",
+    "firstP": "شحن مجاني لبعض الطلبات",
+
+    "secondTitle": "الدفع عند الاستلام",
+    "secondP": "دفع واستلام سهل",
+
+    "thirdTitle": "استرجاع سهل",
+    "thirdP": "استرجاع خلال 14يوم",
+
+    "quickLinks": {
+      "accounts": "الحسابات",
+      "register": "تسجيل حساب جديد",
+      "login": "تسجيل دخول",
+      "profile": "ملفك الشخصى",
+      "orders": "الطلبات",
+      "createOrder": "كيف تنشئ طلبية",
+      "followOrder": "تتبع طلبك",
+      "editCart": "التعديل على قائمتك",
+      "cancelOrder": "إلغاء طلبية",
+      "returnPolicy": "سياسة الاسترجاع"
+    },
+    "aboutUs": {
+      "title": "مـن نـحـن",
+      "ourStory": "نـبـذه عـنـا",
+      "termsConditions": "الشروط والاحكام"
+    },
+    "contactUs": {
+      "title": "تواصل مـعـنا"
+    }
+  },
+  "categories": {},
+  "latestCollection": {
+    "mainTitle": "وصل حديثاً"
+  },
+  "offers": {
+    "mainTitle": "عـروضـنـا"
+  },
+  "favorites": {
+    "mainTitle": "قائمة منتجاتي المفضلة",
+    "confirmDeleteTitle": "تأكيد الحذف",
+    "questionDelete": "هل تريد حذف المنتج من المفضلة؟",
+    "questionDeleteCancel": "إلغاء",
+    "questionDeleteYes": "نعم"
+  },
+  "login": {
+    "mainTitle": "سجل دخول الان",
+    "googleAccount": "سجل دخول من خلال حسابك فى جوجل",
+    "chooseLogin": "أو تسجيل دخول بأستخدام الايميل او رقم هاتفك",
+    "username": "ادخل رقم هاتفك أو الايميل",
+    "emailRequired": "حقل الايميل مطلوب",
+    "mobValidate": "ليس رقم صحيحاً",
+    "password": "كلمة المرور",
+    "pwRequired": "كلمة المرور مطلوبة",
+    "notValid": "الايميل او الباسوورد غير صحيحا !! ",
+    "forgotPW": "هل نسيت الرقم السري؟",
+    "loginBtn": "تسجيل دخول"
+  },
+  "profile": {
+    "mainTitle": "الملف الشخصي",
+    "firstName": "الإسم الاول",
+    "lastName": "الإسم الثاني",
+    "email": "الإيميل",
+    "phone": "رقم الموبايل",
+    "shoppingBtn": "تسوق الان"
+  },
+  "orders": {
+    "mainTitle": "طلبياتي",
+    "orderNo": "رقم الطلبية",
+    "itemsNum": "عدد المنتجات",
+    "orderTitle": "الطلبية",
+    "firstNdStep": "تم تجهيز",
+    "preNdShipping": "فى تجهيزها للشحن",
+    "enRoute": "فى طريقها إليك",
+    "arrived": "تم توصيل",
+    "totalPaid": "إجمالى المدفوع"
+  }
+}

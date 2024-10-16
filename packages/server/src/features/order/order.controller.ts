@@ -39,11 +39,10 @@ import {
 import { db } from '../../datastore/index.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
+import { EmailService, PaymobService } from '../../services/index.js';
 import { AddressService } from '../address/address.service.js';
-import { EmailNotification } from '../notification/email.notification.js';
-import { NotificationService } from '../notification/notification.service.js';
+import { DiscountService } from '../discount/discount.service.js';
 import { PaymentService } from '../payment/payment.service.js';
-import { PaymobService } from '../payment/paymob/paymob.service.js';
 import { ShoppingService } from '../shopping/shopping.service.js';
 import { StockService } from '../stock/stock.service.js';
 import { OrderService } from './order.service.js';
@@ -54,20 +53,24 @@ import { OrderService } from './order.service.js';
 @Middlewares([authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;
+  private readonly stockService: StockService;
+  private readonly discountService: DiscountService;
+  private readonly shoppingService: ShoppingService;
+  private readonly addressService: AddressService;
   private readonly paymentService: PaymentService;
-  private readonly notificationService: NotificationService;
+  private readonly emailService: EmailService;
 
   constructor() {
     super();
 
     this.paymentService = new PaymentService(new PaymobService());
-    this.notificationService = new NotificationService(new EmailNotification());
-    this.orderService = new OrderService(
-      db,
-      new AddressService(db),
-      new StockService(db),
-      new ShoppingService(db)
-    );
+
+    this.orderService = new OrderService(db);
+    this.stockService = new StockService(db);
+    this.discountService = new DiscountService(db);
+    this.shoppingService = new ShoppingService(db);
+    this.addressService = new AddressService(db);
+    this.emailService = EmailService.getInstance();
   }
 
   /** Creates a new order for current authenticated user */
@@ -81,14 +84,35 @@ export class OrderController extends Controller {
     const user = req.res?.locals.user;
     const { paymentMethod } = body;
 
-    const { address, items, ...order } = await this.orderService.create(user.id, body);
+    const userCart = await this.shoppingService.cart.get(user.id);
 
-    let payment;
-    if (paymentMethod === 'CARD') {
-      payment = await this.paymentService.checkout({ user, order, items, shipping: address });
+    const discountedUserCart = await this.discountService.applyDiscount(userCart);
+
+    const address = await this.addressService.find(user.id, body.addressId);
+
+    await this.stockService.decrease(discountedUserCart);
+
+    try {
+      const {
+        items: _,
+        shipping,
+        ...order
+      } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
+
+      let payment;
+      if (paymentMethod === 'CARD') {
+        payment = await this.paymentService.checkout({
+          user,
+          order: { shipping, ...order },
+          cart: discountedUserCart,
+          shipping: address,
+        });
+      }
+
+      return { success: true, data: payment };
+    } finally {
+      await this.shoppingService.cart.deleteMany(user.id);
     }
-
-    return { success: true, data: payment };
   }
 
   /** Get order details **Only admins can access this endpoint** */
@@ -122,7 +146,6 @@ export class OrderController extends Controller {
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteOrderSchema)])
   public async delete(
     @Path() orderId: string,
-    // eslint-disable-next-line no-unused-vars
     @Queries() _: DeleteOrderRequest['query']
   ): Promise<DeleteOrderResponse> {
     // cancel order
@@ -133,7 +156,7 @@ export class OrderController extends Controller {
 
     // notify user with order cancellation
     if (order.user?.email) {
-      await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
+      await this.emailService.sendOrderCancellationEmail(order.user.email, order.id);
     }
 
     return { success: true, data: order };
@@ -150,7 +173,7 @@ export class OrderController extends Controller {
     const order = await this.orderService.update(+orderId, body);
 
     if (order.user?.email) {
-      await this.notificationService.sendOrderConfirmationEmail(
+      await this.emailService.sendOrderConfirmationEmail(
         order.user.email,
         order.id,
         orderStatus as OrderStatus

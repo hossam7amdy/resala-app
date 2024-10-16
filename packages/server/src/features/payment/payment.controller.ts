@@ -19,8 +19,8 @@ import {
 
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
+import { PaymobService } from '../../services/index.js';
 import { PaymentService } from './payment.service.js';
-import { PaymobService } from './paymob/paymob.service.js';
 
 @Tags('Payment')
 @Security('JWT_SECRET')

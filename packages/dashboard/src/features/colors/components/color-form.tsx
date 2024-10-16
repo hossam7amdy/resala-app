@@ -4,14 +4,14 @@ import { useCreateColor } from '@/features/colors';
 import { validationPatterns } from '@resala/shared';
 import type { Color } from '@resala/shared';
 import { Button, ColorPicker, Flex, Form, Input } from 'antd';
-import { ColorFactory } from 'antd/es/color-picker/color';
+import { AggregationColor } from 'antd/es/color-picker/color';
 import { useForm } from 'antd/es/form/Form';
 import React from 'react';
 
 interface FormValues {
   enName: string;
   arName: string;
-  code: ColorFactory;
+  code: AggregationColor;
 }
 
 interface ColorFormProps {
@@ -34,7 +34,7 @@ export const ColorEditor = ({ color, onCancel }: ColorFormProps) => {
       initialValues={{
         enName: color?.enName,
         arName: color?.arName,
-        code: color?.code ? new ColorFactory(color.code) : undefined,
+        code: color?.code ? new AggregationColor(color.code) : undefined,
       }}
       onFinish={async (values: FormValues) => {
         const code = values.code.toHexString();

@@ -28,25 +28,29 @@ import {
 
 import { db } from '../../datastore/index.js';
 import { validate } from '../../middlewares/validateHandler.js';
+import { DiscountService } from '../discount/discount.service.js';
 import { ShoppingService } from './shopping.service.js';
 
 @Tags('Shopping')
 @Route('api/v1')
 @Security('JWT_SECRET')
 export class ShoppingController extends Controller {
+  private readonly discountService: DiscountService;
   private readonly shoppingService: ShoppingService;
 
   constructor() {
     super();
     this.shoppingService = new ShoppingService(db);
+    this.discountService = new DiscountService(db);
   }
 
   @Get('cart')
   public async getCart(@Request() req: ExRequest): Promise<GetCartResponse> {
     const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.get(userId);
+    const updatedCart = await this.discountService.applyDiscount(cart);
 
-    return { success: true, data: cart };
+    return { success: true, data: updatedCart };
   }
 
   @Post('cart/items')
@@ -58,8 +62,9 @@ export class ShoppingController extends Controller {
   ): Promise<CreateCartResponse> {
     const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.update(userId, body);
+    const updatedCart = await this.discountService.applyDiscount(cart);
 
-    return { success: true, data: cart };
+    return { success: true, data: updatedCart };
   }
 
   @Delete('cart/items/{stockId}')
@@ -69,8 +74,9 @@ export class ShoppingController extends Controller {
   ): Promise<DeleteCartResponse> {
     const userId = req.res?.locals.user.id;
     const cart = await this.shoppingService.cart.delete(userId, +stockId);
+    const updatedCart = await this.discountService.applyDiscount(cart);
 
-    return { success: true, data: cart };
+    return { success: true, data: updatedCart };
   }
 
   @Delete('cart')

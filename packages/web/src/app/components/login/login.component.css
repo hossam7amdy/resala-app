@@ -10,21 +10,21 @@ section p {
   margin-top: 20px;
 }
 
-.form-item .custome-btn{
+.form-item .custome-btn {
   background-color: #fff !important;
   color: #016373 !important;
   text-decoration: none !important;
   display: block;
 }
 
-@media (max-width:500px) {
+@media (max-width: 500px) {
   .form-item .custome-btn {
     font-size: 12px !important;
   }
 }
 
-@media (max-width:500px) {
-  .form-item button a img{
+@media (max-width: 500px) {
+  .form-item button a img {
     width: 18px !important;
     height: 18px !important;
   }
@@ -78,20 +78,24 @@ section p {
 
 /* Media query */
 
-@media (max-width:1500px) {
-  .w-25{
+@media (max-width: 1500px) {
+  .w-25 {
     width: 50% !important;
   }
 }
 
-@media (max-width:750px) {
-  .w-25{
+@media (max-width: 750px) {
+  .w-25 {
     width: 75% !important;
   }
 }
 
-@media (max-width:300px) {
-  .w-25{
+@media (max-width: 300px) {
+  .w-25 {
     width: 90% !important;
   }
+}
+
+.form-item .password-input i:lang(ar) {
+  right: 92%;
 }

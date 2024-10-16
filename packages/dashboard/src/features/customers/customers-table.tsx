@@ -80,7 +80,7 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
         />
       </Table>
       <Flex justify="center">
-        <Pagination totalPages={pagination.total} />
+        <Pagination total={pagination.total} />
       </Flex>
     </Flex>
   );

@@ -22,7 +22,7 @@ const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFil
 
     return cb(null, true);
   } catch (error) {
-    return cb(error as any, false);
+    return cb(error as Error);
   }
 };
 
