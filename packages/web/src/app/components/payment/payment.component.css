@@ -1,0 +1,115 @@
+.step-one {
+  border-top: 4px solid #fbb935;
+  display: inline;
+}
+
+.address-field {
+  border-bottom: 0.5px solid #ddd;
+  margin: 5px;
+  padding: 5px;
+  padding-bottom: 15px;
+}
+
+.check-address-lbl {
+  color: #fbb935;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.form-check-input {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+  --bs-form-check-bg: var(--bs-body-bg);
+  flex-shrink: 0;
+  width: 2em;
+  height: 2em;
+  margin-top: 0.25em;
+  vertical-align: top;
+  appearance: none;
+  background-color: var(--bs-form-check-bg);
+  background-image: var(--bs-form-check-bg-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.form-check-input,
+.form-check-label {
+  cursor: pointer;
+}
+
+.pay-btn button {
+  padding: 10px 0;
+  color: #fff;
+  font-weight: 500;
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  transition: all 0.3s ease-in-out;
+}
+
+.pay-btn button:hover,
+.pay-btn button:active,
+.pay-btn button:disabled {
+  color: #016373;
+  font-weight: 500;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.pay-btn button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.edit-section .custome-btn{
+  width: auto;
+}
+
+@media (max-width:600px) {
+  .edit-section .fa-xl{
+    font-size: 1.3em;
+  }
+  
+  
+}
+@media (max-width:600px) {
+  .edit-section button.mx-3{
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width:600px) {
+  .edit-section .custome-btn{
+    margin-bottom: 5px;
+    width: 100%;
+  }
+}
+
+/*Media Query*/
+
+@media (max-width:500px) {
+  .w-75{
+    width: 90% !important;
+  }
+}
+
+@media (max-width:1200px) {
+  .w-25{
+    width: 50% !important;
+  }
+}
+
+@media (max-width:800px) {
+  .w-25{
+    width: 75% !important;
+  }
+}
+
+@media (max-width:500px) {
+  .w-25{
+    width: 90% !important;
+  }
+}

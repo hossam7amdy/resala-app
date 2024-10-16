@@ -1,6 +1,7 @@
-import { CategoryTable } from '@/components/categories/categories-table';
-import { Search } from '@/components/ui/search';
-import ROUTES from '@/lib/routes';
+import { Search } from '@/components';
+import { CategoryTable } from '@/features/categories/categories-table';
+import { listAllCategories } from '@/fetch/category';
+import { ROUTES } from '@/routes';
 import { Breadcrumb, Button, Col, Flex, Row, Table } from 'antd';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -10,11 +11,12 @@ export const metadata: Metadata = {
   title: 'Categories',
 };
 
-const CategoryPage = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = searchParams.query || '';
+const CategoryPage = async ({ searchParams }: { searchParams: { search?: string } }) => {
+  const search = searchParams.search || '';
+  const categories = await listAllCategories();
 
   return (
-    <Row gutter={[10, 30]} style={{ padding: 20 }}>
+    <Row gutter={[10, 30]}>
       <Col span={24}>
         <Breadcrumb items={[{ title: 'Categories' }]} />
       </Col>
@@ -22,13 +24,13 @@ const CategoryPage = async ({ searchParams }: { searchParams: { query?: string }
         <Flex gap={10}>
           <Search placeholder="Find category" />
           <Link href={ROUTES.CREATE_CATEGORY}>
-            <Button type="primary">Create New Category</Button>
+            <Button type="primary">Add Category</Button>
           </Link>
         </Flex>
       </Col>
       <Col span={24}>
         <Suspense fallback={<Table loading />}>
-          <CategoryTable query={query} />
+          <CategoryTable search={search} categories={categories} />
         </Suspense>
       </Col>
     </Row>

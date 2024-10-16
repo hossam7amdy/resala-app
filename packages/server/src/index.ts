@@ -2,18 +2,24 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 
 import { createExpressApp } from './app.js';
+import { configuration } from './configuration/index.js';
+import { initDb } from './datastore/index.js';
 
 dotenv.config();
 
-const app = createExpressApp();
+(async () => {
+  await initDb();
 
-const server = createServer(app);
+  const app = createExpressApp();
 
-const PORT = process.env.PORT || 5000;
+  const httpServer = createServer(app);
 
-server.listen(PORT, () => {
-  console.log(`Server is running on ${process.env.NODE_ENV} mode on port ${PORT} 🚀`);
-});
+  const { port, env } = configuration.server;
+
+  httpServer.listen(port, () => {
+    console.log(`server is running on ${env} mode on http://localhost:${port}`);
+  });
+})();
 
 process.on('unhandledRejection', reason => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...', reason);

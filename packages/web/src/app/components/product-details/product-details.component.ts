@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { OnInit, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ProductDetails } from 'src/app/core/interfaces/product-details';
+import { ToastrService } from 'ngx-toastr';
+import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 
 @Component({
@@ -16,68 +21,112 @@ import { HomeProductsService } from 'src/app/core/services/home-products.service
   styleUrls: ['./product-details.component.css'],
 })
 export class ProductDetailsComponent implements OnInit {
+  static productId: any;
+
   constructor(
-    private _ActivatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private _CartService: CartService,
+    private _toaster: ToastrService,
+    private _Renderer2: Renderer2,
+    private _Router: Router
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
   counterQuantity: number = 1;
 
-  productId!: string | null; // '!' to add initial value Undefined to this property 'productId'
+  productId!: any; // '!' to add initial value Undefined to this property 'productId'
 
-  productDetails: any = []; // this property to take value of object 'respons.data'
-  productImages: any = [];
+  productDetails: any = null; // this property to take value of object 'respons.data'
+  productImages: any = null;
+  selectedIimage: string = '';
   productStock: any = [];
+  productStockColor: any = [];
+  productStockSize: any = [];
+  reboColor: any = [];
 
-  //color option variable
+  cartDetails: any = {};
+  //property navigate from login to product details id
+  endPointProductId: string = '';
+
+  //color option property
   selectedColor: string = '';
-  selectedSize: string = '';
+  currentColor: string = '';
+  isChooseColor: boolean = false;
+  stockIndex: any;
 
-  //size Btn variable
+  //size Btn property
   statusClassSizeBtn = 'btn-not-active';
-
+  selectedSize: string = '';
+  currentSize: string = '';
+  stockIdColor: string = '';
+  stockIdSize: string = '';
+  quantity: string = '';
+  isChooseSize: boolean = false;
   ngOnInit(): void {
+    // start code test
+
+    //end code test
     this.spinner.show();
-    this._ActivatedRoute.paramMap.subscribe({
-      next: params => {
-        this.productId = params.get('product-id');
-        console.log('product id', this.productId);
-      },
-    });
+    this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
+    this.getProductDetails(this.productId);
 
-    this._HomeProductsService.getProductDetails(this.productId).subscribe({
-      next: respons => {
-        //we can using destructing for data ({data}) insteade of (respons)
-        console.log('productdetails', respons.data);
-        this.productDetails = respons.data;
+    this._CartService.getCartUser().subscribe({
+      next: response => {
+        console.log(response);
+        this.cartDetails = response.data;
       },
-    });
-
-    this._HomeProductsService.getProductDetails(this.productId).subscribe({
-      next: respons => {
-        //we can using destructing for data ({data}) insteade of (respons)
-        console.log('productdetails', respons.data.images);
-        this.productImages = respons.data.images;
-      },
-    });
-
-    this._HomeProductsService.getProductStock(this.productId).subscribe({
-      complete: () => {
-        this._HomeProductsService.getProductStock(this.productId).subscribe({
-          next: response => {
-            this.productStock = response.data;
-            console.log(this.productStock);
-            this.spinner.hide();
-          },
-        });
+      error: err => {
+        console.log(err);
       },
     });
   }
 
-  // owl carusal  navText: ['<<', '>>'],
-  productDetailsOption: OwlOptions = {
-    loop: true,
+  getProductDetails(id: any) {
+    this._HomeProductsService.getProductDetails(id).subscribe({
+      next: res => {
+        this.productDetails = res?.data;
+        this.productImages = res?.data?.images;
+        console.log('productdetails', res.data);
+      },
+      error: err => console.log(err),
+      complete: () => this.getProductStock(id),
+    });
+  }
+
+  getProductStock(id: any) {
+    this._HomeProductsService.getProductStock(id).subscribe({
+      next: res => {
+        this.productStock = res?.data.stocks;
+
+        console.log('stock', this.productStock);
+
+        this.productStockColor = this.productStock;
+        this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
+          if (!a.find(data => data.color.id == b.colorId)) {
+            a.push(b);
+          }
+          return a;
+        }, []);
+
+        this.spinner.hide();
+        console.log('after filter', this.productStockColor);
+      },
+    });
+  }
+  // removeDuplicat() {
+  //   this.productStockColor = this.productStock;
+  //   this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any; }) => {
+  //     if (!a.find(data => data.colorId == b.colorId)) {
+  //       a.push(b)
+  //     }
+  //     return a
+  //   }, []);
+  //   console.log('after filter', this.productStockColor);
+  // }
+
+  mainImage: OwlOptions = {
+    loop: false,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: false,
@@ -90,7 +139,7 @@ export class ProductDetailsComponent implements OnInit {
 
   // carousel mini images
   miniImgCarousel: OwlOptions = {
-    loop: true,
+    loop: false,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,
@@ -105,7 +154,7 @@ export class ProductDetailsComponent implements OnInit {
         items: 2,
       },
       740: {
-        items: 3,
+        items: 2,
       },
       940: {
         items: 4,
@@ -113,14 +162,32 @@ export class ProductDetailsComponent implements OnInit {
     },
     nav: true,
   };
+  // show products after delete repeated products method
 
-  onColorChange(event: string) {
-    this.selectedColor = event;
-    console.log(this.selectedColor);
+  changeimage(image: string) {
+    this.selectedIimage = image;
   }
-  onSizeChange(event: string) {
-    this.selectedSize = event;
-    console.log(this.selectedSize);
+
+  onColorChange(event: any, index: number) {
+    this.selectedColor = event?.color?.enName;
+    this.currentColor = event?.color?.id;
+    this.stockIdColor = event?.id;
+    this.stockIndex = index;
+    console.log(this.selectedColor, this.stockIndex);
+  }
+  isChooseColorFun() {
+    this.isChooseColor = true;
+  }
+
+  isChooseSizeFun() {
+    this.isChooseSize = true;
+  }
+  onSizeChange(event: any) {
+    this.selectedSize = event?.size;
+    this.currentSize = event?.sizeId;
+    this.stockIdSize = event?.stockId;
+    this.quantity = event?.quantity;
+    console.log(this.selectedSize, this.stockIdSize);
   }
 
   setActiveClass() {
@@ -137,5 +204,31 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.counterQuantity = 1;
     }
+  }
+
+  addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
+    if (this.isChooseColor && this.isChooseSize === true) {
+      this._Renderer2.setAttribute(element, 'disabled', 'true');
+
+      this._CartService.addToCart(productId, quantity).subscribe({
+        next: res => {
+          console.log(res);
+          this._CartService.cartNumber.next(res.data.totalQuantity);
+          console.log('cart number :' + this._CartService.cartNumber);
+          this._toaster.success('added one product successfuly');
+          this._Router.navigate(['/cart']);
+        },
+        error: err => {
+          localStorage.setItem('productId', this.productId);
+          this._toaster.error('please login !!'); //'Should be Login'
+          this._Router.navigate(['/login']);
+          console.log('response', productId, quantity, err);
+        },
+      });
+    } else {
+      this._toaster.info('should be choose color and size');
+    }
+
+    this._Renderer2.removeAttribute(element, 'disabled');
   }
 }

@@ -1,6 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '../../../../../shared/src/endpoints';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -8,22 +11,43 @@ import { Observable } from 'rxjs';
 export class HomeProductsService {
   constructor(private _HttpClient: HttpClient) {}
 
-  baseURL: string = `http://ec2-13-60-47-151.eu-north-1.compute.amazonaws.com/`;
+  // baseURL: string = `https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
   //base url =
 
-  // Products
+  // refactor free API url 
+private getHeaders() {
+  const headers = new HttpHeaders({
+    'ngrok-skip-browser-warning':  '69420',
+    
+  });
+  return {headers};
+}
 
-  getProducts(): Observable<any> {
-    return this._HttpClient.get(this.baseURL + 'api/v1/products?page=1&limit=10&query=');
+  // Products
+  getProducts(currentPage:string ='1'): Observable<any> {
+    console.log(this.getHeaders());
+    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{page:currentPage})
+    return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
+    
   }
 
-  //Product Details
+  // Products
+  getProductsSearch(searchText:string): Observable<any> {
+    console.log(this.getHeaders());
+    const {url} = withQueryParams(ENDPOINT_CONFIGS.listProducts,{search:searchText, limit:"100"})
+    return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
+    
+  }
+//'/api/v1/products?page=1&limit=10&query='
 
-  getProductDetails(id: string | null): Observable<any> {
-    return this._HttpClient.get(this.baseURL + `api/v1/products/${id}`);
+  //Product Details
+  getProductDetails(id: any): Observable<any> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.getProduct, { productId: id! });
+    return this._HttpClient.get(`${environment.BASE_URL}/api/v1/products/${id}`,  this.getHeaders());
   }
 
   getProductStock(id: string | null): Observable<any> {
-    return this._HttpClient.get(this.baseURL + `api/v1/products/${id}/stocks`);
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listStocks, { productId: id! });
+    return this._HttpClient.get(environment.BASE_URL + url , this.getHeaders());
   }
 }

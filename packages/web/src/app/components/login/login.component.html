@@ -2,6 +2,11 @@
   <h1 class="my-3">Login Now</h1>
   <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
     <div class="form-item">
+      <button class="btn w-100">
+        <a href="https://tender-krill-flying.ngrok-free.app/auth/google" class="custome-btn"><img src="./assets/icons/icons8-google-48.png" style="width: 25px;height: 25px;" alt="Google"> Continue With Google Account</a>
+      </button>
+      <p class="p text-center"> Or sign in with your Email / phone</p>
+      
       <label for="email">Email / Phone</label>
 
       <input
@@ -49,11 +54,11 @@
       </div>
     </div>
 
-    <div class="forget">
-      <p>Forget Password</p>
+    <div class="forgot">
+      <p routerLink="/forgot-password">Forgot Password</p>
     </div>
 
-    <button [disabled]="loginForm.invalid" type="submit" class="submit mt-3">
+    <button [disabled]="loginForm.invalid" type="submit" class="mt-3 custome-btn">
       Login
       <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
     </button>

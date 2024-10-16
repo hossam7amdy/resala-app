@@ -1,21 +1,5 @@
-div {
-  position: relative;
-  margin: 0;
-  padding: 0;
-}
-button {
-  position: absolute;
-  background-color: #016373;
-  color: #fbb935;
-  border-radius: 5px;
-  padding: 10px;
-  outline: none;
-  border: none;
-  /* margin-top: 90px; */
-  font-weight: bold;
-  top: 10%;
-  left: 48%;
-}
+
+
 img {
   background-size: cover;
 }
