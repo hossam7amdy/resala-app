@@ -143,5 +143,55 @@
     "enRoute": "فى طريقها إليك",
     "arrived": "تم توصيل",
     "totalPaid": "إجمالى المدفوع"
+  },
+  "register": {
+    "mainTitle": "سجل حساب جديد",
+    "firstName": "الإسم الاول",
+    "nameRequired": "الاسم مطلوب",
+    "nameLength": "يجب ان يكون الاسم اكبر من حرفين",
+    "namePattern": "يجب ان يكون الاسم لا يحتوى على رموز او مسافات فقط اواقل من3 حروف",
+    "lastName": "الإسم الثاني",
+    "password": "كلمة المرور",
+    "pwRequired": "كلمة المرور مطلوبة",
+    "pwPattern": "يجب ان تحتوى على الاقل على رمز وحرف كبير وحرف صغير ورقم ولايقل عن 8 حروف",
+    "pwMinLen": "يجب ان يكون 8 حروف على الاقل",
+    "pwMaxLen": "يجب ان يكون 8 حروف",
+    "email": "الايميل",
+    "emailRequired": "حقل الايميل مطلوب",
+    "emailPattern": "هذا ليس ايميل صحيح",
+    "phone": "رقم الهاتف",
+    "phoneRequired": "رقم الهاتف مطلوب",
+    "phonePatttern": "يجب ان يكون 11 رقم 011,012,010,015",
+    "registerBtn": "تسجيل عضو جديد"
+  },
+  "productDetails": {
+    "empty": "عفواً !! هذا المنتج غير متوفر حاليا",
+    "taxScript": "السعر يشمل الضريبة المضافة 14% , مصاريف الشحن مع الدفع النهائي",
+    "color": "اللون",
+    "size": "المقاس",
+    "quantity": "الكمية",
+    "addToCart": "إضافة الى السلة",
+    "reviews": {
+      "mainTitle": "التقييم والمراجعات"
+    },
+    "similarProducts": {
+      "mainTitle": "منتحات مشابهة"
+    }
+  },
+  "cart": {
+    "mainTitleFirstSlice": "سلة التسوق",
+    "mainTitleNdSlice": "منتج",
+    "deleteAllBtn": "حذف جميع المنتجات",
+    "confirmDeleteAllItems": "تأكيد الحذف",
+    "confirmDeleteQuestion": "هل تريد حذف منتجاتك من السلة ؟",
+    "cancelBtn": "إلغاء",
+    "yesBtn": "موافق",
+    "stockQnt": "متوفر",
+    "sizeTitle": "المقاس",
+    "latestStock": "اخر قطعة",
+    "checkoutBtn": "إجمالى الحساب",
+    "totalProPrice": "إجمالى سعر المنتجات",
+    "orderBtn": "نفذ الطلبية",
+    "cartEmptyTitle": "السلة الخاصه بك لا توجد بها منتجات !!"
   }
 }

@@ -1,6 +1,9 @@
 <section *ngIf="totalCount != 0; else emptyCart">
   <div class="container">
-    <h2 class="cartTitle h2">My Cart {{ cartDetails.totalQuantity }} product</h2>
+    <h2 class="cartTitle h2">
+      {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
+      {{ 'cart.mainTitleNdSlice' | translate }}
+    </h2>
   </div>
   <div class="container">
     <div class="row">
@@ -13,7 +16,7 @@
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
-            Delete All Items
+            {{ 'cart.deleteAllBtn' | translate }}
             <i class="fa-solid fa-trash"></i>
           </button>
           <!--start checked delete all items -->
@@ -31,7 +34,9 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    {{ 'cart.confirmDeleteAllItems' | translate }}
+                  </h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -39,10 +44,10 @@
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">Do You Want Delete All Your Products !!</div>
+                <div class="modal-body">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+                    {{ 'cart.cancelBtn' | translate }}
                   </button>
                   <button
                     type="button"
@@ -51,7 +56,7 @@
                     (click)="[confirmationDel(), clearAllItems(removeAll)]"
                     #removeAll
                   >
-                    Yes
+                    {{ 'cart.yesBtn' | translate }}
                   </button>
                 </div>
               </div>
@@ -77,17 +82,22 @@
             </div>
             <div class="col-sm-7">
               <div class="card-body">
-                <p class="">{{ item.stock.quantity }} IN STOCK</p>
-                <h5 class="card-title">{{ item.product.enName }}</h5>
-                <span class="text-uppercase">{{ item.stock.color.enName }}</span>
+                <p class="">{{ item.stock.quantity }} {{ 'cart.stockQnt' | translate }}</p>
+                <h5 class="card-title">
+                  {{ _Translate.currentLang == 'ar' ? item.product.arName : item.product.enName }}
+                </h5>
+                <span class="text-uppercase">{{
+                  _Translate.currentLang == 'ar' ? item.stock.color.arName : item.stock.color.enName
+                }}</span>
                 <span class="">
-                  - Size : <i class="bold small">{{ item.stock.size.name }}</i></span
+                  - {{ 'cart.sizeTitle' | translate }} :
+                  <i class="bold small">{{ item.stock.size.name }}</i></span
                 >
                 <p *ngIf="item.discountedPrice == 0" class="fw-bold currency">
-                  {{ item.product.price }} EGP
+                  {{ item.product.price }} {{ 'home.allProducts.currency' | translate }}
                 </p>
                 <p *ngIf="item.discountedPrice != 0" class="fw-bold currency">
-                  {{ item.discountedPrice }} EGP
+                  {{ item.discountedPrice }} {{ 'home.allProducts.currency' | translate }}
                 </p>
                 <button class="btn mt-2">
                   <i
@@ -119,7 +129,9 @@
                 >
                   <i class="fa-solid fa-plus"></i>
                 </button>
-                <p *ngIf="item.stock.quantity == 0" class="p">Latest One Stock</p>
+                <p *ngIf="item.stock.quantity == 0" class="p">
+                  {{ 'cart.latestStock' | translate }}
+                </p>
               </div>
             </div>
           </div>
@@ -128,15 +140,18 @@
       <div class="col-lg-4">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Check Out Summary</h5>
+            <h5 class="card-title">{{ 'cart.checkoutBtn' | translate }}</h5>
             <p class="card-text">
-              Total Products Price <span class="total-price">{{ cartDetails.totalPrice }} EGP</span>
+              {{ 'cart.totalProPrice' | translate }}
+              <span class="total-price"
+                >{{ cartDetails.totalPrice }} {{ 'home.allProducts.currency' | translate }}</span
+              >
             </p>
             <button
               [disabled]="cartDetails.totalQuantity == 0"
               class="btn custome-btn p-0 border-0"
             >
-              <a routerLink="/payment" class="btn custome-btn">Order Now</a>
+              <a routerLink="/payment" class="btn custome-btn">{{ 'cart.orderBtn' | translate }}</a>
             </button>
           </div>
         </div>
@@ -147,6 +162,6 @@
 
 <ng-template class="m-auto" #emptyCart>
   <div class="emptyCartParent">
-    <h1 class="emptyCart text-uppercase">Your Cart Is Empty ...</h1>
+    <h1 class="emptyCart text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
   </div>
 </ng-template>

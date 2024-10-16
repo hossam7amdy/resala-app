@@ -3,6 +3,7 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -10,7 +11,7 @@ import { CartService } from 'src/app/core/services/cart.service';
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
@@ -27,7 +28,8 @@ export class CartComponent implements OnInit {
     private _Renderer: Renderer2,
     private _toaster: ToastrService,
     private _Router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService
   ) {}
   totalCount: number = 0;
 
