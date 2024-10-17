@@ -3,7 +3,7 @@ import type superset from 'supertest';
 import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { getTestServer } from './setup/test-server.js';
+import { getTestServer } from './helpers/test-server.js';
 
 describe('TEST /addresses endpoint', () => {
   let client: TestAgent<superset.Test>;
@@ -24,7 +24,7 @@ describe('TEST /addresses endpoint', () => {
   const address = 'address'; // optional,
 
   beforeAll(async () => {
-    client = await getTestServer();
+    client = getTestServer();
 
     await registerNewUser({
       email,

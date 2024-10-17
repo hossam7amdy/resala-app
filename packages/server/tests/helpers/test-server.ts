@@ -5,7 +5,7 @@ import { createExpressApp } from '../../src/app.js';
 
 let client: TestAgent<superset.Test>;
 
-export const getTestServer = async () => {
+export const getTestServer = () => {
   if (!client) {
     const app = createExpressApp(false);
     client = superset(app);
