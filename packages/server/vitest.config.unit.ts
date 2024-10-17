@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    name: 'resala/server - [ Unit Tests ]',
+    name: 'resala/server - [ Unit Test ]',
     environment: 'node',
     include: ['src/**/*.test.ts'],
   },

@@ -4,7 +4,7 @@ import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { JwtManager } from '../src/features/auth/jwt.manager.js';
-import { getTestServer } from './setup/test-server.js';
+import { getTestServer } from './helpers/test-server.js';
 
 describe('TEST /auth endpoints', () => {
   let jwtManager: JwtManager;
@@ -28,7 +28,7 @@ describe('TEST /auth endpoints', () => {
 
   beforeAll(async () => {
     jwtManager = new JwtManager();
-    client = await getTestServer();
+    client = getTestServer();
   });
 
   describe(`TEST ${ENDPOINT_CONFIGS.register.method.toUpperCase()} ${ENDPOINT_CONFIGS.register.url}`, () => {
@@ -275,7 +275,7 @@ describe('TEST /auth endpoints', () => {
     });
 
     it('should reset password with wrong data', async () => {
-      const token = jwtManager.signReset({ id: '2', email: customerUserObj.email });
+      const token = jwtManager.signReset({ id: '22', email: customerUserObj.email });
 
       const { method, url } = ENDPOINT_CONFIGS.resetPassword;
       const res = await client[method](url)
