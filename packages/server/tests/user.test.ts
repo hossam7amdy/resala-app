@@ -4,7 +4,7 @@ import type TestAgent from 'supertest/lib/agent.js';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { db } from '../src/datastore/index.js';
-import { getTestServer } from './setup/test-server.js';
+import { getTestServer } from './helpers/test-server.js';
 
 describe('TEST /users endpoint', () => {
   let client: TestAgent<superset.Test>;
@@ -37,7 +37,7 @@ describe('TEST /users endpoint', () => {
   };
 
   beforeAll(async () => {
-    client = await getTestServer();
+    client = getTestServer();
 
     await Promise.all([
       registerNewUser(adminUserObj),
