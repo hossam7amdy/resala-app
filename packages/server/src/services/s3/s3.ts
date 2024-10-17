@@ -24,6 +24,7 @@ const defaultOptions: S3ClientConfig = {
 };
 
 export class S3Service {
+  private isBucketCreated = false;
   private readonly bucketName: string;
   private readonly baseUrl: string;
   private readonly client: S3Client;
@@ -40,6 +41,8 @@ export class S3Service {
     (async () => {
       await this.createBucketIfNotExist(bucketName);
       await this.makeBucketPublicRead(bucketName);
+
+      this.isBucketCreated = true;
     })();
   }
 
@@ -79,6 +82,13 @@ export class S3Service {
   }
 
   async upload(file: Express.Multer.File, key: string): Promise<string> {
+    if (!this.isBucketCreated) {
+      await Promise.all([
+        this.createBucketIfNotExist(this.bucketName),
+        this.makeBucketPublicRead(this.bucketName),
+      ]);
+    }
+
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
