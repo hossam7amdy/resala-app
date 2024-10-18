@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { configuration } from '../src/configuration';
-import { S3Service } from '../src/services/s3/s3';
+import { S3Service } from '../src/services/s3';
 
 describe('S3Service', () => {
   let s3Service: S3Service;
