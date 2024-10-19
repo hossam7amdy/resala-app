@@ -1,0 +1,13 @@
+nav {
+  font-size: 14px;
+  display: block; /* Ensure it's displayed */
+}
+
+nav a {
+  text-decoration: none;
+  color: blue;
+}
+
+nav span {
+  color: grey;
+}
