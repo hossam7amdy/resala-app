@@ -28,6 +28,7 @@ export function HttpLoaderFactory(_HttpClient: HttpClient) {
     BrowserAnimationsModule,
     NgxSpinnerModule,
     HttpClientModule,
+
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

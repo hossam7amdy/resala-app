@@ -82,12 +82,221 @@
 
   color: #016373;
   font-weight: bold;
-  font-size: 12px;
 }
+
 .counter .min-counter-btn:disabled {
   cursor: not-allowed;
 }
+.remove-item i:hover {
+  opacity: 0.8;
+}
 
+/*start Edit on Size & color */
+.edit-btn {
+  outline: 1px solid #ccc;
+  background-color: #fff;
+  color: #777;
+  font-weight: 400;
+}
+.edit-btn:hover {
+  outline: #fbb935;
+  color: #fff;
+  background-color: #fbb935;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  z-index: 10; /* Overlay above other content */
+}
+
+.form-container {
+  position: fixed;
+  top: 51%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Form above overlay */
+  width: 500px;
+}
+@media (max-width: 700px) {
+  .form-container {
+    width: 80%;
+  }
+}
+.form-container form {
+  position: relative;
+}
+.form-container .close-edit {
+  position: absolute;
+  top: 0px;
+  right: 1px;
+  font-size: 24px;
+  color: #777;
+  cursor: pointer;
+}
+.form-container .content-form {
+  background-color: #f4f4f5;
+  padding: 10px;
+  margin: 20px;
+}
+.form-container .content-form .h4,
+.form-container .h3 {
+  color: #000 !important;
+}
+.content-form .color {
+  margin: 20px 0;
+}
+.form-container .content-form {
+  width: 90%;
+  height: 250px;
+  overflow-y: scroll;
+  float: left;
+}
+::-webkit-scrollbar-track {
+  background-color: #ccc;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #000;
+}
+.form-container .content-form .color-btn {
+  display: inline-flex;
+  margin: 3px 5px;
+  padding: 10px;
+  border: 1px soild #999;
+  border-radius: 0;
+  color: #016373;
+  font-size: 14px;
+}
+/*images*/
+.form-container .mini-images-color {
+  width: 100px;
+}
+/* color option*/
+.form-container .color-options-list {
+  margin-left: -8px;
+}
+
+.form-container .color-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin: 8px;
+  cursor: pointer;
+}
+
+.form-container .color-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
+  border: 1px solid #fbb935;
+}
+
+.form-container .card-body .p {
+  font-size: 12px;
+  padding-top: 0;
+  margin-bottom: 2px;
+  padding-bottom: 0;
+}
+/*size*/
+.size {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.size .btn-not-active {
+  background-color: #eee;
+  border: 1px solid #999;
+  padding: 5px;
+  border-radius: 0;
+  outline: none;
+  color: #999;
+}
+
+.size .active {
+  background-color: #fbb935;
+  border: 1px solid #fbb935;
+  padding: 5px;
+  border-radius: 0;
+  outline: none;
+  color: #fff;
+}
+.size-options-list {
+  margin-left: -8px;
+}
+
+.size-option label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 30px;
+  height: 30px; */
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin: 8px;
+  cursor: pointer;
+}
+
+.size-option.active label {
+  /* border-color: #000; */
+  background-color: #fbb935;
+  color: #fff;
+  border: 1px solid #fbb935;
+}
+
+h2 {
+  margin: 0 0 10px;
+}
+
+/*end Edit on Size & color */
+.card-text .collapse-icon {
+  color: #777;
+  font-size: 15px;
+  margin: 5px;
+}
+/* Rotate Arrow Details */
+.rotate-box {
+  position: absolute;
+  /* right: 0px; */
+
+  cursor: pointer;
+}
+/* .rotate-box:lang(ar){
+  right: none;
+  left: 0;
+} */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+.card-text .card-body {
+  border: 0;
+  border-top: 1px solid #777;
+  font-size: 18px;
+  color: #016373 !important;
+  font-weight: 500;
+}
+.card-body .text-details {
+  text-align: left !important;
+}
+.card-body .price-details {
+  text-align: right !important;
+}
+.card-body .text-details:lang(ar) {
+  text-align: right !important;
+}
+.card-body .price-details:lang(ar) {
+  text-align: left !important;
+}
 .order-btn {
   padding: 10px 0;
   color: #fff;
