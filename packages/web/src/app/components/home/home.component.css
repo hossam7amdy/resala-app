@@ -196,7 +196,7 @@ section .overlay {
 }
 .full-slide {
   position: relative;
-  height: 100vh;
+  /* height: 100vh; */
 }
 .full-slide .title-content {
   position: absolute;
@@ -266,67 +266,58 @@ section .overlay {
   color: hsl(188, 98%, 23%);
   margin-top: 50%;
 }
-.custom-owl {
-  .owl-theme {
-    height: 100vh !important;
-  }
+/* .slider ::ng-deep .owl-carousel .owl-stage-outer{
+  height: 100vh !important;
 }
+
 @media (max-width: 905px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 600px !important;
-    }
+    
   }
 }
 @media (max-width: 850px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 450px !important;
-    }
+    
   }
 }
 @media (max-width: 705px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 400px !important;
-    }
+    
   }
 }
 @media (max-width: 605px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 300px !important;
-    }
+    
   }
 }
 @media (max-width: 550px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 300px !important;
-    }
+    
   }
 }
 @media (max-width: 450px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 250px !important;
-    }
+    
   }
 }
 @media (max-width: 400px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 220px !important;
-    }
+    
   }
 }
 @media (max-width: 350px) {
-  .custom-owl {
-    .owl-theme {
+  .slider ::ng-deep .owl-carousel .owl-stage-outer {
       height: 200px !important;
-    }
+    
   }
-}
+} */
 
 .custom-owl {
   .owl-theme .owl-nav.disabled + .owl-dots {
