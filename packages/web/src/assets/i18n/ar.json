@@ -7,7 +7,7 @@
     "NewOffers": "اقوى الخصومات",
     "SignIn": "تسجيل دخول",
     "SignOut": "تسجيل خروج",
-    "NotaMember?": "ليس لك حساب؟",
+    "NotaMember?": "ليس لديك حساب؟",
     "Register": "تسجيل حساب",
     "Profile": "ملفك الشخصي",
     "TraceYourOrder": "تتبع طلباتك",
@@ -113,8 +113,8 @@
     "questionDeleteYes": "نعم"
   },
   "login": {
-    "mainTitle": "سجل دخول الان",
-    "googleAccount": "سجل دخول من خلال حسابك فى جوجل",
+    "mainTitle": "تسجيل دخول الان",
+    "googleAccount": "سجّل دخول من خلال حسابك فى جوجل",
     "chooseLogin": "أو تسجيل دخول بأستخدام الايميل او رقم هاتفك",
     "username": "ادخل رقم هاتفك أو الايميل",
     "emailRequired": "حقل الايميل مطلوب",
@@ -134,12 +134,12 @@
     "shoppingBtn": "تسوق الان"
   },
   "orders": {
-    "mainTitle": "طلبياتي",
-    "orderNo": "رقم الطلبية",
+    "mainTitle": "طلباتي",
+    "orderNo": "رقم الطلب",
     "itemsNum": "عدد المنتجات",
-    "orderTitle": "الطلبية",
-    "firstNdStep": "تم تجهيز",
-    "preNdShipping": "فى تجهيزها للشحن",
+    "orderTitle": "",
+    "firstNdStep": " تم تجهيز الطلب",
+    "preNdShipping": "جارى تحضير الطلب للشحن  ",
     "enRoute": "فى طريقها إليك",
     "arrived": "تم توصيل",
     "totalPaid": "إجمالى المدفوع"
@@ -175,7 +175,7 @@
       "mainTitle": "التقييم والمراجعات"
     },
     "similarProducts": {
-      "mainTitle": "منتحات مشابهة"
+      "mainTitle": "منتجات مشابهة"
     }
   },
   "cart": {
@@ -188,10 +188,21 @@
     "yesBtn": "موافق",
     "stockQnt": "متوفر",
     "sizeTitle": "المقاس",
+    "editColorSize": "تعديل",
+    "editTitleForm": "تعديل المقاس",
+    "chooseColor": "خيرات اللون",
+    "chooseSize": "خيرات المقاس",
+    "updateCartBtn": "تحديث والعودة الى السلة",
+    "remove": "حذف",
     "latestStock": "اخر قطعة",
     "checkoutBtn": "إجمالى الحساب",
-    "totalProPrice": "إجمالى سعر المنتجات",
-    "orderBtn": "نفذ الطلبية",
+    "totalProPrice": "إجمالى الحساب",
+    "subTotalPrice": "الإجمالى الفرعي",
+    "shippingAmount": "مصاريف الشحن",
+    "discountAmount": "قيمة الخصم",
+    "totalPrice": "إجمالى الحساب",
+    "tax": "(شامل الضريبة)",
+    "orderBtn": "الاستمرار الى الدفع",
     "cartEmptyTitle": "السلة الخاصه بك لا توجد بها منتجات !!"
   }
 }

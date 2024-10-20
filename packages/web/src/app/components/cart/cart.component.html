@@ -7,7 +7,7 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-9">
         <div class="form-check">
           <button
             [disabled]="totalCount == 0"
@@ -65,7 +65,7 @@
           <!--end checked delete all items -->
         </div>
         <div class="card mb-4">
-          <div class="row g-0" *ngFor="let item of cartDetailsItems">
+          <div class="row g-0" *ngFor="let item of cartDetailsItems; let i = index">
             <div class="col-sm-2">
               <img
                 *ngIf="item.images.length > 0"
@@ -82,29 +82,138 @@
             </div>
             <div class="col-sm-7">
               <div class="card-body">
-                <p class="">{{ item.stock.quantity }} {{ 'cart.stockQnt' | translate }}</p>
-                <h5 class="card-title">
+                <!-- <p class="">{{ item.stock.quantity }} {{ 'cart.stockQnt' | translate }}</p> -->
+                <h4 class="h3 card-title">
                   {{ _Translate.currentLang == 'ar' ? item.product.arName : item.product.enName }}
-                </h5>
-                <span class="text-uppercase">{{
-                  _Translate.currentLang == 'ar' ? item.stock.color.arName : item.stock.color.enName
-                }}</span>
-                <span class="">
-                  - {{ 'cart.sizeTitle' | translate }} :
-                  <i class="bold small">{{ item.stock.size.name }}</i></span
-                >
-                <p *ngIf="item.discountedPrice == 0" class="fw-bold currency">
-                  {{ item.product.price }} {{ 'home.allProducts.currency' | translate }}
+                </h4>
+                <div class="row color-size">
+                  <div class="col-3">
+                    <span class="text-uppercase fw-bold" style="color: #016373">{{
+                      _Translate.currentLang == 'ar'
+                        ? item.stock.color.arName
+                        : item.stock.color.enName
+                    }}</span>
+                    <span class="">
+                      -
+                      <i class="bold small fw-bold" style="color: #016373">{{
+                        item.stock.size.name
+                      }}</i></span
+                    >
+                  </div>
+                  <div class="col-2 p-0">
+                    <!-- Start Edit Size & Color Section  -->
+                    <button
+                      class="edit-btn"
+                      (click)="[toggleForm(), getStockDataPro(cartDetailsItems[i].product.id)]"
+                    >
+                      {{ 'cart.editColorSize' | translate }}
+                    </button>
+
+                    <div class="overlay" *ngIf="isFormVisible" (click)="toggleForm()"></div>
+
+                    <div class="form-container" *ngIf="isFormVisible">
+                      <form>
+                        <i class="fa-solid fa-xmark close-edit" (click)="toggleForm()"></i>
+                        <h2 class="h3">{{ 'cart.editTitleForm' | translate }}</h2>
+                        <div class="content-form">
+                          <div class="colorSection">
+                            <h4 class="h4">{{ 'cart.chooseColor' | translate }}</h4>
+                            <div class="d-flex flex-wrap color-options-list">
+                              <ng-container
+                                *ngFor="let product of productStockColor; let i = index"
+                              >
+                                <div>
+                                  <img
+                                    class="mini-images-color"
+                                    [src]="productStock[i].images[0]?.imageUrl"
+                                  />
+
+                                  <div
+                                    [ngClass]="{ active: currentColor === product?.color?.id }"
+                                    class="color-option"
+                                  >
+                                    <input
+                                      [(ngModel)]="selectedColor"
+                                      type="radio"
+                                      class="btn-check"
+                                      name="color-option"
+                                      id="btncolor"
+                                      [value]="selectedColor"
+                                    />
+                                    <label
+                                      (click)="[onColorChange(product, i), isChooseColorFun()]"
+                                      for="btncolor"
+                                    >
+                                      {{
+                                        _Translate.currentLang == 'ar'
+                                          ? product.color.arName
+                                          : product.color.enName
+                                      }}
+                                    </label>
+                                    <!-- owlCar.to(productStock[i].images[0]?.imageUrl), -->
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <div class="sizeSection">
+                            <h4 class="h4">{{ 'cart.chooseSize' | translate }}</h4>
+                            <div class="d-flex flex-wrap size-options-list">
+                              <ng-container *ngFor="let product of productStock; let i = index">
+                                <div *ngFor="let size of product.sizes">
+                                  <div *ngIf="i == stockIndex">
+                                    <div
+                                      [ngClass]="{ active: currentSize === size?.sizeId }"
+                                      class="size-option"
+                                    >
+                                      <input
+                                        [(ngModel)]="selectedSize"
+                                        type="radio"
+                                        class="btn-check"
+                                        name="size-option"
+                                        id="btnsize"
+                                        [value]="selectedSize"
+                                      />
+
+                                      <label
+                                        (click)="[onSizeChange(size), isChooseSizeFun()]"
+                                        for="btnsize"
+                                      >
+                                        {{ size.size }}
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                        <button class="custome-btn">{{ 'cart.updateCartBtn' | translate }}</button>
+                      </form>
+                    </div>
+
+                    <!-- End Edit Size & Color Section  -->
+                  </div>
+                </div>
+
+                <p class="currency mb-0">
+                  <s>{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
                 </p>
-                <p *ngIf="item.discountedPrice != 0" class="fw-bold currency">
-                  {{ item.discountedPrice }} {{ 'home.allProducts.currency' | translate }}
+                <p *ngIf="item.discountedPrice != 0" class="price fs-4">
+                  {{ item.discountedPrice }}
+                  <label class="currency fs-5">
+                    {{ 'home.allProducts.currency' | translate }}</label
+                  >
                 </p>
-                <button class="btn mt-2">
+                <button class="btn mt-2 remove-item">
                   <i
                     (click)="removeItem(item.stock.id, remove)"
                     #remove
                     class="fa-solid fa-trash"
-                  ></i>
+                    style="color: #777"
+                    ><span>{{ 'cart.remove' | translate }}</span></i
+                  >
                 </button>
               </div>
             </div>
@@ -129,6 +238,7 @@
                 >
                   <i class="fa-solid fa-plus"></i>
                 </button>
+
                 <p *ngIf="item.stock.quantity == 0" class="p">
                   {{ 'cart.latestStock' | translate }}
                 </p>
@@ -137,16 +247,91 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">{{ 'cart.checkoutBtn' | translate }}</h5>
-            <p class="card-text">
-              {{ 'cart.totalProPrice' | translate }}
-              <span class="total-price"
-                >{{ cartDetails.totalPrice }} {{ 'home.allProducts.currency' | translate }}</span
-              >
-            </p>
+            <div class="row card-text">
+              <p class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
+
+              <span class="text-end col-6 price fs-5">
+                {{ cartDetails.totalPrice }}
+                <label class="currency fs-5 m-0">
+                  {{ 'home.allProducts.currency' | translate }}</label
+                >
+                <a
+                  [lang]="_Translate.currentLang"
+                  class="rotate-box collapse-icon"
+                  data-bs-toggle="collapse"
+                  href="#multiCollapseExample1"
+                  role="button"
+                  aria-expanded="false"
+                  aria-controls="multiCollapseExample1"
+                  [ngClass]="{ 'rotate-180': isRotated }"
+                  (click)="toggleRotation()"
+                >
+                  <i class="fa-solid fa-chevron-down"></i>
+                </a>
+              </span>
+
+              <!-- <span>
+                
+                
+              </span> -->
+              <div class="row">
+                <div class="col p-0">
+                  <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    <div class="card card-body">
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.subTotalPrice' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >{{ cartDetails.totalDiscount + cartDetails.totalPrice }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.shippingAmount' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >55
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.discountAmount' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >-{{ cartDetails.totalDiscount }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0"
+                          >{{ 'cart.totalPrice' | translate }}
+                          <i>{{ 'cart.tax' | translate }}</i></span
+                        >
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >{{ cartDetails.totalPrice }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button
               [disabled]="cartDetails.totalQuantity == 0"
               class="btn custome-btn p-0 border-0"
