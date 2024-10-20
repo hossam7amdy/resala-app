@@ -188,10 +188,21 @@
     "yesBtn": "Yes",
     "stockQnt": "In Stock",
     "sizeTitle": "Size",
+    "editColorSize": "Edit",
+    "editTitleForm": "SIZE CHANGE",
+    "chooseColor": "Choose Color",
+    "chooseSize": "Choose Size",
+    "updateCartBtn": "Update and Back to Cart",
+    "remove": "Remove",
     "latestStock": "Latest One Stock",
     "checkoutBtn": "Check Out Summary",
-    "totalProPrice": "Total Products Price",
-    "orderBtn": "Order Now",
+    "totalProPrice": "Total Amount",
+    "subTotalPrice": "Sub Total",
+    "shippingAmount": "Shipping",
+    "discountAmount": "Discount Amount",
+    "totalPrice": "Total Price",
+    "tax": "(Tax included)",
+    "orderBtn": "Complete Order",
     "cartEmptyTitle": "Your Cart Is Empty ..."
   }
 }

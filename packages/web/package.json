@@ -27,6 +27,7 @@
     "jwt-decode": "^4.0.0",
     "ng-bootstrap": "^1.6.3",
     "ngx-gallery": "^5.10.0",
+    "ngx-image-zoom": "^3.0.0",
     "ngx-owl-carousel-o": "^16.0.0",
     "ngx-pagination": "^6.0.3",
     "ngx-spinner": "^16.0.2",

@@ -1,6 +1,13 @@
 <h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
+    <!-- blank-layout.component.html -->
+    <div class="layout">
+      <app-breadcrumb></app-breadcrumb>
+      <router-outlet></router-outlet>
+      <!-- This is where child routes will be rendered -->
+    </div>
+
     <div class="row img-product">
       <div class="col-sm-12 col-md-8 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
@@ -8,10 +15,17 @@
             <ng-container *ngFor="let image of product.images; let j = index">
               <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
-                <div class="main-img p-3">
+                <div
+                  class="main-img p-3"
+                  (mousemove)="setZoomPosition($event)"
+                  (mouseover)="toggleZoom(true)"
+                  (mouseout)="toggleZoom(false)"
+                >
                   <img
                     [src]="image.imageUrl"
                     class="image-products"
+                    [class.zoomed]="isZoomed"
+                    [ngStyle]="zoomStyle"
                     [alt]="
                       _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
                     "
@@ -19,6 +33,7 @@
                       _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
                     "
                   />
+                  <div class="hover-overlay"></div>
                 </div>
               </ng-template>
             </ng-container>
@@ -51,14 +66,14 @@
                   (change)="changeimage(image.imageUrl + i)"
                 >
                   <img
-                    [src]="image?.imageUrl"
+                    [src]="
+                      currentColor == ''
+                        ? image?.imageUrl
+                        : currentColor !== product.color.id
+                          ? []
+                          : image?.imageUrl
+                    "
                     class="w-100 image-products"
-                    [alt]="
-                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-                    "
-                    [title]="
-                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-                    "
                   />
                 </div>
               </div>
@@ -66,6 +81,7 @@
           </div>
         </div>
       </div>
+
       <div class="col-sm-12 col-md-4">
         <h2 class="h2">
           {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
@@ -91,9 +107,14 @@
             }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s
           >
           <br />
-          <span *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="price fa-lg"
+          <br />
+          <span
+            *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'"
+            class="price fa-lg fs-2"
             >{{ productDetails.price - productDetails.price * (discount.amount / 100)
-            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
+            }}<label class="currency fs-4">
+              {{ 'home.allProducts.currency' | translate }}</label
+            ></span
           >
         </div>
         <ngx-stars-rating
