@@ -18,6 +18,8 @@ import { ReviewsService } from 'src/app/core/services/reviews.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
@@ -30,6 +32,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     CuttdatePipe,
     RouterLink,
     TranslateModule,
+    BreadcrumbComponent,
   ],
 
   templateUrl: './product-details.component.html',
@@ -37,7 +40,30 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 })
 export class ProductDetailsComponent implements OnInit {
   // static productId: any;
+  isZoomed = false;
 
+  zoomStyle = {};
+
+  toggleZoom(state: boolean) {
+    this.isZoomed = state;
+    this.zoomStyle = state ? this.zoomStyle : {};
+  }
+
+  setZoomPosition(event: MouseEvent) {
+    if (this.isZoomed) {
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      const x = event.clientX - rect.left; // X position within the image
+      const y = event.clientY - rect.top; // Y position within the image
+
+      this.zoomStyle = {
+        transformOrigin: `${x}px ${y}px`, // Set the origin for zoom
+      };
+    }
+  }
+
+  myThumbnail =
+    'https://resala-app.s3.eu-north-1.amazonaws.com/e918b11d-3d50-4d87-814d-d2b3ae5ac017.webp';
+  myFullresImage = this.myThumbnail;
   constructor(
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
@@ -285,7 +311,6 @@ export class ProductDetailsComponent implements OnInit {
           this._CartService.cartNumber.next(res.data.totalQuantity);
           console.log('cart number :' + this._CartService.cartNumber);
           this._toaster.success('added one product successfuly');
-          this._Router.navigate(['/cart']);
         },
         error: err => {
           localStorage.setItem('productId', this.productId);

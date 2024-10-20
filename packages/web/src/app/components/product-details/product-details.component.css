@@ -1,3 +1,28 @@
+/* app.component.css */
+.main-img {
+  overflow: hidden; /*Hide overflow to crop the zoomed image */
+
+  position: relative; /* For positioning */
+}
+
+.image-products {
+  width: 100%; /* Maintain full width */
+  transition: transform 0.7s ease; /* Smooth transition */
+}
+
+.image-products.zoomed {
+  transform: scale(1.5); /* Zoom in effect */
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: zoom-in; /* Change cursor to indicate interactivity */
+}
+
 .product-details {
   margin-top: 100px;
 }
@@ -20,6 +45,14 @@
   /* width: 265.33px;
   height: 450px; */
   height: auto;
+}
+.mini-images .image-products {
+  cursor: zoom-in;
+  transition: transform 0.3s ease-in-out;
+  overflow: hidden;
+}
+.mini-images .image-products:hover {
+  transform: scale(1.1);
 }
 
 .price {
@@ -218,8 +251,8 @@
   /* width: 30px;
   height: 30px; */
   padding: 5px;
-  border: 1px solid #fff;
-  margin: 0 8px;
+  border: 1px solid #ccc;
+  margin: 8px;
   cursor: pointer;
 }
 
@@ -227,6 +260,7 @@
   /* border-color: #000; */
   background-color: #fbb935;
   color: #fff;
+  border: 1px solid #fbb935;
 }
 
 /* color option*/
@@ -241,8 +275,8 @@
   /* width: 30px;
   height: 30px; */
   padding: 5px;
-  border: 1px solid #fff;
-  margin: 0 8px 0px;
+  border: 1px solid #ccc;
+  margin: 8px;
   cursor: pointer;
 }
 
@@ -250,6 +284,7 @@
   /* border-color: #000; */
   background-color: #fbb935;
   color: #fff;
+  border: 1px solid #fbb935;
 }
 
 .card-body .p {
