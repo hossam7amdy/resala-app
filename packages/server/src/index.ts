@@ -1,13 +1,9 @@
 /* eslint-disable no-console */
-import { config } from 'dotenv';
 import { createServer } from 'http';
 
 import { createExpressApp } from './app.js';
-import { checkConfigurations, configuration } from './configuration/index.js';
+import { configuration } from './configuration/index.js';
 import { initDb } from './datastore/index.js';
-
-config({ path: process.env.DOTENV_CONFIG_PATH });
-checkConfigurations(configuration, 'configuration');
 
 (async () => {
   await initDb();
