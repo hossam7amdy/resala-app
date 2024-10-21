@@ -124,8 +124,11 @@
 </section>
 
 <ng-template class="d-flex justify-content-center text-center" #emptyCart>
-  <div class="emptyCartParent">
-    <i class="fa-regular fa-heart favourit-icon"></i>
-    <h1 class="emptyCart text-uppercase">Your Favourites List Is Empty ...</h1>
+  <div class="emptyCart emptyCartParent">
+    <i class="fa-regular fa-heart"></i>
+    <h1 class="h2 text-uppercase">{{ 'favorites.favoritesEmptyTitle' | translate }}</h1>
+    <button routerLink="/home" class="custome-btn">
+      {{ 'favorites.favoritesBtn' | translate }}
+    </button>
   </div>
 </ng-template>
