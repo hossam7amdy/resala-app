@@ -1,4 +1,4 @@
-<section *ngIf="totalCount != 0; else emptyCart">
+<section *ngIf="cartDetailsItems != ''; else emptyCart">
   <div class="container">
     <h2 class="cartTitle h2">
       {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
@@ -113,7 +113,11 @@
 
                     <div class="form-container" *ngIf="isFormVisible">
                       <form>
-                        <i class="fa-solid fa-xmark close-edit" (click)="toggleForm()"></i>
+                        <i
+                          [lang]="_Translate.currentLang"
+                          class="fa-solid fa-xmark close-edit"
+                          (click)="toggleForm()"
+                        ></i>
                         <h2 class="h3">{{ 'cart.editTitleForm' | translate }}</h2>
                         <div class="content-form">
                           <div class="colorSection">
@@ -126,6 +130,7 @@
                                   <img
                                     class="mini-images-color"
                                     [src]="productStock[i].images[0]?.imageUrl"
+                                    (click)="[onColorChange(product, i), isChooseColorFun()]"
                                   />
 
                                   <div
@@ -177,11 +182,20 @@
                                       />
 
                                       <label
+                                        *ngIf="size.quantity !== 0"
                                         (click)="[onSizeChange(size), isChooseSizeFun()]"
                                         for="btnsize"
                                       >
                                         {{ size.size }}
                                       </label>
+
+                                      <s
+                                        *ngIf="size.quantity == 0"
+                                        aria-disabled="true"
+                                        for="btnsize"
+                                      >
+                                        {{ size.size }}
+                                      </s>
                                     </div>
                                   </div>
                                 </div>
@@ -189,7 +203,15 @@
                             </div>
                           </div>
                         </div>
-                        <button class="custome-btn">{{ 'cart.updateCartBtn' | translate }}</button>
+                        <button
+                          (click)="
+                            [removeStockId(item.stock.id, removeStock, stockIdSize, item.quantity)]
+                          "
+                          #removeStock
+                          class="custome-btn"
+                        >
+                          {{ 'cart.updateCartBtn' | translate }}
+                        </button>
                       </form>
                     </div>
 
@@ -297,7 +319,7 @@
                           'cart.shippingAmount' | translate
                         }}</span>
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >55
+                          >0
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span
@@ -346,7 +368,10 @@
 </section>
 
 <ng-template class="m-auto" #emptyCart>
-  <div class="emptyCartParent">
-    <h1 class="emptyCart text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
+  <div class="emptyCart emptyCartParent">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <h1 class="h2 text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
+    <p class="p">{{ 'cart.emptyCartP' | translate }}</p>
+    <button routerLink="/home" class="custome-btn">{{ 'cart.emptyBtn' | translate }}</button>
   </div>
 </ng-template>
