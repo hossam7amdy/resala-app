@@ -264,6 +264,9 @@ export class PaymentComponent implements OnInit {
       },
     });
     this.isLoading = false;
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   paymentSelectedMethod(event: any) {

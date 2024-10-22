@@ -34,7 +34,9 @@ export class OrdersComponent implements OnInit {
         console.log(err);
       },
     });
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   setActiveClass() {

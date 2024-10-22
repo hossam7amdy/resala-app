@@ -110,7 +110,9 @@
     "confirmDeleteTitle": "Confirm Delete",
     "questionDelete": "Do You Want Delete This Product From Your Favorite List ?",
     "questionDeleteCancel": "Cancel",
-    "questionDeleteYes": "Yes"
+    "questionDeleteYes": "Yes",
+    "favoritesEmptyTitle": "There is no product in your favourites.",
+    "favoritesBtn": "Start Shopping"
   },
   "login": {
     "mainTitle": "Login Now",
@@ -190,7 +192,7 @@
     "sizeTitle": "Size",
     "editColorSize": "Edit",
     "editTitleForm": "SIZE CHANGE",
-    "chooseColor": "Choose Color",
+    "chooseColor": "Choose the Color First",
     "chooseSize": "Choose Size",
     "updateCartBtn": "Update and Back to Cart",
     "remove": "Remove",
@@ -203,6 +205,8 @@
     "totalPrice": "Total Price",
     "tax": "(Tax included)",
     "orderBtn": "Complete Order",
-    "cartEmptyTitle": "Your Cart Is Empty ..."
+    "cartEmptyTitle": "Your Cart Is Empty",
+    "emptyCartP": "Many products are waiting for you...",
+    "emptyBtn": "GO TO SHOPPING"
   }
 }

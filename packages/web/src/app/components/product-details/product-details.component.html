@@ -196,9 +196,17 @@
                     [value]="selectedSize"
                   />
 
-                  <label (click)="[onSizeChange(size), isChooseSizeFun()]" for="btnsize">
+                  <label
+                    *ngIf="size.quantity !== 0"
+                    (click)="[onSizeChange(size), isChooseSizeFun()]"
+                    for="btnsize"
+                  >
                     {{ size.size }}
                   </label>
+
+                  <s *ngIf="size.quantity == 0" aria-disabled="true" for="btnsize">
+                    {{ size.size }}
+                  </s>
                 </div>
               </div>
             </div>

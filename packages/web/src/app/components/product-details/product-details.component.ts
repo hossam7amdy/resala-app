@@ -75,7 +75,6 @@ export class ProductDetailsComponent implements OnInit {
     private _Reviews: ReviewsService,
     private _ProductsCategory: CategoriesService,
     private _WishListService: WishListService,
-    private _Renderer: Renderer2,
     private _Toaster: ToastrService,
     private _RTLStatus: Translate_Service,
     public _Translate: TranslateService
@@ -173,6 +172,9 @@ export class ProductDetailsComponent implements OnInit {
         this.productReview = res.data.reviews;
       },
     });
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   getProductDetails(id: any) {
@@ -313,9 +315,14 @@ export class ProductDetailsComponent implements OnInit {
           this._toaster.success('added one product successfuly');
         },
         error: err => {
-          localStorage.setItem('productId', this.productId);
-          this._toaster.error('please login !!'); //'Should be Login'
-          this._Router.navigate(['/login']);
+          if (err.status == 401) {
+            localStorage.setItem('productId', this.productId);
+            this._toaster.info('please login !!'); //'Should be Login'
+            this._Router.navigate(['/login']);
+          } else {
+            this._Toaster.error(err);
+          }
+
           console.log('response', productId, quantity, err);
         },
       });
@@ -384,7 +391,7 @@ export class ProductDetailsComponent implements OnInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this._WishListService.postWishListItems(id).subscribe({
       next: (response: any) => {
-        this._Renderer.setStyle(element, 'font-weight', 'bold');
+        this._Renderer2.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
       },
@@ -404,6 +411,8 @@ export class ProductDetailsComponent implements OnInit {
   reloadPage(id: any): void {
     this.spinner.show();
     window.location.replace(`/product-details/${id}`);
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 }
