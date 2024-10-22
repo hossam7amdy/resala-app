@@ -150,7 +150,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.onClick = true;
-    }, 20000);
+    }, 10000);
   }
   closeOverlay() {
     this.onClick = false;

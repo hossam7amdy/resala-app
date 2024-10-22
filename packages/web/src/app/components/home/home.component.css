@@ -729,7 +729,7 @@ section .overlay {
   padding: 0;
 }
 .discounts .content-offer {
-  background-color: #14aec68b;
+  background-color: #00000042;
   padding: 20px;
   min-height: 400px;
   text-align: center;

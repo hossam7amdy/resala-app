@@ -22,7 +22,7 @@ export class CartComponent implements OnInit {
   cartDetailsItems: any = [];
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-
+  totalCount: number = 0;
   // update color and size
   productStock: any = [];
   productStockColor: any = [];
@@ -51,10 +51,10 @@ export class CartComponent implements OnInit {
     public _Translate: TranslateService,
     private _HomeProductsService: HomeProductsService
   ) {}
-  totalCount: number = 0;
 
   ngOnInit(): void {
     this.spinner.show();
+
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
@@ -67,7 +67,9 @@ export class CartComponent implements OnInit {
       },
     });
 
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   // update Color and Size
@@ -90,7 +92,9 @@ export class CartComponent implements OnInit {
         console.log('after filter', this.productStockColor);
       },
     });
-    this.spinner.hide();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   onColorChange(event: any, index: number) {
@@ -162,7 +166,7 @@ export class CartComponent implements OnInit {
     }
     setTimeout(() => {
       this.spinner.hide();
-    }, 500);
+    }, 1000);
   }
 
   // Remove item
@@ -182,10 +186,51 @@ export class CartComponent implements OnInit {
         this._toaster.info('Your Item Not Removed');
       },
     });
-
     setTimeout(() => {
       this.spinner.hide();
     }, 1000);
+  }
+  // update color&Size
+  //Remove stock id first
+  removeStockId(itemId: string, element: HTMLElement, productId: string, quantity: any): void {
+    if (this.isChooseColor && this.isChooseSize === true) {
+      this.spinner.show();
+      this._Renderer.setAttribute(element, 'disabled', 'true');
+
+      this._CartService.removeCartItem(itemId).subscribe({
+        next: res => {
+          this.cartDetails = res.data;
+          this.cartDetailsItems = res.data.items;
+          this._Renderer.removeAttribute(element, 'disabled');
+          this._CartService.cartNumber.next(res.data.totalQuantity);
+
+          this.updateCartProduct(productId, quantity);
+        },
+        error: () => {
+          this._toaster.info('Your Item Not Removed');
+        },
+      });
+    } else {
+      this._toaster.info('should be choose color and size');
+    }
+  }
+  //Update
+  // updateCartProduct(stockIdSize, item.quantity)
+
+  updateCartProduct(productId: string, quantity: any) {
+    this._CartService.addToCart(productId, quantity).subscribe({
+      next: res => {
+        console.log(res);
+        this._CartService.cartNumber.next(res.data.totalQuantity);
+        console.log('cart number :' + this._CartService.cartNumber);
+        window.location.reload();
+        this._toaster.success('Update product successfuly');
+      },
+      error: err => {
+        this._toaster.error(err);
+        console.log('response', productId, quantity, err);
+      },
+    });
   }
 
   // Delete Confirmation
@@ -209,6 +254,7 @@ export class CartComponent implements OnInit {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
           this.totalCount = response.data.totalQuantity;
+          window.location.reload();
         },
         error: () => {
           this._toaster.info('Your Items are Not Deleted !!');

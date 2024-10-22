@@ -110,7 +110,9 @@
     "confirmDeleteTitle": "تأكيد الحذف",
     "questionDelete": "هل تريد حذف المنتج من المفضلة؟",
     "questionDeleteCancel": "إلغاء",
-    "questionDeleteYes": "نعم"
+    "questionDeleteYes": "نعم",
+    "favoritesEmptyTitle": "لا يوجد أي منتجات في قائمتك المفضلة.",
+    "favoritesBtn": "إبدأ التسوق"
   },
   "login": {
     "mainTitle": "تسجيل دخول الان",
@@ -190,7 +192,7 @@
     "sizeTitle": "المقاس",
     "editColorSize": "تعديل",
     "editTitleForm": "تعديل المقاس",
-    "chooseColor": "خيرات اللون",
+    "chooseColor": "اختر اللون اولا",
     "chooseSize": "خيرات المقاس",
     "updateCartBtn": "تحديث والعودة الى السلة",
     "remove": "حذف",
@@ -203,6 +205,8 @@
     "totalPrice": "إجمالى الحساب",
     "tax": "(شامل الضريبة)",
     "orderBtn": "الاستمرار الى الدفع",
-    "cartEmptyTitle": "السلة الخاصه بك لا توجد بها منتجات !!"
+    "cartEmptyTitle": "لا يوجد لديك منتجات فى سلة التسوق",
+    "emptyCartP": "العديد من المنتجات فى انتظاركم ...",
+    "emptyBtn": "اذهب للتسوق"
   }
 }
