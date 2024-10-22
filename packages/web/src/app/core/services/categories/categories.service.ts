@@ -22,7 +22,7 @@ export class CategoriesService {
 
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
-  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  // baseURL: string = `http://ec2-13-60-17-214.eu-north-1.compute.amazonaws.com`;
   constructor(private _HTTPClient: HttpClient) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

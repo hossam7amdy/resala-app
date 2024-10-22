@@ -1,4 +1,6 @@
 import type {
+  AddProductsToDiscountRequest,
+  AddProductsToDiscountResponse,
   CreateDiscountRequest,
   CreateDiscountResponse,
   DeleteDiscountResponse,
@@ -6,14 +8,18 @@ import type {
   GetDiscountResponse,
   ListDiscountsRequest,
   ListDiscountsResponse,
+  RemoveProductsFromDiscountRequest,
+  RemoveProductsFromDiscountResponse,
   UpdateDiscountRequest,
   UpdateDiscountResponse,
 } from '@resala/shared';
 import {
+  AddProductsToDiscountSchema,
   CreateDiscountSchema,
   DeleteDiscountSchema,
   GetDiscountSchema,
   ListDiscountsSchema,
+  RemoveProductsFromDiscountSchema,
   UpdateDiscountSchema,
 } from '@resala/shared';
 import {
@@ -104,5 +110,31 @@ export class DiscountController extends Controller {
     const discount = await this.discountService.delete(discountId);
 
     return { success: true, data: discount };
+  }
+
+  /** Add products to a discount */
+  @Post('{discountId}/products')
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(AddProductsToDiscountSchema)])
+  public async addProducts(
+    @Path() discountId: string,
+    @Body() body: AddProductsToDiscountRequest['body']
+  ): Promise<AddProductsToDiscountResponse> {
+    await this.discountService.addProducts(+discountId, body.productIds);
+
+    return { success: true };
+  }
+
+  /** Remove products from a discount */
+  @Delete('{discountId}/products')
+  @Security('JWT_SECRET')
+  @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(RemoveProductsFromDiscountSchema)])
+  public async removeProducts(
+    @Path() discountId: string,
+    @Queries() query: RemoveProductsFromDiscountRequest['query']
+  ): Promise<RemoveProductsFromDiscountResponse> {
+    await this.discountService.removeProducts(+discountId, query.productIds);
+
+    return { success: true };
   }
 }
