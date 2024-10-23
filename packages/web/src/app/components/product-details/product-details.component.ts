@@ -126,7 +126,7 @@ export class ProductDetailsComponent implements OnInit {
   currentSize: string = '';
   stockIdColor: string = '';
   stockIdSize: string = '';
-  quantity: string = '';
+  quantity!: number;
   isChooseSize: boolean = false;
 
   // Reviews
@@ -270,6 +270,8 @@ export class ProductDetailsComponent implements OnInit {
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
     this.stockIndex = index;
+    this.counterQuantity = 1;
+    this.stockIdSize = '';
     console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
@@ -284,6 +286,7 @@ export class ProductDetailsComponent implements OnInit {
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
+    this.counterQuantity = 1;
     console.log(this.selectedSize, this.stockIdSize);
   }
 
@@ -303,11 +306,11 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
-    if (this.isChooseColor && this.isChooseSize === true) {
+  addProduct(productId: string, element: HTMLButtonElement) {
+    if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer2.setAttribute(element, 'disabled', 'true');
-
-      this._CartService.addToCart(productId, quantity).subscribe({
+      const requiredCount: string = this.counterQuantity.toString();
+      this._CartService.addToCart(productId, requiredCount).subscribe({
         next: res => {
           console.log(res);
           this._CartService.cartNumber.next(res.data.totalQuantity);
@@ -323,7 +326,7 @@ export class ProductDetailsComponent implements OnInit {
             this._Toaster.error(err);
           }
 
-          console.log('response', productId, quantity, err);
+          console.log('response', productId, requiredCount, err);
         },
       });
     } else {
