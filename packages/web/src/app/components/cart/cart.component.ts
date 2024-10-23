@@ -32,13 +32,15 @@ export class CartComponent implements OnInit {
   stockIdColor: string = '';
   stockIndex: any;
   isChooseColor: boolean = false;
+  stockId: string = '';
   //size
   statusClassSizeBtn = 'btn-not-active';
   selectedSize: string = '';
   currentSize: string = '';
   stockIdSize: string = '';
-  quantity: string = '';
+  quantity!: number;
   isChooseSize: boolean = false;
+  requiredQuantity: string = '';
 
   // quantity attr
   counterQuantity: number = 1;
@@ -74,7 +76,7 @@ export class CartComponent implements OnInit {
 
   // update Color and Size
   getStockDataPro(id: any): void {
-    this.spinner.show();
+    // this.spinner.show();
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
@@ -92,9 +94,9 @@ export class CartComponent implements OnInit {
         console.log('after filter', this.productStockColor);
       },
     });
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.spinner.hide();
+    // }, 1000);
   }
 
   onColorChange(event: any, index: number) {
@@ -102,6 +104,8 @@ export class CartComponent implements OnInit {
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
     this.stockIndex = index;
+    this.counterQuantity = 1;
+    this.stockIdSize = '';
     console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
@@ -117,11 +121,12 @@ export class CartComponent implements OnInit {
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
+    this.counterQuantity = 1;
+
     console.log(this.selectedSize, this.stockIdSize);
   }
   // Quantity Fun
   plusCounterQuantity(): void {
-    this.spinner.show();
     this.counterQuantity++;
   }
 
@@ -192,19 +197,18 @@ export class CartComponent implements OnInit {
   }
   // update color&Size
   //Remove stock id first
-  removeStockId(itemId: string, element: HTMLElement, productId: string, quantity: any): void {
-    if (this.isChooseColor && this.isChooseSize === true) {
-      this.spinner.show();
+  removeStockId(element: HTMLElement, productId: string): void {
+    if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer.setAttribute(element, 'disabled', 'true');
 
-      this._CartService.removeCartItem(itemId).subscribe({
+      this._CartService.removeCartItem(this.stockId).subscribe({
         next: res => {
           this.cartDetails = res.data;
           this.cartDetailsItems = res.data.items;
           this._Renderer.removeAttribute(element, 'disabled');
           this._CartService.cartNumber.next(res.data.totalQuantity);
 
-          this.updateCartProduct(productId, quantity);
+          this.updateCartProduct(productId, this.counterQuantity);
         },
         error: () => {
           this._toaster.info('Your Item Not Removed');
@@ -215,10 +219,10 @@ export class CartComponent implements OnInit {
     }
   }
   //Update
-  // updateCartProduct(stockIdSize, item.quantity)
 
-  updateCartProduct(productId: string, quantity: any) {
-    this._CartService.addToCart(productId, quantity).subscribe({
+  updateCartProduct(itemId: string, quantity: any) {
+    const requiredCount: string = this.counterQuantity.toString();
+    this._CartService.addToCart(itemId, requiredCount).subscribe({
       next: res => {
         console.log(res);
         this._CartService.cartNumber.next(res.data.totalQuantity);
@@ -228,7 +232,7 @@ export class CartComponent implements OnInit {
       },
       error: err => {
         this._toaster.error(err);
-        console.log('response', productId, quantity, err);
+        console.log('response', itemId, quantity, err);
       },
     });
   }
@@ -268,9 +272,10 @@ export class CartComponent implements OnInit {
   // Edit on Size & Color Form
   isFormVisible = false;
 
-  toggleForm() {
+  toggleForm(stockId: string) {
     this.isFormVisible = !this.isFormVisible;
     this.toggleBodyScroll(this.isFormVisible);
+    this.stockId = stockId;
   }
   private toggleBodyScroll(isVisible: boolean) {
     if (isVisible) {
