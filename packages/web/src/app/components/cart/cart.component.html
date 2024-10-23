@@ -104,19 +104,25 @@
                     <!-- Start Edit Size & Color Section  -->
                     <button
                       class="edit-btn"
-                      (click)="[toggleForm(), getStockDataPro(cartDetailsItems[i].product.id)]"
+                      (click)="
+                        [toggleForm(item.stockId), getStockDataPro(cartDetailsItems[i].product.id)]
+                      "
                     >
                       {{ 'cart.editColorSize' | translate }}
                     </button>
 
-                    <div class="overlay" *ngIf="isFormVisible" (click)="toggleForm()"></div>
+                    <div
+                      class="overlay"
+                      *ngIf="isFormVisible"
+                      (click)="toggleForm(item.stockId)"
+                    ></div>
 
                     <div class="form-container" *ngIf="isFormVisible">
                       <form>
                         <i
                           [lang]="_Translate.currentLang"
                           class="fa-solid fa-xmark close-edit"
-                          (click)="toggleForm()"
+                          (click)="toggleForm(item.stockId)"
                         ></i>
                         <h2 class="h3">{{ 'cart.editTitleForm' | translate }}</h2>
                         <div class="content-form">
@@ -202,16 +208,40 @@
                               </ng-container>
                             </div>
                           </div>
+
+                          <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
+                          <section class="quantity">
+                            <div class="counter">
+                              <button
+                                class="min-counter-btn fw-bold"
+                                [disabled]="counterQuantity == 1"
+                                (click)="minCounterQuantity()"
+                              >
+                                <i class="fa-solid fa-minus"></i>
+                              </button>
+                              <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
+                                counterQuantity
+                              }}</span>
+                              <button
+                                class="plus-counter-btn fw-bold"
+                                (click)="plusCounterQuantity()"
+                                [disabled]="counterQuantity == quantity"
+                              >
+                                <i class="fa-solid fa-plus"></i>
+                              </button>
+                            </div>
+                          </section>
                         </div>
                         <button
-                          (click)="
-                            [removeStockId(item.stock.id, removeStock, stockIdSize, item.quantity)]
-                          "
+                          (click)="[removeStockId(removeStock, stockIdSize)]"
                           #removeStock
                           class="custome-btn"
                         >
                           {{ 'cart.updateCartBtn' | translate }}
                         </button>
+                        <span *ngIf="requiredQuantity != ''" class="text-danger"
+                          >Availaible Now {{ requiredQuantity }} Only</span
+                        >
                       </form>
                     </div>
 
@@ -253,7 +283,7 @@
                   item.quantity
                 }}</span>
                 <button
-                  [disabled]="item.stock.quantity == 0"
+                  [disabled]="item.stock.quantity == 0 || item.quantity == item.stock.quantity"
                   class="plus-counter-btn fw-bold"
                   (click)="changeCount(item.quantity + 1, item.stock.id, btnMin, btnPlus)"
                   #btnPlus

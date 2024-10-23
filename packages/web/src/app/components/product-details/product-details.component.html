@@ -257,18 +257,18 @@
             <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
               counterQuantity
             }}</span>
-            <button class="plus-counter-btn fw-bold" (click)="plusCounterQuantity()">
+            <button
+              class="plus-counter-btn fw-bold"
+              (click)="plusCounterQuantity()"
+              [disabled]="counterQuantity == quantity"
+            >
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
         </section>
 
         <div class="add-cart-btn">
-          <button
-            (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)"
-            #addToCartBtn
-            class="w-100"
-          >
+          <button (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="w-100">
             {{ 'productDetails.addToCart' | translate }}
           </button>
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
