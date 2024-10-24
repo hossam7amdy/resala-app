@@ -9,20 +9,28 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, FormsModule],
+  imports: [CommonModule, RouterLink, TranslateModule, FormsModule, SpinnerComponent],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
+  // custome spinner
+  customSpinIsLoading = false;
+  //end custome spinner
+
   cartDetails: any = {};
-  cartDetailsItems: any = [];
+  cartDetailsItems: any;
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
   totalCount: number = 0;
+
+  // Edit Form
+  isFormVisible = false;
   // update color and size
   productStock: any = [];
   productStockColor: any = [];
@@ -53,9 +61,15 @@ export class CartComponent implements OnInit {
     public _Translate: TranslateService,
     private _HomeProductsService: HomeProductsService
   ) {}
+  // ngAfterContentChecked(): void {
+  //   if(this.cartDetailsItems == undefined){
+  //     this.cartDetailsItems = ''
+  //   }
+
+  // }
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
 
     this._CartService.getCartUser().subscribe({
       next: response => {
@@ -63,20 +77,18 @@ export class CartComponent implements OnInit {
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
         this.totalCount = response.data.totalQuantity;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   // update Color and Size
   getStockDataPro(id: any): void {
-    // this.spinner.show();
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
@@ -94,9 +106,7 @@ export class CartComponent implements OnInit {
         console.log('after filter', this.productStockColor);
       },
     });
-    // setTimeout(() => {
-    //   this.spinner.hide();
-    // }, 1000);
+    this.customSpinIsLoading = false;
   }
 
   onColorChange(event: any, index: number) {
@@ -145,7 +155,7 @@ export class CartComponent implements OnInit {
     element1: HTMLButtonElement,
     element2: HTMLButtonElement
   ): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     if (count > 0) {
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
@@ -159,24 +169,23 @@ export class CartComponent implements OnInit {
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
           this.totalCount = response.data.totalQuantity;
+          this.customSpinIsLoading = false;
         },
         error: err => {
           console.log(err);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
+          this.customSpinIsLoading = false;
         },
       });
     } else {
       count = 1;
     }
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   // Remove item
   removeItem(itemId: string, element: HTMLElement): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this._Renderer.setAttribute(element, 'disabled', 'true');
 
     this._CartService.removeCartItem(itemId).subscribe({
@@ -186,21 +195,21 @@ export class CartComponent implements OnInit {
         this._Renderer.removeAttribute(element, 'disabled');
         this._CartService.cartNumber.next(res.data.totalQuantity);
         this._toaster.success('Removed Your Item Successfuly');
+        this.customSpinIsLoading = false;
       },
       error: () => {
         this._toaster.info('Your Item Not Removed');
+        this.customSpinIsLoading = false;
       },
     });
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
   // update color&Size
   //Remove stock id first
   removeStockId(element: HTMLElement, productId: string): void {
     if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer.setAttribute(element, 'disabled', 'true');
-
+      this.customSpinIsLoading = true;
+      this.isFormVisible = false;
       this._CartService.removeCartItem(this.stockId).subscribe({
         next: res => {
           this.cartDetails = res.data;
@@ -209,9 +218,11 @@ export class CartComponent implements OnInit {
           this._CartService.cartNumber.next(res.data.totalQuantity);
 
           this.updateCartProduct(productId, this.counterQuantity);
+          this.customSpinIsLoading = false;
         },
         error: () => {
           this._toaster.info('Your Item Not Removed');
+          this.customSpinIsLoading = false;
         },
       });
     } else {
@@ -249,8 +260,8 @@ export class CartComponent implements OnInit {
   }
   // Clear Cart
   clearAllItems(element: HTMLElement): void {
-    this.spinner.show();
     if (this.confirmDeleteAll == true) {
+      this.customSpinIsLoading = true;
       this._Renderer.setAttribute(element, 'disabled', 'true');
       this._CartService.clearCart().subscribe({
         next: response => {
@@ -262,15 +273,11 @@ export class CartComponent implements OnInit {
         },
         error: () => {
           this._toaster.info('Your Items are Not Deleted !!');
+          this.customSpinIsLoading = false;
         },
       });
     }
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
-  // Edit on Size & Color Form
-  isFormVisible = false;
 
   toggleForm(stockId: string) {
     this.isFormVisible = !this.isFormVisible;

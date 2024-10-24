@@ -1,25 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css'],
 })
 export class ForgotPasswordComponent {
   constructor(
-    private spinner: NgxSpinnerService,
     private _AuthService: AuthService,
-    private route: ActivatedRoute,
     private toaster: ToastrService
   ) {}
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   isLoading: boolean = false;
   successMsg: string = '';
@@ -32,35 +33,32 @@ export class ForgotPasswordComponent {
   });
 
   spinnerLoadEmail(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this.isEmail = true;
     this.isPhone = false;
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
+    this.customSpinIsLoading = false;
   }
 
   spinnerLoadPhone(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
 
     this.isPhone = true;
     this.isEmail = false;
 
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
+    this.customSpinIsLoading = false;
   }
 
   sendEmail(): void {
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
     this._AuthService.forgotPassword(this.forgotPw.value).subscribe({
       next: response => {
         console.log('response', response);
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log('error', err);
+        this.customSpinIsLoading = false;
       },
     });
-    this.isLoading = false;
   }
 }

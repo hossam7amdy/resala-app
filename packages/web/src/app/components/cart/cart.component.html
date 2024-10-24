@@ -1,4 +1,6 @@
-<section *ngIf="cartDetailsItems != ''; else emptyCart">
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
+<section *ngIf="!customSpinIsLoading && cartDetailsItems">
   <div class="container">
     <h2 class="cartTitle h2">
       {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
@@ -397,11 +399,11 @@
   </div>
 </section>
 
-<ng-template class="m-auto" #emptyCart>
+<div *ngIf="!customSpinIsLoading && !cartDetailsItems" class="m-auto">
   <div class="emptyCart emptyCartParent">
     <i class="fa-solid fa-bag-shopping"></i>
     <h1 class="h2 text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
     <p class="p">{{ 'cart.emptyCartP' | translate }}</p>
     <button routerLink="/home" class="custome-btn">{{ 'cart.emptyBtn' | translate }}</button>
   </div>
-</ng-template>
+</div>

@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
@@ -12,11 +11,12 @@ import { Product } from 'src/app/core/interfaces/product';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-latest-collection',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxStarsRatingModule, TranslateModule],
+  imports: [CommonModule, RouterLink, NgxStarsRatingModule, TranslateModule, SpinnerComponent],
   templateUrl: './latest-collection.component.html',
   styleUrls: ['./latest-collection.component.css'],
 })
@@ -27,14 +27,16 @@ export class LatestCollectionComponent implements OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
     private _Reviews: ReviewsService,
     public _Translate: TranslateService
   ) {}
   UserProfile: any;
-
   userNameLogged: any;
   productId: string = '';
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   //start Rating
   public rateNumber: number = 2;
@@ -56,13 +58,14 @@ export class LatestCollectionComponent implements OnInit {
   currentProduct: any;
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     //  products
     this._HomeProductsService.getProducts('1', '20').subscribe({
       next: response => {
         console.log(response.data);
         console.log('products', response.data);
         this.products = response.data.products;
+        this.customSpinIsLoading = false;
       },
     });
 
@@ -71,24 +74,24 @@ export class LatestCollectionComponent implements OnInit {
       next: res => {
         console.log('Reviews', res);
         this.rateNumber = res.data.reviews.rating;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
+        this.customSpinIsLoading = false;
       },
       error: err => {
         this._Toaster.error('Should be Login !!');
@@ -99,6 +102,7 @@ export class LatestCollectionComponent implements OnInit {
         //   this._Toaster.error(err.message);
         // }
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }

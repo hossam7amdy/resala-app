@@ -144,7 +144,9 @@
     "preNdShipping": "Processed Shipping",
     "enRoute": "En Route",
     "arrived": "Arrived",
-    "totalPaid": "Total Payed"
+    "totalPaid": "Total Payed",
+    "ordersEmptyTitle": "Not have Any Order",
+    "ordersEmptyBtn": "Let's GO SHOPPING"
   },
   "register": {
     "mainTitle": "Register Now",
