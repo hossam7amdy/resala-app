@@ -7,7 +7,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +17,7 @@ import { HomeProductsService } from 'src/app/core/services/home-products.service
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { TrendsService } from 'src/app/core/services/trends.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +30,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     SearchPipe,
     NgxStarsRatingModule,
     TranslateModule,
+    SpinnerComponent,
   ], //
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
@@ -40,6 +41,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   userNameLogged: any;
   productId: string = '';
 
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
+
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -47,7 +52,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
     private _Trend: TrendsService,
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
@@ -101,7 +105,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   currentProduct: any;
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
 
     //trend products
     this._Trend.getTrendProducts().subscribe({
@@ -121,29 +125,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
-        // this.rateNumber = response.data.products.avgRating;
+
+        this.customSpinIsLoading = false;
       },
     });
-
-    // categories
-    this._Categories.getCategories().subscribe({
-      next: response => {
-        console.log('categories', response.data);
-      },
-    });
-    //Reviews
-    // this._Reviews.getProductReview('1', '100').subscribe({
-    //   next:(res)=>{
-    //     console.log('Reviews',res)
-    //     this.rateNumber = res.data.reviews.rating;
-    //   },error:(err)=>{
-    //     console.log(err)
-    //   }
-    // })
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   // overlay
@@ -158,15 +143,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = false;
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
+        this.customSpinIsLoading = false;
       },
       error: err => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
+        this.customSpinIsLoading = false;
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
 
         // } else {
@@ -268,6 +256,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   pageChanged(event: any) {
     //  products
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProducts(event).subscribe({
       next: response => {
         console.log(event);
@@ -276,6 +265,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        this.customSpinIsLoading = false;
       },
     });
   }
