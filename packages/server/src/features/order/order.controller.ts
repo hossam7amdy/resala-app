@@ -37,13 +37,11 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
+import { EmailService, PaymobService } from '../../services/index.js';
 import { AddressService } from '../address/address.service.js';
 import { DiscountService } from '../discount/discount.service.js';
-import { EmailNotification } from '../notification/email.notification.js';
-import { NotificationService } from '../notification/notification.service.js';
 import { PaymentService } from '../payment/payment.service.js';
 import { ShoppingService } from '../shopping/shopping.service.js';
 import { StockService } from '../stock/stock.service.js';
@@ -60,7 +58,7 @@ export class OrderController extends Controller {
   private readonly shoppingService: ShoppingService;
   private readonly addressService: AddressService;
   private readonly paymentService: PaymentService;
-  private readonly notificationService: NotificationService;
+  private readonly emailService: EmailService;
 
   constructor() {
     super();
@@ -72,7 +70,7 @@ export class OrderController extends Controller {
     this.discountService = new DiscountService(db);
     this.shoppingService = new ShoppingService(db);
     this.addressService = new AddressService(db);
-    this.notificationService = new NotificationService(new EmailNotification());
+    this.emailService = EmailService.getInstance();
   }
 
   /** Creates a new order for current authenticated user */
@@ -95,18 +93,18 @@ export class OrderController extends Controller {
     await this.stockService.decrease(discountedUserCart);
 
     try {
-      const { items, shipping, ...order } = await this.orderService.create(
-        { userId: user.id, ...body },
-        discountedUserCart,
-        address
-      );
+      const {
+        items: _,
+        shipping,
+        ...order
+      } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
 
       let payment;
       if (paymentMethod === 'CARD') {
         payment = await this.paymentService.checkout({
           user,
           order: { shipping, ...order },
-          items,
+          cart: discountedUserCart,
           shipping: address,
         });
       }
@@ -158,7 +156,7 @@ export class OrderController extends Controller {
 
     // notify user with order cancellation
     if (order.user?.email) {
-      await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
+      await this.emailService.sendOrderCancellationEmail(order.user.email, order.id);
     }
 
     return { success: true, data: order };
@@ -175,7 +173,7 @@ export class OrderController extends Controller {
     const order = await this.orderService.update(+orderId, body);
 
     if (order.user?.email) {
-      await this.notificationService.sendOrderConfirmationEmail(
+      await this.emailService.sendOrderConfirmationEmail(
         order.user.email,
         order.id,
         orderStatus as OrderStatus
