@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { ProductDetailsComponent } from '../product-details/product-details.component';
 
@@ -18,6 +19,7 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
     ProductDetailsComponent,
     RouterLink,
     TranslateModule,
+    SpinnerComponent,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -29,6 +31,10 @@ export class LoginComponent {
     public _Translate: TranslateService
     // private _productDetailsComponent: ProductDetailsComponent
   ) {}
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   //show password
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,7 +81,7 @@ export class LoginComponent {
   // }
 
   handleForm(_loginForm: FormGroup): void {
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
 
     const userData = this.loginForm.value;
 
@@ -93,7 +99,7 @@ export class LoginComponent {
             this.successMsgAr = 'تم تسجيل الدخول بنجاح';
             // this.getUserInfo(response.data.user.firstName);
             // this._AuthService.userNameLogged.next(response.data.user.firstName);
-            this.isLoading = false;
+            this.customSpinIsLoading = false;
 
             // this._Router.navigate(['/home']);
 
@@ -118,7 +124,7 @@ export class LoginComponent {
         },
         error: err => {
           this.errMsg = err.error.message;
-          this.isLoading = false;
+          this.customSpinIsLoading = false;
         },
       });
     }

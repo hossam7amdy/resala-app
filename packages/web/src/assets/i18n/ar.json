@@ -144,7 +144,9 @@
     "preNdShipping": "جارى تحضير الطلب للشحن  ",
     "enRoute": "فى طريقها إليك",
     "arrived": "تم توصيل",
-    "totalPaid": "إجمالى المدفوع"
+    "totalPaid": "إجمالى المدفوع",
+    "ordersEmptyTitle": "ليس لديك طلبات",
+    "ordersEmptyBtn": "ابدأ باختيار طلبك "
   },
   "register": {
     "mainTitle": "سجل حساب جديد",
