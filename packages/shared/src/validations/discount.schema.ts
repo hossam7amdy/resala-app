@@ -4,87 +4,55 @@ import { OffsetPageParamsSchema } from './common.schema.js';
 
 const discountTypes = ['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'] as const;
 
+const productIds = z.array(z.coerce.number().positive()).min(1).max(100);
+
+const DiscountSchema = z.object({
+  type: z.enum(discountTypes),
+  amount: z.coerce.number().positive().min(0.1),
+  description: z.string().max(250).optional(),
+  minQty: z.coerce.number().positive().optional(),
+  isActive: z.coerce.boolean().optional(),
+  isStoreWide: z.coerce.boolean().optional(),
+  productIds: productIds.optional(),
+  startDate: z.coerce
+    .date()
+    .optional()
+    .transform(val => val?.toISOString()),
+  endDate: z.coerce
+    .date()
+    .optional()
+    .transform(val => val?.toISOString()),
+});
+
+type Discount = z.infer<typeof DiscountSchema>;
+
+const refineStoreWide = ({ productIds, isStoreWide }: Discount) => {
+  if (isStoreWide) return !productIds;
+  return true;
+};
+const refineStartAndEndDates = ({ startDate, endDate }: Discount) => {
+  // if both startDate and endDate are provided, endDate must be greater than startDate
+  if (startDate && endDate) {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+
+    return end >= start;
+  }
+
+  // if endDate is provided, startDate must be provided
+  return endDate ? !!startDate : true;
+};
+const refineDiscountType = ({ type, amount, minQty }: Discount) => {
+  if (type === 'BOGO') {
+    return minQty && amount === Math.trunc(amount);
+  }
+  return true;
+};
+
 export const CreateDiscountSchema = z.object({
-  body: z
-    .object({
-      type: z.enum(discountTypes),
-      amount: z.coerce.number().positive().min(0.1),
-      description: z.string().max(250).optional(),
-      minQty: z.coerce.number().positive().optional(),
-      isActive: z.coerce.boolean().optional(),
-      isStoreWide: z.coerce.boolean().optional(),
-      startDate: z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      endDate: z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      productIds: z.array(z.coerce.number().positive()).min(1).max(50).optional(),
-    })
-    .refine(
-      ({ type, productIds }) => {
-        if (['FIXED', 'BULK'].includes(type)) {
-          return productIds === undefined;
-        }
-        return true;
-      },
-      {
-        message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ isStoreWide, productIds }) => {
-        return isStoreWide ? !productIds : !!productIds;
-      },
-      {
-        message: 'Please choose either store-wide or select specific products, but not both.',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ startDate, endDate }) => {
-        // if both startDate and endDate are provided, endDate must be greater than startDate
-        if (startDate && endDate) {
-          const start = new Date(startDate).getTime();
-          const end = new Date(endDate).getTime();
-
-          return end >= start;
-        }
-
-        // if endDate is provided, startDate must be provided
-        return endDate ? !!startDate : true;
-      },
-      {
-        message:
-          'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BULK') return data.minQty;
-        return true;
-      },
-      {
-        message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BOGO') {
-          return data.minQty && data.amount === Math.trunc(data.amount);
-        }
-        return true;
-      },
-      {
-        message: 'Amount must be an integer for BOGO discount type.',
-        path: ['amount'],
-      }
-    ),
+  body: DiscountSchema.refine(refineStoreWide)
+    .refine(refineStartAndEndDates)
+    .refine(refineDiscountType),
 });
 
 export const UpdateDiscountSchema = z.object({
@@ -94,11 +62,32 @@ export const UpdateDiscountSchema = z.object({
       .positive()
       .transform(val => val.toString()),
   }),
-  body: CreateDiscountSchema.shape.body,
+  body: DiscountSchema.omit({ productIds: true })
+    .refine(refineDiscountType)
+    .refine(refineStartAndEndDates),
 });
 
 export const DeleteDiscountSchema = z.object({
   params: UpdateDiscountSchema.shape.params,
+});
+
+export const AddProductsToDiscountSchema = z.object({
+  params: z.object({
+    discountId: z.coerce
+      .number()
+      .positive()
+      .transform(discountId => discountId.toString()),
+  }),
+  body: z.object({ productIds }),
+});
+
+export const RemoveProductsFromDiscountSchema = z.object({
+  params: AddProductsToDiscountSchema.shape.params,
+  query: z.object({
+    productIds: z
+      .union([z.coerce.number(), productIds])
+      .transform(productIds => (typeof productIds === 'number' ? [productIds] : productIds)),
+  }),
 });
 
 export const ListDiscountsSchema = z.object({
