@@ -160,3 +160,68 @@
     /* display: none; */
   }
 }
+
+.emptyCart {
+  color: #016373;
+  /* border: 1px solid #fbb935; */
+  padding: 10px 70px;
+  text-align: center;
+  margin: auto;
+  width: 30%;
+  font-weight: 100 !important;
+}
+
+.emptyCartParent {
+  margin-top: 8%;
+}
+.emptyCart .h2 {
+  font-weight: 300;
+}
+.emptyCart i {
+  font-size: 80px;
+  color: #fbb935;
+}
+.emptyCart .p {
+  font-size: 16px;
+}
+
+@media (max-width: 1580px) {
+  .emptyCart {
+    padding: 20px 40px;
+    width: 35%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .emptyCart {
+    padding: 40px 40px;
+    width: 75%;
+  }
+}
+@media (max-width: 550px) {
+  .emptyCart {
+    padding: 30px 30px;
+    width: 90%;
+  }
+  .emptyCart i {
+    font-size: 60px;
+  }
+  .emptyCart .p {
+    font-size: 16px;
+  }
+}
+@media (max-width: 410px) {
+  .emptyCart {
+    font-size: 20px;
+    padding: 10px 10px;
+  }
+  .emptyCart i {
+    font-size: 40px;
+  }
+  .emptyCart .h2 {
+    font-size: 17px;
+  }
+  .emptyCart .p {
+    font-size: 12px;
+  }
+}
