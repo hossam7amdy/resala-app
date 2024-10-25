@@ -1,11 +1,13 @@
 <!-- && isEdit == false -->
+
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 <!--  -->
 <section
   *ngIf="getUserAddress.length >= 1 && isSelectedAddress == false && isRegisterd == false"
   class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
-  <h1 class="h2 step-one">Step One ...</h1>
-  <h3 class="h3 mt-0">Information Delivery</h3>
+  <h1 class="h2 step-one">{{ 'payment.addressForm.firstTitle' | translate }}</h1>
+  <h3 class="h3 mt-0">{{ 'payment.addressForm.secondTitle' | translate }}</h3>
   <form [formGroup]="userAddresses" action="">
     <div class="row justify-content-center">
       <div *ngFor="let userAddress of getUserAddress; let i = index" class="col-11 address-field">
@@ -20,16 +22,18 @@
             formControlName="addressId"
             (change)="selectedAddressMethod(userAddress.id)"
           />
-          <label class="form-check-label check-address-lbl p-2" for="method"
-            >please choose Address</label
-          >
+          <label class="form-check-label check-address-lbl p-2" for="method">{{
+            'payment.addressForm.chooseAddress' | translate
+          }}</label>
         </div>
         <fieldset class="" [disabled]="i != editIndex">
           <div class="row">
             <!-- col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12 -->
 
             <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="first-name" class="form-label">First Name</label>
+              <label for="first-name" class="form-label">{{
+                'payment.addressForm.firstName' | translate
+              }}</label>
               <input
                 type="text"
                 id="first-name"
@@ -41,7 +45,9 @@
             </div>
 
             <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="last-name" class="form-label">Last Name</label>
+              <label for="last-name" class="form-label">{{
+                'payment.addressForm.lastName' | translate
+              }}</label>
               <input
                 type="text"
                 id="last-name"
@@ -53,7 +59,9 @@
             </div>
 
             <div class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="phone" class="form-label">Contact Number</label>
+              <label for="phone" class="form-label">{{
+                'payment.addressForm.contact' | translate
+              }}</label>
               <input
                 type="text"
                 id="phone"
@@ -66,15 +74,19 @@
                 *ngIf="userAddresses.get('phone')?.errors && userAddresses.get('phone')?.touched"
                 class="alert text-danger"
               >
-                <p *ngIf="userAddresses.get('phone')?.getError('required')">phone is required</p>
+                <p *ngIf="userAddresses.get('phone')?.getError('required')">
+                  {{ 'register.phoneRequired' | translate }}
+                </p>
                 <p *ngIf="userAddresses.get('phone')?.getError('pattern')">
-                  Should be 11 digts sharp & start be 011,012,010,015
+                  {{ 'register.phonePatttern' | translate }}
                 </p>
               </div>
             </div>
 
             <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="country" class="form-label">Country</label>
+              <label for="country" class="form-label">{{
+                'payment.addressForm.country' | translate
+              }}</label>
               <input
                 type="text"
                 id="country"
@@ -86,7 +98,9 @@
             </div>
 
             <div *ngIf="i == editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="state" class="form-label">Country</label>
+              <label for="state" class="form-label">{{
+                'payment.addressForm.country' | translate
+              }}</label>
               <select
                 #selectedValue
                 (change)="onSelected(selectedValue.value)"
@@ -109,13 +123,15 @@
                 class="alert text-danger"
               >
                 <p *ngIf="userAddresses.get('state')?.getError('required')">
-                  this field is required !!!
+                  {{ 'payment.addressForm.fieldRequired' | translate }}
                 </p>
               </div>
             </div>
 
             <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="state" class="form-label">State</label>
+              <label for="state" class="form-label">{{
+                'payment.addressForm.state' | translate
+              }}</label>
               <input
                 type="text"
                 id="state"
@@ -127,7 +143,9 @@
             </div>
 
             <div *ngIf="i != editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="city" class="form-label">City</label>
+              <label for="city" class="form-label">{{
+                'payment.addressForm.city' | translate
+              }}</label>
               <input
                 type="text"
                 id="city"
@@ -138,7 +156,9 @@
               />
             </div>
             <div *ngIf="i == editIndex" class="mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-              <label for="city" class="form-label">City</label>
+              <label for="city" class="form-label">{{
+                'payment.addressForm.city' | translate
+              }}</label>
               <select class="form-select" id="state" name="city" formControlName="city">
                 <option selected>{{ userAddress.city }}</option>
 
@@ -151,13 +171,15 @@
                 class="alert text-danger"
               >
                 <p *ngIf="userAddresses.get('city')?.getError('required')">
-                  this field is required !!!
+                  {{ 'payment.addressForm.fieldRequired' | translate }}
                 </p>
               </div>
             </div>
 
             <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <label for="street" class="form-label">Street</label>
+              <label for="street" class="form-label">{{
+                'payment.addressForm.street' | translate
+              }}</label>
               <input
                 type="text"
                 id="street"
@@ -169,7 +191,9 @@
             </div>
 
             <div class="mb-3 col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <label for="building" class="form-label">Building</label>
+              <label for="building" class="form-label">{{
+                'payment.addressForm.building' | translate
+              }}</label>
               <input
                 type="text"
                 id="building"
@@ -181,7 +205,9 @@
             </div>
 
             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-              <label for="floor" class="form-label">Floor</label>
+              <label for="floor" class="form-label">{{
+                'payment.addressForm.floor' | translate
+              }}</label>
               <input
                 type="number"
                 id="floor"
@@ -197,13 +223,15 @@
                 class="alert text-danger"
               >
                 <p *ngIf="userAddresses.get('floor')?.getError('required')">
-                  this field is required !!!
+                  {{ 'payment.addressForm.fieldRequired' | translate }}
                 </p>
               </div>
             </div>
 
             <div class="mb-3 col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              <label for="address-details" class="form-label">Address Details</label>
+              <label for="address-details" class="form-label">{{
+                'payment.addressForm.addressDetails' | translate
+              }}</label>
               <input
                 type="text"
                 id="address-details"
@@ -271,7 +299,9 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    {{ 'payment.addressForm.confirmDeleteTitle' | translate }}
+                  </h5>
                   <button
                     type="button"
                     class="btn-close"
@@ -279,10 +309,12 @@
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">Do You Want Delete All Your Products !!</div>
+                <div class="modal-body">
+                  {{ 'payment.addressForm.confirmDeleteQuesion' | translate }}
+                </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+                    {{ 'payment.addressForm.cancelDelete' | translate }}
                   </button>
                   <button
                     type="button"
@@ -311,14 +343,16 @@
   *ngIf="getUserAddress.length < 3 && (addNew == true || firstRegister == true)"
   class="w-75 mx-auto mt-5 rounded shadow p-3 bg-main-ligh"
 >
-  <h1 class="h2 step-one">Step One ...</h1>
-  <h3 class="h3 mt-0">Information Delivery</h3>
+  <h1 class="h2 step-one">{{ 'payment.addressForm.firstTitle' | translate }}</h1>
+  <h3 class="h3 mt-0">{{ 'payment.addressForm.secondTitle' | translate }}</h3>
 
   <!-- (ngSubmit)="handleForm(addressForm, btn)"  -->
 
   <form [formGroup]="addressForm" class="row g-3 px-5">
     <div #target class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="firstName" class="form-label">First Name</label>
+      <label for="firstName" class="form-label">{{
+        'payment.addressForm.firstName' | translate
+      }}</label>
       <input type="text" formControlName="firstName" class="form-control" id="firstName" />
       <div
         *ngIf="
@@ -326,45 +360,57 @@
         "
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('firstName')?.getError('required')">Named is required</p>
-        <p *ngIf="addressForm.get('firstName')?.getError('minLength')">The Name Min Lenght 2</p>
+        <p *ngIf="addressForm.get('firstName')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
+        <p *ngIf="addressForm.get('firstName')?.getError('minLength')">
+          {{ 'payment.addressForm.minLengthName' | translate }}
+        </p>
         <p *ngIf="addressForm.get('firstName')?.getError('pattern')">
-          Should be not contain symbols & less 2 chars and only spaces
+          {{ 'payment.addressForm.namePattern' | translate }}
         </p>
       </div>
     </div>
 
     <div class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="lastName" class="form-label">Last Name</label>
+      <label for="lastName" class="form-label">{{
+        'payment.addressForm.lastName' | translate
+      }}</label>
       <input type="text" formControlName="lastName" class="form-control" id="lastName" />
       <div
         *ngIf="addressForm.get('lastName')?.errors && addressForm.get('lastName')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('lastName')?.getError('required')">Named is required</p>
-        <p *ngIf="addressForm.get('lastName')?.getError('minLength')">The Name Min Lenght 2</p>
+        <p *ngIf="addressForm.get('lastName')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
+        <p *ngIf="addressForm.get('lastName')?.getError('minLength')">
+          {{ 'payment.addressForm.minLengthName' | translate }}
+        </p>
         <p *ngIf="addressForm.get('lastName')?.getError('pattern')">
-          Should be not contain symbols & less 2 chars and only spaces
+          {{ 'payment.addressForm.namePattern' | translate }}
         </p>
       </div>
     </div>
 
     <div class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="phone" class="form-label">Phone</label>
+      <label for="phone" class="form-label">{{ 'register.phoneRequired' | translate }}</label>
       <input type="text" formControlName="phone" class="form-control" id="phone" />
       <div
         *ngIf="addressForm.get('phone')?.errors && addressForm.get('phone')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('phone')?.getError('required')">phone is required</p>
+        <p *ngIf="addressForm.get('phone')?.getError('required')">
+          {{ 'register.phoneRequired' | translate }}
+        </p>
         <p *ngIf="addressForm.get('phone')?.getError('pattern')">
-          Should be 11 digts sharp & start be 011,012,010,015
+          {{ 'register.phonePatttern' | translate }}
         </p>
       </div>
     </div>
 
     <div class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="state" class="form-label">Country</label>
+      <label for="state" class="form-label">{{ 'payment.addressForm.country' | translate }}</label>
       <select
         #selectedValue
         (change)="onSelected(selectedValue.value)"
@@ -372,7 +418,7 @@
         class="form-select"
         id="state"
       >
-        <option selected disabled>Select Your Country</option>
+        <option selected disabled>{{ 'payment.addressForm.selectCountry' | translate }}</option>
         <option *ngFor="let countries of allCountries; let i = index" (click)="countryIndexFun(i)">
           {{ countries.country }}
         </option>
@@ -381,14 +427,16 @@
         *ngIf="addressForm.get('state')?.errors != null && addressForm.get('state')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('state')?.getError('required')">this field is required !!!</p>
+        <p *ngIf="addressForm.get('state')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
       </div>
     </div>
 
     <div class="form-item mb-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="city" class="form-label">City</label>
+      <label for="city" class="form-label">{{ 'payment.addressForm.city' | translate }}</label>
       <select class="form-select" id="state" formControlName="city">
-        <option selected disabled>Select Your State</option>
+        <option selected disabled>{{ 'payment.addressForm.selectCity' | translate }}</option>
 
         <option *ngFor="let cities of allCities">{{ cities }}</option>
       </select>
@@ -396,39 +444,49 @@
         *ngIf="addressForm.get('city')?.errors != null && addressForm.get('city')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('city')?.getError('required')">this field is required !!!</p>
+        <p *ngIf="addressForm.get('city')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
       </div>
     </div>
 
     <div class="form-item col-6">
-      <label for="street" class="form-label">Street</label>
+      <label for="street" class="form-label">{{ 'payment.addressForm.street' | translate }}</label>
       <input type="text" class="form-control" id="street" formControlName="street" />
       <div
         *ngIf="addressForm.get('street')?.errors != null && addressForm.get('street')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('street')?.getError('required')">this field is required !!!</p>
+        <p *ngIf="addressForm.get('street')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
       </div>
     </div>
 
     <div class="form-item col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="building" class="form-label">Building</label>
+      <label for="building" class="form-label">{{
+        'payment.addressForm.building' | translate
+      }}</label>
       <input type="text" class="form-control" id="building" formControlName="building" />
     </div>
 
     <div class="form-item col-xl-3 col-lg-4 col-md-6 col-sm-12 col-xs-12">
-      <label for="floor" class="form-label">Floor</label>
+      <label for="floor" class="form-label">{{ 'payment.addressForm.floor' | translate }}</label>
       <input type="number" class="form-control" id="floor" formControlName="floor" />
       <div
         *ngIf="addressForm.get('floor')?.errors != null && addressForm.get('floor')?.touched"
         class="alert text-danger p-0 m-0"
       >
-        <p *ngIf="addressForm.get('floor')?.getError('required')">this field is required !!!</p>
+        <p *ngIf="addressForm.get('floor')?.getError('required')">
+          {{ 'payment.addressForm.fieldRequired' | translate }}
+        </p>
       </div>
     </div>
 
     <div class="form-item col-xl-9 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <label for="address" class="form-label">Address Details</label>
+      <label for="address" class="form-label">{{
+        'payment.addressForm.addressDetails' | translate
+      }}</label>
       <input type="text" class="form-control" id="address" formControlName="address" />
     </div>
 
@@ -440,7 +498,7 @@
         type="submit"
         class="w-100 submit custome-btn"
       >
-        Save Address
+        {{ 'payment.addressForm.saveAddress' | translate }}
         <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
       </button>
       <!-- [disabled]="addressForm.invalid"  -->
@@ -455,28 +513,32 @@
 <!-- *ngIf="getUserAddress.length > 0" -->
 <!-- *ngIf="isRegisterd == true" -->
 <section *ngIf="addressId !== 0" class="w-25 mx-auto mt-5 rounded shadow p-3 bg-main-ligh">
-  <h1 class="h2 step-one">Step Two ...</h1>
-  <h3 class="h3 mt-0">Payment Method</h3>
+  <h1 class="h2 step-one">{{ 'payment.paymentForm.firstTitle' | translate }}</h1>
+  <h3 class="h3 mt-0">{{ 'payment.paymentForm.secondTitle' | translate }}</h3>
   <form [formGroup]="payForm" class="row g-3 px-5">
     <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
       <input
         class="form-check-input"
         type="radio"
         name="paymentMethod"
-        id="method"
+        [id]="_Translate.currentLang === 'ar' ? method.arMethod : method.enMethod"
         [(ngModel)]="paymentSelected"
-        value="{{ method }}"
-        (change)="paymentSelectedMethod(method)"
+        value="{{ method.enMethod }}"
+        (change)="paymentSelectedMethod(method.enMethod)"
         formControlName="paymentMethod"
       />
-      <label class="form-check-label check-address-lbl p-2" for="method">{{ method }}</label>
+      <label
+        class="form-check-label check-address-lbl p-2"
+        [for]="_Translate.currentLang === 'ar' ? method.arMethod : method.enMethod"
+        >{{ _Translate.currentLang === 'ar' ? method.arMethod : method.enMethod }}</label
+      >
     </div>
-    <p>payment method{{ paymentSelected }}</p>
+    <!-- <p>{{"payment.paymentForm.choosePayMethod"|translate}}{{ paymentSelected }}</p> -->
 
     <!-- </div> -->
 
     <div class="form-item col-9">
-      <label for="note" class="form-label">Note</label>
+      <label for="note" class="form-label">{{ 'payment.paymentForm.note' | translate }}</label>
       <input
         type="text"
         [(ngModel)]="note"
@@ -489,7 +551,7 @@
     <!-- [disabled]="payForm.invalid" -->
     <div class="pay-btn col-12">
       <button (click)="creatOrder(payForm, btn)" #btn type="submit" class="w-100 submit mt-3">
-        Submit
+        {{ 'payment.paymentForm.payBtn' | translate }}
         <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
       </button>
     </div>

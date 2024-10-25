@@ -1,3 +1,5 @@
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
 <h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">

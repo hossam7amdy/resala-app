@@ -140,10 +140,12 @@
     "orderNo": "رقم الطلب",
     "itemsNum": "عدد المنتجات",
     "orderTitle": "",
-    "firstNdStep": " تم تجهيز الطلب",
+    "orderDate": "تاريخ الطلب",
+    "firstNdStep": "تم تجهيز الطلب ",
     "preNdShipping": "جارى تحضير الطلب للشحن  ",
-    "enRoute": "فى طريقها إليك",
-    "arrived": "تم توصيل",
+    "enRoute": "فى طريقها إليك ",
+    "arrived": "تم توصيل ",
+    "totalBill": "إجمالى الفاتورة",
     "totalPaid": "إجمالى المدفوع",
     "ordersEmptyTitle": "ليس لديك طلبات",
     "ordersEmptyBtn": "ابدأ باختيار طلبك "
@@ -210,5 +212,46 @@
     "cartEmptyTitle": "لا يوجد لديك منتجات فى سلة التسوق",
     "emptyCartP": "العديد من المنتجات فى انتظاركم ...",
     "emptyBtn": "اذهب للتسوق"
+  },
+  "payment": {
+    "addressForm": {
+      "firstTitle": " أولاً",
+      "secondTitle": "بيانات التوصيل",
+      "chooseAddress": "أختر عنوان التوصيل",
+      "firstName": "الأ سم الأول",
+      "lastName": "الأسم الثاني",
+      "contact": "رقم الموبايل",
+      "country": "البلد",
+      "state": "المحافظة",
+      "city": "المدينة",
+      "street": "الشارع",
+      "building": "المبني",
+      "floor": "الدور",
+      "addressDetails": "العنوان بالتفصيل",
+      "fieldRequired": "هذا الحقل مطلوب",
+      "confirmDelete": "تأكيد الحذف",
+      "confirmDeleteQuesion": "هل تريد بالفعل حذف العنوان",
+      "cancelDelete": "إلغاء",
+      "yesDelete": "موافق",
+      "minLengthName": "يجب ان يكون الاسم حرفين على الاقل",
+      "namePattern": "يجب ان لايحتوي على رموز",
+      "selectCountry": "أختر البلد",
+      "selectCity": "أختر المدينة",
+      "saveAddress": "حفظ"
+    },
+
+    "paymentForm": {
+      "firstTitle": " ثانياً",
+      "secondTitle": "طريقة الدفع",
+      "choosePayMethod": "أختر طريقة الدفع",
+      "note": "ملاحظات",
+      "payBtn": "استمرار الدفع"
+    }
+  },
+  "postPay": {
+    "mainTitle": "تم قبول طلبك بنجاح",
+    "Btn": "معاودة التسوق",
+    "failedPay": "عفواً عملية الدفع غير صالحة",
+    "failedScript": "لقد تم رفض معاملة الدفع الخاصة بك. يرجى الاتصال بالبنك الخاص بك..."
   }
 }
