@@ -1,0 +1,26 @@
+{
+  "governorates": [
+    {
+      "name": "Cairo",
+      "cities": [
+        { "name": "Cairo", "arabicName": "القاهرة" },
+        { "name": "Heliopolis", "arabicName": "مصر الجديدة" },
+        { "name": "Nasr City", "arabicName": "مدينة نصر" }
+      ]
+    },
+    {
+      "name": "Alexandria",
+      "cities": [
+        { "name": "Alexandria", "arabicName": "الإسكندرية" },
+        { "name": "Borg El Arab", "arabicName": "برج العرب" }
+      ]
+    },
+    {
+      "name": "Giza",
+      "cities": [
+        { "name": "Giza", "arabicName": "الجيزة" },
+        { "name": "6th of October", "arabicName": "6 أكتوبر" }
+      ]
+    }
+  ]
+}

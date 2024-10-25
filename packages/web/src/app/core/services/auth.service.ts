@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { jwtDecode } from 'jwt-decode';
+import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -9,7 +11,11 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private _HttpClient: HttpClient) {}
+  constructor(
+    private _HttpClient: HttpClient,
+    private _Router: Router,
+    private _Toaster: ToastrService
+  ) {}
 
   userNameLogged: BehaviorSubject<string> = new BehaviorSubject('Login');
 
@@ -51,6 +57,9 @@ export class AuthService {
       const decode = jwtDecode(encode);
       this.userInfo = decode;
       this.signOut = true;
+    } else {
+      this._Router.navigate(['/login']);
+      this._Toaster.error('Please Login the First !!'); //'Should be Login'
     }
   }
 

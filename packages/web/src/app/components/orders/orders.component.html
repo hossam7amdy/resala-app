@@ -20,11 +20,12 @@
                   <span class="font-weight-bold">{{ order.orderItems.length }}</span>
                 </h4>
               </div>
-              <!-- <div class="text-end">
+              <div class="text-end">
                 <h4 class="h4 main-color mb-0">
-                  Order Status <span class="font-weight-bold">{{ order.orderStatus }}</span>
+                  {{ 'orders.orderDate' | translate }}
+                  <span class="font-weight-bold">{{ order.createdAt | cuttdate }}</span>
                 </h4>
-              </div> -->
+              </div>
             </div>
 
             <ul
@@ -34,27 +35,44 @@
               <li
                 [ngClass]="{
                   thirdcolor:
-                    order.orderStatus == 'PENDING' || 'FULFILLED' || 'SHIPPED' || 'DELIVERED',
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                  arrivedStep:
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
                 }"
-                class="step0 text-center"
-                id="step1"
+                class="not-arrived-step text-center"
               ></li>
               <li
                 [ngClass]="{
-                  thirdcolor: order.orderStatus == 'FULFILLED' || 'SHIPPED' || 'DELIVERED',
+                  thirdcolor:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                  arrivedStep:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
                 }"
-                class="step0 text-center"
-                id="step2"
+                class="not-arrived-step text-center"
               ></li>
               <li
-                [ngClass]="{ thirdcolor: order.orderStatus == 'SHIPPED' || 'DELIVERED' }"
-                class="step0 text-center"
-                id="step3"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                  arrivedStep: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
               <li
-                [ngClass]="{ thirdcolor: order.orderStatus == 'DELIVERED' }"
-                class="step0 text-muted text-end"
-                id="step4"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'DELIVERED',
+                  arrivedStep: order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
             </ul>
 
@@ -63,7 +81,10 @@
                 class="d-lg-flex align-items-center defaultcolor"
                 [ngClass]="{
                   thirdcolor:
-                    order.orderStatus == 'PENDING' || 'FULFILLED' || 'SHIPPED' || 'DELIVERED',
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
                 }"
               >
                 <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
@@ -75,7 +96,10 @@
               <div
                 class="d-lg-flex align-items-center defaultcolor"
                 [ngClass]="{
-                  thirdcolor: order.orderStatus == 'FULFILLED' || 'SHIPPED' || 'DELIVERED',
+                  thirdcolor:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
                 }"
               >
                 <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
@@ -86,7 +110,9 @@
               </div>
               <div
                 class="d-lg-flex align-items-center defaultcolor"
-                [ngClass]="{ thirdcolor: order.orderStatus == 'SHIPPED' || 'DELIVERED' }"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                }"
               >
                 <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                 <div>
@@ -107,9 +133,17 @@
             </div>
           </div>
           <div class="text-end second-background-color w-100 p-1 mt-3">
-            <h2 class="h2">
+            <h2 *ngIf="order.paymentStatus === 'PAID'" class="h2">
               {{ 'orders.totalPaid' | translate }}
-              <span class="font-weight-bold">{{ order.total }} LE</span>
+              <span class="font-weight-bold"
+                >{{ order.total }} {{ 'home.allProducts.currency' | translate }}</span
+              >
+            </h2>
+            <h2 *ngIf="order.paymentStatus !== 'PAID'" class="h2">
+              {{ 'orders.totalBill' | translate }}
+              <span class="font-weight-bold"
+                >{{ order.total }} {{ 'home.allProducts.currency' | translate }}</span
+              >
             </h2>
           </div>
         </div>
