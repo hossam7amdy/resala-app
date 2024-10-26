@@ -48,7 +48,6 @@ export class CartComponent implements OnInit {
   stockIdSize: string = '';
   quantity!: number;
   isChooseSize: boolean = false;
-  requiredQuantity: string = '';
 
   // quantity attr
   counterQuantity: number = 1;

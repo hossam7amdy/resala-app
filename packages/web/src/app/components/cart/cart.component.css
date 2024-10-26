@@ -23,17 +23,38 @@
   font-size: 16px;
 }
 
-.second-custom-btn {
+/* .second-custom-btn {
   background-color: #fff;
-  border: 1px solid #016373;
-  color: #016373;
+  border: none;
+  color: #777;
+  border-radius: 0;
 }
 .second-custom-btn:hover,
 .second-custom-btn:active {
-  border: 1px solid #fbb935;
+  border: none;
+  opacity: 0.8;
+} */
+.delete-all {
+  background-color: #fff;
+  border: none;
+  color: #777;
+  border-radius: 0;
 }
-.second-custom-btn:disabled {
+.delete-all:hover,
+.delete-all:active {
+  border: none;
+  opacity: 0.8;
+}
+.delete-all:disabled {
   cursor: not-allowed;
+}
+.modal-header .btn-close {
+  margin: 0 !important;
+  margin-left: auto !important;
+}
+.modal-header .btn-close:lang(ar) {
+  margin: 0 !important;
+  margin-right: auto !important;
 }
 @media (max-width: 1580px) {
   .emptyCart {
