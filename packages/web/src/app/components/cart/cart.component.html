@@ -1,4 +1,6 @@
-<section *ngIf="totalCount != 0; else emptyCart">
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
+<section *ngIf="!customSpinIsLoading && cartDetailsItems">
   <div class="container">
     <h2 class="cartTitle h2">
       {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
@@ -12,7 +14,7 @@
           <button
             [disabled]="totalCount == 0"
             type="button"
-            class="btn mt-2 second-custom-btn"
+            class="btn mt-2 delete-all"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
@@ -25,33 +27,34 @@
 
           <!-- Modal -->
           <div
-            class="modal fade"
+            class="modal fade rounded-0"
             id="exampleModal"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div class="modal-dialog">
-              <div class="modal-content">
+            <div class="modal-dialog rounded-0">
+              <div class="modal-content rounded-0">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">
+                  <h5 class="modal-title h3" id="exampleModalLabel">
                     {{ 'cart.confirmDeleteAllItems' | translate }}
                   </h5>
                   <button
                     type="button"
+                    [lang]="_Translate.currentLang"
                     class="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
+                <div class="modal-body h4">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <button type="button" class="custome-btn" data-bs-dismiss="modal">
                     {{ 'cart.cancelBtn' | translate }}
                   </button>
                   <button
                     type="button"
-                    class="btn second-custom-btn"
+                    class="second-custom-btn"
                     data-bs-dismiss="modal"
                     (click)="[confirmationDel(), clearAllItems(removeAll)]"
                     #removeAll
@@ -104,16 +107,26 @@
                     <!-- Start Edit Size & Color Section  -->
                     <button
                       class="edit-btn"
-                      (click)="[toggleForm(), getStockDataPro(cartDetailsItems[i].product.id)]"
+                      (click)="
+                        [toggleForm(item.stockId), getStockDataPro(cartDetailsItems[i].product.id)]
+                      "
                     >
                       {{ 'cart.editColorSize' | translate }}
                     </button>
 
-                    <div class="overlay" *ngIf="isFormVisible" (click)="toggleForm()"></div>
+                    <div
+                      class="overlay"
+                      *ngIf="isFormVisible"
+                      (click)="toggleForm(item.stockId)"
+                    ></div>
 
                     <div class="form-container" *ngIf="isFormVisible">
                       <form>
-                        <i class="fa-solid fa-xmark close-edit" (click)="toggleForm()"></i>
+                        <i
+                          [lang]="_Translate.currentLang"
+                          class="fa-solid fa-xmark close-edit"
+                          (click)="toggleForm(item.stockId)"
+                        ></i>
                         <h2 class="h3">{{ 'cart.editTitleForm' | translate }}</h2>
                         <div class="content-form">
                           <div class="colorSection">
@@ -126,6 +139,7 @@
                                   <img
                                     class="mini-images-color"
                                     [src]="productStock[i].images[0]?.imageUrl"
+                                    (click)="[onColorChange(product, i), isChooseColorFun()]"
                                   />
 
                                   <div
@@ -177,19 +191,57 @@
                                       />
 
                                       <label
+                                        *ngIf="size.quantity !== 0"
                                         (click)="[onSizeChange(size), isChooseSizeFun()]"
                                         for="btnsize"
                                       >
                                         {{ size.size }}
                                       </label>
+
+                                      <s
+                                        *ngIf="size.quantity == 0"
+                                        aria-disabled="true"
+                                        for="btnsize"
+                                      >
+                                        {{ size.size }}
+                                      </s>
                                     </div>
                                   </div>
                                 </div>
                               </ng-container>
                             </div>
                           </div>
+
+                          <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
+                          <section class="quantity">
+                            <div class="counter">
+                              <button
+                                class="min-counter-btn fw-bold"
+                                [disabled]="counterQuantity == 1"
+                                (click)="minCounterQuantity()"
+                              >
+                                <i class="fa-solid fa-minus"></i>
+                              </button>
+                              <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
+                                counterQuantity
+                              }}</span>
+                              <button
+                                class="plus-counter-btn fw-bold"
+                                (click)="plusCounterQuantity()"
+                                [disabled]="counterQuantity == quantity"
+                              >
+                                <i class="fa-solid fa-plus"></i>
+                              </button>
+                            </div>
+                          </section>
                         </div>
-                        <button class="custome-btn">{{ 'cart.updateCartBtn' | translate }}</button>
+                        <button
+                          (click)="[removeStockId(removeStock, stockIdSize)]"
+                          #removeStock
+                          class="custome-btn"
+                        >
+                          {{ 'cart.updateCartBtn' | translate }}
+                        </button>
                       </form>
                     </div>
 
@@ -200,12 +252,17 @@
                 <p class="currency mb-0">
                   <s>{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
                 </p>
+
                 <p *ngIf="item.discountedPrice != 0" class="price fs-4">
+                  <span class="p p-0"
+                    >{{ 'cart.discountTitle' | translate }} {{ item.appliedDiscount.amount }}%</span
+                  >
                   {{ item.discountedPrice }}
                   <label class="currency fs-5">
                     {{ 'home.allProducts.currency' | translate }}</label
                   >
                 </p>
+
                 <button class="btn mt-2 remove-item">
                   <i
                     (click)="removeItem(item.stock.id, remove)"
@@ -231,7 +288,7 @@
                   item.quantity
                 }}</span>
                 <button
-                  [disabled]="item.stock.quantity == 0"
+                  [disabled]="item.stock.quantity == 0 || item.quantity == item.stock.quantity"
                   class="plus-counter-btn fw-bold"
                   (click)="changeCount(item.quantity + 1, item.stock.id, btnMin, btnPlus)"
                   #btnPlus
@@ -239,8 +296,9 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
 
-                <p *ngIf="item.stock.quantity == 0" class="p">
-                  {{ 'cart.latestStock' | translate }}
+                <p *ngIf="item.stock.quantity <= 5" class="p">
+                  {{ 'cart.latestStock' | translate }} <b>{{ item.stock.quantity }}</b>
+                  {{ 'cart.latestStock2NdWord' | translate }}
                 </p>
               </div>
             </div>
@@ -297,7 +355,7 @@
                           'cart.shippingAmount' | translate
                         }}</span>
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >55
+                          >0
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span
@@ -345,8 +403,11 @@
   </div>
 </section>
 
-<ng-template class="m-auto" #emptyCart>
-  <div class="emptyCartParent">
-    <h1 class="emptyCart text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
+<div *ngIf="!customSpinIsLoading && !cartDetailsItems" class="m-auto">
+  <div class="emptyCart emptyCartParent">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <h1 class="h2 text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
+    <p class="p">{{ 'cart.emptyCartP' | translate }}</p>
+    <button routerLink="/home" class="custome-btn">{{ 'cart.emptyBtn' | translate }}</button>
   </div>
-</ng-template>
+</div>

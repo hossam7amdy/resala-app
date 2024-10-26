@@ -1,3 +1,5 @@
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
 <h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
@@ -196,9 +198,17 @@
                     [value]="selectedSize"
                   />
 
-                  <label (click)="[onSizeChange(size), isChooseSizeFun()]" for="btnsize">
+                  <label
+                    *ngIf="size.quantity !== 0"
+                    (click)="[onSizeChange(size), isChooseSizeFun()]"
+                    for="btnsize"
+                  >
                     {{ size.size }}
                   </label>
+
+                  <s *ngIf="size.quantity == 0" aria-disabled="true" for="btnsize">
+                    {{ size.size }}
+                  </s>
                 </div>
               </div>
             </div>
@@ -249,18 +259,18 @@
             <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
               counterQuantity
             }}</span>
-            <button class="plus-counter-btn fw-bold" (click)="plusCounterQuantity()">
+            <button
+              class="plus-counter-btn fw-bold"
+              (click)="plusCounterQuantity()"
+              [disabled]="counterQuantity == quantity"
+            >
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
         </section>
 
         <div class="add-cart-btn">
-          <button
-            (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)"
-            #addToCartBtn
-            class="w-100"
-          >
+          <button (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="w-100">
             {{ 'productDetails.addToCart' | translate }}
           </button>
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->

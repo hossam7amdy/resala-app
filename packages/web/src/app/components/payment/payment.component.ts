@@ -3,16 +3,18 @@ import { OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
+import { CityService } from 'src/app/core/services/cities.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent, TranslateModule],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
@@ -24,8 +26,13 @@ export class PaymentComponent implements OnInit {
     private _Router: Router,
     private _CartService: CartService,
     private _AuthService: AuthService,
-    private spinner: NgxSpinnerService
+    private _CityService: CityService,
+    public _Translate: TranslateService
   ) {}
+  governorates: any[] = [];
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
   userLoginId: number = 0;
   isEdit: boolean = false;
   editIndex: any;
@@ -52,11 +59,31 @@ export class PaymentComponent implements OnInit {
 
   // payment form
 
-  paymentDataMethod: any = ['CASH', 'CARD'];
+  paymentDataMethod: any = [
+    {
+      enMethod: 'CASH',
+      arMethod: 'الدفع عند الاستلام',
+    },
+    {
+      enMethod: 'CARD',
+      arMethod: 'فيزا بنكية',
+    },
+  ];
   paymentSelected: string = '';
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
+
+    this._CityService.getCities().subscribe({
+      next: data => {
+        this.governorates = data.governorates;
+        console.log(data);
+      },
+      error: err => {
+        console.error(err);
+      },
+    });
+
     this._AuthService.decodeUser();
     this.userLoginId = this._AuthService.userInfo.id;
 
@@ -69,41 +96,43 @@ export class PaymentComponent implements OnInit {
         if (this.getUserAddress.length == 0) {
           this.firstRegister = true;
         }
+        this.customSpinIsLoading = false;
         console.log(response);
 
         console.log('user address id', this.getUserAddress);
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
 
     this._PaymentServices.getAllCountries().subscribe({
       next: response => {
         this.allCountries = response.data;
-
+        this.customSpinIsLoading = false;
         console.log(this.allCountries);
       },
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
     });
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   selectedAddressMethod(value: number): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this.addressId = value;
     this.isSelectedAddress = true;
     this.isRegisterd = true;
     this.addNew = false;
     console.log('address id', this.addressId);
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
+    this.customSpinIsLoading = false;
   }
   addNewAddressFun(trarget: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this.addNew = true;
     trarget.scrollIntoView({ behavior: 'smooth' });
+    this.customSpinIsLoading = false;
   }
 
   addressForm: FormGroup = new FormGroup({
@@ -162,12 +191,17 @@ export class PaymentComponent implements OnInit {
   });
 
   onSelected(value: string): void {
+    this.customSpinIsLoading = true;
     this.selectedCountry = value;
 
     this._PaymentServices.getAllCities(value).subscribe({
       next: response => {
         this.allCities = response.data;
         console.log('Cities', this.allCities);
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
   }
@@ -177,7 +211,7 @@ export class PaymentComponent implements OnInit {
   }
 
   handleForm(addressForm: FormGroup, btn: HTMLButtonElement): void {
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
 
     const userData = this.addressForm.value;
     console.log('user data', userData);
@@ -197,12 +231,13 @@ export class PaymentComponent implements OnInit {
             this.firstRegister = false;
             console.log('response register', response);
           }
+          this.customSpinIsLoading = false;
         },
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
           console.log('Save Address Error', err);
-          this.isLoading = false;
+          this.customSpinIsLoading = false;
         },
       });
     }
@@ -211,12 +246,12 @@ export class PaymentComponent implements OnInit {
     this.isEdit = true;
     this.editIndex = index;
     const userNumberId = Number(this.userLoginId); // parsing to number
-    console.log(typeof userNumberId);
+
     this.userAddresses.patchValue({ userId: userNumberId });
   }
 
   updateAddress(userAddressId: number, userAddresses: FormGroup, element: HTMLButtonElement): void {
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     const userData = this.userAddresses.value;
     if (userAddresses.valid) {
@@ -229,15 +264,17 @@ export class PaymentComponent implements OnInit {
           this.isEdit = false;
           console.log('after edit', response);
           this._Renderer2.setAttribute(element, 'disabled', 'true');
+          this.customSpinIsLoading = false;
         },
         error: err => {
           console.log(err);
           this._Toaster.error(this.errMsg);
           console.log('request false user address edits', this.userAddresses.value, userAddressId);
+          this.customSpinIsLoading = false;
         },
       });
-      this.isLoading = false;
     }
+    this.customSpinIsLoading = false;
   }
 
   // textTimer(txt:string): void {
@@ -246,8 +283,7 @@ export class PaymentComponent implements OnInit {
   //   }, 3000);
   // }
   removeItem(addressId: number, element: HTMLElement): void {
-    this.spinner.show();
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     this._PaymentServices.deleteUserAddress(this.userLoginId, addressId).subscribe({
       next: response => {
@@ -257,18 +293,21 @@ export class PaymentComponent implements OnInit {
         window.location.reload();
         this.isRegisterd = false;
         this.isEdit = false;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         this._Toaster.info('Your Item Not Removed');
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
-    this.isLoading = false;
   }
 
   paymentSelectedMethod(event: any) {
+    this.customSpinIsLoading = true;
     this.paymentSelected = event;
     console.log(this.paymentSelected);
+    this.customSpinIsLoading = false;
   }
 
   payForm: FormGroup = new FormGroup({
@@ -278,7 +317,7 @@ export class PaymentComponent implements OnInit {
   });
 
   creatOrder(payForm: FormGroup, btn: HTMLButtonElement) {
-    this.isLoading = true;
+    this.customSpinIsLoading = true;
     const payData = this.payForm.value;
 
     // if (this.payForm.valid) {
@@ -300,7 +339,7 @@ export class PaymentComponent implements OnInit {
           this._Renderer2.setAttribute(btn, 'disabled', 'true');
           this._CartService.cartNumber.next(0);
         }
-        this.isLoading = false;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         if (this.paymentSelected == '') {
@@ -310,7 +349,7 @@ export class PaymentComponent implements OnInit {
           this._Toaster.error(this.errMsg);
           console.log(err);
         }
-        this.isLoading = false;
+        this.customSpinIsLoading = false;
       },
     });
     //}

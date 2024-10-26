@@ -7,7 +7,6 @@ import { RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
@@ -17,6 +16,7 @@ import { HomeProductsService } from 'src/app/core/services/home-products.service
 import { ReviewsService } from 'src/app/core/services/reviews.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
@@ -33,6 +33,7 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
     RouterLink,
     TranslateModule,
     BreadcrumbComponent,
+    SpinnerComponent,
   ],
 
   templateUrl: './product-details.component.html',
@@ -67,7 +68,6 @@ export class ProductDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
-    private spinner: NgxSpinnerService,
     private _CartService: CartService,
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
@@ -75,14 +75,18 @@ export class ProductDetailsComponent implements OnInit {
     private _Reviews: ReviewsService,
     private _ProductsCategory: CategoriesService,
     private _WishListService: WishListService,
-    private _Renderer: Renderer2,
     private _Toaster: ToastrService,
     private _RTLStatus: Translate_Service,
     public _Translate: TranslateService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
+
   // Change page Direction as per Selected Lang
   changePageDirection(): boolean {
+    this.customSpinIsLoading = true;
     const html = document.getElementsByTagName('html')[0];
     let rtlStat: boolean;
     if (this._RTLStatus.rTLStatus.value === 'ar') {
@@ -94,7 +98,7 @@ export class ProductDetailsComponent implements OnInit {
       html.lang = 'en';
       rtlStat = false;
     }
-    console.log('topbar rtlFun', rtlStat);
+    this.customSpinIsLoading = false;
     return rtlStat;
   }
 
@@ -127,7 +131,7 @@ export class ProductDetailsComponent implements OnInit {
   currentSize: string = '';
   stockIdColor: string = '';
   stockIdSize: string = '';
-  quantity: string = '';
+  quantity!: number;
   isChooseSize: boolean = false;
 
   // Reviews
@@ -152,7 +156,7 @@ export class ProductDetailsComponent implements OnInit {
     // start code test
 
     //end code test
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
 
@@ -160,9 +164,11 @@ export class ProductDetailsComponent implements OnInit {
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
 
@@ -171,24 +177,38 @@ export class ProductDetailsComponent implements OnInit {
         console.log('test');
         console.log('review', res);
         this.productReview = res.data.reviews;
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   getProductDetails(id: any) {
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
         this.categoryId = res?.data.categoryId;
         console.log('productdetails', res.data, 'cat id' + this.categoryId);
+        this.customSpinIsLoading = false;
       },
-      error: err => console.log(err),
-      complete: () => this.getProductStock(id),
+
+      error: err => {
+        console.log(err);
+        this.customSpinIsLoading = false;
+      },
+      complete: () => {
+        this.getProductStock(id);
+        this.customSpinIsLoading = false;
+      },
     });
   }
 
   getProductStock(id: any) {
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
@@ -203,10 +223,16 @@ export class ProductDetailsComponent implements OnInit {
           return a;
         }, []);
 
-        this.spinner.hide();
+        this.customSpinIsLoading = false;
         console.log('after filter', this.productStockColor);
       },
-      complete: () => this.getProductsCategory(this.categoryId),
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
+      complete: () => {
+        this.getProductsCategory(this.categoryId);
+        this.customSpinIsLoading = false;
+      },
     });
   }
 
@@ -268,6 +294,8 @@ export class ProductDetailsComponent implements OnInit {
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
     this.stockIndex = index;
+    this.counterQuantity = 1;
+    this.stockIdSize = '';
     console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
@@ -282,6 +310,7 @@ export class ProductDetailsComponent implements OnInit {
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
+    this.counterQuantity = 1;
     console.log(this.selectedSize, this.stockIdSize);
   }
 
@@ -301,22 +330,30 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
-    if (this.isChooseColor && this.isChooseSize === true) {
+  addProduct(productId: string, element: HTMLButtonElement) {
+    this.customSpinIsLoading = true;
+    if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer2.setAttribute(element, 'disabled', 'true');
-
-      this._CartService.addToCart(productId, quantity).subscribe({
+      const requiredCount: string = this.counterQuantity.toString();
+      this._CartService.addToCart(productId, requiredCount).subscribe({
         next: res => {
           console.log(res);
           this._CartService.cartNumber.next(res.data.totalQuantity);
           console.log('cart number :' + this._CartService.cartNumber);
           this._toaster.success('added one product successfuly');
+          this.customSpinIsLoading = false;
         },
         error: err => {
-          localStorage.setItem('productId', this.productId);
-          this._toaster.error('please login !!'); //'Should be Login'
-          this._Router.navigate(['/login']);
-          console.log('response', productId, quantity, err);
+          if (err.status == 401) {
+            localStorage.setItem('productId', this.productId);
+            this._toaster.info('please login !!'); //'Should be Login'
+            this._Router.navigate(['/login']);
+          } else {
+            this._Toaster.error(err);
+          }
+
+          console.log('response', productId, requiredCount, err);
+          this.customSpinIsLoading = false;
         },
       });
     } else {
@@ -324,17 +361,21 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     this._Renderer2.removeAttribute(element, 'disabled');
+    this.customSpinIsLoading = false;
   }
 
   // similar products
   getProductsCategory(id: any): void {
+    this.customSpinIsLoading = true;
     this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
         console.log('similar pro', res);
         this.productsCategory = res.data.products;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }
@@ -382,11 +423,13 @@ export class ProductDetailsComponent implements OnInit {
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
       next: (response: any) => {
-        this._Renderer.setStyle(element, 'font-weight', 'bold');
+        this._Renderer2.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
+        this.customSpinIsLoading = false;
       },
       error: (err: any) => {
         this._Toaster.error('Should be Login !!');
@@ -397,13 +440,14 @@ export class ProductDetailsComponent implements OnInit {
         //   this._Toaster.error(err.message);
         // }
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   reloadPage(id: any): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     window.location.replace(`/product-details/${id}`);
-    this.spinner.hide();
+    this.customSpinIsLoading = false;
   }
 }

@@ -98,6 +98,12 @@
       "title": "Contact Us"
     }
   },
+  "forgotPw": {
+    "mainTitle": "Forgot Password",
+    "email": "Email",
+    "verifyEmail": "Verify Email",
+    "mobile": "Mobile"
+  },
   "categories": {},
   "latestCollection": {
     "mainTitle": "Latest Collection"
@@ -110,7 +116,9 @@
     "confirmDeleteTitle": "Confirm Delete",
     "questionDelete": "Do You Want Delete This Product From Your Favorite List ?",
     "questionDeleteCancel": "Cancel",
-    "questionDeleteYes": "Yes"
+    "questionDeleteYes": "Yes",
+    "favoritesEmptyTitle": "There is no product in your favourites.",
+    "favoritesBtn": "Start Shopping"
   },
   "login": {
     "mainTitle": "Login Now",
@@ -137,12 +145,16 @@
     "mainTitle": "My Orders",
     "orderNo": "Order Number",
     "itemsNum": "Order Items",
+    "orderDate": "Order Date",
     "orderTitle": "Order",
     "firstNdStep": "Processed",
     "preNdShipping": "Processed Shipping",
     "enRoute": "En Route",
     "arrived": "Arrived",
-    "totalPaid": "Total Payed"
+    "totalPaid": "Total Payed",
+    "totalBill": "Total Bill",
+    "ordersEmptyTitle": "Not have Any Order",
+    "ordersEmptyBtn": "Let's GO SHOPPING"
   },
   "register": {
     "mainTitle": "Register Now",
@@ -183,18 +195,20 @@
     "mainTitleNdSlice": "Product",
     "deleteAllBtn": "Delete All Items",
     "confirmDeleteAllItems": "Confirm Delete",
-    "confirmDeleteQuestion": "Do You Want Delete All Your Products !!",
-    "cancelBtn": "Cancel",
-    "yesBtn": "Yes",
+    "confirmDeleteQuestion": "Do You Want Delete All Your Products ?",
+    "cancelBtn": "CANCEL",
+    "yesBtn": "YES",
     "stockQnt": "In Stock",
-    "sizeTitle": "Size",
+    "discountTitle": "OFF",
+    "sizeTitle": "SIZE",
     "editColorSize": "Edit",
     "editTitleForm": "SIZE CHANGE",
-    "chooseColor": "Choose Color",
+    "chooseColor": "Choose the Color First",
     "chooseSize": "Choose Size",
     "updateCartBtn": "Update and Back to Cart",
     "remove": "Remove",
-    "latestStock": "Latest One Stock",
+    "latestStock": "LATEST ",
+    "latestStock2NdWord": " PIECE IN STOCK ",
     "checkoutBtn": "Check Out Summary",
     "totalProPrice": "Total Amount",
     "subTotalPrice": "Sub Total",
@@ -203,6 +217,49 @@
     "totalPrice": "Total Price",
     "tax": "(Tax included)",
     "orderBtn": "Complete Order",
-    "cartEmptyTitle": "Your Cart Is Empty ..."
+    "cartEmptyTitle": "Your Cart Is Empty",
+    "emptyCartP": "Many products are waiting for you...",
+    "emptyBtn": "GO TO SHOPPING"
+  },
+  "payment": {
+    "addressForm": {
+      "firstTitle": "Step One ...",
+      "secondTitle": "Delivery Information",
+      "chooseAddress": "Choose Address",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "contact": "Phone",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "street": "Street",
+      "building": "Building",
+      "floor": "Floor",
+      "addressDetails": "Address Details",
+      "fieldRequired": "this field is required !!!",
+      "confirmDelete": "Confirm Delete",
+      "confirmDeleteQuesion": "Do You Want Delete this Address",
+      "cancelDelete": "Cancel",
+      "yesDelete": "Yes",
+      "minLengthName": "The Name Min Lenght 2 Chars",
+      "namePattern": "Should be not contain symbols & less 2 chars and only spaces",
+      "selectCountry": "Select Your Country",
+      "selectCity": "Select Your City",
+      "saveAddress": "Save Address"
+    },
+
+    "paymentForm": {
+      "firstTitle": "Step Two ...",
+      "secondTitle": "Payment Method",
+      "choosePayMethod": "Choose Payment Method",
+      "note": "Note",
+      "payBtn": "Continue Pay"
+    }
+  },
+  "postPay": {
+    "mainTitle": "The Order Successfuly",
+    "Btn": "GO SHOPPING",
+    "failedPay": "Pay Failed",
+    "failedScript": "Your payment transaction has been declined. Kindly contact your bank..."
   }
 }

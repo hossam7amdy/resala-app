@@ -1,4 +1,6 @@
-<section class="" style="background-color: #fff">
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
+<section *ngIf="!customSpinIsLoading && orders.length > 0" class="" style="background-color: #fff">
   <div class="container-fluid">
     <h1 class="h1">{{ 'orders.mainTitle' | translate }}</h1>
   </div>
@@ -18,11 +20,12 @@
                   <span class="font-weight-bold">{{ order.orderItems.length }}</span>
                 </h4>
               </div>
-              <!-- <div class="text-end">
+              <div class="text-end">
                 <h4 class="h4 main-color mb-0">
-                  Order Status <span class="font-weight-bold">{{ order.orderStatus }}</span>
+                  {{ 'orders.orderDate' | translate }}
+                  <span class="font-weight-bold">{{ order.createdAt | cuttdate }}</span>
                 </h4>
-              </div> -->
+              </div>
             </div>
 
             <ul
@@ -30,31 +33,59 @@
               class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2"
             >
               <li
-                [ngClass]="{ thirdcolor: order.orderStatus !== 'CANCELLED' }"
-                class="step0 text-center"
-                id="step1"
+                [ngClass]="{
+                  thirdcolor:
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                  arrivedStep:
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
               <li
-                [ngClass]="{ thirdcolor: order.paymentStatus == 'PAID' }"
-                class="step0 text-center"
-                id="step2"
+                [ngClass]="{
+                  thirdcolor:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                  arrivedStep:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
               <li
-                [ngClass]="{ thirdcolor: order.orderStatus == 'SHIPPED' }"
-                class="step0 text-center"
-                id="step3"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                  arrivedStep: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
               <li
-                [ngClass]="{ thirdcolor: order.orderStatus == 'DELIVERED' }"
-                class="step0 text-muted text-end"
-                id="step4"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'DELIVERED',
+                  arrivedStep: order.orderStatus == 'DELIVERED',
+                }"
+                class="not-arrived-step text-center"
               ></li>
             </ul>
 
             <div class="d-flex justify-content-between">
               <div
                 class="d-lg-flex align-items-center defaultcolor"
-                [ngClass]="{ thirdcolor: order.orderStatus !== 'CANCELLED' }"
+                [ngClass]="{
+                  thirdcolor:
+                    order.orderStatus == 'PENDING' ||
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                }"
               >
                 <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                 <div>
@@ -64,7 +95,12 @@
               </div>
               <div
                 class="d-lg-flex align-items-center defaultcolor"
-                [ngClass]="{ thirdcolor: order.paymentStatus == 'PAID' }"
+                [ngClass]="{
+                  thirdcolor:
+                    order.orderStatus == 'FULFILLED' ||
+                    order.orderStatus == 'SHIPPED' ||
+                    order.orderStatus == 'DELIVERED',
+                }"
               >
                 <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                 <div>
@@ -74,7 +110,9 @@
               </div>
               <div
                 class="d-lg-flex align-items-center defaultcolor"
-                [ngClass]="{ thirdcolor: order.orderStatus == 'SHIPPED' }"
+                [ngClass]="{
+                  thirdcolor: order.orderStatus == 'SHIPPED' || order.orderStatus == 'DELIVERED',
+                }"
               >
                 <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
                 <div>
@@ -95,9 +133,17 @@
             </div>
           </div>
           <div class="text-end second-background-color w-100 p-1 mt-3">
-            <h2 class="h2">
+            <h2 *ngIf="order.paymentStatus === 'PAID'" class="h2">
               {{ 'orders.totalPaid' | translate }}
-              <span class="font-weight-bold">{{ order.total }} LE</span>
+              <span class="font-weight-bold"
+                >{{ order.total }} {{ 'home.allProducts.currency' | translate }}</span
+              >
+            </h2>
+            <h2 *ngIf="order.paymentStatus !== 'PAID'" class="h2">
+              {{ 'orders.totalBill' | translate }}
+              <span class="font-weight-bold"
+                >{{ order.total }} {{ 'home.allProducts.currency' | translate }}</span
+              >
             </h2>
           </div>
         </div>
@@ -105,3 +151,16 @@
     </div>
   </div>
 </section>
+
+<div
+  *ngIf="!customSpinIsLoading && !orders.length"
+  class="d-flex justify-content-center text-center"
+>
+  <div class="emptyCart emptyCartParent">
+    <i class="fa-solid fa-receipt"></i>
+    <h1 class="h2 text-uppercase">{{ 'orders.ordersEmptyTitle' | translate }}</h1>
+    <button routerLink="/home" class="custome-btn">
+      {{ 'orders.ordersEmptyBtn' | translate }}
+    </button>
+  </div>
+</div>
