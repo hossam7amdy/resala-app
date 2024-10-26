@@ -78,6 +78,9 @@ body {
   overflow-x: hidden !important ;
   margin-top: 153px;
 }
+.row {
+  --bs-gutter-x: 0 !important;
+}
 .main-color {
   color: #016373;
 }
@@ -262,13 +265,20 @@ body {
 
 /* second Btn*/
 .second-custom-btn {
-  background-color: #fff;
-  border: 1px solid #016373;
+  padding: 10px 0;
   color: #016373;
+  font-weight: 500;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  border-radius: 0;
 }
 .second-custom-btn:hover,
 .second-custom-btn:active {
   border: 1px solid #fbb935;
+  background-color: #fbb935;
+  color: #fff;
 }
 .second-custom-btn:disabled {
   cursor: not-allowed;

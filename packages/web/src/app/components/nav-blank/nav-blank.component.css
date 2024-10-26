@@ -154,6 +154,32 @@ form .icon-search {
   position: relative;
   cursor: pointer;
 }
+.under-line-hover-link {
+  overflow: hidden;
+}
+.under-line-hover-link::after {
+  content: '';
+  position: absolute;
+  left: 0%;
+  bottom: 0;
+  width: 100%;
+  height: 0px;
+  background-color: #fff;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.under-line-hover-link:lang(ar)::after {
+  left: 100%;
+  transform: translateX(100%);
+}
+.under-line-hover-link:lang(ar):hover::after {
+  left: 100%;
+  transform: translateX(-100%);
+}
+.under-line-hover-link:hover::after {
+  height: 1px;
+  transform: translateX(0);
+}
 
 .upper-nav .nav-link {
   color: #016373;

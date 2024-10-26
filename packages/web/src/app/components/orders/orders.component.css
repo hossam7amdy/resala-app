@@ -35,8 +35,8 @@
   position: relative;
 }
 
-#progressbar-2 #step1:before {
-  content: '\f058';
+#progressbar-2 .not-arrived-step:before {
+  content: '\f111';
   font-family: 'Font Awesome 5 Free';
   color: #fff;
   width: 37px;
@@ -44,14 +44,7 @@
   padding-left: 0px;
 }
 
-#progressbar-2 #step2:before {
-  content: '\f058';
-  font-family: 'Font Awesome 5 Free';
-  color: #fff;
-  width: 37px;
-}
-
-#progressbar-2 #step3:before {
+#progressbar-2 .arrivedStep:before {
   content: '\f058';
   font-family: 'Font Awesome 5 Free';
   color: #fff;
@@ -59,15 +52,7 @@
   margin-right: 0;
   text-align: center;
 }
-
-#progressbar-2 #step4:before {
-  content: '\f111';
-  font-family: 'Font Awesome 5 Free';
-  color: #fff;
-  width: 37px;
-  margin-right: 0;
-  text-align: center;
-}
+/* \f111 */
 
 #progressbar-2 li:before {
   line-height: 37px;
@@ -102,7 +87,7 @@
 #progressbar-2 li:nth-child(3):after {
   left: 1%;
   width: 100%;
-  background: #ccc !important;
+  background: #ccc;
 }
 
 #progressbar-2 li:nth-child(4) {
