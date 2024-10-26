@@ -1,77 +1,74 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
+import dotenv from 'dotenv';
+import { z } from 'zod';
 
-const _parseInt = (envVar: string | undefined, defaultValue: number): number => {
-  return envVar && parseInt(envVar) ? parseInt(envVar) : defaultValue;
-};
+const _parseNodeEnv = z.enum(['development', 'production', 'test']).parse;
 
 const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boolean => {
   return envVar && envVar.toLowerCase() === 'true' ? true : defaultValue;
 };
 
+dotenv.config({ path: `.env.${_parseNodeEnv(process.env.NODE_ENV)}` });
+
 const configuration = {
   origin: {
-    web: process.env.WEB_URL || 'http://localhost:4200',
-    dashboard: process.env.DASHBOARD_URL || 'http://localhost:3000',
-    allowedList: JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]'),
+    web: z.string().url().parse(process.env.WEB_URL),
+    dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
+    allowedList: z
+      .array(z.string().url())
+      .parse(JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]')),
   },
   server: {
-    env: process.env.NODE_ENV || 'development',
-    port: _parseInt(process.env.PORT, 5000),
-    url: process.env.SERVER_URL || 'http://localhost:5000',
+    env: _parseNodeEnv(process.env.NODE_ENV),
+    port: z.coerce.number().default(5000).parse(process.env.PORT),
+    url: z.string().url().parse(process.env.SERVER_URL),
   },
   jwt: {
-    secret: process.env.JWT_SECRET,
-    refresh: process.env.JWT_REFRESH,
-    reset: process.env.JWT_RESET,
-    verify: process.env.JWT_VERIFY,
+    secret: z.string().parse(process.env.JWT_SECRET),
+    refresh: z.string().parse(process.env.JWT_REFRESH),
+    reset: z.string().parse(process.env.JWT_RESET),
+    verify: z.string().parse(process.env.JWT_VERIFY),
   },
   db: {
-    url: process.env.DATABASE_URL,
+    url: z.string().url().parse(process.env.DATABASE_URL),
   },
   email: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: z.string().email().parse(process.env.MAIL_USER),
+    pass: z.string().parse(process.env.MAIL_PASS),
   },
   payment: {
     paymob: {
-      integrationId: _parseInt(process.env.PAYMOB_INTEGRATION_ID, 0),
-      baseUrl: process.env.PAYMOB_BASE_URL || 'https://accept.paymob.com',
+      integrationId: z.coerce.number().parse(process.env.PAYMOB_INTEGRATION_ID),
+      baseUrl: z
+        .string()
+        .url()
+        .default('https://accept.paymob.com')
+        .parse(process.env.PAYMOB_BASE_URL),
       checkoutLink: `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}`,
-      hmacKey: process.env.PAYMOB_HMAC_KEY,
-      apiToken: process.env.PAYMOB_API_TOKEN,
-      publicKey: process.env.PAYMOB_PUBLIC_KEY,
-      secretKey: process.env.PAYMOB_SECRET_KEY,
+      hmacKey: z.string().parse(process.env.PAYMOB_HMAC_KEY),
+      apiToken: z.string().parse(process.env.PAYMOB_API_TOKEN),
+      publicKey: z.string().parse(process.env.PAYMOB_PUBLIC_KEY),
+      secretKey: z.string().parse(process.env.PAYMOB_SECRET_KEY),
     },
   },
+
   blobStorage: {
-    accessKey: process.env.AWS_ACCESS_KEY_ID,
-    accessSecret: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.S3_REGION || 'eu-north-1',
-    bucketName: process.env.S3_BUCKET || 'resala-bucket',
-    baseUrl: process.env.S3_BASE_URL || 'http://localhost:9000/resala-app',
-    endpoint: process.env.S3_ENDPOINT, // only used for minio
-    forcePathStyle: _parseBoolean(process.env.S3_FORCE_PATH_STYLE, false),
+    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY_ID),
+    accessSecret: z.string().parse(process.env.AWS_SECRET_ACCESS_KEY),
+    region: z.string().default('eu-north-1').parse(process.env.S3_REGION),
+    bucketName: z.string().default('resala-bucket').parse(process.env.S3_BUCKET),
+    baseUrl: z.string().url().parse(process.env.S3_BASE_URL),
+    endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT), // only used for minio
+    forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
   },
   auth: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL ?? 'http://localhost:5000'}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
+      clientId: z.string().parse(process.env.GOOGLE_CLIENT_ID),
+      clientSecret: z.string().parse(process.env.GOOGLE_CLIENT_SECRET),
+      callbackURL: `${process.env.SERVER_URL}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
     },
   },
 };
 
-/** Recursively loop through the configuration object and log warnings for missing environment variables */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkConfigurations = (config: { [key: string]: any }, path: string) => {
-  for (const key in config) {
-    if (typeof config[key] === 'object') {
-      checkConfigurations(config[key], `${path}.${key}`);
-    } else if (config[key] === undefined) {
-      console.warn(`Missing environment variable: ${path}.${key}`);
-    }
-  }
-};
-
-export type Configuration = typeof configuration;
-export { configuration, checkConfigurations };
+type Configuration = typeof configuration;
+export { configuration, type Configuration };

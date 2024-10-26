@@ -50,4 +50,4 @@ jobs:
 
       - name: Run new container
         run: |
-          docker run --env-file /home/ec2-user/.env --name ${{ env.CONTAINER_NAME }} -dp 80:80 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker run --env-file /home/ec2-user/.env --name ${{ env.CONTAINER_NAME }} -dp 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}

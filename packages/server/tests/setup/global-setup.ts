@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LocalstackContainer } from '@testcontainers/localstack';
 import { PostgreSqlContainer } from '@testcontainers/postgresql';
 

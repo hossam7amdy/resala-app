@@ -2,9 +2,11 @@ import { afterAll, beforeAll } from 'vitest';
 
 import { db, initDb } from '../../src/datastore';
 import { hashPassword } from '../../src/lib/password';
+import { S3Service } from '../../src/services/s3';
 
 beforeAll(async () => {
   await initDb();
+  await new S3Service().init();
 
   await db.user.createMany({
     data: [
