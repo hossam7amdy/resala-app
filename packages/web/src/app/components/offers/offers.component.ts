@@ -4,7 +4,6 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
@@ -12,6 +11,7 @@ import { CustomefillterPipe } from 'src/app/core/pipe/customefillter.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-offers',
@@ -24,6 +24,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     NgxStarsRatingModule,
     TranslateModule,
     CustomefillterPipe,
+    SpinnerComponent,
   ],
   templateUrl: './offers.component.html',
   styleUrls: ['./offers.component.css'],
@@ -35,10 +36,13 @@ export class OffersComponent implements OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   // interfaces
   products: Product[] = [];
@@ -54,7 +58,7 @@ export class OffersComponent implements OnInit {
   //end Rating
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
 
     //  products
     this._HomeProductsService.getProducts().subscribe({
@@ -62,21 +66,21 @@ export class OffersComponent implements OnInit {
         console.log(response.data);
         console.log('products', response.data);
         this.products = response.data.products;
-
+        this.customSpinIsLoading = false;
         // this.rateNumber = response.data.products.avgRating;
       },
     });
-
-    this.spinner.hide();
   }
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
       next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
         console.log(response);
+        this.customSpinIsLoading = false;
       },
       error: err => {
         this._Toaster.error('Should be Login !!');
@@ -87,6 +91,7 @@ export class OffersComponent implements OnInit {
         //   this._Toaster.error(err.message);
         // }
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }

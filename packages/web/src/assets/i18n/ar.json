@@ -98,6 +98,12 @@
       "title": "تواصل مـعـنا"
     }
   },
+  "forgotPw": {
+    "mainTitle": "نسيان كلمة المرور",
+    "email": "الإيميل",
+    "verifyEmail": "التحقق من الايميل",
+    "mobile": "رقم الهاتف"
+  },
   "categories": {},
   "latestCollection": {
     "mainTitle": "وصل حديثاً"
@@ -110,7 +116,9 @@
     "confirmDeleteTitle": "تأكيد الحذف",
     "questionDelete": "هل تريد حذف المنتج من المفضلة؟",
     "questionDeleteCancel": "إلغاء",
-    "questionDeleteYes": "نعم"
+    "questionDeleteYes": "نعم",
+    "favoritesEmptyTitle": "لا يوجد أي منتجات في قائمتك المفضلة.",
+    "favoritesBtn": "إبدأ التسوق"
   },
   "login": {
     "mainTitle": "تسجيل دخول الان",
@@ -138,11 +146,15 @@
     "orderNo": "رقم الطلب",
     "itemsNum": "عدد المنتجات",
     "orderTitle": "",
-    "firstNdStep": " تم تجهيز الطلب",
+    "orderDate": "تاريخ الطلب",
+    "firstNdStep": "تم تجهيز الطلب ",
     "preNdShipping": "جارى تحضير الطلب للشحن  ",
-    "enRoute": "فى طريقها إليك",
-    "arrived": "تم توصيل",
-    "totalPaid": "إجمالى المدفوع"
+    "enRoute": "فى طريقها إليك ",
+    "arrived": "تم توصيل ",
+    "totalBill": "إجمالى الفاتورة",
+    "totalPaid": "إجمالى المدفوع",
+    "ordersEmptyTitle": "ليس لديك طلبات",
+    "ordersEmptyBtn": "ابدأ باختيار طلبك "
   },
   "register": {
     "mainTitle": "سجل حساب جديد",
@@ -187,14 +199,16 @@
     "cancelBtn": "إلغاء",
     "yesBtn": "موافق",
     "stockQnt": "متوفر",
+    "discountTitle": "خصم ",
     "sizeTitle": "المقاس",
     "editColorSize": "تعديل",
     "editTitleForm": "تعديل المقاس",
-    "chooseColor": "خيرات اللون",
+    "chooseColor": "اختر اللون اولا",
     "chooseSize": "خيرات المقاس",
     "updateCartBtn": "تحديث والعودة الى السلة",
     "remove": "حذف",
-    "latestStock": "اخر قطعة",
+    "latestStock": "اخر ",
+    "latestStock2NdWord": " قطع ستوك ",
     "checkoutBtn": "إجمالى الحساب",
     "totalProPrice": "إجمالى الحساب",
     "subTotalPrice": "الإجمالى الفرعي",
@@ -203,6 +217,49 @@
     "totalPrice": "إجمالى الحساب",
     "tax": "(شامل الضريبة)",
     "orderBtn": "الاستمرار الى الدفع",
-    "cartEmptyTitle": "السلة الخاصه بك لا توجد بها منتجات !!"
+    "cartEmptyTitle": "لا يوجد لديك منتجات فى سلة التسوق",
+    "emptyCartP": "العديد من المنتجات فى انتظاركم ...",
+    "emptyBtn": "اذهب للتسوق"
+  },
+  "payment": {
+    "addressForm": {
+      "firstTitle": " أولاً",
+      "secondTitle": "بيانات التوصيل",
+      "chooseAddress": "أختر عنوان التوصيل",
+      "firstName": "الأ سم الأول",
+      "lastName": "الأسم الثاني",
+      "contact": "رقم الموبايل",
+      "country": "البلد",
+      "state": "المحافظة",
+      "city": "المدينة",
+      "street": "الشارع",
+      "building": "المبني",
+      "floor": "الدور",
+      "addressDetails": "العنوان بالتفصيل",
+      "fieldRequired": "هذا الحقل مطلوب",
+      "confirmDelete": "تأكيد الحذف",
+      "confirmDeleteQuesion": "هل تريد بالفعل حذف العنوان",
+      "cancelDelete": "إلغاء",
+      "yesDelete": "موافق",
+      "minLengthName": "يجب ان يكون الاسم حرفين على الاقل",
+      "namePattern": "يجب ان لايحتوي على رموز",
+      "selectCountry": "أختر البلد",
+      "selectCity": "أختر المدينة",
+      "saveAddress": "حفظ"
+    },
+
+    "paymentForm": {
+      "firstTitle": " ثانياً",
+      "secondTitle": "طريقة الدفع",
+      "choosePayMethod": "أختر طريقة الدفع",
+      "note": "ملاحظات",
+      "payBtn": "استمرار الدفع"
+    }
+  },
+  "postPay": {
+    "mainTitle": "تم قبول طلبك بنجاح",
+    "Btn": "معاودة التسوق",
+    "failedPay": "عفواً عملية الدفع غير صالحة",
+    "failedScript": "لقد تم رفض معاملة الدفع الخاصة بك. يرجى الاتصال بالبنك الخاص بك..."
   }
 }

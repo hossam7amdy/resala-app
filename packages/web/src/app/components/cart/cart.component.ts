@@ -9,20 +9,28 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, FormsModule],
+  imports: [CommonModule, RouterLink, TranslateModule, FormsModule, SpinnerComponent],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
+  // custome spinner
+  customSpinIsLoading = false;
+  //end custome spinner
+
   cartDetails: any = {};
-  cartDetailsItems: any = [];
+  cartDetailsItems: any;
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
+  totalCount: number = 0;
 
+  // Edit Form
+  isFormVisible = false;
   // update color and size
   productStock: any = [];
   productStockColor: any = [];
@@ -32,12 +40,13 @@ export class CartComponent implements OnInit {
   stockIdColor: string = '';
   stockIndex: any;
   isChooseColor: boolean = false;
+  stockId: string = '';
   //size
   statusClassSizeBtn = 'btn-not-active';
   selectedSize: string = '';
   currentSize: string = '';
   stockIdSize: string = '';
-  quantity: string = '';
+  quantity!: number;
   isChooseSize: boolean = false;
 
   // quantity attr
@@ -51,28 +60,34 @@ export class CartComponent implements OnInit {
     public _Translate: TranslateService,
     private _HomeProductsService: HomeProductsService
   ) {}
-  totalCount: number = 0;
+  // ngAfterContentChecked(): void {
+  //   if(this.cartDetailsItems == undefined){
+  //     this.cartDetailsItems = ''
+  //   }
+
+  // }
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
+
     this._CartService.getCartUser().subscribe({
       next: response => {
         console.log(response);
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
         this.totalCount = response.data.totalQuantity;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
-
-    this.spinner.hide();
   }
 
   // update Color and Size
   getStockDataPro(id: any): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
@@ -90,7 +105,7 @@ export class CartComponent implements OnInit {
         console.log('after filter', this.productStockColor);
       },
     });
-    this.spinner.hide();
+    this.customSpinIsLoading = false;
   }
 
   onColorChange(event: any, index: number) {
@@ -98,6 +113,8 @@ export class CartComponent implements OnInit {
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
     this.stockIndex = index;
+    this.counterQuantity = 1;
+    this.stockIdSize = '';
     console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
@@ -113,11 +130,12 @@ export class CartComponent implements OnInit {
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
+    this.counterQuantity = 1;
+
     console.log(this.selectedSize, this.stockIdSize);
   }
   // Quantity Fun
   plusCounterQuantity(): void {
-    this.spinner.show();
     this.counterQuantity++;
   }
 
@@ -136,7 +154,7 @@ export class CartComponent implements OnInit {
     element1: HTMLButtonElement,
     element2: HTMLButtonElement
   ): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     if (count > 0) {
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
@@ -150,24 +168,23 @@ export class CartComponent implements OnInit {
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
           this.totalCount = response.data.totalQuantity;
+          this.customSpinIsLoading = false;
         },
         error: err => {
           console.log(err);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
+          this.customSpinIsLoading = false;
         },
       });
     } else {
       count = 1;
     }
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 500);
   }
 
   // Remove item
   removeItem(itemId: string, element: HTMLElement): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this._Renderer.setAttribute(element, 'disabled', 'true');
 
     this._CartService.removeCartItem(itemId).subscribe({
@@ -177,15 +194,57 @@ export class CartComponent implements OnInit {
         this._Renderer.removeAttribute(element, 'disabled');
         this._CartService.cartNumber.next(res.data.totalQuantity);
         this._toaster.success('Removed Your Item Successfuly');
+        this.customSpinIsLoading = false;
       },
       error: () => {
         this._toaster.info('Your Item Not Removed');
+        this.customSpinIsLoading = false;
       },
     });
+  }
+  // update color&Size
+  //Remove stock id first
+  removeStockId(element: HTMLElement, productId: string): void {
+    if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
+      this._Renderer.setAttribute(element, 'disabled', 'true');
+      this.customSpinIsLoading = true;
+      this.isFormVisible = false;
+      this._CartService.removeCartItem(this.stockId).subscribe({
+        next: res => {
+          this.cartDetails = res.data;
+          this.cartDetailsItems = res.data.items;
+          this._Renderer.removeAttribute(element, 'disabled');
+          this._CartService.cartNumber.next(res.data.totalQuantity);
 
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
+          this.updateCartProduct(productId, this.counterQuantity);
+          this.customSpinIsLoading = false;
+        },
+        error: () => {
+          this._toaster.info('Your Item Not Removed');
+          this.customSpinIsLoading = false;
+        },
+      });
+    } else {
+      this._toaster.info('should be choose color and size');
+    }
+  }
+  //Update
+
+  updateCartProduct(itemId: string, quantity: any) {
+    const requiredCount: string = this.counterQuantity.toString();
+    this._CartService.addToCart(itemId, requiredCount).subscribe({
+      next: res => {
+        console.log(res);
+        this._CartService.cartNumber.next(res.data.totalQuantity);
+        console.log('cart number :' + this._CartService.cartNumber);
+        window.location.reload();
+        this._toaster.success('Update product successfuly');
+      },
+      error: err => {
+        this._toaster.error(err);
+        console.log('response', itemId, quantity, err);
+      },
+    });
   }
 
   // Delete Confirmation
@@ -200,8 +259,8 @@ export class CartComponent implements OnInit {
   }
   // Clear Cart
   clearAllItems(element: HTMLElement): void {
-    this.spinner.show();
     if (this.confirmDeleteAll == true) {
+      this.customSpinIsLoading = true;
       this._Renderer.setAttribute(element, 'disabled', 'true');
       this._CartService.clearCart().subscribe({
         next: response => {
@@ -209,22 +268,20 @@ export class CartComponent implements OnInit {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
           this.totalCount = response.data.totalQuantity;
+          window.location.reload();
         },
         error: () => {
           this._toaster.info('Your Items are Not Deleted !!');
+          this.customSpinIsLoading = false;
         },
       });
     }
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
-  // Edit on Size & Color Form
-  isFormVisible = false;
 
-  toggleForm() {
+  toggleForm(stockId: string) {
     this.isFormVisible = !this.isFormVisible;
     this.toggleBodyScroll(this.isFormVisible);
+    this.stockId = stockId;
   }
   private toggleBodyScroll(isVisible: boolean) {
     if (isVisible) {

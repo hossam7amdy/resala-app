@@ -248,12 +248,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 30px;
-  height: 30px; */
   padding: 5px;
   border: 1px solid #ccc;
   margin: 8px;
   cursor: pointer;
+}
+.size-option s {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin: 8px;
+  cursor: not-allowed;
 }
 
 .size-option.active label {

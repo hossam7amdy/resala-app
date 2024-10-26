@@ -1,28 +1,66 @@
 .emptyCart {
   color: #016373;
-  border: 1px solid #fbb935;
-  padding: 40px 60px;
+  /* border: 1px solid #fbb935; */
+  padding: 10px 70px;
   text-align: center;
   margin: auto;
-  width: 51%;
+  width: 30%;
   font-weight: 100 !important;
 }
 
 .emptyCartParent {
-  margin-top: 10%;
+  margin-top: 8%;
+}
+.emptyCart .h2 {
+  margin-bottom: 0 !important;
+  font-weight: 500;
+}
+.emptyCart i {
+  font-size: 80px;
+  color: #fbb935;
+}
+.emptyCart .p {
+  font-size: 16px;
 }
 
-.second-custom-btn {
+/* .second-custom-btn {
   background-color: #fff;
-  border: 1px solid #016373;
-  color: #016373;
+  border: none;
+  color: #777;
+  border-radius: 0;
 }
 .second-custom-btn:hover,
 .second-custom-btn:active {
-  border: 1px solid #fbb935;
+  border: none;
+  opacity: 0.8;
+} */
+.delete-all {
+  background-color: #fff;
+  border: none;
+  color: #777;
+  border-radius: 0;
 }
-.second-custom-btn:disabled {
+.delete-all:hover,
+.delete-all:active {
+  border: none;
+  opacity: 0.8;
+}
+.delete-all:disabled {
   cursor: not-allowed;
+}
+.modal-header .btn-close {
+  margin: 0 !important;
+  margin-left: auto !important;
+}
+.modal-header .btn-close:lang(ar) {
+  margin: 0 !important;
+  margin-right: auto !important;
+}
+@media (max-width: 1580px) {
+  .emptyCart {
+    padding: 20px 40px;
+    width: 35%;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -36,11 +74,26 @@
     padding: 30px 30px;
     width: 90%;
   }
+  .emptyCart i {
+    font-size: 60px;
+  }
+  .emptyCart .p {
+    font-size: 16px;
+  }
 }
 @media (max-width: 410px) {
   .emptyCart {
     font-size: 20px;
-    padding: 20px 20px;
+    padding: 10px 10px;
+  }
+  .emptyCart i {
+    font-size: 40px;
+  }
+  .emptyCart .h2 {
+    font-size: 17px;
+  }
+  .emptyCart .p {
+    font-size: 12px;
   }
 }
 
@@ -141,6 +194,9 @@
   color: #777;
   cursor: pointer;
 }
+.form-container .close-edit:lang(ar) {
+  right: 96%;
+}
 .form-container .content-form {
   background-color: #f4f4f5;
   padding: 10px;
@@ -177,6 +233,7 @@
 /*images*/
 .form-container .mini-images-color {
   width: 100px;
+  cursor: pointer;
 }
 /* color option*/
 .form-container .color-options-list {
@@ -245,6 +302,15 @@
   border: 1px solid #ccc;
   margin: 8px;
   cursor: pointer;
+}
+.size-option s {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin: 8px;
+  cursor: not-allowed;
 }
 
 .size-option.active label {

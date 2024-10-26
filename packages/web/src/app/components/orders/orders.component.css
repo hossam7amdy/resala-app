@@ -35,8 +35,8 @@
   position: relative;
 }
 
-#progressbar-2 #step1:before {
-  content: '\f058';
+#progressbar-2 .not-arrived-step:before {
+  content: '\f111';
   font-family: 'Font Awesome 5 Free';
   color: #fff;
   width: 37px;
@@ -44,14 +44,7 @@
   padding-left: 0px;
 }
 
-#progressbar-2 #step2:before {
-  content: '\f058';
-  font-family: 'Font Awesome 5 Free';
-  color: #fff;
-  width: 37px;
-}
-
-#progressbar-2 #step3:before {
+#progressbar-2 .arrivedStep:before {
   content: '\f058';
   font-family: 'Font Awesome 5 Free';
   color: #fff;
@@ -59,15 +52,7 @@
   margin-right: 0;
   text-align: center;
 }
-
-#progressbar-2 #step4:before {
-  content: '\f111';
-  font-family: 'Font Awesome 5 Free';
-  color: #fff;
-  width: 37px;
-  margin-right: 0;
-  text-align: center;
-}
+/* \f111 */
 
 #progressbar-2 li:before {
   line-height: 37px;
@@ -102,7 +87,7 @@
 #progressbar-2 li:nth-child(3):after {
   left: 1%;
   width: 100%;
-  background: #ccc !important;
+  background: #ccc;
 }
 
 #progressbar-2 li:nth-child(4) {
@@ -158,5 +143,70 @@
     font-size: 8px;
     font-weight: 300;
     /* display: none; */
+  }
+}
+
+.emptyCart {
+  color: #016373;
+  /* border: 1px solid #fbb935; */
+  padding: 10px 70px;
+  text-align: center;
+  margin: auto;
+  width: 30%;
+  font-weight: 100 !important;
+}
+
+.emptyCartParent {
+  margin-top: 8%;
+}
+.emptyCart .h2 {
+  font-weight: 300;
+}
+.emptyCart i {
+  font-size: 80px;
+  color: #fbb935;
+}
+.emptyCart .p {
+  font-size: 16px;
+}
+
+@media (max-width: 1580px) {
+  .emptyCart {
+    padding: 20px 40px;
+    width: 35%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .emptyCart {
+    padding: 40px 40px;
+    width: 75%;
+  }
+}
+@media (max-width: 550px) {
+  .emptyCart {
+    padding: 30px 30px;
+    width: 90%;
+  }
+  .emptyCart i {
+    font-size: 60px;
+  }
+  .emptyCart .p {
+    font-size: 16px;
+  }
+}
+@media (max-width: 410px) {
+  .emptyCart {
+    font-size: 20px;
+    padding: 10px 10px;
+  }
+  .emptyCart i {
+    font-size: 40px;
+  }
+  .emptyCart .h2 {
+    font-size: 17px;
+  }
+  .emptyCart .p {
+    font-size: 12px;
   }
 }

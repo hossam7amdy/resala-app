@@ -4,17 +4,17 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-nav-blank',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule, SpinnerComponent],
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
@@ -26,11 +26,14 @@ export class NavBlankComponent implements OnInit {
     private _Categories: CategoriesService,
     private route: ActivatedRoute,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
     private UserProfile: UserService,
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   // attributes
   userNameLogged: string = 'Login';
@@ -56,6 +59,7 @@ export class NavBlankComponent implements OnInit {
   langStorage: any = localStorage.getItem('language');
 
   switchLanguage(lang: string): void {
+    this.customSpinIsLoading = true;
     localStorage.setItem('language', lang);
     this.langStorage = localStorage.getItem('language');
     window.location.reload();
@@ -68,11 +72,12 @@ export class NavBlankComponent implements OnInit {
       this.currentLang = 'ar';
       this._RTLStatus.rTLStatus.next(lang);
     }
-
+    this.customSpinIsLoading = false;
     console.log('Language' + lang, this.currentLang);
   }
 
   ngOnInit(): void {
+    this.customSpinIsLoading = true;
     if (this.langStorage === null) {
       this._Translate.defaultLang;
       this.currentLang = 'ar';
@@ -101,32 +106,40 @@ export class NavBlankComponent implements OnInit {
       next: response => {
         console.log('cart number', response);
         this.cartNum = response;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         this.cartNum = 0;
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
 
     this._CartService.getCartUser().subscribe({
       next: response => {
         this.cartNum = response.data.totalQuantity;
+        this.customSpinIsLoading = false;
       },
-      error: () => {},
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
     });
 
     this._Categories.getCategories().subscribe({
       next: response => {
         this.categoryList = response.data;
+        this.customSpinIsLoading = false;
       },
       error: err => {
         console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   // Change page Direction as per Selected Lang
   changePageDirection(lang: string) {
+    this.customSpinIsLoading = true;
     const html = document.getElementsByTagName('html')[0];
     if (lang === 'ar') {
       html.dir = 'rtl';
@@ -135,6 +148,7 @@ export class NavBlankComponent implements OnInit {
       html.dir = 'ltr';
       html.lang = 'en';
     }
+    this.customSpinIsLoading = false;
   }
 
   isTogglerOpend(): void {
@@ -163,9 +177,9 @@ export class NavBlankComponent implements OnInit {
   }
 
   reloadPage(id: any): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     window.location.replace(`/category/${id}`);
-    this.spinner.hide();
+    this.customSpinIsLoading = false;
   }
 
   removeTokenSignOut(): void {
