@@ -98,6 +98,12 @@
       "title": "تواصل مـعـنا"
     }
   },
+  "forgotPw": {
+    "mainTitle": "نسيان كلمة المرور",
+    "email": "الإيميل",
+    "verifyEmail": "التحقق من الايميل",
+    "mobile": "رقم الهاتف"
+  },
   "categories": {},
   "latestCollection": {
     "mainTitle": "وصل حديثاً"
@@ -193,6 +199,7 @@
     "cancelBtn": "إلغاء",
     "yesBtn": "موافق",
     "stockQnt": "متوفر",
+    "discountTitle": "خصم ",
     "sizeTitle": "المقاس",
     "editColorSize": "تعديل",
     "editTitleForm": "تعديل المقاس",
@@ -200,7 +207,8 @@
     "chooseSize": "خيرات المقاس",
     "updateCartBtn": "تحديث والعودة الى السلة",
     "remove": "حذف",
-    "latestStock": "اخر قطعة",
+    "latestStock": "اخر ",
+    "latestStock2NdWord": " قطع ستوك ",
     "checkoutBtn": "إجمالى الحساب",
     "totalProPrice": "إجمالى الحساب",
     "subTotalPrice": "الإجمالى الفرعي",

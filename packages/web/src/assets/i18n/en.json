@@ -98,6 +98,12 @@
       "title": "Contact Us"
     }
   },
+  "forgotPw": {
+    "mainTitle": "Forgot Password",
+    "email": "Email",
+    "verifyEmail": "Verify Email",
+    "mobile": "Mobile"
+  },
   "categories": {},
   "latestCollection": {
     "mainTitle": "Latest Collection"
@@ -189,18 +195,20 @@
     "mainTitleNdSlice": "Product",
     "deleteAllBtn": "Delete All Items",
     "confirmDeleteAllItems": "Confirm Delete",
-    "confirmDeleteQuestion": "Do You Want Delete All Your Products !!",
-    "cancelBtn": "Cancel",
-    "yesBtn": "Yes",
+    "confirmDeleteQuestion": "Do You Want Delete All Your Products ?",
+    "cancelBtn": "CANCEL",
+    "yesBtn": "YES",
     "stockQnt": "In Stock",
-    "sizeTitle": "Size",
+    "discountTitle": "OFF",
+    "sizeTitle": "SIZE",
     "editColorSize": "Edit",
     "editTitleForm": "SIZE CHANGE",
     "chooseColor": "Choose the Color First",
     "chooseSize": "Choose Size",
     "updateCartBtn": "Update and Back to Cart",
     "remove": "Remove",
-    "latestStock": "Latest One Stock",
+    "latestStock": "LATEST ",
+    "latestStock2NdWord": " PIECE IN STOCK ",
     "checkoutBtn": "Check Out Summary",
     "totalProPrice": "Total Amount",
     "subTotalPrice": "Sub Total",

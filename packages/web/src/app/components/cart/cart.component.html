@@ -14,7 +14,7 @@
           <button
             [disabled]="totalCount == 0"
             type="button"
-            class="btn mt-2 second-custom-btn"
+            class="btn mt-2 delete-all"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
@@ -27,33 +27,34 @@
 
           <!-- Modal -->
           <div
-            class="modal fade"
+            class="modal fade rounded-0"
             id="exampleModal"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div class="modal-dialog">
-              <div class="modal-content">
+            <div class="modal-dialog rounded-0">
+              <div class="modal-content rounded-0">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">
+                  <h5 class="modal-title h3" id="exampleModalLabel">
                     {{ 'cart.confirmDeleteAllItems' | translate }}
                   </h5>
                   <button
                     type="button"
+                    [lang]="_Translate.currentLang"
                     class="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
+                <div class="modal-body h4">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  <button type="button" class="custome-btn" data-bs-dismiss="modal">
                     {{ 'cart.cancelBtn' | translate }}
                   </button>
                   <button
                     type="button"
-                    class="btn second-custom-btn"
+                    class="second-custom-btn"
                     data-bs-dismiss="modal"
                     (click)="[confirmationDel(), clearAllItems(removeAll)]"
                     #removeAll
@@ -241,9 +242,6 @@
                         >
                           {{ 'cart.updateCartBtn' | translate }}
                         </button>
-                        <span *ngIf="requiredQuantity != ''" class="text-danger"
-                          >Availaible Now {{ requiredQuantity }} Only</span
-                        >
                       </form>
                     </div>
 
@@ -254,12 +252,17 @@
                 <p class="currency mb-0">
                   <s>{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
                 </p>
+
                 <p *ngIf="item.discountedPrice != 0" class="price fs-4">
+                  <span class="p p-0"
+                    >{{ 'cart.discountTitle' | translate }} {{ item.appliedDiscount.amount }}%</span
+                  >
                   {{ item.discountedPrice }}
                   <label class="currency fs-5">
                     {{ 'home.allProducts.currency' | translate }}</label
                   >
                 </p>
+
                 <button class="btn mt-2 remove-item">
                   <i
                     (click)="removeItem(item.stock.id, remove)"
@@ -293,8 +296,9 @@
                   <i class="fa-solid fa-plus"></i>
                 </button>
 
-                <p *ngIf="item.stock.quantity == 0" class="p">
-                  {{ 'cart.latestStock' | translate }}
+                <p *ngIf="item.stock.quantity <= 5" class="p">
+                  {{ 'cart.latestStock' | translate }} <b>{{ item.stock.quantity }}</b>
+                  {{ 'cart.latestStock2NdWord' | translate }}
                 </p>
               </div>
             </div>
