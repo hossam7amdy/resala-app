@@ -11,34 +11,27 @@
 }
 
 .check-address-lbl {
-  color: #fbb935;
+  color: #016373;
   font-weight: bold;
   font-size: 16px;
+  margin-top: 15px;
+  cursor: pointer;
 }
 
 .form-check-input {
-  padding-right: 1rem !important;
-  padding-left: 1rem !important;
-  --bs-form-check-bg: var(--bs-body-bg);
-  flex-shrink: 0;
   width: 2em;
   height: 2em;
-  margin-top: 0.25em;
-  vertical-align: top;
-  appearance: none;
-  background-color: var(--bs-form-check-bg);
-  background-image: var(--bs-form-check-bg-image);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
-
-.form-check-input,
-.form-check-label {
+  margin-top: 1.25em;
+  border: 1px solid #000;
   cursor: pointer;
+}
+.form-check-input:checked {
+  background-color: #fbb935;
+  border-color: #fbb935;
+  outline: #fff;
+}
+.form-check-input:focus {
+  box-shadow: none !important;
 }
 
 .pay-btn button {

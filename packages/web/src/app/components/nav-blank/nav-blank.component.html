@@ -132,9 +132,13 @@
         <!-- left nav -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/home">{{
-              'nav-blank.Home' | translate
-            }}</a>
+            <a
+              class="nav-link under-line-hover-link"
+              [lang]="_Translate.currentLang"
+              routerLinkActive="active-link"
+              routerLink="/home"
+              >{{ 'nav-blank.Home' | translate }}</a
+            >
           </li>
 
           <li class="nav-item dropdown mx-2">
@@ -170,15 +174,23 @@
           </li>
 
           <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection">{{
-              'nav-blank.LatestCollection' | translate
-            }}</a>
+            <a
+              class="nav-link under-line-hover-link"
+              [lang]="_Translate.currentLang"
+              routerLinkActive="active-link"
+              routerLink="/latest-collection"
+              >{{ 'nav-blank.LatestCollection' | translate }}</a
+            >
           </li>
 
           <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">{{
-              'nav-blank.NewOffers' | translate
-            }}</a>
+            <a
+              class="nav-link under-line-hover-link"
+              [lang]="_Translate.currentLang"
+              routerLinkActive="active-link"
+              routerLink="/new-offers"
+              >{{ 'nav-blank.NewOffers' | translate }}</a
+            >
           </li>
         </ul>
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
@@ -8,7 +9,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, TranslateModule, SpinnerComponent],
+  imports: [CommonModule, TranslateModule, SpinnerComponent, CuttdatePipe],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
 })
@@ -28,7 +29,7 @@ export class OrdersComponent implements OnInit {
     this.customSpinIsLoading = true;
     this._AuthService.decodeUser();
 
-    this._UserDataService.getUserOrders(this._AuthService.userInfo.id).subscribe({
+    this._UserDataService.getUserOrders(this._AuthService.userInfo?.id).subscribe({
       next: response => {
         this.orders = response.data.orders;
         console.log('orders', response);
