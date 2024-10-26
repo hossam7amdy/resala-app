@@ -19,8 +19,8 @@ const GoogleCallbackPage: React.FC<{
 
   const { mutate } = useMutation({
     mutationFn: login,
-    onError: e => {
-      error(e?.message);
+    onError: () => {
+      error('You are not authorized to access this page');
       replace(ROUTES.LOGIN);
     },
   });
