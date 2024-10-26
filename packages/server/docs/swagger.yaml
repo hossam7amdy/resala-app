@@ -3843,5 +3843,5 @@ components:
 servers:
   - url: http://localhost:5000
     description: Local development
-  - url: http://ec2-13-60-17-214.eu-north-1.compute.amazonaws.com
+  - url: https://www.resala.live
     description: Development server
