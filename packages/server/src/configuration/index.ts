@@ -11,6 +11,18 @@ const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boole
 dotenv.config({ path: `.env.${_parseNodeEnv(process.env.NODE_ENV)}` });
 
 const configuration = {
+  aws: {
+    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
+    accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
+    region: z.string().default('eu-north-1').parse(process.env.AWS_REGION),
+    ses: {
+      endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
+      verifiedIdentity: z
+        .string()
+        .default('Resala store<no-reply@resala.live>')
+        .parse(process.env.SES_VERIFIED_ID),
+    },
+  },
   origin: {
     web: z.string().url().parse(process.env.WEB_URL),
     dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
@@ -51,7 +63,6 @@ const configuration = {
       secretKey: z.string().parse(process.env.PAYMOB_SECRET_KEY),
     },
   },
-
   blobStorage: {
     accessKey: z.string().parse(process.env.AWS_ACCESS_KEY_ID),
     accessSecret: z.string().parse(process.env.AWS_SECRET_ACCESS_KEY),
