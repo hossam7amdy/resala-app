@@ -100,3 +100,6 @@ section p {
 .form-item .password-input i:lang(ar) {
   right: 92%;
 }
+.not-member {
+  font-size: 14px !important;
+}

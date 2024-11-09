@@ -12,6 +12,39 @@ section p {
 .form-item label {
   color: #016373;
 }
+
+/* start date*/
+.date-input {
+  position: relative;
+  margin: 20px 0;
+}
+.date-input input {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  font-size: 16px;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+.date-input input:focus {
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 16px;
+  top: 72%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+/* end date*/
 .password-input {
   position: relative;
   margin-bottom: 20px;
@@ -24,6 +57,36 @@ section p {
 }
 .password-input i:lang(ar) {
   right: 90%;
+}
+.terms .form-check-input {
+  width: 20px !important;
+  height: 20px !important;
+  border: 1px solid #ccc;
+  margin: 0;
+  margin-top: 1.25em;
+  background-image: var(--bs-form-check-bg-image);
+  border-radius: 0;
+}
+.terms .form-check-input:lang(ar) {
+  float: right;
+}
+.form-check-input:focus {
+  border: 1px solid #016373;
+  box-shadow: none;
+  background-image: var(--bs-form-check-bg-image);
+}
+.form-check-input:unchecked {
+  background-color: #fff;
+}
+.form-check-input:checked {
+  border: 1px solid #016373;
+  background-color: #016373;
+  background-image: var(--bs-form-check-bg-image);
+}
+.terms a {
+  text-decoration: underline !important;
+  cursor: pointer;
+  color: inherit !important;
 }
 .submit:disabled {
   cursor: text;

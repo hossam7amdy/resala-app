@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
@@ -19,6 +19,14 @@ export class RegisterComponent {
     public _Translate: TranslateService
   ) {}
 
+  isCheckedTerms: boolean = false;
+  checkedTerms(): void {
+    if (this.isCheckedTerms == false) {
+      this.isCheckedTerms = true;
+    } else {
+      this.isCheckedTerms = false;
+    }
+  }
   //show password
   showPW: any;
   togglePW() {
@@ -26,6 +34,7 @@ export class RegisterComponent {
   }
 
   errMsg: string = '';
+  errMsgAr: string = '';
   successMsg: string = '';
   successMsgAr: string = '';
   isLoading: boolean = false;
@@ -72,28 +81,35 @@ export class RegisterComponent {
   });
 
   handleForm(_registerForm: FormGroup): void {
-    this.isLoading = true;
-
-    const userData = this.registerForm.value;
-    console.log(userData);
-
-    if (this.registerForm.valid === true) {
+    if (this.isCheckedTerms) {
+      const userData = this.registerForm.value;
       console.log(userData);
-      this._AuthService.register(userData).subscribe({
-        next: response => {
-          if (response.success == true) {
-            this.successMsg = 'Registration successfuly';
-            this.successMsgAr = 'تم تسجيل الحساب بنجاح';
+
+      if (this.registerForm.valid === true) {
+        this.isLoading = true;
+        console.log(userData);
+        this._AuthService.register(userData).subscribe({
+          next: response => {
+            if (response.success == true) {
+              this.successMsg = 'Registration successfuly';
+              this.successMsgAr = 'تم تسجيل الحساب بنجاح';
+              this.isLoading = false;
+              this._Router.navigate(['/login']);
+            }
+          },
+          error: err => {
+            this.errMsg = err.error.message;
             this.isLoading = false;
-            this._Router.navigate(['/login']);
-          }
-        },
-        error: err => {
-          this.errMsg = err.error.message;
-          this.isLoading = false;
-        },
-      });
-      //Email already registered
+          },
+        });
+        //Email already registered
+      } else {
+        this.errMsg = 'Please fill in the required fields.';
+        this.errMsgAr = 'برجاء ملئ الحقول المطلوبة';
+      }
+    } else {
+      this.errMsg = 'Please check Privacy Policy';
+      this.errMsgAr = 'برجاء مراجعة سياسة الخصوصية';
     }
   }
 

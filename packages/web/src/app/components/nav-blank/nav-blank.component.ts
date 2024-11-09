@@ -1,20 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { Product } from 'src/app/core/interfaces/product';
+import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-nav-blank',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule, SpinnerComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    TranslateModule,
+    SpinnerComponent,
+    TranslateModule,
+    FormsModule,
+    SearchPipe,
+  ],
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
@@ -28,9 +43,59 @@ export class NavBlankComponent implements OnInit {
     private _Renderer: Renderer2,
     private UserProfile: UserService,
     public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
+    private _RTLStatus: Translate_Service,
+    private _HomeProducts: HomeProductsService,
+    private _WishListService: WishListService,
+    private _Toaster: ToastrService
   ) {}
 
+  isClickedSearch: boolean = false;
+  products: Product[] = [];
+  searchText: string = '';
+
+  toggleSearch(): void {
+    this.isClickedSearch = true;
+  }
+
+  closeSearch(): void {
+    this.isClickedSearch = false;
+  }
+
+  //Add product in Wish list method
+  addPoductInWishList(id: any, element: HTMLElement): void {
+    this._WishListService.postWishListItems(id).subscribe({
+      next: response => {
+        this._Renderer.setStyle(element, 'font-weight', 'bold');
+        this._Toaster.success('Added in Your Favorite List');
+        console.log(response);
+      },
+      error: err => {
+        this._Toaster.error('Should be Login !!');
+        this._Router.navigate(['/login']);
+        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
+
+        // } else {
+        //   this._Toaster.error(err.message);
+        // }
+        console.log(err);
+      },
+    });
+  }
+
+  searchProducts(): void {
+    if (this.searchText !== '') {
+      this._HomeProducts.getProductsSearch(this.searchText).subscribe({
+        next: response => {
+          this.products = response.data.products;
+          console.log(this.products);
+          console.log(this.searchText);
+        },
+        error: err => {
+          console.log(err);
+        },
+      });
+    }
+  }
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner

@@ -142,6 +142,20 @@ const routes: Routes = [
           import('./components/profile/profile.component').then(m => m.ProfileComponent),
         title: 'Profile',
       },
+      {
+        path: 'terms',
+        loadComponent: () =>
+          import('./components/termsandconditions/termsandconditions.component').then(
+            m => m.TermsandconditionsComponent
+          ),
+        title: 'Terms',
+      },
+      {
+        path: 'about-us',
+        loadComponent: () =>
+          import('./components/about-us/about-us.component').then(m => m.AboutUsComponent),
+        title: 'Our Story',
+      },
 
       // end login
     ],

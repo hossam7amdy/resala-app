@@ -18,7 +18,7 @@
               <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div
-                  class="main-img p-3"
+                  class="main-img p-3 m-3"
                   (mousemove)="setZoomPosition($event)"
                   (mouseover)="toggleZoom(true)"
                   (mouseout)="toggleZoom(false)"
@@ -35,6 +35,7 @@
                       _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
                     "
                   />
+
                   <div class="hover-overlay"></div>
                 </div>
               </ng-template>
