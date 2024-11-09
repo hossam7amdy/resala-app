@@ -14,7 +14,7 @@
           {{ 'login.googleAccount' | translate }}</a
         >
       </button>
-      <p class="p text-center">{{ 'login.chooseLogin' | translate }}</p>
+      <p class="p not-member text-center">{{ 'login.chooseLogin' | translate }}</p>
 
       <label for="email">{{ 'login.username' | translate }}</label>
 
@@ -78,11 +78,15 @@
       {{ 'login.loginBtn' | translate }}
       <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
     </button>
-    <a routerLinkActive="active-link" routerLink="/register" class="dropdown-item p" role="button"
+    <a
+      routerLinkActive="active-link"
+      routerLink="/register"
+      class="dropdown-item p not-member"
+      role="button"
       ><span style="color: #fbb935" class="not-member">{{
         'nav-blank.NotaMember?' | translate
       }}</span>
-      {{ 'nav-blank.Register' | translate }}</a
+      <span>{{ 'nav-blank.Register' | translate }}</span></a
     >
 
     <p *ngIf="successMsg" class="alert text-green mx-auto">

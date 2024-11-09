@@ -42,7 +42,6 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 export class ProductDetailsComponent implements OnInit {
   // static productId: any;
   isZoomed = false;
-
   zoomStyle = {};
 
   toggleZoom(state: boolean) {
@@ -62,9 +61,6 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  myThumbnail =
-    'https://resala-app.s3.eu-north-1.amazonaws.com/e918b11d-3d50-4d87-814d-d2b3ae5ac017.webp';
-  myFullresImage = this.myThumbnail;
   constructor(
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,

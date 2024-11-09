@@ -7,11 +7,11 @@
 
 .image-products {
   width: 100%; /* Maintain full width */
-  transition: transform 0.7s ease; /* Smooth transition */
+  transition: transform 2s ease; /* Smooth transition */
 }
 
 .image-products.zoomed {
-  transform: scale(1.5); /* Zoom in effect */
+  transform: scale(1.8); /* Zoom in effect */
 }
 
 .hover-overlay {
@@ -47,7 +47,7 @@
   height: auto;
 }
 .mini-images .image-products {
-  cursor: zoom-in;
+  cursor: pointer;
   transition: transform 0.3s ease-in-out;
   overflow: hidden;
 }

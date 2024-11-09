@@ -41,6 +41,14 @@
       </div>
     </div>
 
+    <!-- start date -->
+    <div class="date-input">
+      <label for="date">{{ 'register.date' | translate }}</label>
+      <input type="date" id="date" placeholder="Select a date" />
+      <i class="fas fa-calendar-alt calendar-icon"></i>
+    </div>
+    <!-- end date -->
+
     <div class="form-item">
       <label for="password">{{ 'register.password' | translate }}</label>
       <div class="password-input">
@@ -114,8 +122,32 @@
         </p>
       </div>
     </div>
-
-    <button [disabled]="registerForm.invalid" type="submit" class="custome-btn submit mt-3">
+    <div class="form-check terms d-flex">
+      <input
+        class="form-check-input"
+        (click)="checkedTerms()"
+        [lang]="_Translate.currentLang"
+        type="checkbox"
+        [value]=""
+        id="flexCheckIndeterminate"
+      />
+      <label class="p" for="">
+        {{ 'register.privacyPolicy1Script' | translate }}
+        <a class="" routerLink="/terms"
+          ><b>{{ 'register.termsLink' | translate }}</b>
+        </a>
+        {{ 'register.privacyPolicy2Script' | translate }}
+        <a class="" routerLink="/privacy"
+          ><b>{{ 'register.privacyLink' | translate }}</b>
+        </a>
+        {{ 'register.privacyPolicy3Script' | translate }}
+      </label>
+    </div>
+    <button
+      [disabled]="registerForm.invalid && isCheckedTerms == false"
+      type="submit"
+      class="custome-btn submit mt-3"
+    >
       {{ 'register.registerBtn' | translate }}
       <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
     </button>
@@ -123,6 +155,8 @@
     <p *ngIf="successMsg" class="alert text-green mx-auto">
       {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
     </p>
-    <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
+    <p *ngIf="errMsgAr" class="alert text-danger mx-auto">
+      {{ _Translate.currentLang == 'ar' ? errMsgAr : errMsg }}
+    </p>
   </form>
 </section>
