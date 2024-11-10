@@ -26,7 +26,7 @@ export class CartService {
 
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 
-  // baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  // baseUrl: string = `https://www.resala.live`;
 
   // add item on cart
   addToCart(stockId: string, quantity: string): Observable<any> {

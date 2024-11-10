@@ -107,6 +107,8 @@ exports.Endpoints = void 0;
   Endpoints['createDiscount'] = 'createDiscount';
   Endpoints['updateDiscount'] = 'updateDiscount';
   Endpoints['deleteDiscount'] = 'deleteDiscount';
+  Endpoints['addProductsToDiscount'] = 'addProductsToDiscount';
+  Endpoints['removeProductsFromDiscount'] = 'removeProductsFromDiscount';
 })(exports.Endpoints || (exports.Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -565,6 +567,16 @@ const ENDPOINT_CONFIGS = {
   },
   [exports.Endpoints.deleteDiscount]: {
     url: '/api/v1/discounts/{discountId}',
+    method: 'delete',
+    auth: true,
+  },
+  [exports.Endpoints.addProductsToDiscount]: {
+    url: '/api/v1/discounts/{discountId}/products',
+    method: 'post',
+    auth: true,
+  },
+  [exports.Endpoints.removeProductsFromDiscount]: {
+    url: '/api/v1/discounts/{discountId}/products',
     method: 'delete',
     auth: true,
   },
@@ -1101,85 +1113,48 @@ const DeleteReviewSchema = zod.z.object({
 });
 
 const discountTypes = ['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'];
+const productIds = zod.z.array(zod.z.coerce.number().positive()).min(1).max(100);
+const DiscountSchema = zod.z.object({
+  type: zod.z.enum(discountTypes),
+  amount: zod.z.coerce.number().positive().min(0.1),
+  description: zod.z.string().max(250).optional(),
+  minQty: zod.z.coerce.number().positive().optional(),
+  isActive: zod.z.coerce.boolean().optional(),
+  isStoreWide: zod.z.coerce.boolean().optional(),
+  productIds: productIds.optional(),
+  startDate: zod.z.coerce
+    .date()
+    .optional()
+    .transform(val => val?.toISOString()),
+  endDate: zod.z.coerce
+    .date()
+    .optional()
+    .transform(val => val?.toISOString()),
+});
+const refineStoreWide = ({ productIds, isStoreWide }) => {
+  if (isStoreWide) return !productIds;
+  return true;
+};
+const refineStartAndEndDates = ({ startDate, endDate }) => {
+  // if both startDate and endDate are provided, endDate must be greater than startDate
+  if (startDate && endDate) {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    return end >= start;
+  }
+  // if endDate is provided, startDate must be provided
+  return endDate ? !!startDate : true;
+};
+const refineDiscountType = ({ type, amount, minQty }) => {
+  if (type === 'BOGO') {
+    return minQty && amount === Math.trunc(amount);
+  }
+  return true;
+};
 const CreateDiscountSchema = zod.z.object({
-  body: zod.z
-    .object({
-      type: zod.z.enum(discountTypes),
-      amount: zod.z.coerce.number().positive().min(0.1),
-      description: zod.z.string().max(250).optional(),
-      minQty: zod.z.coerce.number().positive().optional(),
-      isActive: zod.z.coerce.boolean().optional(),
-      isStoreWide: zod.z.coerce.boolean().optional(),
-      startDate: zod.z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      endDate: zod.z.coerce
-        .date()
-        .optional()
-        .transform(val => val?.toISOString()),
-      productIds: zod.z.array(zod.z.coerce.number().positive()).min(1).max(50).optional(),
-    })
-    .refine(
-      ({ type, productIds }) => {
-        if (['FIXED', 'BULK'].includes(type)) {
-          return productIds === undefined;
-        }
-        return true;
-      },
-      {
-        message: 'You cannot provide products for order-level discounts. (e.g. FIXED, BULK)',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ isStoreWide, productIds }) => {
-        return isStoreWide ? !productIds : !!productIds;
-      },
-      {
-        message: 'Please choose either store-wide or select specific products, but not both.',
-        path: ['productIds'],
-      }
-    )
-    .refine(
-      ({ startDate, endDate }) => {
-        // if both startDate and endDate are provided, endDate must be greater than startDate
-        if (startDate && endDate) {
-          const start = new Date(startDate).getTime();
-          const end = new Date(endDate).getTime();
-          return end >= start;
-        }
-        // if endDate is provided, startDate must be provided
-        return endDate ? !!startDate : true;
-      },
-      {
-        message:
-          'Start date must not be in the past and end date must be greater than the start date.',
-        path: ['startDate'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BULK') return data.minQty;
-        return true;
-      },
-      {
-        message: 'Minimum quantity is required for BULK discount type.',
-        path: ['minQty'],
-      }
-    )
-    .refine(
-      data => {
-        if (data.type === 'BOGO') {
-          return data.minQty && data.amount === Math.trunc(data.amount);
-        }
-        return true;
-      },
-      {
-        message: 'Amount must be an integer for BOGO discount type.',
-        path: ['amount'],
-      }
-    ),
+  body: DiscountSchema.refine(refineStoreWide)
+    .refine(refineStartAndEndDates)
+    .refine(refineDiscountType),
 });
 const UpdateDiscountSchema = zod.z.object({
   params: zod.z.object({
@@ -1188,10 +1163,29 @@ const UpdateDiscountSchema = zod.z.object({
       .positive()
       .transform(val => val.toString()),
   }),
-  body: CreateDiscountSchema.shape.body,
+  body: DiscountSchema.omit({ productIds: true })
+    .refine(refineDiscountType)
+    .refine(refineStartAndEndDates),
 });
 const DeleteDiscountSchema = zod.z.object({
   params: UpdateDiscountSchema.shape.params,
+});
+const AddProductsToDiscountSchema = zod.z.object({
+  params: zod.z.object({
+    discountId: zod.z.coerce
+      .number()
+      .positive()
+      .transform(discountId => discountId.toString()),
+  }),
+  body: zod.z.object({ productIds }),
+});
+const RemoveProductsFromDiscountSchema = zod.z.object({
+  params: AddProductsToDiscountSchema.shape.params,
+  query: zod.z.object({
+    productIds: zod.z
+      .union([zod.z.coerce.number(), productIds])
+      .transform(productIds => (typeof productIds === 'number' ? [productIds] : productIds)),
+  }),
 });
 const ListDiscountsSchema = zod.z.object({
   query: OffsetPageParamsSchema.extend({
@@ -1241,6 +1235,7 @@ const GetDiscountSchema = zod.z.object({
   query: OffsetPageParamsSchema,
 });
 
+exports.AddProductsToDiscountSchema = AddProductsToDiscountSchema;
 exports.ChangePasswordSchema = ChangePasswordSchema;
 exports.CreateAddressSchema = CreateAddressSchema;
 exports.CreateCartSchema = CreateCartSchema;
@@ -1290,6 +1285,7 @@ exports.OffsetPageParamsSchema = OffsetPageParamsSchema;
 exports.RefreshTokenSchema = RefreshTokenSchema;
 exports.RefundPaymentSchema = RefundPaymentSchema;
 exports.RegisterSchema = RegisterSchema;
+exports.RemoveProductsFromDiscountSchema = RemoveProductsFromDiscountSchema;
 exports.ResendVerificationSchema = ResendVerificationSchema;
 exports.ResetPasswordSchema = ResetPasswordSchema;
 exports.UpdateAddressSchema = UpdateAddressSchema;

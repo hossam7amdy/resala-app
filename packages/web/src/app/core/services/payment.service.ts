@@ -20,7 +20,7 @@ export class PaymentService {
     return { headers };
   }
 
-  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  // baseURL: string = `https://www.resala.live`;
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
   // countries API
