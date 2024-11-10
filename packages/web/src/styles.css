@@ -217,14 +217,14 @@ body {
 
 .p {
   color: #777;
-  font-size: 14px;
+  font-size: 16px;
   text-justify: 10px;
   padding: 10px;
 }
 
 @media (max-width: 576px) {
   .p {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 
@@ -260,6 +260,9 @@ body {
 }
 
 .custome-btn:disabled {
+  cursor: not-allowed;
+}
+.btn:disabled {
   cursor: not-allowed;
 }
 
