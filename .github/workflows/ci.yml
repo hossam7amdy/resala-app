@@ -8,6 +8,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Use Node.js version
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: yarn install
+        run: |
+          yarn
   lint:
     runs-on: ubuntu-latest
 
@@ -18,6 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+
       - name: yarn format and lint
         run: |
           yarn
@@ -25,41 +39,11 @@ jobs:
           yarn format:check
   test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U user"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      minio:
-        image: minio/minio
-        env:
-          MINIO_ACCESS_KEY: minio
-          MINIO_SECRET_KEY: minio123
-        ports:
-          - 9000:9000
-    env:
-      NODE_ENV: test
-      DATABASE_URL: postgres://user:password@localhost:5432/test_db
-      S3_ENDPOINT: http://localhost:9000
-      S3_ACCESS_KEY: minio
-      S3_SECRET_KEY: minio123
-      JWT_SECRET: dummy-secret
-      JWT_REFRESH: dummy-secret
-      JWT_RESET: dummy-secret
-      JWT_VERIFY: dummy-secret
-      ORIGIN_ALLOWED_LIST: '["http://localhost:4200"]'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Set up test environment variables
+        run: echo "${{ secrets.ENV_TEST_VARS }}" > .env.test
       - name: Use Node.js version
         uses: actions/setup-node@v4
         with:

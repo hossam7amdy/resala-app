@@ -1,12 +1,11 @@
 import { v4 as uuid } from 'uuid';
 
 import { BadRequestError } from '../../errors/api.errors.js';
-import type { LocalStorage } from '../local-storage/index.js';
 import { S3Service } from '../s3/index.js';
 
 export class FileStorage {
   private static _instance: FileStorage | null = null;
-  protected _fileStorage: S3Service | LocalStorage;
+  protected _fileStorage: S3Service;
 
   protected constructor() {
     this._fileStorage = new S3Service();
