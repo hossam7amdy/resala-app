@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { JwtManager } from '../src/features/auth/jwt.manager.js';
 import { getTestServer } from './helpers/test-server.js';
 
-describe.skip('TEST /auth endpoints', () => {
+describe('TEST /auth endpoints', () => {
   let jwtManager: JwtManager;
   let client: TestAgent<superset.Test>;
 

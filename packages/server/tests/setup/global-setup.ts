@@ -13,13 +13,14 @@ export const setup = async () => {
   await execAsync('yarn db:migrate');
 
   const localstackContainer = await new LocalstackContainer().start();
-  process.env.S3_BUCKET = 'test';
   process.env.S3_BASE_URL = localstackContainer.getConnectionUri() + '/test';
-  process.env.S3_ENDPOINT = localstackContainer.getConnectionUri();
-  process.env.S3_REGION = 'us-east-1';
-  process.env.AWS_ACCESS_KEY_ID = 'test';
-  process.env.AWS_SECRET_ACCESS_KEY = 'test';
-  process.env.S3_FORCE_PATH_STYLE = 'true';
+  process.env.S3_ENDPOINT = process.env.SES_ENDPOINT = localstackContainer.getConnectionUri();
+
+  await localstackContainer.exec('awslocal s3api create-bucket --bucket test');
+  await localstackContainer.exec('awslocal s3api put-bucket-acl --bucket test --acl public-read');
+  await localstackContainer.exec(
+    'awslocal ses verify-email-identity --email-address no-reply@resala.test --region us-east-1'
+  );
 
   console.log('🟢 - Test containers is ready');
 
