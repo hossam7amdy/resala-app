@@ -1,4 +1,4 @@
-name: Deploy master
+name: Deploy to Beanstalk
 
 on:
   pull_request:
