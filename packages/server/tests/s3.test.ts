@@ -21,7 +21,7 @@ describe('S3Service', () => {
       const url = await s3Service.upload(mockMulterFile, fileKey);
 
       expect(url).toBeDefined();
-      expect(url).toBe(`${configuration.blobStorage.baseUrl}/${fileKey}`);
+      expect(url).toBe(`${configuration.aws.s3.baseUrl}/${fileKey}`);
       expect(await s3Service.exists(fileKey)).toBe(true);
     });
   });

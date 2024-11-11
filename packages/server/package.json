@@ -17,7 +17,9 @@
     "routes:generate": "tsoa spec-and-routes && tsx src/routes/api.routes.fix.ts && tsc",
     "test:unit": "dotenv -e .env.test -- vitest -c ./vitest.config.unit.ts",
     "test:int": "dotenv -e .env.test -- vitest -c ./vitest.config.int.ts",
-    "test": "npm-run-all --parallel test:unit test:int"
+    "test": "npm-run-all --parallel test:unit test:int",
+    "compose:up": "docker-compose up -d",
+    "compose:down": "docker-compose down"
   },
   "keywords": [],
   "author": "Hossam Hamdy",
@@ -31,6 +33,7 @@
     "cors": "^2.8.5",
     "decimal.js": "^10.4.3",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "ejs": "^3.1.10",
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.1",
