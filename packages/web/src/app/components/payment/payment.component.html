@@ -42,14 +42,11 @@
             </li>
             <li class="nav-item">
               <button
-                [disabled]="!isSelectedAddress || getUserAddress.length < 1"
+                [disabled]="!addressId && getUserAddress.length < 1"
                 class="nav-link"
                 (click)="currentStep = 1"
               >
-                <h3
-                  [class.notActive]="!isSelectedAddress || getUserAddress.length < 1"
-                  class="h3 mt-0"
-                >
+                <h3 [class.notActive]="!addressId && getUserAddress.length < 1" class="h3 mt-0">
                   {{ 'payment.paymentForm.secondTitle' | translate
                   }}<span class="badge bg-dark">2</span>
                 </h3>
@@ -60,14 +57,14 @@
 
         <div class="forms">
           <!-- *ngIf="getUserAddress.length >= 1 && isSelectedAddress == false && isRegisterd == false" -->
-          <h4 class="h4 m-0 p-3">My Delivery Addresses</h4>
-          <div *ngIf="currentStep === 0" class="d-inline-flex py-2 mx-2 justify-content-center">
+          <h4 *ngIf="currentStep === 0" class="h4 m-0 p-3">Select Delivery Address</h4>
+          <h4 *ngIf="currentStep === 1" class="h4 m-0 p-3">Select Payment Method</h4>
+          <div
+            [ngClass]="{ appear: currentStep === 0, disappear: currentStep === 1 }"
+            class="d-flex flex-wrap py-2 mx-2 justify-content-center"
+          >
             <div *ngFor="let userAddress of getUserAddress; let i = index" class="">
-              <fieldset
-                (click)="selectedAddressMethod(userAddress.id)"
-                class="border mx-2 d-inline-block"
-                style="width: 200px"
-              >
+              <fieldset class="border mx-2 d-inline-block" style="width: 200px">
                 <label [for]="userAddress.id" class="check-box-lbl">
                   <div class="m-3">
                     <div class="d-flex">
@@ -80,16 +77,17 @@
                         value="{{ addressId }}"
                         formControlName="addressId"
                         (change)="selectedAddressMethod(userAddress.id)"
+                        [checked]="addressId === i"
                       />
                       <div class="dropdown-edit">
-                        <span class="p-2">
-                          <i
-                            class="dropdown-toggle fa-solid fa-ellipsis-vertical"
-                            id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                          </i>
+                        <span
+                          class="p-2"
+                          id="dropdownMenuButton1"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="true"
+                          role="button"
+                        >
+                          <i class="dropdown-toggle fa-solid fa-ellipsis-vertical"> </i>
                         </span>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li>
@@ -107,6 +105,7 @@
                               class="dropdown-item"
                               data-bs-toggle="modal"
                               data-bs-target="#exampleModal"
+                              (click)="selectedDelIndex = i"
                               >DELETE</a
                             >
                           </li>
@@ -163,8 +162,7 @@
                         type="button"
                         class="second-custom-btn"
                         data-bs-dismiss="modal"
-                        (click)="removeItem(i, remove)"
-                        #remove
+                        (click)="removeItem()"
                       >
                         {{ 'cart.yesBtn' | translate }}
                       </button>
@@ -178,6 +176,7 @@
 
             <!-- start Add new Address -->
             <div
+              *ngIf="firstRegister === false"
               class="cardAddress d-grid"
               style="width: 200px; min-height: 200px"
               data-bs-toggle="offcanvas"
@@ -649,9 +648,19 @@
           <!-- *ngIf="getUserAddress.length > 0" -->
           <!-- *ngIf="isRegisterd == true" -->
           <!-- *ngIf="addressId !== 0" -->
-          <section id="thirdSection" class="pay-form" *ngIf="currentStep === 1">
+          <section
+            id="thirdSection"
+            class="pay-form"
+            [ngClass]="{ appear: currentStep === 1, disappear: currentStep === 0 }"
+          >
             <form [formGroup]="payForm" class="row g-3 px-5">
-              <div *ngFor="let method of paymentDataMethod" class="form-check form-check-inline">
+              <div
+                *ngFor="let method of paymentDataMethod"
+                class="form-check form-check-inline border-bottom"
+              >
+                <h4 class="h4">
+                  {{ method.enMethod == 'CASH' ? 'Cash On Delivery' : 'Visa Card' }}
+                </h4>
                 <input
                   class="form-check-input"
                   type="radio"
@@ -667,12 +676,30 @@
                   [for]="_Translate.currentLang === 'ar' ? method.arMethod : method.enMethod"
                   >{{ _Translate.currentLang === 'ar' ? method.arMethod : method.enMethod }}</label
                 >
+                <p class="p">
+                  {{
+                    method.enMethod == 'CASH'
+                      ? 'The Maxmum Limit for Order Amount 4000 LE'
+                      : 'To Continue Pay Over Visa Card Click on Follow Up Payment'
+                  }}
+                </p>
+                <p class="p">
+                  {{
+                    method.enMethod == 'CASH'
+                      ? _Translate.currentLang === 'ar'
+                        ? 'طلبكم يكون قد اكتمل بمجرد النقر على تابع عملية الدفع.'
+                        : 'The Order is Complete Just Clicked On Follow Up Payment '
+                      : _Translate.currentLang === 'ar'
+                        ? 'ليست هذه الخطوه النهائية للدفع من خلال الفيزا البنكية'
+                        : 'This step is not latest for payment .'
+                  }}
+                </p>
               </div>
               <!-- <p>{{"payment.paymentForm.choosePayMethod"|translate}}{{ paymentSelected }}</p> -->
 
               <!-- </div> -->
 
-              <div class="form-item col-9">
+              <div class="form-item col-9 mb-1">
                 <label for="note" class="form-label">{{
                   'payment.paymentForm.note' | translate
                 }}</label>
@@ -698,110 +725,11 @@
       </div>
 
       <!-- start summary checkout -->
-      <div *ngIf="paymentSelected == ''" class="summary col-lg-3">
-        <div class="card text-center">
-          <div class="card-body">
-            <div class="row card-text">
-              <p class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
 
-              <span class="text-end col-6 price fs-5">
-                {{ cartDetails.totalPrice }}
-                <label class="currency fs-5 m-0">
-                  {{ 'home.allProducts.currency' | translate }}</label
-                >
-                <a
-                  [lang]="_Translate.currentLang"
-                  class="rotate-box collapse-icon"
-                  data-bs-toggle="collapse"
-                  href="#multiCollapseExample1"
-                  role="button"
-                  aria-expanded="false"
-                  aria-controls="multiCollapseExample1"
-                  [ngClass]="{ 'rotate-180': isRotated }"
-                  (click)="toggleRotation()"
-                  style="color: #777"
-                >
-                  <i class="fa-solid fa-chevron-down"></i>
-                </a>
-              </span>
-
-              <!-- <span>
-          
-          
-        </span> -->
-              <div class="row">
-                <div class="col p-0">
-                  <div class="collapse multi-collapse" id="multiCollapseExample1">
-                    <div class="card card-body" style="border: 0; border-top: 1px solid #ccc">
-                      <div class="row m-0 border-0">
-                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
-                          'cart.subTotalPrice' | translate
-                        }}</span>
-                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalDiscount + cartDetails.totalPrice }}
-                          <label class="currency m-0 fs-6">{{
-                            'home.allProducts.currency' | translate
-                          }}</label></span
-                        >
-                      </div>
-                      <div class="row m-0 border-0">
-                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
-                          'cart.shippingAmount' | translate
-                        }}</span>
-                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >0
-                          <label class="currency m-0 fs-6">{{
-                            'home.allProducts.currency' | translate
-                          }}</label></span
-                        >
-                      </div>
-                      <div class="row m-0 border-0">
-                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
-                          'cart.discountAmount' | translate
-                        }}</span>
-                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >-{{ cartDetails.totalDiscount }}
-                          <label class="currency m-0 fs-6">{{
-                            'home.allProducts.currency' | translate
-                          }}</label></span
-                        >
-                      </div>
-                      <div class="row m-0 border-0">
-                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0"
-                          >{{ 'cart.totalPrice' | translate }}
-                          <i>{{ 'cart.tax' | translate }}</i></span
-                        >
-                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalPrice }}
-                          <label class="currency m-0 fs-6">{{
-                            'home.allProducts.currency' | translate
-                          }}</label></span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <button
-              [disabled]="!isSelectedAddress || getUserAddress.length < 1"
-              type="submit"
-              (click)="currentStep = 1"
-              [class.active]="currentStep === 1"
-              class="w-100 submit custome-btn"
-            >
-              {{ 'payment.checkOutSummary.continuePayBtn' | translate }}
-              <!-- <a  class="btn custome-btn"></a> -->
-            </button>
-            <i id="not-pay">{{ 'payment.checkOutSummary.notPayStep' | translate }}</i>
-          </div>
-        </div>
-      </div>
       <!-- end summary checkout -->
-
+      <!-- *ngIf="paymentSelected !== ''" -->
       <!-- start summary checkout -->
-      <div *ngIf="paymentSelected !== ''" class="summary col-lg-3">
+      <div class="summary col-lg-3">
         <div class="card text-center">
           <div class="card-body">
             <div class="row card-text">
@@ -877,16 +805,11 @@
                           [value]=""
                           id="flexCheckIndeterminate"
                         />
-                        <label class="p" for="">
+                        <label class="p fs-6" for="">
                           {{ 'register.privacyPolicy1Script' | translate }}
-                          <a class="" routerLink="/terms"
+                          <a class="" routerLink="/terms" target="_blank"
                             ><b>{{ 'register.termsLink' | translate }}</b>
                           </a>
-                          {{ 'register.privacyPolicy2Script' | translate }}
-                          <a class="" routerLink="/privacy"
-                            ><b>{{ 'register.privacyLink' | translate }}</b>
-                          </a>
-                          {{ 'register.privacyPolicy3Script' | translate }}
                         </label>
                       </div>
                     </div>
@@ -896,6 +819,7 @@
             </div>
 
             <button
+              [disabled]="payForm.invalid || isCheckedTerms === false"
               type="submit"
               (click)="creatOrder(payForm, btn)"
               #btn
@@ -904,7 +828,7 @@
               {{ 'payment.checkOutSummary.followPayment' | translate }}
               <!-- <a  class="btn custome-btn"></a> -->
             </button>
-            <i id="not-pay">{{ 'payment.checkOutSummary.payStep' | translate }}</i>
+            <!-- <i id="not-pay">{{ 'payment.checkOutSummary.payStep' | translate }}</i> -->
           </div>
         </div>
       </div>

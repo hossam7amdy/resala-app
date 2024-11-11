@@ -575,6 +575,9 @@ section .overlay {
   .col-xs-12 {
     width: 51%;
   }
+  .col-xs-6 {
+    width: 50%;
+  }
 }
 
 .img-content .offer {
