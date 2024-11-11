@@ -11,6 +11,24 @@ const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boole
 dotenv.config({ path: `.env.${_parseNodeEnv(process.env.NODE_ENV)}` });
 
 const configuration = {
+  aws: {
+    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
+    accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
+    region: z.string().default('eu-north-1').parse(process.env.AWS_REGION),
+    ses: {
+      endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
+      verifiedIdentity: z
+        .string()
+        .default('Resala store<no-reply@resala.live>')
+        .parse(process.env.SES_VERIFIED_ID),
+    },
+    s3: {
+      bucketName: z.string().default('resala-files').parse(process.env.S3_BUCKET),
+      baseUrl: z.string().url('cdn.resala.live').parse(process.env.S3_BASE_URL),
+      endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
+      forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
+    },
+  },
   origin: {
     web: z.string().url().parse(process.env.WEB_URL),
     dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
@@ -32,10 +50,6 @@ const configuration = {
   db: {
     url: z.string().url().parse(process.env.DATABASE_URL),
   },
-  email: {
-    user: z.string().email().parse(process.env.MAIL_USER),
-    pass: z.string().parse(process.env.MAIL_PASS),
-  },
   payment: {
     paymob: {
       integrationId: z.coerce.number().parse(process.env.PAYMOB_INTEGRATION_ID),
@@ -50,16 +64,6 @@ const configuration = {
       publicKey: z.string().parse(process.env.PAYMOB_PUBLIC_KEY),
       secretKey: z.string().parse(process.env.PAYMOB_SECRET_KEY),
     },
-  },
-
-  blobStorage: {
-    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY_ID),
-    accessSecret: z.string().parse(process.env.AWS_SECRET_ACCESS_KEY),
-    region: z.string().default('eu-north-1').parse(process.env.S3_REGION),
-    bucketName: z.string().default('resala-bucket').parse(process.env.S3_BUCKET),
-    baseUrl: z.string().url().parse(process.env.S3_BASE_URL),
-    endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT), // only used for minio
-    forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
   },
   auth: {
     google: {
