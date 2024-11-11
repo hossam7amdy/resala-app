@@ -13,11 +13,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Set up test environment variables
-        run: echo "${{ secrets.ENV_TEST_VARS }}" > .env.test
-        
+        uses: actions/checkout@v4  
       - name: Use Node.js version
         uses: actions/setup-node@v4
         with:
@@ -65,6 +61,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Set up test environment variables
+        run: echo "${{ secrets.ENV_TEST_VARS }}" > .env.test
       - name: Use Node.js version
         uses: actions/setup-node@v4
         with:
