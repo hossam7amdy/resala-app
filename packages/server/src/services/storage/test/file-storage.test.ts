@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BadRequestError } from '../../../errors/api.errors.js';
-import { FileStorage } from '../file-storage';
+import { FileStorage } from '../file-storage.js';
 
 // Mock S3Service
 vi.mock('services/s3', () => ({
