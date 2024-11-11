@@ -14,7 +14,7 @@ const configuration = {
   aws: {
     accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
     accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
-    region: z.string().parse(process.env.AWS_REGION),
+    region: z.string().default('eu-north-1').parse(process.env.AWS_REGION),
     ses: {
       endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
       verifiedIdentity: z
