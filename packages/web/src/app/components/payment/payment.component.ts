@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -20,7 +20,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, SpinnerComponent, TranslateModule, RouterLink],
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
@@ -121,6 +121,8 @@ export class PaymentComponent implements OnInit {
   isLoading: boolean = false;
   getUserAddress: any = [];
   addressId: number = 0;
+  //the index selected for delete
+  selectedDelIndex!: number;
   selectPayMethod: string = '';
   note: string = '';
 
@@ -182,7 +184,7 @@ export class PaymentComponent implements OnInit {
     this._PaymentServices.getListAddressUser(this.userLoginId).subscribe({
       next: response => {
         this.getUserAddress = response.data;
-        if (this.getUserAddress.length == 0) {
+        if (this.getUserAddress.length == 3) {
           this.firstRegister = true;
         }
         this.customSpinIsLoading = false;
@@ -379,28 +381,26 @@ export class PaymentComponent implements OnInit {
     }
   }
 
-  removeItem(index: number, element: HTMLElement): void {
+  removeItem(): void {
     this.customSpinIsLoading = true;
-    this._Renderer2.setAttribute(element, 'disabled', 'true');
-    this._PaymentServices
-      .deleteUserAddress(this.userLoginId, this.getUserAddress[index].id)
-      .subscribe({
-        next: response => {
-          this.getUserAddress = response.data;
-          this._Renderer2.removeAttribute(element, 'disabled');
-          this._Toaster.success('Removed Your Address Successfuly');
-          window.location.reload();
-          this.isRegisterd = false;
-          this.isEdit = false;
-          this.isSelectedAddress = false;
-          this.customSpinIsLoading = false;
-        },
-        error: err => {
-          this._Toaster.info('Your Item Not Removed');
-          console.log(err);
-          this.customSpinIsLoading = false;
-        },
-      });
+    const addressId: number = this.getUserAddress[this.selectedDelIndex].id;
+    this._PaymentServices.deleteUserAddress(this.userLoginId, addressId).subscribe({
+      next: response => {
+        this.getUserAddress = response.data;
+
+        this._Toaster.success('Removed Your Address Successfuly');
+        window.location.reload();
+        this.isRegisterd = false;
+        this.isEdit = false;
+        this.isSelectedAddress = false;
+        this.customSpinIsLoading = false;
+      },
+      error: err => {
+        this._Toaster.info('Your Item Not Removed');
+        console.log(err);
+        this.customSpinIsLoading = false;
+      },
+    });
   }
 
   paymentSelectedMethod(event: any) {
@@ -462,7 +462,7 @@ export class PaymentComponent implements OnInit {
 
   // Move to the next step
   nextStep() {
-    if (this.currentStep < 2 && this.isSelectedAddress) {
+    if (this.currentStep < 2 && this.addressId && this.getUserAddress > 0) {
       this.currentStep++;
     }
   }
