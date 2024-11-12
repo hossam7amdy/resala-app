@@ -56,12 +56,32 @@ export const postPay: RequestHandler<{ orderId: string }, unknown, PostPayReques
 
     const isValid = verify(hmac, transaction);
 
-    await db.order.update({
+    const { orderItems } = await db.order.update({
       data: {
         transactionId: transaction.id.toString(),
         paymentStatus: status(transaction),
       },
       where: { id: orderId },
+      select: {
+        orderItems: true,
+      },
+    });
+
+    await db.$transaction(async trx => {
+      const toUpdate = await trx.stock.findMany({
+        where: {
+          id: { in: orderItems.map(s => s.stockId) },
+        },
+      });
+
+      for (const stock of toUpdate) {
+        await trx.stock.update({
+          where: { id: stock.id },
+          data: {
+            quantity: { decrement: stock.quantity },
+          },
+        });
+      }
     });
 
     if (!isValid) {
