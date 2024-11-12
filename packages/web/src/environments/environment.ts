@@ -2,5 +2,5 @@
 export const environment = {
   production: true,
   apiUrl: 'https://resala-app-6ba5cpyy5q-ey.a.run.app',
-  BASE_URL: `https://www.resala.live`,
+  BASE_URL: `https://api.resala.live`,
 };

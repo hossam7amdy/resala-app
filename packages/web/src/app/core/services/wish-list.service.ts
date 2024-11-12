@@ -21,7 +21,7 @@ export class WishListService {
   }
 
   //base URL
-  // baseUrl: string = `https://www.resala.live`;
+  // baseUrl: string = `https://api.resala.live`;
 
   // My token
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
