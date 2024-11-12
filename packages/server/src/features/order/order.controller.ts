@@ -44,7 +44,6 @@ import { AddressService } from '../address/address.service.js';
 import { DiscountService } from '../discount/discount.service.js';
 import { PaymentService } from '../payment/payment.service.js';
 import { ShoppingService } from '../shopping/shopping.service.js';
-import { StockService } from '../stock/stock.service.js';
 import { OrderService } from './order.service.js';
 
 @Tags('Order')
@@ -53,7 +52,6 @@ import { OrderService } from './order.service.js';
 @Middlewares([authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;
-  private readonly stockService: StockService;
   private readonly discountService: DiscountService;
   private readonly shoppingService: ShoppingService;
   private readonly addressService: AddressService;
@@ -66,7 +64,6 @@ export class OrderController extends Controller {
     this.paymentService = new PaymentService(new PaymobService());
 
     this.orderService = new OrderService(db);
-    this.stockService = new StockService(db);
     this.discountService = new DiscountService(db);
     this.shoppingService = new ShoppingService(db);
     this.addressService = new AddressService(db);
@@ -90,29 +87,23 @@ export class OrderController extends Controller {
 
     const address = await this.addressService.find(user.id, body.addressId);
 
-    await this.stockService.decrease(discountedUserCart);
+    const {
+      items: _,
+      shipping,
+      ...order
+    } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
 
-    try {
-      const {
-        items: _,
-        shipping,
-        ...order
-      } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
-
-      let payment;
-      if (paymentMethod === 'CARD') {
-        payment = await this.paymentService.checkout({
-          user,
-          order: { shipping, ...order },
-          cart: discountedUserCart,
-          shipping: address,
-        });
-      }
-
-      return { success: true, data: payment };
-    } finally {
-      await this.shoppingService.cart.deleteMany(user.id);
+    let payment;
+    if (paymentMethod === 'CARD') {
+      payment = await this.paymentService.checkout({
+        user,
+        order: { shipping, ...order },
+        cart: discountedUserCart,
+        shipping: address,
+      });
     }
+
+    return { success: true, data: payment };
   }
 
   /** Get order details **Only admins can access this endpoint** */
