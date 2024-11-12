@@ -22,7 +22,7 @@ export class CategoriesService {
 
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
-  // baseURL: string = `https://www.resala.live`;
+  // baseURL: string = `https://api.resala.live`;
   constructor(private _HTTPClient: HttpClient) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

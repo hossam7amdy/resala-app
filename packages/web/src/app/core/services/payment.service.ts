@@ -20,7 +20,7 @@ export class PaymentService {
     return { headers };
   }
 
-  // baseURL: string = `https://www.resala.live`;
+  // baseURL: string = `https://api.resala.live`;
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
   // countries API
