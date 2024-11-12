@@ -31,7 +31,7 @@ export class AuthService {
 
   signOut: boolean = false;
   userInfo: any;
-  // baseURL: string = `https://www.resala.live`;
+  // baseURL: string = `https://api.resala.live`;
   //baseurl = https://resala-app.onrender.com/
 
   register(userData: object): Observable<any> {
