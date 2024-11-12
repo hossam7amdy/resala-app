@@ -34,7 +34,7 @@
           "description": "Local development"
         },
         {
-          "url": "https://www.resala.live",
+          "url": "https://api.resala.live",
           "description": "Development server"
         }
       ]

@@ -26,7 +26,7 @@ export class CartService {
 
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 
-  // baseUrl: string = `https://www.resala.live`;
+  // baseUrl: string = `https://api.resala.live`;
 
   // add item on cart
   addToCart(stockId: string, quantity: string): Observable<any> {
