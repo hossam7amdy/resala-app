@@ -395,9 +395,8 @@ export class PaymentComponent implements OnInit {
         this.isSelectedAddress = false;
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: () => {
         this._Toaster.info('Your Item Not Removed');
-        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
@@ -406,7 +405,6 @@ export class PaymentComponent implements OnInit {
   paymentSelectedMethod(event: any) {
     this.customSpinIsLoading = true;
     this.paymentSelected = event;
-    console.log(this.paymentSelected);
     this.customSpinIsLoading = false;
   }
 
@@ -416,24 +414,17 @@ export class PaymentComponent implements OnInit {
     note: new FormControl(''),
   });
 
-  creatOrder(payForm: FormGroup, btn: HTMLButtonElement) {
+  createOrder(payForm: FormGroup, btn: HTMLButtonElement) {
     if (this.isCheckedTerms) {
       this.customSpinIsLoading = true;
 
-      const payData = this.payForm.value;
-
-      // if (this.payForm.valid) {
-      console.log(payData, 'addres id', this.addressId);
       this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
         next: response => {
           if (response.success == true) {
-            console.log('dataPay', this.addressId, this.paymentSelected, this.note);
-            console.log(response);
-
             this.isLoading = false;
             this._Toaster.success('Your Order Completed');
 
-            if (this.paymentSelected == 'CARD') {
+            if (this.paymentSelected == 'CARD' && response.data?.paymentUrl) {
               window.open(response.data.paymentUrl, '_self');
             } else {
               this._Router.navigate(['/home']);
@@ -449,7 +440,6 @@ export class PaymentComponent implements OnInit {
           } else {
             this.errMsg = err.error.message;
             this._Toaster.error(this.errMsg);
-            console.log(err);
           }
           this.customSpinIsLoading = false;
         },
