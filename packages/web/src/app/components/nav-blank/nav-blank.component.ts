@@ -227,13 +227,11 @@ export class NavBlankComponent implements OnInit {
   getUserInfo(userId: any): void {
     this.UserProfile.getUserInfo(userId).subscribe({
       next: response => {
-        this._AuthService.userNameLogged = response.data.firstName;
+        this._AuthService.userNameLogged.next(response.data.firstName);
         this.userNameLogged = response.data.firstName;
         this.signOut = true;
-        console.log('user name', this.userNameLogged);
       },
       error: err => {
-        console.log(err);
         if (err.status == 401 || err.status == 403) {
           this.signOut = false;
         }

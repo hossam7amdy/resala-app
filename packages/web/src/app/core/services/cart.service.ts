@@ -1,6 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
+import {
+  CreateCartResponse,
+  DeleteCartResponse,
+  ENDPOINT_CONFIGS,
+  GetCartResponse,
+  withParams,
+} from '@resala/shared';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
@@ -14,25 +20,20 @@ export class CartService {
   // refactor free API url
   private getHeaders() {
     const headers = new HttpHeaders({
-      'ngrok-skip-browser-warning': '69420',
       Authorization: `Bearer ${localStorage.getItem('etoken')}`,
     });
 
     return { headers };
   }
 
-  // token = (`Bearer ${localStorage.getItem('etoken')}`);
   myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
 
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 
-  // baseUrl: string = `https://api.resala.live`;
-
-  // add item on cart
-  addToCart(stockId: string, quantity: string): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.addItemToCart]);
-    return this.http.post(
-      environment.BASE_URL + url,
+  addToCart(stockId: string, quantity: string): Observable<CreateCartResponse> {
+    const { url } = ENDPOINT_CONFIGS.addItemToCart;
+    return this.http.post<CreateCartResponse>(
+      environment.baseUrl + url,
       {
         stockId: stockId,
         quantity: quantity,
@@ -41,22 +42,18 @@ export class CartService {
     );
   }
 
-  // get cart page
-
-  getCartUser(): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getUserCart]);
-    return this.http.get(environment.BASE_URL + url, this.getHeaders());
+  getCartUser(): Observable<GetCartResponse> {
+    const { url } = ENDPOINT_CONFIGS.getUserCart;
+    return this.http.get<GetCartResponse>(environment.baseUrl + url, this.getHeaders());
   }
 
-  // remove item
-  removeCartItem(productId: string): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.removeItemFromCart], productId + '');
-    return this.http.delete(environment.BASE_URL + url, this.getHeaders());
+  removeCartItem(productId: string): Observable<DeleteCartResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.removeItemFromCart, productId + '');
+    return this.http.delete<DeleteCartResponse>(environment.baseUrl + url, this.getHeaders());
   }
 
-  // remove All Items from User
-  clearCart(): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.removeUserCart]);
-    return this.http.delete(environment.BASE_URL + url, this.getHeaders());
+  clearCart(): Observable<DeleteCartResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.removeUserCart);
+    return this.http.delete<DeleteCartResponse>(environment.baseUrl + url, this.getHeaders());
   }
 }
