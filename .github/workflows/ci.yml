@@ -40,7 +40,7 @@ jobs:
       - name: Test shared
         run: yarn test:shared
       - name: Test dashboard
-        run: yarn test dashboard
+        run: yarn test:dashboard
       - name: Test web
         run: yarn test:web
 
