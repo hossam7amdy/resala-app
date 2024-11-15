@@ -157,7 +157,7 @@ export class NavBlankComponent implements OnInit {
     this.changePageDirection(this.langStorage);
 
     // this.signOut = this._AuthService.signOut;
-    this.isToken = localStorage.getItem('etoken');
+    this.isToken = localStorage.getItem('accessToken');
     if (this.isToken == null || this.isToken == '') {
       this.signOut = false;
     } else {
@@ -227,13 +227,11 @@ export class NavBlankComponent implements OnInit {
   getUserInfo(userId: any): void {
     this.UserProfile.getUserInfo(userId).subscribe({
       next: response => {
-        this._AuthService.userNameLogged = response.data.firstName;
+        this._AuthService.userNameLogged.next(response.data.firstName);
         this.userNameLogged = response.data.firstName;
         this.signOut = true;
-        console.log('user name', this.userNameLogged);
       },
       error: err => {
-        console.log(err);
         if (err.status == 401 || err.status == 403) {
           this.signOut = false;
         }
@@ -249,7 +247,7 @@ export class NavBlankComponent implements OnInit {
 
   removeTokenSignOut(): void {
     this.signOut = false;
-    localStorage.removeItem('etoken');
+    localStorage.removeItem('accessToken');
     this._Router.navigate(['/login']);
     if (this._AuthService.signOut == null) {
       this.cartNum = 0;

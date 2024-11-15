@@ -186,14 +186,12 @@ export class ProductDetailsComponent implements OnInit {
     this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
-        this.productImages = res?.data?.images;
+        this.productImages = [];
         this.categoryId = res?.data.categoryId;
-        console.log('productdetails', res.data, 'cat id' + this.categoryId);
         this.customSpinIsLoading = false;
       },
 
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
       complete: () => {
