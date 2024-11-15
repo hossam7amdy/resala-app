@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   decodeUser(): void {
-    const encode = localStorage.getItem('etoken');
+    const encode = localStorage.getItem('accessToken');
 
     if (encode != null) {
       const decode = jwtDecode(encode);

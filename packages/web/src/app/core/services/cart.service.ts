@@ -20,13 +20,13 @@ export class CartService {
   // refactor free API url
   private getHeaders() {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     });
 
     return { headers };
   }
 
-  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
+  myToken: any = { Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
 
   cartNumber: BehaviorSubject<number> = new BehaviorSubject(0);
 

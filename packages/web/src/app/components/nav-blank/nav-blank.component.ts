@@ -157,7 +157,7 @@ export class NavBlankComponent implements OnInit {
     this.changePageDirection(this.langStorage);
 
     // this.signOut = this._AuthService.signOut;
-    this.isToken = localStorage.getItem('etoken');
+    this.isToken = localStorage.getItem('accessToken');
     if (this.isToken == null || this.isToken == '') {
       this.signOut = false;
     } else {
@@ -247,7 +247,7 @@ export class NavBlankComponent implements OnInit {
 
   removeTokenSignOut(): void {
     this.signOut = false;
-    localStorage.removeItem('etoken');
+    localStorage.removeItem('accessToken');
     this._Router.navigate(['/login']);
     if (this._AuthService.signOut == null) {
       this.cartNum = 0;

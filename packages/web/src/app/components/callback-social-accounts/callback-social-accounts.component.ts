@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-callback-social-accounts',
   standalone: true,
   imports: [CommonModule],
@@ -22,21 +23,17 @@ export class CallbackSocialAccountsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(token => {
       this.tokenFromSocial = token['accessToken'];
-      console.log('token', this.tokenFromSocial);
     });
 
     if (this.tokenFromSocial !== '') {
-      localStorage.setItem('etoken', this.tokenFromSocial);
+      localStorage.setItem('accessToken', this.tokenFromSocial);
       this._AuthService.decodeUser();
       const productId = localStorage.getItem('productId');
       if (productId == null) {
         this._Router.navigate(['/home']).then(() => {
           window.location.reload();
         });
-        console.log('product id' + productId);
       } else {
-        console.log('product id' + productId);
-
         this._Router.navigate(['product-details/', productId]).then(() => {
           window.location.reload();
         });
