@@ -18,7 +18,7 @@ export class WishListService {
 
   private getHeaders() {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     });
 
     return { headers };
