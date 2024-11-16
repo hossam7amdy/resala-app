@@ -251,6 +251,7 @@ export class NavBlankComponent implements OnInit {
     this.signOut = false;
     localStorage.removeItem('etoken');
     this._Router.navigate(['/login']);
+    this._CartService.cartNumber.next(0);
     if (this._AuthService.signOut == null) {
       this.cartNum = 0;
     } else {

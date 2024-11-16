@@ -16,7 +16,7 @@
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <!-- *ngIf="image.isPrimary" -->
-              <ng-template carouselSlide [id]="image.imageUrl">
+              <!-- <ng-template carouselSlide [id]="image.imageUrl">
                 <div
                   class="main-img p-3 m-3"
                   (mousemove)="setZoomPosition($event)"
@@ -37,6 +37,55 @@
                   />
 
                   <div class="hover-overlay"></div>
+                </div>
+              </ng-template> -->
+              <ng-template carouselSlide [id]="image.imageUrl">
+                <div
+                  class="image-container p-1 m-1"
+                  (mousemove)="onMouseMove($event)"
+                  (mouseleave)="hideCustomCursor()"
+                  (mouseenter)="showCustomCursor()"
+                >
+                  <!-- Original Image -->
+                  <img
+                    [src]="image.imageUrl"
+                    [alt]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    [title]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    class="original-image"
+                  />
+
+                  <!-- Full Image Overlay -->
+                  <div class="image-overlay" [class.hidden]="isMouseMoving">
+                    <div
+                      class="custom-cursor"
+                      *ngIf="isCursorVisible"
+                      [ngStyle]="cursorStyles"
+                      #cursor
+                    ></div>
+                  </div>
+
+                  <!-- Zoomed Image Displayed in Separate Area Beneath -->
+                  <div class="zoom-container" *ngIf="isZoomActive">
+                    <img
+                      [src]="image.imageUrl"
+                      [alt]="
+                        _Translate.currentLang == 'ar'
+                          ? productDetails.arName
+                          : productDetails.enName
+                      "
+                      [title]="
+                        _Translate.currentLang == 'ar'
+                          ? productDetails.arName
+                          : productDetails.enName
+                      "
+                      class="zoomed-image"
+                      [ngStyle]="zoomStyles"
+                    />
+                  </div>
                 </div>
               </ng-template>
             </ng-container>

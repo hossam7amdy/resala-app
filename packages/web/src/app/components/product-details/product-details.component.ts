@@ -446,4 +446,65 @@ export class ProductDetailsComponent implements OnInit {
     window.location.replace(`/product-details/${id}`);
     this.customSpinIsLoading = false;
   }
+
+  //zoomin
+  //  @ViewChild('cursor') refCursor:any;
+  //  @HostListener('document:mousemove',['$event'])
+  //  atMouseMove(event:any){
+  //     console.log('width',event.pageX);
+  //     console.log('height',event.pageY);
+  //     this.refCursor.nativeElement.style.left =event.pageX;
+  //     this.refCursor.nativeElement.style.top =event.pageY;
+
+  //  }
+
+  zoomStyles = {};
+  isZoomActive = false;
+  isCursorVisible = false;
+  cursorStyles = {};
+  overlayStyles = {}; // Style object for overlay position
+  isMouseMoving = false; // Track if the mouse is moving
+  private mouseMoveTimeout: any;
+
+  onMouseMove(event: MouseEvent): void {
+    const { offsetX, offsetY, target } = event;
+    const { offsetWidth, offsetHeight } = target as HTMLElement;
+
+    // Activate zoom display
+    this.isZoomActive = true;
+
+    // Calculate position of zoomed image based on mouse position
+    const xPercent = (offsetX / offsetWidth) * 100;
+    const yPercent = (offsetY / offsetHeight) * 100;
+
+    this.zoomStyles = {
+      transformOrigin: `${xPercent}% ${yPercent}%`,
+      transform: 'scale(4)', // Adjust zoom scale here
+    };
+
+    // Update custom cursor position
+    this.cursorStyles = {
+      top: `${event.offsetY}px`,
+      left: `${event.offsetX}px`,
+    };
+
+    // Show overlay only if the mouse is still
+    this.isMouseMoving = true;
+    clearTimeout(this.mouseMoveTimeout);
+    this.mouseMoveTimeout = setTimeout(() => {
+      this.isMouseMoving = false; // Mouse is considered still after 200ms
+    }, 200);
+  }
+
+  showCustomCursor(): void {
+    this.isCursorVisible = true;
+  }
+
+  hideCustomCursor(): void {
+    this.isCursorVisible = false;
+    this.isZoomActive = false;
+    this.zoomStyles = {};
+    this.isMouseMoving = false;
+    this.overlayStyles = {};
+  }
 }
