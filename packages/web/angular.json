@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "freshcart": {
+    "resala": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,12 +11,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@ngx-env/builder:browser",
           "options": {
-            "outputPath": "dist/freshcart",
+            "outputPath": "dist/resala",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
@@ -26,8 +26,9 @@
               "../../node_modules/ngx-spinner/animations/ball-spin-fade.css",
               "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css",
-              "../../node_modules/ngx-toastr/toastr.css"
+              "../../node_modules/@aws-amplify/ui-angular/theme.css",
+              "../../node_modules/ngx-toastr/toastr.css",
+              "src/styles.css"
             ],
             "scripts": ["../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           },
@@ -65,13 +66,13 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@ngx-env/builder:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "freshcart:build:production"
+              "browserTarget": "resala:build:production"
             },
             "development": {
-              "browserTarget": "freshcart:build:development",
+              "browserTarget": "resala:build:development",
               "ssl": false,
               "sslKey": "ssl/server.key",
               "sslCert": "ssl/server.crt"
@@ -80,9 +81,9 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@ngx-env/builder:extract-i18n",
           "options": {
-            "browserTarget": "freshcart:build"
+            "browserTarget": "resala:build"
           }
         },
         "lint": {
@@ -92,7 +93,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@ngx-env/builder:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",

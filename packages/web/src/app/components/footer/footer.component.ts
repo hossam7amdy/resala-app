@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { Translate_Service } from 'src/app/core/services/translate.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 
 @Component({
@@ -33,7 +33,7 @@ export class FooterComponent {
     private _Toaster: ToastrService,
     private _Router: Router,
     public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
+    private _RTLStatus: LocalizationService
   ) {}
 
   isClickedSearch: boolean = false;

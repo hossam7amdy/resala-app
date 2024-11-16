@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import type { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
-// import { HomeComponent } from './components/home/home.component';
-// import { ProductsComponent } from './components/products/products.component';
-
 const routes: Routes = [
   {
     path: '',
@@ -103,21 +100,24 @@ const routes: Routes = [
         title: 'Google Account',
       },
 
-      // login
-
       {
         path: 'login',
         loadComponent: () =>
-          import('./components/login/login.component').then(m => m.LoginComponent),
+          import('./components/authenticator/authenticator.component').then(
+            m => m.AuthenticatorComponent
+          ),
         title: 'Login',
       },
 
       {
         path: 'register',
         loadComponent: () =>
-          import('./components/register/register.component').then(m => m.RegisterComponent),
+          import('./components/authenticator/authenticator.component').then(
+            m => m.AuthenticatorComponent
+          ),
         title: 'Register',
       },
+
       {
         path: 'forgot-password',
         loadComponent: () =>
@@ -156,46 +156,8 @@ const routes: Routes = [
           import('./components/about-us/about-us.component').then(m => m.AboutUsComponent),
         title: 'Our Story',
       },
-
-      // end login
     ],
   },
-
-  // {
-  //   path: '',
-  //   loadComponent: () =>
-  //     import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
-  //   children: [
-  //     { path: '', redirectTo: 'login', pathMatch: 'full' },
-
-  //     {
-  //       path: 'login',
-  //       loadComponent: () =>
-  //         import('./components/login/login.component').then(m => m.LoginComponent),
-  //       title: 'Login',
-  //     },
-
-  //     {
-  //       path: 'register',
-  //       loadComponent: () =>
-  //         import('./components/register/register.component').then(m => m.RegisterComponent),
-  //       title: 'Register',
-  //     },
-  //     {
-  //       path: 'forgot-password',
-  //       loadComponent: () =>
-  //         import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
-  //       title: 'Forgot Password',
-  //     },
-
-  //     {
-  //       path: 'reset-password',
-  //       loadComponent: () =>
-  //         import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
-  //       title: 'Reset Password',
-  //     },
-  //   ],
-  // },
 
   {
     path: '',
@@ -210,12 +172,6 @@ const routes: Routes = [
       },
     ],
   },
-
-  // {path:'home', component:HomeComponent},
-  // {path:'products', component:ProductsComponent},
-
-  // {path:'home' , loadChildren:()=>import('./components/home/home.component').then(m=>m.HomeComponent)}
-  // ;
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

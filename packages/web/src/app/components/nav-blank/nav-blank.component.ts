@@ -1,23 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthenticatorService } from '@aws-amplify/ui-angular';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { CognitoService } from 'src/app/core/services/cognito.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { Translate_Service } from 'src/app/core/services/translate.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-nav-blank',
   standalone: true,
   imports: [
@@ -35,23 +36,30 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 })
 export class NavBlankComponent implements OnInit {
   constructor(
-    private _AuthService: AuthService,
-    private _Router: Router,
-    private _CartService: CartService,
-    private _Categories: CategoriesService,
-    private route: ActivatedRoute,
-    private _Renderer: Renderer2,
-    private UserProfile: UserService,
-    public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service,
-    private _HomeProducts: HomeProductsService,
-    private _WishListService: WishListService,
-    private _Toaster: ToastrService
+    private router: Router,
+    private cartService: CartService,
+    private categories: CategoriesService,
+    private renderer: Renderer2,
+    private cognitoService: CognitoService,
+    private authenticator: AuthenticatorService,
+    public translate: TranslateService,
+    private rtlStatus: LocalizationService,
+    private homeProducts: HomeProductsService,
+    private wishListService: WishListService,
+    private toaster: ToastrService
   ) {}
 
+  cartNum: number = 0;
+  authenticated: boolean = false;
+  userNameLogged: string = 'Login';
+
+  categoryList: any = [];
   isClickedSearch: boolean = false;
   products: Product[] = [];
   searchText: string = '';
+
+  togglerOpened: boolean = false;
+  customSpinIsLoading = false;
 
   toggleSearch(): void {
     this.isClickedSearch = true;
@@ -61,93 +69,83 @@ export class NavBlankComponent implements OnInit {
     this.isClickedSearch = false;
   }
 
-  //Add product in Wish list method
-  addPoductInWishList(id: any, element: HTMLElement): void {
-    this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
-        this._Renderer.setStyle(element, 'font-weight', 'bold');
-        this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+  addProductInWishList(id: string, element: HTMLElement): void {
+    this.wishListService.postWishListItems(id).subscribe({
+      next: () => {
+        this.renderer.setStyle(element, 'font-weight', 'bold');
+        this.toaster.success('Added in Your Favorite List');
       },
-      error: err => {
-        this._Toaster.error('Should be Login !!');
-        this._Router.navigate(['/login']);
-        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-
-        // } else {
-        //   this._Toaster.error(err.message);
-        // }
-        console.log(err);
+      error: () => {
+        this.toaster.error('Should be Login !!');
+        this.router.navigate(['/login']);
       },
     });
   }
 
   searchProducts(): void {
     if (this.searchText !== '') {
-      this._HomeProducts.getProductsSearch(this.searchText).subscribe({
+      this.homeProducts.getProductsSearch(this.searchText).subscribe({
         next: response => {
           this.products = response.data.products;
-          console.log(this.products);
-          console.log(this.searchText);
         },
-        error: err => {
-          console.log(err);
-        },
+        error: () => {},
       });
     }
   }
-  // start Custome Spinner
-  customSpinIsLoading = false;
-  //end Custome Spinner
-
-  // attributes
-  userNameLogged: string = 'Login';
-  userId: any;
-  signOut: boolean = false;
-  isToken: string | null = '';
-  categoryList: any = [];
-
-  cartNum: number = 0;
-  togglerOpend: boolean = false;
 
   @ViewChild('navbar') navbarElement!: ElementRef;
 
   @HostListener('window:scroll')
   onScrollSecond(): void {
     if (scrollY > 600) {
-      this._Renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
+      this.renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
     } else {
-      this._Renderer.removeStyle(this.navbarElement.nativeElement, 'top');
+      this.renderer.removeStyle(this.navbarElement.nativeElement, 'top');
     }
   }
   currentLang: string = 'ar';
-  langStorage: any = localStorage.getItem('language');
+  langStorage: string = localStorage.getItem('language') || 'ar';
 
-  switchLanguage(lang: string): void {
-    this.customSpinIsLoading = true;
-    localStorage.setItem('language', lang);
-    this.langStorage = localStorage.getItem('language');
-    window.location.reload();
-    this._Translate.use(this.langStorage);
-    this.changePageDirection(lang);
-    if (lang == 'ar') {
-      this.currentLang = 'en';
-      this._RTLStatus.rTLStatus.next(lang);
-    } else {
-      this.currentLang = 'ar';
-      this._RTLStatus.rTLStatus.next(lang);
+  async switchLanguage(lang: string): Promise<void> {
+    try {
+      this.langStorage = lang;
+      this.customSpinIsLoading = true;
+
+      await this.cognitoService.updateUserLocale(lang);
+    } catch (_err) {
+      // TODO: Toast error
+    } finally {
+      localStorage.setItem('language', lang);
+
+      this.translate.use(this.langStorage);
+      this.changePageDirection(lang);
+
+      window.location.reload();
+
+      if (lang == 'ar') {
+        this.currentLang = 'en';
+        this.rtlStatus.rTLStatus.next(lang);
+      } else {
+        this.currentLang = 'ar';
+        this.rtlStatus.rTLStatus.next(lang);
+      }
+
+      this.customSpinIsLoading = false;
     }
-    this.customSpinIsLoading = false;
-    console.log('Language' + lang, this.currentLang);
   }
 
   ngOnInit(): void {
-    this.customSpinIsLoading = true;
+    this.authenticated = this.authenticator.authStatus === 'authenticated';
+
+    this.authenticator.subscribe(auth => {
+      this.authenticated = auth.authStatus === 'authenticated';
+    });
+
     if (this.langStorage === null) {
-      this._Translate.defaultLang;
+      this.translate.defaultLang;
       this.currentLang = 'ar';
     } else {
-      this._Translate.use(this.langStorage);
+      this.translate.use(this.langStorage);
       if (this.langStorage === 'en') {
         this.currentLang = 'ar';
       } else {
@@ -156,53 +154,44 @@ export class NavBlankComponent implements OnInit {
     }
     this.changePageDirection(this.langStorage);
 
-    // this.signOut = this._AuthService.signOut;
-    this.isToken = localStorage.getItem('accessToken');
-    if (this.isToken == null || this.isToken == '') {
-      this.signOut = false;
-    } else {
-      this._AuthService.decodeUser();
-      this.userId = this._AuthService.userInfo?.id;
-    }
-
-    this.getUserInfo(this.userId);
-
-    this._CartService.cartNumber.subscribe({
+    this.cartService.cartNumber.subscribe({
       next: response => {
-        console.log('cart number', response);
         this.cartNum = response;
-        this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: _err => {
         this.cartNum = 0;
-        console.log(err);
+        // TODO: Toast error
+      },
+      complete: () => {
         this.customSpinIsLoading = false;
       },
     });
 
-    this._CartService.getCartUser().subscribe({
+    this.cartService.getCartUser().subscribe({
       next: response => {
         this.cartNum = response.data.totalQuantity;
-        this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: _err => {
+        // TODO: Toast error
+      },
+      complete: () => {
         this.customSpinIsLoading = false;
       },
     });
 
-    this._Categories.getCategories().subscribe({
+    this.categories.getCategories().subscribe({
       next: response => {
         this.categoryList = response.data;
-        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: _err => {
+        // TODO: Toast error
+      },
+      complete: () => {
         this.customSpinIsLoading = false;
       },
     });
   }
 
-  // Change page Direction as per Selected Lang
   changePageDirection(lang: string) {
     this.customSpinIsLoading = true;
     const html = document.getElementsByTagName('html')[0];
@@ -216,45 +205,23 @@ export class NavBlankComponent implements OnInit {
     this.customSpinIsLoading = false;
   }
 
-  isTogglerOpend(): void {
-    if (this.togglerOpend == false) {
-      this.togglerOpend = true;
+  isTogglerOpened(): void {
+    if (this.togglerOpened == false) {
+      this.togglerOpened = true;
     } else {
-      this.togglerOpend = false;
+      this.togglerOpened = false;
     }
   }
 
-  getUserInfo(userId: any): void {
-    this.UserProfile.getUserInfo(userId).subscribe({
-      next: response => {
-        this._AuthService.userNameLogged.next(response.data.firstName);
-        this.userNameLogged = response.data.firstName;
-        this.signOut = true;
-      },
-      error: err => {
-        if (err.status == 401 || err.status == 403) {
-          this.signOut = false;
-        }
-      },
-    });
-  }
-
-  reloadPage(id: any): void {
-    this.customSpinIsLoading = true;
-    window.location.replace(`/category/${id}`);
-    this.customSpinIsLoading = false;
-  }
-
-  removeTokenSignOut(): void {
-    this.signOut = false;
-    localStorage.removeItem('accessToken');
-    this._Router.navigate(['/login']);
-    if (this._AuthService.signOut == null) {
-      this.cartNum = 0;
-    } else {
-      this.cartNum = this._CartService.cartNumber.value;
+  async signOut(): Promise<void> {
+    try {
+      this.customSpinIsLoading = true;
+      await this.cognitoService.signOut();
+    } catch (_err) {
+      // TODO: Toast error
+    } finally {
+      this.customSpinIsLoading = false;
+      this.authenticated = false;
     }
-
-    this.userNameLogged = 'Login';
   }
 }

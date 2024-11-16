@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angu
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import type { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { Translate_Service } from 'src/app/core/services/translate.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -33,7 +33,7 @@ export class TopBarComponent {
   constructor(
     private _Renderer: Renderer2,
     public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
+    private _RTLStatus: LocalizationService
   ) {
     this._Translate.setDefaultLang('en');
   }

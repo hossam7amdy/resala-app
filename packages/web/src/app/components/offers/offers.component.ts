@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { CustomefillterPipe } from 'src/app/core/pipe/customefillter.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { Translate_Service } from 'src/app/core/services/translate.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
@@ -37,7 +37,7 @@ export class OffersComponent implements OnInit {
     private _Router: Router,
     private _Renderer: Renderer2,
     public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
+    private _RTLStatus: LocalizationService
   ) {}
 
   // start Custome Spinner

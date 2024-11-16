@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CreateWishlistResponse,
@@ -16,35 +16,20 @@ import { environment } from 'src/environments/environment.development';
 export class WishListService {
   constructor(private _HttpClient: HttpClient) {}
 
-  private getHeaders() {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    });
-
-    return { headers };
-  }
-
   postWishListItems(productId: any): Observable<CreateWishlistResponse> {
     const { url } = withParams(ENDPOINT_CONFIGS.addProductToWishlist);
-    return this._HttpClient.post<CreateWishlistResponse>(
-      environment.baseUrl + url,
-      {
-        productId: productId,
-      },
-      this.getHeaders()
-    );
+    return this._HttpClient.post<CreateWishlistResponse>(environment.baseUrl + url, {
+      productId: productId,
+    });
   }
 
   getAllMyProducts(): Observable<GetWishlistResponse> {
     const { url } = withParams(ENDPOINT_CONFIGS.getUserWishlist);
-    return this._HttpClient.get<GetWishlistResponse>(environment.baseUrl + url, this.getHeaders());
+    return this._HttpClient.get<GetWishlistResponse>(environment.baseUrl + url);
   }
 
   deleteMyFavoriteProduct(id: any): Observable<DeleteWishlistResponse> {
     const { url } = withParams(ENDPOINT_CONFIGS.removeProductFromWishlist, id + '');
-    return this._HttpClient.delete<DeleteWishlistResponse>(
-      environment.baseUrl + url,
-      this.getHeaders()
-    );
+    return this._HttpClient.delete<DeleteWishlistResponse>(environment.baseUrl + url);
   }
 }
