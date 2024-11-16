@@ -121,6 +121,8 @@ export class PaymentComponent implements OnInit {
   isLoading: boolean = false;
   getUserAddress: any = [];
   addressId: number = 0;
+  addressIdEdit: number = 0;
+
   //the index selected for delete
   selectedDelIndex!: number;
   selectPayMethod: string = '';
@@ -191,6 +193,7 @@ export class PaymentComponent implements OnInit {
         console.log(response);
 
         console.log('user address id', this.getUserAddress);
+        if (this.addressId === 0) this.addressId = this.getUserAddress[0].id;
       },
       error: err => {
         console.log(err);
@@ -349,7 +352,7 @@ export class PaymentComponent implements OnInit {
   editAddressForm(index: any): void {
     this.isEdit = true;
     this.editIndex = index;
-    this.addressId = this.getUserAddress[index].id;
+    this.addressIdEdit = this.getUserAddress[index].id;
     const userNumberId = Number(this.userLoginId); // parsing to number
 
     this.userAddresses.patchValue({ userId: userNumberId });
@@ -360,11 +363,15 @@ export class PaymentComponent implements OnInit {
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     const userData = this.userAddresses.value;
     if (userAddresses.valid) {
-      console.log('user address edits', this.userAddresses.value, this.addressId);
+      console.log('user address edits', this.userAddresses.value, this.addressIdEdit);
 
-      this._PaymentServices.updateUserAddress(this.addressId, userData).subscribe({
+      this._PaymentServices.updateUserAddress(this.addressIdEdit, userData).subscribe({
         next: response => {
-          console.log('request true user address edits', this.userAddresses.value, this.addressId);
+          console.log(
+            'request true user address edits',
+            this.userAddresses.value,
+            this.addressIdEdit
+          );
           this._Toaster.success('Updated Your Address successfuly');
           this.isEdit = false;
           console.log('after edit', response);
@@ -374,7 +381,11 @@ export class PaymentComponent implements OnInit {
         },
         error: err => {
           this._Toaster.error(err);
-          console.log('request false user address edits', this.userAddresses.value, this.addressId);
+          console.log(
+            'request false user address edits',
+            this.userAddresses.value,
+            this.addressIdEdit
+          );
           this.customSpinIsLoading = false;
         },
       });
@@ -436,10 +447,10 @@ export class PaymentComponent implements OnInit {
             if (this.paymentSelected == 'CARD') {
               window.open(response.data.paymentUrl, '_self');
             } else {
+              this._CartService.cartNumber.next(0);
               this._Router.navigate(['/home']);
             }
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
-            this._CartService.cartNumber.next(0);
           }
           this.customSpinIsLoading = false;
         },
