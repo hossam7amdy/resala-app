@@ -14,7 +14,7 @@ import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
-import { Translate_Service } from 'src/app/core/services/translate.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 import { TrendsService } from 'src/app/core/services/trends.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private _Renderer: Renderer2,
     private _Trend: TrendsService,
     public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
+    private _RTLStatus: LocalizationService
   ) {}
   langStorage: any = localStorage.getItem('language');
   // Change page Direction as per Selected Lang
@@ -70,7 +70,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       html.lang = 'en';
       rtlStat = false;
     }
-    console.log('topbar rtlFun', rtlStat);
     return rtlStat;
   }
 
@@ -100,7 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   pageLimit: number = 2;
   currentPage: number = 1;
   totalItems: number = 0;
-  //favourit icons
+  //favorite icons
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
 
@@ -111,15 +110,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this._Trend.getTrendProducts().subscribe({
       next: res => {
         this.trendProducts = res.data;
-        console.log('trends', res);
       },
     });
 
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
-        console.log(response.data);
-        console.log('products', response.data);
         this.products = response.data.products;
         this.categories = response.data.products;
         this.pageLimit = response.data.pagination.limit;
@@ -145,28 +141,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this.customSpinIsLoading = false;
     this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
+      next: () => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: () => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         this.customSpinIsLoading = false;
-        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-
-        // } else {
-        //   this._Toaster.error(err.message);
-        // }
-        console.log(err);
       },
     });
   }
 
   public onClickRate(rate: number): void {
-    console.log(rate, 'rate'); // Logs the clicked star number
+    this.rateNumber = rate;
   }
 
   // main slider
@@ -259,8 +248,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.customSpinIsLoading = true;
     this._HomeProductsService.getProducts(event).subscribe({
       next: response => {
-        console.log(event);
-        console.log('products', response.data.products);
         this.products = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;

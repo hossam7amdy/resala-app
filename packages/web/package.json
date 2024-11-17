@@ -22,6 +22,7 @@
     "@aws-amplify/ui-angular": "^5.0.30",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
+    "@ngx-env/builder": "^18.0.2",
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "aws-amplify": "^6.8.1",

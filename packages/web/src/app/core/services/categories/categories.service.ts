@@ -13,8 +13,6 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class CategoriesService {
-  myToken = { Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
-
   constructor(private _HTTPClient: HttpClient) {}
 
   getCategories(): Observable<ListCategoriesResponse> {

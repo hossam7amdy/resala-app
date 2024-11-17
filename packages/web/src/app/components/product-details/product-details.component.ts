@@ -13,8 +13,8 @@ import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
+import { LocalizationService } from 'src/app/core/services/localization.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
-import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
@@ -72,7 +72,7 @@ export class ProductDetailsComponent implements OnInit {
     private _ProductsCategory: CategoriesService,
     private _WishListService: WishListService,
     private _Toaster: ToastrService,
-    private _RTLStatus: Translate_Service,
+    private _RTLStatus: LocalizationService,
     public _Translate: TranslateService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
 
