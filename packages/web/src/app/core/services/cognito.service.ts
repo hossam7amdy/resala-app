@@ -36,11 +36,11 @@ export class CognitoService {
     });
   }
 
-  async fetchSessionOrAccessToken(): Promise<string | null> {
+  async fetchAccessToken(): Promise<string | null> {
     try {
       const session = await fetchAuthSession({ forceRefresh: true });
 
-      return session.tokens?.accessToken.toString() || session.credentials?.sessionToken || null;
+      return session.tokens?.accessToken.toString() || null;
     } catch {
       return null;
     }
