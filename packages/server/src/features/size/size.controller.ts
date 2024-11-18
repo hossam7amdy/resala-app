@@ -25,12 +25,10 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { jwtParse } from '../../middlewares/authentication.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { SizeService } from './size.service.js';
 
 @Tags('Size')
-@Middlewares([jwtParse])
 @Route('api/v1/sizes')
 export class SizeController extends Controller {
   private readonly sizeService: SizeService;
@@ -55,7 +53,7 @@ export class SizeController extends Controller {
   }
 
   @Post()
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @SuccessResponse('201', 'Size created')
   @Middlewares([validate(CreateSizeSchema)])
   public async create(@Body() req: CreateSizeRequest['body']): Promise<CreateSizeResponse> {
@@ -65,7 +63,7 @@ export class SizeController extends Controller {
   }
 
   @Put('{sizeId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([validate(UpdateSizeSchema)])
   public async update(
     @Path() sizeId: string,
@@ -77,7 +75,7 @@ export class SizeController extends Controller {
   }
 
   @Delete('{sizeId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   public async delete(@Path() sizeId: string): Promise<DeleteSizeResponse> {
     const size = await this.sizeService.delete(+sizeId);
 

@@ -11,35 +11,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ------------------------------------------------ //
-//*             User Data                *//
-
-model User {
-  id              Int           @id @default(autoincrement()) @db.Integer
-  email           String        @unique @db.VarChar(125)
-  isEmailVerified Boolean       @default(false) @map("is_email_verified")
-  phone           String?       @unique @db.VarChar(15)
-  isPhoneVerified Boolean       @default(false) @map("is_phone_verified")
-  firstName       String        @map("first_name") @db.VarChar(50)
-  lastName        String        @map("last_name") @db.VarChar(50)
-  role            Role          @default(CUSTOMER)
-  password        String        @db.VarChar(500)
-  lastLogin       DateTime?     @map("last_login")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-  cart            Cart[]
-  wishlist        Wishlist[]
-  addressList     UserAddress[]
-  reviews         Review[]
-  orders          Order[]
-
-  @@map("user")
-}
-
 model UserAddress {
-  userId    Int     @map("user_id") @db.Integer
+  userId    String  @map("user_id") @db.Uuid
   addressId Int     @unique @map("address_id") @db.Integer
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   address   Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
 
   @@id([userId, addressId])
@@ -141,12 +115,11 @@ model Size {
 // ------------------------------------------------ //
 //*             Shopping Data                *//
 model Cart {
-  userId    Int      @map("user_id") @db.Integer
+  userId    String   @map("user_id") @db.Uuid
   stockId   Int      @map("stock_id") @db.Integer
   quantity  Int      @default(1) @map("quantity")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   stock     Stock    @relation(fields: [stockId], references: [id], onDelete: Cascade)
 
   @@id([userId, stockId])
@@ -154,11 +127,10 @@ model Cart {
 }
 
 model Wishlist {
-  userId    Int      @map("user_id") @db.Integer
+  userId    String   @map("user_id") @db.Uuid
   productId Int      @map("product_id") @db.Integer
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
@@ -169,7 +141,7 @@ model Wishlist {
 //*             Order Data                *//
 model Order {
   id              Int           @id @default(autoincrement()) @db.Integer
-  userId          Int           @map("user_id") @db.Integer
+  userId          String        @map("user_id") @db.Uuid
   subtotal        Decimal       @db.Decimal(9, 2)
   discount        Decimal       @default(0) @db.Decimal(9, 2)
   total           Decimal       @db.Decimal(9, 2)
@@ -181,7 +153,6 @@ model Order {
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
   orderItems      OrderItem[]
-  user            User          @relation(fields: [userId], references: [id])
   shippingDetails Shipping?
 
   @@map("order")
@@ -220,13 +191,12 @@ model Shipping {
 //*             Review Data                *//
 model Review {
   id        Int      @id @default(autoincrement()) @db.Integer
-  userId    Int      @map("user_id") @db.Integer
+  userId    String   @map("user_id") @db.Uuid
   productId Int      @map("product_id") @db.Integer
   rating    Int      @default(5)
   comment   String?  @db.VarChar(500)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@map("review")

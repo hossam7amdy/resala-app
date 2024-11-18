@@ -8,7 +8,7 @@ export class AddressService {
 
   constructor(private readonly db: DataStore) {}
 
-  async list(userId: number) {
+  async list(userId: string) {
     const addresses = await this.db.userAddress.findMany({
       select: { address: true },
       where: { userId },
@@ -34,7 +34,7 @@ export class AddressService {
     });
   }
 
-  async find(userId: number, addressId: number) {
+  async find(userId: string, addressId: number) {
     const userAddr = await this.db.userAddress.findFirstOrThrow({
       select: { address: true },
       where: { userId, addressId },
@@ -50,7 +50,7 @@ export class AddressService {
     });
   }
 
-  async delete(addressId: number, userId: number) {
+  async delete(addressId: number, userId: string) {
     await this.find(userId, addressId);
 
     return await this.db.address.delete({ where: { id: addressId } });

@@ -32,7 +32,7 @@ import { ImageService } from './image.service.js';
 
 @Tags('Image')
 @Route('api/v1/images')
-@Security('JWT_SECRET')
+@Security('jwt_auth')
 export class ImageController extends Controller {
   private readonly imageService: ImageService;
 

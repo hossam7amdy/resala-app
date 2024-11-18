@@ -1,43 +1,11 @@
 import process from 'process';
 
-import { hashPassword } from '../../lib/password.js';
 import { db, initDb } from '../index.js';
 
 const main = async () => {
   await initDb();
 
   console.log('seeding database...');
-
-  // create users
-  await db.user.createMany({
-    data: [
-      {
-        password: await hashPassword('abcABC@123'),
-        email: `customer@resala.com`,
-        phone: `01500000000`,
-        firstName: `Resala`,
-        lastName: `Customer`,
-        role: 'CUSTOMER',
-      },
-      {
-        password: await hashPassword('abcABC@123'),
-        email: `admin@resala.com`,
-        phone: `01500000001`,
-        firstName: 'Resala',
-        lastName: 'Admin',
-        role: 'ADMIN',
-        isEmailVerified: true,
-      },
-      {
-        password: await hashPassword('abcABC@123'),
-        email: `moderator@resala.com`,
-        phone: `01500000002`,
-        firstName: `Resala`,
-        lastName: `Moderator`,
-        role: 'MODERATOR',
-      },
-    ],
-  });
 
   // create main categories
   await db.category.createMany({

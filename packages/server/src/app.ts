@@ -1,15 +1,16 @@
 import type { CorsOptions } from 'cors';
 import cors from 'cors';
-import express, { type Request, type Response } from 'express';
+import express from 'express';
 import fs from 'fs';
 import helmet from 'helmet';
-import passport from 'passport';
 import swaggerUI from 'swagger-ui-express';
 import { parse } from 'yaml';
 
 import { configuration } from './configuration/index.js';
+import { jwtParse } from './middlewares/authentication.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { loggerHandler } from './middlewares/loggerHandler.js';
+import { limiter } from './middlewares/rateLimiter.js';
 import { RegisterRoutes } from './routes/api.routes.js';
 import { views } from './views/index.js';
 import { postPay } from './webhooks/paymob.js';
@@ -30,7 +31,6 @@ export const createExpressApp = (logRequests: boolean = true) => {
   // Middlewares
   app.use(cors(corsConfig));
   app.use(helmet());
-  app.use(passport.initialize());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static('uploads')); // serve uploaded files
@@ -47,21 +47,12 @@ export const createExpressApp = (logRequests: boolean = true) => {
 
   if (logRequests) app.use(loggerHandler);
 
+  app.use(jwtParse);
+  app.use(limiter());
+
   RegisterRoutes(app); // Register TSOA routes
 
   app.post('/post_pay/:orderId', postPay); // Paymob webhook
-
-  app.get('/uploads/*', (req: Request, res: Response) => {
-    const filepath = req.params[0];
-
-    const exist = fs.existsSync(`uploads/${filepath}`);
-
-    if (!exist) {
-      return res.status(404).send('File not found');
-    }
-
-    return res.sendFile(filepath, { root: 'uploads' });
-  });
 
   app.use(views);
 

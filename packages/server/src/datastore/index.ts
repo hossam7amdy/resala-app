@@ -6,14 +6,7 @@ export let db: DataStore;
 
 export const initDb = async (datasourceUrl?: string) => {
   if (!db) {
-    db = new DataStore({
-      datasourceUrl,
-      omit: {
-        user: {
-          password: true,
-        },
-      },
-    });
+    db = new DataStore({ datasourceUrl });
 
     await db.$connect();
   }

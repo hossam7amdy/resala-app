@@ -20,35 +20,28 @@ export class DashboardService {
   constructor(private readonly db: DataStore) {}
 
   async getOverview(): Promise<GetDashboardOverviewResponse['data']> {
-    const [
-      totalProducts,
-      totalOrders,
-      totalCustomers,
-      totalSalesSum,
-      totalRevenueSum,
-      totalRefundSum,
-    ] = await Promise.all([
-      this.db.product.count(),
-      this.db.order.count(),
-      this.db.user.count(),
-      this.db.order.aggregate({ _sum: { total: true } }),
-      this.db.order.aggregate({
-        _sum: { total: true },
-        where: { paymentStatus: 'PAID' },
-      }),
-      this.db.order.aggregate({
-        _sum: { total: true },
-        where: {
-          OR: [{ paymentStatus: 'VOIDED' }, { paymentStatus: 'REFUNDED' }],
-        },
-      }),
-    ]);
+    const [totalProducts, totalOrders, totalSalesSum, totalRevenueSum, totalRefundSum] =
+      await Promise.all([
+        this.db.product.count(),
+        this.db.order.count(),
+        this.db.order.aggregate({ _sum: { total: true } }),
+        this.db.order.aggregate({
+          _sum: { total: true },
+          where: { paymentStatus: 'PAID' },
+        }),
+        this.db.order.aggregate({
+          _sum: { total: true },
+          where: {
+            OR: [{ paymentStatus: 'VOIDED' }, { paymentStatus: 'REFUNDED' }],
+          },
+        }),
+      ]);
 
     const totalSales = totalSalesSum._sum.total?.toNumber() ?? 0;
     const totalRevenue = totalRevenueSum._sum.total?.toNumber() ?? 0;
     const totalRefund = totalRefundSum._sum.total?.toNumber() ?? 0;
 
-    return { totalProducts, totalOrders, totalCustomers, totalSales, totalRefund, totalRevenue };
+    return { totalProducts, totalOrders, totalCustomers: 0, totalSales, totalRefund, totalRevenue };
   }
 
   async getSalesTrend(): Promise<GetSalesTrendsResponse['data']> {
@@ -141,7 +134,6 @@ export class DashboardService {
       }),
       this.db.review.findMany({
         include: {
-          user: true,
           product: true,
         },
         orderBy: {
@@ -153,7 +145,7 @@ export class DashboardService {
 
     return {
       averageRating: +(averageRating._avg.rating ?? 0),
-      recentFeedback: recentReviews,
+      recentFeedback: recentReviews.map(review => ({ ...review, user: undefined })),
     };
   }
 
