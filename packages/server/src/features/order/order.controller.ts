@@ -48,7 +48,7 @@ import { OrderService } from './order.service.js';
 
 @Tags('Order')
 @Route('api/v1/orders')
-@Security('JWT_SECRET')
+@Security('jwt_auth')
 @Middlewares([authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;
@@ -122,7 +122,7 @@ export class OrderController extends Controller {
     @Query() page: number = 1,
     @Query() limit: number = 10,
     @Query() search?: string,
-    @Query() userId?: number
+    @Query() userId?: string
   ): Promise<ListOrdersResponse> {
     const { orders, pagination } = await this.orderService.list({ page, limit, search, userId });
 

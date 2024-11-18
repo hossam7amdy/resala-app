@@ -39,14 +39,12 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
 import { DiscountService } from './discount.service.js';
 
 @Tags('Discount')
 @Route('api/v1/discounts')
-@Middlewares([jwtParse])
 export class DiscountController extends Controller {
   private readonly discountService: DiscountService;
 
@@ -78,7 +76,7 @@ export class DiscountController extends Controller {
 
   /** Create a new discount, only admins can create discount */
   @Post()
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @SuccessResponse('201', 'Discount created')
   @Middlewares([validate(CreateDiscountSchema), authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
@@ -91,7 +89,7 @@ export class DiscountController extends Controller {
 
   /** Update a discount, only admins can update discount */
   @Put('{discountId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([validate(UpdateDiscountSchema), authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() discountId: string,
@@ -104,7 +102,7 @@ export class DiscountController extends Controller {
 
   /** Delete a discount, only admins can delete discount */
   @Delete('{discountId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(DeleteDiscountSchema)])
   public async delete(@Path() discountId: string): Promise<DeleteDiscountResponse> {
     const discount = await this.discountService.delete(discountId);
@@ -114,7 +112,7 @@ export class DiscountController extends Controller {
 
   /** Add products to a discount */
   @Post('{discountId}/products')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(AddProductsToDiscountSchema)])
   public async addProducts(
     @Path() discountId: string,
@@ -127,7 +125,7 @@ export class DiscountController extends Controller {
 
   /** Remove products from a discount */
   @Delete('{discountId}/products')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR']), validate(RemoveProductsFromDiscountSchema)])
   public async removeProducts(
     @Path() discountId: string,

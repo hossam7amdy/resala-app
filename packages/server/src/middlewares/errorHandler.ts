@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import { MulterError } from 'multer';
 import { ValidateError } from 'tsoa/dist/index.js';
 import { ZodError } from 'zod';
@@ -36,16 +35,6 @@ export const errorHandler = (error: Error, _req: Request, res: Response, _next: 
     return res.status(400).json({
       success: false,
       message: formatZodError(error),
-    });
-  } else if (error instanceof jwt.TokenExpiredError) {
-    return res.status(401).json({
-      success: false,
-      message: `Token expired at ${error.expiredAt}`,
-    });
-  } else if (error instanceof jwt.JsonWebTokenError) {
-    return res.status(401).json({
-      success: false,
-      message: error.message,
     });
   } else if (error instanceof MulterError) {
     return res.status(400).json({

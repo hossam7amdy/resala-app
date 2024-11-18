@@ -1,62 +1,30 @@
-import type { Prisma } from '@prisma/client';
-import type { ListUsersRequest, ListUsersResponse, UpdateUserRequest } from '@resala/shared';
-
-import type { DataStore } from '../../datastore/index.js';
+import type {
+  GetUserResponse,
+  ListUsersRequest,
+  ListUsersResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
+} from '@resala/shared';
 
 export class UserService {
-  constructor(private readonly db: DataStore) {}
+  constructor() {}
 
-  async update(id: number, payload: UpdateUserRequest['body']) {
-    return await this.db.user.update({
-      where: { id },
-      data: payload,
-    });
+  async update(
+    _id: number,
+    _payload: UpdateUserRequest['body']
+  ): Promise<UpdateUserResponse['data']> {
+    throw new Error('Not implemented');
   }
 
-  async delete(id: number) {
-    return await this.db.user.delete({
-      where: { id },
-    });
+  async delete(_id: number) {
+    throw new Error('Not implemented');
   }
 
-  async find(id: number) {
-    return await this.db.user.findUniqueOrThrow({
-      where: { id },
-    });
+  async find(_id: number): Promise<GetUserResponse['data']> {
+    throw new Error('Not implemented');
   }
 
-  async list({
-    page = 1,
-    limit = 10,
-    search = '',
-  }: ListUsersRequest['query']): Promise<ListUsersResponse['data']> {
-    const first = search.split(' ')[0];
-    let last = search.split(' ')[1];
-    if (!last) last = first;
-
-    const filters: Prisma.UserWhereInput = {
-      OR: [
-        { firstName: { startsWith: first, mode: 'insensitive' } },
-        { lastName: { startsWith: last, mode: 'insensitive' } },
-        { email: { startsWith: first, mode: 'insensitive' } },
-        { phone: { startsWith: first, mode: 'insensitive' } },
-      ],
-    };
-
-    const [total, users] = await this.db.$transaction([
-      this.db.user.count({ where: filters }),
-
-      this.db.user.findMany({
-        where: filters,
-        take: limit,
-        skip: (page - 1) * limit,
-        orderBy: { updatedAt: 'desc' },
-      }),
-    ]);
-
-    return {
-      users,
-      pagination: { page, limit, total },
-    };
+  async list(_query: ListUsersRequest['query']): Promise<ListUsersResponse['data']> {
+    throw new Error('Not implemented');
   }
 }

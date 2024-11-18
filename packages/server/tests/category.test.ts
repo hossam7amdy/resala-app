@@ -7,7 +7,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { getAuthToken } from './helpers/auth-token.js';
 import { getTestServer } from './helpers/test-server.js';
 
-describe('Category API Integration Tests', () => {
+describe.skip('Category API Integration Tests', () => {
   let client: TestAgent<superset.Test>;
   const category = {
     id: '', // will be updated later

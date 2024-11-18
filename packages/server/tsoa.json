@@ -11,17 +11,7 @@
     "spec": {
       "components": {
         "securitySchemes": {
-          "JWT_SECRET": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-          },
-          "JWT_VERIFY": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-          },
-          "JWT_RESET": {
+          "jwt_auth": {
             "type": "http",
             "scheme": "bearer",
             "bearerFormat": "JWT"

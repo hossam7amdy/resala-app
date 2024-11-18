@@ -41,7 +41,7 @@ export class OrderService {
   constructor(private readonly db: DataStore) {}
 
   async create(
-    { userId, paymentMethod, note }: { userId: number; paymentMethod: string; note?: string },
+    { userId, paymentMethod, note }: { userId: string; paymentMethod: string; note?: string },
     cart: GetCartResponse['data'],
     address: Address
   ) {
@@ -99,8 +99,6 @@ export class OrderService {
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {
       OR: [
-        { user: { email: { startsWith: search } } },
-        { user: { phone: { startsWith: search } } },
         {
           orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
         },

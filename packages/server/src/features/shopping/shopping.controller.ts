@@ -33,7 +33,7 @@ import { ShoppingService } from './shopping.service.js';
 
 @Tags('Shopping')
 @Route('api/v1')
-@Security('JWT_SECRET')
+@Security('jwt_auth')
 export class ShoppingController extends Controller {
   private readonly discountService: DiscountService;
   private readonly shoppingService: ShoppingService;

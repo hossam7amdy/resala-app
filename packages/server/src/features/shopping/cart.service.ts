@@ -8,7 +8,7 @@ const MAX_CART_ITEMS = 25;
 export class CartService {
   constructor(private readonly db: DataStore) {}
 
-  async get(userId: number): Promise<GetCartResponse['data']> {
+  async get(userId: string): Promise<GetCartResponse['data']> {
     const cart = await this.db.cart.findMany({
       include: {
         stock: {
@@ -64,7 +64,7 @@ export class CartService {
   }
 
   async update(
-    userId: number,
+    userId: string,
     { stockId, quantity }: CreateCartRequest['body']
   ): Promise<GetCartResponse['data']> {
     const stock = await this.db.stock.findUniqueOrThrow({ where: { id: stockId } });
@@ -89,7 +89,7 @@ export class CartService {
     return this.get(userId);
   }
 
-  async delete(userId: number, stockId: number): Promise<GetCartResponse['data']> {
+  async delete(userId: string, stockId: number): Promise<GetCartResponse['data']> {
     await this.db.cart.delete({
       where: {
         userId_stockId: {
@@ -102,7 +102,7 @@ export class CartService {
     return this.get(userId);
   }
 
-  async deleteMany(userId: number) {
+  async deleteMany(userId: string) {
     await this.db.cart.deleteMany({
       where: {
         userId,

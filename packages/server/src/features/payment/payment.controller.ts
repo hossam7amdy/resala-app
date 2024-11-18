@@ -23,7 +23,7 @@ import { PaymobService } from '../../services/index.js';
 import { PaymentService } from './payment.service.js';
 
 @Tags('Payment')
-@Security('JWT_SECRET')
+@Security('jwt_auth')
 @Route('api/v1/payments')
 @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
 export class PaymentController extends Controller {

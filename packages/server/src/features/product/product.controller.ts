@@ -26,7 +26,6 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
-import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validateImage } from '../../middlewares/uploadHandler.js';
 import { validate } from '../../middlewares/validateHandler.js';
@@ -34,7 +33,6 @@ import { FileStorage } from '../../services/index.js';
 import { ProductService } from './product.service.js';
 
 @Tags('Product')
-@Middlewares([jwtParse])
 @Route('api/v1/products')
 export class ProductController extends Controller {
   private readonly productService: ProductService;
@@ -73,7 +71,7 @@ export class ProductController extends Controller {
 
   /** Create a new product, only admins can create products */
   @Post()
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @SuccessResponse('201', 'Product created')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async create(
@@ -98,7 +96,7 @@ export class ProductController extends Controller {
 
   /** Update a product, only admins can update products */
   @Put('{productId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async update(
     @Path() productId: string,
@@ -124,7 +122,7 @@ export class ProductController extends Controller {
 
   /** Delete a product, only admins can delete products */
   @Delete('{productId}')
-  @Security('JWT_SECRET')
+  @Security('jwt_auth')
   @Middlewares([authorizeRole(['ADMIN', 'MODERATOR'])])
   public async delete(@Path() productId: string): Promise<DeleteProductResponse> {
     const data = await this.productService.delete(+productId);

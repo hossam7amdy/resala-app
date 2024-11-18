@@ -1,4 +1,3 @@
-import { ENDPOINT_CONFIGS } from '@resala/shared';
 import dotenv from 'dotenv';
 import { z } from 'zod';
 
@@ -28,6 +27,10 @@ const configuration = {
       endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
       forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
     },
+    auth: {
+      userPoolId: z.string().parse(process.env.COGNITO_USER_POOL_ID),
+      clientId: z.string().parse(process.env.COGNITO_USER_POOL_CLIENT_ID),
+    },
   },
   origin: {
     web: z.string().url().parse(process.env.WEB_URL),
@@ -41,12 +44,7 @@ const configuration = {
     port: z.coerce.number().default(5000).parse(process.env.PORT),
     url: z.string().url().parse(process.env.SERVER_URL),
   },
-  jwt: {
-    secret: z.string().parse(process.env.JWT_SECRET),
-    refresh: z.string().parse(process.env.JWT_REFRESH),
-    reset: z.string().parse(process.env.JWT_RESET),
-    verify: z.string().parse(process.env.JWT_VERIFY),
-  },
+
   db: {
     url: z.string().url().parse(process.env.DATABASE_URL),
   },
@@ -63,13 +61,6 @@ const configuration = {
       apiToken: z.string().parse(process.env.PAYMOB_API_TOKEN),
       publicKey: z.string().parse(process.env.PAYMOB_PUBLIC_KEY),
       secretKey: z.string().parse(process.env.PAYMOB_SECRET_KEY),
-    },
-  },
-  auth: {
-    google: {
-      clientId: z.string().parse(process.env.GOOGLE_CLIENT_ID),
-      clientSecret: z.string().parse(process.env.GOOGLE_CLIENT_SECRET),
-      callbackURL: `${process.env.SERVER_URL}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
     },
   },
 };

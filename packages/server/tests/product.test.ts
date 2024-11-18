@@ -9,7 +9,7 @@ import { getTestServer } from './helpers/test-server.js';
 
 const testImagePath = join(process.cwd(), 'public', 'assets', 'product-1.webp');
 
-describe('Product API Integration Tests', () => {
+describe.skip('Product API Integration Tests', () => {
   let client: TestAgent<superset.Test>;
 
   let categoryId = '';

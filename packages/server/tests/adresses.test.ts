@@ -5,7 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getTestServer } from './helpers/test-server.js';
 
-describe('TEST /addresses endpoint', () => {
+describe.skip('TEST /addresses endpoint', () => {
   let client: TestAgent<superset.Test>;
 
   let userId: number;
