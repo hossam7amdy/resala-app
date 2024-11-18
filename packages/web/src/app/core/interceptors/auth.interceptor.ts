@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return new Observable(observer => {
       this.cognitoService
-        .fetchSessionOrAccessToken()
+        .fetchAccessToken()
         .then(token => {
           const authReq = token
             ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
