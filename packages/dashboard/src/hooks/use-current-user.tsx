@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/fetch/users';
+import { getCurrentUser } from '@/fetch/auth';
 import type { User } from '@resala/shared';
 import { useEffect, useState } from 'react';
 

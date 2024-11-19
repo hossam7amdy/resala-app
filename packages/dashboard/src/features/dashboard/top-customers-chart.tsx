@@ -38,10 +38,10 @@ const TopPaidBarChart: React.FC<TopCustomersChartProps> = ({ customers }) => {
     <Bar
       options={options}
       data={{
-        labels: customers.map(({ user }) => `${user.firstName} ${user.lastName}`),
+        labels: customers?.map(({ user }) => `${user.firstName} ${user.lastName}`),
         datasets: [
           {
-            data: customers.map(({ totalPaid }) => totalPaid),
+            data: customers?.map(({ totalPaid }) => totalPaid),
             label: 'Total paid',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
           },
@@ -56,10 +56,10 @@ const TopOrdersBarChart: React.FC<TopCustomersChartProps> = ({ customers }) => {
     <Bar
       options={options}
       data={{
-        labels: customers.map(({ user }) => `${user.firstName} ${user.lastName}`),
+        labels: customers?.map(({ user }) => `${user.firstName} ${user.lastName}`),
         datasets: [
           {
-            data: customers.map(({ totalOrders }) => totalOrders).sort((a, b) => b - a),
+            data: customers?.map(({ totalOrders }) => totalOrders).sort((a, b) => b - a),
             label: 'Total orders',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },

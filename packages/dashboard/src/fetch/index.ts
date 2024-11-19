@@ -1,7 +1,9 @@
-import { auth } from '@/auth';
 import { configuration } from '@/configuration';
 import { ROUTES } from '@/routes';
+import { runWithAmplifyServerContext } from '@/utils/amplify-server-utils';
 import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
+import { fetchAuthSession } from 'aws-amplify/auth/server';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 type Request<T> = Omit<RequestInit, 'body'> &
@@ -30,13 +32,18 @@ export const callEndpoint = async <Req, Res>(
   const withParamsConfig = withParams(endpoint, ...paramsArr);
   const { method, url, auth: isProtected } = withQueryParams(withParamsConfig, query ?? {});
 
-  const session = await auth();
-  const isLoggedIn = session !== null;
+  const session = await runWithAmplifyServerContext({
+    nextServerContext: { cookies },
+    operation: contextSpec => fetchAuthSession(contextSpec),
+  });
+  const isLoggedIn = !!session?.tokens?.accessToken;
 
   const response = await fetch(`${configuration.baseUrl}${url}`, {
     method: method.toUpperCase(),
     headers: {
-      ...(isProtected || isLoggedIn ? { Authorization: `Bearer ${session?.accessToken}` } : {}),
+      ...(isProtected || isLoggedIn
+        ? { Authorization: `Bearer ${session?.tokens?.accessToken}` }
+        : {}),
       ...(isFormData(body) ? {} : { 'Content-Type': 'application/json' }),
       ...headers,
     },

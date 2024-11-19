@@ -4,8 +4,8 @@ import { logout } from '@/fetch/auth';
 import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
-type Success<T> = ({ statusCode: number; success: boolean } & T) | void;
-type Error = { statusCode: number; success: boolean; message: string };
+type Success<T> = ({ statusCode?: number; success?: boolean } & T) | void;
+type Error = { statusCode?: number; success?: boolean; message: string };
 
 type MutationOptions<Data, Variables> = {
   mutationFn: (variables: Variables) => Promise<Success<Data>>;
@@ -54,7 +54,7 @@ export const useMutation = <Data, Variables>({
         setError(error);
         onError(error);
 
-        if ([401, 403].includes(error.statusCode)) {
+        if (error?.statusCode && [401, 403].includes(error.statusCode)) {
           await sleep(2000).then(logout);
         }
       } finally {

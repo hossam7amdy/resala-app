@@ -1,6 +1,3 @@
-'use server';
-
-import { auth } from '@/auth';
 import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
 import type {
@@ -15,11 +12,6 @@ import type {
 } from '@resala/shared';
 import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
-
-export const getCurrentUser = async () => {
-  const data = await auth();
-  return getUserById(data?.user?.id ?? '');
-};
 
 export const getUserById = async (id: number | string) => {
   const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {

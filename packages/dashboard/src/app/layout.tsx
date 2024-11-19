@@ -1,9 +1,9 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import type { Metadata } from 'next';
-import { SessionProvider } from 'next-auth/react';
 import { Inter } from 'next/font/google';
 import React from 'react';
 
+import { ConfigureAmplifyClientSide } from './amplify-cognito-config';
 import StyledComponentsRegistry from './antd-registry';
 import AppConfigProvider from './app-config-provider';
 import './globals.css';
@@ -25,11 +25,10 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ConfigureAmplifyClientSide />
         <StyledComponentsRegistry>
           <AntdRegistry>
-            <AppConfigProvider>
-              <SessionProvider>{children}</SessionProvider>
-            </AppConfigProvider>
+            <AppConfigProvider>{children}</AppConfigProvider>
           </AntdRegistry>
         </StyledComponentsRegistry>
       </body>

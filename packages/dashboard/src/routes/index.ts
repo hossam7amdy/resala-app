@@ -1,6 +1,7 @@
 export const ROUTES = {
   // Auth routes (public)
   LOGIN: '/login',
+  VERIFY_SIGNUP: '/verify-signup',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
 

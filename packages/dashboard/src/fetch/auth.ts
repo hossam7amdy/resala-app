@@ -1,83 +1,63 @@
-'use server';
-
-import { signIn, signOut } from '@/auth';
-import { ROUTES } from '@/routes';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
 import type {
   ForgotPasswordRequest,
-  ForgotPasswordResponse,
   LoginRequest,
   ResendVerificationEmailRequest,
-  ResendVerificationEmailResponse,
   ResetPasswordRequest,
-  ResetPasswordResponse,
-  VerifyEmailRequest,
-  VerifyEmailResponse,
+  User,
 } from '@resala/shared';
-import { AuthError } from 'next-auth';
-import { redirect } from 'next/navigation';
+import * as Auth from 'aws-amplify/auth';
 
-import { callEndpoint } from '.';
+export const getCurrentUser = async (): Promise<User> => {
+  const user = await Auth.fetchUserAttributes();
 
-export const login = async (payload: LoginRequest['body']) => {
-  try {
-    const response = await signIn('credentials', { ...payload, redirect: false });
-
-    const { searchParams } = new URL(response);
-
-    redirect(searchParams.get('callbackUrl') || ROUTES.DASHBOARD);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error?.type) {
-        case 'CredentialsSignin':
-          return { success: false, statusCode: 400, message: 'Invalid email or password' };
-        default:
-          return { success: false, statusCode: 400, message: error.message };
-      }
-    }
-    throw error;
-  }
+  return {
+    id: user.sub!,
+    firstName: user.given_name!,
+    lastName: user.family_name!,
+    email: user.email!,
+    phone: user.phone_number!,
+    role: 'ADMIN',
+    isEmailVerified: user.email_verified === 'true',
+    isPhoneVerified: user.phone_number_verified === 'true',
+    updatedAt: new Date(user.updated_at!),
+    createdAt: new Date(),
+    lastLogin: new Date(),
+  };
 };
 
-export const logout = async () => {
-  await signOut({ redirectTo: ROUTES.LOGIN });
+export const login = (payload: LoginRequest['body']) => {
+  return Auth.signIn({
+    username: payload.sign,
+    password: payload.password,
+  });
 };
 
-export const verifyEmail = async ({ token }: { token: string }) => {
-  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
-    ENDPOINT_CONFIGS.verifyEmail,
-    { body: {}, headers: { Authorization: `Bearer ${token}` } }
-  );
-
-  return response;
+export const logout = () => {
+  return signOut();
 };
 
-export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
-  return callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
-    ENDPOINT_CONFIGS.forgotPassword,
-    { body: payload }
-  );
+export const verifyEmail = ({ token }: { token: string }) => {
+  return Auth.confirmSignIn({
+    challengeResponse: token,
+  });
 };
 
-export const resetPassword = async ({
-  token,
+export const forgotPassword = (payload: ForgotPasswordRequest['body']) => {
+  return Auth.resetPassword({ username: payload.email });
+};
+
+export const resetPassword = ({
+  code,
+  email,
   newPassword,
-  confirmNewPassword,
-}: ResetPasswordRequest['body'] & { token: string }) => {
-  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
-    ENDPOINT_CONFIGS.resetPassword,
-    {
-      body: { newPassword, confirmNewPassword },
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  return response;
+}: ResetPasswordRequest['body'] & { code: string; email: string }) => {
+  return Auth.confirmResetPassword({ username: email, newPassword, confirmationCode: code });
 };
 
-export const resendVerificationEmail = async (payload: ResendVerificationEmailRequest['body']) => {
-  return await callEndpoint<ResendVerificationEmailRequest, ResendVerificationEmailResponse>(
-    ENDPOINT_CONFIGS.resendEmailVerification,
-    { body: payload }
-  );
+export const resendVerificationEmail = (payload: ResendVerificationEmailRequest['body']) => {
+  return Auth.resendSignUpCode({ username: payload.email });
+};
+
+export const signOut = (global: boolean = false) => {
+  return Auth.signOut({ global });
 };
