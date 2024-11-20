@@ -7,6 +7,7 @@ import type {
   ListOrdersResponse,
   PaymentMethod,
   UpdateOrderRequest,
+  User,
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
@@ -25,7 +26,6 @@ const ORDER_ATTRIBUTES = {
       },
     },
   },
-  user: true,
   shippingDetails: {
     select: {
       id: true,
@@ -98,12 +98,12 @@ export class OrderService {
     userId,
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {
+      userId,
       OR: [
         {
           orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
         },
       ],
-      userId: userId,
     };
 
     const [count, orders] = await this.db.$transaction([
@@ -121,6 +121,7 @@ export class OrderService {
       pagination: { total: count, page, limit },
       orders: orders.map(order => ({
         ...order,
+        user: {} as User,
         orderItems: order.orderItems.map(({ stock, ...item }) => ({
           ...item,
           color: stock.color.enName,
@@ -138,6 +139,7 @@ export class OrderService {
 
     return {
       ...order,
+      user: {} as User,
       orderItems: order.orderItems.map(({ stock, ...item }) => ({
         ...item,
         color: stock.color.enName,
