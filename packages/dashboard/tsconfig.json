@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2015",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/auth": ["./src/auth"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -27,9 +27,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts",
-    "src/middleware.ts",
-    "src/auth.config.ts",
-    "src/auth.ts"
+    "src/middleware.ts"
   ],
   "exclude": ["node_modules"]
 }

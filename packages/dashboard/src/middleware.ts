@@ -2,9 +2,10 @@ import { authenticatedUser } from '@/utils/amplify-server-utils';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+import { handleApiRequest } from './api-middleware';
 import { PROTECTED_ROUTES, ROUTES } from './routes';
 
-const middleware = async (request: NextRequest) => {
+const handleNextRequest = async (request: NextRequest) => {
   const response = NextResponse.next();
   const user = await authenticatedUser({ request, response });
 
@@ -23,9 +24,15 @@ const middleware = async (request: NextRequest) => {
   return NextResponse.next();
 };
 
-export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico).*)'],
+export const middleware = async (request: NextRequest) => {
+  if (request.nextUrl.pathname.startsWith('/api')) {
+    return handleApiRequest(request);
+  }
+
+  return handleNextRequest(request);
 };
 
-export default middleware;
+export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  matcher: ['/((?!_next/static|_next/image|.*\\.png$|favicon.ico).*)'],
+};

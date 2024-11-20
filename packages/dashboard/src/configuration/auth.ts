@@ -5,11 +5,11 @@ import { configuration } from '.';
 export const authConfig: ResourcesConfig['Auth'] = {
   Cognito: {
     //  Amazon Cognito User Pool ID
-    userPoolId: configuration.cognito.userPoolId,
+    userPoolId: configuration.aws.cognito.userPoolId,
     // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolClientId: configuration.cognito.userPoolClientId,
+    userPoolClientId: configuration.aws.cognito.userPoolClientId,
     // REQUIRED only for Federated Authentication - Amazon Cognito Identity Pool ID
-    identityPoolId: configuration.cognito.identityPoolId,
+    identityPoolId: configuration.aws.cognito.identityPoolId,
     // OPTIONAL - Set to true to use your identity pool's unauthenticated role when user is not logged in
     allowGuestAccess: true,
     // OPTIONAL - This is used when autoSignIn is enabled for Auth.signUp
@@ -23,9 +23,9 @@ export const authConfig: ResourcesConfig['Auth'] = {
     loginWith: {
       // OPTIONAL - Hosted UI configuration
       oauth: {
-        domain: configuration.cognito.oauthDomain,
-        redirectSignIn: [configuration.cognito.oauthRedirectSignIn],
-        redirectSignOut: [configuration.cognito.oauthRedirectSignOut],
+        domain: configuration.aws.cognito.oauthDomain,
+        redirectSignIn: [`${configuration.baseUrl}`],
+        redirectSignOut: [`${configuration.baseUrl}/login`],
         scopes: ['email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
         responseType: 'code',
       },
