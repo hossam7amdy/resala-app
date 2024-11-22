@@ -1,12 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  CreateWishlistResponse,
-  DeleteWishlistResponse,
-  ENDPOINT_CONFIGS,
-  GetWishlistResponse,
-  withParams,
-} from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -16,18 +10,27 @@ import { environment } from 'src/environments/environment.development';
 export class WishListService {
   constructor(private _HttpClient: HttpClient) {}
 
+  // refactor free API url
   private getHeaders() {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      'ngrok-skip-browser-warning': '69420',
+      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
     });
 
     return { headers };
   }
 
-  postWishListItems(productId: any): Observable<CreateWishlistResponse> {
-    const { url } = withParams(ENDPOINT_CONFIGS.addProductToWishlist);
-    return this._HttpClient.post<CreateWishlistResponse>(
-      environment.baseUrl + url,
+  //base URL
+  // baseUrl: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+
+  // My token
+  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
+
+  //post items wishtlist method
+  postWishListItems(productId: any): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.addProductToWishlist]);
+    return this._HttpClient.post(
+      environment.BASE_URL + url,
       {
         productId: productId,
       },
@@ -35,16 +38,15 @@ export class WishListService {
     );
   }
 
-  getAllMyProducts(): Observable<GetWishlistResponse> {
-    const { url } = withParams(ENDPOINT_CONFIGS.getUserWishlist);
-    return this._HttpClient.get<GetWishlistResponse>(environment.baseUrl + url, this.getHeaders());
+  // get all favourits products
+  getAllMyProducts(): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getUserWishlist]);
+    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 
-  deleteMyFavoriteProduct(id: any): Observable<DeleteWishlistResponse> {
-    const { url } = withParams(ENDPOINT_CONFIGS.removeProductFromWishlist, id + '');
-    return this._HttpClient.delete<DeleteWishlistResponse>(
-      environment.baseUrl + url,
-      this.getHeaders()
-    );
+  //Delelte product from my favorite
+  deleteMyFavoriteProduct(id: any): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.removeProductFromWishlist], id + '');
+    return this._HttpClient.delete(environment.BASE_URL + url, this.getHeaders());
   }
 }

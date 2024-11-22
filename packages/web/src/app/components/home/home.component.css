@@ -757,3 +757,26 @@ section .overlay {
 .discounts .content-offer .p {
   color: #efefef !important;
 }
+@media (max-width: 400px) {
+  .header-product .favourit-icon {
+    right: 0.5%;
+    font-size: 14px;
+  }
+  .shopping-icon {
+    right: 0.5px;
+    font-size: 14px;
+  }
+  .shopping-icon:lang(ar) {
+    left: 0.5px;
+    font-size: 14px;
+  }
+  .img-content .offer {
+    padding: 2px;
+  }
+  .img-content .offer::after {
+    width: 19px;
+    height: 19px;
+    top: 4px;
+    right: -10px;
+  }
+}

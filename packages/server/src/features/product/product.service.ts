@@ -12,12 +12,12 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { ConflictError } from '../../errors/api.errors.js';
-import type { FileStorage } from '../../services/index.js';
+import type { FileService } from '../filestorage/file.service.js';
 
 export class ProductService {
   constructor(
     private readonly db: DataStore,
-    private readonly fileService: FileStorage
+    private readonly fileService: FileService
   ) {}
 
   async get(id: number): Promise<GetProductResponse['data']> {
@@ -151,9 +151,9 @@ export class ProductService {
   ): Promise<UpdateProductResponse['data']> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 
-    const { imageKey, imageUrl } = await this.get(id);
+    const { imageKey } = await this.get(id);
 
-    let fileData = { key: imageKey, url: imageUrl };
+    let fileData = { key: imageKey, url: '' };
     if (file) {
       await this.fileService.deleteFile(imageKey);
 

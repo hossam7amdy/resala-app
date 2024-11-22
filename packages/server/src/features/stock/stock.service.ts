@@ -2,6 +2,7 @@ import type { Prisma } from '@prisma/client';
 import type {
   Color,
   CreateStockRequest,
+  GetCartResponse,
   GetStockResponse,
   Image,
   ListStocksRequest,
@@ -13,6 +14,7 @@ import type {
 } from '@resala/shared';
 
 import type { DataStore } from '../../datastore/index.js';
+import { ConflictError } from '../../errors/api.errors.js';
 
 type StockReturnType = Stock & {
   product: Product;
@@ -89,16 +91,20 @@ export class StockService {
     };
   }
 
-  /*
-    FIXME: This is a bug, stock will be decreased even if we don't have enough stock
-    resulting in negative stock quantity
-  */
-  async decrease(stocks: { stockId: number; quantity: number }[]) {
+  async decrease(userCart: GetCartResponse['data']) {
     await this.db.$transaction(async trx => {
       const toUpdate = await trx.stock.findMany({
         where: {
-          id: { in: stocks.map(s => s.stockId) },
+          id: { in: userCart.items.map(s => s.stock.id) },
         },
+      });
+
+      toUpdate.forEach(stock => {
+        const stockData = userCart.items.find(s => s.stock.id === stock.id);
+
+        if (!stockData || stockData.quantity > stock.quantity) {
+          throw new ConflictError('Not enough stock');
+        }
       });
 
       for (const stock of toUpdate) {
