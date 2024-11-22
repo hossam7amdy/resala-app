@@ -64,12 +64,11 @@ export class NavBlankComponent implements OnInit {
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
     this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
+      next: () => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
       },
-      error: err => {
+      error: () => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -77,7 +76,6 @@ export class NavBlankComponent implements OnInit {
         // } else {
         //   this._Toaster.error(err.message);
         // }
-        console.log(err);
       },
     });
   }
@@ -87,12 +85,8 @@ export class NavBlankComponent implements OnInit {
       this._HomeProducts.getProductsSearch(this.searchText).subscribe({
         next: response => {
           this.products = response.data.products;
-          console.log(this.products);
-          console.log(this.searchText);
         },
-        error: err => {
-          console.log(err);
-        },
+        error: () => {},
       });
     }
   }
@@ -138,7 +132,6 @@ export class NavBlankComponent implements OnInit {
       this._RTLStatus.rTLStatus.next(lang);
     }
     this.customSpinIsLoading = false;
-    console.log('Language' + lang, this.currentLang);
   }
 
   ngOnInit(): void {
@@ -169,13 +162,12 @@ export class NavBlankComponent implements OnInit {
 
     this._CartService.cartNumber.subscribe({
       next: response => {
-        console.log('cart number', response);
         this.cartNum = response;
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: () => {
         this.cartNum = 0;
-        console.log(err);
+
         this.customSpinIsLoading = false;
       },
     });
@@ -195,8 +187,7 @@ export class NavBlankComponent implements OnInit {
         this.categoryList = response.data;
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -225,26 +216,21 @@ export class NavBlankComponent implements OnInit {
   }
 
   getUserInfo(userId: any): void {
+    this.customSpinIsLoading = true;
     this.UserProfile.getUserInfo(userId).subscribe({
       next: response => {
         this._AuthService.userNameLogged = response.data.firstName;
         this.userNameLogged = response.data.firstName;
         this.signOut = true;
-        console.log('user name', this.userNameLogged);
+        this.customSpinIsLoading = false;
       },
       error: err => {
-        console.log(err);
         if (err.status == 401 || err.status == 403) {
           this.signOut = false;
         }
+        this.customSpinIsLoading = false;
       },
     });
-  }
-
-  reloadPage(id: any): void {
-    this.customSpinIsLoading = true;
-    window.location.replace(`/category/${id}`);
-    this.customSpinIsLoading = false;
   }
 
   removeTokenSignOut(): void {

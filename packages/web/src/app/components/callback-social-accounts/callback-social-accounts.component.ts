@@ -22,7 +22,6 @@ export class CallbackSocialAccountsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(token => {
       this.tokenFromSocial = token['accessToken'];
-      console.log('token', this.tokenFromSocial);
     });
 
     if (this.tokenFromSocial !== '') {
@@ -33,10 +32,7 @@ export class CallbackSocialAccountsComponent implements OnInit {
         this._Router.navigate(['/home']).then(() => {
           window.location.reload();
         });
-        console.log('product id' + productId);
       } else {
-        console.log('product id' + productId);
-
         this._Router.navigate(['product-details/', productId]).then(() => {
           window.location.reload();
         });

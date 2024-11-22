@@ -248,7 +248,6 @@
               >
                 <li *ngFor="let category of categoryList">
                   <a
-                    (click)="reloadPage(category.id)"
                     routerLinkActive="active-link"
                     [routerLink]="['/category/', category.id]"
                     class="dropdown-item"

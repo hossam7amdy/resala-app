@@ -23,7 +23,6 @@ export class HomeProductsService {
 
   // Products
   getProducts(currentPage: string = '1', limitProducts: string = '10'): Observable<any> {
-    console.log(this.getHeaders());
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
       page: currentPage,
       limit: limitProducts,
@@ -33,7 +32,6 @@ export class HomeProductsService {
 
   // Products
   getProductsSearch(searchText: string): Observable<any> {
-    console.log(this.getHeaders());
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
       search: searchText,
       limit: '100',
