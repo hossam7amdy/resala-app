@@ -37,13 +37,16 @@ import {
 } from 'tsoa/dist/index.js';
 
 import { db } from '../../datastore/index.js';
+import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorization, authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
-import { EmailService, PaymobService } from '../../services/index.js';
 import { AddressService } from '../address/address.service.js';
 import { DiscountService } from '../discount/discount.service.js';
+import { EmailNotification } from '../notification/email.notification.js';
+import { NotificationService } from '../notification/notification.service.js';
 import { PaymentService } from '../payment/payment.service.js';
 import { ShoppingService } from '../shopping/shopping.service.js';
+import { StockService } from '../stock/stock.service.js';
 import { OrderService } from './order.service.js';
 
 @Tags('Order')
@@ -52,11 +55,12 @@ import { OrderService } from './order.service.js';
 @Middlewares([authorization])
 export class OrderController extends Controller {
   private readonly orderService: OrderService;
+  private readonly stockService: StockService;
   private readonly discountService: DiscountService;
   private readonly shoppingService: ShoppingService;
   private readonly addressService: AddressService;
   private readonly paymentService: PaymentService;
-  private readonly emailService: EmailService;
+  private readonly notificationService: NotificationService;
 
   constructor() {
     super();
@@ -64,10 +68,11 @@ export class OrderController extends Controller {
     this.paymentService = new PaymentService(new PaymobService());
 
     this.orderService = new OrderService(db);
+    this.stockService = new StockService(db);
     this.discountService = new DiscountService(db);
     this.shoppingService = new ShoppingService(db);
     this.addressService = new AddressService(db);
-    this.emailService = EmailService.getInstance();
+    this.notificationService = new NotificationService(new EmailNotification());
   }
 
   /** Creates a new order for current authenticated user */
@@ -87,23 +92,29 @@ export class OrderController extends Controller {
 
     const address = await this.addressService.find(user.id, body.addressId);
 
-    const {
-      items: _,
-      shipping,
-      ...order
-    } = await this.orderService.create({ userId: user.id, ...body }, discountedUserCart, address);
+    await this.stockService.decrease(discountedUserCart);
 
-    let payment;
-    if (paymentMethod === 'CARD') {
-      payment = await this.paymentService.checkout({
-        user,
-        order: { shipping, ...order },
-        cart: discountedUserCart,
-        shipping: address,
-      });
+    try {
+      const { items, shipping, ...order } = await this.orderService.create(
+        { userId: user.id, ...body },
+        discountedUserCart,
+        address
+      );
+
+      let payment;
+      if (paymentMethod === 'CARD') {
+        payment = await this.paymentService.checkout({
+          user,
+          order: { shipping, ...order },
+          items,
+          shipping: address,
+        });
+      }
+
+      return { success: true, data: payment };
+    } finally {
+      await this.shoppingService.cart.deleteMany(user.id);
     }
-
-    return { success: true, data: payment };
   }
 
   /** Get order details **Only admins can access this endpoint** */
@@ -147,7 +158,7 @@ export class OrderController extends Controller {
 
     // notify user with order cancellation
     if (order.user?.email) {
-      await this.emailService.sendOrderCancellationEmail(order.user.email, order.id);
+      await this.notificationService.sendOrderCancellationEmail(order.user.email, order.id);
     }
 
     return { success: true, data: order };
@@ -164,7 +175,7 @@ export class OrderController extends Controller {
     const order = await this.orderService.update(+orderId, body);
 
     if (order.user?.email) {
-      await this.emailService.sendOrderConfirmationEmail(
+      await this.notificationService.sendOrderConfirmationEmail(
         order.user.email,
         order.id,
         orderStatus as OrderStatus

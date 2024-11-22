@@ -103,8 +103,6 @@ export var Endpoints;
   Endpoints['createDiscount'] = 'createDiscount';
   Endpoints['updateDiscount'] = 'updateDiscount';
   Endpoints['deleteDiscount'] = 'deleteDiscount';
-  Endpoints['addProductsToDiscount'] = 'addProductsToDiscount';
-  Endpoints['removeProductsFromDiscount'] = 'removeProductsFromDiscount';
 })(Endpoints || (Endpoints = {}));
 /**
  * Function to add params to the endpoint url
@@ -563,16 +561,6 @@ export const ENDPOINT_CONFIGS = {
   },
   [Endpoints.deleteDiscount]: {
     url: '/api/v1/discounts/{discountId}',
-    method: 'delete',
-    auth: true,
-  },
-  [Endpoints.addProductsToDiscount]: {
-    url: '/api/v1/discounts/{discountId}/products',
-    method: 'post',
-    auth: true,
-  },
-  [Endpoints.removeProductsFromDiscount]: {
-    url: '/api/v1/discounts/{discountId}/products',
     method: 'delete',
     auth: true,
   },

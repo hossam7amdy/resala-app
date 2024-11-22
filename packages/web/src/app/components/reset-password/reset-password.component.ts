@@ -24,9 +24,7 @@ export class ResetPasswordComponent implements OnInit {
   newToken: string = '';
   ngOnInit(): void {
     this.route.queryParams.subscribe(queryParam => {
-      console.log(queryParam);
       this.newToken = queryParam['token'];
-      console.log('token', this.newToken);
     });
   }
 
@@ -68,13 +66,11 @@ export class ResetPasswordComponent implements OnInit {
   changePw(): void {
     this.isLoading = true;
     this._AuthService.resetPassword(this.resetPw.value, this.newToken).subscribe({
-      next: response => {
-        console.log('response', response);
+      next: () => {
         this.isLoading = false;
         this.toaster.success('Changed Your Password Successfuly');
       },
       error: err => {
-        console.log(err);
         this.toaster.error(err.error.message);
         this.isLoading = false;
       },
