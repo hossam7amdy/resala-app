@@ -170,18 +170,16 @@ export class PaymentComponent implements OnInit {
     this._CityService.getCities().subscribe({
       next: data => {
         this.governorates = data.governorates;
-        console.log(data);
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.error(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
 
     this._AuthService.decodeUser();
     this.userLoginId = this._AuthService.userInfo.id;
 
-    console.log('user info', this.userLoginId);
-    console.log(this._AuthService.userInfo, typeof this.userLoginId);
     this.addressForm.patchValue({ userId: this.userLoginId });
     this._PaymentServices.getListAddressUser(this.userLoginId).subscribe({
       next: response => {
@@ -190,13 +188,10 @@ export class PaymentComponent implements OnInit {
           this.firstRegister = true;
         }
         this.customSpinIsLoading = false;
-        console.log(response);
 
-        console.log('user address id', this.getUserAddress);
         if (this.addressId === 0) this.addressId = this.getUserAddress[0].id;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -205,7 +200,6 @@ export class PaymentComponent implements OnInit {
       next: response => {
         this.allCountries = response.data;
         this.customSpinIsLoading = false;
-        console.log(this.allCountries);
       },
       error: () => {
         this.customSpinIsLoading = false;
@@ -214,13 +208,11 @@ export class PaymentComponent implements OnInit {
 
     this._CartService.getCartUser().subscribe({
       next: response => {
-        console.log(response);
         this.cartDetails = response.data;
 
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -232,7 +224,7 @@ export class PaymentComponent implements OnInit {
     this.isSelectedAddress = true;
     this.isRegisterd = true;
     this.addNew = false;
-    console.log('address id', this.addressId);
+
     this.customSpinIsLoading = false;
   }
   addNewAddressFun(trarget: HTMLElement): void {
@@ -300,32 +292,28 @@ export class PaymentComponent implements OnInit {
   onSelected(value: string): void {
     this.customSpinIsLoading = true;
     this.selectedCountry = value;
-    console.log('country', value);
+
     this._PaymentServices.getAllCities(value).subscribe({
       next: response => {
         this.allCities = response.data;
-        console.log('Cities', this.allCities);
+
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
   }
   countryIndexFun(index: number): void {
     this.countryIndex = index;
-    console.log('index:', this.countryIndex);
   }
 
   handleForm(userAddresses: FormGroup, btn: HTMLButtonElement): void {
     this.customSpinIsLoading = true;
 
     const userData = this.addressForm.value;
-    console.log('user data', userData);
 
     if (userAddresses.valid) {
-      console.log('user data2', userData);
       this._PaymentServices.registerUserAddress(userData).subscribe({
         next: response => {
           if (response.success == true) {
@@ -335,7 +323,7 @@ export class PaymentComponent implements OnInit {
             this.isLoading = false;
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
             this.firstRegister = false;
-            console.log('response register', response);
+
             window.location.reload();
           }
           this.customSpinIsLoading = false;
@@ -343,7 +331,7 @@ export class PaymentComponent implements OnInit {
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
-          console.log('Save Address Error', err);
+
           this.customSpinIsLoading = false;
         },
       });
@@ -363,29 +351,18 @@ export class PaymentComponent implements OnInit {
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     const userData = this.userAddresses.value;
     if (userAddresses.valid) {
-      console.log('user address edits', this.userAddresses.value, this.addressIdEdit);
-
       this._PaymentServices.updateUserAddress(this.addressIdEdit, userData).subscribe({
-        next: response => {
-          console.log(
-            'request true user address edits',
-            this.userAddresses.value,
-            this.addressIdEdit
-          );
+        next: () => {
           this._Toaster.success('Updated Your Address successfuly');
           this.isEdit = false;
-          console.log('after edit', response);
+
           this._Renderer2.setAttribute(element, 'disabled', 'true');
           window.location.reload();
           this.customSpinIsLoading = false;
         },
         error: err => {
           this._Toaster.error(err);
-          console.log(
-            'request false user address edits',
-            this.userAddresses.value,
-            this.addressIdEdit
-          );
+
           this.customSpinIsLoading = false;
         },
       });
@@ -406,9 +383,9 @@ export class PaymentComponent implements OnInit {
         this.isSelectedAddress = false;
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: () => {
         this._Toaster.info('Your Item Not Removed');
-        console.log(err);
+
         this.customSpinIsLoading = false;
       },
     });
@@ -417,7 +394,7 @@ export class PaymentComponent implements OnInit {
   paymentSelectedMethod(event: any) {
     this.customSpinIsLoading = true;
     this.paymentSelected = event;
-    console.log(this.paymentSelected);
+
     this.customSpinIsLoading = false;
   }
 
@@ -431,16 +408,11 @@ export class PaymentComponent implements OnInit {
     if (this.isCheckedTerms) {
       this.customSpinIsLoading = true;
 
-      const payData = this.payForm.value;
-
       // if (this.payForm.valid) {
-      console.log(payData, 'addres id', this.addressId);
+
       this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
         next: response => {
           if (response.success == true) {
-            console.log('dataPay', this.addressId, this.paymentSelected, this.note);
-            console.log(response);
-
             this.isLoading = false;
             this._Toaster.success('Your Order Completed');
 
@@ -460,7 +432,6 @@ export class PaymentComponent implements OnInit {
           } else {
             this.errMsg = err.error.message;
             this._Toaster.error(this.errMsg);
-            console.log(err);
           }
           this.customSpinIsLoading = false;
         },

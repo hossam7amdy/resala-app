@@ -158,20 +158,16 @@ export class ProductDetailsComponent implements OnInit {
 
     this._CartService.getCartUser().subscribe({
       next: response => {
-        console.log(response);
         this.cartDetails = response.data;
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
 
     this._Reviews.getProductReview(this.productId, '10').subscribe({
       next: res => {
-        console.log('test');
-        console.log('review', res);
         this.productReview = res.data.reviews;
         this.customSpinIsLoading = false;
       },
@@ -188,12 +184,11 @@ export class ProductDetailsComponent implements OnInit {
         this.productDetails = res?.data;
         this.productImages = res?.data?.images;
         this.categoryId = res?.data.categoryId;
-        console.log('productdetails', res.data, 'cat id' + this.categoryId);
+
         this.customSpinIsLoading = false;
       },
 
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
       complete: () => {
@@ -209,8 +204,6 @@ export class ProductDetailsComponent implements OnInit {
       next: res => {
         this.productStock = res?.data.stocks;
 
-        console.log('stock', this.productStock);
-
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
           if (!a.find(data => data.color.id == b.colorId)) {
@@ -220,7 +213,6 @@ export class ProductDetailsComponent implements OnInit {
         }, []);
 
         this.customSpinIsLoading = false;
-        console.log('after filter', this.productStockColor);
       },
       error: () => {
         this.customSpinIsLoading = false;
@@ -232,10 +224,6 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  public onClickRate(rate: number): void {
-    // Logs the clicked star number
-    console.log('rate', rate);
-  }
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
     // trarget.scrollTo({behavior:'smooth'})
@@ -292,7 +280,6 @@ export class ProductDetailsComponent implements OnInit {
     this.stockIndex = index;
     this.counterQuantity = 1;
     this.stockIdSize = '';
-    console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
     this.isChooseColor = true;
@@ -307,7 +294,6 @@ export class ProductDetailsComponent implements OnInit {
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
     this.counterQuantity = 1;
-    console.log(this.selectedSize, this.stockIdSize);
   }
 
   setActiveClass() {
@@ -333,9 +319,8 @@ export class ProductDetailsComponent implements OnInit {
       const requiredCount: string = this.counterQuantity.toString();
       this._CartService.addToCart(productId, requiredCount).subscribe({
         next: res => {
-          console.log(res);
           this._CartService.cartNumber.next(res.data.totalQuantity);
-          console.log('cart number :' + this._CartService.cartNumber);
+
           this._toaster.success('added one product successfuly');
           this.customSpinIsLoading = false;
         },
@@ -348,7 +333,6 @@ export class ProductDetailsComponent implements OnInit {
             this._Toaster.error(err);
           }
 
-          console.log('response', productId, requiredCount, err);
           this.customSpinIsLoading = false;
         },
       });
@@ -365,12 +349,10 @@ export class ProductDetailsComponent implements OnInit {
     this.customSpinIsLoading = true;
     this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
-        console.log('similar pro', res);
         this.productsCategory = res.data.products;
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -421,13 +403,13 @@ export class ProductDetailsComponent implements OnInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: (response: any) => {
+      next: () => {
         this._Renderer2.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+
         this.customSpinIsLoading = false;
       },
-      error: (err: any) => {
+      error: () => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -435,7 +417,7 @@ export class ProductDetailsComponent implements OnInit {
         // } else {
         //   this._Toaster.error(err.message);
         // }
-        console.log(err);
+
         this.customSpinIsLoading = false;
       },
     });
@@ -451,8 +433,7 @@ export class ProductDetailsComponent implements OnInit {
   //  @ViewChild('cursor') refCursor:any;
   //  @HostListener('document:mousemove',['$event'])
   //  atMouseMove(event:any){
-  //     console.log('width',event.pageX);
-  //     console.log('height',event.pageY);
+
   //     this.refCursor.nativeElement.style.left =event.pageX;
   //     this.refCursor.nativeElement.style.top =event.pageY;
 

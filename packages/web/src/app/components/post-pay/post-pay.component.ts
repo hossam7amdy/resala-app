@@ -31,7 +31,7 @@ export class PostPayComponent implements OnInit {
     this.route.queryParams.subscribe(mobPayQuery => {
       this.orderStatus = mobPayQuery['success'];
       // this._CartService.cartNumber.next(0);
-      console.log(mobPayQuery, 'order status', this.orderStatus);
+
       this.customSpinIsLoading = false;
     });
 
@@ -40,6 +40,7 @@ export class PostPayComponent implements OnInit {
         next: response => {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);
+          this.customSpinIsLoading = false;
         },
         error: () => {
           this.customSpinIsLoading = false;

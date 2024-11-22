@@ -23,32 +23,6 @@
 
 <section class="slider">
   <owl-carousel-o [options]="mainSliderOptions" class="custom-owl">
-    <!-- <ng-template carouselSlide>
-      <div class="row full-slide m-0">
-        <div class="col-12 p-0">
-          <div class="title-content">
-            <h1 class="hyper-title">{{ 'home.mainSlider.ndSlide.hyperTitle' | translate }}</h1>
-            <p class="p">{{ 'home.mainSlider.ndSlide.pTitle' | translate }}</p>
-          </div>
-
-          <img src="./assets/main-slider/2.jpg" class="w-100" alt="Slide1" />
-        </div>
-      </div>
-    </ng-template> -->
-
-    <!-- <ng-template carouselSlide>
-      <div class="row full-slide m-0">
-        <div class="col-12 p-0">
-          <div class="title-content">
-            <h1 class="hyper-title">{{ 'home.mainSlider.ndSlide.hyperTitle' | translate }}</h1>
-            <p class="p">{{ 'home.mainSlider.ndSlide.pTitle' | translate }}</p>
-          </div>
-
-          <img src="./assets/main-slider/four-children.avif" class="w-100" alt="Slide1" />
-        </div>
-       
-      </div>
-    </ng-template> -->
     <ng-template carouselSlide>
       <div class="row half-slide m-0">
         <div class="col-6 p-0">
@@ -129,14 +103,7 @@
 </section>
 
 <!-- section products -->
-<!-- <div
-  *ngIf="products.length < 1"
-  class="spinner-border text-warning d-flex justify-content-center text-center"
-  style="width: 3rem; height: 3rem; top: 50px"
-  role="status"
->
-  <span class="visually-hidden">Loading...</span>
-</div> -->
+
 <section *ngIf="products.length > 0" class="">
   <div class="container-fluid">
     <h2 class="h1">{{ 'home.allProducts.mainTitle' | translate }}</h2>
@@ -195,11 +162,10 @@
             >
               {{ _Translate.currentLang === 'ar' ? product.arName : product.enName }}
             </h6>
-
+            <!-- (onRate)="onClickRate($event)" -->
             <ngx-stars-rating
               [rate]="product.avgRating"
               [options]="ratingOptions"
-              (onRate)="onClickRate($event)"
               [starTemplate]="starCustomTemplate"
             ></ngx-stars-rating>
 

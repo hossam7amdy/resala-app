@@ -86,12 +86,9 @@ export class LoginComponent {
     const userData = this.loginForm.value;
 
     if (this.loginForm.valid === true) {
-      console.log('data is valed');
-      console.log(userData);
       // let loginData = userData
       this._AuthService.login(userData).subscribe({
         next: response => {
-          console.log(response.data.accessToken);
           if (response.success == true) {
             localStorage.setItem('etoken', response.data.accessToken);
             this._AuthService.decodeUser();
@@ -111,10 +108,7 @@ export class LoginComponent {
               this._Router.navigate(['/home']).then(() => {
                 window.location.reload();
               });
-              console.log('product id' + productId);
             } else {
-              console.log('product id' + productId);
-
               this._Router.navigate(['product-details/', productId]).then(() => {
                 window.location.reload();
               });
