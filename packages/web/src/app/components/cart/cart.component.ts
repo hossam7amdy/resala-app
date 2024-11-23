@@ -72,12 +72,14 @@ export class CartComponent implements OnInit {
 
     this._CartService.getCartUser().subscribe({
       next: response => {
+        console.log(response);
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
         this.totalCount = response.data.totalQuantity;
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
@@ -90,6 +92,8 @@ export class CartComponent implements OnInit {
       next: res => {
         this.productStock = res?.data.stocks;
 
+        console.log('stock', this.productStock);
+
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
           if (!a.find(data => data.color.id == b.colorId)) {
@@ -97,12 +101,11 @@ export class CartComponent implements OnInit {
           }
           return a;
         }, []);
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
+
+        console.log('after filter', this.productStockColor);
       },
     });
+    this.customSpinIsLoading = false;
   }
 
   onColorChange(event: any, index: number) {
@@ -112,6 +115,7 @@ export class CartComponent implements OnInit {
     this.stockIndex = index;
     this.counterQuantity = 1;
     this.stockIdSize = '';
+    console.log(this.selectedColor, this.stockIndex);
   }
   isChooseColorFun() {
     this.isChooseColor = true;
@@ -127,6 +131,8 @@ export class CartComponent implements OnInit {
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
     this.counterQuantity = 1;
+
+    console.log(this.selectedSize, this.stockIdSize);
   }
   // Quantity Fun
   plusCounterQuantity(): void {
@@ -158,12 +164,14 @@ export class CartComponent implements OnInit {
           this._CartService.cartNumber.next(response.data.totalQuantity);
           this.cartDetailsItems = response.data.items;
 
+          console.log(this.cartDetails);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
           this.totalCount = response.data.totalQuantity;
           this.customSpinIsLoading = false;
         },
-        error: () => {
+        error: err => {
+          console.log(err);
           this._Renderer.removeAttribute(element1, 'disabled');
           this._Renderer.removeAttribute(element2, 'disabled');
           this.customSpinIsLoading = false;
@@ -223,16 +231,18 @@ export class CartComponent implements OnInit {
   //Update
 
   updateCartProduct(itemId: string, quantity: any) {
-    const requiredCount: string = quantity.toString();
+    const requiredCount: string = this.counterQuantity.toString();
     this._CartService.addToCart(itemId, requiredCount).subscribe({
       next: res => {
+        console.log(res);
         this._CartService.cartNumber.next(res.data.totalQuantity);
-
+        console.log('cart number :' + this._CartService.cartNumber);
         window.location.reload();
         this._toaster.success('Update product successfuly');
       },
       error: err => {
         this._toaster.error(err);
+        console.log('response', itemId, quantity, err);
       },
     });
   }

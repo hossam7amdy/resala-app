@@ -1,23 +1,6 @@
-export interface Product {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  imageUrl: any;
-  enName: string;
-  price: string;
-  category: CategoryProduct;
-  images: Image[];
-  id?: number;
-  categoryId?: number;
-  avgRating: number;
-  arName: string;
-  discounts: [
-    {
-      amount: string;
-      type: string;
-      isActive: boolean;
-      minQty: number;
-    },
-  ];
-}
+import { ListProductsResponse } from '@resala/shared';
+
+export type Product = ListProductsResponse['data']['products'][number];
 
 export interface CategoryProduct {
   enName: string;

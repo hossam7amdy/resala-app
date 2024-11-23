@@ -26,7 +26,7 @@ export class TopBarComponent {
       html.lang = 'en';
       rtlStat = false;
     }
-
+    console.log('topbar rtlFun', rtlStat);
     return rtlStat;
   }
 

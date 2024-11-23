@@ -77,7 +77,7 @@
                         value="{{ addressId }}"
                         formControlName="addressId"
                         (change)="selectedAddressMethod(userAddress.id)"
-                        [checked]="getUserAddress[0].id === getUserAddress[i].id"
+                        [checked]="addressId === i"
                       />
                       <div class="dropdown-edit">
                         <span
@@ -714,7 +714,7 @@
               </div>
               <!-- [disabled]="payForm.invalid" -->
               <!-- <div class="pay-btn col-12">
-      <button (click)="creatOrder(payForm, btn)" #btn type="submit" class="w-100 submit mt-3">
+      <button (click)="createOrder(payForm, btn)" #btn type="submit" class="w-100 submit mt-3">
         {{ 'payment.paymentForm.payBtn' | translate }}
         <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
       </button>
@@ -821,7 +821,7 @@
             <button
               [disabled]="payForm.invalid || isCheckedTerms === false"
               type="submit"
-              (click)="creatOrder(payForm, btn)"
+              (click)="createOrder(payForm, btn)"
               #btn
               class="w-100 submit custome-btn"
             >
