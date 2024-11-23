@@ -11,12 +11,8 @@ export class SearchPipe implements PipeTransform {
   transform(products: Product[], searchString: string): Product[] {
     return products.filter(
       this.lang == 'ar'
-        ? item =>
-            item.arName.includes(searchString) ||
-            item.enName.toLowerCase().includes(searchString.toLowerCase())
-        : item =>
-            item.enName.toLowerCase().includes(searchString.toLowerCase()) ||
-            item.arName.includes(searchString)
+        ? item => item.arName.includes(searchString)
+        : item => item.enName.toLowerCase().includes(searchString.toLowerCase())
     );
   }
 }

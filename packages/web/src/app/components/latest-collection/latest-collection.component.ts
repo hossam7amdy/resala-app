@@ -62,10 +62,9 @@ export class LatestCollectionComponent implements OnInit {
     //  products
     this._HomeProductsService.getProducts('1', '20').subscribe({
       next: response => {
+        console.log(response.data);
+        console.log('products', response.data);
         this.products = response.data.products;
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -73,10 +72,12 @@ export class LatestCollectionComponent implements OnInit {
     //Reviews
     this._Reviews.getProductReview('1', '100').subscribe({
       next: res => {
+        console.log('Reviews', res);
         this.rateNumber = res.data.reviews.rating;
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
@@ -86,13 +87,13 @@ export class LatestCollectionComponent implements OnInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: () => {
+      next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-
+        console.log(response);
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -100,9 +101,13 @@ export class LatestCollectionComponent implements OnInit {
         // } else {
         //   this._Toaster.error(err.message);
         // }
-
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
+  }
+
+  public onClickRate(rate: number): void {
+    console.log(rate, 'rate'); // Logs the clicked star number
   }
 }

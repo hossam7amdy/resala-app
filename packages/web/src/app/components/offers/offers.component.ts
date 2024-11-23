@@ -63,12 +63,11 @@ export class OffersComponent implements OnInit {
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
+        console.log(response.data);
+        console.log('products', response.data);
         this.products = response.data.products;
         this.customSpinIsLoading = false;
         // this.rateNumber = response.data.products.avgRating;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
       },
     });
   }
@@ -77,13 +76,13 @@ export class OffersComponent implements OnInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: () => {
+      next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-
+        console.log(response);
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -91,7 +90,7 @@ export class OffersComponent implements OnInit {
         // } else {
         //   this._Toaster.error(err.message);
         // }
-
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
