@@ -1,4 +1,4 @@
-import { configuration } from '@/configuration';
+import { configuration } from '@/configuration/server';
 import { ROUTES } from '@/routes';
 import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
 import { redirect } from 'next/navigation';
