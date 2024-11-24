@@ -365,7 +365,7 @@ export type RefundPaymentResponse = DefaultResponseBody;
 export type GetReviewRequest = z.infer<typeof Schemas.GetReviewSchema>;
 export type GetReviewResponse = DefaultResponseBody & {
   data: Review & {
-    user?: User;
+    user: User;
   };
 };
 
@@ -444,7 +444,7 @@ export type ListCustomersFeedbackResponse = DefaultResponseBody & {
   data: {
     averageRating: number;
     recentFeedback: (Review & {
-      user?: User;
+      user: User;
       product: Product;
     })[];
   };

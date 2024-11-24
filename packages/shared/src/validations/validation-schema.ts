@@ -92,7 +92,7 @@ export const ForgotPasswordSchema = z.object({
 // User Schemas
 export const GetUserSchema = z.object({
   params: z.object({
-    userId: z.coerce.string(),
+    userId: z.string(),
   }),
 });
 
@@ -121,7 +121,7 @@ export const DeleteUserSchema = z.object({
 
 export const CreateAddressSchema = z.object({
   body: z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
     firstName: UserSchema.shape.firstName,
     lastName: UserSchema.shape.lastName,
     phone: UserSchema.shape.phone,
@@ -136,7 +136,9 @@ export const CreateAddressSchema = z.object({
 });
 
 export const ListAddressSchema = z.object({
-  query: z.string(),
+  query: z.object({
+    userId: z.string().optional(),
+  }),
 });
 
 export const UpdateAddressSchema = z.object({
@@ -433,7 +435,7 @@ export const RefundPaymentSchema = z.object({
 // Review Schemas
 export const CreateReviewSchema = z.object({
   body: z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
     productId: z.coerce.number().positive(),
     rating: z.coerce.number().min(1).max(5),
     comment: z.string().max(500).optional(),
@@ -463,6 +465,6 @@ export const UpdateReviewSchema = z.object({
 export const DeleteReviewSchema = z.object({
   params: GetReviewSchema.shape.params,
   query: z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
   }),
 });

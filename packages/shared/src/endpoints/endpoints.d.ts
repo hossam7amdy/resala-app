@@ -70,7 +70,7 @@ export declare enum Endpoints {
   addProductToWishlist = 'addProductToWishlist',
   removeUserWishlist = 'removeUserWishlist',
   removeProductFromWishlist = 'removeProductFromWishlist',
-  createOrder = 'createOrder',
+  checkout = 'checkout',
   getOrder = 'getOrder',
   listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',

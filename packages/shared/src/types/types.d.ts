@@ -29,7 +29,7 @@ export type Pagination = {
   total: number;
 };
 export type User = {
-  id: number;
+  id: string;
   email: string;
   isEmailVerified: boolean;
   phone: null | string;
@@ -42,7 +42,7 @@ export type User = {
   updatedAt: Date;
 };
 export type UserAddress = {
-  userId: number;
+  userId: string;
   addressId: number;
 };
 export type Category = {
@@ -98,21 +98,21 @@ export type Size = {
   updatedAt: Date;
 };
 export type Cart = {
-  userId: number;
+  userId: string;
   stockId: number;
   quantity: number;
   createdAt: Date;
   updatedAt: Date;
 };
 export type Wishlist = {
-  userId: number;
+  userId: string;
   productId: number;
   createdAt: Date;
   updatedAt: Date;
 };
 export type Order = {
   id: number;
-  userId: null | number;
+  userId: null | string;
   subtotal: Decimal;
   discount: Decimal;
   total: Decimal;
@@ -144,7 +144,7 @@ export type Shipping = {
 export type Review = {
   id: number;
   productId: number;
-  userId: null | number;
+  userId: null | string;
   rating: number;
   comment: null | string;
   createdAt: Date;
