@@ -1,7 +1,7 @@
 'use server';
 
 import { callEndpoint } from '@/fetch';
-import { optimizeImages } from '@/lib/optimize-images';
+import { optimizeImages } from '@/lib/optimizer';
 import { ROUTES } from '@/routes';
 import type {
   CreateProductResponse,

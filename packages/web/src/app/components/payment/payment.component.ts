@@ -414,7 +414,7 @@ export class PaymentComponent implements OnInit {
     note: new FormControl(''),
   });
 
-  createOrder(payForm: FormGroup, btn: HTMLButtonElement) {
+  checkout(payForm: FormGroup, btn: HTMLButtonElement) {
     if (this.isCheckedTerms) {
       this.customSpinIsLoading = true;
 

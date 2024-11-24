@@ -1,4 +1,3 @@
-import { auth } from '@/auth';
 import { configuration } from '@/configuration';
 import { ROUTES } from '@/routes';
 import { type EndpointConfig, withParams, withQueryParams } from '@resala/shared';
@@ -30,7 +29,7 @@ export const callEndpoint = async <Req, Res>(
   const withParamsConfig = withParams(endpoint, ...paramsArr);
   const { method, url, auth: isProtected } = withQueryParams(withParamsConfig, query ?? {});
 
-  const session = await auth();
+  const session = { accessToken: undefined };
   const isLoggedIn = session !== null;
 
   const response = await fetch(`${configuration.baseUrl}${url}`, {

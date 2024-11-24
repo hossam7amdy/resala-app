@@ -73,7 +73,7 @@ export var Endpoints;
   Endpoints['removeUserWishlist'] = 'removeUserWishlist';
   Endpoints['removeProductFromWishlist'] = 'removeProductFromWishlist';
   // order endpoints
-  Endpoints['createOrder'] = 'createOrder';
+  Endpoints['checkout'] = 'checkout';
   Endpoints['getOrder'] = 'getOrder';
   Endpoints['listOrders'] = 'listOrders';
   Endpoints['deleteOrder'] = 'deleteOrder';
@@ -436,7 +436,7 @@ export const ENDPOINT_CONFIGS = {
     auth: true,
   },
   // order endpoints
-  [Endpoints.createOrder]: {
+  [Endpoints.checkout]: {
     url: '/api/v1/orders',
     method: 'post',
     auth: true,
