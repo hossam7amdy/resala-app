@@ -1,6 +1,6 @@
 'use client';
 
-import { MAX_UPLOAD_IMAGE_COUNT } from '@/utils/constants';
+import { MAX_UPLOAD_IMAGE_COUNT } from '@/constants';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';

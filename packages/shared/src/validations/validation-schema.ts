@@ -6,7 +6,7 @@ import { OffsetPageParamsSchema } from './common.schema.js';
 const UserSchema = z.object({
   email: z.string().min(5).max(128).email(),
   isVerified: z.boolean().optional(),
-  phone: z.string().length(11).startsWith('01'),
+  phone: z.string().min(11).max(15),
   firstName: z.string().min(2).max(50),
   lastName: z.string().min(2).max(50),
   role: z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
@@ -116,7 +116,7 @@ export const UpdateUserSchema = z.object({
 });
 
 export const DeleteUserSchema = z.object({
-  params: z.string(),
+  params: UpdateUserSchema.shape.params,
 });
 
 export const CreateAddressSchema = z.object({

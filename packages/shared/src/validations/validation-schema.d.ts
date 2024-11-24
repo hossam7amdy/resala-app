@@ -427,15 +427,31 @@ export declare const UpdateUserSchema: z.ZodObject<
 >;
 export declare const DeleteUserSchema: z.ZodObject<
   {
-    params: z.ZodString;
+    params: z.ZodObject<
+      {
+        userId: z.ZodString;
+      },
+      'strip',
+      z.ZodTypeAny,
+      {
+        userId: string;
+      },
+      {
+        userId: string;
+      }
+    >;
   },
   'strip',
   z.ZodTypeAny,
   {
-    params: string;
+    params: {
+      userId: string;
+    };
   },
   {
-    params: string;
+    params: {
+      userId: string;
+    };
   }
 >;
 export declare const CreateAddressSchema: z.ZodObject<

@@ -387,21 +387,6 @@ paths:
       security:
         - jwt_auth: []
       parameters: []
-    delete:
-      operationId: ClearCart
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteCartResponse'
-      tags:
-        - Shopping
-      security:
-        - jwt_auth: []
-      parameters: []
-  /api/v1/cart/items:
     post:
       operationId: AddItemToCart
       responses:
@@ -429,7 +414,21 @@ paths:
                   type: integer
                   format: int32
               type: object
-  /api/v1/cart/items/{stockId}:
+    delete:
+      operationId: ClearCart
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCartResponse'
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+  /api/v1/cart/{stockId}:
     delete:
       operationId: RemoveItemFromCart
       responses:
@@ -464,21 +463,6 @@ paths:
       security:
         - jwt_auth: []
       parameters: []
-    delete:
-      operationId: ClearWishlist
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteWishlistResponse'
-      tags:
-        - Shopping
-      security:
-        - jwt_auth: []
-      parameters: []
-  /api/v1/wishlist/items:
     post:
       operationId: AddProductToWishlist
       responses:
@@ -503,7 +487,21 @@ paths:
                   type: integer
                   format: int32
               type: object
-  /api/v1/wishlist/items/{productId}:
+    delete:
+      operationId: ClearWishlist
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteWishlistResponse'
+      tags:
+        - Shopping
+      security:
+        - jwt_auth: []
+      parameters: []
+  /api/v1/wishlist/{productId}:
     delete:
       operationId: RemoveProductFromWishlist
       responses:
@@ -2613,6 +2611,8 @@ components:
                 - properties:
                     user:
                       $ref: '#/components/schemas/User'
+                  required:
+                    - user
                   type: object
           required:
             - data
@@ -2630,6 +2630,8 @@ components:
                       - properties:
                           user:
                             $ref: '#/components/schemas/User'
+                        required:
+                          - user
                         type: object
                   type: array
                 pagination:
@@ -3361,6 +3363,7 @@ components:
                             $ref: '#/components/schemas/User'
                         required:
                           - product
+                          - user
                         type: object
                   type: array
                 averageRating:

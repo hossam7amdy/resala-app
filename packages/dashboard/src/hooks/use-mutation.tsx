@@ -40,7 +40,10 @@ export const useMutation = <Data, Variables>({
       try {
         const result = await mutationFn(variables);
 
-        if (result instanceof Object && !result.success) {
+        if (
+          (result?.statusCode && result?.statusCode >= 400) ||
+          (result?.success !== undefined && !result?.success)
+        ) {
           throw result;
         }
 

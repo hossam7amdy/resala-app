@@ -686,7 +686,7 @@ const OffsetPageParamsSchema = zod.z.object({
 const UserSchema = zod.z.object({
   email: zod.z.string().min(5).max(128).email(),
   isVerified: zod.z.boolean().optional(),
-  phone: zod.z.string().length(11).startsWith('01'),
+  phone: zod.z.string().min(11).max(15),
   firstName: zod.z.string().min(2).max(50),
   lastName: zod.z.string().min(2).max(50),
   role: zod.z.enum(['ADMIN', 'MODERATOR', 'CUSTOMER']),
@@ -783,7 +783,7 @@ const UpdateUserSchema = zod.z.object({
   }),
 });
 const DeleteUserSchema = zod.z.object({
-  params: zod.z.string(),
+  params: UpdateUserSchema.shape.params,
 });
 const CreateAddressSchema = zod.z.object({
   body: zod.z.object({

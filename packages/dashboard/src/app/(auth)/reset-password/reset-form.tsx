@@ -6,24 +6,23 @@ import { ROUTES } from '@/routes';
 import { validationPatterns } from '@resala/shared';
 import { Button, Form, Input } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 interface FormValues {
-  token: string;
+  code: string;
   newPassword: string;
   confirmNewPassword: string;
 }
 
 interface ResetPasswordFormProps {
-  token?: FormValues['token'];
+  email: string;
 }
 
-export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
+export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ email }) => {
   const route = useRouter();
   const [form] = Form.useForm();
   const { error: notificationError, success: notificationSuccess } = useNotification();
   const { isLoading, mutate } = useMutation({
-    mutationFn: (values: FormValues) => resetPassword({ ...values, token: token ?? '' }),
+    mutationFn: (values: FormValues) => resetPassword({ ...values, email }),
     onSuccess: () => {
       form.resetFields();
       route.replace(ROUTES.LOGIN);
@@ -33,13 +32,6 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) =
       notificationError(error.message);
     },
   });
-
-  useEffect(() => {
-    if (!token) {
-      notificationError('Invalid reset password link');
-      route.replace(ROUTES.LOGIN);
-    }
-  }, [notificationError, route, token]);
 
   return (
     <Form size="large" name="reset-password" layout="vertical" onFinish={mutate} autoComplete="off">

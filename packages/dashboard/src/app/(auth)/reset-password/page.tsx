@@ -7,14 +7,14 @@ import React from 'react';
 import styles from './page.module.css';
 import { ResetPasswordForm } from './reset-form';
 
-const ResetPasswordPage = ({ searchParams }: { searchParams: { token?: string } }) => {
+const ResetPasswordPage = ({ searchParams }: { searchParams: { email?: string } }) => {
   return (
     <div className={styles.container}>
       <Flex vertical gap={10}>
         <div style={{ alignSelf: 'center' }}>
           <Logo />
         </div>
-        <ResetPasswordForm token={searchParams.token} />
+        <ResetPasswordForm email={searchParams.email ?? ''} />
         <Link href={ROUTES.LOGIN}>Back to Login</Link>
       </Flex>
     </div>

@@ -53,7 +53,7 @@ export class ShoppingController extends Controller {
     return { success: true, data: updatedCart };
   }
 
-  @Post('cart/items')
+  @Post('cart')
   @SuccessResponse('201', 'Item added to cart')
   @Middlewares([validate(CreateCartSchema)])
   public async addItemToCart(
@@ -67,7 +67,7 @@ export class ShoppingController extends Controller {
     return { success: true, data: updatedCart };
   }
 
-  @Delete('cart/items/{stockId}')
+  @Delete('cart/{stockId}')
   public async removeItemFromCart(
     @Request() req: ExRequest,
     @Path() stockId: string
@@ -102,7 +102,7 @@ export class ShoppingController extends Controller {
     return { success: true, data: wishlist };
   }
 
-  @Post('wishlist/items')
+  @Post('wishlist')
   @SuccessResponse('201', 'Item added to wishlist')
   @Middlewares([validate(CreateWishlistSchema)])
   public async addProductToWishlist(
@@ -115,7 +115,7 @@ export class ShoppingController extends Controller {
     return { success: true, data: wishlist };
   }
 
-  @Delete('wishlist/items/{productId}')
+  @Delete('wishlist/{productId}')
   public async removeProductFromWishlist(
     @Request() req: ExRequest,
     @Path() productId: string

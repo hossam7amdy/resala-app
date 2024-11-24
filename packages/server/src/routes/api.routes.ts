@@ -722,7 +722,10 @@ const models: TsoaRoute.Models = {
               dataType: 'intersection',
               subSchemas: [
                 { ref: 'Review' },
-                { dataType: 'nestedObjectLiteral', nestedProperties: { user: { ref: 'User' } } },
+                {
+                  dataType: 'nestedObjectLiteral',
+                  nestedProperties: { user: { ref: 'User', required: true } },
+                },
               ],
               required: true,
             },
@@ -753,7 +756,7 @@ const models: TsoaRoute.Models = {
                       { ref: 'Review' },
                       {
                         dataType: 'nestedObjectLiteral',
-                        nestedProperties: { user: { ref: 'User' } },
+                        nestedProperties: { user: { ref: 'User', required: true } },
                       },
                     ],
                   },
@@ -1578,7 +1581,7 @@ const models: TsoaRoute.Models = {
                         dataType: 'nestedObjectLiteral',
                         nestedProperties: {
                           product: { ref: 'Product', required: true },
-                          user: { ref: 'User' },
+                          user: { ref: 'User', required: true },
                         },
                       },
                     ],
@@ -2345,7 +2348,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
-    '/api/v1/cart/items',
+    '/api/v1/cart',
     authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addItemToCart),
@@ -2389,7 +2392,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
-    '/api/v1/cart/items/:stockId',
+    '/api/v1/cart/:stockId',
     authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeItemFromCart),
@@ -2501,7 +2504,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.post(
-    '/api/v1/wishlist/items',
+    '/api/v1/wishlist',
     authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.addProductToWishlist),
@@ -2545,7 +2548,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.delete(
-    '/api/v1/wishlist/items/:productId',
+    '/api/v1/wishlist/:productId',
     authenticateMiddleware([{ jwt_auth: [] }]),
     ...fetchMiddlewares<RequestHandler>(ShoppingController),
     ...fetchMiddlewares<RequestHandler>(ShoppingController.prototype.removeProductFromWishlist),

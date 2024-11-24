@@ -4,7 +4,8 @@ import type { Request, RequestHandler } from 'express';
 
 import { configuration } from '../configuration/index.js';
 import type { Configuration } from '../configuration/index.js';
-import { InternalServerError, UnauthorizedError } from '../errors/api.errors.js';
+import { UnauthorizedError } from '../errors/api.errors.js';
+import { UserService } from '../features/user/user.service.js';
 
 const verifyJwt = (token: string, config: Configuration = configuration) => {
   const verifier = CognitoJwtVerifier.create({
@@ -23,7 +24,11 @@ export const jwtParse: RequestHandler = async (req, res, next) => {
     }
 
     const token = req.headers.authorization.split(' ')[1];
-    res.locals.user = await verifyJwt(token);
+    const tokenPayload = await verifyJwt(token);
+    const groups = await new UserService(configuration).getGroups(tokenPayload.sub);
+
+    res.locals.user = { id: tokenPayload.sub, groups };
+
     return next();
   } catch (e) {
     return next(new UnauthorizedError((e as Error).message));
@@ -48,7 +53,7 @@ export const expressAuthentication = async (
   _scopes?: string[]
 ) => {
   if (securityName.toLocaleLowerCase() !== 'jwt_auth') {
-    return Promise.reject(new InternalServerError('only jwt security is allowed'));
+    return Promise.reject(new UnauthorizedError('only jwt security is allowed'));
   }
 
   return enforceJwt(req, req.res!, req.next!);
