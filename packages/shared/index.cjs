@@ -126,7 +126,7 @@ exports.Endpoints = void 0;
  */
 const withParams = (endpoint, ...params) => {
   let url = endpoint.url;
-  const placeholders = url.match(/:[^}]*}/) ?? [];
+  const placeholders = url.match(/:[^\/]*/g) || [];
   if (placeholders.length !== params.length) {
     throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
   }
@@ -400,12 +400,12 @@ const ENDPOINT_CONFIGS = {
   },
   // shopping endpoints
   [exports.Endpoints.addItemToCart]: {
-    url: '/api/v1/cart/items',
+    url: '/api/v1/cart',
     method: 'post',
     auth: true,
   },
   [exports.Endpoints.removeItemFromCart]: {
-    url: '/api/v1/cart/items/:stockId',
+    url: '/api/v1/cart/:stockId',
     method: 'delete',
     auth: true,
   },
@@ -420,12 +420,12 @@ const ENDPOINT_CONFIGS = {
     auth: true,
   },
   [exports.Endpoints.addProductToWishlist]: {
-    url: '/api/v1/wishlist/items',
+    url: '/api/v1/wishlist',
     method: 'post',
     auth: true,
   },
   [exports.Endpoints.removeProductFromWishlist]: {
-    url: '/api/v1/wishlist/items/:productId',
+    url: '/api/v1/wishlist/:productId',
     method: 'delete',
     auth: true,
   },
@@ -644,7 +644,7 @@ const validationPatterns = {
   },
   validateURL: {
     // eslint-disable-next-line
-    pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/, // url, ssh url, ip
+    pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/,
     message: 'URL is not valid',
   },
   validatePath: {

@@ -122,7 +122,7 @@ export var Endpoints;
  */
 export const withParams = (endpoint, ...params) => {
   let url = endpoint.url;
-  const placeholders = url.match(/:[^}]*}/) ?? [];
+  const placeholders = url.match(/:[^\/]*/g) || [];
   if (placeholders.length !== params.length) {
     throw `Too ${placeholders.length < params.length ? 'many' : 'few'} params for url: ${url}!`;
   }
@@ -396,12 +396,12 @@ export const ENDPOINT_CONFIGS = {
   },
   // shopping endpoints
   [Endpoints.addItemToCart]: {
-    url: '/api/v1/cart/items',
+    url: '/api/v1/cart',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeItemFromCart]: {
-    url: '/api/v1/cart/items/:stockId',
+    url: '/api/v1/cart/:stockId',
     method: 'delete',
     auth: true,
   },
@@ -416,12 +416,12 @@ export const ENDPOINT_CONFIGS = {
     auth: true,
   },
   [Endpoints.addProductToWishlist]: {
-    url: '/api/v1/wishlist/items',
+    url: '/api/v1/wishlist',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeProductFromWishlist]: {
-    url: '/api/v1/wishlist/items/:productId',
+    url: '/api/v1/wishlist/:productId',
     method: 'delete',
     auth: true,
   },
