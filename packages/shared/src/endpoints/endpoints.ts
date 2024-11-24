@@ -93,7 +93,7 @@ export enum Endpoints {
   removeProductFromWishlist = 'removeProductFromWishlist',
 
   // order endpoints
-  createOrder = 'createOrder',
+  checkout = 'checkout',
   getOrder = 'getOrder',
   listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',
@@ -478,7 +478,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // order endpoints
-  [Endpoints.createOrder]: {
+  [Endpoints.checkout]: {
     url: '/api/v1/orders',
     method: 'post',
     auth: true,

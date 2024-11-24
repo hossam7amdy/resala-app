@@ -77,7 +77,7 @@ exports.Endpoints = void 0;
   Endpoints['removeUserWishlist'] = 'removeUserWishlist';
   Endpoints['removeProductFromWishlist'] = 'removeProductFromWishlist';
   // order endpoints
-  Endpoints['createOrder'] = 'createOrder';
+  Endpoints['checkout'] = 'checkout';
   Endpoints['getOrder'] = 'getOrder';
   Endpoints['listOrders'] = 'listOrders';
   Endpoints['deleteOrder'] = 'deleteOrder';
@@ -440,7 +440,7 @@ const ENDPOINT_CONFIGS = {
     auth: true,
   },
   // order endpoints
-  [exports.Endpoints.createOrder]: {
+  [exports.Endpoints.checkout]: {
     url: '/api/v1/orders',
     method: 'post',
     auth: true,
@@ -762,10 +762,7 @@ const ForgotPasswordSchema = zod.z.object({
 // User Schemas
 const GetUserSchema = zod.z.object({
   params: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
 });
 const ListUsersSchema = zod.z.object({
@@ -775,10 +772,7 @@ const ListUsersSchema = zod.z.object({
 });
 const UpdateUserSchema = zod.z.object({
   params: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
   body: zod.z.object({
     firstName: UserSchema.shape.firstName,
@@ -790,15 +784,12 @@ const UpdateUserSchema = zod.z.object({
 });
 const DeleteUserSchema = zod.z.object({
   params: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
 });
 const CreateAddressSchema = zod.z.object({
   body: zod.z.object({
-    userId: zod.z.coerce.number().positive(),
+    userId: zod.z.string(),
     firstName: UserSchema.shape.firstName,
     lastName: UserSchema.shape.lastName,
     phone: UserSchema.shape.phone,
@@ -813,10 +804,7 @@ const CreateAddressSchema = zod.z.object({
 });
 const ListAddressSchema = zod.z.object({
   query: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
 });
 const UpdateAddressSchema = zod.z.object({
@@ -1034,7 +1022,7 @@ const GetOrderSchema = zod.z.object({
 });
 const ListOrdersSchema = zod.z.object({
   query: OffsetPageParamsSchema.extend({
-    userId: zod.z.coerce.number().positive().optional(),
+    userId: zod.z.string(),
     search: zod.z.string().max(100).optional(),
   }),
 });
@@ -1053,10 +1041,7 @@ const UpdateOrderStatusSchema = zod.z.object({
 const DeleteOrderSchema = zod.z.object({
   params: GetOrderSchema.shape.params,
   query: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
 });
 // Payment Schemas
@@ -1079,7 +1064,7 @@ const RefundPaymentSchema = zod.z.object({
 // Review Schemas
 const CreateReviewSchema = zod.z.object({
   body: zod.z.object({
-    userId: zod.z.coerce.number().positive(),
+    userId: zod.z.string(),
     productId: zod.z.coerce.number().positive(),
     rating: zod.z.coerce.number().min(1).max(5),
     comment: zod.z.string().max(500).optional(),
@@ -1105,10 +1090,7 @@ const UpdateReviewSchema = zod.z.object({
 const DeleteReviewSchema = zod.z.object({
   params: GetReviewSchema.shape.params,
   query: zod.z.object({
-    userId: zod.z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: zod.z.string(),
   }),
 });
 

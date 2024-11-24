@@ -71,7 +71,7 @@ export class PaymentService {
   }
 
   userOrder(userAddressId: number, payInfo: string, note: string): Observable<CreateOrderResponse> {
-    const { url } = withParams(ENDPOINT_CONFIGS.createOrder);
+    const { url } = withParams(ENDPOINT_CONFIGS.checkout);
     return this._HttpClient.post<CreateOrderResponse>(
       environment.baseUrl + url,
       { addressId: userAddressId, paymentMethod: payInfo, note: note },

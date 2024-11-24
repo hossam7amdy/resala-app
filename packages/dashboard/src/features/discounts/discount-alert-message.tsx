@@ -1,4 +1,4 @@
-import { classnames } from '@/lib/classnames';
+import { classnames } from '@/utils/classnames';
 import type { Discount } from '@resala/shared';
 import { Alert } from 'antd';
 import type { AlertProps } from 'antd';
