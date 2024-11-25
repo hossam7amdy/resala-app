@@ -6,10 +6,7 @@ import { BadRequestError } from '../errors/api.errors.js';
 const FILE_SIZE_LIMIT = 1024 * 1024 * 50; // 50MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
-export const validateImage = (file?: Express.Multer.File) => {
-  if (!file) {
-    throw new BadRequestError('File is required');
-  }
+export const validateImage = (file: Express.Multer.File) => {
   if (!ALLOWED_FILE_TYPES.includes(file.mimetype)) {
     throw new BadRequestError('File type not allowed');
   }

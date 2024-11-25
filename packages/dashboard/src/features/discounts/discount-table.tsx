@@ -12,7 +12,6 @@ import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
 import { DiscountActions } from './discount-actions';
-import { DiscountActiveStatus } from './discount-active-status';
 
 const extractFilterValueFromSearchParams = (searchParams: URLSearchParams, key: string) => {
   const value = searchParams.get(key);
@@ -92,6 +91,8 @@ export const DiscountTable: React.FC<{
           filters: [
             { text: 'BOGO', value: 'BOGO' },
             { text: 'Percentage', value: 'PERCENTAGE' },
+            { text: 'Fixed', value: 'FIXED' },
+            { text: 'Bulk', value: 'BULK' },
           ],
         },
         {
@@ -107,6 +108,20 @@ export const DiscountTable: React.FC<{
           title: 'Amount',
           dataIndex: 'amount',
           filteredValue: null,
+        },
+        {
+          width: 100,
+          align: 'center',
+          title: 'Active',
+          dataIndex: 'isActive',
+          filterMultiple: false,
+          filteredValue: extractFilterValueFromSearchParams(searchParams, 'isActive')
+            ? [searchParams.get('isActive')!]
+            : null,
+          filters: [
+            { text: 'Yes', value: true },
+            { text: 'No', value: false },
+          ],
         },
         {
           width: 100,
@@ -143,20 +158,6 @@ export const DiscountTable: React.FC<{
         },
         {
           width: 100,
-          align: 'center',
-          title: 'Active',
-          dataIndex: 'isActive',
-          filterMultiple: false,
-          filteredValue: extractFilterValueFromSearchParams(searchParams, 'isActive')
-            ? [searchParams.get('isActive')!]
-            : null,
-          filters: [
-            { text: 'Yes', value: true },
-            { text: 'No', value: false },
-          ],
-        },
-        {
-          width: 100,
           title: 'Actions',
           dataIndex: 'actions',
           filteredValue: null,
@@ -170,10 +171,8 @@ export const DiscountTable: React.FC<{
         ) : (
           <IconLink href={ROUTES.DISCOUNT_PRODUCTS(d.id)}>{d.id}</IconLink>
         ),
-        minQty: 'buy ' + d.minQty,
-        amount: 'get ' + d.amount + (d.type === 'PERCENTAGE' ? '% off' : ' free'),
         products: d.isStoreWide ? 'All' : d.productsCount,
-        isActive: <DiscountActiveStatus discount={d} />,
+        isActive: d.isActive ? 'Yes' : 'No',
         isStoreWide: d.isStoreWide ? 'Yes' : 'No',
         startDate: d.startDate ? formatDate(d.startDate) : 'N/A',
         endDate: d.endDate ? formatDate(new Date(d.endDate)) : 'N/A',

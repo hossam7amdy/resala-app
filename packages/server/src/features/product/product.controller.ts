@@ -30,7 +30,8 @@ import { jwtParse } from '../../middlewares/authentication.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validateImage } from '../../middlewares/uploadHandler.js';
 import { validate } from '../../middlewares/validateHandler.js';
-import { FileStorage } from '../../services/index.js';
+import { FileService } from '../filestorage/file.service.js';
+import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ProductService } from './product.service.js';
 
 @Tags('Product')
@@ -42,7 +43,7 @@ export class ProductController extends Controller {
   constructor() {
     super();
 
-    const fileServer = FileStorage.getInstance();
+    const fileServer = new FileService(new S3FileStorage());
     this.productService = new ProductService(db, fileServer);
   }
 

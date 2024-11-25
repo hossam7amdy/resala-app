@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       html.lang = 'en';
       rtlStat = false;
     }
-    console.log('topbar rtlFun', rtlStat);
+
     return rtlStat;
   }
 
@@ -106,26 +106,29 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
-
     //trend products
     this._Trend.getTrendProducts().subscribe({
       next: res => {
         this.trendProducts = res.data;
-        console.log('trends', res);
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
 
     //  products
     this._HomeProductsService.getProducts().subscribe({
       next: response => {
-        console.log(response.data);
-        console.log('products', response.data);
         this.products = response.data.products;
         this.categories = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
 
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -143,31 +146,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
-    this.customSpinIsLoading = false;
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
+      next: () => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: () => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         this.customSpinIsLoading = false;
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-
-        // } else {
-        //   this._Toaster.error(err.message);
-        // }
-        console.log(err);
       },
     });
   }
 
-  public onClickRate(rate: number): void {
-    console.log(rate, 'rate'); // Logs the clicked star number
-  }
+  // public onClickRate(rate: number): void {
+  //   console.log(rate, 'rate');
+  // }
 
   // main slider
   mainSliderOptions: OwlOptions = {
@@ -259,12 +257,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.customSpinIsLoading = true;
     this._HomeProductsService.getProducts(event).subscribe({
       next: response => {
-        console.log(event);
-        console.log('products', response.data.products);
         this.products = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });

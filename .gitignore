@@ -12,9 +12,3 @@
 
 # Logs:
 **/logs
-
-# Uploads:
-**/uploads
-
-# docker volumes:
-**/volume
