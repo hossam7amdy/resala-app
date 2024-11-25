@@ -1,78 +1,77 @@
 import { ENDPOINT_CONFIGS } from '@resala/shared';
-import dotenv from 'dotenv';
-import { z } from 'zod';
+import { config } from 'dotenv';
 
-const _parseNodeEnv = z.enum(['development', 'production', 'test']).parse;
+config({ path: process.env.DOTENV_CONFIG_PATH });
 
-const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boolean => {
-  return envVar && envVar.toLowerCase() === 'true' ? true : defaultValue;
+const _parseInt = (envVar: string | undefined, defaultValue: number): number => {
+  return envVar && parseInt(envVar) ? parseInt(envVar) : defaultValue;
 };
 
-dotenv.config({ path: `.env.${_parseNodeEnv(process.env.NODE_ENV)}` });
-
 const configuration = {
-  aws: {
-    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
-    accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
-    region: z.string().default('eu-north-1').parse(process.env.AWS_REGION),
-    ses: {
-      endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
-      verifiedIdentity: z
-        .string()
-        .default('Resala store<no-reply@resala.live>')
-        .parse(process.env.SES_VERIFIED_ID),
-    },
-    s3: {
-      bucketName: z.string().default('resala-files').parse(process.env.S3_BUCKET),
-      baseUrl: z.string().url('cdn.resala.live').parse(process.env.S3_BASE_URL),
-      endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
-      forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
-    },
-  },
   origin: {
-    web: z.string().url().parse(process.env.WEB_URL),
-    dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
-    allowedList: z
-      .array(z.string().url())
-      .parse(JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]')),
+    web: process.env.WEB_URL || 'http://localhost:4200',
+    dashboard: process.env.DASHBOARD_URL || 'http://localhost:3000',
+    allowedList: JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]'),
   },
   server: {
-    env: _parseNodeEnv(process.env.NODE_ENV),
-    port: z.coerce.number().default(5000).parse(process.env.PORT),
-    url: z.string().url().parse(process.env.SERVER_URL),
+    env: process.env.NODE_ENV || 'development',
+    port: _parseInt(process.env.PORT, 5000),
+    url: process.env.SERVER_URL || 'http://localhost:5000',
   },
   jwt: {
-    secret: z.string().parse(process.env.JWT_SECRET),
-    refresh: z.string().parse(process.env.JWT_REFRESH),
-    reset: z.string().parse(process.env.JWT_RESET),
-    verify: z.string().parse(process.env.JWT_VERIFY),
+    secret: process.env.JWT_SECRET || 'jwt-secret',
+    refresh: process.env.JWT_REFRESH || 'refresh-secret',
+    reset: process.env.JWT_RESET || 'reset-secret',
+    verify: process.env.JWT_VERIFY || 'verify-secret',
   },
   db: {
-    url: z.string().url().parse(process.env.DATABASE_URL),
+    url: process.env.DATABASE_URL,
+  },
+  email: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
   payment: {
     paymob: {
-      integrationId: z.coerce.number().parse(process.env.PAYMOB_INTEGRATION_ID),
-      baseUrl: z
-        .string()
-        .url()
-        .default('https://accept.paymob.com')
-        .parse(process.env.PAYMOB_BASE_URL),
+      integrationId: _parseInt(process.env.PAYMOB_INTEGRATION_ID, 0),
+      baseUrl: process.env.PAYMOB_BASE_URL || 'https://accept.paymob.com',
       checkoutLink: `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}`,
-      hmacKey: z.string().parse(process.env.PAYMOB_HMAC_KEY),
-      apiToken: z.string().parse(process.env.PAYMOB_API_TOKEN),
-      publicKey: z.string().parse(process.env.PAYMOB_PUBLIC_KEY),
-      secretKey: z.string().parse(process.env.PAYMOB_SECRET_KEY),
+      hmacKey: process.env.PAYMOB_HMAC_KEY,
+      apiToken: process.env.PAYMOB_API_TOKEN,
+      publicKey: process.env.PAYMOB_PUBLIC_KEY,
+      secretKey: process.env.PAYMOB_SECRET_KEY,
     },
+  },
+  blobStorage: {
+    accessKey: process.env.AWS_ACCESS_KEY_ID,
+    accessSecret: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.S3_REGION || 'eu-north-1',
+    bucketName: process.env.S3_BUCKET || 'resala-bucket',
+    endpoint: process.env.S3_ENDPOINT || 'http://localhost:9000',
+    baseUrl: process.env.S3_BASE_URL || 'http://localhost:9000/resala-app',
   },
   auth: {
     google: {
-      clientId: z.string().parse(process.env.GOOGLE_CLIENT_ID),
-      clientSecret: z.string().parse(process.env.GOOGLE_CLIENT_SECRET),
-      callbackURL: `${process.env.SERVER_URL}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.SERVER_URL ?? 'http://localhost:5000'}${ENDPOINT_CONFIGS.loginWithGoogle.url}/callback`,
     },
   },
 };
 
-type Configuration = typeof configuration;
-export { configuration, type Configuration };
+/** Recursively loop through the configuration object and log warnings for missing environment variables */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _validateConfig = (config: { [key: string]: any }, path: string) => {
+  for (const key in config) {
+    if (typeof config[key] === 'object') {
+      _validateConfig(config[key], `${path}.${key}`);
+    } else if (!config[key]) {
+      console.warn(`Missing environment variable: ${path}.${key}`);
+    }
+  }
+};
+
+_validateConfig(configuration, 'configuration');
+
+export type Configuration = typeof configuration;
+export { configuration };

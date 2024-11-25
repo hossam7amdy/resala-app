@@ -16,7 +16,7 @@ export const formatPrismaError = (error: PrismaErrors): { code: number; message:
         const errMsg = resource1 && resource2 ? `${resource1} and ${resource2}` : 'some resources';
 
         return {
-          code: 409,
+          code: 400,
           message: `Invalid reference, there is a conflict with ${errMsg}`,
         };
       }

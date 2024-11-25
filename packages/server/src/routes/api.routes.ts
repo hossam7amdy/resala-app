@@ -1391,16 +1391,6 @@ const models: TsoaRoute.Models = {
     type: { ref: 'CreateDiscountResponse', validators: {} },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  AddProductsToDiscountResponse: {
-    dataType: 'refAlias',
-    type: { ref: 'DefaultResponseBody', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  RemoveProductsFromDiscountResponse: {
-    dataType: 'refAlias',
-    type: { ref: 'DefaultResponseBody', validators: {} },
-  },
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   GetDashboardOverviewResponse: {
     dataType: 'refAlias',
     type: {
@@ -3777,6 +3767,7 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
           required: true,
           dataType: 'nestedObjectLiteral',
           nestedProperties: {
+            productIds: { dataType: 'array', array: { dataType: 'integer' } },
             minQty: { dataType: 'integer' },
             description: { dataType: 'string' },
             endDate: { dataType: 'string' },
@@ -3840,94 +3831,6 @@ export function RegisterRoutes(app: Router, opts?: { multer?: ReturnType<typeof 
 
         await templateService.apiHandler({
           methodName: 'delete',
-          controller,
-          response,
-          next,
-          validatedArgs,
-          successStatus: undefined,
-        });
-      } catch (err) {
-        return next(err);
-      }
-    }
-  );
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  app.post(
-    '/api/v1/discounts/:discountId/products',
-    authenticateMiddleware([{ JWT_SECRET: [] }]),
-    ...fetchMiddlewares<RequestHandler>(DiscountController),
-    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.addProducts),
-
-    async function DiscountController_addProducts(
-      request: ExRequest,
-      response: ExResponse,
-      next: any
-    ) {
-      const args: Record<string, TsoaRoute.ParameterSchema> = {
-        discountId: { in: 'path', name: 'discountId', required: true, dataType: 'string' },
-        body: {
-          in: 'body',
-          name: 'body',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: { productIds: { dataType: 'array', array: { dataType: 'integer' } } },
-        },
-      };
-
-      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-        const controller = new DiscountController();
-
-        await templateService.apiHandler({
-          methodName: 'addProducts',
-          controller,
-          response,
-          next,
-          validatedArgs,
-          successStatus: undefined,
-        });
-      } catch (err) {
-        return next(err);
-      }
-    }
-  );
-  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  app.delete(
-    '/api/v1/discounts/:discountId/products',
-    authenticateMiddleware([{ JWT_SECRET: [] }]),
-    ...fetchMiddlewares<RequestHandler>(DiscountController),
-    ...fetchMiddlewares<RequestHandler>(DiscountController.prototype.removeProducts),
-
-    async function DiscountController_removeProducts(
-      request: ExRequest,
-      response: ExResponse,
-      next: any
-    ) {
-      const args: Record<string, TsoaRoute.ParameterSchema> = {
-        discountId: { in: 'path', name: 'discountId', required: true, dataType: 'string' },
-        query: {
-          in: 'queries',
-          name: 'query',
-          required: true,
-          dataType: 'nestedObjectLiteral',
-          nestedProperties: { productIds: { dataType: 'array', array: { dataType: 'integer' } } },
-        },
-      };
-
-      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-      let validatedArgs: any[] = [];
-      try {
-        validatedArgs = templateService.getValidatedArgs({ args, request, response });
-
-        const controller = new DiscountController();
-
-        await templateService.apiHandler({
-          methodName: 'removeProducts',
           controller,
           response,
           next,

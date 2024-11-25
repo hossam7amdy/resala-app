@@ -3,8 +3,6 @@
 import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
 import type {
-  AddProductsToDiscountRequest,
-  AddProductsToDiscountResponse,
   CreateDiscountRequest,
   CreateDiscountResponse,
   DeleteDiscountRequest,
@@ -13,8 +11,6 @@ import type {
   GetDiscountResponse,
   ListDiscountsRequest,
   ListDiscountsResponse,
-  RemoveProductsFromDiscountRequest,
-  RemoveProductsFromDiscountResponse,
   UpdateDiscountRequest,
   UpdateDiscountResponse,
 } from '@resala/shared';
@@ -35,7 +31,7 @@ export const listAllDiscounts = async (query: ListDiscountsRequest['query']) => 
 export const findDiscountById = async (id: string, query: GetDiscountRequest['query']) => {
   const response = await callEndpoint<GetDiscountRequest, GetDiscountResponse>(
     ENDPOINT_CONFIGS.getDiscount,
-    { params: { discountId: id.toString() }, query, next: { tags: [ROUTES.DISCOUNT_PRODUCTS(id)] } }
+    { params: { discountId: id.toString() }, query, next: { tags: [ROUTES.DISCOUNTS] } }
   );
 
   if (response.statusCode === 404) {
@@ -72,31 +68,5 @@ export const deleteDiscount = async (id: string) => {
   );
 
   revalidateTag(ROUTES.DISCOUNTS);
-  return response;
-};
-
-export const addProductsToDiscount = async (
-  id: string,
-  { productIds }: AddProductsToDiscountRequest['body']
-) => {
-  const response = await callEndpoint<AddProductsToDiscountRequest, AddProductsToDiscountResponse>(
-    ENDPOINT_CONFIGS.addProductsToDiscount,
-    { params: { discountId: id }, body: { productIds } }
-  );
-
-  revalidateTag(ROUTES.DISCOUNT_PRODUCTS(id));
-  return response;
-};
-
-export const removeProductsFromDiscount = async (id: string, productIds: number[]) => {
-  const response = await callEndpoint<
-    RemoveProductsFromDiscountRequest,
-    RemoveProductsFromDiscountResponse
-  >(ENDPOINT_CONFIGS.removeProductsFromDiscount, {
-    params: { discountId: id },
-    query: { productIds },
-  });
-
-  revalidateTag(ROUTES.DISCOUNT_PRODUCTS(id));
   return response;
 };
