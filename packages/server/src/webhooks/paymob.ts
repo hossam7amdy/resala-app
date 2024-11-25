@@ -55,14 +55,37 @@ export const postPay: RequestHandler<{ orderId: string }, unknown, PostPayReques
     const hmac = (req.query.hmac as string) || req.body.hmac;
 
     const isValid = verify(hmac, transaction);
+    const paymentStatus = status(transaction);
 
-    await db.order.update({
+    const { orderItems } = await db.order.update({
       data: {
         transactionId: transaction.id.toString(),
-        paymentStatus: status(transaction),
+        paymentStatus,
       },
       where: { id: orderId },
+      select: {
+        orderItems: true,
+      },
     });
+
+    if (paymentStatus === 'PAID') {
+      await db.$transaction(async trx => {
+        const toUpdate = await trx.stock.findMany({
+          where: {
+            id: { in: orderItems.map(s => s.stockId) },
+          },
+        });
+
+        for (const stock of toUpdate) {
+          await trx.stock.update({
+            where: { id: stock.id },
+            data: {
+              quantity: { decrement: stock.quantity },
+            },
+          });
+        }
+      });
+    }
 
     if (!isValid) {
       throw new Error(`Invalid HMAC signature, hmac=${hmac}`);

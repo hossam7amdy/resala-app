@@ -34,12 +34,8 @@
           "description": "Local development"
         },
         {
-          "url": "https://tender-krill-flying.ngrok-free.app",
+          "url": "https://api.resala.live",
           "description": "Development server"
-        },
-        {
-          "url": "http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com",
-          "description": "Development server (http)"
         }
       ]
     }

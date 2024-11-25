@@ -1,6 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
+import {
+  ENDPOINT_CONFIGS,
+  GetUserResponse,
+  ListOrdersResponse,
+  withParams,
+  withQueryParams,
+} from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -9,23 +15,20 @@ import { environment } from 'src/environments/environment.development';
 })
 export class UserService {
   constructor(private _HTTPClient: HttpClient) {}
-  //myToken:any;
-  // refactor free API url
   private getHeaders() {
     const headers = new HttpHeaders({
-      'ngrok-skip-browser-warning': '69420',
-      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
     });
     return { headers };
   }
 
-  getUserInfo(userId: any): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.getUser], userId);
-    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
+  getUserInfo(userId: string): Observable<GetUserResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.getUser, userId);
+    return this._HTTPClient.get<GetUserResponse>(environment.baseUrl + url, this.getHeaders());
   }
 
-  getUserOrders(userId: any): Observable<any> {
+  getUserOrders(userId: string): Observable<ListOrdersResponse> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listOrders, { userId: userId, limit: '5' });
-    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
+    return this._HTTPClient.get<ListOrdersResponse>(environment.baseUrl + url, this.getHeaders());
   }
 }

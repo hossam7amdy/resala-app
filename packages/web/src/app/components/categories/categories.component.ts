@@ -61,10 +61,9 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
-    this.route.paramMap.subscribe(params => {
-      this.categoryId = params.get('category-id');
-      this.allCategoryProducts(this.categoryId);
-    });
+    this.route.paramMap.subscribe(params => (this.categoryId = params.get('category-id')));
+    console.log('category id', this.categoryId);
+    this.allCategoryProducts(this.categoryId);
   }
 
   allCategoryProducts(id: any): void {
@@ -73,13 +72,15 @@ export class CategoriesComponent implements OnInit {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
         this.arTitleCategory = response.data.products[0].category.arName;
-
+        console.log('title & categ id', this.titleCategory);
+        console.log('category-products', this.allProductsCategory);
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
@@ -89,10 +90,10 @@ export class CategoriesComponent implements OnInit {
   addPoductInWishList(id: any, element: HTMLElement): void {
     this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: () => {
+      next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-
+        console.log(response);
         this.customSpinIsLoading = false;
       },
       error: err => {
@@ -115,13 +116,15 @@ export class CategoriesComponent implements OnInit {
       next: response => {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
-
+        console.log('title', this.titleCategory);
+        console.log('category-products', this.allProductsCategory);
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
