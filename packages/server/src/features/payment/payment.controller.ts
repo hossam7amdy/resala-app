@@ -17,9 +17,9 @@ import {
   Tags,
 } from 'tsoa/dist/index.js';
 
+import { PaymobService } from '../../lib/paymob/paymob.service.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validate } from '../../middlewares/validateHandler.js';
-import { PaymobService } from '../../services/index.js';
 import { PaymentService } from './payment.service.js';
 
 @Tags('Payment')

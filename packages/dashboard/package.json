@@ -7,32 +7,32 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --no-cache",
-    "test": "echo \"No tests specified for dashboard\" && exit 0"
+    "test": "echo \"Error: no test specified\""
   },
   "dependencies": {
-    "@ant-design/icons": "^5.5.1",
-    "@ant-design/nextjs-registry": "^1.0.1",
+    "@ant-design/icons": "^5.3.6",
+    "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.21.2",
-    "antd-img-crop": "^4.23.0",
+    "antd-img-crop": "^4.22.0",
     "chart.js": "^4.4.4",
     "clsx": "^2.1.1",
     "jwt-decode": "^4.0.0",
-    "next": "14.2.14",
+    "next": "14.2.2",
     "next-auth": "5.0.0-beta.5",
-    "react": "^18.3.1",
+    "react": "^18",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^18",
     "sharp": "0.32",
-    "tailwind-merge": "^2.5.3"
+    "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
-    "eslint-config-next": "14.2.14",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13"
+    "eslint-config-next": "14.2.2",
+    "postcss": "^8.4.43",
+    "tailwindcss": "^3.4.10"
   }
 }

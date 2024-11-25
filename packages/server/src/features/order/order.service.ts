@@ -55,7 +55,7 @@ export class OrderService {
       productId: item.product.id,
       stockId: item.stock.id,
       quantity: item.quantity,
-      price: item.discountedPrice ?? item.product.price,
+      price: item.product.price,
       productName: `${item.product.enName} | ${item.product.arName}`,
       description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
@@ -77,11 +77,11 @@ export class OrderService {
         },
         orderItems: {
           createMany: {
-            data: orderItems.map(item => ({
-              productId: item.productId,
-              stockId: item.stockId,
+            data: cart.items.map(item => ({
+              productId: item.product.id,
+              stockId: item.stock.id,
               quantity: item.quantity,
-              price: item.price,
+              price: item.product.price,
             })),
           },
         },

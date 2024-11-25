@@ -48,7 +48,7 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
       const { image, ...rest } = values;
 
       const formData = new FormData();
-      if (image[0]?.originFileObj) formData.append('image', image[0].originFileObj);
+      image[0]?.originFileObj && formData.append('image', image[0].originFileObj);
 
       Object.entries(rest).forEach(([key, value]) => {
         formData.append(key, value.toString());
@@ -66,7 +66,7 @@ export const Form: React.FC<{ product?: Product; categories: Category[] }> = ({
 
       notification.success('Product updated successfully');
 
-      if (isEdit) router.back();
+      isEdit ? router.back() : null;
     },
     onError: error => {
       notification.error(error.message);

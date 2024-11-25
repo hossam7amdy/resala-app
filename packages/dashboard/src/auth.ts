@@ -71,7 +71,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             accessToken: data.accessToken,
             refreshToken: data.refreshToken,
           };
-        } catch {
+        } catch (e) {
           return null;
         }
       },

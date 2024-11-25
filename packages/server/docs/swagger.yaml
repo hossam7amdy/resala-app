@@ -1251,6 +1251,11 @@ paths:
           application/json:
             schema:
               properties:
+                productIds:
+                  items:
+                    type: integer
+                    format: int32
+                  type: array
                 minQty:
                   type: integer
                   format: int32
@@ -1401,67 +1406,6 @@ paths:
                     - BOGO
                     - BULK
               type: object
-  /api/v1/discounts/{discountId}/products:
-    post:
-      operationId: AddProducts
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddProductsToDiscountResponse'
-      description: Add products to a discount
-      tags:
-        - Discount
-      security:
-        - JWT_SECRET: []
-      parameters:
-        - in: path
-          name: discountId
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              properties:
-                productIds:
-                  items:
-                    type: integer
-                    format: int32
-                  type: array
-              type: object
-    delete:
-      operationId: RemoveProducts
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RemoveProductsFromDiscountResponse'
-      description: Remove products from a discount
-      tags:
-        - Discount
-      security:
-        - JWT_SECRET: []
-      parameters:
-        - in: path
-          name: discountId
-          required: true
-          schema:
-            type: string
-        - in: query
-          name: productIds
-          required: false
-          schema:
-            type: array
-            items:
-              type: integer
-              format: int32
   /api/v1/dashboard/overview:
     get:
       operationId: GetOverview
@@ -3484,10 +3428,6 @@ components:
       $ref: '#/components/schemas/CreateDiscountResponse'
     DeleteDiscountResponse:
       $ref: '#/components/schemas/CreateDiscountResponse'
-    AddProductsToDiscountResponse:
-      $ref: '#/components/schemas/DefaultResponseBody'
-    RemoveProductsFromDiscountResponse:
-      $ref: '#/components/schemas/DefaultResponseBody'
     GetDashboardOverviewResponse:
       allOf:
         - $ref: '#/components/schemas/DefaultResponseBody'
@@ -3843,5 +3783,7 @@ components:
 servers:
   - url: http://localhost:5000
     description: Local development
-  - url: https://api.resala.live
+  - url: https://tender-krill-flying.ngrok-free.app
     description: Development server
+  - url: http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com
+    description: Development server (http)
