@@ -54,11 +54,12 @@ export class FooterComponent {
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
     this._WishListService.postWishListItems(id).subscribe({
-      next: () => {
+      next: response => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
+        console.log(response);
       },
-      error: () => {
+      error: err => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -66,6 +67,7 @@ export class FooterComponent {
         // } else {
         //   this._Toaster.error(err.message);
         // }
+        console.log(err);
       },
     });
   }
@@ -75,8 +77,12 @@ export class FooterComponent {
       this._HomeProducts.getProductsSearch(this.searchText).subscribe({
         next: response => {
           this.products = response.data.products;
+          console.log(this.products);
+          console.log(this.searchText);
         },
-        error: () => {},
+        error: err => {
+          console.log(err);
+        },
       });
     }
   }
