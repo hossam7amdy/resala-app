@@ -26,7 +26,7 @@ export class BreadcrumbComponent implements OnInit {
   ngOnInit(): void {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.breadcrumbs = this.createBreadcrumbs(this.activatedRoute.root);
-      console.log('Breadcrumbs:', this.breadcrumbs); // Check the breadcrumbs array
+  
     });
   }
 
@@ -50,8 +50,8 @@ export class BreadcrumbComponent implements OnInit {
         url += `/${routeURL}`;
         breadcrumbs.push({ label: routeURL, url });
 
-        // Debugging log
-        console.log(`Added Breadcrumb: ${routeURL} | URL: ${url}`);
+    
+      
       }
 
       // Recursive call
