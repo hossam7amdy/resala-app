@@ -44,8 +44,9 @@ import { db } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
 import { jwtParse } from '../../middlewares/authentication.js';
 import { limiter, validate } from '../../middlewares/index.js';
-import { EmailService } from '../../services/index.js';
 import { isAllowedOrigin } from '../../utils/is-allowed-origin.js';
+import { EmailNotification } from '../notification/email.notification.js';
+import { NotificationService } from '../notification/notification.service.js';
 import { AuthService } from './index.js';
 
 @Tags('Auth')
@@ -56,19 +57,19 @@ export class AuthController extends Controller {
   private readonly confirmUrl = configuration.origin.web + '/confirm-email';
 
   private readonly authService: AuthService;
-  private readonly emailService: EmailService;
+  private readonly notificationService: NotificationService;
 
   constructor() {
     super();
 
     this.authService = new AuthService(configuration, db);
-    this.emailService = EmailService.getInstance();
+    this.notificationService = new NotificationService(new EmailNotification());
   }
 
   private async _sendVerificationEmail(email: string, token: string) {
     const link = `${this.confirmUrl}?token=${token}`;
 
-    return await this.emailService.sendVerificationEmail(email, link);
+    return await this.notificationService.sendVerificationEmail(email, link);
   }
 
   @Post('login')
@@ -150,7 +151,7 @@ export class AuthController extends Controller {
 
     const link = `${resetUrl}?token=${token}`;
 
-    await this.emailService.sendResetPasswordEmail(email, link);
+    await this.notificationService.sendResetPasswordEmail(email, link);
 
     return { success: true, message: 'Password reset link sent successfully' };
   }
@@ -176,7 +177,7 @@ export class AuthController extends Controller {
     }
 
     await this.authService.resetPassword(email, newPassword);
-    await this.emailService.sendResetConfirmationEmail(email);
+    await this.notificationService.sendResetConfirmationEmail(email);
 
     return { success: true };
   }

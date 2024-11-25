@@ -36,7 +36,7 @@ export const findProduct = async (id: string | number) => {
     );
 
     return response.data;
-  } catch {
+  } catch (e) {
     return null;
   }
 };

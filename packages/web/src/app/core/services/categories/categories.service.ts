@@ -1,11 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  ENDPOINT_CONFIGS,
-  ListCategoriesResponse,
-  ListProductsResponse,
-  withQueryParams,
-} from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -13,20 +8,35 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class CategoriesService {
-  myToken = { Authorization: `Bearer ${localStorage.getItem('accessToken')}` };
+  // baseurl = https://resala-app.onrender.com/
 
-  constructor(private _HTTPClient: HttpClient) {}
+  // refactor free API url
+  private getHeaders() {
+    const headers = new HttpHeaders({
+      'ngrok-skip-browser-warning': '69420',
+      // 'Authorization':`Bearer ${localStorage.getItem('etoken')}`
+    });
 
-  getCategories(): Observable<ListCategoriesResponse> {
-    const { url } = ENDPOINT_CONFIGS.listCategories;
-    return this._HTTPClient.get<ListCategoriesResponse>(environment.baseUrl + url);
+    return { headers };
   }
 
-  getCategoryProducts(id?: string, currentPage: string = '1'): Observable<ListProductsResponse> {
+  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
+
+  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
+  constructor(private _HTTPClient: HttpClient) {}
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  getCategories(): Observable<any> {
+    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.listCategories]);
+    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
+  }
+
+  getCategoryProducts(id: any, currentPage: string = '1'): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
       categoryId: id!,
       page: currentPage,
     });
-    return this._HTTPClient.get<ListProductsResponse>(environment.baseUrl + url);
+    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 }

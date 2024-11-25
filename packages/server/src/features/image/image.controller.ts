@@ -27,7 +27,8 @@ import {
 import { db } from '../../datastore/index.js';
 import { authorizeRole } from '../../middlewares/authorization.js';
 import { validateImage } from '../../middlewares/uploadHandler.js';
-import { FileStorage } from '../../services/index.js';
+import { FileService } from '../filestorage/file.service.js';
+import { S3FileStorage } from '../filestorage/s3.filestorage.js';
 import { ImageService } from './image.service.js';
 
 @Tags('Image')
@@ -39,7 +40,7 @@ export class ImageController extends Controller {
   constructor() {
     super();
 
-    const fileService = FileStorage.getInstance();
+    const fileService = new FileService(new S3FileStorage());
     this.imageService = new ImageService(db, fileService);
   }
 

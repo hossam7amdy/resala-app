@@ -24,7 +24,7 @@ export const createExpressApp = (logRequests: boolean = true) => {
   app.set('view engine', 'ejs');
 
   const corsConfig: CorsOptions = {
-    origin: configuration.origin.allowedList,
+    origin: [configuration.origin.allowedList],
   };
 
   // Middlewares

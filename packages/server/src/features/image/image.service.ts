@@ -8,12 +8,12 @@ import type {
 
 import type { DataStore } from '../../datastore/index.js';
 import { BadRequestError } from '../../errors/api.errors.js';
-import type { FileStorage } from '../../services/index.js';
+import type { FileService } from '../filestorage/file.service.js';
 
 export class ImageService {
   constructor(
     private readonly db: DataStore,
-    private readonly fileService: FileStorage
+    private readonly fileService: FileService
   ) {}
 
   async find(id: number) {

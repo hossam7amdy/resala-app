@@ -11,14 +11,12 @@ export const DiscountAlertMessage: React.FC<DiscountAlertMessageProps> = ({
   discount,
   className,
 }) => {
-  const { minQty, amount } = discount;
-
   const message = (
     <span>
-      Buy {minQty} {minQty > 1 ? 'items' : 'item'}, and get {+amount}
+      Buy {discount.minQty} or more, and get {discount.amount.toString()}
       {discount.type === 'PERCENTAGE'
         ? '% discount'
-        : `${+amount > 1 ? ' items' : ' item'} for free`}
+        : `${+discount.amount > 1 ? ' items' : ' item'} for free`}
     </span>
   );
 
