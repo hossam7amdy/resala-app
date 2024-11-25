@@ -32,10 +32,11 @@ export class OrdersComponent implements OnInit {
     this._UserDataService.getUserOrders(this._AuthService.userInfo?.id).subscribe({
       next: response => {
         this.orders = response.data.orders;
-
+        console.log('orders', response);
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });

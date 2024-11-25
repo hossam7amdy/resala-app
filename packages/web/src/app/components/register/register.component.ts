@@ -83,10 +83,11 @@ export class RegisterComponent {
   handleForm(_registerForm: FormGroup): void {
     if (this.isCheckedTerms) {
       const userData = this.registerForm.value;
+      console.log(userData);
 
       if (this.registerForm.valid === true) {
         this.isLoading = true;
-
+        console.log(userData);
         this._AuthService.register(userData).subscribe({
           next: response => {
             if (response.success == true) {
