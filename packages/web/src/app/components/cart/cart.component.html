@@ -1,6 +1,6 @@
 <app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 
-<section *ngIf="!customSpinIsLoading && cartDetailsItems && cartDetailsItems.length > 0">
+<section *ngIf="!customSpinIsLoading && cartDetailsItems">
   <div class="container">
     <h2 class="cartTitle h2">
       {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
@@ -403,10 +403,7 @@
   </div>
 </section>
 
-<div
-  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems.length == 0"
-  class="m-auto"
->
+<div *ngIf="!customSpinIsLoading && !cartDetailsItems" class="m-auto">
   <div class="emptyCart emptyCartParent">
     <i class="fa-solid fa-bag-shopping"></i>
     <h1 class="h2 text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
