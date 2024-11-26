@@ -1,6 +1,5 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import type { Metadata } from 'next';
-import { SessionProvider } from 'next-auth/react';
 import { Inter } from 'next/font/google';
 import React from 'react';
 
@@ -27,9 +26,7 @@ const Layout = ({ children }: LayoutProps) => {
       <body className={inter.className}>
         <StyledComponentsRegistry>
           <AntdRegistry>
-            <AppConfigProvider>
-              <SessionProvider>{children}</SessionProvider>
-            </AppConfigProvider>
+            <AppConfigProvider>{children}</AppConfigProvider>
           </AntdRegistry>
         </StyledComponentsRegistry>
       </body>

@@ -1,4 +1,3 @@
-import { configuration } from '@/configuration';
 import { db } from '@/lib/db';
 
 import { AddressService } from './address/address.service';
@@ -6,6 +5,7 @@ import { CategoryService } from './category/category.service';
 import { ColorService } from './color/color.service';
 import { DashboardService } from './dashboard/dashboard.service';
 import { DiscountService } from './discount/discount.service';
+import { EmailService } from './email';
 import { ImageService } from './image/image.service';
 import { OrderService } from './order/order.service';
 import { PaymentService } from './payment/payment.service';
@@ -31,7 +31,8 @@ const reviewService = new ReviewService(db);
 const shoppingService = new ShoppingService(db);
 const sizeService = new SizeService(db);
 const stockService = new StockService(db);
-const userService = new UserService(configuration);
+const userService = new UserService(db);
+const emailService = EmailService.getInstance();
 
 export {
   addressService,
@@ -48,6 +49,7 @@ export {
   sizeService,
   stockService,
   userService,
+  emailService,
 };
 
 export type {

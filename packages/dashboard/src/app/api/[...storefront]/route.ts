@@ -1,4 +1,5 @@
 import { configuration } from '@/configuration';
+import { auth } from '@/lib/auth';
 import { zValidator } from '@hono/zod-validator';
 import {
   CreateAddressSchema,
@@ -27,8 +28,6 @@ import * as collectionHandler from './handlers/collectionHandler';
 import * as orderHandler from './handlers/orderHandler';
 import * as productHandler from './handlers/productHandler';
 import * as shoppingHandler from './handlers/shoppingHandler';
-import { enforceJwt, parseJwt } from './middlewares/jwt';
-import { createOrUpdateSession } from './middlewares/session';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,24 +37,6 @@ export type Env = {
     guestId: string;
   };
 };
-
-const app = new Hono<Env>();
-
-app.use(
-  cors({
-    credentials: true,
-    allowHeaders: ['Authorization', 'Content-Type'],
-    allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    origin: configuration.origin.allowedList,
-  })
-);
-
-app.use(parseJwt);
-app.use(createOrUpdateSession);
-
-app.get('/api/healthz', async c => {
-  return c.json({ message: 'OK 🚀' });
-});
 
 const notImplementedHandler = (c: Context) => {
   return c.json({ message: 'Not implemented' }, { status: 501 });
@@ -146,17 +127,43 @@ const HANDLERS: { [_key in StorefrontEndpoints]: Handler[] } = {
   [StorefrontEndpoints.listSizes]: [notImplementedHandler],
 };
 
-// register handlers in hono app
-Object.keys(StorefrontEndpoints).forEach(entry => {
-  const { method, url, auth } = STOREFRONT_ENDPOINT_CONFIGS[entry as StorefrontEndpoints];
-  const handlers = HANDLERS[entry as StorefrontEndpoints];
+const createHonoApp = () => {
+  const app = new Hono<Env>();
 
-  if (auth?.toString() === 'true') {
-    app[method](url, enforceJwt, ...handlers);
-  } else {
-    app[method](url, ...handlers);
-  }
-});
+  app.use(
+    cors({
+      credentials: true,
+      allowHeaders: ['Authorization', 'Content-Type'],
+      allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+      origin: configuration.origin.allowedList,
+    })
+  );
+
+  // health check
+  app.get('/api/healthz', async c => {
+    return c.json({ message: 'OK 🚀' });
+  });
+
+  // auth handlers
+  app.get('/api/auth/*', c => auth.handler(c.req.raw));
+  app.post('/api/auth/*', c => auth.handler(c.req.raw));
+
+  // register handlers in hono app
+  Object.keys(StorefrontEndpoints).forEach(entry => {
+    const { method, url, auth } = STOREFRONT_ENDPOINT_CONFIGS[entry as StorefrontEndpoints];
+    const handlers = HANDLERS[entry as StorefrontEndpoints];
+
+    if (auth) {
+      app[method](url, ...handlers);
+    } else {
+      app[method](url, ...handlers);
+    }
+  });
+
+  return app;
+};
+
+const app = createHonoApp();
 
 export const GET = handle(app);
 export const POST = handle(app);
