@@ -19,7 +19,7 @@ export class NavAuthComponent {
 
   signOut: boolean = this._AuthService.signOut;
   removeTokenSignOut(): void {
-    localStorage.removeItem('etoken');
+    localStorage.removeItem('accessToken');
     this._Router.navigate(['/login']);
   }
 }

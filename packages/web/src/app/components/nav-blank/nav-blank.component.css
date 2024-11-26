@@ -137,11 +137,7 @@ nav .logo {
 .dropdown:hover > .dropdown-menu {
   display: block;
 }
-@media (max-width: 400px) {
-  .upper-nav .dropdown-menu {
-    left: -80px;
-  }
-}
+
 .dropdown > .dropdown-toggle:active {
   /*Without this, clicking will make it sticky*/
   pointer-events: none;
@@ -335,13 +331,13 @@ form {
   position: absolute;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 9px;
   background-color: #fbb935;
   color: #fff;
   top: 0;
   left: 30px;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.9;
   font-weight: bolder;
   font-size: 12px;
   display: flex;
@@ -366,26 +362,12 @@ edit on bootstrap classes
 }
 
 .text-reset:lang(ar) {
-  margin-right: 110px;
+  margin-right: 120px;
 }
 
 @media (max-width: 1300px) {
   .nav-link,
   .nav-link span {
     font-size: 14px;
-  }
-  @media (max-width: 400px) {
-    .fs-5 {
-      font-size: 16px !important;
-    }
-    .nav-link {
-      padding-left: 5px !important;
-      padding-right: 5px !important;
-    }
-    .nav-link .mini-basket-count {
-      height: 16px;
-      width: 15px;
-      left: 15px;
-    }
   }
 }

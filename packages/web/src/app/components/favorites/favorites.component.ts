@@ -49,7 +49,8 @@ export class FavoritesComponent implements OnInit {
 
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
@@ -57,19 +58,21 @@ export class FavoritesComponent implements OnInit {
   // remove favorite icone
   removeFavoriteIcon(productId: string): void {
     this.productId = productId;
+    console.log(this.productId);
   }
 
   // delete my favorite product
   deletePoductInWishList(): void {
     this.customSpinIsLoading = true;
     this._WishListService.deleteMyFavoriteProduct(this.productId).subscribe({
-      next: () => {
+      next: response => {
         this._Toaster.success('Removed Successfully');
         window.location.reload();
-
+        console.log(response, 'product id', this.productId);
         this.customSpinIsLoading = false;
       },
-      error: () => {
+      error: err => {
+        console.log(err);
         this.customSpinIsLoading = false;
       },
     });
