@@ -6,7 +6,7 @@
     <div>
       <img src="./assets/products/confirm order.jpg" alt="" class="w-50 mx-auto" />
     </div>
-    <div class="mx-auto">
+    <div class="w-25 mx-auto">
       <button class="custome-btn" routerLink="/home">{{ 'postPay.Btn' | translate }}</button>
     </div>
   </div>
@@ -15,13 +15,13 @@
 <section *ngIf="orderStatus == 'false' || orderStatus == ''" class="">
   <div class="container text-center">
     <div>
-      <img src="./assets/products/payment_fail_icon-300x300.png" alt="" class="w-50 mx-auto" />
+      <img src="./assets/products/payment_fail_icon-300x300.png" alt="" class="w-25 mx-auto" />
       <h1 class="h1 mt-0">{{ 'postPay.failedPay' | translate }}</h1>
       <p class="p py-0">
         {{ 'postPay.failedScript' | translate }}
       </p>
     </div>
-    <div class="mx-auto">
+    <div class="w-25 mx-auto">
       <button class="custome-btn" routerLink="/home">{{ 'postPay.Btn' | translate }}</button>
     </div>
   </div>

@@ -91,7 +91,7 @@ export const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, select
 
       form.resetFields();
 
-      !isCreate && router.back(); // Redirect to the previous page if it's an update
+      if (!isCreate) router.back(); // Redirect to the previous page if it's an update
 
       notification.success(`Stock has been ${isCreate ? 'created' : 'updated'} successfully`);
     },

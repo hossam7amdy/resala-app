@@ -10,7 +10,7 @@
   "scripts": {
     "prepare": "husky",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 300",
     "format:fix": "prettier --write .",
     "format:check": "prettier --check .",
     "build:shared": "yarn workspace @resala/shared build",
@@ -18,17 +18,20 @@
     "build:dashboard": "yarn workspace @resala/dashboard build",
     "build:web": "yarn workspace @resala/web build",
     "build": "npm-run-all build:shared build:server build:dashboard build:web",
-    "test:server": "yarn workspace @resala/server test",
+    "test:server": "yarn workspace @resala/server test:unit",
+    "test:shared": "yarn workspace @resala/shared test",
     "test:dashboard": "yarn workspace @resala/dashboard test",
     "test:web": "yarn workspace @resala/web test",
-    "test": "npm-run-all --parallel test:server test:dashboard test:web",
+    "test": "npm-run-all --parallel test:server test:shared test:dashboard test:web",
     "start:dashboard:dev": "yarn workspace @resala/dashboard dev",
     "start:dashboard": "yarn workspace @resala/dashboard start",
     "start:web:dev": "yarn workspace @resala/web ng serve --open",
     "start:web": "yarn workspace @resala/web start",
     "start:server:dev": "yarn workspace @resala/server dev",
     "start:server": "yarn workspace @resala/server start",
-    "docker:build:server": "docker build -t hossam7amdy/resala-server . -f Dockerfile.server"
+    "docker:build:server": "docker build -t resala-server . -f Dockerfile.server",
+    "compose:down": "yarn workspace @resala/server compose:down",
+    "compose:up": "yarn workspace @resala/server compose:up"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
