@@ -25,7 +25,7 @@ export const validationPatterns = {
   },
   validateURL: {
     // eslint-disable-next-line
-    pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/,
+    pattern: /^((https?:\/\/)|((ssh:\/\/)?git@))[^\s$.?#].[^\s]*$/, // url, ssh url, ip
     message: 'URL is not valid',
   },
   validatePath: {
