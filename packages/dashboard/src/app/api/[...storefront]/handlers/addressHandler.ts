@@ -21,7 +21,7 @@ export const listUserAddress = async (
 
   const addresses = await addressService.list(userId);
 
-  return c.json({ success: true, data: addresses });
+  return c.json({ data: addresses });
 };
 
 export const createUserAddress = async (
