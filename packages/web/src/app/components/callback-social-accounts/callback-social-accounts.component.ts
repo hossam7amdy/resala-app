@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-callback-social-accounts',
   standalone: true,
   imports: [CommonModule],
@@ -26,7 +25,7 @@ export class CallbackSocialAccountsComponent implements OnInit {
     });
 
     if (this.tokenFromSocial !== '') {
-      localStorage.setItem('accessToken', this.tokenFromSocial);
+      localStorage.setItem('etoken', this.tokenFromSocial);
       this._AuthService.decodeUser();
       const productId = localStorage.getItem('productId');
       if (productId == null) {

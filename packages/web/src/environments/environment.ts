@@ -1,5 +1,6 @@
 // https://v16.angular.io/guide/build
 export const environment = {
   production: true,
-  baseUrl: 'https://api.resala.live',
+  apiUrl: 'https://resala-app-6ba5cpyy5q-ey.a.run.app',
+  BASE_URL: `https://api.resala.live`,
 };

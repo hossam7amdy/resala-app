@@ -11,7 +11,7 @@
 </ul> -->
 
     <ul class="nav ms-auto p-0 pt-1 mb-lg-0 justify-content-center">
-      <li class="nav-item mx-4 me-3">
+      <li class="nav-item">
         <a (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link lang">AR</a>
         <a (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link lang">EN</a>
       </li>
@@ -248,7 +248,6 @@
               >
                 <li *ngFor="let category of categoryList">
                   <a
-                    (click)="reloadPage(category.id)"
                     routerLinkActive="active-link"
                     [routerLink]="['/category/', category.id]"
                     class="dropdown-item"
