@@ -5,11 +5,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, SpinnerComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -24,9 +25,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   userInfo: any = {};
   userId: any;
   isLoaded: boolean = false;
-
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
   ngOnInit(): void {
-    this._Spinner.show();
+    this.customSpinIsLoading = true;
     this._AuthService.decodeUser();
     this.userId = this._AuthService.userInfo.id;
 
@@ -34,9 +37,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       next: response => {
         this.userInfo = response.data;
         this.isLoaded = true;
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
   }

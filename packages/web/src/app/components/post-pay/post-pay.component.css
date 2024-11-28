@@ -1,0 +1,13 @@
+@media (min-width: 570px) {
+  .custome-btn {
+    width: 50%;
+  }
+  .w-50 {
+    width: 25% !important;
+  }
+}
+@media (max-width: 570px) {
+  .custome-btn {
+    width: 90%;
+  }
+}

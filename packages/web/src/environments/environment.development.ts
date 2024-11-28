@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  baseUrl: 'https://api.resala.live',
+  apiUrl: 'http://localhost:5000',
+  BASE_URL: `https://api.resala.live`,
 };
