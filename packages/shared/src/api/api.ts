@@ -15,7 +15,6 @@ import type {
   Image,
   Order,
   OrderItem,
-  Pagination,
   Product,
   Review,
   Shipping,
@@ -26,13 +25,20 @@ import type {
 } from '../types/index.js';
 import type * as Schemas from '../validations/index.js';
 
+export type Pagination = {
+  page: number;
+  limit: number;
+  total: number;
+};
+
 export type ListRequestQuery = {
   query: z.infer<typeof Schemas.OffsetPageParamsSchema>;
 };
 
 export type DefaultResponseBody = {
-  success: boolean;
+  success?: boolean;
   message?: string;
+  error?: string;
 };
 
 // Auth types

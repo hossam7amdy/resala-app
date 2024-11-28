@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    // Should be disabled -> https://github.com/Microsoft/TypeScript/issues/29172
-    // "outDir": "dist",
-
+    "outDir": "dist",
     "module": "node16",
     "moduleResolution": "node16",
     "moduleDetection": "force",
-    "target": "ES2022", // Node.js 18
+    "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "resolveJsonModule": false, // ESM doesn't yet support JSON modules.
     "jsx": "react",
