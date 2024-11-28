@@ -1,1 +1,25 @@
-export * from './types.js';
+export type {
+  User,
+  Address,
+  Category,
+  Product,
+  Image,
+  Stock,
+  Color,
+  Size,
+  Order,
+  OrderItem,
+  OrderStatus,
+  Role,
+  MarketingState,
+  Cart,
+  Wishlist,
+  Review,
+  Discount,
+  PaymentMethod,
+  DiscountType,
+  Shipping,
+  PaymentStatus,
+} from '@prisma/client';
+
+export { ProviderUser, SignProvider, JwtPayload } from './types.js';

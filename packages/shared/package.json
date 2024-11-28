@@ -4,21 +4,25 @@
   "description": "Shared types and functions",
   "private": true,
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./index.js",
-      "require": "./index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
   "scripts": {
-    "rollup": "rollup -c rollup.config.js",
-    "build": "tsc && yarn rollup",
+    "build": "tsc && yarn bundle",
+    "bundle": "tsup --clean --dts --minify",
     "test": "echo \"No tests specified for shared\" && exit 0"
   },
   "dependencies": {
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "rollup": "^4.24.0"
+    "tsup": "^8.3.5"
   }
 }

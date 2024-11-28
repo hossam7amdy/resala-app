@@ -39,7 +39,7 @@ export type Pagination = {
 };
 
 export type User = {
-  id: string;
+  id: number;
   email: string;
   isEmailVerified: boolean;
   phone: null | string;
@@ -53,7 +53,7 @@ export type User = {
 };
 
 export type UserAddress = {
-  userId: string;
+  userId: number;
   addressId: number;
 };
 
@@ -116,7 +116,7 @@ export type Size = {
 };
 
 export type Cart = {
-  userId: string;
+  userId: number;
   stockId: number;
   quantity: number;
   createdAt: Date;
@@ -124,7 +124,7 @@ export type Cart = {
 };
 
 export type Wishlist = {
-  userId: string;
+  userId: number;
   productId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -132,7 +132,7 @@ export type Wishlist = {
 
 export type Order = {
   id: number;
-  userId: null | string;
+  userId: null | number;
   subtotal: Decimal;
   discount: Decimal;
   total: Decimal;
@@ -167,7 +167,7 @@ export type Shipping = {
 export type Review = {
   id: number;
   productId: number;
-  userId: null | string;
+  userId: null | number;
   rating: number;
   comment: null | string;
   createdAt: Date;
