@@ -25,7 +25,7 @@ export class UserService {
   }
 
   getUserOrders(userId: any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listOrders, { userId: userId, limit: '5' });
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listOrders, { userId: userId });
     return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
   }
 }
