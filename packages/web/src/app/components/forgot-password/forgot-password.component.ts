@@ -52,12 +52,10 @@ export class ForgotPasswordComponent {
   sendEmail(): void {
     this.customSpinIsLoading = true;
     this._AuthService.forgotPassword(this.forgotPw.value).subscribe({
-      next: response => {
-        console.log('response', response);
+      next: () => {
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log('error', err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
