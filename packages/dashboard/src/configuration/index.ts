@@ -1,35 +1,41 @@
 import { z } from 'zod';
 
+const _parseNodeEnv = z.enum(['development', 'production', 'test']).parse;
+
 const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boolean => {
   return envVar && envVar.toLowerCase() === 'true' ? true : defaultValue;
 };
 
-const configuration = {
-  isProduction: process.env.NODE_ENV === 'production',
-  baseUrl: z.string().url().default('http://localhost:3000').parse(process.env.BASE_URL),
+const configuration = () => ({
   aws: {
+    region: z.string().parse(process.env.AWS_REGION),
     accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
     accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
-    region: z.string().default('eu-north-1').parse(process.env.AWS_REGION),
     ses: {
       endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
-      verifiedIdentity: z
-        .string()
-        .default('Resala store<no-reply@resala.live>')
-        .parse(process.env.SES_VERIFIED_ID),
+      verifiedIdentity: z.string().parse(process.env.SES_VERIFIED_ID),
     },
     s3: {
       bucketName: z.string().parse(process.env.S3_BUCKET),
-      baseUrl: z.string().parse(process.env.S3_BASE_URL),
+      baseUrl: z.string().url().parse(process.env.S3_BASE_URL),
       endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
-      forcePathStyle: z.boolean().parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
+      forcePathStyle: z
+        .boolean()
+        .optional()
+        .parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
     },
   },
   origin: {
     web: z.string().url().parse(process.env.WEB_URL),
+    dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
     allowedList: z
       .array(z.string().url())
       .parse(JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]')),
+  },
+  server: {
+    env: _parseNodeEnv(process.env.NODE_ENV),
+    port: z.coerce.number().default(5000).parse(process.env.PORT),
+    url: z.string().url().parse(process.env.SERVER_URL),
   },
   db: {
     url: z.string().url().parse(process.env.DATABASE_URL),
@@ -55,7 +61,7 @@ const configuration = {
       clientSecret: z.string().parse(process.env.GOOGLE_CLIENT_SECRET),
     },
   },
-};
+});
 
-type Configuration = typeof configuration;
+type Configuration = ReturnType<typeof configuration>;
 export { configuration, type Configuration };

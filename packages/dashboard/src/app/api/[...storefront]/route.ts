@@ -17,6 +17,8 @@ import {
   ListStocksSchema,
   UpdateAddressSchema,
 } from '@resala/shared';
+import type { AuthUser } from '@resala/shared';
+import type { Session } from 'better-auth';
 import type { Context, Handler } from 'hono';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
@@ -28,13 +30,14 @@ import * as collectionHandler from './handlers/collectionHandler';
 import * as orderHandler from './handlers/orderHandler';
 import * as productHandler from './handlers/productHandler';
 import * as shoppingHandler from './handlers/shoppingHandler';
+import { enforceSession, parseSession } from './middlewares/sessionMiddleware';
 
 export const dynamic = 'force-dynamic';
 
 export type Env = {
   Variables: {
-    userId?: string;
-    guestId: string;
+    user?: AuthUser;
+    session?: Session;
   };
 };
 
@@ -135,18 +138,15 @@ const createHonoApp = () => {
       credentials: true,
       allowHeaders: ['Authorization', 'Content-Type'],
       allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-      origin: configuration.origin.allowedList,
+      origin: configuration().origin.allowedList,
     })
   );
+  app.use(parseSession);
 
   // health check
   app.get('/api/healthz', async c => {
     return c.json({ message: 'OK 🚀' });
   });
-
-  // auth handlers
-  app.get('/api/auth/*', c => auth.handler(c.req.raw));
-  app.post('/api/auth/*', c => auth.handler(c.req.raw));
 
   // register handlers in hono app
   Object.keys(StorefrontEndpoints).forEach(entry => {
@@ -154,11 +154,15 @@ const createHonoApp = () => {
     const handlers = HANDLERS[entry as StorefrontEndpoints];
 
     if (auth) {
-      app[method](url, ...handlers);
+      app[method](url, enforceSession, ...handlers);
     } else {
       app[method](url, ...handlers);
     }
   });
+
+  // auth handlers
+  app.get('/api/auth/*', c => auth.handler(c.req.raw));
+  app.post('/api/auth/*', c => auth.handler(c.req.raw));
 
   return app;
 };

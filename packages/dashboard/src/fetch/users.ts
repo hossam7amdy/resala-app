@@ -1,63 +1,60 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
-import type {
-  DeleteUserRequest,
-  DeleteUserResponse,
-  GetUserRequest,
-  GetUserResponse,
-  ListUsersRequest,
-  ListUsersResponse,
-  UpdateUserRequest,
-  UpdateUserResponse,
+import { userService } from '@/services';
+import {
+  type DeleteUserResponse,
+  type GetUserResponse,
+  type ListUsersRequest,
+  type ListUsersResponse,
+  ListUsersSchema,
+  type UpdateUserRequest,
+  type UpdateUserResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const getCurrentUser = async () => {
-  throw new Error('Not implemented');
+export const getUserById = async (id: number | string): Promise<GetUserResponse['data']> => {
+  try {
+    return await userService.find(+id);
+  } catch (e) {
+    return notFound();
+  }
 };
 
-export const getUserById = async (id: number | string) => {
-  const response = await callEndpoint<GetUserRequest, GetUserResponse>(ENDPOINT_CONFIGS.getUser, {
-    params: { userId: id.toString() },
-    next: { tags: [ROUTES.CUSTOMERS, ROUTES.EDIT_CUSTOMER(id)] },
-  });
+export const listUsers = async (
+  query: ListUsersRequest['query']
+): Promise<ListUsersResponse['data']> => {
+  const parsed = ListUsersSchema.parse({ query });
 
-  return response.data;
+  const page = parsed.query.page ?? 1;
+  const limit = parsed.query.limit ?? 10;
+  const search = parsed.query.search;
+
+  const users = await userService.list({ page, limit, search });
+  return { users, pagination: { page, limit, total: users.length } };
 };
 
-export const listUsers = async (query: ListUsersRequest['query']) => {
-  const response = await callEndpoint<ListUsersRequest, ListUsersResponse>(
-    ENDPOINT_CONFIGS.listUsers,
-    {
-      query,
-      next: { tags: [ROUTES.CUSTOMERS] },
-    }
-  );
-
-  return response.data;
+export const updateUser = async (
+  id: string | number,
+  payload: UpdateUserRequest['body']
+): Promise<UpdateUserResponse> => {
+  try {
+    const data = await userService.update(+id, payload);
+    revalidatePath(ROUTES.CUSTOMERS);
+    revalidatePath(ROUTES.EDIT_CUSTOMER(id));
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as UpdateUserResponse;
+  }
 };
 
-export const updateUser = async (id: string | number, payload: UpdateUserRequest['body']) => {
-  const response = await callEndpoint<UpdateUserRequest, UpdateUserResponse>(
-    ENDPOINT_CONFIGS.updateUser,
-    { params: { userId: id.toString() }, body: payload }
-  );
-
-  revalidateTag(ROUTES.CUSTOMERS);
-  revalidateTag(ROUTES.EDIT_CUSTOMER(id));
-  return response;
-};
-
-export const deleteUser = async (id: string | number) => {
-  const response = await callEndpoint<DeleteUserRequest, DeleteUserResponse>(
-    ENDPOINT_CONFIGS.deleteUser,
-    { params: { userId: id.toString() } }
-  );
-
-  revalidateTag(ROUTES.CUSTOMERS);
-
-  return response;
+export const deleteUser = async (id: string | number): Promise<DeleteUserResponse> => {
+  try {
+    const data = await userService.delete(+id);
+    revalidatePath(ROUTES.CUSTOMERS);
+    return { data } as DeleteUserResponse;
+  } catch (e) {
+    return { error: (e as Error).message } as DeleteUserResponse;
+  }
 };

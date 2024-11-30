@@ -1,6 +1,7 @@
 # Ignore artifacts:
 **/.angular
 **/.dist
+**/dist
 **/.next
 
 # web package

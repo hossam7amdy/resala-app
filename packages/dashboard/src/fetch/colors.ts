@@ -1,69 +1,64 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { colorService } from '@/services';
 import type {
   CreateColorRequest,
   CreateColorResponse,
-  DeleteColorRequest,
   DeleteColorResponse,
-  GetColorRequest,
   GetColorResponse,
-  ListColorsRequest,
   ListColorsResponse,
   UpdateColorRequest,
   UpdateColorResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const listAllColors = async () => {
-  const response = await callEndpoint<ListColorsRequest, ListColorsResponse>(
-    ENDPOINT_CONFIGS.listColors,
-    { query: {}, next: { tags: [ROUTES.COLORS] } }
-  );
-
-  return response.data;
+export const listAllColors = async (): Promise<ListColorsResponse['data']> => {
+  return await colorService.list();
 };
 
-export const findColorById = async (id: string | number) => {
-  const response = await callEndpoint<GetColorRequest, GetColorResponse>(
-    ENDPOINT_CONFIGS.getColor,
-    { params: { colorId: id.toString() }, next: { tags: [ROUTES.COLORS] } }
-  );
-
-  return response.data;
+export const findColorById = async (id: string | number): Promise<GetColorResponse['data']> => {
+  try {
+    return await colorService.find(+id);
+  } catch {
+    notFound();
+  }
 };
 
-export const createColor = async (data: CreateColorRequest['body']) => {
-  const response = await callEndpoint<CreateColorRequest, CreateColorResponse>(
-    ENDPOINT_CONFIGS.createColor,
-    { body: data }
-  );
-
-  revalidateTag(ROUTES.COLORS);
-  return response;
+export const createColor = async (
+  payload: CreateColorRequest['body']
+): Promise<CreateColorResponse> => {
+  try {
+    const data = await colorService.create(payload);
+    revalidateTag(ROUTES.COLORS);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as CreateColorResponse;
+  }
 };
 
-export const updateColor = async (id: string | number, data: UpdateColorRequest['body']) => {
-  const response = await callEndpoint<UpdateColorRequest, UpdateColorResponse>(
-    ENDPOINT_CONFIGS.updateColor,
-    {
-      body: data,
-      params: { colorId: id.toString() },
-    }
-  );
+export const updateColor = async (
+  id: string | number,
+  payload: UpdateColorRequest['body']
+): Promise<UpdateColorResponse> => {
+  try {
+    const data = await colorService.update(+id, payload);
 
-  revalidateTag(ROUTES.COLORS);
-  return response;
+    revalidateTag(ROUTES.COLORS);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as UpdateColorResponse;
+  }
 };
 
 export const deleteColor = async (id: string | number) => {
-  const response = await callEndpoint<DeleteColorRequest, DeleteColorResponse>(
-    ENDPOINT_CONFIGS.deleteColor,
-    { params: { colorId: id.toString() } }
-  );
+  try {
+    const data = await colorService.delete(+id);
 
-  revalidateTag(ROUTES.COLORS);
-  return response;
+    revalidateTag(ROUTES.COLORS);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as DeleteColorResponse;
+  }
 };

@@ -1,3 +1,4 @@
+import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { CreateAddressRequest, UpdateAddressRequest } from '@resala/shared';
 
@@ -6,7 +7,7 @@ export class AddressService {
 
   constructor(private readonly db: DataStore) {}
 
-  async list(userId: string) {
+  async list(userId: number) {
     const addresses = await this.db.userAddress.findMany({
       select: { address: true },
       where: { userId },
@@ -20,7 +21,7 @@ export class AddressService {
     const userAddrCount = await this.db.userAddress.count({ where: { userId } });
 
     if (userAddrCount >= this.maxAddressCount) {
-      throw new Error('You have reached the maximum number of addresses allowed');
+      throw new BadRequestError('You have reached the maximum number of addresses allowed');
     }
 
     return await this.db.$transaction(async trx => {
@@ -32,7 +33,7 @@ export class AddressService {
     });
   }
 
-  async find(userId: string, addressId: number) {
+  async find(userId: number, addressId: number) {
     const userAddr = await this.db.userAddress.findFirstOrThrow({
       select: { address: true },
       where: { userId, addressId },
@@ -48,7 +49,7 @@ export class AddressService {
     });
   }
 
-  async delete(addressId: number, userId: string) {
+  async delete(addressId: number, userId: number) {
     await this.find(userId, addressId);
 
     return await this.db.address.delete({ where: { id: addressId } });

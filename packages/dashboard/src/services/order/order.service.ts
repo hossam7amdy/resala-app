@@ -1,3 +1,4 @@
+import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 import type {
@@ -23,6 +24,7 @@ const ORDER_ATTRIBUTES = {
       },
     },
   },
+  user: true,
   shippingDetails: {
     select: {
       id: true,
@@ -38,12 +40,12 @@ export class OrderService {
   constructor(private readonly db: DataStore) {}
 
   async create(
-    { userId, paymentMethod, note }: { userId: string; paymentMethod: string; note?: string },
+    { userId, paymentMethod, note }: { userId: number; paymentMethod: string; note?: string },
     cart: GetCartResponse['data'],
     address: Address
   ) {
     if (cart.items.length === 0) {
-      throw new Error('Cart is empty');
+      throw new BadRequestError('Cart is empty');
     }
 
     const subtotal = cart.totalPrice;
@@ -60,7 +62,7 @@ export class OrderService {
     const { id: _, ...addressWithoutId } = address;
     const newOrder = await this.db.order.create({
       data: {
-        userId: userId,
+        userId,
         subtotal: subtotal,
         total: subtotal + SHIPPING,
         note,
@@ -96,11 +98,13 @@ export class OrderService {
   }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
     const filters: Prisma.OrderWhereInput = {
       OR: [
+        { user: { email: { startsWith: search } } },
+        { user: { phone: { startsWith: search } } },
         {
           orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
         },
       ],
-      userId,
+      userId: userId,
     };
 
     const [count, orders] = await this.db.$transaction([

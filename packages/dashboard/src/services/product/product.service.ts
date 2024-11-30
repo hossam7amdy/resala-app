@@ -1,4 +1,6 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
+import type { FileStorage } from '@/services/storage';
 import type { Prisma } from '@prisma/client';
 import type {
   CreateProductRequest,
@@ -10,8 +12,6 @@ import type {
   UpdateProductRequest,
   UpdateProductResponse,
 } from '@resala/shared';
-
-import type { FileStorage } from '../storage';
 
 export class ProductService {
   constructor(
@@ -25,23 +25,18 @@ export class ProductService {
       _avg: { rating: true },
     });
 
-    const { discountProduct, ...product } = await this.db.product.findUniqueOrThrow({
+    const { discounts, ...product } = await this.db.product.findUniqueOrThrow({
       include: {
         category: true,
-        discountProduct: {
-          include: {
-            discount: true,
-          },
+        discounts: {
           where: {
-            discount: {
-              isActive: true,
-              OR: [
-                { startDate: null },
-                { endDate: null },
-                { startDate: { lte: new Date() } },
-                { endDate: { gte: new Date(new Date().toDateString()) } },
-              ],
-            },
+            isActive: true,
+            OR: [
+              { startDate: null },
+              { endDate: null },
+              { startDate: { lte: new Date() } },
+              { endDate: { gte: new Date(new Date().toDateString()) } },
+            ],
           },
         },
       },
@@ -51,7 +46,7 @@ export class ProductService {
     return {
       ...product,
       avgRating: avgRating._avg.rating ?? 0,
-      discounts: discountProduct.map(dp => dp.discount),
+      discounts,
     };
   }
 
@@ -74,20 +69,15 @@ export class ProductService {
       this.db.product.findMany({
         include: {
           category: true,
-          discountProduct: {
-            include: {
-              discount: true,
-            },
+          discounts: {
             where: {
-              discount: {
-                isActive: true,
-                OR: [
-                  { startDate: null },
-                  { endDate: null },
-                  { startDate: { lte: new Date() } },
-                  { endDate: { gte: new Date(new Date().toDateString()) } },
-                ],
-              },
+              isActive: true,
+              OR: [
+                { startDate: null },
+                { endDate: null },
+                { startDate: { lte: new Date() } },
+                { endDate: { gte: new Date(new Date().toDateString()) } },
+              ],
             },
           },
         },
@@ -106,9 +96,9 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ discountProduct, ...product }) => ({
+      products: products.map(({ discounts, ...product }) => ({
         ...product,
-        discounts: discountProduct.map(dp => dp.discount),
+        discounts,
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
     };
@@ -120,9 +110,7 @@ export class ProductService {
     arName,
     file,
     ...payload
-  }: CreateProductRequest['body'] & { file: Express.Multer.File }): Promise<
-    CreateProductResponse['data']
-  > {
+  }: CreateProductRequest['body'] & { file: File }): Promise<CreateProductResponse['data']> {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
     const product = await this.db.product.findFirst({
@@ -132,7 +120,7 @@ export class ProductService {
     });
 
     if (product) {
-      throw new Error('Product already exists');
+      throw new ConflictError('Product already exists');
     }
 
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
@@ -146,7 +134,7 @@ export class ProductService {
 
   async update(
     id: number,
-    { file, ...product }: UpdateProductRequest['body'] & { file?: Express.Multer.File }
+    { file, ...product }: UpdateProductRequest['body'] & { file?: File }
   ): Promise<UpdateProductResponse['data']> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 

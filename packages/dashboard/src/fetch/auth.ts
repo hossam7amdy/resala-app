@@ -1,59 +1,59 @@
-'use server';
-
-import { ENDPOINT_CONFIGS } from '@resala/shared';
+import {
+  forgetPassword as handleForgetPassword,
+  resetPassword as handleResetPassword,
+  verifyEmail as handleVerifyEmail,
+  sendVerificationEmail,
+  signIn,
+  signOut,
+} from '@/lib/auth.client';
+import { ROUTES } from '@/routes';
 import type {
   ForgotPasswordRequest,
-  ForgotPasswordResponse,
   LoginRequest,
-  ResendVerificationEmailRequest,
-  ResendVerificationEmailResponse,
   ResetPasswordRequest,
-  ResetPasswordResponse,
-  VerifyEmailRequest,
-  VerifyEmailResponse,
+  SendVerificationEmailRequest,
 } from '@resala/shared';
 
-import { callEndpoint } from '.';
-
-export const login = async (_payload: LoginRequest['body']) => {};
-
-export const logout = async () => {};
-
-export const verifyEmail = async ({ token }: { token: string }) => {
-  const response = await callEndpoint<VerifyEmailRequest, VerifyEmailResponse>(
-    ENDPOINT_CONFIGS.verifyEmail,
-    { body: {}, headers: { Authorization: `Bearer ${token}` } }
-  );
-
-  return response;
+export const login = async ({ sign, password }: LoginRequest['body']) => {
+  return signIn.email({
+    email: sign,
+    password,
+    callbackURL: location.origin + ROUTES.DASHBOARD,
+  });
 };
 
-export const forgotPassword = async (payload: ForgotPasswordRequest['body']) => {
-  return callEndpoint<ForgotPasswordRequest, ForgotPasswordResponse>(
-    ENDPOINT_CONFIGS.forgotPassword,
-    { body: payload }
-  );
+export const loginWithProvider = async () => {
+  return signIn.social({
+    provider: 'google',
+    callbackURL: location.origin + ROUTES.DASHBOARD,
+  });
+};
+
+export const logout = async () => {
+  return signOut({
+    fetchOptions: {
+      onSuccess: () => {
+        location.reload();
+      },
+    },
+  });
+};
+
+export const verifyEmail = async ({ token }: { token: string }) => {
+  return handleVerifyEmail({ query: { token } });
+};
+
+export const forgetPassword = async ({ email, redirectUrl }: ForgotPasswordRequest['body']) => {
+  return handleForgetPassword({ email, redirectTo: redirectUrl });
 };
 
 export const resetPassword = async ({
   token,
   newPassword,
-  confirmNewPassword,
 }: ResetPasswordRequest['body'] & { token: string }) => {
-  const response = await callEndpoint<ResetPasswordRequest, ResetPasswordResponse>(
-    ENDPOINT_CONFIGS.resetPassword,
-    {
-      body: { newPassword, confirmNewPassword },
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-
-  return response;
+  return handleResetPassword({ token, newPassword });
 };
 
-export const resendVerificationEmail = async (payload: ResendVerificationEmailRequest['body']) => {
-  return await callEndpoint<ResendVerificationEmailRequest, ResendVerificationEmailResponse>(
-    ENDPOINT_CONFIGS.resendEmailVerification,
-    { body: payload }
-  );
+export const resendVerificationEmail = async ({ email }: SendVerificationEmailRequest['body']) => {
+  return sendVerificationEmail({ email });
 };

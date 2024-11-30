@@ -1,3 +1,4 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type {
   CreateReviewRequest,
@@ -10,13 +11,13 @@ import type {
 export class ReviewService {
   constructor(private readonly db: DataStore) {}
 
-  async create(review: CreateReviewRequest['body'] & { userId: string }) {
+  async create(review: CreateReviewRequest['body']) {
     const reviewsLength = await this.db.review.count({
       where: { userId: review.userId, productId: review.productId },
     });
 
     if (reviewsLength > 0) {
-      throw new Error('User already reviewed this product');
+      throw new ConflictError('User already reviewed this product');
     }
 
     return await this.db.review.create({
@@ -36,7 +37,7 @@ export class ReviewService {
     });
   }
 
-  async delete(reviewId: number, userId: string) {
+  async delete(reviewId: number, userId: number) {
     return await this.db.review.delete({
       where: { id: reviewId, userId },
     });
@@ -45,6 +46,7 @@ export class ReviewService {
   async find(reviewId: number): Promise<GetReviewResponse['data']> {
     return await this.db.review.findUniqueOrThrow({
       where: { id: reviewId },
+      include: { user: true },
     });
   }
 
@@ -56,6 +58,7 @@ export class ReviewService {
     const [count, reviews] = await this.db.$transaction([
       this.db.review.count({ where: { productId } }),
       this.db.review.findMany({
+        include: { user: true },
         where: { productId },
         skip: page - 1,
         take: limit,

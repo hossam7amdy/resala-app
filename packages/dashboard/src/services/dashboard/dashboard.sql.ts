@@ -1,6 +1,6 @@
 // TODO: `Temporary` this file should be and use native `TypedSQL` solution from prisma
 // https://www.prisma.io/docs/orm/prisma-client/using-raw-sql
-import type { RoleType } from '@resala/shared';
+import type { Role } from '@prisma/client';
 
 export type GetSalesTrend = {
   date: string;
@@ -51,15 +51,15 @@ export const listTopProducts = `
 export type ListTopCustomers = {
   total_paid: number;
   total_orders: bigint | null;
-  id: string;
+  id: number;
   email: string;
   is_email_verified: boolean;
   phone: string;
   is_phone_verified: boolean;
+  name: string;
   first_name: string;
   last_name: string;
-  role: RoleType;
-  password: string;
+  role: Role;
   last_login: Date | null;
   created_at: Date;
   updated_at: Date;

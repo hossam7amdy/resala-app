@@ -2,8 +2,7 @@
 
 import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
-import type { GetOrderResponse, OrderStatusType } from '@resala/shared';
-import { OrderStatus as OrderStatusEnum } from '@resala/shared';
+import type { GetOrderResponse, OrderStatus as OrderStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';
 import type { TagProps } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -96,24 +95,24 @@ export const OrderStatus: React.FC<OrderStatusProps> = ({
         value={newOrderStatus}
         options={[
           {
-            label: <StatusTag status={OrderStatusEnum.PENDING} />,
-            value: OrderStatusEnum.PENDING,
+            label: <StatusTag status={'PENDING'} />,
+            value: 'PENDING',
           },
           {
-            label: <StatusTag status={OrderStatusEnum.FULFILLED} />,
-            value: OrderStatusEnum.FULFILLED,
+            label: <StatusTag status={'FULFILLED'} />,
+            value: 'FULFILLED',
           },
           {
-            label: <StatusTag status={OrderStatusEnum.SHIPPED} />,
-            value: OrderStatusEnum.SHIPPED,
+            label: <StatusTag status={'SHIPPED'} />,
+            value: 'SHIPPED',
           },
           {
-            label: <StatusTag status={OrderStatusEnum.DELIVERED} />,
-            value: OrderStatusEnum.DELIVERED,
+            label: <StatusTag status={'DELIVERED'} />,
+            value: 'DELIVERED',
           },
           {
-            label: <StatusTag status={OrderStatusEnum.CANCELLED} />,
-            value: OrderStatusEnum.CANCELLED,
+            label: <StatusTag status={'CANCELLED'} />,
+            value: 'CANCELLED',
             disabled: true,
           },
         ]}
