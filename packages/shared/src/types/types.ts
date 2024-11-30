@@ -3,6 +3,7 @@ import type { z } from 'zod';
 
 import type {
   DiscountEnum,
+  MarketingState,
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
@@ -19,6 +20,8 @@ export type PaymentStatusType = keyof typeof PaymentStatus;
 export type PaymentMethodType = keyof typeof PaymentMethod;
 
 export type DiscountType = keyof typeof DiscountEnum;
+
+export type MarketingStateType = keyof typeof MarketingState;
 
 export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 
@@ -42,14 +45,29 @@ export type User = {
   id: number;
   email: string;
   isEmailVerified: boolean;
-  phone: null | string;
+  emailMarketingState: MarketingStateType;
+  phone: string | null;
   isPhoneVerified: boolean;
+  smsMarketingState: MarketingStateType;
+  name: string;
   firstName: string;
   lastName: string;
   role: RoleType;
-  lastLogin: null | Date;
+  banned: boolean | null;
+  banReason: string | null;
+  banExpires: number | null;
+  isAnonymous: boolean | null;
+  image: string | null;
+  lang: string | null;
+  birthDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type AuthUser = Omit<User, 'isEmailVerified' | 'phone' | 'isPhoneVerified'> & {
+  emailVerified: boolean;
+  phoneNumber: null | string;
+  phoneNumberVerified: boolean;
 };
 
 export type UserAddress = {

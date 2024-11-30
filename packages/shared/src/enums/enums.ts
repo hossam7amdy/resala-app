@@ -1,5 +1,7 @@
 export enum Role {
+  USER = 'USER',
   ADMIN = 'ADMIN',
+  STAFF = 'STAFF',
   CUSTOMER = 'CUSTOMER',
   MODERATOR = 'MODERATOR',
 }
@@ -30,4 +32,10 @@ export enum DiscountEnum {
   FIXED = 'FIXED',
   BOGO = 'BOGO',
   BULK = 'BULK',
+}
+
+export enum MarketingState {
+  SUBSCRIBED = 'SUBSCRIBED',
+  NOT_SUBSCRIBED = 'NOT_SUBSCRIBED',
+  UNSUBSCRIBED = 'UNSUBSCRIBED',
 }
