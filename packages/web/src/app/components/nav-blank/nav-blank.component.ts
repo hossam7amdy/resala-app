@@ -203,12 +203,6 @@ export class NavBlankComponent implements OnInit {
     }
   }
 
-  reloadPage(id: any): void {
-    this.customSpinIsLoading = true;
-    window.location.replace(`/category/${id}`);
-    this.customSpinIsLoading = false;
-  }
-
   handleLogout(): void {
     this.customSpinIsLoading = true;
     this._authService.logout().subscribe({

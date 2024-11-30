@@ -121,6 +121,8 @@ export class PaymentComponent implements OnInit {
   isLoading: boolean = false;
   getUserAddress: any = [];
   addressId: number = 0;
+  addressIdEdit: number = 0;
+
   //the index selected for delete
   selectedDelIndex!: number;
   selectPayMethod: string = '';
@@ -168,10 +170,10 @@ export class PaymentComponent implements OnInit {
     this._CityService.getCities().subscribe({
       next: data => {
         this.governorates = data.governorates;
-        console.log(data);
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.error(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
 
@@ -188,12 +190,10 @@ export class PaymentComponent implements OnInit {
           this.firstRegister = true;
         }
         this.customSpinIsLoading = false;
-        console.log(response);
 
-        console.log('user address id', this.getUserAddress);
+        if (this.addressId === 0) this.addressId = this.getUserAddress[0].id;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -202,7 +202,6 @@ export class PaymentComponent implements OnInit {
       next: response => {
         this.allCountries = response.data;
         this.customSpinIsLoading = false;
-        console.log(this.allCountries);
       },
       error: () => {
         this.customSpinIsLoading = false;
@@ -211,13 +210,11 @@ export class PaymentComponent implements OnInit {
 
     this._CartService.getCartUser().subscribe({
       next: response => {
-        console.log(response);
         this.cartDetails = response.data;
 
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
@@ -229,7 +226,7 @@ export class PaymentComponent implements OnInit {
     this.isSelectedAddress = true;
     this.isRegisterd = true;
     this.addNew = false;
-    console.log('address id', this.addressId);
+
     this.customSpinIsLoading = false;
   }
   addNewAddressFun(trarget: HTMLElement): void {
@@ -297,32 +294,28 @@ export class PaymentComponent implements OnInit {
   onSelected(value: string): void {
     this.customSpinIsLoading = true;
     this.selectedCountry = value;
-    console.log('country', value);
+
     this._PaymentServices.getAllCities(value).subscribe({
       next: response => {
         this.allCities = response.data;
-        console.log('Cities', this.allCities);
+
         this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
         this.customSpinIsLoading = false;
       },
     });
   }
   countryIndexFun(index: number): void {
     this.countryIndex = index;
-    console.log('index:', this.countryIndex);
   }
 
   handleForm(userAddresses: FormGroup, btn: HTMLButtonElement): void {
     this.customSpinIsLoading = true;
 
     const userData = this.addressForm.value;
-    console.log('user data', userData);
 
     if (userAddresses.valid) {
-      console.log('user data2', userData);
       this._PaymentServices.registerUserAddress(userData).subscribe({
         next: response => {
           if (response.success == true) {
@@ -332,7 +325,7 @@ export class PaymentComponent implements OnInit {
             this.isLoading = false;
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
             this.firstRegister = false;
-            console.log('response register', response);
+
             window.location.reload();
           }
           this.customSpinIsLoading = false;
@@ -340,7 +333,7 @@ export class PaymentComponent implements OnInit {
         error: err => {
           this.errMsg = err.error.message;
           this._Toaster.error(this.errMsg);
-          console.log('Save Address Error', err);
+
           this.customSpinIsLoading = false;
         },
       });
@@ -349,7 +342,7 @@ export class PaymentComponent implements OnInit {
   editAddressForm(index: any): void {
     this.isEdit = true;
     this.editIndex = index;
-    this.addressId = this.getUserAddress[index].id;
+    this.addressIdEdit = this.getUserAddress[index].id;
     const userNumberId = Number(this.userLoginId); // parsing to number
 
     this.userAddresses.patchValue({ userId: userNumberId });
@@ -360,21 +353,18 @@ export class PaymentComponent implements OnInit {
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     const userData = this.userAddresses.value;
     if (userAddresses.valid) {
-      console.log('user address edits', this.userAddresses.value, this.addressId);
-
-      this._PaymentServices.updateUserAddress(this.addressId, userData).subscribe({
-        next: response => {
-          console.log('request true user address edits', this.userAddresses.value, this.addressId);
+      this._PaymentServices.updateUserAddress(this.addressIdEdit, userData).subscribe({
+        next: () => {
           this._Toaster.success('Updated Your Address successfuly');
           this.isEdit = false;
-          console.log('after edit', response);
+
           this._Renderer2.setAttribute(element, 'disabled', 'true');
           window.location.reload();
           this.customSpinIsLoading = false;
         },
         error: err => {
           this._Toaster.error(err);
-          console.log('request false user address edits', this.userAddresses.value, this.addressId);
+
           this.customSpinIsLoading = false;
         },
       });
@@ -397,6 +387,7 @@ export class PaymentComponent implements OnInit {
       },
       error: () => {
         this._Toaster.info('Your Item Not Removed');
+
         this.customSpinIsLoading = false;
       },
     });
@@ -405,6 +396,7 @@ export class PaymentComponent implements OnInit {
   paymentSelectedMethod(event: any) {
     this.customSpinIsLoading = true;
     this.paymentSelected = event;
+
     this.customSpinIsLoading = false;
   }
 
@@ -418,19 +410,21 @@ export class PaymentComponent implements OnInit {
     if (this.isCheckedTerms) {
       this.customSpinIsLoading = true;
 
+      // if (this.payForm.valid) {
+
       this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
         next: response => {
           if (response.success == true) {
             this.isLoading = false;
             this._Toaster.success('Your Order Completed');
 
-            if (this.paymentSelected == 'CARD' && response.data?.paymentUrl) {
+            if (this.paymentSelected == 'CARD') {
               window.open(response.data.paymentUrl, '_self');
             } else {
+              this._CartService.cartNumber.next(0);
               this._Router.navigate(['/home']);
             }
             this._Renderer2.setAttribute(btn, 'disabled', 'true');
-            this._CartService.cartNumber.next(0);
           }
           this.customSpinIsLoading = false;
         },

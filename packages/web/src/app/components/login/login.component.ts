@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -7,6 +7,8 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { ProductDetailsComponent } from '../product-details/product-details.component';
+
+// import { ProductDetailsComponent } from '../product-details/product-details.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -30,7 +32,9 @@ export class LoginComponent {
     public translate: TranslateService
   ) {}
 
+  // start Custome Spinner
   customSpinIsLoading = false;
+  //end Custome Spinner
 
   //show password
   showPW: boolean = false;
@@ -42,6 +46,10 @@ export class LoginComponent {
   successMsg: string = '';
   successMsgAr: string = '';
   isLoading: boolean = false;
+
+  //properity => Return to product details page after login
+
+  // can use FormBulder instead of  new FormGroup (lookup leson 9)
 
   loginForm: FormGroup = new FormGroup({
     sign: new FormControl('', [Validators.required]),
