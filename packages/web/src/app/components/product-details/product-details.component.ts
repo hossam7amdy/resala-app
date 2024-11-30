@@ -182,7 +182,8 @@ export class ProductDetailsComponent implements OnInit {
     this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
-        this.productImages = res?.data?.images;
+        // FIXME: getProductDetails: do not have images!!
+        // this.productImages = res?.data?.images;
         this.categoryId = res?.data.categoryId;
 
         this.customSpinIsLoading = false;

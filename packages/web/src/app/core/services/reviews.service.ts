@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withQueryParams } from '@resala/shared';
+import { ENDPOINT_CONFIGS, ListReviewsResponse, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -8,21 +8,13 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class ReviewsService {
-  constructor(private _HTTP: HttpClient) {}
+  constructor(private _httpClient: HttpClient) {}
 
-  private getHeaders() {
-    const headers = new HttpHeaders({
-      'ngrok-skip-browser-warning': '69420',
-      // 'Authorization':`Bearer ${localStorage.getItem('etoken')}`
-    });
-    return { headers };
-  }
-
-  getProductReview(productId: string, reviewsLimit: string): Observable<any> {
+  getProductReview(productId: string, reviewsLimit: string): Observable<ListReviewsResponse> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listReviews, {
       productId: productId,
       limit: reviewsLimit,
     });
-    return this._HTTP.get(environment.BASE_URL + url, this.getHeaders());
+    return this._httpClient.get<ListReviewsResponse>(environment.baseUrl + url);
   }
 }

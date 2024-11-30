@@ -22,6 +22,6 @@ export class OffersService {
 
   getOffers(): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.getDiscount, {});
-    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
+    return this._HTTPClient.get(environment.baseUrl + url, this.getHeaders());
   }
 }
