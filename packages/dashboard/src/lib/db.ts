@@ -1,17 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
-const prismaClientSingleton = () => {
+const DataStoreSingleton = () => {
   return new PrismaClient();
 };
 
 declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+  dbGlobal: ReturnType<typeof DataStoreSingleton>;
 } & typeof global;
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
-
-export default prisma;
-export const db = prisma;
+export const db = globalThis.dbGlobal ?? DataStoreSingleton();
 export type DataStore = PrismaClient;
 
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
+if (process.env.NODE_ENV !== 'production') globalThis.dbGlobal = db;

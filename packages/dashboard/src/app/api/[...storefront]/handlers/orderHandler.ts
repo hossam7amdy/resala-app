@@ -14,11 +14,10 @@ import type { Env } from '../route';
 type HonoCtx = Context<Env>;
 
 export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderResponse>> => {
-  const userId = c.var.userId!;
-  const guestId = c.var.guestId;
+  const userId = c.var.user?.id as number;
   const { paymentMethod, addressId, note } = (await c.req.json()) as CreateOrderRequest['body'];
 
-  const userCart = await shoppingService.cart.get(guestId);
+  const userCart = await shoppingService.cart.get(userId);
 
   const discountedUserCart = await discountService.applyDiscount(userCart);
 
@@ -50,7 +49,7 @@ export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderR
 };
 
 export const listUserOrders = async (c: HonoCtx): Promise<HandlerResponse<ListOrdersResponse>> => {
-  const userId = c.var.userId!;
+  const userId = c.var.user?.id as number;
   const page = +(c.req.query('page') || '1');
   const limit = +(c.req.query('limit') || '10');
   const search = c.req.query('search') || '';

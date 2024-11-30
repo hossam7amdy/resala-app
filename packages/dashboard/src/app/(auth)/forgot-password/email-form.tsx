@@ -1,6 +1,6 @@
 'use client';
 
-import { forgotPassword } from '@/fetch/auth';
+import { forgetPassword } from '@/fetch/auth';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { Button, Form, Input } from 'antd';
@@ -12,11 +12,11 @@ export const EmailForm = () => {
   const notification = useNotification();
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: (values: { email: string }) =>
-      forgotPassword({ ...values, redirectUrl: window.location.origin + '/reset-password' }),
-    onSuccess: data => {
+    mutationFn: ({ email }: { email: string }) =>
+      forgetPassword({ email, redirectUrl: window.location.origin + '/reset-password' }),
+    onSuccess: () => {
       form.resetFields();
-      notification.success(data?.message ?? 'Reset password link sent successfully');
+      notification.success('Reset password link sent successfully');
       router.replace(ROUTES.LOGIN);
     },
     onError: error => {

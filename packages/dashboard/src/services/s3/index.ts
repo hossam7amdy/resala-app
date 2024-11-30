@@ -1,4 +1,4 @@
-import { configuration } from '@/configuration';
+import type { Configuration } from '@/configuration';
 import {
   CreateBucketCommand,
   DeleteBucketCommand,
@@ -9,32 +9,23 @@ import {
   PutBucketPolicyCommand,
   PutObjectCommand,
   S3Client,
-  type S3ClientConfig,
 } from '@aws-sdk/client-s3';
-
-const defaultOptions: S3ClientConfig = {
-  region: configuration.aws.region,
-  endpoint: configuration.aws.s3.endpoint,
-  forcePathStyle: configuration.aws.s3.forcePathStyle,
-  credentials: {
-    accessKeyId: configuration.aws.accessKey,
-    secretAccessKey: configuration.aws.accessSecret,
-  },
-};
 
 export class S3Service {
   private readonly bucketName: string;
   private readonly baseUrl: string;
   private readonly client: S3Client;
 
-  constructor(
-    config: S3ClientConfig = defaultOptions,
-    baseUrl: string = configuration.aws.s3.baseUrl,
-    bucketName: string = configuration.aws.s3.bucketName
-  ) {
-    this.baseUrl = baseUrl;
-    this.bucketName = bucketName;
-    this.client = new S3Client(config);
+  constructor(config: Configuration) {
+    this.baseUrl = config.aws.s3.baseUrl;
+    this.bucketName = config.aws.s3.bucketName;
+    this.client = new S3Client({
+      region: config.aws.region,
+      credentials: {
+        accessKeyId: config.aws.accessKey,
+        secretAccessKey: config.aws.accessSecret,
+      },
+    });
   }
 
   async createBucketIfNotExist(bucketName: string): Promise<'CREATED' | 'EXIST'> {
@@ -43,7 +34,7 @@ export class S3Service {
       await this.client.send(command);
 
       return 'EXIST';
-    } catch {
+    } catch (err) {
       const command = new CreateBucketCommand({ Bucket: bucketName });
       await this.client.send(command);
 
@@ -67,16 +58,16 @@ export class S3Service {
     try {
       await this.client.send(command);
       return true;
-    } catch {
+    } catch (err) {
       return false;
     }
   }
 
-  async upload(file: Express.Multer.File, key: string): Promise<string> {
+  async upload(file: File, key: string): Promise<string> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: key,
-      Body: file.buffer,
+      Body: Buffer.from(await file.arrayBuffer()),
       ACL: 'public-read',
     });
 

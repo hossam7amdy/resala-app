@@ -41,7 +41,7 @@ export const UserDropdown: React.FC = () => {
       items={[
         {
           key: 'user-settings',
-          icon: <Avatar size="small">{user?.firstName.at(0)}</Avatar>,
+          icon: <Avatar size="small">{user?.firstName?.at(0)}</Avatar>,
           label: <Space>{user?.firstName}</Space>,
           children: [
             {

@@ -1,27 +1,28 @@
+import type { Configuration } from '@/configuration';
+import { BadRequestError } from '@/exceptions';
+import { S3Service } from '@/services/s3';
 import { v4 as uuid } from 'uuid';
-
-import S3Service from '../s3';
 
 export class FileStorage {
   private static _instance: FileStorage | null = null;
   protected _fileStorage: S3Service;
 
-  protected constructor() {
-    this._fileStorage = new S3Service();
+  protected constructor(readonly config: Configuration) {
+    this._fileStorage = new S3Service(config);
   }
 
-  public static getInstance(): FileStorage {
+  public static getInstance(config: Configuration): FileStorage {
     if (!this._instance) {
-      this._instance = new FileStorage();
+      this._instance = new FileStorage(config);
     }
 
     return this._instance;
   }
 
-  async uploadFile(file: Express.Multer.File, directory?: string) {
-    if (!file) throw new Error('No file provided');
+  async uploadFile(file: File, directory?: string) {
+    if (!file) throw new BadRequestError('No file provided');
 
-    const fileExtension = file.originalname.split('.').pop();
+    const fileExtension = file.name.split('.').pop();
     const filename = `${uuid()}.${fileExtension}`;
     const key = directory ? `${directory}/${filename}` : filename;
 
@@ -29,8 +30,8 @@ export class FileStorage {
     return { key, url };
   }
 
-  async uploadFiles(files: Express.Multer.File[], directory?: string) {
-    if (!files || !files.length) throw new Error('No files provided');
+  async uploadFiles(files: File[], directory?: string) {
+    if (!files || !files.length) throw new BadRequestError('No files provided');
 
     return await Promise.all(files.map(file => this.uploadFile(file, directory)));
   }

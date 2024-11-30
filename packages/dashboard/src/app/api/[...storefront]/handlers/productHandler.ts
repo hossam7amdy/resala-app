@@ -7,21 +7,17 @@ import type {
   ListTopProductsResponse,
 } from '@resala/shared';
 import type { Context } from 'hono';
-import type { HandlerResponse } from 'hono/types';
+import type { TypedResponse } from 'hono/types';
 
-export const get = async (c: Context): Promise<HandlerResponse<GetProductResponse>> => {
-  try {
-    const productId = c.req.param('productId');
+export const get = async (c: Context): Promise<TypedResponse<GetProductResponse>> => {
+  const productId = c.req.param('productId');
 
-    const product = await productService.get(+productId);
+  const product = await productService.get(+productId);
 
-    return c.json({ success: true, data: product });
-  } catch (e) {
-    return c.json({ success: false, message: (e as Error).message }, { status: 404 });
-  }
+  return c.json({ success: true, data: product });
 };
 
-export const list = async (c: Context): Promise<HandlerResponse<ListProductsResponse>> => {
+export const list = async (c: Context): Promise<TypedResponse<ListProductsResponse>> => {
   const page = c.req.query('page') || '1';
   const limit = c.req.query('limit') || '10';
   const search = c.req.query('search') || '';
@@ -37,7 +33,7 @@ export const list = async (c: Context): Promise<HandlerResponse<ListProductsResp
   return c.json({ success: true, data: { pagination, products } });
 };
 
-export const listStocks = async (c: Context): Promise<HandlerResponse<ListStocksResponse>> => {
+export const listStocks = async (c: Context): Promise<TypedResponse<ListStocksResponse>> => {
   const page = c.req.query('page') || '1';
   const limit = c.req.query('limit') || '10';
   const search = c.req.query('search') || '';
@@ -55,15 +51,15 @@ export const listStocks = async (c: Context): Promise<HandlerResponse<ListStocks
 
 export const listTopProducts = async (
   c: Context
-): Promise<HandlerResponse<ListTopProductsResponse>> => {
+): Promise<TypedResponse<ListTopProductsResponse>> => {
   const products = await dashboardService.listTopProducts();
 
-  return c.json({ success: true, data: { products } });
+  return c.json({ success: true, data: products });
 };
 
 export const listSalesTrends = async (
   c: Context
-): Promise<HandlerResponse<GetSalesTrendsResponse>> => {
+): Promise<TypedResponse<GetSalesTrendsResponse>> => {
   const trends = await dashboardService.getSalesTrend();
 
   return c.json({ success: true, data: { trends } });

@@ -1,3 +1,4 @@
+import { BadRequestError, NotFoundError } from '@/exceptions';
 import type { GetPaymentResponse } from '@resala/shared';
 
 import type { CheckoutDto, PaymobService } from '../paymob';
@@ -15,7 +16,7 @@ export class PaymentService {
     try {
       await this.paymobService.void(+transactionId);
     } catch (e) {
-      throw new Error((e as Error).message);
+      throw new BadRequestError((e as Error).message);
     }
   }
 
@@ -25,7 +26,7 @@ export class PaymentService {
 
       await this.paymobService.refund(+transactionId, amountCents);
     } catch (e) {
-      throw new Error((e as Error).message);
+      throw new BadRequestError((e as Error).message);
     }
   }
 
@@ -33,7 +34,7 @@ export class PaymentService {
     try {
       return await this.paymobService.retrieve(+transactionId);
     } catch (e) {
-      throw new Error((e as Error).message);
+      throw new NotFoundError((e as Error).message);
     }
   }
 }

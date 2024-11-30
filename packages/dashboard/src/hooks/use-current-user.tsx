@@ -1,21 +1,19 @@
-import { getCurrentUser } from '@/fetch/users';
+import { useSession } from '@/lib/auth.client';
 import type { User } from '@resala/shared';
-import { useEffect, useState } from 'react';
 
 export const useCurrentUser = () => {
-  const [user, setUser] = useState<User>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isPending, error } = useSession();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await getCurrentUser();
-        setUser(user);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, []);
-
-  return { isLoading, user: user };
+  return {
+    isLoading: isPending,
+    user: {
+      ...data?.user,
+      firstName: data?.user?.name?.split(' ')[0],
+      lastName: data?.user?.name?.split(' ')[1] || '',
+      phone: data?.user?.phoneNumber,
+      isPhoneVerified: data?.user?.phoneNumberVerified ?? false,
+      isEmailVerified: data?.user?.emailVerified ?? false,
+    } as Partial<User>,
+    error,
+  };
 };

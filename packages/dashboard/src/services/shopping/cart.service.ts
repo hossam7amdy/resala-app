@@ -1,3 +1,4 @@
+import { BadRequestError, NotFoundError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { CreateCartRequest, GetCartResponse } from '@resala/shared';
 
@@ -6,7 +7,7 @@ const MAX_CART_ITEMS = 25;
 export class CartService {
   constructor(private readonly db: DataStore) {}
 
-  async get(userId: string): Promise<GetCartResponse['data']> {
+  async get(userId: number): Promise<GetCartResponse['data']> {
     const cart = await this.db.cart.findMany({
       include: {
         stock: {
@@ -62,17 +63,17 @@ export class CartService {
   }
 
   async update(
-    userId: string,
+    userId: number,
     { stockId, quantity }: CreateCartRequest['body']
   ): Promise<GetCartResponse['data']> {
     const stock = await this.db.stock.findUniqueOrThrow({ where: { id: stockId } });
     if (stock.quantity < quantity) {
-      throw new Error('Not enough stock');
+      throw new NotFoundError('Not enough stock');
     }
 
     const userCart = await this.get(userId);
     if (userCart.totalQuantity + quantity > MAX_CART_ITEMS) {
-      throw new Error(`Cart quantity limit reached ${MAX_CART_ITEMS} items`);
+      throw new BadRequestError(`Cart quantity limit reached ${MAX_CART_ITEMS} items`);
     }
 
     const cartData = { userId, stockId, quantity };
@@ -87,7 +88,7 @@ export class CartService {
     return this.get(userId);
   }
 
-  async delete(userId: string, stockId: number): Promise<GetCartResponse['data']> {
+  async delete(userId: number, stockId: number): Promise<GetCartResponse['data']> {
     await this.db.cart.delete({
       where: {
         userId_stockId: {
@@ -100,9 +101,20 @@ export class CartService {
     return this.get(userId);
   }
 
-  async deleteMany(userId: string) {
+  async deleteMany(userId: number) {
     await this.db.cart.deleteMany({
       where: {
+        userId,
+      },
+    });
+  }
+
+  async merge(userId: number, guestId: number) {
+    await this.db.cart.updateMany({
+      where: {
+        userId: guestId,
+      },
+      data: {
         userId,
       },
     });

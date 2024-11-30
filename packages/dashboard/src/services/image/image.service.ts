@@ -1,3 +1,4 @@
+import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type {
   CreateImageRequest,
@@ -19,9 +20,7 @@ export class ImageService {
     return await this.db.image.findUniqueOrThrow({ where: { id } });
   }
 
-  async createMany(
-    image: CreateImageRequest['body'] & { files: Express.Multer.File[] }
-  ): Promise<void> {
+  async createMany(image: CreateImageRequest['body'] & { files: File[] }): Promise<void> {
     await this.checkColorLimits(image.productId, image.colorId, image.files.length);
 
     const productImages = await this.list({ productId: image.productId });
@@ -101,7 +100,7 @@ export class ImageService {
     const existingImages = await this.list({ productId, colorId });
 
     if (existingImages.length + filesCount > limit) {
-      throw new Error(`Exceeded images limit of ${limit} per color`);
+      throw new BadRequestError(`Exceeded images limit of ${limit} per color`);
     }
   }
 }

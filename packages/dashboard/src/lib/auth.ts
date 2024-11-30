@@ -1,17 +1,35 @@
 import { configuration } from '@/configuration';
-import { emailService } from '@/services';
+import { emailService, shoppingService } from '@/services';
 import { betterAuth } from 'better-auth';
 import { admin, anonymous, openAPI, phoneNumber } from 'better-auth/plugins';
-import { isPossiblePhoneNumber } from 'libphonenumber-js';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import { Pool } from 'pg';
-import { v4 as uuid } from 'uuid';
 
-export const auth = betterAuth({
+const config = configuration();
+
+const auth = betterAuth({
   database: new Pool({
-    connectionString: configuration.db.url,
+    connectionString: config.db.url,
   }),
+  trustedOrigins: config.origin.allowedList,
+  databaseHooks: {
+    user: {
+      create: {
+        before: async user => {
+          return {
+            data: {
+              ...user,
+              firstName: user.name.split(' ')[0],
+              lastName: user.name.split(' ')[1] || '',
+            },
+          };
+        },
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
     requireEmailVerification: true,
     sendResetPassword: ({ user, url }) => {
       return emailService.sendVerificationEmail(user.email, url);
@@ -28,13 +46,8 @@ export const auth = betterAuth({
   },
   socialProviders: {
     google: {
-      clientId: configuration.auth.google.clientId,
-      clientSecret: configuration.auth.google.clientSecret,
-    },
-  },
-  account: {
-    accountLinking: {
-      enabled: true,
+      clientId: config.auth.google.clientId,
+      clientSecret: config.auth.google.clientSecret,
     },
   },
   plugins: [
@@ -43,22 +56,29 @@ export const auth = betterAuth({
     anonymous({
       emailDomainName: 'resala.dev',
       onLinkAccount: async ({ anonymousUser, newUser }) => {
-        // perform actions like moving the cart items from anonymous user to the new user
+        const userId = Number(newUser.user.id);
+        const guestId = Number(anonymousUser.user.id);
+
+        await Promise.allSettled([
+          shoppingService.cart.merge(userId, guestId),
+          shoppingService.wishlist.merge(userId, guestId),
+        ]);
       },
     }),
     phoneNumber({
-      sendOTP: ({ phoneNumber, code }, request) => {
+      sendOTP: ({ phoneNumber, code }) => {
+        console.log(`Sending OTP code ${code} to ${phoneNumber}`);
+
         // Implement sending OTP code via SMS
         throw new Error('Not implemented');
       },
       phoneNumberValidator: phoneNumber => {
-        const isValid = isPossiblePhoneNumber(phoneNumber);
-        return isValid ? Promise.resolve(true) : Promise.reject(false);
+        return isValidPhoneNumber(phoneNumber, 'EG');
       },
     }),
   ],
   advanced: {
-    generateId: () => uuid(),
+    generateId: false,
   },
   user: {
     fields: {
@@ -114,6 +134,10 @@ export const auth = betterAuth({
         type: 'string',
         fieldName: 'ban_expires',
       },
+      birthDate: {
+        type: 'string',
+        fieldName: 'birth_date',
+      },
     },
   },
   session: {
@@ -133,6 +157,9 @@ export const auth = betterAuth({
     },
   },
   account: {
+    accountLinking: {
+      enabled: true,
+    },
     fields: {
       userId: 'user_id',
       idToken: 'id_token',
@@ -154,3 +181,6 @@ export const auth = betterAuth({
     },
   },
 });
+
+export { auth };
+export type BetterAuth = typeof auth;

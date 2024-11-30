@@ -1,46 +1,40 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import type {
-  DeleteReviewRequest,
-  DeleteReviewResponse,
-  GetReviewRequest,
-  GetReviewResponse,
-  ListReviewsRequest,
-  ListReviewsResponse,
+import { reviewService } from '@/services';
+import {
+  type DeleteReviewResponse,
+  type GetReviewResponse,
+  type ListReviewsRequest,
+  type ListReviewsResponse,
+  ListReviewsSchema,
 } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const listReviews = async (query: ListReviewsRequest['query']) => {
-  const response = await callEndpoint<ListReviewsRequest, ListReviewsResponse>(
-    ENDPOINT_CONFIGS.listReviews,
-    { query, next: { tags: [ROUTES.PRODUCT_REVIEWS(query.productId ?? '')] } }
-  );
+export const listReviews = async (
+  query: ListReviewsRequest['query']
+): Promise<ListReviewsResponse['data']> => {
+  const parsed = ListReviewsSchema.parse({ query });
 
-  return response.data;
+  return await reviewService.list(parsed.query);
 };
 
-export const findReviewById = async (id: string | number) => {
-  const response = await callEndpoint<GetReviewRequest, GetReviewResponse>(
-    ENDPOINT_CONFIGS.getStock,
-    { params: { reviewId: id.toString() } }
-  );
-
-  return response.data;
+export const findReviewById = async (id: string | number): Promise<GetReviewResponse['data']> => {
+  try {
+    return await reviewService.find(+id);
+  } catch {
+    return notFound();
+  }
 };
 
-export const deleteReview = async (id: number, userId: number) => {
-  const response = await callEndpoint<DeleteReviewRequest, DeleteReviewResponse>(
-    ENDPOINT_CONFIGS.deleteReview,
-    {
-      params: { reviewId: id.toString() },
-      query: { userId: userId.toString() },
-    }
-  );
+export const deleteReview = async (id: number, userId: number): Promise<DeleteReviewResponse> => {
+  try {
+    const data = await reviewService.delete(id, userId);
 
-  revalidateTag(ROUTES.PRODUCT_REVIEWS(id));
-
-  return response;
+    revalidatePath(ROUTES.PRODUCT_REVIEWS(id));
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as DeleteReviewResponse;
+  }
 };

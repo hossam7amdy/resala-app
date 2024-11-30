@@ -1,3 +1,4 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type {
   CreateDiscountRequest,
@@ -34,7 +35,7 @@ export class DiscountService {
     });
 
     if (activeStoreWideDiscounts.length > 0) {
-      throw new Error('There is already an active store-wide discount');
+      throw new ConflictError('There is already an active store-wide discount');
     }
   }
 
@@ -51,9 +52,9 @@ export class DiscountService {
 
     const productDiscountsPromise = this.db.discount.findMany({
       include: {
-        discountProduct: {
+        products: {
           where: {
-            productId: {
+            id: {
               in: productIds,
             },
           },
@@ -141,31 +142,19 @@ export class DiscountService {
   ): Promise<GetDiscountResponse['data']> {
     const discountId = +id;
 
-    const [productsCount, { discountProduct, ...discount }] = await this.db.$transaction([
-      this.db.discountProduct.count({ where: { discountId } }),
-      this.db.discount.findUniqueOrThrow({
-        include: {
-          discountProduct: {
-            include: {
-              product: true,
-            },
-            skip: (page - 1) * limit,
-            take: limit,
-            orderBy: {
-              discountId: 'desc',
-            },
-          },
-        },
-        where: {
-          id: discountId,
-        },
-      }),
-    ]);
+    const { products, ...discount } = await this.db.discount.findUniqueOrThrow({
+      include: {
+        products: true,
+      },
+      where: {
+        id: discountId,
+      },
+    });
 
     return {
       ...discount,
-      pagination: { page, limit, total: productsCount },
-      products: discountProduct.map(dp => dp.product),
+      products,
+      pagination: { page, limit, total: products.length },
     };
   }
 
@@ -195,7 +184,7 @@ export class DiscountService {
         include: {
           _count: {
             select: {
-              discountProduct: true,
+              products: true,
             },
           },
         },
@@ -211,9 +200,13 @@ export class DiscountService {
       pagination: { page, limit, total: count },
       discounts: discounts.map(({ _count, ...discount }) => ({
         ...discount,
-        productsCount: _count.discountProduct,
+        productsCount: _count.products,
       })),
     };
+  }
+
+  async count(): Promise<number> {
+    return await this.db.discount.count();
   }
 
   async create({
@@ -225,13 +218,8 @@ export class DiscountService {
     return await this.db.discount.create({
       data: {
         ...data,
-        discountProduct: {
-          createMany: productIds?.length
-            ? {
-                data: productIds.map(productId => ({ productId })),
-                skipDuplicates: true,
-              }
-            : undefined,
+        products: {
+          connect: productIds?.map(id => ({ id })),
         },
       },
     });
@@ -268,20 +256,30 @@ export class DiscountService {
     });
 
     if (discount.isStoreWide) {
-      throw new Error('Cannot add products to a store-wide discount');
+      throw new ConflictError('Cannot add products to a store-wide discount');
     }
 
-    return await this.db.discountProduct.createMany({
-      data: productIds.map(productId => ({ productId, discountId })),
-      skipDuplicates: true,
+    return await this.db.discount.update({
+      data: {
+        products: {
+          connect: productIds.map(id => ({ id })),
+        },
+      },
+      where: {
+        id: discountId,
+      },
     });
   }
 
   async removeProducts(discountId: number, productIds: number[]) {
-    await this.db.discountProduct.deleteMany({
+    await this.db.discount.update({
+      data: {
+        products: {
+          disconnect: productIds.map(id => ({ id })),
+        },
+      },
       where: {
-        discountId,
-        productId: { in: productIds },
+        id: discountId,
       },
     });
   }
@@ -310,13 +308,11 @@ export class DiscountService {
 
     const storeWideDiscounts = applicableDiscounts.filter(d => d.isStoreWide);
 
-    const productDiscountsMap = applicableDiscounts.reduce((map, discount) => {
-      discount.discountProduct.forEach(dp => {
-        if (!map.has(dp.productId)) {
-          map.set(dp.productId, []);
-        }
-        map.get(dp.productId)!.push(discount);
-      });
+    const productDiscountsMap = applicableDiscounts.reduce((map, product) => {
+      if (!map.has(product.id)) {
+        map.set(product.id, []);
+      }
+      map.get(product.id)!.push(product);
       return map;
     }, new Map<number, Discount[]>());
 

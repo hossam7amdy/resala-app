@@ -17,7 +17,7 @@ type HonoCtx = Context<Env>;
 export const listUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<ListAddressResponse>> => {
-  const userId = c.var.userId as string;
+  const userId = c.var.user?.id as number;
 
   const addresses = await addressService.list(userId);
 
@@ -27,7 +27,7 @@ export const listUserAddress = async (
 export const createUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<CreateAddressResponse>> => {
-  const userId = c.var.userId as string;
+  const userId = c.var.user?.id as number;
   const body = (await c.req.json()) as CreateAddressRequest['body'];
 
   const address = await addressService.create({ ...body, userId });
@@ -38,7 +38,7 @@ export const createUserAddress = async (
 export const updateUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<UpdateAddressResponse>> => {
-  const userId = c.var.userId as string;
+  const userId = c.var.user?.id as number;
   const addressId = c.req.query('addressId') as string;
   const body = (await c.req.json()) as UpdateAddressRequest['body'];
 
@@ -50,7 +50,7 @@ export const updateUserAddress = async (
 export const deleteUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteAddressResponse>> => {
-  const userId = c.var.userId as string;
+  const userId = c.var.user?.id as number;
   const addressId = c.req.query('addressId') as string;
 
   const address = await addressService.delete(+addressId, userId);

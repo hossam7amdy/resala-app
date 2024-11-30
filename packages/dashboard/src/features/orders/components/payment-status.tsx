@@ -1,8 +1,7 @@
 import { ResalaTooltip } from '@/components';
 import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
-import type { GetOrderResponse, PaymentStatusType } from '@resala/shared';
-import { PaymentStatus as PaymentStatusEnum } from '@resala/shared';
+import type { GetOrderResponse, PaymentStatus as PaymentStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';
 import type { TagProps } from 'antd';
 import { useEffect, useState } from 'react';
@@ -81,29 +80,31 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({
           variant="borderless"
           style={{ width: 'max-content' }}
           value={newPaymentStatus}
-          options={[
-            {
-              label: <StatusTag status={PaymentStatusEnum.UNPAID} />,
-              value: PaymentStatusEnum.UNPAID,
-            },
-            {
-              label: <StatusTag status={PaymentStatusEnum.PAID} />,
-              value: PaymentStatusEnum.PAID,
-            },
-            {
-              label: <StatusTag status={PaymentStatusEnum.REFUNDED} />,
-              value: PaymentStatusEnum.REFUNDED,
-            },
-            {
-              label: <StatusTag status={PaymentStatusEnum.VOIDED} />,
-              value: PaymentStatusEnum.VOIDED,
-            },
-            {
-              label: <StatusTag status={PaymentStatusEnum.FAILED} />,
-              value: PaymentStatusEnum.FAILED,
-              disabled: true,
-            },
-          ]}
+          options={
+            [
+              {
+                label: <StatusTag status={'UNPAID'} />,
+                value: 'UNPAID',
+              },
+              {
+                label: <StatusTag status={'PAID'} />,
+                value: 'PAID',
+              },
+              {
+                label: <StatusTag status={'REFUNDED'} />,
+                value: 'REFUNDED',
+              },
+              {
+                label: <StatusTag status={'VOIDED'} />,
+                value: 'VOIDED',
+              },
+              {
+                label: <StatusTag status={'FAILED'} />,
+                value: 'FAILED',
+                disabled: true,
+              },
+            ] satisfies { label: React.ReactNode; value: PaymentStatusType; disabled?: boolean }[]
+          }
           onChange={onChange}
           disabled={isOnlinePayment}
         />

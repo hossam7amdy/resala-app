@@ -1,17 +1,18 @@
-import { configuration } from '@/configuration';
-import { SimpleEmailService } from '@/services/ses';
+import type { Configuration } from '@/configuration';
+
+import { SimpleEmailService } from '../ses';
 
 export class EmailService {
   private static _instance: EmailService | null = null;
   private _ses: SimpleEmailService;
 
-  protected constructor() {
-    this._ses = SimpleEmailService.getInstance(configuration);
+  protected constructor(private config: Configuration) {
+    this._ses = SimpleEmailService.getInstance(this.config);
   }
 
-  static getInstance() {
+  static getInstance(config: Configuration) {
     if (!this._instance) {
-      this._instance = new EmailService();
+      this._instance = new EmailService(config);
     }
 
     return this._instance;

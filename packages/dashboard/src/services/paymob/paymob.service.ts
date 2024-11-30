@@ -1,38 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: remove this 👆 after implementing the service
-import { configuration } from '@/configuration';
-import type { AxiosInstance } from 'axios';
-import axios from 'axios';
+import type { Configuration } from '@/configuration';
+import { HttpClient } from '@/utils/http-client';
 import { Decimal } from 'decimal.js';
 
 import type { AuthenticateApiResponse, CheckoutApiResponse, CheckoutDto } from './payments.dtos';
 
 export class PaymobService {
-  private readonly api: AxiosInstance;
-  private readonly serverUrl = configuration.baseUrl;
-  private readonly webUrl = configuration.origin.web;
-  private readonly baseURL = configuration.payment.paymob.baseUrl;
-  private readonly apiToken = configuration.payment.paymob.apiToken;
-  private readonly secretKey = configuration.payment.paymob.secretKey;
-  private readonly integrationId = configuration.payment.paymob.integrationId;
-  private readonly checkoutLink = configuration.payment.paymob.checkoutLink;
+  private readonly serverUrl: string;
+  private readonly webUrl: string;
+  private readonly apiToken: string;
+  private readonly secretKey: string;
+  private readonly integrationId: number;
+  private readonly checkoutLink: string;
+  private readonly httpClient: HttpClient;
 
-  constructor() {
-    this.api = axios.create({
-      baseURL: this.baseURL,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  constructor(config: Configuration) {
+    this.webUrl = config.origin.web;
+    this.serverUrl = config.server.url;
+    this.apiToken = config.payment.paymob.apiToken;
+    this.secretKey = config.payment.paymob.secretKey;
+    this.integrationId = config.payment.paymob.integrationId;
+    this.checkoutLink = config.payment.paymob.checkoutLink;
+
+    this.httpClient = new HttpClient({
+      baseUrl: config.payment.paymob.baseUrl,
+      defaultHeaders: { 'Content-Type': 'application/json' },
     });
-
-    this.api.interceptors.response.use(
-      response => {
-        return response.data;
-      },
-      error => {
-        throw error.response.data ?? error.response ?? error;
-      }
-    );
   }
 
   async authenticate(): Promise<{ token: string }> {
@@ -40,10 +34,9 @@ export class PaymobService {
       api_key: this.apiToken,
     };
 
-    const { token } = await this.api.post<unknown, AuthenticateApiResponse>(
-      '/api/auth/tokens',
-      body
-    );
+    const { token } = await this.httpClient.post<AuthenticateApiResponse>('/api/auth/tokens', {
+      body,
+    });
 
     return { token };
   }
@@ -100,7 +93,7 @@ export class PaymobService {
       },
     };
 
-    const { client_secret, ...rest } = await this.api.post<unknown, CheckoutApiResponse>(
+    const { client_secret, ...rest } = await this.httpClient.post<CheckoutApiResponse>(
       '/v1/intention/',
       body,
       { headers }
@@ -122,7 +115,7 @@ export class PaymobService {
       Authorization: `Bearer ${token}`,
     };
 
-    return this.api.get(`/api/acceptance/transactions/${trxId}`, {
+    return this.httpClient.get(`/api/acceptance/transactions/${trxId}`, {
       headers,
     });
   }
@@ -138,7 +131,7 @@ export class PaymobService {
       transaction_id: trxId,
     };
 
-    return await this.api.post('/api/acceptance/void_refund/void', body, { headers });
+    return await this.httpClient.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
   async refund(trxId: number, amountCents: number): Promise<any> {
@@ -151,7 +144,7 @@ export class PaymobService {
       amount_cents: amountCents,
     };
 
-    return await this.api.post('/api/acceptance/void_refund/refund', body, {
+    return await this.httpClient.post('/api/acceptance/void_refund/refund', body, {
       headers,
     });
   }

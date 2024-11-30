@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "role" AS ENUM ('ADMIN', 'MODERATOR', 'CUSTOMER');
+CREATE TYPE "discount_type" AS ENUM ('PERCENTAGE', 'FIXED', 'BOGO', 'BULK');
 
 -- CreateEnum
 CREATE TYPE "order_status" AS ENUM ('PENDING', 'FULFILLED', 'SHIPPED', 'DELIVERED', 'CANCELLED');
@@ -10,18 +10,32 @@ CREATE TYPE "payment_status" AS ENUM ('UNPAID', 'PAID', 'FAILED', 'VOIDED', 'REF
 -- CreateEnum
 CREATE TYPE "payment_method" AS ENUM ('CASH', 'CARD');
 
+-- CreateEnum
+CREATE TYPE "marketing_state" AS ENUM ('SUBSCRIBED', 'NOT_SUBSCRIBED', 'UNSUBSCRIBED');
+
+-- CreateEnum
+CREATE TYPE "role" AS ENUM ('ADMIN', 'MODERATOR', 'STAFF', 'USER', 'CUSTOMER');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
-    "email" VARCHAR(125) NOT NULL,
+    "email" TEXT NOT NULL,
     "is_email_verified" BOOLEAN NOT NULL DEFAULT false,
-    "phone" VARCHAR(15) NOT NULL,
+    "email_marketing_state" "marketing_state" NOT NULL DEFAULT 'NOT_SUBSCRIBED',
+    "phone" VARCHAR(15),
     "is_phone_verified" BOOLEAN NOT NULL DEFAULT false,
-    "first_name" VARCHAR(50) NOT NULL,
-    "last_name" VARCHAR(50) NOT NULL,
+    "sms_marketing_state" "marketing_state" NOT NULL DEFAULT 'NOT_SUBSCRIBED',
+    "name" TEXT NOT NULL DEFAULT '',
+    "first_name" TEXT NOT NULL,
+    "last_name" TEXT NOT NULL,
     "role" "role" NOT NULL DEFAULT 'CUSTOMER',
-    "password" VARCHAR(500) NOT NULL,
-    "last_login" TIMESTAMP(3),
+    "banned" BOOLEAN,
+    "ban_reason" TEXT,
+    "ban_expires" INTEGER,
+    "is_anonymous" BOOLEAN,
+    "image" TEXT,
+    "lang" CHAR(2) DEFAULT 'en',
+    "birth_date" DATE,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -30,8 +44,9 @@ CREATE TABLE "user" (
 
 -- CreateTable
 CREATE TABLE "user_address" (
-    "user_id" INTEGER NOT NULL,
     "address_id" INTEGER NOT NULL,
+    "is_default" BOOLEAN NOT NULL DEFAULT false,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "user_address_pkey" PRIMARY KEY ("user_id","address_id")
 );
@@ -55,7 +70,7 @@ CREATE TABLE "product" (
     "en_name" VARCHAR(50) NOT NULL,
     "ar_description" VARCHAR(1000) NOT NULL,
     "en_description" VARCHAR(1000) NOT NULL,
-    "price" DECIMAL(9,2) NOT NULL,
+    "price" MONEY NOT NULL,
     "image_key" VARCHAR(50) NOT NULL,
     "image_url" VARCHAR(300) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -114,30 +129,29 @@ CREATE TABLE "size" (
 
 -- CreateTable
 CREATE TABLE "cart" (
-    "user_id" INTEGER NOT NULL,
     "stock_id" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "cart_pkey" PRIMARY KEY ("user_id","stock_id")
 );
 
 -- CreateTable
 CREATE TABLE "wishlist" (
-    "user_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "user_id" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "order" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "subtotal" DECIMAL(9,2) NOT NULL,
-    "discount" DECIMAL(9,2) NOT NULL DEFAULT 0,
-    "total" DECIMAL(9,2) NOT NULL,
+    "subtotal" MONEY NOT NULL,
+    "discount" MONEY NOT NULL DEFAULT 0,
+    "total" MONEY NOT NULL,
     "order_status" "order_status" NOT NULL DEFAULT 'PENDING',
     "transaction_id" VARCHAR(32),
     "payment_method" "payment_method" NOT NULL,
@@ -145,6 +159,7 @@ CREATE TABLE "order" (
     "note" VARCHAR(250),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "order_pkey" PRIMARY KEY ("id")
 );
@@ -156,7 +171,7 @@ CREATE TABLE "order_item" (
     "product_id" INTEGER NOT NULL,
     "stock_id" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "unit_price" DECIMAL(9,2) NOT NULL,
+    "unit_price" MONEY NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -168,7 +183,7 @@ CREATE TABLE "shipping" (
     "id" SERIAL NOT NULL,
     "order_id" INTEGER NOT NULL,
     "address_id" INTEGER NOT NULL,
-    "cost" DECIMAL(9,2) NOT NULL DEFAULT 0,
+    "cost" MONEY NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -178,12 +193,12 @@ CREATE TABLE "shipping" (
 -- CreateTable
 CREATE TABLE "review" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
     "rating" INTEGER NOT NULL DEFAULT 5,
     "comment" VARCHAR(500),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "user_id" INTEGER NOT NULL,
 
     CONSTRAINT "review_pkey" PRIMARY KEY ("id")
 );
@@ -205,6 +220,77 @@ CREATE TABLE "address" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "address_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "discount" (
+    "id" SERIAL NOT NULL,
+    "type" "discount_type" NOT NULL,
+    "amount" MONEY NOT NULL,
+    "description" VARCHAR(250),
+    "min_qty" INTEGER NOT NULL DEFAULT 1,
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "is_store_wide" BOOLEAN NOT NULL DEFAULT false,
+    "start_date" TIMESTAMP(3),
+    "end_date" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "discount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "account" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "account_id" TEXT NOT NULL,
+    "id_token" TEXT,
+    "provider_id" TEXT NOT NULL,
+    "access_token" TEXT,
+    "refresh_token" TEXT,
+    "access_token_expires_at" TIMESTAMP(3),
+    "refresh_token_expires_at" TIMESTAMP(3),
+    "scope" TEXT,
+    "password" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "account_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "session" (
+    "id" SERIAL NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
+    "ip_address" TEXT,
+    "user_agent" TEXT,
+    "impersonated_by" INTEGER,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "session_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "verification" (
+    "id" SERIAL NOT NULL,
+    "identifier" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "verification_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_DiscountToProduct" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_DiscountToProduct_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -255,11 +341,17 @@ CREATE UNIQUE INDEX "shipping_order_id_key" ON "shipping"("order_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "shipping_address_id_key" ON "shipping"("address_id");
 
--- AddForeignKey
-ALTER TABLE "user_address" ADD CONSTRAINT "user_address_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
+
+-- CreateIndex
+CREATE INDEX "_DiscountToProduct_B_index" ON "_DiscountToProduct"("B");
 
 -- AddForeignKey
 ALTER TABLE "user_address" ADD CONSTRAINT "user_address_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_address" ADD CONSTRAINT "user_address_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "product" ADD CONSTRAINT "product_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -271,25 +363,25 @@ ALTER TABLE "image" ADD CONSTRAINT "image_color_id_fkey" FOREIGN KEY ("color_id"
 ALTER TABLE "image" ADD CONSTRAINT "image_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock" ADD CONSTRAINT "stock_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "stock" ADD CONSTRAINT "stock_color_id_fkey" FOREIGN KEY ("color_id") REFERENCES "color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock" ADD CONSTRAINT "stock_color_id_fkey" FOREIGN KEY ("color_id") REFERENCES "color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "stock" ADD CONSTRAINT "stock_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stock" ADD CONSTRAINT "stock_size_id_fkey" FOREIGN KEY ("size_id") REFERENCES "size"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "cart" ADD CONSTRAINT "cart_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "cart" ADD CONSTRAINT "cart_stock_id_fkey" FOREIGN KEY ("stock_id") REFERENCES "stock"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "cart" ADD CONSTRAINT "cart_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "order" ADD CONSTRAINT "order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -304,13 +396,25 @@ ALTER TABLE "order_item" ADD CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY
 ALTER TABLE "order_item" ADD CONSTRAINT "order_item_stock_id_fkey" FOREIGN KEY ("stock_id") REFERENCES "stock"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "shipping" ADD CONSTRAINT "shipping_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "shipping" ADD CONSTRAINT "shipping_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "shipping" ADD CONSTRAINT "shipping_address_id_fkey" FOREIGN KEY ("address_id") REFERENCES "address"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "review" ADD CONSTRAINT "review_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "review" ADD CONSTRAINT "review_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "session" ADD CONSTRAINT "session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_DiscountToProduct" ADD CONSTRAINT "_DiscountToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "discount"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_DiscountToProduct" ADD CONSTRAINT "_DiscountToProduct_B_fkey" FOREIGN KEY ("B") REFERENCES "product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
