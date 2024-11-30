@@ -6,8 +6,10 @@
  */
 import type { z } from 'zod';
 
+import type { DTO } from '../dto/dto.js';
 import type {
   Address,
+  AuthUser,
   Cart,
   Category,
   Color,
@@ -15,6 +17,7 @@ import type {
   Image,
   Order,
   OrderItem,
+  Pagination,
   Product,
   Review,
   Shipping,
@@ -24,12 +27,6 @@ import type {
   Wishlist,
 } from '../types/index.js';
 import type * as Schemas from '../validations/index.js';
-
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-};
 
 export type ListRequestQuery = {
   query: z.infer<typeof Schemas.OffsetPageParamsSchema>;
@@ -42,43 +39,89 @@ export type DefaultResponseBody = {
 };
 
 // Auth types
-export type LoginRequest = z.infer<typeof Schemas.LoginSchema>;
-export type LoginResponse = DefaultResponseBody & {
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    user: User;
-  };
+export type LoginRequest = {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+  callbackURL?: string;
+};
+export type LoginResponse = {
+  user: AuthUser;
+  redirect: boolean;
 };
 
-export type GoogleLoginRequest = z.infer<typeof Schemas.GoogleLoginSchema>;
-export type GoogleLoginResponse = undefined;
+export type LoginWithPhoneRequest = Omit<LoginRequest, 'email'> & {
+  phoneNumber: string;
+};
+export type LoginWithPhoneResponse = LoginResponse;
 
-export type RegisterRequest = z.infer<typeof Schemas.RegisterSchema>;
+export type LoginAnonymousRequest = never;
+export type LoginAnonymousResponse = LoginResponse;
+
+export type ProviderLoginRequest = {
+  provider: 'google';
+  callbackURL?: string;
+  errorCallbackURL?: string;
+};
+export type ProviderLoginResponse = LoginResponse & {
+  url: string;
+  redirect: boolean;
+};
+
+export type RegisterRequest = Partial<DTO<AuthUser>> & {
+  email: string;
+  password: string;
+  callbackURL?: string;
+};
 export type RegisterResponse = DefaultResponseBody;
 
-export type RefreshTokenRequest = z.infer<typeof Schemas.RefreshTokenSchema>;
-export type RefreshTokenResponse = DefaultResponseBody & {
-  data: {
-    accessToken: string;
-    refreshToken: string;
-  };
+export type ForgotPasswordRequest = {
+  email: string;
+  redirectTo?: string;
 };
-
-export type VerifyEmailRequest = z.infer<typeof Schemas.VerifyEmailSchema>;
-export type VerifyEmailResponse = DefaultResponseBody;
-
-export type ResendVerificationEmailRequest = z.infer<typeof Schemas.ResendVerificationSchema>;
-export type ResendVerificationEmailResponse = DefaultResponseBody;
-
-export type ForgotPasswordRequest = z.infer<typeof Schemas.ForgotPasswordSchema>;
 export type ForgotPasswordResponse = DefaultResponseBody;
 
-export type ResetPasswordRequest = z.infer<typeof Schemas.ResetPasswordSchema>;
+export type ResetPasswordRequest = {
+  newPassword: string;
+  token: string;
+};
 export type ResetPasswordResponse = DefaultResponseBody;
 
-export type ChangePasswordRequest = z.infer<typeof Schemas.ChangePasswordSchema>;
+export type SendVerificationEmailRequest = {
+  email: string;
+  callbackURL?: string;
+};
+export type SendVerificationEmailResponse = DefaultResponseBody;
+
+export type ChangePasswordRequest = {
+  newPassword: string;
+  currentPassword: string;
+  revokeOtherSessions?: boolean;
+};
 export type ChangePasswordResponse = DefaultResponseBody;
+
+export type SendPhoneNumberOTPRequest = {
+  phoneNumber: string;
+};
+export type SendPhoneNumberOTPResponse = DefaultResponseBody;
+
+export type VerifyPhoneNumberOTPRequest = {
+  phoneNumber: string;
+  code: string;
+  disableSession?: boolean;
+  updatePhoneNumber?: boolean;
+};
+export type VerifyPhoneNumberOTPResponse = {
+  user: AuthUser;
+};
+
+export type GetSessionRequest = never;
+export type GetSessionResponse = {
+  user: AuthUser;
+} | null;
+
+export type LogoutRequest = never;
+export type LogoutResponse = DefaultResponseBody;
 
 // User types
 export type GetUserRequest = z.infer<typeof Schemas.GetUserSchema>;
