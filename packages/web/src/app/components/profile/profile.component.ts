@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthUser } from '@resala/shared';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule],
@@ -15,33 +16,23 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
   constructor(
-    private _UserInfo: UserService,
-    private _AuthService: AuthService,
-    private _Spinner: NgxSpinnerService,
-    public _Translate: TranslateService
+    public translate: TranslateService,
+    private _authService: AuthService,
+    private _spinner: NgxSpinnerService
   ) {}
 
-  userInfo: any = {};
-  userId: any;
   isLoaded: boolean = false;
+  userInfo: AuthUser | null = null;
 
   ngOnInit(): void {
-    this._Spinner.show();
-    this._AuthService.decodeUser();
-    this.userId = this._AuthService.userInfo.id;
-
-    this._UserInfo.getUserInfo(this.userId).subscribe({
-      next: response => {
-        this.userInfo = response.data;
-        this.isLoaded = true;
-      },
-      error: err => {
-        console.log(err);
-      },
+    this._spinner.show();
+    this._authService.userInfo$.subscribe(data => {
+      this.userInfo = data;
+      this.isLoaded = true;
     });
   }
 
   ngAfterViewInit(): void {
-    this._Spinner.hide();
+    this._spinner.hide();
   }
 }

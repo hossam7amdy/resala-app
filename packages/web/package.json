@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "echo \"No tests specified for web\" && exit 0"
+    "test": "echo \"No tests specified for web\" && exit 0",
+    "prebuild": "yarn workspace @resala/shared build"
   },
   "private": true,
   "dependencies": {
@@ -25,7 +26,6 @@
     "@ngx-translate/http-loader": "^8.0.0",
     "bootstrap": "^5.3.2",
     "hammerjs": "^2.0.8",
-    "jwt-decode": "^4.0.0",
     "ng-bootstrap": "^1.6.3",
     "ngx-gallery": "^5.10.0",
     "ngx-image-zoom": "^3.0.0",

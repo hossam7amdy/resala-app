@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthUser } from '@resala/shared';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
@@ -13,11 +13,11 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
-import { UserService } from 'src/app/core/services/user.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-nav-blank',
   standalone: true,
   imports: [
@@ -34,19 +34,25 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   styleUrls: ['./nav-blank.component.css'],
 })
 export class NavBlankComponent implements OnInit {
+  user: AuthUser | null = null;
+  customSpinIsLoading = false;
+  authenticated: boolean = false;
+  categoryList: any = [];
+
+  cartNum: number = 0;
+  togglerOnend: boolean = false;
+
   constructor(
-    private _AuthService: AuthService,
-    private _Router: Router,
-    private _CartService: CartService,
-    private _Categories: CategoriesService,
-    private route: ActivatedRoute,
-    private _Renderer: Renderer2,
-    private UserProfile: UserService,
-    public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service,
-    private _HomeProducts: HomeProductsService,
-    private _WishListService: WishListService,
-    private _Toaster: ToastrService
+    public translate: TranslateService,
+    private _authService: AuthService,
+    private _router: Router,
+    private _cartService: CartService,
+    private _categories: CategoriesService,
+    private _renderer: Renderer2,
+    private _rtlStatus: Translate_Service,
+    private _homeProducts: HomeProductsService,
+    private _wishListService: WishListService,
+    private _toaster: ToastrService
   ) {}
 
   isClickedSearch: boolean = false;
@@ -61,93 +67,75 @@ export class NavBlankComponent implements OnInit {
     this.isClickedSearch = false;
   }
 
-  //Add product in Wish list method
-  addPoductInWishList(id: any, element: HTMLElement): void {
-    this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
-        this._Renderer.setStyle(element, 'font-weight', 'bold');
-        this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+  addProductInWishList(id: string, element: HTMLElement): void {
+    this._wishListService.postWishListItems(id).subscribe({
+      next: () => {
+        this._renderer.setStyle(element, 'font-weight', 'bold');
+        this._toaster.success('Added in Your Favorite List');
       },
       error: err => {
-        this._Toaster.error('Should be Login !!');
-        this._Router.navigate(['/login']);
-        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-
-        // } else {
-        //   this._Toaster.error(err.message);
-        // }
-        console.log(err);
+        const errMsg = err.error.message || 'Something went wrong';
+        this._toaster.error(errMsg);
       },
     });
   }
 
   searchProducts(): void {
     if (this.searchText !== '') {
-      this._HomeProducts.getProductsSearch(this.searchText).subscribe({
+      this._homeProducts.getProductsSearch(this.searchText).subscribe({
         next: response => {
           this.products = response.data.products;
-          console.log(this.products);
-          console.log(this.searchText);
         },
         error: err => {
-          console.log(err);
+          const errMsg = err.error.message || 'Something went wrong';
+          this._toaster.error(errMsg);
         },
       });
     }
   }
-  // start Custome Spinner
-  customSpinIsLoading = false;
-  //end Custome Spinner
-
-  // attributes
-  userNameLogged: string = 'Login';
-  userId: any;
-  signOut: boolean = false;
-  isToken: string | null = '';
-  categoryList: any = [];
-
-  cartNum: number = 0;
-  togglerOpend: boolean = false;
 
   @ViewChild('navbar') navbarElement!: ElementRef;
 
   @HostListener('window:scroll')
   onScrollSecond(): void {
     if (scrollY > 600) {
-      this._Renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
+      this._renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
     } else {
-      this._Renderer.removeStyle(this.navbarElement.nativeElement, 'top');
+      this._renderer.removeStyle(this.navbarElement.nativeElement, 'top');
     }
   }
   currentLang: string = 'ar';
-  langStorage: any = localStorage.getItem('language');
+  langStorage: string = localStorage.getItem('language') ?? this.currentLang;
 
   switchLanguage(lang: string): void {
     this.customSpinIsLoading = true;
     localStorage.setItem('language', lang);
-    this.langStorage = localStorage.getItem('language');
+    this.langStorage = lang;
     window.location.reload();
-    this._Translate.use(this.langStorage);
+    this.translate.use(this.langStorage);
     this.changePageDirection(lang);
     if (lang == 'ar') {
       this.currentLang = 'en';
-      this._RTLStatus.rTLStatus.next(lang);
+      this._rtlStatus.rTLStatus.next(lang);
     } else {
       this.currentLang = 'ar';
-      this._RTLStatus.rTLStatus.next(lang);
+      this._rtlStatus.rTLStatus.next(lang);
     }
     this.customSpinIsLoading = false;
-    console.log('Language' + lang, this.currentLang);
   }
 
   ngOnInit(): void {
+    this._authService.userInfo$.subscribe(user => {
+      this.user = user;
+      this.authenticated = !!user && !user?.isAnonymous;
+    });
+
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
-      this._Translate.defaultLang;
+      this.translate.defaultLang;
       this.currentLang = 'ar';
     } else {
-      this._Translate.use(this.langStorage);
+      this.translate.use(this.langStorage);
       if (this.langStorage === 'en') {
         this.currentLang = 'ar';
       } else {
@@ -156,31 +144,21 @@ export class NavBlankComponent implements OnInit {
     }
     this.changePageDirection(this.langStorage);
 
-    // this.signOut = this._AuthService.signOut;
-    this.isToken = localStorage.getItem('accessToken');
-    if (this.isToken == null || this.isToken == '') {
-      this.signOut = false;
-    } else {
-      this._AuthService.decodeUser();
-      this.userId = this._AuthService.userInfo?.id;
-    }
-
-    this.getUserInfo(this.userId);
-
-    this._CartService.cartNumber.subscribe({
+    this._cartService.cartNumber.subscribe({
       next: response => {
-        console.log('cart number', response);
         this.cartNum = response;
         this.customSpinIsLoading = false;
       },
       error: err => {
+        const errMsg = err.error.message || 'Something went wrong';
+
         this.cartNum = 0;
-        console.log(err);
+        this._toaster.error(errMsg);
         this.customSpinIsLoading = false;
       },
     });
 
-    this._CartService.getCartUser().subscribe({
+    this._cartService.getCartUser().subscribe({
       next: response => {
         this.cartNum = response.data.totalQuantity;
         this.customSpinIsLoading = false;
@@ -190,13 +168,14 @@ export class NavBlankComponent implements OnInit {
       },
     });
 
-    this._Categories.getCategories().subscribe({
+    this._categories.getCategories().subscribe({
       next: response => {
         this.categoryList = response.data;
         this.customSpinIsLoading = false;
       },
       error: err => {
-        console.log(err);
+        const errMsg = err.error.message || 'Something went wrong';
+        this._toaster.error(errMsg);
         this.customSpinIsLoading = false;
       },
     });
@@ -217,26 +196,11 @@ export class NavBlankComponent implements OnInit {
   }
 
   isTogglerOpend(): void {
-    if (this.togglerOpend == false) {
-      this.togglerOpend = true;
+    if (this.togglerOnend == false) {
+      this.togglerOnend = true;
     } else {
-      this.togglerOpend = false;
+      this.togglerOnend = false;
     }
-  }
-
-  getUserInfo(userId: any): void {
-    this.UserProfile.getUserInfo(userId).subscribe({
-      next: response => {
-        this._AuthService.userNameLogged.next(response.data.firstName);
-        this.userNameLogged = response.data.firstName;
-        this.signOut = true;
-      },
-      error: err => {
-        if (err.status == 401 || err.status == 403) {
-          this.signOut = false;
-        }
-      },
-    });
   }
 
   reloadPage(id: any): void {
@@ -245,16 +209,20 @@ export class NavBlankComponent implements OnInit {
     this.customSpinIsLoading = false;
   }
 
-  removeTokenSignOut(): void {
-    this.signOut = false;
-    localStorage.removeItem('accessToken');
-    this._Router.navigate(['/login']);
-    if (this._AuthService.signOut == null) {
-      this.cartNum = 0;
-    } else {
-      this.cartNum = this._CartService.cartNumber.value;
-    }
-
-    this.userNameLogged = 'Login';
+  handleLogout(): void {
+    this.customSpinIsLoading = true;
+    this._authService.logout().subscribe({
+      next: data => {
+        console.log(data);
+        this.customSpinIsLoading = false;
+        this._router.navigate(['/']);
+      },
+      error: err => {
+        console.log(err);
+        const errMsg = err?.error?.message || 'Something went wrong';
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
+      },
+    });
   }
 }
