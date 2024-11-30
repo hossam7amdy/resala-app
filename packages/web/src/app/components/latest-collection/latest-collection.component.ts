@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { OnInit, Renderer2 } from '@angular/core';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ListProductsResponse } from '@resala/shared';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
-import { Product } from 'src/app/core/interfaces/product';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-latest-collection',
   standalone: true,
   imports: [CommonModule, RouterLink, NgxStarsRatingModule, TranslateModule, SpinnerComponent],
@@ -34,11 +35,8 @@ export class LatestCollectionComponent implements OnInit {
   userNameLogged: any;
   productId: string = '';
 
-  // start Custome Spinner
   customSpinIsLoading = false;
-  //end Custome Spinner
 
-  //start Rating
   public rateNumber: number = 2;
   public ratingOptions: IRatingOptions = {
     starsCount: 5,
@@ -46,20 +44,14 @@ export class LatestCollectionComponent implements OnInit {
     clickable: false,
   };
 
-  //end Rating
-
-  // interfaces
-  products: Product[] = [];
+  products: ListProductsResponse['data']['products'] = [];
 
   imgPlaceHolder: string = '';
 
-  //favourit icons
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
-    //  products
     this._HomeProductsService.getProducts('1', '20').subscribe({
       next: response => {
         this.products = response.data.products;
@@ -73,7 +65,7 @@ export class LatestCollectionComponent implements OnInit {
     //Reviews
     this._Reviews.getProductReview('1', '100').subscribe({
       next: res => {
-        this.rateNumber = res.data.reviews.rating;
+        this.rateNumber = res.data.reviews.at(0)?.rating || 5;
         this.customSpinIsLoading = false;
       },
       error: () => {
@@ -87,21 +79,14 @@ export class LatestCollectionComponent implements OnInit {
     this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
       next: () => {
+        this.customSpinIsLoading = false;
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-
-        this.customSpinIsLoading = false;
       },
-      error: () => {
-        this._Toaster.error('Should be Login !!');
-        this._Router.navigate(['/login']);
-        // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
-
-        // } else {
-        //   this._Toaster.error(err.message);
-        // }
-
+      error: e => {
         this.customSpinIsLoading = false;
+        const errMsg = e?.error?.message || 'Something went wrong';
+        this._Toaster.error(errMsg);
       },
     });
   }

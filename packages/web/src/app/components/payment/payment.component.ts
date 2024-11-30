@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { OnInit, Renderer2 } from '@angular/core';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,6 +18,7 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-payment',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, SpinnerComponent, TranslateModule, RouterLink],
@@ -183,7 +184,7 @@ export class PaymentComponent implements OnInit {
     }
 
     this.addressForm.patchValue({ userId: this.userLoginId });
-    this._PaymentServices.getListAddressUser(this.userLoginId).subscribe({
+    this._PaymentServices.getListAddressUser(this.userLoginId.toString()).subscribe({
       next: response => {
         this.getUserAddress = response.data;
         if (this.getUserAddress.length == 3) {
@@ -235,61 +236,6 @@ export class PaymentComponent implements OnInit {
     trarget.scrollIntoView({ behavior: 'smooth' });
     this.customSpinIsLoading = false;
   }
-
-  // addressForm:FormGroup =new FormGroup({
-  //   userId: new FormControl('', [Validators.required]),
-  //   state: new FormControl('', [Validators.required]),
-  //   city: new FormControl('', [Validators.required]),
-  //   street: new FormControl('', [Validators.required]),
-
-  //   phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
-
-  //   firstName: new FormControl('', [
-  //     Validators.required,
-  //     Validators.minLength(2),
-  //     Validators.maxLength(50),
-  //     Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
-  //   ]),
-
-  //   lastName: new FormControl('', [
-  //     Validators.required,
-  //     Validators.minLength(2),
-  //     Validators.maxLength(50),
-  //     Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
-  //   ]),
-
-  //   building: new FormControl(''), //optional
-  //   floor: new FormControl('', [Validators.pattern('^[1-9][0-9]?$'), Validators.required]),
-  //   address: new FormControl(''), //optional
-  // });
-
-  // userAddresses: FormGroup = new FormGroup({
-  //   userId: new FormControl('', [Validators.required]),
-  //   state: new FormControl('', [Validators.required]),
-  //   city: new FormControl('', [Validators.required]),
-  //   street: new FormControl('', [Validators.required]),
-
-  //   phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
-
-  //   firstName: new FormControl('', [
-  //     Validators.required,
-  //     Validators.minLength(2),
-  //     Validators.maxLength(50),
-  //     Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
-  //   ]),
-
-  //   lastName: new FormControl('', [
-  //     Validators.required,
-  //     Validators.minLength(2),
-  //     Validators.maxLength(50),
-  //     Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
-  //   ]),
-
-  //   building: new FormControl(''), //optional
-  //   floor: new FormControl('', [Validators.pattern('^[1-9][0-9]?$'), Validators.required]),
-  //   address: new FormControl(''), //optional
-  //   addressId: new FormControl(''), //optional
-  // });
 
   onSelected(value: string): void {
     this.customSpinIsLoading = true;
@@ -353,7 +299,7 @@ export class PaymentComponent implements OnInit {
     this._Renderer2.setAttribute(element, 'disabled', 'true');
     const userData = this.userAddresses.value;
     if (userAddresses.valid) {
-      this._PaymentServices.updateUserAddress(this.addressIdEdit, userData).subscribe({
+      this._PaymentServices.updateUserAddress(this.addressIdEdit.toString(), userData).subscribe({
         next: () => {
           this._Toaster.success('Updated Your Address successfuly');
           this.isEdit = false;
@@ -374,23 +320,25 @@ export class PaymentComponent implements OnInit {
   removeItem(): void {
     this.customSpinIsLoading = true;
     const addressId: number = this.getUserAddress[this.selectedDelIndex].id;
-    this._PaymentServices.deleteUserAddress(this.userLoginId, addressId).subscribe({
-      next: response => {
-        this.getUserAddress = response.data;
+    this._PaymentServices
+      .deleteUserAddress(this.userLoginId.toString(), addressId.toString())
+      .subscribe({
+        next: response => {
+          this.getUserAddress = response.data;
 
-        this._Toaster.success('Removed Your Address Successfuly');
-        window.location.reload();
-        this.isRegisterd = false;
-        this.isEdit = false;
-        this.isSelectedAddress = false;
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
-        this._Toaster.info('Your Item Not Removed');
+          this._Toaster.success('Removed Your Address Successfuly');
+          window.location.reload();
+          this.isRegisterd = false;
+          this.isEdit = false;
+          this.isSelectedAddress = false;
+          this.customSpinIsLoading = false;
+        },
+        error: () => {
+          this._Toaster.info('Your Item Not Removed');
 
-        this.customSpinIsLoading = false;
-      },
-    });
+          this.customSpinIsLoading = false;
+        },
+      });
   }
 
   paymentSelectedMethod(event: any) {
@@ -419,7 +367,7 @@ export class PaymentComponent implements OnInit {
             this._Toaster.success('Your Order Completed');
 
             if (this.paymentSelected == 'CARD') {
-              window.open(response.data.paymentUrl, '_self');
+              window.open(response.data?.paymentUrl, '_self');
             } else {
               this._CartService.cartNumber.next(0);
               this._Router.navigate(['/home']);

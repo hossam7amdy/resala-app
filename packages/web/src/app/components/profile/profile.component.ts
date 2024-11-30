@@ -22,14 +22,14 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     private _spinner: NgxSpinnerService
   ) {}
 
-  isLoaded: boolean = false;
   userInfo: AuthUser | null = null;
+  customSpinIsLoading: boolean = false;
 
   ngOnInit(): void {
-    this._spinner.show();
+    this.customSpinIsLoading = true;
     this._authService.userInfo$.subscribe(data => {
       this.userInfo = data;
-      this.isLoaded = true;
+      this.customSpinIsLoading = false;
     });
   }
 
