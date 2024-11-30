@@ -3,13 +3,6 @@
 
 <section #navbar class="fixed-top">
   <div class="upper-nav">
-    <!-- <ul  class="nav justify-content-end">
-  <li class="nav-item">
-    <a   (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link py-1">Arabic</a>
-    <a  (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link py-1" >English</a>
-  </li>
-</ul> -->
-
     <ul class="nav ms-auto p-0 pt-1 mb-lg-0 justify-content-center">
       <li class="nav-item mx-4 me-3">
         <a (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link lang">AR</a>
@@ -53,8 +46,8 @@
                     <img
                       class="w-100 image-products"
                       [src]="product.imageUrl"
-                      [alt]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
-                      [title]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
+                      [alt]="translate.currentLang == 'ar' ? product.arName : product.enName"
+                      [title]="translate.currentLang == 'ar' ? product.arName : product.enName"
                     />
                   </div>
                 </div>
@@ -62,15 +55,15 @@
 
                 <div class="descrp">
                   <h6
-                    [lang]="_Translate.currentLang"
+                    [lang]="translate.currentLang"
                     [routerLink]="['/product-details/', product.id]"
                     class="mb-0"
                     role="button"
                   >
-                    {{ _Translate.currentLang === 'ar' ? product.arName : product.enName }}
+                    {{ translate.currentLang === 'ar' ? product.arName : product.enName }}
                   </h6>
 
-                  <span class="price" [lang]="_Translate.currentLang"
+                  <span class="price" [lang]="translate.currentLang"
                     >{{ product.price }}
                     <label class="currency">
                       {{ 'home.allProducts.currency' | translate }}</label
@@ -97,12 +90,12 @@
           aria-expanded="false"
         >
           <i class="far far fa-user me-2 fs-5"></i>
-          <span>{{ userNameLogged === 'Login' ? '' : userNameLogged }}</span>
+          <span>{{ user?.firstName || '' }}</span>
         </a>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li>
             <a
-              *ngIf="signOut == false"
+              *ngIf="!authenticated"
               routerLinkActive="active-link"
               routerLink="/login"
               class="dropdown-item"
@@ -110,8 +103,8 @@
               >{{ 'nav-blank.SignIn' | translate }}</a
             >
             <a
-              *ngIf="signOut"
-              (click)="removeTokenSignOut()"
+              *ngIf="authenticated"
+              (click)="handleLogout()"
               routerLinkActive="active-link"
               routerLink="/login"
               class="dropdown-item"
@@ -122,7 +115,7 @@
 
           <li>
             <a
-              *ngIf="signOut == false"
+              *ngIf="!authenticated"
               routerLinkActive="active-link"
               routerLink="/register"
               class="dropdown-item"
@@ -134,7 +127,7 @@
 
           <li>
             <a
-              *ngIf="signOut"
+              *ngIf="authenticated"
               routerLinkActive="active-link"
               routerLink="/profile"
               class="dropdown-item"
@@ -145,7 +138,7 @@
 
           <li>
             <a
-              *ngIf="signOut"
+              *ngIf="authenticated"
               routerLinkActive="active-link"
               routerLink="/orders"
               class="dropdown-item"
@@ -192,8 +185,6 @@
         (click)="isTogglerOpend()"
       >
         <i class="fa-solid fa-bars"></i>
-        <!-- *ngIf="togglerOpend == false" -->
-        <!-- <i *ngIf="togglerOpend == true" class="fa-solid fa-xmark"></i> -->
       </button>
 
       <div
@@ -209,7 +200,7 @@
           </h5>
           <button
             type="button"
-            [lang]="_Translate.currentLang"
+            [lang]="translate.currentLang"
             class="btn-close text-reset"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
@@ -220,7 +211,7 @@
             <li class="nav-item mx-2">
               <a
                 class="nav-link under-line-hover-link"
-                [lang]="_Translate.currentLang"
+                [lang]="translate.currentLang"
                 routerLinkActive="active-link"
                 routerLink="/home"
                 >{{ 'nav-blank.Home' | translate }}</a
@@ -244,7 +235,7 @@
               <ul
                 class="dropdown-menu"
                 aria-labelledby="dropdownMenuButton"
-                [lang]="_Translate.currentLang"
+                [lang]="translate.currentLang"
               >
                 <li *ngFor="let category of categoryList">
                   <a
@@ -253,7 +244,7 @@
                     [routerLink]="['/category/', category.id]"
                     class="dropdown-item"
                     role="button"
-                    >{{ _Translate.currentLang === 'ar' ? category.arName : category.enName }}</a
+                    >{{ translate.currentLang === 'ar' ? category.arName : category.enName }}</a
                   >
                 </li>
               </ul>
@@ -262,7 +253,7 @@
             <li class="nav-item mx-2">
               <a
                 class="nav-link under-line-hover-link"
-                [lang]="_Translate.currentLang"
+                [lang]="translate.currentLang"
                 routerLinkActive="active-link"
                 routerLink="/latest-collection"
                 >{{ 'nav-blank.LatestCollection' | translate }}</a
@@ -272,7 +263,7 @@
             <li class="nav-item mx-2">
               <a
                 class="nav-link under-line-hover-link"
-                [lang]="_Translate.currentLang"
+                [lang]="translate.currentLang"
                 routerLinkActive="active-link"
                 routerLink="/new-offers"
                 >{{ 'nav-blank.NewOffers' | translate }}</a

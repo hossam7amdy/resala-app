@@ -175,11 +175,11 @@ export class PaymentComponent implements OnInit {
       },
     });
 
-    this._AuthService.decodeUser();
-    this.userLoginId = this._AuthService.userInfo.id;
+    this._AuthService.getSession();
+    if (this._AuthService) {
+      this.userLoginId = 0;
+    }
 
-    console.log('user info', this.userLoginId);
-    console.log(this._AuthService.userInfo, typeof this.userLoginId);
     this.addressForm.patchValue({ userId: this.userLoginId });
     this._PaymentServices.getListAddressUser(this.userLoginId).subscribe({
       next: response => {

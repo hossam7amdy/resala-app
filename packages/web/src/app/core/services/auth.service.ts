@@ -1,74 +1,171 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import {
+  AuthUser,
   ENDPOINT_CONFIGS,
+  ForgotPasswordRequest,
   ForgotPasswordResponse,
+  GetSessionResponse,
+  LoginAnonymousResponse,
+  LoginRequest,
   LoginResponse,
+  LoginWithPhoneRequest,
+  LogoutResponse,
+  ProviderLoginResponse,
+  RegisterRequest,
   RegisterResponse,
+  ResetPasswordRequest,
   ResetPasswordResponse,
 } from '@resala/shared';
-import { jwtDecode } from 'jwt-decode';
-import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+
+type SignData = {
+  sign: string;
+  password: string;
+  rememberMe?: boolean;
+};
+type RegisterData = {
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  password: string;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private _HttpClient: HttpClient,
-    private _Router: Router,
-    private _Toaster: ToastrService
-  ) {}
+  private authenticated = new BehaviorSubject<boolean>(false);
+  public authenticated$ = this.authenticated.asObservable();
 
-  userNameLogged: BehaviorSubject<string> = new BehaviorSubject('Login');
+  private userInfoSubject = new BehaviorSubject<AuthUser | null>(null);
+  public userInfo$ = this.userInfoSubject.asObservable();
 
-  private getHeaders(token?: string): { headers: HttpHeaders } {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-    return { headers };
+  constructor(private _httpClient: HttpClient) {}
+
+  private _setUserInfo(userInfo: AuthUser): void {
+    this.userInfoSubject.next(userInfo);
+    this.authenticated.next(true);
   }
 
-  signOut: boolean = false;
-  userInfo: any;
+  private _clearUserInfo(): void {
+    this.userInfoSubject.next(null);
+    this.authenticated.next(false);
+  }
 
-  register(userData: object): Observable<RegisterResponse> {
+  register(userData: RegisterData): Observable<RegisterResponse> {
+    const body: RegisterRequest = {
+      ...userData,
+      callbackURL: `${location.origin}/login`,
+    };
+
     const { url } = ENDPOINT_CONFIGS.register;
-    return this._HttpClient.post<RegisterResponse>(environment.baseUrl + url, userData);
+    return this._httpClient.post<RegisterResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-  login(userData: any): Observable<LoginResponse> {
+  loginWithEmail({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
+    const body: LoginRequest = {
+      email: sign,
+      password,
+      rememberMe,
+      callbackURL: `${location.origin}/home`,
+    };
+
     const { url } = ENDPOINT_CONFIGS.login;
-    return this._HttpClient.post<LoginResponse>(environment.baseUrl + url, userData);
+    return this._httpClient.post<LoginResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-  decodeUser(): void {
-    const encode = localStorage.getItem('accessToken');
+  loginWithPhone({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
+    const body: LoginWithPhoneRequest = {
+      phoneNumber: sign,
+      password,
+      rememberMe,
+      callbackURL: `${location.origin}/home`,
+    };
 
-    if (encode != null) {
-      const decode = jwtDecode(encode);
-      this.userInfo = decode;
-      this.signOut = true;
-    } else {
-      this._Router.navigate(['/login']);
-      this._Toaster.error('Please Login the First !!'); //'Should be Login'
-    }
+    const { url } = ENDPOINT_CONFIGS.loginWithPhone;
+    return this._httpClient.post<LoginResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-  forgotPassword(forgotPwData: any): Observable<ForgotPasswordResponse> {
-    const { url } = ENDPOINT_CONFIGS.forgotPassword;
-    return this._HttpClient.post<ForgotPasswordResponse>(environment.baseUrl + url, forgotPwData);
+  login(signData: SignData): Observable<LoginResponse> {
+    const loginObservable = signData.sign.includes('@')
+      ? this.loginWithEmail(signData)
+      : this.loginWithPhone(signData);
+
+    return loginObservable.pipe(tap(res => this._setUserInfo(res.user)));
   }
 
-  resetPassword(resetPwData: any, token?: string): Observable<ResetPasswordResponse> {
-    const { url } = ENDPOINT_CONFIGS.resetPassword;
-    return this._HttpClient.post<ResetPasswordResponse>(
-      environment.baseUrl + url,
-      resetPwData,
-      this.getHeaders(token)
+  loginAnonymous(): Observable<LoginAnonymousResponse> {
+    const { url } = ENDPOINT_CONFIGS.loginAnonymous;
+    return this._httpClient.post<LoginAnonymousResponse>(`${environment.baseUrl}${url}`, {});
+  }
+
+  loginWithGoogle(): Observable<ProviderLoginResponse> {
+    const body = {
+      provider: 'google',
+      callbackURL: `${location.origin}/home`,
+      errorCallbackURL: location.href,
+    };
+
+    const { url } = ENDPOINT_CONFIGS.loginWithProvider;
+    return this._httpClient.post<ProviderLoginResponse>(`${environment.baseUrl}${url}`, body);
+  }
+
+  logout(): Observable<LogoutResponse> {
+    const { url } = ENDPOINT_CONFIGS.logout;
+    const logoutObservable = this._httpClient.post<LogoutResponse>(
+      `${environment.baseUrl}${url}`,
+      {}
     );
+
+    return logoutObservable.pipe(
+      tap(() => {
+        this._clearUserInfo();
+        this.loginAnonymous().subscribe();
+      })
+    );
+  }
+
+  getSession(): Observable<GetSessionResponse> {
+    const { url } = ENDPOINT_CONFIGS.getSession;
+    const sessionObservable = this._httpClient.get<GetSessionResponse>(
+      `${environment.baseUrl}${url}`
+    );
+
+    return sessionObservable.pipe(
+      tap(data => {
+        if (data?.user && !data.user.isAnonymous) {
+          this._setUserInfo(data.user);
+        } else {
+          this.loginAnonymous().subscribe();
+        }
+      })
+    );
+  }
+
+  forgetPassword({ email }: { email: string }): Observable<ForgotPasswordResponse> {
+    const body: ForgotPasswordRequest = {
+      email,
+      redirectTo: `${location.origin}/reset-password`,
+    };
+
+    const { url } = ENDPOINT_CONFIGS.forgetPassword;
+    return this._httpClient.post<ForgotPasswordResponse>(`${environment.baseUrl}${url}`, body);
+  }
+
+  resetPassword(
+    payload: { newPassword: string },
+    token: string
+  ): Observable<ResetPasswordResponse> {
+    const body: ResetPasswordRequest = {
+      newPassword: payload.newPassword,
+      token,
+    };
+
+    const { url } = ENDPOINT_CONFIGS.resetPassword;
+    return this._httpClient.post<ResetPasswordResponse>(`${environment.baseUrl}${url}`, body);
   }
 }

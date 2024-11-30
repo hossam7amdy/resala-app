@@ -48,23 +48,20 @@ export class RegisterComponent {
       Validators.maxLength(50),
       Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
     ]),
-
     lastName: new FormControl('', [
       Validators.required,
       Validators.minLength(2),
       Validators.maxLength(50),
       Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
     ]),
-
-    // password:new FormControl('', [Validators.required,
-    //   Validators.minLength(8),
-    //   Validators.maxLength(8),
-    //   Validators.pattern('[a-z]{1,}[A-Z]{1,}[0-9]{1,}[!@#$%^&*()>< +-=_?]{1,}'),
-
-    // ]),
-
-    phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
-
+    birthDate: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/),
+    ]),
+    phone: new FormControl('+20', [
+      Validators.required,
+      Validators.pattern(/^\+201[0125][0-9]{8,15}$/),
+    ]),
     password: new FormControl(
       '',
       Validators.compose([
@@ -76,33 +73,26 @@ export class RegisterComponent {
         Validators.minLength(8),
       ])
     ),
-
     email: new FormControl('', [Validators.required, Validators.email]),
   });
 
   handleForm(_registerForm: FormGroup): void {
     if (this.isCheckedTerms) {
       const userData = this.registerForm.value;
-      console.log(userData);
-
       if (this.registerForm.valid === true) {
         this.isLoading = true;
-        console.log(userData);
         this._AuthService.register(userData).subscribe({
-          next: response => {
-            if (response.success == true) {
-              this.successMsg = 'Registration successfuly';
-              this.successMsgAr = 'تم تسجيل الحساب بنجاح';
-              this.isLoading = false;
-              this._Router.navigate(['/login']);
-            }
+          next: () => {
+            this.successMsg = 'Registration successfuly';
+            this.successMsgAr = 'تم تسجيل الحساب بنجاح';
+            this.isLoading = false;
+            this._Router.navigate(['/login']);
           },
           error: err => {
-            this.errMsg = err.error.message;
+            this.errMsg = err?.error?.message;
             this.isLoading = false;
           },
         });
-        //Email already registered
       } else {
         this.errMsg = 'Please fill in the required fields.';
         this.errMsgAr = 'برجاء ملئ الحقول المطلوبة';

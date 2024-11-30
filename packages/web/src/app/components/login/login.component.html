@@ -2,20 +2,23 @@
 
 <section class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
   <h1 class="my-3">{{ 'login.mainTitle' | translate }}</h1>
+
+  <div class="form-item">
+    <button class="btn w-100" (click)="handleGoogleLogin()">
+      <a class="custome-btn"
+        ><img
+          src="./assets/icons/icons8-google-48.png"
+          style="width: 25px; height: 25px"
+          alt="Google"
+        />
+        {{ 'login.googleAccount' | translate }}</a
+      >
+    </button>
+  </div>
+  <p class="p not-member text-center">{{ 'login.chooseLogin' | translate }}</p>
+
   <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
     <div class="form-item">
-      <button class="btn w-100">
-        <a href="https://api.resala.live/auth/google" class="custome-btn"
-          ><img
-            src="./assets/icons/icons8-google-48.png"
-            style="width: 25px; height: 25px"
-            alt="Google"
-          />
-          {{ 'login.googleAccount' | translate }}</a
-        >
-      </button>
-      <p class="p not-member text-center">{{ 'login.chooseLogin' | translate }}</p>
-
       <label for="email">{{ 'login.username' | translate }}</label>
 
       <input type="text" formControlName="sign" class="form-control" id="email" />
@@ -44,13 +47,13 @@
           id="password"
         />
         <i
-          [lang]="_Translate.currentLang"
+          [lang]="translate.currentLang"
           class="fa-regular fa-eye"
           *ngIf="!showPW"
           (click)="togglePW()"
         ></i>
         <i
-          [lang]="_Translate.currentLang"
+          [lang]="translate.currentLang"
           class="far fa-eye-slash"
           *ngIf="showPW"
           (click)="togglePW()"
@@ -90,7 +93,7 @@
     >
 
     <p *ngIf="successMsg" class="alert text-green mx-auto">
-      {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
+      {{ translate.currentLang == 'ar' ? successMsgAr : successMsg }}
     </p>
     <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
   </form>
