@@ -1,12 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  CreateCartResponse,
-  DeleteCartResponse,
-  ENDPOINT_CONFIGS,
-  GetCartResponse,
-  withParams,
-} from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment.development';

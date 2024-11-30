@@ -1,15 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  CreateAddressResponse,
-  CreateOrderResponse,
-  DeleteAddressResponse,
-  ENDPOINT_CONFIGS,
-  ListAddressResponse,
-  UpdateAddressResponse,
-  withParams,
-  withQueryParams,
-} from '@resala/shared';
+import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -26,8 +17,15 @@ export class PaymentService {
     return this._HttpClient.get(this.urlCountries + `countries`);
   }
 
+  // States API
   getAllCities(country: string): Observable<any> {
-    return this._HttpClient.post(this.urlCountries + `countries/cities`, { country: country });
+    return this._HttpClient.post(
+      this.urlCountries + `countries/cities`,
+
+      {
+        country: country,
+      }
+    );
   }
 
   registerUserAddress(userAddress: any): Observable<CreateAddressResponse> {
@@ -35,13 +33,13 @@ export class PaymentService {
     return this._HttpClient.post<CreateAddressResponse>(environment.baseUrl + url, userAddress);
   }
 
-  getListAddressUser(id: any): Observable<ListAddressResponse> {
+  getListAddressUser(id: any): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress, { userId: id });
     return this._HttpClient.get<ListAddressResponse>(environment.baseUrl + url);
   }
 
-  deleteUserAddress(userId: any, addressId: any): Observable<DeleteAddressResponse> {
-    const withParamsConfig: any = withParams(ENDPOINT_CONFIGS.deleteAddress, addressId);
+  deleteUserAddress(userId: any, addressId: any): Observable<any> {
+    const withParamsConfig: any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress], addressId);
     const { url } = withQueryParams(withParamsConfig, { userId });
     return this._HttpClient.delete<DeleteAddressResponse>(environment.baseUrl + url);
   }

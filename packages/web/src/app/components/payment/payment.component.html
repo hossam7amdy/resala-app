@@ -77,7 +77,7 @@
                         value="{{ addressId }}"
                         formControlName="addressId"
                         (change)="selectedAddressMethod(userAddress.id)"
-                        [checked]="addressId === i"
+                        [checked]="getUserAddress[0].id === getUserAddress[i].id"
                       />
                       <div class="dropdown-edit">
                         <span
