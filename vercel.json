@@ -1,4 +1,9 @@
 {
+  "build": {
+    "command": "yarn build:dashboard",
+    "outputDirectory": "packages/dashboard/.next"
+  },
+  "framework": "nextjs",
   "headers": [
     {
       "source": "/api/(.*)",
