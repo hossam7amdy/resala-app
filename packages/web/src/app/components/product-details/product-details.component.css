@@ -462,8 +462,9 @@
 
 .image-container {
   position: relative;
-  width: 98%; /* Original image container width */
+  width: 80%; /* Original image container width */
   height: auto;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .original-image {
@@ -488,22 +489,22 @@
   position: absolute;
   width: 150px;
   height: 150px;
-  background-color: #ffffff73;
+  /* background-color: #ffffff73; */
   cursor: crosshair;
   border-radius: 0%;
   opacity: 1;
   pointer-events: none; /* Prevent interaction */
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-  transition: transform 0.1s ease;
+  /* box-shadow: 0 0 5px rgba(255, 255, 255, 0.3); */
+  transition: transform 0.5s ease;
 }
 
 .zoom-container {
   position: fixed;
-  top: 0; /* Position beneath the original image */
+  top: 1.5%; /* Position beneath the original image */
   left: 0px;
-  width: 30%;
-  height: 30%; /* Adjust height for zoom area */
+  width: 40%;
+  height: 90%; /* Adjust height for zoom area */
   overflow: hidden;
   /* border: 1px solid #ddd; */
 }
@@ -512,5 +513,5 @@
   position: absolute;
   width: 100%; /* Scale up the image to be zoomed */
   height: auto;
-  transition: transform 0.1s ease;
+  transition: transform 0.5s ease;
 }
