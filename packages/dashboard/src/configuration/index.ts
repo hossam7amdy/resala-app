@@ -9,8 +9,8 @@ const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boole
 const configuration = () => ({
   aws: {
     region: z.string().parse(process.env.AWS_REGION),
-    accessKey: z.string().parse(process.env.AWS_ACCESS_KEY),
-    accessSecret: z.string().parse(process.env.AWS_ACCESS_SECRET),
+    accessKey: z.string().parse(process.env.AWS_ACCESS),
+    accessSecret: z.string().parse(process.env.AWS_SECRET),
     ses: {
       endpoint: z.string().url().optional().parse(process.env.SES_ENDPOINT),
       verifiedIdentity: z.string().parse(process.env.SES_VERIFIED_ID),
