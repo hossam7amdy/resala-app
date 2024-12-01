@@ -1,8 +1,6 @@
 {
-  "build": {
-    "command": "yarn build",
-    "outputDirectory": "packages/dashboard/.next"
-  },
+  "buildCommand": "yarn build:dashboard",
+  "outputDirectory": "packages/dashboard/.next",
   "framework": "nextjs",
   "headers": [
     {
