@@ -4,8 +4,10 @@ const supported = (mimeType: string): boolean => {
   return mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/webp';
 };
 
-const optimize = async (image: Buffer): Promise<Buffer> => {
-  return await sharp(image).webp().toBuffer();
+const optimize = async (image: ArrayBuffer): Promise<Buffer> => {
+  // Convert ArrayBuffer to Buffer
+  const buffer = Buffer.from(image);
+  return await sharp(buffer).webp().toBuffer();
 };
 
 export const optimizeImages = async (images: File[]) => {
@@ -19,10 +21,14 @@ export const optimizeImages = async (images: File[]) => {
       throw new Error('Unsupported image type');
     }
 
+    // Convert the image to ArrayBuffer
     const buffer = await imageFile.arrayBuffer();
-    const optimizedImage = await optimize(buffer as Buffer);
+    const optimizedImage = await optimize(buffer);
 
-    const file = new File([optimizedImage], 'optimized.webp', { type: 'image/webp' });
+    // Create a new File with the optimized image
+    const file = new File([optimizedImage], `${imageFile.name}-optimized.webp`, {
+      type: 'image/webp',
+    });
     optimizedImages.push(file);
   }
 
