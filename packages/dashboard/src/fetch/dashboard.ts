@@ -1,76 +1,40 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
+import { dashboardService } from '@/services';
 import type {
-  GetDashboardOverviewRequest,
   GetDashboardOverviewResponse,
-  GetInventoryStatusRequest,
   GetInventoryStatusResponse,
-  GetOrdersStatusRequest,
   GetOrdersStatusResponse,
-  GetSalesTrendsRequest,
   GetSalesTrendsResponse,
-  ListCustomersFeedbackRequest,
   ListCustomersFeedbackResponse,
-  ListTopCustomersRequest,
   ListTopCustomersResponse,
-  ListTopProductsRequest,
   ListTopProductsResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
 
-export const getOverview = async () => {
-  const response = await callEndpoint<GetDashboardOverviewRequest, GetDashboardOverviewResponse>(
-    ENDPOINT_CONFIGS.getDashboardOverview
-  );
-
-  return response.data;
+export const getOverview = async (): Promise<GetDashboardOverviewResponse['data']> => {
+  return await dashboardService.getOverview();
 };
 
-export const getSalesTrends = async () => {
-  const response = await callEndpoint<GetSalesTrendsRequest, GetSalesTrendsResponse>(
-    ENDPOINT_CONFIGS.getSalesTrends
-  );
-
-  return response.data;
+export const getSalesTrends = async (): Promise<GetSalesTrendsResponse['data']> => {
+  return await dashboardService.getSalesTrend();
 };
 
-export const getInventoryStatus = async () => {
-  const response = await callEndpoint<GetInventoryStatusRequest, GetInventoryStatusResponse>(
-    ENDPOINT_CONFIGS.getInventoryStatus
-  );
-
-  return response.data;
+export const getInventoryStatus = async (): Promise<GetInventoryStatusResponse['data']> => {
+  return await dashboardService.getInventoryStatus();
 };
 
-export const getOrdersStatus = async () => {
-  const response = await callEndpoint<GetOrdersStatusRequest, GetOrdersStatusResponse>(
-    ENDPOINT_CONFIGS.getOrdersStatus
-  );
-
-  return response.data;
+export const getOrdersStatus = async (): Promise<GetOrdersStatusResponse['data']> => {
+  return await dashboardService.getOrderStatus();
 };
 
-export const listTopProducts = async () => {
-  const response = await callEndpoint<ListTopProductsRequest, ListTopProductsResponse>(
-    ENDPOINT_CONFIGS.listTopProducts
-  );
-
-  return response.data;
+export const listTopProducts = async (): Promise<ListTopProductsResponse['data']> => {
+  return await dashboardService.listTopProducts();
 };
 
-export const listTopCustomers = async () => {
-  const response = await callEndpoint<ListTopCustomersRequest, ListTopCustomersResponse>(
-    ENDPOINT_CONFIGS.listTopCustomers
-  );
-
-  return response.data;
+export const listTopCustomers = async (): Promise<ListTopCustomersResponse['data']> => {
+  return await dashboardService.listTopCustomers();
 };
 
-export const listCustomersFeedback = async () => {
-  const response = await callEndpoint<ListCustomersFeedbackRequest, ListCustomersFeedbackResponse>(
-    ENDPOINT_CONFIGS.listCustomersFeedback
-  );
-
-  return response.data;
+export const listCustomersFeedback = async (): Promise<ListCustomersFeedbackResponse['data']> => {
+  return await dashboardService.listCustomersFeedback();
 };

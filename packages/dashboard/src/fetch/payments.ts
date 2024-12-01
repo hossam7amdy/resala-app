@@ -1,47 +1,46 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { paymentService } from '@/services';
 import type {
-  GetPaymentRequest,
   GetPaymentResponse,
   RefundPaymentRequest,
   RefundPaymentResponse,
   VoidPaymentRequest,
   VoidPaymentResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 
-export const findPaymentById = async (id: string) => {
-  const response = await callEndpoint<GetPaymentRequest, GetPaymentResponse>(
-    ENDPOINT_CONFIGS.getPayment,
-    { params: { transactionId: id }, next: { tags: [ROUTES.ORDERS, `payments/${id}`] } }
-  );
-
-  return response.data;
+export const findPaymentById = async (id: string): Promise<GetPaymentResponse['data']> => {
+  return await paymentService.retrieve(id);
 };
 
-export const voidPayment = async (data: VoidPaymentRequest['body']) => {
-  const response = await callEndpoint<VoidPaymentRequest, VoidPaymentResponse>(
-    ENDPOINT_CONFIGS.voidPayment,
-    { body: data }
-  );
+export const voidPayment = async (
+  payload: VoidPaymentRequest['body']
+): Promise<VoidPaymentResponse> => {
+  try {
+    await paymentService.void(payload.transactionId);
 
-  revalidateTag(ROUTES.ORDERS);
-  revalidateTag(`payments/${data.transactionId}`);
+    revalidatePath(ROUTES.ORDERS);
+    revalidatePath(`payments/${payload.transactionId}`);
 
-  return response;
+    return { success: true };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };
 
-export const refundPayment = async (payload: RefundPaymentRequest['body']) => {
-  const response = await callEndpoint<RefundPaymentRequest, RefundPaymentResponse>(
-    ENDPOINT_CONFIGS.refundPayment,
-    { body: payload }
-  );
+export const refundPayment = async (
+  payload: RefundPaymentRequest['body']
+): Promise<RefundPaymentResponse> => {
+  try {
+    await paymentService.refund(payload.transactionId, payload.amount);
 
-  revalidateTag(ROUTES.ORDERS);
-  revalidateTag(`payments/${payload.transactionId}`);
+    revalidatePath(ROUTES.ORDERS);
+    revalidatePath(`payments/${payload.transactionId}`);
 
-  return response;
+    return { success: true };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };

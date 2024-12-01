@@ -7,7 +7,16 @@ import { Product } from '../interfaces/product';
   standalone: true,
 })
 export class SearchPipe implements PipeTransform {
+  lang = localStorage.getItem('language');
   transform(products: Product[], searchString: string): Product[] {
-    return products.filter(item => item.enName.toLowerCase().includes(searchString.toLowerCase()));
+    return products.filter(
+      this.lang == 'ar'
+        ? item =>
+            item.arName.includes(searchString) ||
+            item.enName.toLowerCase().includes(searchString.toLowerCase())
+        : item =>
+            item.enName.toLowerCase().includes(searchString.toLowerCase()) ||
+            item.arName.includes(searchString)
+    );
   }
 }

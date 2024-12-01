@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-reset-password',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
@@ -15,22 +15,20 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
   constructor(
-    private spinner: NgxSpinnerService,
-    private _AuthService: AuthService,
+    private authService: AuthService,
     private route: ActivatedRoute,
+    private router: Router,
     private toaster: ToastrService
   ) {}
 
   newToken: string = '';
   ngOnInit(): void {
     this.route.queryParams.subscribe(queryParam => {
-      console.log(queryParam);
       this.newToken = queryParam['token'];
-      console.log('token', this.newToken);
     });
   }
 
-  showPW: any;
+  showPW: boolean = false;
   togglePW() {
     this.showPW = !this.showPW;
   }
@@ -67,15 +65,17 @@ export class ResetPasswordComponent implements OnInit {
 
   changePw(): void {
     this.isLoading = true;
-    this._AuthService.resetPassword(this.resetPw.value, this.newToken).subscribe({
-      next: response => {
-        console.log('response', response);
-        this.isLoading = false;
-        this.toaster.success('Changed Your Password Successfuly');
+    this.authService.resetPassword(this.resetPw.value, this.newToken).subscribe({
+      next: () => {
+        this.resetPw.reset();
+        this.toaster.success('Changed Your Password Successful');
+        this.router.navigate(['/login']);
       },
       error: err => {
-        console.log(err);
-        this.toaster.error(err.error.message);
+        const errMsg = err?.error?.message || 'Something went wrong';
+        this.toaster.error(errMsg);
+      },
+      complete: () => {
         this.isLoading = false;
       },
     });

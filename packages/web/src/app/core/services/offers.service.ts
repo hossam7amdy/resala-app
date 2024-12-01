@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ENDPOINT_CONFIGS, withQueryParams } from '@resala/shared';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,6 @@ export class OffersService {
 
   getOffers(): Observable<any> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.getDiscount, {});
-    return this._HTTPClient.get(environment.BASE_URL + url, this.getHeaders());
+    return this._HTTPClient.get(environment.baseUrl + url, this.getHeaders());
   }
 }
