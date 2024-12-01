@@ -1,27 +1,9 @@
 <!-- && isEdit == false -->
 
 <app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
-<!--  -->
-<!-- *ngIf="currentStep === 0" (ngSubmit)="nextStep()" -->
-<!-- <div class="container">
 
-  <div class="tabs">
-    
-    <div [class.active]="currentStep === 0" (click)="currentStep = 0">
-      <h1 class="h2 step-one">{{ 'payment.addressForm.firstTitle' | translate }}</h1>
-      <h3 class="h3 mt-0">{{ 'payment.addressForm.secondTitle' | translate }}</h3>
-    </div>
-    <div [class.active]="currentStep === 1" (click)="currentStep = 1">
-      <h1 class="h2 step-one">{{ 'payment.paymentForm.firstTitle' | translate }}</h1>
-      <h3 class="h3 mt-0">{{ 'payment.paymentForm.secondTitle' | translate }}</h3>
-    </div>
-
-  </div>
-
-</div> -->
-<!-- <button [class.active]="currentStep === 2" (click)="currentStep = 2">Step 3</button> -->
 <section class="mt-3">
-  <div class="container-fluid">
+  <div class="container">
     <h2 class="h2 mt-0">{{ 'payment.addressForm.secondTitle' | translate }}</h2>
   </div>
 </section>
@@ -29,13 +11,13 @@
 <div class="payment-info">
   <div class="container">
     <div class="row">
-      <div class="col-lg-9 px-1">
+      <div class="col-lg-8 px-1 mx-4">
         <section class="mt-2">
           <ul class="nav nav-tabs">
             <li class="nav-item" (click)="currentStep = 0">
               <a class="nav-link" [class.active]="currentStep === 0" aria-current="page">
                 <h3 class="h3 mt-0">
-                  {{ 'payment.addressForm.secondTitle' | translate
+                  {{ 'payment.addressForm.addressInfo' | translate
                   }}<span class="badge bg-dark">1</span>
                 </h3>
               </a>
@@ -57,8 +39,12 @@
 
         <div class="forms">
           <!-- *ngIf="getUserAddress.length >= 1 && isSelectedAddress == false && isRegisterd == false" -->
-          <h4 *ngIf="currentStep === 0" class="h4 m-0 p-3">Select Delivery Address</h4>
-          <h4 *ngIf="currentStep === 1" class="h4 m-0 p-3">Select Payment Method</h4>
+          <h4 *ngIf="currentStep === 0" class="h4 m-0 p-3">
+            {{ 'payment.addressForm.chooseAddress' | translate }}
+          </h4>
+          <h4 *ngIf="currentStep === 1" class="h4 m-0 p-3">
+            {{ 'payment.paymentForm.choosePayMethod' | translate }}
+          </h4>
           <div
             [ngClass]="{ appear: currentStep === 0, disappear: currentStep === 1 }"
             class="d-flex flex-wrap py-2 mx-2 justify-content-center"
@@ -79,7 +65,10 @@
                         (change)="selectedAddressMethod(userAddress.id)"
                         [checked]="getUserAddress[0].id === getUserAddress[i].id"
                       />
-                      <div class="dropdown-edit">
+                      <div
+                        class="dropdown-edit justify-content-end"
+                        [lang]="_Translate.currentLang"
+                      >
                         <span
                           class="p-2"
                           id="dropdownMenuButton1"
@@ -97,8 +86,8 @@
                               data-bs-target="#offcanvasRight"
                               aria-controls="offcanvasRight"
                               (click)="editAddressForm(i)"
-                              >EDIT</a
-                            >
+                              >{{ 'payment.addressForm.editAddress' | translate }}
+                            </a>
                           </li>
                           <li>
                             <a
@@ -106,7 +95,7 @@
                               data-bs-toggle="modal"
                               data-bs-target="#exampleModal"
                               (click)="selectedDelIndex = i"
-                              >DELETE</a
+                              >{{ 'payment.addressForm.deleteAddress' | translate }}</a
                             >
                           </li>
                         </ul>
@@ -185,7 +174,7 @@
             >
               <div class="card-body">
                 <i class="fa-solid fa-plus"></i>
-                <p class="p">Add New Address</p>
+                <p class="p">{{ 'payment.addressForm.addNewAddress' | translate }}</p>
               </div>
             </div>
             <!-- end Add new Address -->
@@ -198,7 +187,9 @@
             aria-labelledby="offcanvasRightLabel"
           >
             <div class="offcanvas-header">
-              <h5 id="offcanvasRightLabel">Add New Delivery Address</h5>
+              <h5 id="offcanvasRightLabel">
+                {{ 'payment.addressForm.addNewAddress' | translate }}
+              </h5>
               <button
                 type="button"
                 class="btn-close text-reset"
@@ -404,18 +395,11 @@
                     {{ 'payment.addressForm.saveAddress' | translate }}
                     <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
                   </button>
-                  <!-- [disabled]="addressForm.invalid"  -->
-
-                  <!-- <p *ngIf="successMsg" class="alert text-green mx-auto">{{ successMsg }}</p>
-                  <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p> -->
                 </div>
               </form>
             </div>
           </div>
 
-          <!-- start Edit Address -->
-          <!-- *ngFor="let userAddress of getUserAddress; let i = index" -->
-          <!-- [disabled]="i != editIndex" -->
           <div
             class="offcanvas offcanvas-end"
             tabindex="-1"
@@ -645,9 +629,6 @@
             </div>
           </div>
 
-          <!-- *ngIf="getUserAddress.length > 0" -->
-          <!-- *ngIf="isRegisterd == true" -->
-          <!-- *ngIf="addressId !== 0" -->
           <section
             id="thirdSection"
             class="pay-form"
@@ -658,9 +639,6 @@
                 *ngFor="let method of paymentDataMethod"
                 class="form-check form-check-inline border-bottom"
               >
-                <h4 class="h4">
-                  {{ method.enMethod == 'CASH' ? 'Cash On Delivery' : 'Visa Card' }}
-                </h4>
                 <input
                   class="form-check-input"
                   type="radio"
@@ -674,13 +652,23 @@
                 <label
                   class="form-check-label check-address-lbl p-2"
                   [for]="_Translate.currentLang === 'ar' ? method.arMethod : method.enMethod"
-                  >{{ _Translate.currentLang === 'ar' ? method.arMethod : method.enMethod }}</label
+                  >{{
+                    _Translate.currentLang === 'ar'
+                      ? method.arMethod
+                      : method.enMethod === 'CASH'
+                        ? 'Cash On Delivery'
+                        : 'Visa Card'
+                  }}</label
                 >
                 <p class="p">
                   {{
                     method.enMethod == 'CASH'
-                      ? 'The Maxmum Limit for Order Amount 4000 LE'
-                      : 'To Continue Pay Over Visa Card Click on Follow Up Payment'
+                      ? _Translate.currentLang === 'ar'
+                        ? 'الحد الاقصي للشراء عند الدفع عند الاستلام يكون 4000 جنيه مصري'
+                        : 'The Maxmum Limit for Order Amount 4000 LE'
+                      : _Translate.currentLang === 'ar'
+                        ? 'للاستمرار فى الدفع من خلال الفيزا البنكية انقر على تابع اتمام الدفع'
+                        : 'To Continue Pay Over Visa Card Click on Follow Up Payment'
                   }}
                 </p>
                 <p class="p">
@@ -695,41 +683,14 @@
                   }}
                 </p>
               </div>
-              <!-- <p>{{"payment.paymentForm.choosePayMethod"|translate}}{{ paymentSelected }}</p> -->
-
-              <!-- </div> -->
-
-              <div class="form-item col-9 mb-1">
-                <label for="note" class="form-label">{{
-                  'payment.paymentForm.note' | translate
-                }}</label>
-                <input
-                  type="text"
-                  [(ngModel)]="note"
-                  [value]="note"
-                  class="form-control"
-                  id="note"
-                  formControlName="note"
-                />
-              </div>
-              <!-- [disabled]="payForm.invalid" -->
-              <!-- <div class="pay-btn col-12">
-      <button (click)="checkout(payForm, btn)" #btn type="submit" class="w-100 submit mt-3">
-        {{ 'payment.paymentForm.payBtn' | translate }}
-        <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
-      </button>
-    </div> -->
             </form>
           </section>
         </div>
       </div>
 
       <!-- start summary checkout -->
-
-      <!-- end summary checkout -->
-      <!-- *ngIf="paymentSelected !== ''" -->
-      <!-- start summary checkout -->
       <div class="summary col-lg-3">
+        <h2 class="h3">{{ 'payment.checkOutSummary.summaryTitle' | translate }}</h2>
         <div class="card text-center">
           <div class="card-body">
             <div class="row card-text">

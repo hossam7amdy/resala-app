@@ -11,34 +11,10 @@
     </div>
 
     <div class="row img-product">
-      <div class="col-sm-12 col-md-8 main-img">
+      <div class="col-sm-12 col-md-6 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
-              <!-- *ngIf="image.isPrimary" -->
-              <!-- <ng-template carouselSlide [id]="image.imageUrl">
-                <div
-                  class="main-img p-3 m-3"
-                  (mousemove)="setZoomPosition($event)"
-                  (mouseover)="toggleZoom(true)"
-                  (mouseout)="toggleZoom(false)"
-                >
-                  <img
-                    [src]="image.imageUrl"
-                    class="image-products"
-                    [class.zoomed]="isZoomed"
-                    [ngStyle]="zoomStyle"
-                    [alt]="
-                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-                    "
-                    [title]="
-                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-                    "
-                  />
-
-                  <div class="hover-overlay"></div>
-                </div>
-              </ng-template> -->
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div
                   class="image-container p-1 m-1"
@@ -92,22 +68,6 @@
           </ng-container>
         </owl-carousel-o>
 
-        <!-- test gallery -->
-
-        <!-- test gallery -->
-
-        <!-- <owl-carousel-o [options]="miniImgCarousel">
-          <ng-container *ngFor="let product of productStock">
-            <ng-container *ngFor="let image of product.images let i =index">
-              <ng-template carouselSlide [id]="image.id">
-                <div class="img-content" (click)="owlCar.to(image.imageUrl)" (change)="changeimage(image.imageUrl+i)">
-                  <img [src]="image.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
-                    [title]="productDetails.enName" />
-                </div>
-              </ng-template>
-            </ng-container>
-          </ng-container>
-        </owl-carousel-o> -->
         <div class="d-flex flex-wrap p-3 pt-0 mini-images">
           <div class="d-flex" *ngFor="let product of productStock">
             <div class="d-flex flex-wrap">
@@ -134,7 +94,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-4">
+      <div class="col-sm-12 col-md-6">
         <h2 class="h2">
           {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
         </h2>
@@ -328,7 +288,7 @@
     </div>
 
     <!--start Reviews -->
-    <div class="card mt-4">
+    <div class="card mt-5">
       <div class="card-header">
         <h4 class="h3">{{ 'productDetails.reviews.mainTitle' | translate }}</h4>
       </div>
