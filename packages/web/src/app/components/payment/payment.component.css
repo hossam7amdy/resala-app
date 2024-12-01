@@ -95,6 +95,9 @@ fieldset .form-check-input {
   margin-left: auto;
   display: inline;
 }
+.forms .dropdown-edit:lang(ar) {
+  margin-right: 80% !important;
+}
 .forms .dropdown-edit i {
   cursor: pointer;
 }

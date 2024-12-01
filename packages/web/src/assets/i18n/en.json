@@ -231,7 +231,11 @@
     "addressForm": {
       "firstTitle": "Step One ...",
       "secondTitle": "Delivery Information",
-      "chooseAddress": "Choose Address",
+      "addressInfo": "My Delivery Address",
+      "addNewAddress": "Add New Address",
+      "editAddress": "Edit",
+      "deleteAddress": "Delete",
+      "chooseAddress": "Select Delivery Address",
       "firstName": "First Name",
       "lastName": "Last Name",
       "contact": "Phone",
@@ -254,6 +258,7 @@
       "saveAddress": "Save Address"
     },
     "checkOutSummary": {
+      "summaryTitle": "Order Summary",
       "continuePayBtn": "Go Payment Method",
       "notPayStep": "No payment will be taken at this step.",
       "followPayment": "Follow UP Payment",
@@ -263,7 +268,7 @@
     "paymentForm": {
       "firstTitle": "Step Two ...",
       "secondTitle": "Payment Method",
-      "choosePayMethod": "Choose Payment Method",
+      "choosePayMethod": "Select Payment Method",
       "note": "Note",
       "payBtn": "Continue Pay"
     }
