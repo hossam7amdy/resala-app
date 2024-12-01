@@ -319,7 +319,7 @@ export class DiscountService {
     // 3. Calculate best discount for each product
     const updatedItems: GetCartResponse['data']['items'] = [];
 
-    for (const [productId, items] of productToItemsMap.entries()) {
+    for (const [productId, items] of Array.from(productToItemsMap.entries())) {
       const discounts = productDiscountsMap.get(productId) ?? [];
 
       const bestDiscounts = this._calculateBestDiscount(items, [

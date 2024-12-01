@@ -3,14 +3,13 @@
 import { ROUTES } from '@/routes';
 import { orderService } from '@/services';
 import type {
-  DeleteOrderRequest,
-  DeleteOrderResponse,
-  GetOrderRequest,
+  // DeleteOrderRequest,
+  // DeleteOrderResponse,
+  // GetOrderRequest,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
-  UpdateOrderRequest,
-  UpdateOrderResponse,
+  UpdateOrderRequest, // UpdateOrderResponse,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -42,7 +41,7 @@ export const updateOrderStatus = async (
   }
 };
 
-export const deleteOrder = async (orderId: string | number, userId: string | number) => {
+export const deleteOrder = async (_orderId: string | number, _userId: string | number) => {
   try {
     // TODO: handle order deletion
     revalidatePath(ROUTES.ORDERS);

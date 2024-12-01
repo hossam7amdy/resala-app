@@ -2,7 +2,7 @@
 
 import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
-import type { GetOrderResponse, OrderStatus as OrderStatusType } from '@resala/shared';
+import type { GetOrderResponse, OrderStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';
 import type { TagProps } from 'antd';
 import React, { useEffect, useState } from 'react';

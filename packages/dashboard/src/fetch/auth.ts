@@ -7,14 +7,8 @@ import {
   signOut,
 } from '@/lib/auth.client';
 import { ROUTES } from '@/routes';
-import type {
-  ForgotPasswordRequest,
-  LoginRequest,
-  ResetPasswordRequest,
-  SendVerificationEmailRequest,
-} from '@resala/shared';
 
-export const login = async ({ sign, password }: LoginRequest['body']) => {
+export const login = async ({ sign, password }: { sign: string; password: string }) => {
   return signIn.email({
     email: sign,
     password,
@@ -43,17 +37,26 @@ export const verifyEmail = async ({ token }: { token: string }) => {
   return handleVerifyEmail({ query: { token } });
 };
 
-export const forgetPassword = async ({ email, redirectUrl }: ForgotPasswordRequest['body']) => {
+export const forgetPassword = async ({
+  email,
+  redirectUrl,
+}: {
+  email: string;
+  redirectUrl?: string;
+}) => {
   return handleForgetPassword({ email, redirectTo: redirectUrl });
 };
 
 export const resetPassword = async ({
   token,
   newPassword,
-}: ResetPasswordRequest['body'] & { token: string }) => {
+}: {
+  newPassword: string;
+  token: string;
+}) => {
   return handleResetPassword({ token, newPassword });
 };
 
-export const resendVerificationEmail = async ({ email }: SendVerificationEmailRequest['body']) => {
+export const resendVerificationEmail = async ({ email }: { email: string }) => {
   return sendVerificationEmail({ email });
 };

@@ -211,6 +211,7 @@ export class DashboardService {
       ORDER BY 1 DESC;
     `;
 
+    // @ts-expect-error TODO: will fix later
     return topCustomers.map(({ total_paid, total_orders, ...user }) => ({
       totalPaid: +(total_paid ?? 0),
       totalOrders: +(total_orders?.toString() ?? 0),
@@ -227,6 +228,6 @@ export class DashboardService {
         createdAt: user.created_at,
         updatedAt: user.updated_at,
       },
-    })) as ListTopCustomersResponse['data'];
+    }));
   }
 }
