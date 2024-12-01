@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, Renderer2 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ListProductsResponse } from '@resala/shared';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Product } from 'src/app/core/interfaces/product';
 import { CustomefillterPipe } from 'src/app/core/pipe/customefillter.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
@@ -42,7 +42,7 @@ export class OffersComponent implements OnInit {
   ) {}
 
   customSpinIsLoading = false;
-  products: ListProductsResponse['data']['products'] = [];
+  products: Product[] = [];
 
   public rateNumber: number = 3;
   public ratingOptions: IRatingOptions = {
