@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "clean": "rm -rf .next",
+    "typecheck": "tsc --noEmit",
     "start": "next start",
     "lint": "next lint --no-cache",
-    "test": "echo \"No tests specified for dashboard\" && exit 0",
-    "prebuild": "yarn workspace @resala/shared build"
+    "test": "echo \"No tests specified for dashboard\" && exit 0"
   },
   "dependencies": {
+    "@resala/shared": "*",
     "@ant-design/icons": "^5.5.1",
     "@ant-design/nextjs-registry": "^1.0.1",
     "@aws-sdk/client-s3": "^3.701.0",
@@ -44,7 +46,8 @@
     "prisma": "^6.0.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss": "^3.4.13",
-    "vitest": "^2.1.6"
+    "vitest": "^2.1.6",
+    "typescript": "^5.1.0"
   },
   "prisma": {
     "seed": "node prisma/seed.mjs"
