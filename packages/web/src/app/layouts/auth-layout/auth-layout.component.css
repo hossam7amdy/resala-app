@@ -3,3 +3,13 @@
   min-height: 100vh;
   flex-direction: column;
 }
+
+.ssl-badge {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+.ssl-badge img {
+  width: 120px;
+}
