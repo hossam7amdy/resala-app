@@ -1,6 +1,6 @@
 {
   "build": {
-    "command": "yarn build:dashboard",
+    "command": "yarn build",
     "outputDirectory": "packages/dashboard/.next"
   },
   "framework": "nextjs",
