@@ -83,10 +83,10 @@
       "login": "تسجيل دخول",
       "profile": "ملفك الشخصى",
       "orders": "الطلبات",
-      "createOrder": "كيف تنشئ طلبية",
+      "createOrder": "كيف تنشئ طلب",
       "followOrder": "تتبع طلبك",
       "editCart": "التعديل على قائمتك",
-      "cancelOrder": "إلغاء طلبية",
+      "cancelOrder": "إلغاء طلب",
       "returnPolicy": "سياسة الاسترجاع"
     },
     "aboutUs": {
@@ -231,7 +231,11 @@
   "payment": {
     "addressForm": {
       "firstTitle": " أولاً",
-      "secondTitle": "بيانات التوصيل",
+      "secondTitle": "معلومات التوصيل",
+      "addressInfo": "معلومات عنواني",
+      "addNewAddress": "إضافة عنوان جديد",
+      "editAddress": "تعديل",
+      "deleteAddress": "حذف",
       "chooseAddress": "أختر عنوان التوصيل",
       "firstName": "الأ سم الأول",
       "lastName": "الأسم الثاني",
@@ -255,6 +259,7 @@
       "saveAddress": "حفظ"
     },
     "checkOutSummary": {
+      "summaryTitle": "ملخص الطلب",
       "continuePayBtn": "انتقل لطريقة الدفع",
       "notPayStep": "ليس يوجد دفع فى هذه الخطوة",
       "followPayment": "تابع اتمام الدفع",
@@ -262,7 +267,7 @@
     },
     "paymentForm": {
       "firstTitle": " ثانياً",
-      "secondTitle": "طريقة الدفع",
+      "secondTitle": "طرق الدفع",
       "choosePayMethod": "أختر طريقة الدفع",
       "note": "ملاحظات",
       "payBtn": "استمرار الدفع"
