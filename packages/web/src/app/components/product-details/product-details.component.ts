@@ -460,7 +460,7 @@ export class ProductDetailsComponent implements OnInit {
 
     this.zoomStyles = {
       transformOrigin: `${xPercent}% ${yPercent}%`,
-      transform: 'scale(4)', // Adjust zoom scale here
+      transform: 'scale(5)', // Adjust zoom scale here
     };
 
     // Update custom cursor position
