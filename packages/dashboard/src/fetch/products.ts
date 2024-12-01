@@ -39,10 +39,11 @@ export const addProduct = async (formData: FormData): Promise<CreateProductRespo
       formData.append('image', optimizedImage[0]);
     }
 
-    const data = await productService.create(formData);
+    throw new Error('Not implemented');
+    // const data = await productService.create(formData);
 
     revalidatePath(ROUTES.PRODUCTS);
-    return { data };
+    // return { data };
   } catch (e) {
     return { error: (e as Error).message } as CreateProductResponse;
   }
@@ -62,10 +63,11 @@ export const updateProduct = async (
       formData.append('image', optimizedImage[0]);
     }
 
-    const data = await productService.update(+id, formData);
+    throw new Error('Not implemented');
+    // const data = await productService.update(+id, formData);
 
     revalidatePath(ROUTES.PRODUCTS);
-    return { data };
+    // return { data };
   } catch (e) {
     return { error: (e as Error).message } as UpdateProductResponse;
   }

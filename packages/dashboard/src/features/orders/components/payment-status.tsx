@@ -1,7 +1,7 @@
 import { ResalaTooltip } from '@/components';
 import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
-import type { GetOrderResponse, PaymentStatus as PaymentStatusType } from '@resala/shared';
+import type { GetOrderResponse, PaymentStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';
 import type { TagProps } from 'antd';
 import { useEffect, useState } from 'react';

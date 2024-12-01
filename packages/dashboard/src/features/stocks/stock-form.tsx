@@ -63,7 +63,7 @@ export const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, select
   const handleSubmit = async (values: FormValues) => {
     const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
 
-    const promiseAll: Promise<DefaultResponseBody & { statusCode: number }>[] = [submit(values)];
+    const promiseAll: Promise<DefaultResponseBody>[] = [submit(values)];
 
     const newFiles = fileList.filter(file => file.status === 'done' && !file.url);
 

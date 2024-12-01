@@ -3,7 +3,8 @@
 import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { type Role, type User, validationPatterns } from '@resala/shared';
+import type { User } from '@resala/shared';
+import { Role, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -114,9 +115,9 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
           placeholder="Select Role"
           disabled={disableRoleField}
           options={[
-            { label: 'Admin', value: 'ADMIN' as Role },
-            { label: 'Moderator', value: 'MODERATOR' as Role },
-            { label: 'Customer', value: 'CUSTOMER' as Role },
+            { label: 'Admin', value: Role.ADMIN },
+            { label: 'Moderator', value: Role.MODERATOR },
+            { label: 'Customer', value: Role.CUSTOMER },
           ]}
         />
       </Form.Item>
