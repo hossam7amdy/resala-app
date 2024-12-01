@@ -1,19 +1,80 @@
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 <!-- start second bar -->
 
 <section #navbar class="fixed-top">
   <div class="upper-nav">
-    <!-- <ul  class="nav justify-content-end">
-  <li class="nav-item">
-    <a   (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link py-1">Arabic</a>
-    <a  (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link py-1" >English</a>
-  </li>
-</ul> -->
-
     <ul class="nav ms-auto p-0 pt-1 mb-lg-0 justify-content-center">
-      <li class="nav-item mx-4 me-3">
+      <li class="nav-item">
         <a (click)="switchLanguage('ar')" *ngIf="currentLang == 'ar'" class="nav-link lang">AR</a>
         <a (click)="switchLanguage('en')" *ngIf="currentLang == 'en'" class="nav-link lang">EN</a>
       </li>
+      <!-- -->
+      <li class="nav-item">
+        <a class="nav-link" (click)="[toggleSearch(), searchProducts()]">
+          <i class="fa-solid fa-magnifying-glass me-2 fs-5"></i>
+        </a>
+      </li>
+
+      <section *ngIf="isClickedSearch" class="search-form">
+        <div class="parent-search">
+          <form class="d-flex">
+            <i class="fa-solid fa-magnifying-glass icon-search"></i>
+            <input
+              (keydown)="searchProducts()"
+              placeholder="Search"
+              name="search-text"
+              [(ngModel)]="searchText"
+              class="form-control search"
+              type="text"
+              aria-label="Search"
+            />
+            <i class="fa-solid fa-xmark search-close" (click)="closeSearch()"></i>
+          </form>
+
+          <div class="products-search row">
+            <div
+              *ngFor="let product of products | search: searchText"
+              class="col-xs-6-custome col-sm-4 col-md-3 col-lg-3 col-xl-2"
+            >
+              <div (click)="closeSearch()">
+                <div class="parent-img-content w-100">
+                  <div
+                    class="img-content"
+                    [routerLink]="['/product-details/', product.id]"
+                    role="button"
+                  >
+                    <img
+                      class="w-100 image-products"
+                      [src]="product.imageUrl"
+                      [alt]="translate.currentLang == 'ar' ? product.arName : product.enName"
+                      [title]="translate.currentLang == 'ar' ? product.arName : product.enName"
+                    />
+                  </div>
+                </div>
+                <!--  -->
+
+                <div class="descrp">
+                  <h6
+                    [lang]="translate.currentLang"
+                    [routerLink]="['/product-details/', product.id]"
+                    class="mb-0"
+                    role="button"
+                  >
+                    {{ translate.currentLang === 'ar' ? product.arName : product.enName }}
+                  </h6>
+
+                  <span class="price" [lang]="translate.currentLang"
+                    >{{ product.price }}
+                    <label class="currency">
+                      {{ 'home.allProducts.currency' | translate }}</label
+                    ></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <li class="nav-item dropdown">
         <a
@@ -29,12 +90,12 @@
           aria-expanded="false"
         >
           <i class="far far fa-user me-2 fs-5"></i>
-          <span>{{ userNameLogged === 'Login' ? '' : userNameLogged }}</span>
+          <span>{{ user?.firstName || '' }}</span>
         </a>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <li>
             <a
-              *ngIf="signOut == false"
+              *ngIf="!authenticated"
               routerLinkActive="active-link"
               routerLink="/login"
               class="dropdown-item"
@@ -42,8 +103,8 @@
               >{{ 'nav-blank.SignIn' | translate }}</a
             >
             <a
-              *ngIf="signOut"
-              (click)="removeTokenSignOut()"
+              *ngIf="authenticated"
+              (click)="handleLogout()"
               routerLinkActive="active-link"
               routerLink="/login"
               class="dropdown-item"
@@ -54,7 +115,7 @@
 
           <li>
             <a
-              *ngIf="signOut == false"
+              *ngIf="!authenticated"
               routerLinkActive="active-link"
               routerLink="/register"
               class="dropdown-item"
@@ -66,7 +127,7 @@
 
           <li>
             <a
-              *ngIf="signOut"
+              *ngIf="authenticated"
               routerLinkActive="active-link"
               routerLink="/profile"
               class="dropdown-item"
@@ -77,7 +138,7 @@
 
           <li>
             <a
-              *ngIf="signOut"
+              *ngIf="authenticated"
               routerLinkActive="active-link"
               routerLink="/orders"
               class="dropdown-item"
@@ -110,176 +171,105 @@
 
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" routerLink=""
+      <a class="navbar-brand" [routerLink]="['/home']"
         ><img src="./assets/logo/logo.png" alt="logo" class="logo"
       /></a>
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasWithBothOptions"
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
         (click)="isTogglerOpend()"
       >
-        <i *ngIf="togglerOpend == false" class="fa-solid fa-bars"></i>
-
-        <i *ngIf="togglerOpend == true" class="fa-solid fa-xmark"></i>
+        <i class="fa-solid fa-bars"></i>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <!-- left nav -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/home">{{
-              'nav-blank.Home' | translate
-            }}</a>
-          </li>
 
-          <li class="nav-item dropdown mx-2">
-            <a
-              data-mdb-button-init
-              data-mdb-ripple-init
-              data-mdb-dropdown-init
-              class="nav-link dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-mdb-toggle="dropdown"
-              aria-expanded="false"
-            >
-              {{ 'nav-blank.Categories' | translate }}
-            </a>
-
-            <ul
-              class="dropdown-menu"
-              aria-labelledby="dropdownMenuButton"
-              [lang]="_Translate.currentLang"
-            >
-              <li *ngFor="let category of categoryList">
-                <a
-                  (click)="reloadPage(category.id)"
-                  routerLinkActive="active-link"
-                  [routerLink]="['/category/', category.id]"
-                  class="dropdown-item"
-                  role="button"
-                  >{{ _Translate.currentLang === 'ar' ? category.arName : category.enName }}</a
-                >
-              </li>
-            </ul>
-          </li>
-
-          <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/latest-collection">{{
-              'nav-blank.LatestCollection' | translate
-            }}</a>
-          </li>
-
-          <li class="nav-item mx-2">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/new-offers">{{
-              'nav-blank.NewOffers' | translate
-            }}</a>
-          </li>
-        </ul>
-
-        <!-- right nav -->
-        <!-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown mx-2 me-3">
-            <a
-              data-mdb-button-init
-              class="nav-link"
-              routerLinkActive="active-link"
-              routerLink="/login"
-              data-mdb-ripple-init
-              data-mdb-dropdown-init
-              class="nav-link dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-mdb-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="far far fa-user me-4 fs-5"></i>
-              <span>{{
-                _Translate.currentLang === 'ar'
-                  ? userNameLogged === 'Login'
-                    ? 'تسجيل دخول'
-                    : userNameLogged
-                  : userNameLogged
-              }}</span>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <li>
-                <a
-                  *ngIf="signOut == false"
-                  routerLinkActive="active-link"
-                  routerLink="/login"
-                  class="dropdown-item"
-                  role="button"
-                  >{{ 'nav-blank.SignIn' | translate }}</a
-                >
-                <a
-                  *ngIf="signOut"
-                  (click)="removeTokenSignOut()"
-                  routerLinkActive="active-link"
-                  routerLink="/login"
-                  class="dropdown-item"
-                  role="button"
-                  >{{ 'nav-blank.SignOut' | translate }}</a
-                >
-              </li>
-
-              <li>
-                <a
-                  *ngIf="signOut == false"
-                  routerLinkActive="active-link"
-                  routerLink="/register"
-                  class="dropdown-item"
-                  role="button"
-                  ><span class="not-member">{{ 'nav-blank.NotaMember?' | translate }}</span>
-                  {{ 'nav-blank.Register' | translate }}</a
-                >
-              </li>
-
-              <li>
-                <a
-                  *ngIf="signOut"
-                  routerLinkActive="active-link"
-                  routerLink="/profile"
-                  class="dropdown-item"
-                  role="button"
-                  >{{ 'nav-blank.Profile' | translate }}</a
-                >
-              </li>
-
-              <li>
-                <a
-                  *ngIf="signOut"
-                  routerLinkActive="active-link"
-                  routerLink="/orders"
-                  class="dropdown-item"
-                  role="button"
-                  >{{ 'nav-blank.TraceYourOrder' | translate }}</a
-                >
-              </li>
-            </ul>
-          </li>
-
-          <li class="nav-item me-3">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/favorites"
-              ><i class="far fa-heart me-4 fs-5"></i>
-              <span>{{ 'nav-blank.Favorites' | translate }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active-link" routerLink="/cart"
-              ><i class="fas fa-shopping-bag me-3 fs-5"></i>
-              <span class="shopping-text">{{ 'nav-blank.Cart' | translate }}</span>
-              <span class="mini-basket-count"
-                ><span>{{ cartNum }}</span></span
+      <div
+        class="offcanvas offcanvas-start"
+        data-bs-scroll="true"
+        tabindex="-1"
+        id="offcanvasWithBothOptions"
+        aria-labelledby="offcanvasWithBothOptionsLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+            <img src="./assets/logo/logo.png" alt="logo" class="logo" />
+          </h5>
+          <button
+            type="button"
+            [lang]="translate.currentLang"
+            class="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item mx-2">
+              <a
+                class="nav-link under-line-hover-link"
+                [lang]="translate.currentLang"
+                routerLinkActive="active-link"
+                routerLink="/home"
+                >{{ 'nav-blank.Home' | translate }}</a
               >
-            </a>
-          </li>
-        </ul> -->
+            </li>
+
+            <li class="nav-item dropdown mx-2">
+              <a
+                data-mdb-button-init
+                data-mdb-ripple-init
+                data-mdb-dropdown-init
+                class="nav-link dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-mdb-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ 'nav-blank.Categories' | translate }}
+              </a>
+
+              <ul
+                class="dropdown-menu"
+                aria-labelledby="dropdownMenuButton"
+                [lang]="translate.currentLang"
+              >
+                <li *ngFor="let category of categoryList">
+                  <a
+                    routerLinkActive="active-link"
+                    [routerLink]="['/category/', category.id]"
+                    class="dropdown-item"
+                    role="button"
+                    >{{ translate.currentLang === 'ar' ? category.arName : category.enName }}</a
+                  >
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a
+                class="nav-link under-line-hover-link"
+                [lang]="translate.currentLang"
+                routerLinkActive="active-link"
+                routerLink="/latest-collection"
+                >{{ 'nav-blank.LatestCollection' | translate }}</a
+              >
+            </li>
+
+            <li class="nav-item mx-2">
+              <a
+                class="nav-link under-line-hover-link"
+                [lang]="translate.currentLang"
+                routerLinkActive="active-link"
+                routerLink="/new-offers"
+                >{{ 'nav-blank.NewOffers' | translate }}</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>

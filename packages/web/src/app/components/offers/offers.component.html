@@ -1,3 +1,5 @@
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
 <section class="offers">
   <div class="container-fluid">
     <h1 class="offer-title h1">{{ 'offers.mainTitle' | translate }}</h1>
@@ -10,7 +12,7 @@
           <div class="parent-img-content">
             <header class="header-product">
               <i
-                (click)="addPoductInWishList(product.id, favoritIcon)"
+                (click)="addProductInWishList(product.id, favoritIcon)"
                 #favoritIcon
                 class="fa-regular fa-heart favourit-icon"
               ></i>

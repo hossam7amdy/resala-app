@@ -48,12 +48,13 @@ section p {
   text-align: right;
   margin-top: 20px;
 }
-.forgot p {
+.forgot .p {
   display: inline;
-  cursor: pointer;
-  color: #016373;
+  cursor: pointer !important;
+  color: #777;
+  font-size: 12px !important;
 }
-.forgot p:hover {
+.forgot .p:hover {
   text-decoration: solid;
   color: #016473a1;
 }
@@ -98,4 +99,7 @@ section p {
 
 .form-item .password-input i:lang(ar) {
   right: 92%;
+}
+.not-member {
+  font-size: 14px !important;
 }

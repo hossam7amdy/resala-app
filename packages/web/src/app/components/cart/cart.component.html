@@ -1,19 +1,24 @@
-<section *ngIf="totalCount != 0; else emptyCart">
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
+<section *ngIf="!customSpinIsLoading && cartDetailsItems && cartDetailsItems.length > 0">
   <div class="container">
-    <h2 class="cartTitle h2">My Cart {{ cartDetails.totalQuantity }} product</h2>
+    <h2 class="cartTitle h2">
+      {{ 'cart.mainTitleFirstSlice' | translate }} {{ cartDetails.totalQuantity }}
+      {{ 'cart.mainTitleNdSlice' | translate }}
+    </h2>
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-9">
         <div class="form-check">
           <button
             [disabled]="totalCount == 0"
             type="button"
-            class="btn mt-2 second-custom-btn"
+            class="btn mt-2 delete-all"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
           >
-            Delete All Items
+            {{ 'cart.deleteAllBtn' | translate }}
             <i class="fa-solid fa-trash"></i>
           </button>
           <!--start checked delete all items -->
@@ -22,36 +27,39 @@
 
           <!-- Modal -->
           <div
-            class="modal fade"
+            class="modal fade rounded-0"
             id="exampleModal"
             tabindex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div class="modal-dialog">
-              <div class="modal-content">
+            <div class="modal-dialog rounded-0">
+              <div class="modal-content rounded-0">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                  <h5 class="modal-title h3" id="exampleModalLabel">
+                    {{ 'cart.confirmDeleteAllItems' | translate }}
+                  </h5>
                   <button
                     type="button"
+                    [lang]="_Translate.currentLang"
                     class="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
                   ></button>
                 </div>
-                <div class="modal-body">Do You Want Delete All Your Products !!</div>
+                <div class="modal-body h4">{{ 'cart.confirmDeleteQuestion' | translate }}</div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+                  <button type="button" class="custome-btn" data-bs-dismiss="modal">
+                    {{ 'cart.cancelBtn' | translate }}
                   </button>
                   <button
                     type="button"
-                    class="btn second-custom-btn"
+                    class="second-custom-btn"
                     data-bs-dismiss="modal"
                     (click)="[confirmationDel(), clearAllItems(removeAll)]"
                     #removeAll
                   >
-                    Yes
+                    {{ 'cart.yesBtn' | translate }}
                   </button>
                 </div>
               </div>
@@ -60,7 +68,7 @@
           <!--end checked delete all items -->
         </div>
         <div class="card mb-4">
-          <div class="row g-0" *ngFor="let item of cartDetailsItems">
+          <div class="row g-0" *ngFor="let item of cartDetailsItems; let i = index">
             <div class="col-sm-2">
               <img
                 *ngIf="item.images.length > 0"
@@ -77,24 +85,192 @@
             </div>
             <div class="col-sm-7">
               <div class="card-body">
-                <p class="">{{ item.stock.quantity }} IN STOCK</p>
-                <h5 class="card-title">{{ item.product.enName }}</h5>
-                <span class="text-uppercase">{{ item.stock.color.enName }}</span>
-                <span class="">
-                  - Size : <i class="bold small">{{ item.stock.size.name }}</i></span
-                >
-                <p *ngIf="item.discountedPrice == 0" class="fw-bold currency">
-                  {{ item.product.price }} EGP
+                <!-- <p class="">{{ item.stock.quantity }} {{ 'cart.stockQnt' | translate }}</p> -->
+                <h4 class="h3 card-title">
+                  {{ _Translate.currentLang == 'ar' ? item.product.arName : item.product.enName }}
+                </h4>
+                <div class="row color-size">
+                  <div class="col-3">
+                    <span class="text-uppercase fw-bold" style="color: #016373">{{
+                      _Translate.currentLang == 'ar'
+                        ? item.stock.color.arName
+                        : item.stock.color.enName
+                    }}</span>
+                    <span class="">
+                      -
+                      <i class="bold small fw-bold" style="color: #016373">{{
+                        item.stock.size.name
+                      }}</i></span
+                    >
+                  </div>
+                  <div class="col-2 p-0">
+                    <!-- Start Edit Size & Color Section  -->
+                    <button
+                      class="edit-btn"
+                      (click)="
+                        [toggleForm(item.stockId), getStockDataPro(cartDetailsItems[i].product.id)]
+                      "
+                    >
+                      {{ 'cart.editColorSize' | translate }}
+                    </button>
+
+                    <div
+                      class="overlay"
+                      *ngIf="isFormVisible"
+                      (click)="toggleForm(item.stockId)"
+                    ></div>
+
+                    <div class="form-container" *ngIf="isFormVisible">
+                      <form>
+                        <i
+                          [lang]="_Translate.currentLang"
+                          class="fa-solid fa-xmark close-edit"
+                          (click)="toggleForm(item.stockId)"
+                        ></i>
+                        <h2 class="h3">{{ 'cart.editTitleForm' | translate }}</h2>
+                        <div class="content-form">
+                          <div class="colorSection">
+                            <h4 class="h4">{{ 'cart.chooseColor' | translate }}</h4>
+                            <div class="d-flex flex-wrap color-options-list">
+                              <ng-container
+                                *ngFor="let product of productStockColor; let i = index"
+                              >
+                                <div>
+                                  <img
+                                    class="mini-images-color"
+                                    [src]="productStock[i].images[0]?.imageUrl"
+                                    (click)="[onColorChange(product, i), isChooseColorFun()]"
+                                  />
+
+                                  <div
+                                    [ngClass]="{ active: currentColor === product?.color?.id }"
+                                    class="color-option"
+                                  >
+                                    <input
+                                      [(ngModel)]="selectedColor"
+                                      type="radio"
+                                      class="btn-check"
+                                      name="color-option"
+                                      id="btncolor"
+                                      [value]="selectedColor"
+                                    />
+                                    <label
+                                      (click)="[onColorChange(product, i), isChooseColorFun()]"
+                                      for="btncolor"
+                                    >
+                                      {{
+                                        _Translate.currentLang == 'ar'
+                                          ? product.color.arName
+                                          : product.color.enName
+                                      }}
+                                    </label>
+                                    <!-- owlCar.to(productStock[i].images[0]?.imageUrl), -->
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <div class="sizeSection">
+                            <h4 class="h4">{{ 'cart.chooseSize' | translate }}</h4>
+                            <div class="d-flex flex-wrap size-options-list">
+                              <ng-container *ngFor="let product of productStock; let i = index">
+                                <div *ngFor="let size of product.sizes">
+                                  <div *ngIf="i == stockIndex">
+                                    <div
+                                      [ngClass]="{ active: currentSize === size?.sizeId }"
+                                      class="size-option"
+                                    >
+                                      <input
+                                        [(ngModel)]="selectedSize"
+                                        type="radio"
+                                        class="btn-check"
+                                        name="size-option"
+                                        id="btnsize"
+                                        [value]="selectedSize"
+                                      />
+
+                                      <label
+                                        *ngIf="size.quantity !== 0"
+                                        (click)="[onSizeChange(size), isChooseSizeFun()]"
+                                        for="btnsize"
+                                      >
+                                        {{ size.size }}
+                                      </label>
+
+                                      <s
+                                        *ngIf="size.quantity == 0"
+                                        aria-disabled="true"
+                                        for="btnsize"
+                                      >
+                                        {{ size.size }}
+                                      </s>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+
+                          <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
+                          <section class="quantity">
+                            <div class="counter">
+                              <button
+                                class="min-counter-btn fw-bold"
+                                [disabled]="counterQuantity == 1"
+                                (click)="minCounterQuantity()"
+                              >
+                                <i class="fa-solid fa-minus"></i>
+                              </button>
+                              <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
+                                counterQuantity
+                              }}</span>
+                              <button
+                                class="plus-counter-btn fw-bold"
+                                (click)="plusCounterQuantity()"
+                                [disabled]="counterQuantity == quantity"
+                              >
+                                <i class="fa-solid fa-plus"></i>
+                              </button>
+                            </div>
+                          </section>
+                        </div>
+                        <button
+                          (click)="[removeStockId(removeStock, stockIdSize)]"
+                          #removeStock
+                          class="custome-btn"
+                        >
+                          {{ 'cart.updateCartBtn' | translate }}
+                        </button>
+                      </form>
+                    </div>
+
+                    <!-- End Edit Size & Color Section  -->
+                  </div>
+                </div>
+
+                <p class="currency mb-0">
+                  <s>{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
                 </p>
-                <p *ngIf="item.discountedPrice != 0" class="fw-bold currency">
-                  {{ item.discountedPrice }} EGP
+
+                <p *ngIf="item.discountedPrice != 0" class="price fs-4">
+                  <span class="p p-0"
+                    >{{ 'cart.discountTitle' | translate }} {{ item.appliedDiscount.amount }}%</span
+                  >
+                  {{ item.discountedPrice }}
+                  <label class="currency fs-5">
+                    {{ 'home.allProducts.currency' | translate }}</label
+                  >
                 </p>
-                <button class="btn mt-2">
+
+                <button class="btn mt-2 remove-item">
                   <i
                     (click)="removeItem(item.stock.id, remove)"
                     #remove
                     class="fa-solid fa-trash"
-                  ></i>
+                    style="color: #777"
+                    ><span>{{ 'cart.remove' | translate }}</span></i
+                  >
                 </button>
               </div>
             </div>
@@ -112,31 +288,113 @@
                   item.quantity
                 }}</span>
                 <button
-                  [disabled]="item.stock.quantity == 0"
+                  [disabled]="item.stock.quantity == 0 || item.quantity == item.stock.quantity"
                   class="plus-counter-btn fw-bold"
                   (click)="changeCount(item.quantity + 1, item.stock.id, btnMin, btnPlus)"
                   #btnPlus
                 >
                   <i class="fa-solid fa-plus"></i>
                 </button>
-                <p *ngIf="item.stock.quantity == 0" class="p">Latest One Stock</p>
+
+                <p *ngIf="item.stock.quantity <= 5" class="p">
+                  {{ 'cart.latestStock' | translate }} <b>{{ item.stock.quantity }}</b>
+                  {{ 'cart.latestStock2NdWord' | translate }}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Check Out Summary</h5>
-            <p class="card-text">
-              Total Products Price <span class="total-price">{{ cartDetails.totalPrice }} EGP</span>
-            </p>
+            <div class="row card-text">
+              <p class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
+
+              <span class="text-end col-6 price fs-5">
+                {{ cartDetails.totalPrice }}
+                <label class="currency fs-5 m-0">
+                  {{ 'home.allProducts.currency' | translate }}</label
+                >
+                <a
+                  [lang]="_Translate.currentLang"
+                  class="rotate-box collapse-icon"
+                  data-bs-toggle="collapse"
+                  href="#multiCollapseExample1"
+                  role="button"
+                  aria-expanded="false"
+                  aria-controls="multiCollapseExample1"
+                  [ngClass]="{ 'rotate-180': isRotated }"
+                  (click)="toggleRotation()"
+                >
+                  <i class="fa-solid fa-chevron-down"></i>
+                </a>
+              </span>
+
+              <!-- <span>
+                
+                
+              </span> -->
+              <div class="row">
+                <div class="col p-0">
+                  <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    <div class="card card-body">
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.subTotalPrice' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >{{ cartDetails.totalDiscount + cartDetails.totalPrice }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.shippingAmount' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >0
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0">{{
+                          'cart.discountAmount' | translate
+                        }}</span>
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >-{{ cartDetails.totalDiscount }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                      <div class="row m-0 border-0">
+                        <span [lang]="_Translate.currentLang" class="col-6 title-details p p-0"
+                          >{{ 'cart.totalPrice' | translate }}
+                          <i>{{ 'cart.tax' | translate }}</i></span
+                        >
+                        <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
+                          >{{ cartDetails.totalPrice }}
+                          <label class="currency m-0 fs-6">{{
+                            'home.allProducts.currency' | translate
+                          }}</label></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button
               [disabled]="cartDetails.totalQuantity == 0"
               class="btn custome-btn p-0 border-0"
             >
-              <a routerLink="/payment" class="btn custome-btn">Order Now</a>
+              <a routerLink="/payment" class="btn custome-btn">{{ 'cart.orderBtn' | translate }}</a>
             </button>
           </div>
         </div>
@@ -145,8 +403,14 @@
   </div>
 </section>
 
-<ng-template class="m-auto" #emptyCart>
-  <div class="emptyCartParent">
-    <h1 class="emptyCart text-uppercase">Your Cart Is Empty ...</h1>
+<div
+  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems.length == 0"
+  class="m-auto"
+>
+  <div class="emptyCart emptyCartParent">
+    <i class="fa-solid fa-bag-shopping"></i>
+    <h1 class="h2 text-uppercase">{{ 'cart.cartEmptyTitle' | translate }}</h1>
+    <p class="p">{{ 'cart.emptyCartP' | translate }}</p>
+    <button routerLink="/home" class="custome-btn">{{ 'cart.emptyBtn' | translate }}</button>
   </div>
-</ng-template>
+</div>

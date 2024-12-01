@@ -4,10 +4,9 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
@@ -15,7 +14,11 @@ import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
+import { Translate_Service } from 'src/app/core/services/translate.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
+
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-product-details',
@@ -29,6 +32,8 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
     CuttdatePipe,
     RouterLink,
     TranslateModule,
+    BreadcrumbComponent,
+    SpinnerComponent,
   ],
 
   templateUrl: './product-details.component.html',
@@ -36,11 +41,29 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 })
 export class ProductDetailsComponent implements OnInit {
   // static productId: any;
+  isZoomed = false;
+  zoomStyle = {};
+
+  toggleZoom(state: boolean) {
+    this.isZoomed = state;
+    this.zoomStyle = state ? this.zoomStyle : {};
+  }
+
+  setZoomPosition(event: MouseEvent) {
+    if (this.isZoomed) {
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      const x = event.clientX - rect.left; // X position within the image
+      const y = event.clientY - rect.top; // Y position within the image
+
+      this.zoomStyle = {
+        transformOrigin: `${x}px ${y}px`, // Set the origin for zoom
+      };
+    }
+  }
 
   constructor(
     private route: ActivatedRoute,
     private _HomeProductsService: HomeProductsService,
-    private spinner: NgxSpinnerService,
     private _CartService: CartService,
     private _toaster: ToastrService,
     private _Renderer2: Renderer2,
@@ -48,9 +71,32 @@ export class ProductDetailsComponent implements OnInit {
     private _Reviews: ReviewsService,
     private _ProductsCategory: CategoriesService,
     private _WishListService: WishListService,
-    private _Renderer: Renderer2,
-    private _Toaster: ToastrService
+    private _Toaster: ToastrService,
+    private _RTLStatus: Translate_Service,
+    public _Translate: TranslateService
   ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
+
+  // Change page Direction as per Selected Lang
+  changePageDirection(): boolean {
+    this.customSpinIsLoading = true;
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+    this.customSpinIsLoading = false;
+    return rtlStat;
+  }
 
   counterQuantity: number = 1;
   priceAfterSale: number = 0;
@@ -81,7 +127,7 @@ export class ProductDetailsComponent implements OnInit {
   currentSize: string = '';
   stockIdColor: string = '';
   stockIdSize: string = '';
-  quantity: string = '';
+  quantity!: number;
   isChooseSize: boolean = false;
 
   // Reviews
@@ -106,48 +152,58 @@ export class ProductDetailsComponent implements OnInit {
     // start code test
 
     //end code test
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
 
     this._CartService.getCartUser().subscribe({
       next: response => {
-        console.log(response);
         this.cartDetails = response.data;
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
 
     this._Reviews.getProductReview(this.productId, '10').subscribe({
       next: res => {
-        console.log('test');
-        console.log('review', res);
         this.productReview = res.data.reviews;
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   getProductDetails(id: any) {
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
-        this.productImages = res?.data?.images;
+        // FIXME: getProductDetails: do not have images!!
+        // this.productImages = res?.data?.images;
         this.categoryId = res?.data.categoryId;
-        console.log('productdetails', res.data, 'cat id' + this.categoryId);
+
+        this.customSpinIsLoading = false;
       },
-      error: err => console.log(err),
-      complete: () => this.getProductStock(id),
+
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
+      complete: () => {
+        this.getProductStock(id);
+        this.customSpinIsLoading = false;
+      },
     });
   }
 
   getProductStock(id: any) {
+    this.customSpinIsLoading = true;
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
-
-        console.log('stock', this.productStock);
 
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
@@ -157,17 +213,18 @@ export class ProductDetailsComponent implements OnInit {
           return a;
         }, []);
 
-        this.spinner.hide();
-        console.log('after filter', this.productStockColor);
+        this.customSpinIsLoading = false;
       },
-      complete: () => this.getProductsCategory(this.categoryId),
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
+      complete: () => {
+        this.getProductsCategory(this.categoryId);
+        this.customSpinIsLoading = false;
+      },
     });
   }
 
-  public onClickRate(rate: number): void {
-    // Logs the clicked star number
-    console.log('rate', rate);
-  }
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
     // trarget.scrollTo({behavior:'smooth'})
@@ -182,6 +239,7 @@ export class ProductDetailsComponent implements OnInit {
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     items: 1,
     nav: false,
+    rtl: this.changePageDirection(),
   };
 
   // carousel mini images
@@ -192,6 +250,7 @@ export class ProductDetailsComponent implements OnInit {
     pullDrag: true,
     dots: false,
     navSpeed: 700,
+    rtl: this.changePageDirection(),
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
       0: {
@@ -220,7 +279,8 @@ export class ProductDetailsComponent implements OnInit {
     this.currentColor = event?.color?.id;
     this.stockIdColor = event?.id;
     this.stockIndex = index;
-    console.log(this.selectedColor, this.stockIndex);
+    this.counterQuantity = 1;
+    this.stockIdSize = '';
   }
   isChooseColorFun() {
     this.isChooseColor = true;
@@ -234,7 +294,7 @@ export class ProductDetailsComponent implements OnInit {
     this.currentSize = event?.sizeId;
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
-    console.log(this.selectedSize, this.stockIdSize);
+    this.counterQuantity = 1;
   }
 
   setActiveClass() {
@@ -253,23 +313,28 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, quantity: any, element: HTMLButtonElement) {
-    if (this.isChooseColor && this.isChooseSize === true) {
+  addProduct(productId: string, element: HTMLButtonElement) {
+    this.customSpinIsLoading = true;
+    if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer2.setAttribute(element, 'disabled', 'true');
-
-      this._CartService.addToCart(productId, quantity).subscribe({
+      const requiredCount: string = this.counterQuantity.toString();
+      this._CartService.addToCart(productId, requiredCount).subscribe({
         next: res => {
-          console.log(res);
           this._CartService.cartNumber.next(res.data.totalQuantity);
-          console.log('cart number :' + this._CartService.cartNumber);
+
           this._toaster.success('added one product successfuly');
-          this._Router.navigate(['/cart']);
+          this.customSpinIsLoading = false;
         },
         error: err => {
-          localStorage.setItem('productId', this.productId);
-          this._toaster.error('please login !!'); //'Should be Login'
-          this._Router.navigate(['/login']);
-          console.log('response', productId, quantity, err);
+          if (err.status == 401) {
+            localStorage.setItem('productId', this.productId);
+            this._toaster.info('please login !!'); //'Should be Login'
+            this._Router.navigate(['/login']);
+          } else {
+            this._Toaster.error(err);
+          }
+
+          this.customSpinIsLoading = false;
         },
       });
     } else {
@@ -277,17 +342,19 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     this._Renderer2.removeAttribute(element, 'disabled');
+    this.customSpinIsLoading = false;
   }
 
   // similar products
   getProductsCategory(id: any): void {
+    this.customSpinIsLoading = true;
     this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
-        console.log('similar pro', res);
         this.productsCategory = res.data.products;
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
   }
@@ -302,6 +369,7 @@ export class ProductDetailsComponent implements OnInit {
     margin: 5,
     autoWidth: true,
     navSpeed: 700,
+    rtl: this.changePageDirection(),
     navText: ['<i class="fa-solid fa-angle-left"></i>', '<i class="fa-solid fa-angle-right"></i>'],
     responsive: {
       0: {
@@ -334,13 +402,15 @@ export class ProductDetailsComponent implements OnInit {
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: (response: any) => {
-        this._Renderer.setStyle(element, 'font-weight', 'bold');
+      next: () => {
+        this._Renderer2.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+
+        this.customSpinIsLoading = false;
       },
-      error: (err: any) => {
+      error: () => {
         this._Toaster.error('Should be Login !!');
         this._Router.navigate(['/login']);
         // if (err.statusText == 'Unauthorized'|| err.error.message == 'JWT token is missing or invalid' || err.error.message == 'jwt expired') {
@@ -348,14 +418,75 @@ export class ProductDetailsComponent implements OnInit {
         // } else {
         //   this._Toaster.error(err.message);
         // }
-        console.log(err);
+
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   reloadPage(id: any): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     window.location.replace(`/product-details/${id}`);
-    this.spinner.hide();
+    this.customSpinIsLoading = false;
+  }
+
+  //zoomin
+  //  @ViewChild('cursor') refCursor:any;
+  //  @HostListener('document:mousemove',['$event'])
+  //  atMouseMove(event:any){
+
+  //     this.refCursor.nativeElement.style.left =event.pageX;
+  //     this.refCursor.nativeElement.style.top =event.pageY;
+
+  //  }
+
+  zoomStyles = {};
+  isZoomActive = false;
+  isCursorVisible = false;
+  cursorStyles = {};
+  overlayStyles = {}; // Style object for overlay position
+  isMouseMoving = false; // Track if the mouse is moving
+  private mouseMoveTimeout: any;
+
+  onMouseMove(event: MouseEvent): void {
+    const { offsetX, offsetY, target } = event;
+    const { offsetWidth, offsetHeight } = target as HTMLElement;
+
+    // Activate zoom display
+    this.isZoomActive = true;
+
+    // Calculate position of zoomed image based on mouse position
+    const xPercent = (offsetX / offsetWidth) * 100;
+    const yPercent = (offsetY / offsetHeight) * 100;
+
+    this.zoomStyles = {
+      transformOrigin: `${xPercent}% ${yPercent}%`,
+      transform: 'scale(5)', // Adjust zoom scale here
+    };
+
+    // Update custom cursor position
+    this.cursorStyles = {
+      top: `${event.offsetY}px`,
+      left: `${event.offsetX}px`,
+    };
+
+    // Show overlay only if the mouse is still
+    this.isMouseMoving = true;
+    clearTimeout(this.mouseMoveTimeout);
+    this.mouseMoveTimeout = setTimeout(() => {
+      this.isMouseMoving = false; // Mouse is considered still after 200ms
+    }, 200);
+  }
+
+  showCustomCursor(): void {
+    this.isCursorVisible = true;
+  }
+
+  hideCustomCursor(): void {
+    this.isCursorVisible = false;
+    this.isZoomActive = false;
+    this.zoomStyles = {};
+    this.isMouseMoving = false;
+    this.overlayStyles = {};
   }
 }

@@ -1,28 +1,27 @@
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
 <section class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
   <h1 class="my-3">{{ 'login.mainTitle' | translate }}</h1>
+
+  <div class="form-item">
+    <button class="btn w-100" (click)="handleGoogleLogin()">
+      <a class="custome-btn"
+        ><img
+          src="./assets/icons/icons8-google-48.png"
+          style="width: 25px; height: 25px"
+          alt="Google"
+        />
+        {{ 'login.googleAccount' | translate }}</a
+      >
+    </button>
+  </div>
+  <p class="p not-member text-center">{{ 'login.chooseLogin' | translate }}</p>
+
   <form [formGroup]="loginForm" class="form" (ngSubmit)="handleForm(loginForm)">
     <div class="form-item">
-      <button class="btn w-100">
-        <a href="https://tender-krill-flying.ngrok-free.app/auth/google" class="custome-btn"
-          ><img
-            src="./assets/icons/icons8-google-48.png"
-            style="width: 25px; height: 25px"
-            alt="Google"
-          />
-          {{ 'login.googleAccount' | translate }}</a
-        >
-      </button>
-      <p class="p text-center">{{ 'login.chooseLogin' | translate }}</p>
-
       <label for="email">{{ 'login.username' | translate }}</label>
 
-      <input
-        type="text"
-        formControlName="sign"
-        class="form-control"
-        id="email"
-        placeholder="{{ 'login.username' | translate }}"
-      />
+      <input type="text" formControlName="sign" class="form-control" id="email" />
 
       <div
         *ngIf="loginForm.get('sign')?.errors && loginForm.get('sign')?.touched"
@@ -44,18 +43,17 @@
         <input
           [type]="showPW ? 'text' : 'password'"
           formControlName="password"
-          placeholder="{{ 'login.password' | translate }}"
           class="form-control"
           id="password"
         />
         <i
-          [lang]="_Translate.currentLang"
+          [lang]="translate.currentLang"
           class="fa-regular fa-eye"
           *ngIf="!showPW"
           (click)="togglePW()"
         ></i>
         <i
-          [lang]="_Translate.currentLang"
+          [lang]="translate.currentLang"
           class="far fa-eye-slash"
           *ngIf="showPW"
           (click)="togglePW()"
@@ -76,16 +74,26 @@
     </div>
 
     <div class="forgot">
-      <p routerLink="/forgot-password">{{ 'login.forgotPW' | translate }}</p>
+      <p class="p" routerLink="/forgot-password">{{ 'login.forgotPW' | translate }}</p>
     </div>
 
     <button [disabled]="loginForm.invalid" type="submit" class="mt-3 custome-btn">
       {{ 'login.loginBtn' | translate }}
       <span *ngIf="isLoading"><i class="fa-spin fas fa-spinner"></i></span>
     </button>
+    <a
+      routerLinkActive="active-link"
+      routerLink="/register"
+      class="dropdown-item p not-member"
+      role="button"
+      ><span style="color: #fbb935" class="not-member">{{
+        'nav-blank.NotaMember?' | translate
+      }}</span>
+      <span>{{ 'nav-blank.Register' | translate }}</span></a
+    >
 
     <p *ngIf="successMsg" class="alert text-green mx-auto">
-      {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
+      {{ translate.currentLang == 'ar' ? successMsgAr : successMsg }}
     </p>
     <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
   </form>

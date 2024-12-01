@@ -1,42 +1,73 @@
-<h1 *ngIf="productStock.length == 0">Sorry !! this product not found stock ...</h1>
+<app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
+
+<h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
+    <!-- blank-layout.component.html -->
+    <div class="layout">
+      <app-breadcrumb></app-breadcrumb>
+      <router-outlet></router-outlet>
+      <!-- This is where child routes will be rendered -->
+    </div>
+
     <div class="row img-product">
-      <div class="col-sm-12 col-md-8 main-img">
+      <div class="col-sm-12 col-md-6 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
-              <!-- *ngIf="image.isPrimary" -->
               <ng-template carouselSlide [id]="image.imageUrl">
-                <div class="main-img p-3">
+                <div
+                  class="image-container p-1 m-1"
+                  (mousemove)="onMouseMove($event)"
+                  (mouseleave)="hideCustomCursor()"
+                  (mouseenter)="showCustomCursor()"
+                >
+                  <!-- Original Image -->
                   <img
                     [src]="image.imageUrl"
-                    class="image-products"
-                    [alt]="productDetails.enName"
-                    [title]="productDetails.enName"
+                    [alt]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    [title]="
+                      _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+                    "
+                    class="original-image"
                   />
+
+                  <!-- Full Image Overlay -->
+                  <div class="image-overlay" [class.hidden]="isMouseMoving">
+                    <div
+                      class="custom-cursor"
+                      *ngIf="isCursorVisible"
+                      [ngStyle]="cursorStyles"
+                      #cursor
+                    ></div>
+                  </div>
+
+                  <!-- Zoomed Image Displayed in Separate Area Beneath -->
+                  <div class="zoom-container" *ngIf="isZoomActive">
+                    <img
+                      [src]="image.imageUrl"
+                      [alt]="
+                        _Translate.currentLang == 'ar'
+                          ? productDetails.arName
+                          : productDetails.enName
+                      "
+                      [title]="
+                        _Translate.currentLang == 'ar'
+                          ? productDetails.arName
+                          : productDetails.enName
+                      "
+                      class="zoomed-image"
+                      [ngStyle]="zoomStyles"
+                    />
+                  </div>
                 </div>
               </ng-template>
             </ng-container>
           </ng-container>
         </owl-carousel-o>
 
-        <!-- test gallery -->
-
-        <!-- test gallery -->
-
-        <!-- <owl-carousel-o [options]="miniImgCarousel">
-          <ng-container *ngFor="let product of productStock">
-            <ng-container *ngFor="let image of product.images let i =index">
-              <ng-template carouselSlide [id]="image.id">
-                <div class="img-content" (click)="owlCar.to(image.imageUrl)" (change)="changeimage(image.imageUrl+i)">
-                  <img [src]="image.imageUrl" class="w-100 image-products" [alt]="productDetails.enName"
-                    [title]="productDetails.enName" />
-                </div>
-              </ng-template>
-            </ng-container>
-          </ng-container>
-        </owl-carousel-o> -->
         <div class="d-flex flex-wrap p-3 pt-0 mini-images">
           <div class="d-flex" *ngFor="let product of productStock">
             <div class="d-flex flex-wrap">
@@ -47,10 +78,14 @@
                   (change)="changeimage(image.imageUrl + i)"
                 >
                   <img
-                    [src]="image?.imageUrl"
+                    [src]="
+                      currentColor == ''
+                        ? image?.imageUrl
+                        : currentColor !== product.color.id
+                          ? []
+                          : image?.imageUrl
+                    "
                     class="w-100 image-products"
-                    [alt]="productDetails.enName"
-                    [title]="productDetails.enName"
                   />
                 </div>
               </div>
@@ -58,30 +93,45 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-4">
-        <h2 class="h2">{{ productDetails.enName }}</h2>
-        <p class="p">{{ productDetails.enDescription }}</p>
+
+      <div class="col-sm-12 col-md-6">
+        <h2 class="h2">
+          {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
+        </h2>
+        <p class="p">
+          {{
+            _Translate.currentLang == 'ar'
+              ? productDetails.arDescription
+              : productDetails.enDescription
+          }}
+        </p>
 
         <div *ngFor="let discount of productDetails.discounts">
           <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
             <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
           </h4>
           <span *ngIf="discount.length < 0 && discount.type != 'PERCENTAGE'" class="price"
-            >{{ productDetails.price }}<label class="currency"> EGP</label></span
+            >{{ productDetails.price
+            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
           >
           <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
-            >{{ productDetails.price }}<s class="p px-0">EGP</s></s
+            >{{ productDetails.price
+            }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s
           >
           <br />
-          <span *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="price fa-lg"
+          <br />
+          <span
+            *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'"
+            class="price fa-lg fs-2"
             >{{ productDetails.price - productDetails.price * (discount.amount / 100)
-            }}<label class="currency"> EGP</label></span
+            }}<label class="currency fs-4">
+              {{ 'home.allProducts.currency' | translate }}</label
+            ></span
           >
         </div>
         <ngx-stars-rating
           [rate]="productDetails.avgRating"
           [options]="ratingOptions"
-          (onRate)="onClickRate($event)"
           [starTemplate]="starCustomTemplate"
         ></ngx-stars-rating>
 
@@ -97,9 +147,9 @@
             ></span>
           </ng-template>
         </div>
-        <span class="sub-text">Tax included. Shipping calculated at checkout.</span>
+        <span class="sub-text">{{ 'productDetails.taxScript' | translate }}</span>
 
-        <h3 class="h4">Color</h3>
+        <h3 class="h4">{{ 'productDetails.color' | translate }}</h3>
         <div class="d-flex flex-wrap color-options-list">
           <ng-container *ngFor="let product of productStockColor; let i = index">
             <div [ngClass]="{ active: currentColor === product?.color?.id }" class="color-option">
@@ -121,7 +171,7 @@
                 "
                 for="btncolor"
               >
-                {{ product.color.enName }}
+                {{ _Translate.currentLang == 'ar' ? product.color.arName : product.color.enName }}
               </label>
             </div>
           </ng-container>
@@ -142,7 +192,7 @@
          -->
         <!-- [ngStyle]="{'background-color':colors.color.code}" -->
 
-        <h3 class="h4">Size</h3>
+        <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
             <div *ngFor="let size of product.sizes">
@@ -157,9 +207,17 @@
                     [value]="selectedSize"
                   />
 
-                  <label (click)="[onSizeChange(size), isChooseSizeFun()]" for="btnsize">
+                  <label
+                    *ngIf="size.quantity !== 0"
+                    (click)="[onSizeChange(size), isChooseSizeFun()]"
+                    for="btnsize"
+                  >
                     {{ size.size }}
                   </label>
+
+                  <s *ngIf="size.quantity == 0" aria-disabled="true" for="btnsize">
+                    {{ size.size }}
+                  </s>
                 </div>
               </div>
             </div>
@@ -197,7 +255,7 @@
           </div>
         </section>
          -->
-        <h4 class="h4">Quantity</h4>
+        <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
         <section class="quantity">
           <div class="counter">
             <button
@@ -210,29 +268,29 @@
             <span disabled min="1" data-min="1" class="fw-bold small px-4">{{
               counterQuantity
             }}</span>
-            <button class="plus-counter-btn fw-bold" (click)="plusCounterQuantity()">
+            <button
+              class="plus-counter-btn fw-bold"
+              (click)="plusCounterQuantity()"
+              [disabled]="counterQuantity == quantity"
+            >
               <i class="fa-solid fa-plus"></i>
             </button>
           </div>
         </section>
 
         <div class="add-cart-btn">
-          <button
-            (click)="addProduct(stockIdSize, counterQuantity, addToCartBtn)"
-            #addToCartBtn
-            class="w-100"
-          >
-            ADD TO CART
+          <button (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="w-100">
+            {{ 'productDetails.addToCart' | translate }}
           </button>
-          <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label>
+          <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
         </div>
       </div>
     </div>
 
     <!--start Reviews -->
-    <div class="card mt-4">
+    <div class="card mt-5">
       <div class="card-header">
-        <h4 class="h3">Testimonials & Ratings</h4>
+        <h4 class="h3">{{ 'productDetails.reviews.mainTitle' | translate }}</h4>
       </div>
       <div *ngFor="let review of productReview" class="card-body">
         <blockquote class="blockquote mb-0">
@@ -253,7 +311,9 @@
             </ng-template>
           </div>
 
-          <h4 class="h4 fw-bold mb-3">{{ productDetails.enName }}</h4>
+          <h4 class="h4 fw-bold mb-3">
+            {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
+          </h4>
           <footer class="blockquote-footer">
             <cite title="Source Title">{{ review.comment }}</cite>
           </footer>
@@ -266,7 +326,7 @@
     <!-- Similar Products -->
 
     <div *ngIf="productsCategory.length > 3" class="container-fluid">
-      <h2 class="h1">Similar Products</h2>
+      <h2 class="h1">{{ 'productDetails.similarProducts.mainTitle' | translate }}</h2>
 
       <owl-carousel-o
         [options]="similarProducts"
@@ -304,8 +364,8 @@
                   <img
                     class="w-100 image-products"
                     [src]="product.imageUrl"
-                    [alt]="product.enName"
-                    [title]="product.enName"
+                    [alt]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
+                    [title]="_Translate.currentLang == 'ar' ? product.arName : product.enName"
                   />
                 </div>
                 <footer
@@ -324,7 +384,7 @@
                   class="mb-0"
                   role="button"
                 >
-                  {{ product.enName }}
+                  {{ _Translate.currentLang == 'ar' ? product.arName : product.enName }}
                 </h6>
 
                 <ngx-stars-rating
@@ -345,7 +405,12 @@
                   </ng-template>
                 </div>
 
-                <span class="price">{{ product.price }}<label class="currency"> EGP</label></span>
+                <span class="price"
+                  >{{ product.price
+                  }}<label class="currency">
+                    {{ 'home.allProducts.currency' | translate }}</label
+                  ></span
+                >
               </div>
             </div>
           </ng-template>

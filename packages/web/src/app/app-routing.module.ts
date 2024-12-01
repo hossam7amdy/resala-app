@@ -17,6 +17,7 @@ const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
         title: 'Home',
+        data: { breadcrumb: 'Home' },
       },
 
       {
@@ -69,13 +70,7 @@ const routes: Routes = [
             m => m.ProductDetailsComponent
           ),
         title: 'Product Details',
-      },
-
-      {
-        path: 'payment',
-        loadComponent: () =>
-          import('./components/payment/payment.component').then(m => m.PaymentComponent),
-        title: 'Payment',
+        data: { breadcrumb: 'Home' },
       },
 
       {
@@ -91,17 +86,6 @@ const routes: Routes = [
           import('./components/orders/orders.component').then(m => m.OrdersComponent),
         title: 'Orders',
       },
-
-      {
-        path: 'login/callback',
-        loadComponent: () =>
-          import('./components/callback-social-accounts/callback-social-accounts.component').then(
-            m => m.CallbackSocialAccountsComponent
-          ),
-        title: 'Google Account',
-      },
-
-      // login
 
       {
         path: 'login',
@@ -140,46 +124,40 @@ const routes: Routes = [
           import('./components/profile/profile.component').then(m => m.ProfileComponent),
         title: 'Profile',
       },
+      {
+        path: 'terms',
+        loadComponent: () =>
+          import('./components/termsandconditions/termsandconditions.component').then(
+            m => m.TermsandconditionsComponent
+          ),
+        title: 'Terms',
+      },
+      {
+        path: 'about-us',
+        loadComponent: () =>
+          import('./components/about-us/about-us.component').then(m => m.AboutUsComponent),
+        title: 'Our Story',
+      },
 
       // end login
     ],
   },
 
-  // {
-  //   path: '',
-  //   loadComponent: () =>
-  //     import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
-  //   children: [
-  //     { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./layouts/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
+    children: [
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  //     {
-  //       path: 'login',
-  //       loadComponent: () =>
-  //         import('./components/login/login.component').then(m => m.LoginComponent),
-  //       title: 'Login',
-  //     },
-
-  //     {
-  //       path: 'register',
-  //       loadComponent: () =>
-  //         import('./components/register/register.component').then(m => m.RegisterComponent),
-  //       title: 'Register',
-  //     },
-  //     {
-  //       path: 'forgot-password',
-  //       loadComponent: () =>
-  //         import('./components/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
-  //       title: 'Forgot Password',
-  //     },
-
-  //     {
-  //       path: 'reset-password',
-  //       loadComponent: () =>
-  //         import('./components/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
-  //       title: 'Reset Password',
-  //     },
-  //   ],
-  // },
+      {
+        path: 'payment',
+        loadComponent: () =>
+          import('./components/payment/payment.component').then(m => m.PaymentComponent),
+        title: 'Payment',
+      },
+    ],
+  },
 
   {
     path: '',

@@ -1,69 +1,69 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { stockService } from '@/services';
 import type {
   CreateStockRequest,
   CreateStockResponse,
-  DeleteStockRequest,
   DeleteStockResponse,
-  GetStockRequest,
   GetStockResponse,
   ListStocksRequest,
   ListStocksResponse,
   UpdateStockRequest,
   UpdateStockResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const listStocks = async (query: ListStocksRequest['query']) => {
-  const response = await callEndpoint<ListStocksRequest, ListStocksResponse>(
-    ENDPOINT_CONFIGS.listStocks,
-    { query, next: { tags: [ROUTES.STOCKS] } }
-  );
-
-  return response.data;
+export const listStocks = async (
+  query: ListStocksRequest['query']
+): Promise<ListStocksResponse['data']> => {
+  return await stockService.list(query);
 };
 
-export const findStockById = async (id: string | number) => {
-  const response = await callEndpoint<GetStockRequest, GetStockResponse>(
-    ENDPOINT_CONFIGS.getStock,
-    { params: { stockId: id.toString() }, cache: 'no-store' }
-  );
-
-  return response.data;
+export const findStockById = async (id: string | number): Promise<GetStockResponse['data']> => {
+  try {
+    return await stockService.find(+id);
+  } catch {
+    notFound();
+  }
 };
 
-export const createStock = async (stock: CreateStockRequest['body']) => {
-  const response = await callEndpoint<CreateStockRequest, CreateStockResponse>(
-    ENDPOINT_CONFIGS.addStock,
-    { body: stock }
-  );
+export const createStock = async (
+  stock: CreateStockRequest['body']
+): Promise<CreateStockResponse> => {
+  try {
+    const data = await stockService.create(stock);
 
-  revalidateTag(ROUTES.STOCKS);
-  revalidateTag(ROUTES.PRODUCT_STOCKS(stock.productId));
-  return response;
+    revalidatePath(ROUTES.STOCKS);
+    revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as CreateStockResponse;
+  }
 };
 
-export const updateStock = async (stockId: string | number, stock: UpdateStockRequest['body']) => {
-  const response = await callEndpoint<UpdateStockRequest, UpdateStockResponse>(
-    ENDPOINT_CONFIGS.updateStock,
-    { params: { stockId: stockId.toString() }, body: stock }
-  );
-
-  revalidateTag(ROUTES.STOCKS);
-  revalidateTag(ROUTES.PRODUCT_STOCKS(stock.productId));
-  return response;
+export const updateStock = async (
+  stockId: string | number,
+  stock: UpdateStockRequest['body']
+): Promise<UpdateStockResponse> => {
+  try {
+    const data = await stockService.update(+stockId, stock);
+    revalidatePath(ROUTES.STOCKS);
+    revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as UpdateStockResponse;
+  }
 };
 
-export const deleteStock = async (stockId: string | number) => {
-  const response = await callEndpoint<DeleteStockRequest, DeleteStockResponse>(
-    ENDPOINT_CONFIGS.deleteStock,
-    { params: { stockId: stockId.toString() } }
-  );
+export const deleteStock = async (stockId: string | number): Promise<DeleteStockResponse> => {
+  try {
+    const data = await stockService.delete(+stockId);
+    revalidatePath(ROUTES.STOCKS);
 
-  revalidateTag(ROUTES.STOCKS);
-
-  return response;
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as DeleteStockResponse;
+  }
 };

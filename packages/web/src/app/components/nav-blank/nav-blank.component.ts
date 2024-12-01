@@ -1,83 +1,141 @@
 import { CommonModule } from '@angular/common';
 import { ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthUser } from '@resala/shared';
+import { ToastrService } from 'ngx-toastr';
+import { Product } from 'src/app/core/interfaces/product';
+import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
+import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { Translate_Service } from 'src/app/core/services/translate.service';
-import { UserService } from 'src/app/core/services/user.service';
+import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-nav-blank',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    TranslateModule,
+    SpinnerComponent,
+    TranslateModule,
+    FormsModule,
+    SearchPipe,
+  ],
   templateUrl: './nav-blank.component.html',
   styleUrls: ['./nav-blank.component.css'],
 })
 export class NavBlankComponent implements OnInit {
-  constructor(
-    private _AuthService: AuthService,
-    private _Router: Router,
-    private _CartService: CartService,
-    private _Categories: CategoriesService,
-    private route: ActivatedRoute,
-    private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
-    private UserProfile: UserService,
-    public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
-  ) {}
-
-  // attributes
-  userNameLogged: string = 'Login';
-  userId: any;
-  signOut: boolean = false;
-  isToken: string | null = '';
+  user: AuthUser | null = null;
+  customSpinIsLoading = false;
+  authenticated: boolean = false;
   categoryList: any = [];
 
   cartNum: number = 0;
-  togglerOpend: boolean = false;
+  togglerOnend: boolean = false;
+
+  constructor(
+    public translate: TranslateService,
+    private _authService: AuthService,
+    private _router: Router,
+    private _cartService: CartService,
+    private _categories: CategoriesService,
+    private _renderer: Renderer2,
+    private _rtlStatus: Translate_Service,
+    private _homeProducts: HomeProductsService,
+    private _wishListService: WishListService,
+    private _toaster: ToastrService
+  ) {}
+
+  isClickedSearch: boolean = false;
+  products: Product[] = [];
+  searchText: string = '';
+
+  toggleSearch(): void {
+    this.isClickedSearch = true;
+  }
+
+  closeSearch(): void {
+    this.isClickedSearch = false;
+  }
+
+  addProductInWishList(id: string, element: HTMLElement): void {
+    this._wishListService.postWishListItems(id).subscribe({
+      next: () => {
+        this._renderer.setStyle(element, 'font-weight', 'bold');
+        this._toaster.success('Added in Your Favorite List');
+      },
+      error: err => {
+        const errMsg = err.error.message || 'Something went wrong';
+        this._toaster.error(errMsg);
+      },
+    });
+  }
+
+  searchProducts(): void {
+    if (this.searchText !== '') {
+      this._homeProducts.getProductsSearch(this.searchText).subscribe({
+        next: response => {
+          this.products = response.data.products;
+        },
+        error: err => {
+          const errMsg = err.error.message || 'Something went wrong';
+          this._toaster.error(errMsg);
+        },
+      });
+    }
+  }
 
   @ViewChild('navbar') navbarElement!: ElementRef;
 
   @HostListener('window:scroll')
   onScrollSecond(): void {
     if (scrollY > 600) {
-      this._Renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
+      this._renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
     } else {
-      this._Renderer.removeStyle(this.navbarElement.nativeElement, 'top');
+      this._renderer.removeStyle(this.navbarElement.nativeElement, 'top');
     }
   }
   currentLang: string = 'ar';
-  langStorage: any = localStorage.getItem('language');
+  langStorage: string = localStorage.getItem('language') ?? this.currentLang;
 
   switchLanguage(lang: string): void {
+    this.customSpinIsLoading = true;
     localStorage.setItem('language', lang);
-    this.langStorage = localStorage.getItem('language');
+    this.langStorage = lang;
     window.location.reload();
-    this._Translate.use(this.langStorage);
+    this.translate.use(this.langStorage);
     this.changePageDirection(lang);
     if (lang == 'ar') {
       this.currentLang = 'en';
-      this._RTLStatus.rTLStatus.next(lang);
+      this._rtlStatus.rTLStatus.next(lang);
     } else {
       this.currentLang = 'ar';
-      this._RTLStatus.rTLStatus.next(lang);
+      this._rtlStatus.rTLStatus.next(lang);
     }
-
-    console.log('Language' + lang, this.currentLang);
+    this.customSpinIsLoading = false;
   }
 
   ngOnInit(): void {
+    this._authService.userInfo$.subscribe(user => {
+      this.user = user;
+      this.authenticated = !!user && !user?.isAnonymous;
+    });
+
+    this.customSpinIsLoading = true;
     if (this.langStorage === null) {
-      this._Translate.defaultLang;
+      this.translate.defaultLang;
       this.currentLang = 'ar';
     } else {
-      this._Translate.use(this.langStorage);
+      this.translate.use(this.langStorage);
       if (this.langStorage === 'en') {
         this.currentLang = 'ar';
       } else {
@@ -86,47 +144,46 @@ export class NavBlankComponent implements OnInit {
     }
     this.changePageDirection(this.langStorage);
 
-    // this.signOut = this._AuthService.signOut;
-    this.isToken = localStorage.getItem('etoken');
-    if (this.isToken == null || this.isToken == '') {
-      this.signOut = false;
-    } else {
-      this._AuthService.decodeUser();
-      this.userId = this._AuthService.userInfo?.id;
-    }
-
-    this.getUserInfo(this.userId);
-
-    this._CartService.cartNumber.subscribe({
+    this._cartService.cartNumber.subscribe({
       next: response => {
-        console.log('cart number', response);
         this.cartNum = response;
+        this.customSpinIsLoading = false;
       },
       error: err => {
+        const errMsg = err.error.message || 'Something went wrong';
+
         this.cartNum = 0;
-        console.log(err);
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
       },
     });
 
-    this._CartService.getCartUser().subscribe({
+    this._cartService.getCartUser().subscribe({
       next: response => {
         this.cartNum = response.data.totalQuantity;
+        this.customSpinIsLoading = false;
       },
-      error: () => {},
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
     });
 
-    this._Categories.getCategories().subscribe({
+    this._categories.getCategories().subscribe({
       next: response => {
         this.categoryList = response.data;
+        this.customSpinIsLoading = false;
       },
       error: err => {
-        console.log(err);
+        const errMsg = err.error.message || 'Something went wrong';
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
       },
     });
   }
 
   // Change page Direction as per Selected Lang
   changePageDirection(lang: string) {
+    this.customSpinIsLoading = true;
     const html = document.getElementsByTagName('html')[0];
     if (lang === 'ar') {
       html.dir = 'rtl';
@@ -135,49 +192,31 @@ export class NavBlankComponent implements OnInit {
       html.dir = 'ltr';
       html.lang = 'en';
     }
+    this.customSpinIsLoading = false;
   }
 
   isTogglerOpend(): void {
-    if (this.togglerOpend == false) {
-      this.togglerOpend = true;
+    if (this.togglerOnend == false) {
+      this.togglerOnend = true;
     } else {
-      this.togglerOpend = false;
+      this.togglerOnend = false;
     }
   }
 
-  getUserInfo(userId: any): void {
-    this.UserProfile.getUserInfo(userId).subscribe({
-      next: response => {
-        this._AuthService.userNameLogged = response.data.firstName;
-        this.userNameLogged = response.data.firstName;
-        this.signOut = true;
-        console.log('user name', this.userNameLogged);
+  handleLogout(): void {
+    this.customSpinIsLoading = true;
+    this._authService.logout().subscribe({
+      next: data => {
+        console.log(data);
+        this.customSpinIsLoading = false;
+        this._router.navigate(['/']);
       },
       error: err => {
         console.log(err);
-        if (err.status == 401 || err.status == 403) {
-          this.signOut = false;
-        }
+        const errMsg = err?.error?.message || 'Something went wrong';
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
       },
     });
-  }
-
-  reloadPage(id: any): void {
-    this.spinner.show();
-    window.location.replace(`/category/${id}`);
-    this.spinner.hide();
-  }
-
-  removeTokenSignOut(): void {
-    this.signOut = false;
-    localStorage.removeItem('etoken');
-    this._Router.navigate(['/login']);
-    if (this._AuthService.signOut == null) {
-      this.cartNum = 0;
-    } else {
-      this.cartNum = this._CartService.cartNumber.value;
-    }
-
-    this.userNameLogged = 'Login';
   }
 }

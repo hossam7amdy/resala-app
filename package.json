@@ -14,24 +14,22 @@
     "format:fix": "prettier --write .",
     "format:check": "prettier --check .",
     "build:shared": "yarn workspace @resala/shared build",
-    "build:server": "yarn workspace @resala/server build",
     "build:dashboard": "yarn workspace @resala/dashboard build",
     "build:web": "yarn workspace @resala/web build",
-    "build": "npm-run-all build:shared build:server build:dashboard build:web",
-    "test:server": "yarn workspace @resala/server test",
     "test:shared": "yarn workspace @resala/shared test",
     "test:dashboard": "yarn workspace @resala/dashboard test",
     "test:web": "yarn workspace @resala/web test",
-    "test": "npm-run-all --parallel test:server test:shared test:dashboard test:web",
     "start:dashboard:dev": "yarn workspace @resala/dashboard dev",
     "start:dashboard": "yarn workspace @resala/dashboard start",
     "start:web:dev": "yarn workspace @resala/web ng serve --open",
     "start:web": "yarn workspace @resala/web start",
-    "start:server:dev": "yarn workspace @resala/server dev",
-    "start:server": "yarn workspace @resala/server start",
-    "docker:build:server": "docker build -t resala-server . -f Dockerfile.server",
-    "compose:down": "docker-compose down",
-    "compose:up": "docker-compose up -d"
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "compose:down": "docker-compose -f docker-compose.yml down",
+    "compose:up": "docker-compose -f docker-compose.yml up"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -42,8 +40,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
-    "typescript": "~5.1.0"
+    "turbo": "^2.3.3"
   }
 }

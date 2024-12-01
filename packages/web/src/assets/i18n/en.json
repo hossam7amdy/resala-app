@@ -98,6 +98,12 @@
       "title": "Contact Us"
     }
   },
+  "forgotPw": {
+    "mainTitle": "Forgot Password",
+    "email": "Email",
+    "verifyEmail": "Verify Email",
+    "mobile": "Mobile"
+  },
   "categories": {},
   "latestCollection": {
     "mainTitle": "Latest Collection"
@@ -110,7 +116,9 @@
     "confirmDeleteTitle": "Confirm Delete",
     "questionDelete": "Do You Want Delete This Product From Your Favorite List ?",
     "questionDeleteCancel": "Cancel",
-    "questionDeleteYes": "Yes"
+    "questionDeleteYes": "Yes",
+    "favoritesEmptyTitle": "There is no product in your favourites.",
+    "favoritesBtn": "Start Shopping"
   },
   "login": {
     "mainTitle": "Login Now",
@@ -137,11 +145,201 @@
     "mainTitle": "My Orders",
     "orderNo": "Order Number",
     "itemsNum": "Order Items",
+    "orderDate": "Order Date",
     "orderTitle": "Order",
     "firstNdStep": "Processed",
     "preNdShipping": "Processed Shipping",
     "enRoute": "En Route",
     "arrived": "Arrived",
-    "totalPaid": "Total Payed"
+    "totalPaid": "Total Payed",
+    "totalBill": "Total Bill",
+    "ordersEmptyTitle": "Not have Any Order",
+    "ordersEmptyBtn": "Let's GO SHOPPING"
+  },
+  "register": {
+    "mainTitle": "Register Now",
+    "firstName": "First Name",
+    "nameRequired": "Named is required",
+    "nameLength": "The Name Min Length 2",
+    "namePattern": "Should be not contain symbols & less 2 chars and only spaces",
+    "lastName": "Last Name",
+    "date": "Birth Date",
+    "password": "Password",
+    "pwRequired": "Password is required",
+    "pwPattern": "Should be contain symbols & chars & numbers and Not less 8 chars",
+    "pwMinLen": "Should be 8 Chars at least",
+    "pwMaxLen": "Should be 8 Chars sharp",
+    "email": "Email",
+    "emailRequired": "Email is required",
+    "emailPattern": "This Not matching as Email",
+    "phone": "Phone",
+    "phoneRequired": "phone is required",
+    "phonePatttern": "Should be 11 digts sharp & start be 011,012,010,015",
+    "privacyPolicy1Script": "I have read and understand the",
+    "termsLink": "Terms & Conditions",
+    "privacyPolicy2Script": " and ",
+    "privacyLink": "Privacy Policy",
+    "privacyPolicy3Script": "by clicking of the \n\"Register\n\" button.",
+    "registerBtn": "Register"
+  },
+  "productDetails": {
+    "empty": "Sorry !! this product not found stock ...",
+    "taxScript": "Tax included. Shipping calculated at checkout.",
+    "color": "Color",
+    "size": "Size",
+    "quantity": "Quantity",
+    "addToCart": "ADD TO CART",
+    "reviews": {
+      "mainTitle": "Testimonials & Ratings"
+    },
+    "similarProducts": {
+      "mainTitle": "Similar Products"
+    }
+  },
+  "cart": {
+    "mainTitleFirstSlice": "My Cart",
+    "mainTitleNdSlice": "Product",
+    "deleteAllBtn": "Delete All Items",
+    "confirmDeleteAllItems": "Confirm Delete",
+    "confirmDeleteQuestion": "Do You Want Delete All Your Products ?",
+    "cancelBtn": "CANCEL",
+    "yesBtn": "YES",
+    "stockQnt": "In Stock",
+    "discountTitle": "OFF",
+    "sizeTitle": "SIZE",
+    "editColorSize": "Edit",
+    "editTitleForm": "SIZE CHANGE",
+    "chooseColor": "Choose the Color First",
+    "chooseSize": "Choose Size",
+    "updateCartBtn": "Update and Back to Cart",
+    "remove": "Remove",
+    "latestStock": "LATEST ",
+    "latestStock2NdWord": " PIECE IN STOCK ",
+    "checkoutBtn": "Check Out Summary",
+    "totalProPrice": "Total Amount",
+    "subTotalPrice": "Sub Total",
+    "shippingAmount": "Shipping",
+    "discountAmount": "Discount Amount",
+    "totalPrice": "Total Price",
+    "tax": "(Tax included)",
+    "orderBtn": "Complete Order",
+    "cartEmptyTitle": "Your Cart Is Empty",
+    "emptyCartP": "Many products are waiting for you...",
+    "emptyBtn": "GO TO SHOPPING"
+  },
+  "payment": {
+    "addressForm": {
+      "firstTitle": "Step One ...",
+      "secondTitle": "Delivery Information",
+      "addressInfo": "My Delivery Address",
+      "addNewAddress": "Add New Address",
+      "editAddress": "Edit",
+      "deleteAddress": "Delete",
+      "chooseAddress": "Select Delivery Address",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "contact": "Phone",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "street": "Street",
+      "building": "Building",
+      "floor": "Floor",
+      "addressDetails": "Address Details",
+      "fieldRequired": "this field is required !!!",
+      "confirmDeleteTitle": "Confirm Delete",
+      "confirmDeleteQuesion": "Do You Want Delete this Address",
+      "cancelDelete": "Cancel",
+      "yesDelete": "Yes",
+      "minLengthName": "The Name Min Lenght 2 Chars",
+      "namePattern": "Should be not contain symbols & less 2 chars and only spaces",
+      "selectCountry": "Select Your Country",
+      "selectCity": "Select Your City",
+      "saveAddress": "Save Address"
+    },
+    "checkOutSummary": {
+      "summaryTitle": "Order Summary",
+      "continuePayBtn": "Go Payment Method",
+      "notPayStep": "No payment will be taken at this step.",
+      "followPayment": "Follow UP Payment",
+      "payStep": "When complete this step will deduct the amount from your account."
+    },
+
+    "paymentForm": {
+      "firstTitle": "Step Two ...",
+      "secondTitle": "Payment Method",
+      "choosePayMethod": "Select Payment Method",
+      "note": "Note",
+      "payBtn": "Continue Pay"
+    }
+  },
+  "postPay": {
+    "mainTitle": "The Order Successfuly",
+    "Btn": "GO SHOPPING",
+    "failedPay": "Pay Failed",
+    "failedScript": "Your payment transaction has been declined. Kindly contact your bank..."
+  },
+
+  "terms": {
+    "mainTitle": "Terms & Conditions",
+    "firstSection": {
+      "firstLine": "Disclaimer",
+      "firstStep": "While the Site strives to provide accurate product information (such as stock availability, pricing, product features, images, and specifications) and service information, typographical errors may occur.",
+      "secondStep": "Prices on the Site are in pound Egyption.",
+      "thirdStep": "Promotions, updates, and special offers are subject to change without notice.",
+      "fourthStep": "Resala. reserves the right to blacklist any customer and/or refuse any order without giving reasons.",
+      "fifthStep": "The online store will not be responsible for any credit card fraud.\n\nThe responsibility for using the card in a way that exposes you to fraud lies with you, and the burden of proving otherwise lies exclusively with you.",
+      "sixthStep": "We do not store your credit card details on the Website.\n\nAll payment details entered through the Website's payment gateway are encrypted. Communications to and from the Service Provider's website are encrypted.",
+      "seventhStep": "The laws of the EGYPT apply to all transactions, and special procedures are implemented on our Website.",
+      "eighthStep": "The prices and availability of products and services stated on the Website are subject to change without notice.",
+      "ninthStep": "The colors of our products that appear on the Website will be displayed as accurately as possible. However, since the actual colors you see will depend on your monitor, we cannot guarantee that your monitor's display of any color will be accurate.",
+      "tenthStep": "In the event that the purchase is not completed and the item is placed in the cart, all updated prices will apply to that item regardless of the price at the time the item is placed in the cart.",
+      "eleventhStep": "This policy is implemented in two identical versions in Arabic and English, and in the event of a conflict between the Arabic version and the English version, the Arabic version of the application takes precedence."
+    },
+    "secondSection": {
+      "firstLine": "Terms of use",
+      "firstStep": "The Site is available only to persons who can form legally binding contracts under applicable law.",
+      "secondStep": "If you are a minor, i.e., under the age of 18, you may use this Site only under the supervision of a parent or legal guardian who agrees to be bound by these Terms of Use.",
+      "thirdStep": "All intellectual property rights, whether registered or unregistered, in the Site, the information content on the Site, and all Site designs including but not limited to text, graphics, images, video, music, sound, and their selection and arrangement, and all software compilations, software, and underlying source codes remain our property. All contents of the Site are also protected by copyright laws in the Arab Republic of Egypt and international conventions. All rights reserved.",
+      "fourthStep": "The customer is required to have only one account on the Site.",
+      "fifthStep": "Please note that there are cases where an order cannot be processed for various reasons. The Site reserves the right to refuse or cancel any order for any reason at any time. You may be asked to perform verifications or provide additional information, including but not limited to your phone number and address, before we accept the order.",
+      "sixthStep": "If you choose to register or subscribe to any of these services or features, you agree to provide accurate and current information about yourself and to promptly update such information if there are any changes. Every user of the Site is solely responsible for keeping passwords and other account identifiers secure. The account owner is entirely responsible for all activities that occur under such password or account. Furthermore, you must notify us of any unauthorized use of your password or account. The Site shall not be responsible or liable directly or indirectly in any way for any loss or damage of any kind incurred as a result of or in connection with your failure to comply with this provision.",
+      "seventhStep": "During the registration process, you agree to receive promotional emails from the Site. You may subsequently opt out of receiving promotional emails by clicking on the link at the bottom of any promotional email.",
+      "eighthStep": "By using the Site, you agree to be bound by the Terms and Conditions and to check for any updates to the policies stated on the Site.",
+      "ninthStep": "In the event that the customer wishes to permanently close his account, please contact customer service for this."
+    },
+    "thirdSection": {
+      "firstLine": "Return and Exchange Policy",
+      "section": "\n\n\n\n\n\n\n\n\n\n",
+      "firstStep": "To ensure the ease of the delivery process, you must provide us with a clear delivery address, and the delivery address must contain (mobile number, building number, street name, city, governorate, postal code).",
+      "secondStep": "Please check the delivery address and contact number to avoid delays in delivery.",
+      "thirdStep": "After submitting the purchase order, the time required to deliver orders within the Riyadh region is only two working days. The time required to deliver orders outside Riyadh is from 4 to 7 working days from the date of the order.",
+      "fourthStep": "We cannot make deliveries during weekends and official holidays, so all deliveries will arrive at your door on a weekday from Sunday to Thursday.",
+      "fifthStep": "VAT (14%) is added to the total order amount on all local orders (within the Arab Republic of Egypt).",
+      "sixthStep": "Products cannot be shipped to an incomplete address or to an address different from the address specified in the purchase order.",
+      "seventhStep": "In the event that you cannot be contacted or refuse to receive the product for any reason other than an error in the order sent to you by the online store, you hereby agree to pay the delivery fee only, or deduct it from the amount paid online in the Resala store.",
+      "eighthStep": "For international shipments, if you refuse to pay customs or taxes that may apply in the destination country, the shipment will be returned back to our warehouses, but you will bear the shipping cost and any additional fees that may be paid as mentioned above.",
+      "ninthStep": "Upon completion of delivery, please sign the delivery receipt to confirm that there are no defects in the delivery box and the product(s).",
+      "eleventhStep": "Resala Store will not deal or provide any services or products to any of the countries subject to sanctions from the Office of Foreign Assets Control according to the law of the Kingdom of Saudi Arabia.",
+      "twelfthStep": "(Contracted shipping company: Aramex)\n\nReturn and Refund Policy",
+      "returnConditions": "We will gladly receive your return and refund request according to the following conditions:",
+      "thirteenthStep": "We accept the return of goods within 7 days from the date of delivery.",
+      "fourteenthStep": "Returned goods must be in the same condition as they were delivered and have never been used with the original box, including any stickers, cards, or accessories attached to the product or inside the box and the policy is not attached directly to the product box.",
+      "fifteenthStep": "The customer must pay the shipping cost to return the order unless the reason for the return is due to the Resala. Store team.",
+      "sixteenthStep": "Ministry of Commerce instructions regarding the terms of exchange and return.",
+      "seventeenthStep": "You can request a return of your order by logging into your account in the Resala. Store, then clicking on the “My Orders” page, then choosing the order you want to return in full or in part, and choosing the reason for the return. For further assistance, please contact Resala. Customer Service at 8001247272 during business days from Sunday to Thursday (8 am - 5 pm).",
+      "eighteenthStep": "Once we receive the order and review the details, we will contact you to discuss the reason for the return. Based on that, we can determine whether the order will be accepted or not within 3 business days.",
+      "ninteenthStep": "If the final decision is to accept the return of the item(s), we will notify the shipping company to pick up the goods from your address and return them to Ajlan & Bros. Company for local orders, and for international orders, if there is a product error or defect in the goods, Ajlan & Bros. Store bears the shipping cost. The customer is responsible for shipping the product(s) to Ajlan & Bros. warehouse.",
+      "twentyStep": "If you used (credit or debit card) to pay for the order, the amount paid will be refunded to your card. The refunded amount will be reflected in your card based on the banking operations of each bank, as it takes a month in some cases.",
+      "twenty1Step": "In case of cash on delivery, please provide us with your bank account details to refund the amount (IBAN, bank name, account holder name)."
+    },
+    "fourthSection": {
+      "firstLine": "Recovery Steps",
+      "firstStep": "Contact us via the following email: ecommerce.cs@Resala.com. Provide the reason for requesting a return of the product and explanation of the return.",
+      "secondStep": "Please repack the items in the original box, add any tags or labels that came with the product or in the box, and do not attach the shipping label directly to the outer product box as this may damage the box.",
+      "thirdStep": "We will notify the shipping company to pick up the goods from your address and return them to Resala.",
+      "fourthStep": "The shipping company official will contact you within 3 to 5 business days to set the pickup date, in some cases it may take longer.",
+      "fifthStep": "Once the products are received and pass inspection to confirm their condition, the refund process will be initiated."
+    }
   }
 }

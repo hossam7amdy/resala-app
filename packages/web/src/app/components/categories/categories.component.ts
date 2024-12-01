@@ -3,16 +3,23 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
+import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgxPaginationModule, NgxStarsRatingModule, TranslateModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    NgxPaginationModule,
+    NgxStarsRatingModule,
+    TranslateModule,
+    SpinnerComponent,
+  ],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.css'],
 })
@@ -24,9 +31,12 @@ export class CategoriesComponent implements OnInit {
     private _Toaster: ToastrService,
     private _Router: Router,
     private _Renderer: Renderer2,
-    private spinner: NgxSpinnerService,
     public _Translate: TranslateService
   ) {}
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
 
   allProductsCategory: any = [];
   titleCategory: string = '';
@@ -49,11 +59,12 @@ export class CategoriesComponent implements OnInit {
   totalItems: number = 0;
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.customSpinIsLoading = true;
 
-    this.route.paramMap.subscribe(params => (this.categoryId = params.get('category-id')));
-    console.log('category id', this.categoryId);
-    this.allCategoryProducts(this.categoryId);
+    this.route.paramMap.subscribe(params => {
+      this.categoryId = params.get('category-id');
+      this.allCategoryProducts(this.categoryId);
+    });
   }
 
   allCategoryProducts(id: any): void {
@@ -62,28 +73,27 @@ export class CategoriesComponent implements OnInit {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
         this.arTitleCategory = response.data.products[0].category.arName;
-        console.log('title & categ id', this.titleCategory);
-        console.log('category-products', this.allProductsCategory);
+
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   //Add product in Wish list method
   addPoductInWishList(id: any, element: HTMLElement): void {
+    this.customSpinIsLoading = true;
     this._WishListService.postWishListItems(id).subscribe({
-      next: response => {
+      next: () => {
         this._Renderer.setStyle(element, 'font-weight', 'bold');
         this._Toaster.success('Added in Your Favorite List');
-        console.log(response);
+
+        this.customSpinIsLoading = false;
       },
       error: err => {
         if (err.statusText == 'Unauthorized') {
@@ -92,7 +102,7 @@ export class CategoriesComponent implements OnInit {
         } else {
           this._Toaster.error(err.message);
         }
-        console.log(err);
+        this.customSpinIsLoading = false;
       },
     });
   }
@@ -100,21 +110,20 @@ export class CategoriesComponent implements OnInit {
 
   pageChanged(event: any) {
     //  products
-    this.spinner.show();
+    this.customSpinIsLoading = true;
     this._Categories.getCategoryProducts(this.categoryId, event).subscribe({
       next: response => {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
-        console.log('title', this.titleCategory);
-        console.log('category-products', this.allProductsCategory);
+
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
+        this.customSpinIsLoading = false;
       },
-      error: err => {
-        console.log(err);
+      error: () => {
+        this.customSpinIsLoading = false;
       },
     });
-    this.spinner.hide();
   }
 }
