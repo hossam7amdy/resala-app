@@ -2,8 +2,6 @@ import type { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angu
 import { Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 
-// import { environment as env } from 'environments/environment';
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   excludedExtensionsUrls = ['.svg', '.json'];

@@ -9,7 +9,7 @@ import {
   withQueryParams,
 } from '@resala/shared';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
