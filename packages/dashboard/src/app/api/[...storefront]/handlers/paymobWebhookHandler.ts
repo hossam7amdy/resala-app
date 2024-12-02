@@ -1,8 +1,9 @@
 import { db } from '@/lib/db';
+import { ROUTES } from '@/routes';
+import type { PostPayRequestDTO } from '@/services/paymob';
 import { createHmac } from 'crypto';
-import { type NextRequest, NextResponse } from 'next/server';
-
-import type { PostPayRequestDTO } from './paymob.dto';
+import type { Context } from 'hono';
+import { revalidatePath } from 'next/cache';
 
 const status = (transaction: PostPayRequestDTO['transaction']) => {
   if (transaction.is_voided) return 'VOIDED';
@@ -42,17 +43,13 @@ const verify = (hmac: string, transaction: PostPayRequestDTO['transaction']): bo
   return hash === hmac;
 };
 
-export const POST = async (
-  request: NextRequest,
-  { params }: { params: Promise<{ orderId: string }> }
-) => {
+export const paymobWebhookHandler = async (c: Context) => {
   try {
-    const body = await request.json();
-    const orderId = +(await params).orderId;
-    const searchParams = request.nextUrl.searchParams;
+    const body = await c.req.json();
+    const orderId = c.req.param('orderId') as string;
+    const hmac = c.req.query('hmac') || body.hmac;
 
     const transaction = body.transaction;
-    const hmac = searchParams.get('hmac') || body.hmac;
 
     const isValid = verify(hmac, transaction);
     const paymentStatus = status(transaction);
@@ -62,7 +59,7 @@ export const POST = async (
         transactionId: transaction.id.toString(),
         paymentStatus,
       },
-      where: { id: orderId },
+      where: { id: +orderId },
       select: {
         orderItems: true,
       },
@@ -91,8 +88,9 @@ export const POST = async (
       throw new Error(`Invalid HMAC signature, hmac=${hmac}`);
     }
 
-    return NextResponse.json({ status: 'success' }, { status: 200 });
-  } catch (e) {
-    return NextResponse.json({ status: `Webhook error: ${(e as Error).message}` }, { status: 400 });
+    revalidatePath(ROUTES.ORDERS);
+    return c.json({ success: true });
+  } catch (error) {
+    return c.json({ success: false, error });
   }
 };

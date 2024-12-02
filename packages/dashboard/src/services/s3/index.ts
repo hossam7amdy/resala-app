@@ -34,7 +34,7 @@ export class S3Service {
       await this.client.send(command);
 
       return 'EXIST';
-    } catch (err) {
+    } catch {
       const command = new CreateBucketCommand({ Bucket: bucketName });
       await this.client.send(command);
 
@@ -58,7 +58,7 @@ export class S3Service {
     try {
       await this.client.send(command);
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   }

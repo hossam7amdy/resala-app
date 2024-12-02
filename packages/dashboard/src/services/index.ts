@@ -53,7 +53,7 @@ export {
   emailService,
 };
 
-export type {
+export {
   AddressService,
   CategoryService,
   ColorService,

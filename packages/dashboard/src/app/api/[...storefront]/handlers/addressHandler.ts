@@ -7,17 +7,14 @@ import type {
   UpdateAddressRequest,
   UpdateAddressResponse,
 } from '@resala/shared';
-import type { Context } from 'hono';
 import type { HandlerResponse } from 'hono/types';
 
-import type { Env } from '../route';
-
-type HonoCtx = Context<Env>;
+import type { HonoCtx } from '../types';
 
 export const listUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<ListAddressResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
 
   const addresses = await addressService.list(userId);
 
@@ -27,7 +24,7 @@ export const listUserAddress = async (
 export const createUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<CreateAddressResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const body = (await c.req.json()) as CreateAddressRequest['body'];
 
   const address = await addressService.create({ ...body, userId });
@@ -38,11 +35,11 @@ export const createUserAddress = async (
 export const updateUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<UpdateAddressResponse>> => {
-  const userId = c.var.user?.id as number;
-  const addressId = c.req.query('addressId') as string;
+  const userId = Number(c.var.user?.id);
+  const addressId = Number(c.req.query('addressId'));
   const body = (await c.req.json()) as UpdateAddressRequest['body'];
 
-  const address = await addressService.update(+addressId, { ...body, userId });
+  const address = await addressService.update(addressId, { ...body, userId });
 
   return c.json({ success: true, data: address });
 };
@@ -50,10 +47,10 @@ export const updateUserAddress = async (
 export const deleteUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteAddressResponse>> => {
-  const userId = c.var.user?.id as number;
-  const addressId = c.req.query('addressId') as string;
+  const userId = Number(c.var.user?.id);
+  const addressId = Number(c.req.query('addressId'));
 
-  const address = await addressService.delete(+addressId, userId);
+  const address = await addressService.delete(addressId, userId);
 
   return c.json({ success: true, data: address });
 };

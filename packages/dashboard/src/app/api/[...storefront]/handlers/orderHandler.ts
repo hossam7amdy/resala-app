@@ -6,15 +6,12 @@ import {
   shoppingService,
 } from '@/services';
 import type { CreateOrderRequest, CreateOrderResponse, ListOrdersResponse } from '@resala/shared';
-import type { Context } from 'hono';
 import type { HandlerResponse } from 'hono/types';
 
-import type { Env } from '../route';
-
-type HonoCtx = Context<Env>;
+import type { HonoCtx } from '../types';
 
 export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const { paymentMethod, addressId, note } = (await c.req.json()) as CreateOrderRequest['body'];
 
   const userCart = await shoppingService.cart.get(userId);
@@ -49,7 +46,7 @@ export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderR
 };
 
 export const listUserOrders = async (c: HonoCtx): Promise<HandlerResponse<ListOrdersResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const page = +(c.req.query('page') || '1');
   const limit = +(c.req.query('limit') || '10');
   const search = c.req.query('search') || '';

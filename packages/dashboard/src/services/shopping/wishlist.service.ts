@@ -36,7 +36,7 @@ export class WishlistService {
       });
 
       return this.get(userId);
-    } catch (error) {
+    } catch {
       throw new NotFoundError('Product not found in wishlist');
     }
   }

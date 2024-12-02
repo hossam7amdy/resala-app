@@ -31,6 +31,7 @@ export class UserService {
         { email: { startsWith: search, mode: 'insensitive' } },
         { phone: { startsWith: search, mode: 'insensitive' } },
       ],
+      isAnonymous: false,
     };
 
     return this.db.user.findMany({
