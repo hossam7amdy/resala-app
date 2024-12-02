@@ -27,7 +27,7 @@ export class AddressService {
     return await this.db.$transaction(async trx => {
       const newAddress = await trx.address.create({ data: payload });
 
-      await trx.userAddress.create({ data: { userId, addressId: newAddress.id } });
+      await trx.userAddress.create({ data: { userId: userId!, addressId: newAddress.id } });
 
       return newAddress;
     });

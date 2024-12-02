@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "yarn prisma generate",
     "dev": "yarn prisma generate && next dev",
-    "build": "next build",
+    "build": "yarn prisma generate && next build",
     "clean": "rm -rf .next",
     "typecheck": "tsc --noEmit",
     "start": "next start",

@@ -5,21 +5,24 @@ import {
   CreateAddressSchema,
   CreateCartSchema,
   CreateOrderSchema,
+  CreateReviewSchema,
   CreateWishlistSchema,
   DeleteAddressSchema,
   DeleteCartSchema,
+  DeleteReviewSchema,
   DeleteWishlistSchema,
   GetCategorySchema,
   GetProductSchema,
+  GetReviewSchema,
   ListAddressSchema,
   ListOrdersSchema,
   ListProductsSchema,
+  ListReviewsSchema,
   ListStocksSchema,
   UpdateAddressSchema,
+  UpdateReviewSchema,
 } from '@resala/shared';
-import type { AuthUser } from '@resala/shared';
-import type { Session } from 'better-auth';
-import type { Context, Handler } from 'hono';
+import type { Handler } from 'hono';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
@@ -28,22 +31,14 @@ import { STOREFRONT_ENDPOINT_CONFIGS, StorefrontEndpoints } from './endpoints.co
 import * as addressHandler from './handlers/addressHandler';
 import * as collectionHandler from './handlers/collectionHandler';
 import * as orderHandler from './handlers/orderHandler';
+import { paymobWebhookHandler } from './handlers/paymobWebhookHandler';
 import * as productHandler from './handlers/productHandler';
+import * as reviewHandler from './handlers/reviewHandler';
 import * as shoppingHandler from './handlers/shoppingHandler';
 import { enforceSession, parseSession } from './middlewares/sessionMiddleware';
+import type { Env } from './types';
 
 export const dynamic = 'force-dynamic';
-
-export type Env = {
-  Variables: {
-    user?: AuthUser;
-    session?: Session;
-  };
-};
-
-const notImplementedHandler = (c: Context) => {
-  return c.json({ message: 'Not implemented' }, { status: 501 });
-};
 
 const HANDLERS: { [_key in StorefrontEndpoints]: Handler[] } = {
   [StorefrontEndpoints.getCategory]: [
@@ -114,20 +109,26 @@ const HANDLERS: { [_key in StorefrontEndpoints]: Handler[] } = {
     addressHandler.deleteUserAddress,
   ],
 
-  [StorefrontEndpoints.getReview]: [notImplementedHandler],
-  [StorefrontEndpoints.listReviews]: [notImplementedHandler],
-  [StorefrontEndpoints.createReview]: [notImplementedHandler],
-  [StorefrontEndpoints.updateReview]: [notImplementedHandler],
-  [StorefrontEndpoints.deleteReview]: [notImplementedHandler],
-
-  [StorefrontEndpoints.getDiscount]: [notImplementedHandler],
-  [StorefrontEndpoints.listDiscounts]: [notImplementedHandler],
-
-  [StorefrontEndpoints.getColor]: [notImplementedHandler],
-  [StorefrontEndpoints.listColors]: [notImplementedHandler],
-
-  [StorefrontEndpoints.getSize]: [notImplementedHandler],
-  [StorefrontEndpoints.listSizes]: [notImplementedHandler],
+  [StorefrontEndpoints.getReview]: [
+    zValidator('param', GetReviewSchema.shape.params),
+    reviewHandler.getReview,
+  ],
+  [StorefrontEndpoints.listReviews]: [
+    zValidator('query', ListReviewsSchema.shape.query),
+    reviewHandler.listReviews,
+  ],
+  [StorefrontEndpoints.createReview]: [
+    zValidator('json', CreateReviewSchema.shape.body),
+    reviewHandler.createReview,
+  ],
+  [StorefrontEndpoints.updateReview]: [
+    zValidator('json', UpdateReviewSchema.shape.body),
+    reviewHandler.updateReview,
+  ],
+  [StorefrontEndpoints.deleteReview]: [
+    zValidator('json', DeleteReviewSchema.shape.query),
+    reviewHandler.deleteReview,
+  ],
 };
 
 const createHonoApp = () => {
@@ -135,18 +136,28 @@ const createHonoApp = () => {
 
   app.use(
     cors({
-      credentials: true,
+      origin: configuration().origin.allowedList,
       allowHeaders: ['Authorization', 'Content-Type'],
       allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-      origin: configuration().origin.allowedList,
+      exposeHeaders: ['Content-Length'],
+      maxAge: 600,
+      credentials: true,
     })
   );
+
   app.use(parseSession);
 
   // health check
   app.get('/api/healthz', async c => {
     return c.json({ message: 'OK 🚀' });
   });
+
+  // auth handlers
+  app.get('/api/auth/*', c => auth.handler(c.req.raw));
+  app.post('/api/auth/*', c => auth.handler(c.req.raw));
+
+  // webhook handlers
+  app.post('/post_pay/:orderId', paymobWebhookHandler);
 
   // register handlers in hono app
   Object.keys(StorefrontEndpoints).forEach(entry => {
@@ -159,10 +170,6 @@ const createHonoApp = () => {
       app[method](url, ...handlers);
     }
   });
-
-  // auth handlers
-  app.get('/api/auth/*', c => auth.handler(c.req.raw));
-  app.post('/api/auth/*', c => auth.handler(c.req.raw));
 
   return app;
 };

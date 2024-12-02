@@ -17,7 +17,7 @@ import { notFound } from 'next/navigation';
 export const getUserById = async (id: number | string): Promise<GetUserResponse['data']> => {
   try {
     return await userService.find(+id);
-  } catch (e) {
+  } catch {
     return notFound();
   }
 };

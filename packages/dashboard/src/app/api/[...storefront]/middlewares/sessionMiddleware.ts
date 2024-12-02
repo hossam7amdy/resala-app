@@ -1,7 +1,9 @@
 import { auth } from '@/lib/auth';
-import type { Context, Next } from 'hono';
+import { createMiddleware } from 'hono/factory';
 
-export const parseSession = async (c: Context, next: Next) => {
+import type { Env } from '../types';
+
+export const parseSession = createMiddleware<Env>(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
   if (session) {
@@ -10,12 +12,12 @@ export const parseSession = async (c: Context, next: Next) => {
   }
 
   return next();
-};
+});
 
-export const enforceSession = async (c: Context, next: Next) => {
+export const enforceSession = createMiddleware<Env>(async (c, next) => {
   if (!c.var.user) {
     return c.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   return next();
-};
+});
