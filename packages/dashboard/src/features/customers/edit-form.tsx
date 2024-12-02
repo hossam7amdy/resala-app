@@ -3,12 +3,11 @@
 import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
 import { useCurrentUser } from '@/hooks/use-current-user';
-import { Role, type User, validationPatterns } from '@resala/shared';
+import type { User } from '@resala/shared';
+import { Role, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-
-import { ResendEmailVerificationButton } from './resend-email-verification-button';
 
 interface EditFormProps {
   disable?: boolean;
@@ -38,7 +37,7 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
   });
 
   const disableRoleField =
-    isLoadingCurrentUser || disable || user?.id === customer.id || user?.role !== Role.ADMIN;
+    isLoadingCurrentUser || disable || user?.id === customer.id || user?.role !== 'ADMIN';
 
   return (
     <Form
@@ -100,15 +99,7 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
         hasFeedback
         rules={[{ required: true, type: 'email', message: 'Please enter a valid email' }]}
       >
-        <Input
-          disabled
-          placeholder="example@mail.com"
-          addonAfter={
-            !customer.isEmailVerified && (
-              <ResendEmailVerificationButton email={customer?.email ?? ''} />
-            )
-          }
-        />
+        <Input disabled placeholder="example@mail.com" />
       </Form.Item>
 
       <Form.Item

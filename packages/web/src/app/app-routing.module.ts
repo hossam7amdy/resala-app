@@ -88,17 +88,6 @@ const routes: Routes = [
       },
 
       {
-        path: 'login/callback',
-        loadComponent: () =>
-          import('./components/callback-social-accounts/callback-social-accounts.component').then(
-            m => m.CallbackSocialAccountsComponent
-          ),
-        title: 'Google Account',
-      },
-
-      // login
-
-      {
         path: 'login',
         loadComponent: () =>
           import('./components/login/login.component').then(m => m.LoginComponent),

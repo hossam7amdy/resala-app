@@ -1,66 +1,51 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { orderService } from '@/services';
 import type {
-  DeleteOrderRequest,
-  DeleteOrderResponse,
-  GetOrderRequest,
+  // DeleteOrderRequest,
+  // DeleteOrderResponse,
+  // GetOrderRequest,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
-  UpdateOrderRequest,
-  UpdateOrderResponse,
+  UpdateOrderRequest, // UpdateOrderResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const findOrderById = async (id: string | number) => {
-  const response = await callEndpoint<GetOrderRequest, GetOrderResponse>(
-    ENDPOINT_CONFIGS.getOrder,
-    {
-      params: { orderId: id.toString() },
-      next: { tags: [ROUTES.ORDERS] },
-    }
-  );
-
-  return response.data;
+export const findOrderById = async (id: string | number): Promise<GetOrderResponse['data']> => {
+  try {
+    return await orderService.find(+id);
+  } catch {
+    notFound();
+  }
 };
 
-export const listOrders = async (query: ListOrdersRequest['query']) => {
-  const response = await callEndpoint<ListOrdersRequest, ListOrdersResponse>(
-    ENDPOINT_CONFIGS.listOrders,
-    {
-      query,
-      next: { revalidate: 30, tags: [ROUTES.ORDERS] },
-    }
-  );
-
-  return response.data;
+export const listOrders = async (
+  query: ListOrdersRequest['query']
+): Promise<ListOrdersResponse['data']> => {
+  return await orderService.list(query);
 };
 
 export const updateOrderStatus = async (
   id: string | number,
   payload: UpdateOrderRequest['body']
 ) => {
-  const response = await callEndpoint<UpdateOrderRequest, UpdateOrderResponse>(
-    ENDPOINT_CONFIGS.updateOrderStatus,
-    {
-      params: { orderId: id.toString() },
-      body: payload,
-    }
-  );
-
-  revalidateTag(ROUTES.ORDERS);
-  return response;
+  try {
+    const data = await orderService.update(+id, payload);
+    revalidatePath(ROUTES.ORDERS);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };
 
-export const deleteOrder = async (orderId: string | number, userId: string | number) => {
-  const response = await callEndpoint<DeleteOrderRequest, DeleteOrderResponse>(
-    ENDPOINT_CONFIGS.deleteOrder,
-    { params: { orderId: orderId.toString() }, query: { userId: userId.toString() } }
-  );
-
-  revalidateTag(ROUTES.ORDERS);
-  return response;
+export const deleteOrder = async (_orderId: string | number, _userId: string | number) => {
+  try {
+    // TODO: handle order deletion
+    revalidatePath(ROUTES.ORDERS);
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };

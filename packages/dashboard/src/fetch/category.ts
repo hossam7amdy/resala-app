@@ -1,66 +1,54 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { categoryService } from '@/services';
 import type {
   CreateCategoryRequest,
-  CreateCategoryResponse,
-  DeleteCategoryRequest,
-  DeleteCategoryResponse,
-  GetCategoryRequest,
   GetCategoryResponse,
-  ListCategoriesRequest,
   ListCategoriesResponse,
   UpdateCategoryRequest,
-  UpdateCategoryResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const listAllCategories = async () => {
-  const response = await callEndpoint<ListCategoriesRequest, ListCategoriesResponse>(
-    ENDPOINT_CONFIGS.listCategories,
-    { query: {}, next: { tags: [ROUTES.CATEGORIES] } }
-  );
-
-  return response.data;
+export const listAllCategories = async (): Promise<ListCategoriesResponse['data']> => {
+  return await categoryService.list();
 };
 
-export const findCategoryById = async (id: string) => {
-  const response = await callEndpoint<GetCategoryRequest, GetCategoryResponse>(
-    ENDPOINT_CONFIGS.getCategory,
-    { params: { categoryId: id.toString() }, next: { tags: [ROUTES.CATEGORIES] } }
-  );
-
-  return response.data;
+export const findCategoryById = async (id: string): Promise<GetCategoryResponse['data']> => {
+  try {
+    return await categoryService.find(+id);
+  } catch {
+    notFound();
+  }
 };
 
 export const createCategory = async (payload: CreateCategoryRequest['body']) => {
-  const response = await callEndpoint<CreateCategoryRequest, CreateCategoryResponse>(
-    ENDPOINT_CONFIGS.createCategory,
-    { body: payload }
-  );
-
-  revalidateTag(ROUTES.CATEGORIES);
-  return response;
+  try {
+    const data = await categoryService.create(payload);
+    revalidatePath(ROUTES.CATEGORIES);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };
 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
-  const response = await callEndpoint<UpdateCategoryRequest, UpdateCategoryResponse>(
-    ENDPOINT_CONFIGS.updateCategory,
-    { params: { categoryId: id }, body: payload }
-  );
-
-  revalidateTag(ROUTES.CATEGORIES);
-  return response;
+  try {
+    const data = await categoryService.update(+id, payload);
+    revalidatePath(ROUTES.CATEGORIES);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };
 
 export const deleteCategory = async (id: string) => {
-  const response = await callEndpoint<DeleteCategoryRequest, DeleteCategoryResponse>(
-    ENDPOINT_CONFIGS.deleteCategory,
-    { params: { categoryId: id } }
-  );
-
-  revalidateTag(ROUTES.CATEGORIES);
-  return response;
+  try {
+    const data = await categoryService.delete(+id);
+    revalidatePath(ROUTES.CATEGORIES);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message };
+  }
 };

@@ -1,53 +1,48 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, withParams, withQueryParams } from '@resala/shared';
+import {
+  ENDPOINT_CONFIGS,
+  GetProductResponse,
+  ListProductsResponse,
+  ListStocksResponse,
+  withParams,
+  withQueryParams,
+} from '@resala/shared';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeProductsService {
-  constructor(private _HttpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient) {}
 
-  // baseURL: string = `https://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
-  //base url =
-
-  // refactor free API url
-  private getHeaders() {
-    const headers = new HttpHeaders({
-      'ngrok-skip-browser-warning': '69420',
-    });
-    return { headers };
-  }
-
-  // Products
-  getProducts(currentPage: string = '1', limitProducts: string = '10'): Observable<any> {
+  getProducts(
+    currentPage: string = '1',
+    limitProducts: string = '10'
+  ): Observable<ListProductsResponse> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
       page: currentPage,
       limit: limitProducts,
     });
-    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
+    return this._httpClient.get<ListProductsResponse>(environment.baseUrl + url);
   }
 
-  // Products
-  getProductsSearch(searchText: string): Observable<any> {
+  getProductsSearch(searchText: string): Observable<ListProductsResponse> {
     const { url } = withQueryParams(ENDPOINT_CONFIGS.listProducts, {
       search: searchText,
       limit: '100',
     });
-    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
-  }
-  //'/api/v1/products?page=1&limit=10&query='
-
-  //Product Details
-  getProductDetails(id: any): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS.getProduct, id);
-    return this._HttpClient.get(`${environment.BASE_URL}${url}`, this.getHeaders());
+    return this._httpClient.get<ListProductsResponse>(environment.baseUrl + url);
   }
 
-  getProductStock(id: string | null): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listStocks, { productId: id! });
-    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
+  getProductDetails(productId: string): Observable<GetProductResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.getProduct, productId);
+    return this._httpClient.get<GetProductResponse>(`${environment.baseUrl}${url}`);
+  }
+
+  getProductStock(productId: string): Observable<ListStocksResponse> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listStocks, { productId });
+    return this._httpClient.get<ListStocksResponse>(environment.baseUrl + url);
   }
 }

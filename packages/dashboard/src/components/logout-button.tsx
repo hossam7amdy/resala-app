@@ -1,20 +1,15 @@
 'use client';
 
-import { FullscreenSpinner, Menu } from '@/components';
+import { Menu } from '@/components';
 import { logout } from '@/fetch/auth';
-import { useMutation } from '@/hooks';
 import { ROUTES } from '@/routes';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
 export const LogoutButton: React.FC = () => {
   const pathname = usePathname();
-  const { mutate, isLoading } = useMutation({
-    mutationFn: logout,
-  });
-
   const selectedKeys = pathname.split('/').map(path => `/${path}`);
 
   return (
@@ -29,13 +24,11 @@ export const LogoutButton: React.FC = () => {
         },
         {
           danger: true,
-          disabled: isLoading,
+          // disabled: isLoading,
           key: 'logout',
-          icon: isLoading ? <FullscreenSpinner /> : <LogoutOutlined />,
+          // icon: isLoading ? <FullscreenSpinner /> : <LogoutOutlined />,
           label: 'Logout',
-          onClick: async () => {
-            await mutate({});
-          },
+          onClick: logout,
         },
       ]}
     />
