@@ -1,16 +1,17 @@
 import { dashboardService, productService, stockService } from '@/services';
-// TODO: fix types
-// import type {
-//   GetProductResponse,
-//   GetSalesTrendsResponse,
-//   ListProductsResponse,
-//   ListStocksResponse,
-//   ListTopProductsResponse,
-// } from '@resala/shared';
+import type {
+  GetProductResponse,
+  GetSalesTrendsResponse,
+  ListProductsResponse,
+  ListStocksResponse,
+  ListTopProductsResponse,
+} from '@resala/shared';
 import type { Context } from 'hono';
-import type { TypedResponse } from 'hono/types';
+import type { HandlerResponse } from 'hono/types';
 
-export const get = async (c: Context): Promise<TypedResponse<unknown>> => {
+// FIXME: should user `TypedResponse` instead of `HandlerResponse`
+
+export const get = async (c: Context): Promise<HandlerResponse<GetProductResponse>> => {
   const productId = c.req.param('productId');
 
   const product = await productService.get(+productId);
@@ -18,7 +19,7 @@ export const get = async (c: Context): Promise<TypedResponse<unknown>> => {
   return c.json({ success: true, data: product });
 };
 
-export const list = async (c: Context): Promise<TypedResponse<unknown>> => {
+export const list = async (c: Context): Promise<HandlerResponse<ListProductsResponse>> => {
   const page = c.req.query('page') || '1';
   const limit = c.req.query('limit') || '10';
   const search = c.req.query('search') || '';
@@ -34,7 +35,7 @@ export const list = async (c: Context): Promise<TypedResponse<unknown>> => {
   return c.json({ success: true, data: { pagination, products } });
 };
 
-export const listStocks = async (c: Context): Promise<TypedResponse<unknown>> => {
+export const listStocks = async (c: Context): Promise<HandlerResponse<ListStocksResponse>> => {
   const page = c.req.query('page') || '1';
   const limit = c.req.query('limit') || '10';
   const search = c.req.query('search') || '';
@@ -50,13 +51,17 @@ export const listStocks = async (c: Context): Promise<TypedResponse<unknown>> =>
   return c.json({ success: true, data: { stocks, pagination } });
 };
 
-export const listTopProducts = async (c: Context): Promise<TypedResponse<unknown>> => {
+export const listTopProducts = async (
+  c: Context
+): Promise<HandlerResponse<ListTopProductsResponse>> => {
   const products = await dashboardService.listTopProducts();
 
   return c.json({ success: true, data: products });
 };
 
-export const listSalesTrends = async (c: Context): Promise<TypedResponse<unknown>> => {
+export const listSalesTrends = async (
+  c: Context
+): Promise<HandlerResponse<GetSalesTrendsResponse>> => {
   const trends = await dashboardService.getSalesTrend();
 
   return c.json({ success: true, data: { trends } });
