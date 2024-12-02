@@ -10,12 +10,10 @@ import type {
 import type { Context } from 'hono';
 import type { HandlerResponse } from 'hono/types';
 
-import type { Env } from '../route';
-
-type HonoCtx = Context<Env>;
+import type { HonoCtx } from '../types';
 
 export const getCart = async (c: HonoCtx): Promise<HandlerResponse<GetCartResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
 
   const cart = await shoppingService.cart.get(userId);
   const updatedCart = await discountService.applyDiscount(cart);
@@ -24,7 +22,7 @@ export const getCart = async (c: HonoCtx): Promise<HandlerResponse<GetCartRespon
 };
 
 export const addItemToCart = async (c: HonoCtx): Promise<HandlerResponse<CreateCartResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const { stockId, quantity } = await c.req.json();
 
   const cart = await shoppingService.cart.update(userId, { stockId, quantity: +quantity });
@@ -36,7 +34,7 @@ export const addItemToCart = async (c: HonoCtx): Promise<HandlerResponse<CreateC
 export const removeItemFromCart = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteCartResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const stockId = c.req.query('stockId') as string;
 
   const cart = await shoppingService.cart.delete(userId, +stockId);
@@ -46,7 +44,7 @@ export const removeItemFromCart = async (
 };
 
 export const clearCart = async (c: HonoCtx): Promise<HandlerResponse<DeleteCartResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
 
   await shoppingService.cart.deleteMany(userId);
 
@@ -57,7 +55,7 @@ export const clearCart = async (c: HonoCtx): Promise<HandlerResponse<DeleteCartR
 };
 
 export const getWishlist = async (c: HonoCtx): Promise<HandlerResponse<GetWishlistResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
 
   const wishlist = await shoppingService.wishlist.get(userId);
 
@@ -67,7 +65,7 @@ export const getWishlist = async (c: HonoCtx): Promise<HandlerResponse<GetWishli
 export const addProductToWishlist = async (
   c: Context
 ): Promise<HandlerResponse<CreateWishlistResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const body = await c.req.json();
 
   const wishlist = await shoppingService.wishlist.update(userId, body.productId);
@@ -78,7 +76,7 @@ export const addProductToWishlist = async (
 export const removeProductFromWishlist = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteWishlistResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
   const productId = c.req.query('productId') as string;
 
   const wishlist = await shoppingService.wishlist.delete(userId, +productId);
@@ -89,7 +87,7 @@ export const removeProductFromWishlist = async (
 export const clearWishlist = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteWishlistResponse>> => {
-  const userId = c.var.user?.id as number;
+  const userId = Number(c.var.user?.id);
 
   await shoppingService.wishlist.deleteMany(userId);
 
