@@ -13,11 +13,6 @@ export enum StorefrontEndpoints {
   listProducts = Endpoints.listProducts,
   listStocks = Endpoints.listStocks,
 
-  getColor = Endpoints.getColor,
-  listColors = Endpoints.listColors,
-  getSize = Endpoints.getSize,
-  listSizes = Endpoints.listSizes,
-
   getUserCart = Endpoints.getUserCart,
   addItemToCart = Endpoints.addItemToCart,
   removeUserCart = Endpoints.removeUserCart,
@@ -38,9 +33,6 @@ export enum StorefrontEndpoints {
 
   getSalesTrends = Endpoints.getSalesTrends,
   listTopProducts = Endpoints.listTopProducts,
-
-  getDiscount = Endpoints.getDiscount,
-  listDiscounts = Endpoints.listDiscounts,
 }
 
 export const STOREFRONT_ENDPOINT_CONFIGS: { [_key in StorefrontEndpoints]: EndpointConfig } = {
@@ -58,14 +50,6 @@ export const STOREFRONT_ENDPOINT_CONFIGS: { [_key in StorefrontEndpoints]: Endpo
   [Endpoints.getProduct]: ENDPOINT_CONFIGS[Endpoints.getProduct],
   [Endpoints.listProducts]: ENDPOINT_CONFIGS[Endpoints.listProducts],
   [Endpoints.listStocks]: ENDPOINT_CONFIGS[Endpoints.listStocks],
-
-  // color endpoints
-  [Endpoints.getColor]: ENDPOINT_CONFIGS[Endpoints.getColor],
-  [Endpoints.listColors]: ENDPOINT_CONFIGS[Endpoints.listColors],
-
-  // size endpoints
-  [Endpoints.getSize]: ENDPOINT_CONFIGS[Endpoints.getSize],
-  [Endpoints.listSizes]: ENDPOINT_CONFIGS[Endpoints.listSizes],
 
   // shopping endpoints
   [Endpoints.addItemToCart]: ENDPOINT_CONFIGS[Endpoints.addItemToCart],
@@ -91,8 +75,4 @@ export const STOREFRONT_ENDPOINT_CONFIGS: { [_key in StorefrontEndpoints]: Endpo
   // dashboard endpoints
   [Endpoints.listTopProducts]: ENDPOINT_CONFIGS[Endpoints.listTopProducts],
   [Endpoints.getSalesTrends]: ENDPOINT_CONFIGS[Endpoints.getSalesTrends],
-
-  // discount endpoints
-  [Endpoints.getDiscount]: ENDPOINT_CONFIGS[Endpoints.getDiscount],
-  [Endpoints.listDiscounts]: ENDPOINT_CONFIGS[Endpoints.listDiscounts],
 };

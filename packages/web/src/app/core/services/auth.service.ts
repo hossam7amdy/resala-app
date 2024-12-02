@@ -136,11 +136,11 @@ export class AuthService {
     );
 
     return sessionObservable.pipe(
-      tap(data => {
-        if (data?.user && !data.user.isAnonymous) {
-          this._setUserInfo(data.user);
-        } else {
+      tap(session => {
+        if (!session) {
           this.loginAnonymous().subscribe();
+        } else if (!session.user.isAnonymous) {
+          this._setUserInfo(session.user);
         }
       })
     );

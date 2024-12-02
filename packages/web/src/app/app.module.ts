@@ -17,8 +17,6 @@ export function HttpLoaderFactory(_HttpClient: HttpClient) {
   return new TranslateHttpLoader(_HttpClient);
 }
 
-//@syncfusion/ej2-angular-navigations
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -37,8 +35,7 @@ export function HttpLoaderFactory(_HttpClient: HttpClient) {
         deps: [HttpClient],
       },
     }),
-    ToastrModule.forRoot(), // ToastrModule added
-    //...httpInterceptors
+    ToastrModule.forRoot(),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

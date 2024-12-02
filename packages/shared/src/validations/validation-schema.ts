@@ -132,7 +132,7 @@ export const DeleteUserSchema = z.object({
 
 export const CreateAddressSchema = z.object({
   body: z.object({
-    userId: z.coerce.number().positive(),
+    userId: z.coerce.number().optional(),
     firstName: UserSchema.shape.firstName,
     lastName: UserSchema.shape.lastName,
     phone: UserSchema.shape.phone,
@@ -148,10 +148,7 @@ export const CreateAddressSchema = z.object({
 
 export const ListAddressSchema = z.object({
   query: z.object({
-    userId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+    userId: z.coerce.number().optional(),
   }),
 });
 
