@@ -1,6 +1,7 @@
 'use client';
 
 import { logout } from '@/fetch/auth';
+import { ROUTES } from '@/routes';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -8,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 export const NotAuthorized: React.FC<{ message?: string }> = ({
   message = 'Sorry, you are not authorized to access this page.',
 }) => {
-  const router = useRouter();
+  const { replace } = useRouter();
   const [timer, setTimer] = useState(5);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,10 +17,11 @@ export const NotAuthorized: React.FC<{ message?: string }> = ({
     setIsLoading(true);
     try {
       await logout();
+      replace(ROUTES.LOGIN);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [replace]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,7 +35,7 @@ export const NotAuthorized: React.FC<{ message?: string }> = ({
     if (timer === 0) {
       logoutCallback();
     }
-  }, [logoutCallback, router, timer]);
+  }, [logoutCallback, timer]);
 
   return (
     <Result

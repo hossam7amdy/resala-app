@@ -20,14 +20,19 @@ export type EndpointConfig = {
 export enum Endpoints {
   // auth endpoints
   login = 'login',
-  loginWithGoogle = 'loginWithGoogle',
+  logout = 'logout',
   register = 'register',
-  refresh = 'refresh',
-  forgotPassword = 'forgotPassword',
-  resetPassword = 'resetPassword',
-  changePassword = 'changePassword',
+  getSession = 'getSession',
   verifyEmail = 'verifyEmail',
-  resendEmailVerification = 'resendEmailVerification',
+  sendPhoneOtp = 'sendPhoneOtp',
+  resetPassword = 'resetPassword',
+  forgetPassword = 'forgetPassword',
+  loginAnonymous = 'loginAnonymous',
+  loginWithPhone = 'loginWithPhone',
+  changePassword = 'changePassword',
+  verifyPhoneOtp = 'verifyPhoneOtp',
+  loginWithProvider = 'loginWithProvider',
+  sendVerificationEmail = 'sendVerificationEmail',
 
   // user endpoints
   getUser = 'getUser',
@@ -93,7 +98,7 @@ export enum Endpoints {
   removeProductFromWishlist = 'removeProductFromWishlist',
 
   // order endpoints
-  createOrder = 'createOrder',
+  checkout = 'checkout',
   getOrder = 'getOrder',
   listOrders = 'listOrders',
   deleteOrder = 'deleteOrder',
@@ -198,50 +203,72 @@ export const withQueryParams = (
  */
 export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   // auth endpoints
-  [Endpoints.login]: {
+  [Endpoints.loginAnonymous]: {
     method: 'post',
-    url: '/api/v1/auth/login',
+    url: '/api/auth/sign-in/anonymous',
     sensitive: true,
   },
-  [Endpoints.loginWithGoogle]: {
-    method: 'get',
-    url: '/auth/google',
+  [Endpoints.loginWithProvider]: {
+    method: 'post',
+    url: '/api/auth/sign-in/social',
+    sensitive: true,
   },
   [Endpoints.register]: {
     method: 'post',
-    url: '/api/v1/auth/register',
+    url: '/api/auth/sign-up/email',
     sensitive: true,
   },
-  [Endpoints.refresh]: {
+  [Endpoints.login]: {
     method: 'post',
-    url: '/api/v1/auth/refresh',
+    url: '/api/auth/sign-in/email',
     sensitive: true,
   },
-  [Endpoints.forgotPassword]: {
+  [Endpoints.loginWithPhone]: {
     method: 'post',
-    url: '/api/v1/auth/forgot-password',
+    url: '/api/auth/sign-in/phone-number',
+    sensitive: true,
+  },
+  [Endpoints.getSession]: {
+    method: 'post',
+    url: '/api/auth/get-session',
+  },
+  [Endpoints.logout]: {
+    url: '/api/auth/sign-out',
+    method: 'post',
+    auth: true,
+  },
+  [Endpoints.forgetPassword]: {
+    method: 'post',
+    url: '/api/auth/forget-password',
   },
   [Endpoints.resetPassword]: {
     method: 'post',
-    url: '/api/v1/auth/reset-password',
+    url: '/api/auth/reset-password',
     sensitive: true,
-    auth: true,
   },
   [Endpoints.verifyEmail]: {
     method: 'post',
-    url: '/api/v1/auth/verify-email',
+    url: '/api/auth/verify-email',
     auth: true,
   },
+  [Endpoints.sendVerificationEmail]: {
+    method: 'post',
+    url: '/api/auth/send-verification-email',
+  },
   [Endpoints.changePassword]: {
-    method: 'patch',
-    url: '/api/v1/auth/change-password',
+    method: 'post',
+    url: '/api/auth/change-password',
     sensitive: true,
     auth: true,
   },
-  [Endpoints.resendEmailVerification]: {
+  [Endpoints.sendPhoneOtp]: {
+    url: '/api/auth/phone-number/send-otp',
     method: 'post',
-    url: '/api/v1/auth/resend-email-verification',
-    auth: true,
+  },
+  [Endpoints.verifyPhoneOtp]: {
+    url: '/api/auth/phone-number/verify',
+    method: 'post',
+    sensitive: true,
   },
 
   [Endpoints.listUsers]: {
@@ -478,7 +505,7 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   // order endpoints
-  [Endpoints.createOrder]: {
+  [Endpoints.checkout]: {
     url: '/api/v1/orders',
     method: 'post',
     auth: true,

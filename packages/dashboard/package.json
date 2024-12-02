@@ -3,36 +3,54 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "postinstall": "yarn prisma generate",
+    "dev": "yarn prisma generate && next dev",
     "build": "next build",
+    "clean": "rm -rf .next",
+    "typecheck": "tsc --noEmit",
     "start": "next start",
     "lint": "next lint --no-cache",
     "test": "echo \"No tests specified for dashboard\" && exit 0"
   },
   "dependencies": {
+    "@resala/shared": "*",
     "@ant-design/icons": "^5.5.1",
     "@ant-design/nextjs-registry": "^1.0.1",
+    "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/client-ses": "^3.699.0",
+    "@hono/zod-validator": "^0.4.1",
+    "@prisma/client": "^6.0.0",
     "antd": "^5.21.2",
     "antd-img-crop": "^4.23.0",
+    "better-auth": "^1.0.4",
     "chart.js": "^4.4.4",
     "clsx": "^2.1.1",
-    "jwt-decode": "^4.0.0",
-    "next": "14.2.14",
-    "next-auth": "5.0.0-beta.5",
+    "hono": "^4.6.12",
+    "libphonenumber-js": "^1.11.15",
+    "next": "14.2.18",
+    "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "sharp": "0.32",
-    "tailwind-merge": "^2.5.3"
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.14",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.13"
+    "prisma": "^6.0.0",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss": "^3.4.13",
+    "vitest": "^2.1.6",
+    "typescript": "^5.1.0"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
   }
 }

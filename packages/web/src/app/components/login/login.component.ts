@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -8,9 +8,8 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { ProductDetailsComponent } from '../product-details/product-details.component';
 
-// import { ProductDetailsComponent } from '../product-details/product-details.component';
-
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'app-login',
   standalone: true,
   imports: [
@@ -26,19 +25,14 @@ import { ProductDetailsComponent } from '../product-details/product-details.comp
 })
 export class LoginComponent {
   constructor(
-    private _AuthService: AuthService,
-    private _Router: Router,
-    public _Translate: TranslateService
-    // private _productDetailsComponent: ProductDetailsComponent
+    private authService: AuthService,
+    private router: Router,
+    public translate: TranslateService
   ) {}
 
-  // start Custome Spinner
   customSpinIsLoading = false;
-  //end Custome Spinner
 
-  //show password
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  showPW: any;
+  showPW: boolean = false;
   togglePW() {
     this.showPW = !this.showPW;
   }
@@ -48,79 +42,46 @@ export class LoginComponent {
   successMsgAr: string = '';
   isLoading: boolean = false;
 
-  //properity => Return to product details page after login
-
-  // can use FormBulder instead of  new FormGroup (lookup leson 9)
-
   loginForm: FormGroup = new FormGroup({
-    password: new FormControl(
-      '',
-      Validators.compose([
-        Validators.required,
-        Validators.pattern(/\d/),
-        Validators.pattern(/[a-z]/),
-        Validators.pattern(/[A-Z]/),
-        Validators.pattern(/[ !@#$%^&*()_=~.,+-:;'"\\|<>/?]/),
-        Validators.minLength(8),
-      ])
-    ),
-
-    sign: new FormControl('', [
-      Validators.required,
-      Validators.pattern(
-        /(^[0-9]{11,11}$)|(^[a-z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+))?$/
-      ),
-    ]),
+    sign: new FormControl('', [Validators.required]),
+    password: new FormControl('', Validators.compose([Validators.required])),
   });
 
-  //|| Validators.pattern(/^(?:\d{10}|\w+@\w+\.\w{2,3})$/)
-  // /^01[0125][0-9]{8}$/
-
-  // getUserInfo(firstName:string):void{
-  //   this._AuthService.userNameLogged.next(firstName);
-  // }
-
-  handleForm(_loginForm: FormGroup): void {
-    this.customSpinIsLoading = true;
-
+  handleForm(_: FormGroup): void {
     const userData = this.loginForm.value;
 
     if (this.loginForm.valid === true) {
-      // let loginData = userData
-      this._AuthService.login(userData).subscribe({
-        next: response => {
-          if (response.success == true) {
-            localStorage.setItem('etoken', response.data.accessToken);
-            this._AuthService.decodeUser();
-            this.successMsg = 'Logged already';
-            this.successMsgAr = 'تم تسجيل الدخول بنجاح';
-            // this.getUserInfo(response.data.user.firstName);
-            // this._AuthService.userNameLogged.next(response.data.user.firstName);
-            this.customSpinIsLoading = false;
+      this.customSpinIsLoading = true;
+      this.authService.login(userData).subscribe({
+        next: () => {
+          this.customSpinIsLoading = false;
+          this.successMsg = 'Logged already';
+          this.successMsgAr = 'تم تسجيل الدخول بنجاح';
 
-            // this._Router.navigate(['/home']);
-
-            // // can use Redirect
-
-            // this._Router.navigate(['/home']);
-            const productId = localStorage.getItem('productId');
-            if (productId == null) {
-              this._Router.navigate(['/home']).then(() => {
-                window.location.reload();
-              });
-            } else {
-              this._Router.navigate(['product-details/', productId]).then(() => {
-                window.location.reload();
-              });
-              localStorage.removeItem('productId');
-            }
+          const productId = localStorage.getItem('productId');
+          if (productId == null) {
+            this.router.navigate(['/home'], { replaceUrl: true });
+          } else {
+            this.router.navigate(['product-details/', productId], { replaceUrl: true });
+            localStorage.removeItem('productId');
           }
         },
         error: err => {
-          this.errMsg = err.error.message;
           this.customSpinIsLoading = false;
+          this.errMsg = err?.error?.message || 'Something went wrong';
         },
       });
     }
+  }
+
+  handleGoogleLogin(): void {
+    this.authService.loginWithGoogle().subscribe({
+      next: ({ url }) => {
+        location.replace(url);
+      },
+      error: err => {
+        this.errMsg = err?.error?.message || 'Something went wrong';
+      },
+    });
   }
 }

@@ -4,19 +4,27 @@ import { logout } from '@/fetch/auth';
 import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
-type Success<T> = ({ statusCode: number; success: boolean } & T) | void;
-type Error = { statusCode: number; success: boolean; message: string };
+type Error = {
+  message: string;
+  status: number;
+  statusText: string;
+};
+
+type Result<T = unknown> = {
+  data: T | null;
+  error?: Error;
+};
 
 type MutationOptions<Data, Variables> = {
-  mutationFn: (variables: Variables) => Promise<Success<Data>>;
-  onSuccess?: (data: Success<Data>, variables: Variables) => void;
+  mutationFn: (variables: Variables) => Promise<Data>;
+  onSuccess?: (data: Data, variables: Variables) => void;
   onError?: (error: Error) => void;
 };
 
 type MutationResult<Data, Variables> = {
   mutate: (variables: Variables) => Promise<void>;
   isLoading: boolean;
-  data?: Success<Data>;
+  data?: Data;
   error?: Error;
   isSuccess: boolean;
   isError: boolean;
@@ -28,7 +36,7 @@ export const useMutation = <Data, Variables>({
   onSuccess = () => {},
 }: MutationOptions<Data, Variables>): MutationResult<Data, Variables> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<Success<Data>>();
+  const [data, setData] = useState<Data>();
   const [error, setError] = useState<Error>();
 
   const mutate = useCallback(
@@ -38,23 +46,23 @@ export const useMutation = <Data, Variables>({
       setError(undefined);
 
       try {
-        const result = await mutationFn(variables);
+        const result = (await mutationFn(variables)) as Result<Data>;
 
-        if (result instanceof Object && !result.success) {
-          throw result;
+        if ((result as Result)?.error) {
+          throw result.error;
         }
 
-        const successResult = (result ?? {}) as Success<Data>;
-
-        setData(successResult);
-        onSuccess(successResult, variables);
+        if (result?.data) {
+          setData(result.data);
+          onSuccess(result.data, variables);
+        }
       } catch (e) {
         const error = e as Error;
 
         setError(error);
         onError(error);
 
-        if ([401, 403].includes(error.statusCode)) {
+        if (error.status && [401, 403].includes(error.status)) {
           await sleep(2000).then(logout);
         }
       } finally {

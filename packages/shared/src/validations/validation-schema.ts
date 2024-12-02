@@ -52,7 +52,7 @@ export const RegisterSchema = z.object({
   }),
 });
 
-export const ResendVerificationSchema = z.object({
+export const SendVerificationSchema = z.object({
   body: z.object({
     email: UserSchema.shape.email,
   }),

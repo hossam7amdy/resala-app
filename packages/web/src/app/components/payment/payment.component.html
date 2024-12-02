@@ -667,7 +667,7 @@
                         ? 'الحد الاقصي للشراء عند الدفع عند الاستلام يكون 4000 جنيه مصري'
                         : 'The Maxmum Limit for Order Amount 4000 LE'
                       : _Translate.currentLang === 'ar'
-                        ? 'للاستمرار فى الدفع من خلال الفيزا البنكية  انقر على تابع اتمام الدفع'
+                        ? 'للاستمرار فى الدفع من خلال الفيزا البنكية انقر على تابع اتمام الدفع'
                         : 'To Continue Pay Over Visa Card Click on Follow Up Payment'
                   }}
                 </p>
@@ -782,7 +782,7 @@
             <button
               [disabled]="payForm.invalid || isCheckedTerms === false"
               type="submit"
-              (click)="creatOrder(payForm, btn)"
+              (click)="checkout(payForm, btn)"
               #btn
               class="w-100 submit custome-btn"
             >

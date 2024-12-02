@@ -1,78 +1,63 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENDPOINT_CONFIGS, Endpoints, withParams, withQueryParams } from '@resala/shared';
+import {
+  CreateAddressResponse,
+  CreateOrderResponse,
+  DeleteAddressResponse,
+  ENDPOINT_CONFIGS,
+  ListAddressResponse,
+  UpdateAddressResponse,
+  withParams,
+  withQueryParams,
+} from '@resala/shared';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PaymentService {
-  constructor(private _HttpClient: HttpClient) {}
-
-  // refactor free API url
-  private getHeaders() {
-    const headers = new HttpHeaders({
-      'ngrok-skip-browser-warning': '69420',
-      Authorization: `Bearer ${localStorage.getItem('etoken')}`,
-    });
-
-    return { headers };
-  }
-
-  // baseURL: string = `http://ec2-13-49-159-109.eu-north-1.compute.amazonaws.com`;
-  myToken: any = { Authorization: `Bearer ${localStorage.getItem('etoken')}` };
-
-  // countries API
+  // TODO: abstract countries API to a separate service
   urlCountries: string = `https://countriesnow.space/api/v0.1/`;
 
+  constructor(private _httpClient: HttpClient) {}
+
   getAllCountries(): Observable<any> {
-    return this._HttpClient.get(this.urlCountries + `countries`);
+    return this._httpClient.get(this.urlCountries + `countries`);
   }
 
   // States API
   getAllCities(country: string): Observable<any> {
-    return this._HttpClient.post(
-      this.urlCountries + `countries/cities`,
-
-      {
-        country: country,
-      }
-    );
+    return this._httpClient.post(this.urlCountries + `countries/cities`, { country });
   }
 
-  registerUserAddress(userAddress: any): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createAddress]);
-    console.log(userAddress.userId);
-    return this._HttpClient.post(environment.BASE_URL + url, userAddress, this.getHeaders());
+  registerUserAddress(userAddress: any): Observable<CreateAddressResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.createAddress);
+    return this._httpClient.post<CreateAddressResponse>(environment.baseUrl + url, userAddress);
   }
 
-  getListAddressUser(id: any): Observable<any> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress, { userId: id });
-    return this._HttpClient.get(environment.BASE_URL + url, this.getHeaders());
+  getListAddressUser(userId: string): Observable<ListAddressResponse> {
+    const { url } = withQueryParams(ENDPOINT_CONFIGS.listAddress, { userId });
+    return this._httpClient.get<ListAddressResponse>(environment.baseUrl + url);
   }
 
-  deleteUserAddress(userId: any, addressId: any): Observable<any> {
-    const withParamsConfig: any = withParams(ENDPOINT_CONFIGS[Endpoints.deleteAddress], addressId);
+  deleteUserAddress(userId: string, addressId: string): Observable<DeleteAddressResponse> {
+    const withParamsConfig = withParams(ENDPOINT_CONFIGS.deleteAddress, addressId);
     const { url } = withQueryParams(withParamsConfig, { userId });
-    return this._HttpClient.delete(environment.BASE_URL + url, this.getHeaders());
+    return this._httpClient.delete<DeleteAddressResponse>(environment.baseUrl + url);
   }
 
-  updateUserAddress(addressId: any, userAddress: object): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.updateAddress], addressId + '');
-    return this._HttpClient.put(environment.BASE_URL + url, userAddress, this.getHeaders());
+  updateUserAddress(addressId: string, userAddress: object): Observable<UpdateAddressResponse> {
+    const { url } = withParams(ENDPOINT_CONFIGS.updateAddress, addressId);
+    return this._httpClient.put<UpdateAddressResponse>(environment.baseUrl + url, userAddress);
   }
 
-  userOrder(userAddressId: number, payInfo: string, note: string): Observable<any> {
-    const { url } = withParams(ENDPOINT_CONFIGS[Endpoints.createOrder]);
-    return this._HttpClient.post(
-      environment.BASE_URL + url,
-      {
-        addressId: userAddressId,
-        paymentMethod: payInfo,
-        note: note,
-      },
-      this.getHeaders()
-    );
+  userOrder(userAddressId: number, payInfo: string, note: string): Observable<CreateOrderResponse> {
+    const { url } = ENDPOINT_CONFIGS.checkout;
+    return this._httpClient.post<CreateOrderResponse>(environment.baseUrl + url, {
+      addressId: userAddressId,
+      paymentMethod: payInfo,
+      note: note,
+    });
   }
 }

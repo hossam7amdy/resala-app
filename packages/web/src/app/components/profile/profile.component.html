@@ -1,10 +1,7 @@
 <app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 
 <div class="profile">
-  <section
-    *ngIf="userInfo != {} && !customSpinIsLoading"
-    class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh"
-  >
+  <section *ngIf="userInfo" class="w-25 mx-auto shadow rounded p-4 my-1 bg-main-ligh">
     <h1 class="my-3">{{ 'profile.mainTitle' | translate }}</h1>
     <form class="form">
       <fieldset disabled>
@@ -48,7 +45,7 @@
             formControlName="phone"
             class="form-control"
             id="phone"
-            [value]="userInfo.phone"
+            [value]="userInfo.phoneNumber"
           />
         </div>
       </fieldset>

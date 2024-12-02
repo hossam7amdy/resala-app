@@ -1,70 +1,64 @@
 'use server';
 
-import { callEndpoint } from '@/fetch';
 import { ROUTES } from '@/routes';
+import { sizeService } from '@/services';
 import type {
   CreateSizeRequest,
   CreateSizeResponse,
-  DeleteSizeRequest,
   DeleteSizeResponse,
-  GetSizeRequest,
   GetSizeResponse,
-  ListSizesRequest,
   ListSizesResponse,
   UpdateSizeRequest,
   UpdateSizeResponse,
 } from '@resala/shared';
-import { ENDPOINT_CONFIGS } from '@resala/shared';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
+import { notFound } from 'next/navigation';
 
-export const listAllSizes = async () => {
-  const response = await callEndpoint<ListSizesRequest, ListSizesResponse>(
-    ENDPOINT_CONFIGS.listSizes,
-    { query: {}, next: { tags: [ROUTES.SIZES] } }
-  );
-
-  return response.data;
+export const listAllSizes = async (): Promise<ListSizesResponse['data']> => {
+  return await sizeService.list();
 };
 
-export const findSizeById = async (id: string | number) => {
-  const response = await callEndpoint<GetSizeRequest, GetSizeResponse>(ENDPOINT_CONFIGS.getSize, {
-    params: { sizeId: id.toString() },
-    cache: 'no-store',
-  });
-
-  return response.data;
+export const findSizeById = async (id: string | number): Promise<GetSizeResponse['data']> => {
+  try {
+    return await sizeService.find(+id);
+  } catch {
+    return notFound();
+  }
 };
 
-export const createSize = async (data: CreateSizeRequest['body']) => {
-  const response = await callEndpoint<CreateSizeRequest, CreateSizeResponse>(
-    ENDPOINT_CONFIGS.createSize,
-    { body: data }
-  );
+export const createSize = async (
+  payload: CreateSizeRequest['body']
+): Promise<CreateSizeResponse> => {
+  try {
+    const data = await sizeService.create(payload);
 
-  revalidateTag(ROUTES.SIZES);
-  return response;
+    revalidatePath(ROUTES.SIZES);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as CreateSizeResponse;
+  }
 };
 
-export const updateSize = async (id: string | number, data: UpdateSizeRequest['body']) => {
-  const response = await callEndpoint<UpdateSizeRequest, UpdateSizeResponse>(
-    ENDPOINT_CONFIGS.updateSize,
-    {
-      body: data,
-      params: { sizeId: id.toString() },
-    }
-  );
-
-  revalidateTag(ROUTES.SIZES);
-  return response;
+export const updateSize = async (
+  id: string | number,
+  payload: UpdateSizeRequest['body']
+): Promise<UpdateSizeResponse> => {
+  try {
+    const data = await sizeService.update(+id, payload);
+    revalidatePath(ROUTES.SIZES);
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as UpdateSizeResponse;
+  }
 };
 
-export const deleteSize = async (id: string | number) => {
-  const response = await callEndpoint<DeleteSizeRequest, DeleteSizeResponse>(
-    ENDPOINT_CONFIGS.deleteSize,
-    { params: { sizeId: id.toString() } }
-  );
+export const deleteSize = async (id: string | number): Promise<DeleteSizeResponse> => {
+  try {
+    const data = await sizeService.delete(+id);
+    revalidatePath(ROUTES.SIZES);
 
-  revalidateTag(ROUTES.SIZES);
-
-  return response;
+    return { data };
+  } catch (e) {
+    return { error: (e as Error).message } as DeleteSizeResponse;
+  }
 };

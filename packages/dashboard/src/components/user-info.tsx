@@ -17,7 +17,7 @@ export const UserInfo: React.FC = () => {
   return (
     <Space>
       <Avatar size="large" shape="square">
-        {user?.firstName.at(0)}
+        {user?.firstName?.at(0)}
       </Avatar>
 
       <div>
