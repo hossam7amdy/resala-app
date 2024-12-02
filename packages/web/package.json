@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
+    "dev": "ng serve --open",
     "start": "ng serve",
     "build": "ng build",
     "clean": "rm -rf dist",
