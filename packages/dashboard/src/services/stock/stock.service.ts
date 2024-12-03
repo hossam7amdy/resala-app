@@ -88,29 +88,6 @@ export class StockService {
     };
   }
 
-  /*
-    FIXME: This is a bug, stock will be decreased even if we don't have enough stock
-    resulting in negative stock quantity
-  */
-  async decrease(stocks: { stockId: number; quantity: number }[]) {
-    await this.db.$transaction(async trx => {
-      const toUpdate = await trx.stock.findMany({
-        where: {
-          id: { in: stocks.map(s => s.stockId) },
-        },
-      });
-
-      for (const stock of toUpdate) {
-        await trx.stock.update({
-          where: { id: stock.id },
-          data: {
-            quantity: { decrement: stock.quantity },
-          },
-        });
-      }
-    });
-  }
-
   async create(stock: CreateStockRequest['body']) {
     return await this.db.stock.create({
       data: {
@@ -178,6 +155,36 @@ export class StockService {
 
     return Object.values(stocks).sort(
       (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
+    );
+  }
+
+  async decreaseQuantity(items: { stockId: number; quantity: number }[]) {
+    await this.db.$transaction(
+      items.map(item =>
+        this.db.stock.update({
+          data: {
+            quantity: { decrement: item.quantity },
+          },
+          where: {
+            id: item.stockId,
+          },
+        })
+      )
+    );
+  }
+
+  async increaseQuantity(items: { stockId: number; quantity: number }[]) {
+    await this.db.$transaction(
+      items.map(item =>
+        this.db.stock.update({
+          data: {
+            quantity: { increment: item.quantity },
+          },
+          where: {
+            id: item.stockId,
+          },
+        })
+      )
     );
   }
 }
