@@ -2,7 +2,6 @@ import { reviewService } from '@/services';
 import type {
   CreateReviewRequest,
   CreateReviewResponse,
-  DeleteReviewRequest,
   DeleteReviewResponse,
   GetReviewResponse,
   ListReviewsResponse,
@@ -14,8 +13,10 @@ import type { HandlerResponse } from 'hono/types';
 import type { HonoCtx } from '../types';
 
 export const createReview = async (c: HonoCtx): Promise<HandlerResponse<CreateReviewResponse>> => {
+  const userId = Number(c.var.user?.id);
   const body = (await c.req.json()) as CreateReviewRequest['body'];
-  const review = await reviewService.create(body);
+
+  const review = await reviewService.create({ ...body, userId });
 
   return c.json(c.json({ success: true, data: review }));
 };
@@ -29,16 +30,16 @@ export const updateReview = async (c: HonoCtx): Promise<HandlerResponse<UpdateRe
 };
 
 export const deleteReview = async (c: HonoCtx): Promise<HandlerResponse<DeleteReviewResponse>> => {
-  const reviewId = c.req.param('reviewId') as string;
-  const query = c.req.query() as DeleteReviewRequest['query'];
+  const userId = Number(c.var.user?.id);
+  const reviewId = +c.req.param('reviewId');
 
-  const address = await reviewService.delete(+reviewId, +query.userId);
+  const address = await reviewService.delete(reviewId, userId);
 
   return c.json({ success: true, data: address });
 };
 
 export const getReview = async (c: HonoCtx): Promise<HandlerResponse<GetReviewResponse>> => {
-  const reviewId = c.req.param('reviewId') as string;
+  const reviewId = c.req.param('reviewId');
   const review = await reviewService.find(+reviewId);
 
   return c.json({ success: true, data: review });
