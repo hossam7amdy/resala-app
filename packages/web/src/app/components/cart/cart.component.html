@@ -255,7 +255,8 @@
 
                 <p *ngIf="item.discountedPrice != 0" class="price fs-4">
                   <span class="p p-0"
-                    >{{ 'cart.discountTitle' | translate }} {{ item.appliedDiscount.amount }}%</span
+                    >{{ 'cart.discountTitle' | translate }}
+                    {{ item?.appliedDiscount?.amount }}%</span
                   >
                   {{ item.discountedPrice }}
                   <label class="currency fs-5">
@@ -404,7 +405,7 @@
 </section>
 
 <div
-  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems.length == 0"
+  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems?.length == 0"
   class="m-auto"
 >
   <div class="emptyCart emptyCartParent">
