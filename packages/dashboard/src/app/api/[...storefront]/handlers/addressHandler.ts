@@ -36,7 +36,7 @@ export const updateUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<UpdateAddressResponse>> => {
   const userId = Number(c.var.user?.id);
-  const addressId = Number(c.req.query('addressId'));
+  const addressId = Number(c.req.param('addressId'));
   const body = (await c.req.json()) as UpdateAddressRequest['body'];
 
   const address = await addressService.update(addressId, { ...body, userId });
@@ -48,7 +48,7 @@ export const deleteUserAddress = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteAddressResponse>> => {
   const userId = Number(c.var.user?.id);
-  const addressId = Number(c.req.query('addressId'));
+  const addressId = Number(c.req.param('addressId'));
 
   const address = await addressService.delete(addressId, userId);
 
