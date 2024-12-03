@@ -70,7 +70,7 @@ export class PaymobService {
       currency: 'EGP',
       amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
       redirection_url: `${this.webUrl}/post_pay/${order.id}/`,
-      notification_url: `${this.serverUrl}/post_pay/${order.id}/`,
+      notification_url: `${this.serverUrl}/api/post_pay/${order.id}/`,
       payment_methods: [this.integrationId],
       items: orderItems,
       billing_data: {

@@ -134,6 +134,9 @@ const HANDLERS: { [_key in StorefrontEndpoints]: Handler[] } = {
 const createHonoApp = () => {
   const app = new Hono<Env>();
 
+  // webhook handlers
+  app.post('/api/post_pay/:orderId', paymobWebhookHandler);
+
   app.use(
     cors({
       origin: configuration().origin.allowedList,
@@ -155,9 +158,6 @@ const createHonoApp = () => {
   // auth handlers
   app.get('/api/auth/*', c => auth.handler(c.req.raw));
   app.post('/api/auth/*', c => auth.handler(c.req.raw));
-
-  // webhook handlers
-  app.post('/post_pay/:orderId', paymobWebhookHandler);
 
   // register handlers in hono app
   Object.keys(StorefrontEndpoints).forEach(entry => {
