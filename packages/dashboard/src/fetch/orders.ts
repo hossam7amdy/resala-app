@@ -25,7 +25,11 @@ export const findOrderById = async (id: string | number): Promise<GetOrderRespon
 export const listOrders = async (
   query: ListOrdersRequest['query']
 ): Promise<ListOrdersResponse['data']> => {
-  return await orderService.list(query);
+  const page = +(query.page || '1');
+  const limit = +(query.limit || '10');
+  const search = query.search || undefined;
+
+  return await orderService.list({ page, limit, search });
 };
 
 export const updateOrderStatus = async (

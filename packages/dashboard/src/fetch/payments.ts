@@ -22,7 +22,7 @@ export const voidPayment = async (
     await paymentService.void(payload.transactionId);
 
     revalidatePath(ROUTES.ORDERS);
-    revalidatePath(`payments/${payload.transactionId}`);
+    revalidatePath(ROUTES.STOCKS);
 
     return { success: true };
   } catch (e) {
@@ -37,7 +37,7 @@ export const refundPayment = async (
     await paymentService.refund(payload.transactionId, payload.amount);
 
     revalidatePath(ROUTES.ORDERS);
-    revalidatePath(`payments/${payload.transactionId}`);
+    revalidatePath(ROUTES.STOCKS);
 
     return { success: true };
   } catch (e) {
