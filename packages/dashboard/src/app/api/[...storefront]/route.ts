@@ -157,7 +157,7 @@ const createHonoApp = () => {
   app.post('/api/auth/*', c => auth.handler(c.req.raw));
 
   // webhook handlers
-  app.post('/post_pay/:orderId', paymobWebhookHandler);
+  app.post('/api/post_pay/:orderId', paymobWebhookHandler);
 
   // register handlers in hono app
   Object.keys(StorefrontEndpoints).forEach(entry => {
