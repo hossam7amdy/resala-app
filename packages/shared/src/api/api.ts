@@ -387,18 +387,14 @@ export type GetPaymentResponse = DefaultResponseBody & {
   data: {
     id: number;
     pending: boolean;
-    amount_cents: number;
+    amount: number;
     success: boolean;
-    is_auth: boolean;
-    is_capture: boolean;
-    is_standalone_payment: boolean;
-    is_voided: boolean;
-    is_refunded: boolean;
-    is_3d_secure: boolean;
-    integration_id: number;
-    profile_id: number;
-    has_parent_transaction: boolean;
-    created_at: string;
+    isCapture: boolean;
+    isStandalonePayment: boolean;
+    isVoided: boolean;
+    isRefunded: boolean;
+    is3dSecure: boolean;
+    createdAt: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   };

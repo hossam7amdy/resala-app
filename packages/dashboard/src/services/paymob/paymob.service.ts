@@ -1,27 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// TODO: remove this 👆 after implementing the service
 import type { Configuration } from '@/configuration';
 import { HttpClient } from '@/utils/http-client';
+import { createHmac } from 'crypto';
 import { Decimal } from 'decimal.js';
 
-import type { AuthenticateApiResponse, CheckoutApiResponse, CheckoutDto } from './payments.dtos';
+import type {
+  CheckoutCreateParams,
+  CheckoutCreateResponse,
+  RetrieveTransactionResponse,
+  Transaction,
+  WebhookParams,
+} from './payments.dtos';
 
 export class PaymobService {
-  private readonly serverUrl: string;
-  private readonly webUrl: string;
   private readonly apiToken: string;
   private readonly secretKey: string;
+  private readonly publicKey: string;
   private readonly integrationId: number;
-  private readonly checkoutLink: string;
   private readonly httpClient: HttpClient;
 
   constructor(config: Configuration) {
-    this.webUrl = config.origin.web;
-    this.serverUrl = config.server.url;
     this.apiToken = config.payment.paymob.apiToken;
     this.secretKey = config.payment.paymob.secretKey;
     this.integrationId = config.payment.paymob.integrationId;
-    this.checkoutLink = config.payment.paymob.checkoutLink;
+    this.publicKey = config.payment.paymob.publicKey;
 
     this.httpClient = new HttpClient({
       baseUrl: config.payment.paymob.baseUrl,
@@ -29,87 +30,101 @@ export class PaymobService {
     });
   }
 
-  async authenticate(): Promise<{ token: string }> {
+  private _constructPaymentLink(clientSecret: string): string {
+    return `https://accept.paymob.com/unifiedcheckout/?publicKey=${this.publicKey}&clientSecret=${clientSecret}`;
+  }
+
+  private _verifyHmacSignature(hmac: string, transaction: Transaction): boolean {
+    const lexicographical =
+      transaction.amount_cents +
+      transaction.created_at +
+      transaction.currency +
+      transaction.error_occured +
+      transaction.has_parent_transaction +
+      transaction.id +
+      transaction.integration_id +
+      transaction.is_3d_secure +
+      transaction.is_auth +
+      transaction.is_capture +
+      transaction.is_refunded +
+      transaction.is_standalone_payment +
+      transaction.is_voided +
+      transaction.order.id +
+      transaction.owner +
+      transaction.pending +
+      transaction.source_data.pan +
+      transaction.source_data.sub_type +
+      transaction.source_data.type +
+      transaction.success;
+
+    const hash = createHmac('sha512', process.env.PAYMOB_HMAC_KEY!)
+      .update(lexicographical)
+      .digest('hex');
+
+    return hash === hmac;
+  }
+
+  private _parseTransactionStatus(transaction: Transaction) {
+    if (transaction.is_voided) return 'VOIDED';
+    if (transaction.is_refunded) return 'REFUNDED';
+    if (transaction.error_occured) return 'FAILED';
+    if (transaction.success) return 'PAID';
+    if (transaction.pending) return 'UNPAID';
+  }
+
+  private async _authenticate(): Promise<{ token: string }> {
     const body = {
       api_key: this.apiToken,
     };
 
-    const { token } = await this.httpClient.post<AuthenticateApiResponse>('/api/auth/tokens', {
-      body,
-    });
+    const { token } = await this.httpClient.post<{ token: string }>('/api/auth/tokens', body);
 
     return { token };
   }
 
-  async checkout({
-    user,
-    order,
-    shipping,
-    cart,
-  }: CheckoutDto): Promise<{ payment_link: string } & CheckoutApiResponse> {
+  async checkout(payload: CheckoutCreateParams): Promise<CheckoutCreateResponse> {
     const headers = {
       Authorization: `Token ${this.secretKey}`,
     };
 
-    const orderItems = [
-      {
-        name: 'Resala cart items',
-        amount: cart.totalPrice * 100,
-        description: `Purchasing for ${cart.totalQuantity} items`,
-        quantity: 1,
-      },
-      {
-        name: 'Shipping',
-        amount: +order.shipping * 100,
-        description: 'Shipping fees',
-        quantity: 1,
-      },
-    ];
-
-    const body = {
+    const body: CheckoutCreateParams = {
       currency: 'EGP',
-      amount: new Decimal(order.total).mul(100).toDecimalPlaces(2).toNumber(),
-      redirection_url: `${this.webUrl}/post_pay/${order.id}/`,
-      notification_url: `${this.serverUrl}/api/post_pay/${order.id}/`,
+      amount: new Decimal(payload.amount).mul(100).toDecimalPlaces(2).toNumber(),
+      redirection_url: payload?.redirection_url,
+      notification_url: payload?.notification_url,
       payment_methods: [this.integrationId],
-      items: orderItems,
+      items: payload.items.map(item => ({
+        name: item.name,
+        amount: new Decimal(item.amount).mul(100).toDecimalPlaces(2).toNumber(),
+        quantity: item.quantity,
+        description: item.description,
+      })),
       billing_data: {
-        first_name: user.firstName,
-        last_name: user.lastName,
-        email: user.email,
-        phone_number: user.phone,
-        country: shipping.country,
-        state: shipping.state,
-        city: shipping.city,
-        street: shipping.street || 'NA',
-        building: shipping.building || 'NA',
-        floor: shipping.floor || 'NA',
-        apartment: shipping.address || 'NA',
-      },
-      customer: {
-        firstName: user.firstName,
-        last_name: user.lastName,
-        email: user.email,
+        first_name: payload.billing_data.first_name,
+        last_name: payload.billing_data.last_name,
+        email: payload.billing_data.email,
+        phone_number: payload.billing_data.phone_number,
+        country: payload.billing_data.country,
+        state: payload.billing_data.state,
+        city: payload.billing_data.city,
+        street: payload.billing_data.street || 'NA',
+        building: payload.billing_data.building || 'NA',
+        floor: payload.billing_data.floor || 'NA',
+        apartment: payload.billing_data.apartment || 'NA',
       },
     };
 
-    const { client_secret, ...rest } = await this.httpClient.post<CheckoutApiResponse>(
+    const { client_secret: clientSecret } = await this.httpClient.post<{ client_secret: string }>(
       '/v1/intention/',
       body,
       { headers }
     );
 
-    if (!client_secret) {
-      throw new Error('Invalid response from Paymob');
-    }
-
-    const payment_link = this.getCheckoutLink(client_secret);
-
-    return { payment_link, client_secret, ...rest };
+    return { paymentLink: this._constructPaymentLink(clientSecret) };
   }
 
-  async retrieve(trxId: number): Promise<any> {
-    const { token } = await this.authenticate();
+  async retrieve(trxId: number): Promise<RetrieveTransactionResponse> {
+    const { token } = await this._authenticate();
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -120,8 +135,8 @@ export class PaymobService {
     });
   }
 
-  async void(trxId: number): Promise<any> {
-    const { token } = await this.authenticate();
+  async void(trxId: number): Promise<void> {
+    const { token } = await this._authenticate();
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -131,25 +146,33 @@ export class PaymobService {
       transaction_id: trxId,
     };
 
-    return await this.httpClient.post('/api/acceptance/void_refund/void', body, { headers });
+    await this.httpClient.post('/api/acceptance/void_refund/void', body, { headers });
   }
 
-  async refund(trxId: number, amountCents: number): Promise<any> {
+  async refund(trxId: number, amount: number): Promise<void> {
     const headers = {
       Authorization: `Token ${this.secretKey}`,
     };
 
     const body = {
       transaction_id: trxId,
-      amount_cents: amountCents,
+      amount_cents: new Decimal(amount).mul(100).toDecimalPlaces(2).toNumber(),
     };
 
-    return await this.httpClient.post('/api/acceptance/void_refund/refund', body, {
+    await this.httpClient.post('/api/acceptance/void_refund/refund', body, {
       headers,
     });
   }
 
-  private getCheckoutLink(clientSecret: string) {
-    return `${this.checkoutLink}&clientSecret=${clientSecret}`;
+  async handleWebhookCallback(data: WebhookParams): Promise<{
+    status: 'PAID' | 'UNPAID' | 'VOIDED' | 'REFUNDED' | 'FAILED' | undefined;
+    verified: boolean;
+  }> {
+    const { hmac, transaction } = data;
+
+    const isValid = this._verifyHmacSignature(hmac, transaction);
+    const status = this._parseTransactionStatus(transaction);
+
+    return Promise.resolve({ status, verified: isValid });
   }
 }

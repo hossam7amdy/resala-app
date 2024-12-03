@@ -19,15 +19,17 @@ import { StockService } from './stock/stock.service';
 import { FileStorage } from './storage';
 import { UserService } from './user/user.service';
 
+const fileStorage = FileStorage.getInstance(configuration());
+const paymobService = new PaymobService(configuration());
 const addressService = new AddressService(db);
 const categoryService = new CategoryService(db);
 const colorService = new ColorService(db);
 const dashboardService = new DashboardService(db);
 const discountService = new DiscountService(db);
-const imageService = new ImageService(db, FileStorage.getInstance(configuration()));
+const imageService = new ImageService(db, fileStorage);
 const orderService = new OrderService(db);
-const paymentService = new PaymentService(new PaymobService(configuration()));
-const productService = new ProductService(db, FileStorage.getInstance(configuration()));
+const paymentService = new PaymentService(configuration(), paymobService);
+const productService = new ProductService(db, fileStorage);
 const reviewService = new ReviewService(db);
 const shoppingService = new ShoppingService(db);
 const sizeService = new SizeService(db);
@@ -51,6 +53,8 @@ export {
   stockService,
   userService,
   emailService,
+  paymobService,
+  fileStorage,
 };
 
 export {
