@@ -26,16 +26,17 @@ export class UserService {
   }
 
   async list({ page, limit, search }: ListUsersParamsDto): Promise<User[]> {
-    const filters: Prisma.UserWhereInput = {
+    const isNotAnonymous = { isAnonymous: null };
+    const searchFilter: Prisma.UserWhereInput = {
       OR: [
         { email: { startsWith: search, mode: 'insensitive' } },
         { phone: { startsWith: search, mode: 'insensitive' } },
       ],
-      isAnonymous: false,
+      ...isNotAnonymous,
     };
 
     return this.db.user.findMany({
-      where: search ? filters : undefined,
+      where: search ? searchFilter : isNotAnonymous,
       take: limit,
       skip: (page - 1) * limit,
       orderBy: { updatedAt: 'desc' },
