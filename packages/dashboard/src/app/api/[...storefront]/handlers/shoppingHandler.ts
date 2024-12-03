@@ -35,9 +35,9 @@ export const removeItemFromCart = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteCartResponse>> => {
   const userId = Number(c.var.user?.id);
-  const stockId = c.req.query('stockId') as string;
+  const stockId = +c.req.param('stockId');
 
-  const cart = await shoppingService.cart.delete(userId, +stockId);
+  const cart = await shoppingService.cart.delete(userId, stockId);
   const updatedCart = await discountService.applyDiscount(cart);
 
   return c.json({ success: true, data: updatedCart });
@@ -77,7 +77,7 @@ export const removeProductFromWishlist = async (
   c: HonoCtx
 ): Promise<HandlerResponse<DeleteWishlistResponse>> => {
   const userId = Number(c.var.user?.id);
-  const productId = c.req.query('productId') as string;
+  const productId = +c.req.param('productId');
 
   const wishlist = await shoppingService.wishlist.delete(userId, +productId);
 
