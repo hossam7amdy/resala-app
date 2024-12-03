@@ -1,20 +1,59 @@
+import type { Configuration } from '@/configuration';
 import { BadRequestError, NotFoundError } from '@/exceptions';
+import { Decimal } from '@prisma/client/runtime/library';
 import type { GetPaymentResponse } from '@resala/shared';
 
-import type { CheckoutDto, PaymobService } from '../paymob';
+import type { PaymobService } from '../paymob';
+import type { CheckoutCreateParams } from './payment.service.dto';
 
 export class PaymentService {
-  constructor(private readonly paymobService: PaymobService) {}
+  constructor(
+    private config: Configuration,
+    private _paymobService: PaymobService
+  ) {}
 
-  async checkout(payload: CheckoutDto): Promise<{ paymentUrl: string }> {
-    const { payment_link } = await this.paymobService.checkout(payload);
+  async checkout({
+    orderId,
+    orderItems,
+    billingData,
+  }: CheckoutCreateParams): Promise<{ paymentUrl: string }> {
+    const total = orderItems.reduce(
+      (acc, item) => item.price.mul(item.quantity).add(acc),
+      new Decimal(0)
+    );
 
-    return { paymentUrl: payment_link };
+    const { paymentLink } = await this._paymobService.checkout({
+      redirection_url: `${this.config.payment.redirectionUrl}/${orderId}/`,
+      notification_url: `${this.config.payment.notificationUrl}/${orderId}/`,
+      currency: 'EGP',
+      items: orderItems.map(item => ({
+        name: item.productName,
+        amount: +item.price,
+        quantity: item.quantity,
+        description: item.description,
+      })),
+      amount: total.toDecimalPlaces(2).toNumber(),
+      billing_data: {
+        email: billingData.email,
+        apartment: billingData.address || 'NA',
+        first_name: billingData.firstName,
+        last_name: billingData.lastName,
+        street: billingData.street,
+        building: billingData.building || 'NA',
+        phone_number: billingData.phone,
+        city: billingData.city,
+        country: billingData.country,
+        floor: billingData.floor?.toString() || 'NA',
+        state: billingData.state,
+      },
+    });
+
+    return { paymentUrl: paymentLink };
   }
 
   async void(transactionId: string): Promise<void> {
     try {
-      await this.paymobService.void(+transactionId);
+      await this._paymobService.void(+transactionId);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
@@ -22,9 +61,7 @@ export class PaymentService {
 
   async refund(transactionId: string, amount: number): Promise<void> {
     try {
-      const amountCents = amount * 100;
-
-      await this.paymobService.refund(+transactionId, amountCents);
+      await this._paymobService.refund(+transactionId, amount);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
@@ -32,7 +69,22 @@ export class PaymentService {
 
   async retrieve(transactionId: string): Promise<GetPaymentResponse['data']> {
     try {
-      return await this.paymobService.retrieve(+transactionId);
+      const transaction = await this._paymobService.retrieve(+transactionId);
+
+      return {
+        id: transaction.id,
+        amount: transaction.amount_cents / 100,
+        currency: transaction.currency,
+        pending: transaction.pending,
+        success: transaction.success,
+        isCapture: transaction.is_capture,
+        isStandalonePayment: transaction.is_standalone_payment,
+        isVoided: transaction.is_voided,
+        isRefunded: transaction.is_refunded,
+        is3dSecure: transaction.is_3d_secure,
+        createdAt: transaction.created_at,
+        paymentMethod: transaction.source_data.type,
+      };
     } catch (e) {
       throw new NotFoundError((e as Error).message);
     }

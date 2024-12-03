@@ -41,6 +41,8 @@ const configuration = () => ({
     url: z.string().url().parse(process.env.DATABASE_URL),
   },
   payment: {
+    redirectionUrl: z.string().url().parse(process.env.PAYMENT_REDIRECTION_URL),
+    notificationUrl: z.string().url().parse(process.env.PAYMENT_NOTIFICATION_URL),
     paymob: {
       integrationId: z.coerce.number().parse(process.env.PAYMOB_INTEGRATION_ID),
       baseUrl: z
@@ -48,7 +50,6 @@ const configuration = () => ({
         .url()
         .default('https://accept.paymob.com')
         .parse(process.env.PAYMOB_BASE_URL),
-      checkoutLink: `https://accept.paymob.com/unifiedcheckout/?publicKey=${process.env.PAYMOB_PUBLIC_KEY}`,
       hmacKey: z.string().parse(process.env.PAYMOB_HMAC_KEY),
       apiToken: z.string().parse(process.env.PAYMOB_API_TOKEN),
       publicKey: z.string().parse(process.env.PAYMOB_PUBLIC_KEY),
