@@ -84,11 +84,12 @@ export const paymobWebhookHandler = async (c: Context) => {
       });
     }
 
+    revalidatePath(ROUTES.ORDERS);
+
     if (!isValid) {
       throw new Error(`Invalid HMAC signature, hmac=${hmac}`);
     }
 
-    revalidatePath(ROUTES.ORDERS);
     return c.json({ success: true });
   } catch (error) {
     return c.json({ success: false, error }, { status: 400 });
