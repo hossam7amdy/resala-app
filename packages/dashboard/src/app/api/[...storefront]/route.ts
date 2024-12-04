@@ -31,7 +31,6 @@ import { STOREFRONT_ENDPOINT_CONFIGS, StorefrontEndpoints } from './endpoints.co
 import * as addressHandler from './handlers/addressHandler';
 import * as collectionHandler from './handlers/collectionHandler';
 import * as orderHandler from './handlers/orderHandler';
-import { paymobWebhookHandler } from './handlers/paymobWebhookHandler';
 import * as productHandler from './handlers/productHandler';
 import * as reviewHandler from './handlers/reviewHandler';
 import * as shoppingHandler from './handlers/shoppingHandler';
@@ -133,9 +132,6 @@ const HANDLERS: { [_key in StorefrontEndpoints]: Handler[] } = {
 
 const createHonoApp = () => {
   const app = new Hono<Env>();
-
-  // webhook handlers
-  app.post('/api/post_pay/:orderId', paymobWebhookHandler);
 
   app.use(
     cors({

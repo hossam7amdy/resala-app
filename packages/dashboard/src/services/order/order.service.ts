@@ -1,6 +1,7 @@
 import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
-import type { Prisma } from '@prisma/client';
+import type { Order, Prisma } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
 import type {
   Address,
   GetCartResponse,
@@ -8,10 +9,8 @@ import type {
   ListOrdersRequest,
   ListOrdersResponse,
   PaymentMethod,
-  UpdateOrderRequest,
 } from '@resala/shared';
 
-const SHIPPING = 60;
 const ORDER_ATTRIBUTES = {
   orderItems: {
     include: {
@@ -54,17 +53,17 @@ export class OrderService {
       productId: item.product.id,
       stockId: item.stock.id,
       quantity: item.quantity,
-      price: item.discountedPrice ?? item.product.price,
+      price: new Decimal(item.discountedPrice ?? item.product.price),
       productName: `${item.product.enName} | ${item.product.arName}`,
       description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
 
     const { id: _, ...addressWithoutId } = address;
-    const newOrder = await this.db.order.create({
+    const order = await this.db.order.create({
       data: {
         userId,
         subtotal: subtotal,
-        total: subtotal + SHIPPING,
+        total: subtotal,
         note,
         paymentMethod: paymentMethod as PaymentMethod,
         shippingDetails: {
@@ -87,7 +86,7 @@ export class OrderService {
       },
     });
 
-    return { ...newOrder, shipping: SHIPPING, items: orderItems, address };
+    return { ...order, orderItems };
   }
 
   async list({
@@ -147,7 +146,7 @@ export class OrderService {
     };
   }
 
-  async update(id: number, order: UpdateOrderRequest['body']) {
+  async update(id: number, order: Partial<Order>): Promise<GetOrderResponse['data']> {
     await this.db.order.update({ where: { id }, data: order });
 
     return await this.find(id);

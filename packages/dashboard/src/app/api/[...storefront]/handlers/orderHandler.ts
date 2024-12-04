@@ -12,33 +12,26 @@ import type { HonoCtx } from '../types';
 
 export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderResponse>> => {
   const userId = Number(c.var.user?.id);
+  const email = String(c.var.user?.email);
   const { paymentMethod, addressId, note } = (await c.req.json()) as CreateOrderRequest['body'];
 
   const userCart = await shoppingService.cart.get(userId);
-
   const discountedUserCart = await discountService.applyDiscount(userCart);
 
   const address = await addressService.find(userId, addressId);
 
-  const {
-    items: _,
-    shipping,
-    ...order
-  } = await orderService.create({ userId, paymentMethod, note }, discountedUserCart, address);
+  const { id, orderItems } = await orderService.create(
+    { userId, paymentMethod, note },
+    discountedUserCart,
+    address
+  );
 
   let payment;
   if (paymentMethod === 'CARD') {
     payment = await paymentService.checkout({
-      user: {
-        id: userId,
-        email: '',
-        phone: address.phone,
-        firstName: address.firstName,
-        lastName: address.lastName,
-      } as never,
-      order: { shipping, ...order },
-      cart: discountedUserCart,
-      shipping: address,
+      orderId: id,
+      orderItems,
+      billingData: { ...address, email },
     });
   }
 
