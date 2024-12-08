@@ -11,7 +11,7 @@ const auth = betterAuth({
   database: new Pool({
     connectionString: config.db.url,
   }),
-  trustedOrigins: config.origin.allowedList,
+  trustedOrigins: config.trustedOrigins,
   databaseHooks: {
     user: {
       create: {
