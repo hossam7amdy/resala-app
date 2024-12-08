@@ -79,6 +79,11 @@ const auth = betterAuth({
   ],
   advanced: {
     generateId: false,
+    cookiePrefix: '__resala-auth__',
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: config.appDomain,
+    },
   },
   user: {
     fields: {
