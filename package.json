@@ -9,18 +9,17 @@
   ],
   "scripts": {
     "prepare": "husky",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx --max-warnings 300",
-    "format:fix": "prettier --write .",
+    "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "clean": "turbo run clean",
-    "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "compose:down": "docker-compose -f docker-compose.yml down",
-    "compose:up": "docker-compose -f docker-compose.yml up"
+    "compose:down": "docker-compose down",
+    "compose:up": "docker-compose up -d"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
