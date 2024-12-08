@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
-const _parseNodeEnv = z.enum(['development', 'production', 'test']).parse;
-
 const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boolean => {
   return envVar && envVar.toLowerCase() === 'true' ? true : defaultValue;
 };
 
 const configuration = () => ({
+  env: process.env.NODE_ENV,
+  cdnBaseUrl: z.string().url().parse(process.env.CDN_BASE_URL),
+  baseUrl: z.string().url().parse(process.env.NEXT_PUBLIC_BASE_URL),
+  trustedOrigins: z.array(z.string().url()).parse(JSON.parse(process.env.TRUSTED_ORIGINS || '[]')),
   aws: {
     region: z.string().parse(process.env.AWS_REGION),
     accessKey: z.string().parse(process.env.AWS_ACCESS),
@@ -17,25 +19,12 @@ const configuration = () => ({
     },
     s3: {
       bucketName: z.string().parse(process.env.S3_BUCKET),
-      baseUrl: z.string().url().parse(process.env.S3_BASE_URL),
       endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
       forcePathStyle: z
         .boolean()
         .optional()
         .parse(_parseBoolean(process.env.S3_FORCE_PATH_STYLE, false)),
     },
-  },
-  origin: {
-    web: z.string().url().parse(process.env.WEB_URL),
-    dashboard: z.string().url().parse(process.env.DASHBOARD_URL),
-    allowedList: z
-      .array(z.string().url())
-      .parse(JSON.parse(process.env.ORIGIN_ALLOWED_LIST || '[]')),
-  },
-  server: {
-    env: _parseNodeEnv(process.env.NODE_ENV),
-    port: z.coerce.number().default(5000).parse(process.env.PORT),
-    url: z.string().url().parse(process.env.SERVER_URL),
   },
   db: {
     url: z.string().url().parse(process.env.DATABASE_URL),

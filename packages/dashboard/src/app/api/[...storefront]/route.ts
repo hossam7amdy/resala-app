@@ -135,7 +135,7 @@ const createHonoApp = () => {
 
   app.use(
     cors({
-      origin: configuration().origin.allowedList,
+      origin: configuration().trustedOrigins,
       allowHeaders: ['Authorization', 'Content-Type'],
       allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
       exposeHeaders: ['Content-Length'],
