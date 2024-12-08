@@ -1,3 +1,4 @@
+import { configuration } from '@/configuration/client';
 import { adminClient, phoneNumberClient } from 'better-auth/client/plugins';
 import { createAuthClient } from 'better-auth/react';
 
@@ -11,5 +12,6 @@ export const {
   updateUser,
   signIn,
 } = createAuthClient({
+  baseURL: configuration().baseUrl,
   plugins: [adminClient(), phoneNumberClient()],
 });

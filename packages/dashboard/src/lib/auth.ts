@@ -11,7 +11,7 @@ const auth = betterAuth({
   database: new Pool({
     connectionString: config.db.url,
   }),
-  trustedOrigins: config.origin.allowedList,
+  trustedOrigins: config.trustedOrigins,
   databaseHooks: {
     user: {
       create: {
@@ -79,6 +79,11 @@ const auth = betterAuth({
   ],
   advanced: {
     generateId: false,
+    cookiePrefix: '__resala-auth__',
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: config.appDomain,
+    },
   },
   user: {
     fields: {
