@@ -144,7 +144,7 @@
       </label>
     </div>
     <button
-      [disabled]="registerForm.invalid && isCheckedTerms == false"
+      [disabled]="registerForm.invalid || isCheckedTerms == false"
       type="submit"
       class="custome-btn submit mt-3"
     >

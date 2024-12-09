@@ -130,6 +130,11 @@ export class NavBlankComponent implements OnInit {
       this.authenticated = !!user && !user?.isAnonymous;
     });
 
+    // this._authService.authenticated$.subscribe(auth => {
+    //   this.authenticated = auth;
+
+    // })
+
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
       this.translate.defaultLang;

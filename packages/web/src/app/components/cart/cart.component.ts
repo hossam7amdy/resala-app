@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
@@ -51,6 +52,8 @@ export class CartComponent implements OnInit {
 
   // quantity attr
   counterQuantity: number = 1;
+
+  authenticated : boolean = false;
   constructor(
     private _CartService: CartService,
     private _Renderer: Renderer2,
@@ -58,7 +61,8 @@ export class CartComponent implements OnInit {
     private _Router: Router,
     private spinner: NgxSpinnerService,
     public _Translate: TranslateService,
-    private _HomeProductsService: HomeProductsService
+    private _HomeProductsService: HomeProductsService,
+    private _AuthService:AuthService
   ) {}
   // ngAfterContentChecked(): void {
   //   if(this.cartDetailsItems == undefined){
@@ -75,6 +79,7 @@ export class CartComponent implements OnInit {
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
         this.totalCount = response.data.totalQuantity;
+        this._CartService.cartNumber.next(this.totalCount);
         this.customSpinIsLoading = false;
       },
       error: () => {
@@ -286,5 +291,19 @@ export class CartComponent implements OnInit {
 
   toggleRotation() {
     this.isRotated = !this.isRotated;
+  }
+
+  checkedLogged():void{
+    this._AuthService.authenticated$.subscribe(response=>{
+      this.authenticated = response;
+    })
+    if(this.authenticated === true){
+      this._Router.navigate(['/payment']);
+    }else{
+      this._toaster.info(this._Translate.currentLang == 'ar'?"برجاء تسجيل الدخول لاتمام عملية الشراء":"Should be Sign in to Complete Your Order")
+      this._AuthService.directionURL.next('cart');
+      this._Router.navigate(['/login']);
+    }
+    
   }
 }
