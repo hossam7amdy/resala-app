@@ -43,7 +43,7 @@ type RegisterData = {
 export class AuthService {
 
   directionURL = new BehaviorSubject<string>('home');
-  isAnonymous = new BehaviorSubject<boolean>(true)
+
   public authenticated = new BehaviorSubject<boolean>(false);
   public authenticated$ = this.authenticated.asObservable();
 
@@ -111,7 +111,7 @@ export class AuthService {
 
     return loginObservable.pipe(tap(res => {
       this._setUserInfo(res.user)
-      this.isAnonymous.next(res.user.isAnonymous||true)
+     
     }
      
     ));

@@ -130,10 +130,7 @@ export class NavBlankComponent implements OnInit {
       this.authenticated = !!user && !user?.isAnonymous;
     });
 
-    // this._authService.authenticated$.subscribe(auth => {
-    //   this.authenticated = auth;
-
-    // })
+   
 
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
@@ -211,13 +208,12 @@ export class NavBlankComponent implements OnInit {
   handleLogout(): void {
     this.customSpinIsLoading = true;
     this._authService.logout().subscribe({
-      next: data => {
-        console.log(data);
+      next: () => {
+
         this.customSpinIsLoading = false;
         this._router.navigate(['/']);
       },
       error: err => {
-        console.log(err);
         const errMsg = err?.error?.message || 'Something went wrong';
         this._toaster.error(errMsg);
         this.customSpinIsLoading = false;
