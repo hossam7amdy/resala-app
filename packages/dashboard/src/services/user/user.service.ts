@@ -1,25 +1,26 @@
 import type { DataStore } from '@/lib/db';
-import type { Prisma, User } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import type { User } from '@resala/shared';
 
 import type { ListUsersParamsDto } from './user.dto';
 
 export class UserService {
   constructor(private readonly db: DataStore) {}
 
-  async update(id: number, payload: Partial<User>): Promise<User> {
+  async update(id: string, payload: Partial<User>): Promise<User> {
     return await this.db.user.update({
       where: { id },
       data: payload,
     });
   }
 
-  async delete(id: number): Promise<User> {
+  async delete(id: string): Promise<User> {
     return await this.db.user.delete({
       where: { id },
     });
   }
 
-  async find(id: number): Promise<User> {
+  async find(id: string): Promise<User> {
     return await this.db.user.findUniqueOrThrow({
       where: { id },
     });
@@ -30,7 +31,7 @@ export class UserService {
     const searchFilter: Prisma.UserWhereInput = {
       OR: [
         { email: { startsWith: search, mode: 'insensitive' } },
-        { phone: { startsWith: search, mode: 'insensitive' } },
+        { phoneNumber: { startsWith: search, mode: 'insensitive' } },
       ],
       ...isNotAnonymous,
     };

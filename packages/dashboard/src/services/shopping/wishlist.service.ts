@@ -5,7 +5,7 @@ import type { GetWishlistResponse } from '@resala/shared';
 export class WishlistService {
   constructor(private readonly db: DataStore) {}
 
-  async get(userId: number): Promise<GetWishlistResponse['data']> {
+  async get(userId: string): Promise<GetWishlistResponse['data']> {
     return await this.db.wishlist.findMany({
       include: { product: true },
       where: { userId },
@@ -13,7 +13,7 @@ export class WishlistService {
     });
   }
 
-  async update(userId: number, productId: number): Promise<GetWishlistResponse['data']> {
+  async update(userId: string, productId: string): Promise<GetWishlistResponse['data']> {
     const wishlist = { userId, productId };
 
     await this.db.wishlist.upsert({
@@ -27,7 +27,7 @@ export class WishlistService {
     return this.get(userId);
   }
 
-  async delete(userId: number, productId: number): Promise<GetWishlistResponse['data']> {
+  async delete(userId: string, productId: string): Promise<GetWishlistResponse['data']> {
     try {
       await this.db.wishlist.delete({
         where: {
@@ -41,7 +41,7 @@ export class WishlistService {
     }
   }
 
-  async deleteMany(userId: number) {
+  async deleteMany(userId: string) {
     await this.db.wishlist.deleteMany({
       where: {
         userId,
@@ -49,7 +49,7 @@ export class WishlistService {
     });
   }
 
-  async merge(userId: number, guestId: number) {
+  async merge(userId: string, guestId: string) {
     await this.db.wishlist.updateMany({
       where: {
         userId: guestId,

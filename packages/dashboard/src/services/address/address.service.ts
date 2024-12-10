@@ -1,13 +1,20 @@
 import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
-import type { CreateAddressRequest, UpdateAddressRequest } from '@resala/shared';
+
+import type {
+  Address,
+  CreateAddressDto,
+  DeleteAddressParamsDto,
+  FindAddressParamsDto,
+  UpdateAddressDto,
+} from './address.dto';
 
 export class AddressService {
   private readonly maxAddressCount = 3;
 
   constructor(private readonly db: DataStore) {}
 
-  async list(userId: number) {
+  async list(userId: string) {
     const addresses = await this.db.userAddress.findMany({
       select: { address: true },
       where: { userId },
@@ -17,7 +24,7 @@ export class AddressService {
     return addresses.map(address => address.address);
   }
 
-  async create({ userId, ...payload }: CreateAddressRequest['body']) {
+  async create({ userId, ...payload }: CreateAddressDto): Promise<Address> {
     const userAddrCount = await this.db.userAddress.count({ where: { userId } });
 
     if (userAddrCount >= this.maxAddressCount) {
@@ -27,13 +34,13 @@ export class AddressService {
     return await this.db.$transaction(async trx => {
       const newAddress = await trx.address.create({ data: payload });
 
-      await trx.userAddress.create({ data: { userId: userId!, addressId: newAddress.id } });
+      await trx.userAddress.create({ data: { userId, addressId: newAddress.id } });
 
       return newAddress;
     });
   }
 
-  async find(userId: number, addressId: number) {
+  async find(addressId: string, { userId }: FindAddressParamsDto): Promise<Address> {
     const userAddr = await this.db.userAddress.findFirstOrThrow({
       select: { address: true },
       where: { userId, addressId },
@@ -42,15 +49,15 @@ export class AddressService {
     return userAddr?.address ?? null;
   }
 
-  async update(addressId: number, { userId: _, ...payload }: UpdateAddressRequest['body']) {
+  async update(addressId: string, payload: UpdateAddressDto) {
     return await this.db.address.update({
       data: payload,
       where: { id: addressId },
     });
   }
 
-  async delete(addressId: number, userId: number) {
-    await this.find(userId, addressId);
+  async delete(addressId: string, { userId }: DeleteAddressParamsDto): Promise<Address> {
+    await this.find(addressId, { userId });
 
     return await this.db.address.delete({ where: { id: addressId } });
   }

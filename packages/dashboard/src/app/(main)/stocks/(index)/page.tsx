@@ -6,7 +6,7 @@ import React from 'react';
 const StocksPage: React.FC<{
   searchParams?: ListStocksRequest['query'];
 }> = async ({ searchParams }) => {
-  const { pagination, stocks } = await listStocks(searchParams ?? {});
+  const { pagination, stocks } = await listStocks({ page: 1, limit: 100, ...searchParams });
 
   return <StocksTable pagination={pagination} stocks={stocks} />;
 };

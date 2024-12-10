@@ -2,10 +2,10 @@ import type { Address } from '@prisma/client';
 import type { Decimal } from '@prisma/client/runtime/library';
 
 export interface CheckoutCreateParams {
-  orderId: number;
+  orderId: string;
   orderItems: {
-    productId: number;
-    stockId: number;
+    productId: string;
+    stockId: string;
     quantity: number;
     price: Decimal;
     productName: string;

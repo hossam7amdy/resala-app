@@ -5,7 +5,7 @@ import { listImages } from '@/fetch/images';
 import { uploadImages } from '@/fetch/images';
 import { createStock, updateStock } from '@/fetch/stocks';
 import { useMutation, useNotification } from '@/hooks';
-import type { DefaultResponseBody, Image } from '@resala/shared';
+import type { DefaultResponseBody, Image, Stock } from '@resala/shared';
 import { Button, Flex, Form, InputNumber, Typography } from 'antd';
 import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -14,20 +14,14 @@ import React, { useEffect, useState } from 'react';
 import { ImageCropUpload } from './image-crop-dragger';
 
 type FormValues = {
-  productId: number;
-  colorId: number;
-  sizeId: number;
+  productId: string;
+  colorId: string;
+  sizeId: string;
   quantity: number;
 };
 
 interface StockFormProps {
-  stock: Partial<{
-    id: number;
-    colorId: number;
-    sizeId: number;
-    productId: number;
-    quantity: number;
-  }>;
+  stock: Partial<Stock>;
   selectSize: React.ReactNode;
   selectColor: React.ReactNode;
 }

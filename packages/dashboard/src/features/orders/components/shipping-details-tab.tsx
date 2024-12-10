@@ -52,7 +52,7 @@ export const ShippingDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> =
               : {order?.shippingDetails?.address.lastName}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              : {order?.shippingDetails?.address.phone || order?.user?.phone}
+              : {order?.shippingDetails?.address.phone || order?.user?.phoneNumber}
             </Typography.Paragraph>
             <Typography.Paragraph>: {order?.user?.email}</Typography.Paragraph>
             <Typography.Paragraph>

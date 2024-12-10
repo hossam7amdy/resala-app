@@ -1,4 +1,3 @@
-import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
 import type {
@@ -9,7 +8,29 @@ import type {
   PaymentStatus,
   Role,
 } from '../enums/index.js';
-import type { OffsetPageParamsSchema } from '../validations/index.js';
+import type {
+  AddressSchema,
+  CartSchema,
+  CategorySchema,
+  ColorSchema,
+  DiscountSchema,
+  ImageSchema,
+  OffsetPageParamsSchema,
+  OrderItemSchema,
+  OrderSchema,
+  ProductSchema,
+  ReviewSchema,
+  SizeSchema,
+  StockSchema,
+  UserSchema,
+  WishlistSchema,
+} from '../validations/index.js';
+
+export type Pagination = {
+  page: number;
+  limit: number;
+  total: number;
+};
 
 export type RoleType = keyof typeof Role;
 
@@ -27,197 +48,32 @@ export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 
 export type SignProvider = 'google';
 
-export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName' | 'isEmailVerified'>;
+export type ProviderUser = Pick<User, 'email' | 'firstName' | 'lastName' | 'emailVerified'>;
 
-export type JwtPayload = {
-  id: string;
-  email: string;
-  strategy?: 'credentials' | SignProvider;
-};
+export type User = z.infer<typeof UserSchema>;
 
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-};
+export type Color = z.infer<typeof ColorSchema>;
 
-export type User = {
-  id: number;
-  email: string;
-  isEmailVerified: boolean;
-  emailMarketingState: MarketingStateType;
-  phone: string | null;
-  isPhoneVerified: boolean;
-  smsMarketingState: MarketingStateType;
-  name: string;
-  firstName: string;
-  lastName: string;
-  role: RoleType;
-  banned: boolean | null;
-  banReason: string | null;
-  banExpires: number | null;
-  isAnonymous: boolean | null;
-  image: string | null;
-  lang: string | null;
-  birthDate: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Size = z.infer<typeof SizeSchema>;
 
-export type AuthUser = Omit<User, 'isEmailVerified' | 'phone' | 'isPhoneVerified'> & {
-  emailVerified: boolean;
-  phoneNumber: null | string;
-  phoneNumberVerified: boolean;
-};
+export type Cart = z.infer<typeof CartSchema>;
 
-export type UserAddress = {
-  userId: number;
-  addressId: number;
-};
+export type Wishlist = z.infer<typeof WishlistSchema>;
 
-export type Category = {
-  id: number;
-  arName: string;
-  enName: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type OrderItem = z.infer<typeof OrderItemSchema>;
 
-export type Product = {
-  id: number;
-  categoryId: number;
-  arName: string;
-  enName: string;
-  arDescription: string;
-  enDescription: string;
-  price: Decimal;
-  imageKey: string;
-  imageUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Review = z.infer<typeof ReviewSchema>;
 
-export type Image = {
-  id: number;
-  colorId: number;
-  productId: number;
-  isPrimary: boolean;
-  imageKey: string;
-  imageUrl: string;
-  createdAt: Date;
-};
+export type Address = z.infer<typeof AddressSchema>;
 
-export type Stock = {
-  id: number;
-  productId: number;
-  colorId: number;
-  sizeId: number;
-  quantity: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Discount = z.infer<typeof DiscountSchema>;
 
-export type Color = {
-  id: number;
-  code: string;
-  arName: string;
-  enName: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Category = z.infer<typeof CategorySchema>;
 
-export type Size = {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Product = z.infer<typeof ProductSchema>;
 
-export type Cart = {
-  userId: number;
-  stockId: number;
-  quantity: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Image = z.infer<typeof ImageSchema>;
 
-export type Wishlist = {
-  userId: number;
-  productId: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Stock = z.infer<typeof StockSchema>;
 
-export type Order = {
-  id: number;
-  userId: null | number;
-  subtotal: Decimal;
-  discount: Decimal;
-  total: Decimal;
-  orderStatus: OrderStatusType;
-  transactionId: null | string;
-  paymentMethod: PaymentMethodType;
-  paymentStatus: PaymentStatusType;
-  note: null | string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type OrderItem = {
-  id: number;
-  productId: number;
-  stockId: number;
-  price: Decimal;
-  quantity: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Shipping = {
-  id: number;
-  orderId: number;
-  addressId: number;
-  cost: Decimal;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Review = {
-  id: number;
-  productId: number;
-  userId: null | number;
-  rating: number;
-  comment: null | string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Address = {
-  id: number;
-  country: string;
-  state: string;
-  city: string;
-  street: string;
-  building: null | string;
-  floor: null | number;
-  address: null | string;
-  phone: string;
-  firstName: string;
-  lastName: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Discount = {
-  id: number;
-  type: DiscountType;
-  amount: Decimal;
-  description: null | string;
-  minQty: number;
-  isActive: boolean;
-  isStoreWide: boolean;
-  startDate: null | Date;
-  endDate: null | Date;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type Order = z.infer<typeof OrderSchema>;

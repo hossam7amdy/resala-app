@@ -32,7 +32,7 @@ export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ siz
           title: 'Actions',
           dataIndex: 'id',
           align: 'center',
-          render: (id: number, size) => (
+          render: (id: string, size) => (
             <Space>
               <ResalaTooltip title="Edit">
                 <SizeEditorModal size={size} buttonProps={{ type: 'link' }}>

@@ -36,8 +36,7 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
     },
   });
 
-  const disableRoleField =
-    isLoadingCurrentUser || disable || user?.id === customer.id || user?.role !== 'ADMIN';
+  const disableRoleField = isLoadingCurrentUser || disable || user?.role !== 'admin';
 
   return (
     <Form
@@ -116,8 +115,8 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
           disabled={disableRoleField}
           options={[
             { label: 'Admin', value: Role.ADMIN },
-            { label: 'Moderator', value: Role.MODERATOR },
-            { label: 'Customer', value: Role.CUSTOMER },
+            { label: 'Staff', value: Role.STAFF },
+            { label: 'Customer', value: Role.USER },
           ]}
         />
       </Form.Item>

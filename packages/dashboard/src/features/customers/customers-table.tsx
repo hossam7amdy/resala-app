@@ -1,26 +1,16 @@
 'use client';
 
-import {
-  Pagination,
-  PopconfirmDeleteButton,
-  ResalaTooltip,
-  Table,
-  TableColumn,
-} from '@/components';
-import { deleteUser } from '@/fetch/users';
+import { Pagination, Table, TableColumn } from '@/components';
 import { ROUTES } from '@/routes';
 import { formatDate, formatTime } from '@/utils/date-time-formatter';
-import { EditOutlined } from '@ant-design/icons';
-import type { ListUsersResponse, User } from '@resala/shared';
-import { Button, Flex, Space, Tag } from 'antd';
+import { type ListUsersResponse, type User } from '@resala/shared';
+import { Flex, Space, Tag } from 'antd';
 import Link from 'next/link';
 
-import { ResendEmailVerificationButton } from './resend-email-verification-button';
-
-export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pagination }) => {
+export const CustomersTable: React.FC<ListUsersResponse> = ({ data }) => {
   return (
     <Flex vertical gap={10}>
-      <Table rowKey={record => record.id} pagination={false} dataSource={users}>
+      <Table rowKey={record => record.id} pagination={false} dataSource={data}>
         <TableColumn width="12%" title="First name" dataIndex="firstName" />
         <TableColumn width="12%" title="Last name" dataIndex="lastName" />
         <TableColumn width="12%" title="Phone" dataIndex="phone" />
@@ -30,10 +20,9 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
           width="10%"
           title="Verified"
           dataIndex="isEmailVerified"
-          render={(isVerified: boolean, user: User) => (
+          render={(isVerified: boolean) => (
             <Flex>
               <Tag color={isVerified ? 'success' : 'error'}>{isVerified ? 'Yes' : 'No'}</Tag>
-              {!isVerified && <ResendEmailVerificationButton email={user.email} />}
             </Flex>
           )}
         />
@@ -63,24 +52,17 @@ export const CustomersTable: React.FC<ListUsersResponse['data']> = ({ users, pag
           title="Actions"
           render={(_, user: User) => (
             <Space>
-              <ResalaTooltip title="Edit">
-                <Button type="link" size="small">
-                  <Link href={ROUTES.EDIT_CUSTOMER(user.id)}>
-                    <EditOutlined />
-                  </Link>
-                </Button>
-              </ResalaTooltip>
-
-              <PopconfirmDeleteButton
-                onConfirmDelete={() => deleteUser(user.id)}
-                disabled={user.role === 'ADMIN'}
-              />
+              <Link href={ROUTES.EDIT_CUSTOMER(user.id)}>edit</Link>
+              <Link className="text-red-500" href={ROUTES.EDIT_CUSTOMER(user.id)}>
+                ban
+              </Link>
             </Space>
           )}
         />
       </Table>
+
       <Flex justify="center">
-        <Pagination total={pagination.total} />
+        <Pagination total={data.length} />
       </Flex>
     </Flex>
   );

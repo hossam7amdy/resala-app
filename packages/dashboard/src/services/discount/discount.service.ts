@@ -1,5 +1,6 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
+import { Decimal } from '@prisma/client/runtime/library';
 import type {
   CreateDiscountRequest,
   CreateDiscountResponse,
@@ -19,7 +20,7 @@ type CartItem = GetCartResponse['data']['items'][number];
 export class DiscountService {
   constructor(private readonly db: DataStore) {}
 
-  private async _checkAnyStoreWideDiscountIsActive(discountId?: number) {
+  private async _checkAnyStoreWideDiscountIsActive(discountId?: string) {
     const activeStoreWideDiscounts = await this.db.discount.findMany({
       where: {
         id: { not: discountId },
@@ -39,7 +40,7 @@ export class DiscountService {
     }
   }
 
-  private async _getApplicableDiscounts(productIds: number[]) {
+  private async _getApplicableDiscounts(productIds: string[]) {
     const commonFilters = {
       isActive: true,
       OR: [
@@ -84,7 +85,7 @@ export class DiscountService {
   private _calculateBestDiscount(items: CartItem[], discounts: Discount[]): CartItem[] {
     const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = items.reduce(
-      (sum, item) => item.product.price.mul(item.quantity).add(sum).toNumber(),
+      (sum, item) => new Decimal(item.product.price).mul(item.quantity).add(sum).toNumber(),
       0
     );
 
@@ -99,18 +100,18 @@ export class DiscountService {
         case 'PERCENTAGE':
           discountedTotalPrice = Math.max(
             0,
-            totalPrice - discount.amount.div(100).mul(totalPrice).toNumber()
+            totalPrice - new Decimal(discount.amount).div(100).mul(totalPrice).toNumber()
           );
 
           break;
         case 'BOGO': {
           const buyQuantity = discount.minQty;
-          const freeQuantity = discount.amount.toNumber();
-          const cycleQuantity = buyQuantity + freeQuantity;
+          const freeQuantity = discount.amount;
+          const cycleQuantity = buyQuantity + +freeQuantity;
           const fullPriceCycles = Math.floor(totalQty / cycleQuantity);
 
           discountedTotalPrice = fullPriceCycles
-            ? totalPrice - productPrice.mul(fullPriceCycles * freeQuantity).toNumber()
+            ? totalPrice - new Decimal(productPrice).mul(fullPriceCycles * +freeQuantity).toNumber()
             : totalPrice;
 
           break;
@@ -128,7 +129,10 @@ export class DiscountService {
 
       return items.map(item => ({
         ...item,
-        discountedPrice: item.product.price.mul(discountFactor).toDecimalPlaces(2).toNumber(),
+        discountedPrice: new Decimal(item.product.price)
+          .mul(discountFactor)
+          .toDecimalPlaces(2)
+          .toNumber(),
         appliedDiscount: bestDiscount,
       }));
     }
@@ -140,15 +144,11 @@ export class DiscountService {
     id: string,
     { page = 1, limit = 10 }: GetDiscountRequest['query']
   ): Promise<GetDiscountResponse['data']> {
-    const discountId = +id;
-
     const { products, ...discount } = await this.db.discount.findUniqueOrThrow({
       include: {
         products: true,
       },
-      where: {
-        id: discountId,
-      },
+      where: { id },
     });
 
     return {
@@ -229,28 +229,28 @@ export class DiscountService {
     discountId: string,
     data: UpdateDiscountRequest['body']
   ): Promise<UpdateDiscountResponse['data']> {
-    const discount = await this.get(discountId, {});
+    const discount = await this.get(discountId, { page: 1, limit: 10 });
 
     const isStoreWideActive = data.isStoreWide || discount.isStoreWide;
     if (isStoreWideActive && data.isActive) {
-      await this._checkAnyStoreWideDiscountIsActive(+discountId);
+      await this._checkAnyStoreWideDiscountIsActive(discountId);
     }
 
     return await this.db.discount.update({
       data,
-      where: { id: +discountId },
+      where: { id: discountId },
     });
   }
 
   async delete(discountId: string): Promise<DeleteDiscountResponse['data']> {
     return await this.db.discount.delete({
       where: {
-        id: +discountId,
+        id: discountId,
       },
     });
   }
 
-  async addProducts(discountId: number, productIds: number[]) {
+  async addProducts(discountId: string, productIds: string[]) {
     const discount = await this.db.discount.findUniqueOrThrow({
       where: { id: discountId },
     });
@@ -271,7 +271,7 @@ export class DiscountService {
     });
   }
 
-  async removeProducts(discountId: number, productIds: number[]) {
+  async removeProducts(discountId: string, productIds: string[]) {
     await this.db.discount.update({
       data: {
         products: {
@@ -296,7 +296,7 @@ export class DiscountService {
       }
       map.get(item.product.id)!.push(item);
       return map;
-    }, new Map<number, CartItem[]>());
+    }, new Map<string, CartItem[]>());
 
     // 2. Get applicable discounts for each product
     const productIds = Array.from(productToItemsMap.keys());
@@ -314,7 +314,7 @@ export class DiscountService {
       }
       map.get(product.id)!.push(product);
       return map;
-    }, new Map<number, Discount[]>());
+    }, new Map<string, Discount[]>());
 
     // 3. Calculate best discount for each product
     const updatedItems: GetCartResponse['data']['items'] = [];

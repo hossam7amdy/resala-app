@@ -5,7 +5,7 @@ import { ROUTES } from '@/routes';
 import { imageService } from '@/services';
 import { revalidateTag } from 'next/cache';
 
-export const listImages = async (productId: number, colorId: number) => {
+export const listImages = async (productId: string, colorId: string) => {
   return await imageService.list({ productId, colorId });
 };
 
@@ -27,7 +27,7 @@ export const uploadImages = async (formData: FormData) => {
 };
 
 export const setDefaultImage = async (imageId: string, productId: string) => {
-  const response = await imageService.update(+imageId, { isPrimary: true });
+  const response = await imageService.update(imageId, { isPrimary: true });
 
   revalidateTag(ROUTES.STOCKS);
   revalidateTag(ROUTES.PRODUCT_STOCKS(productId));
@@ -36,7 +36,7 @@ export const setDefaultImage = async (imageId: string, productId: string) => {
 };
 
 export const deleteImage = async (imageId: string, productId: string) => {
-  const response = await imageService.delete(+imageId);
+  const response = await imageService.delete(imageId);
 
   revalidateTag(ROUTES.STOCKS);
   revalidateTag(ROUTES.PRODUCT_STOCKS(productId));
