@@ -22,18 +22,20 @@ export const dynamic = 'force-dynamic';
 
 const app = new OpenAPIHono();
 
-app.use(
-  cors({
-    origin: configuration().trustedOrigins,
-    allowHeaders: ['Authorization', 'Content-Type'],
-    allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    exposeHeaders: ['Content-Length'],
-    maxAge: 600,
-    credentials: true,
-  })
-);
+app
+  .use(
+    cors({
+      origin: configuration().trustedOrigins,
+      allowHeaders: ['Authorization', 'Content-Type'],
+      allowMethods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+      exposeHeaders: ['Content-Length'],
+      maxAge: 600,
+      credentials: true,
+    })
+  )
+  .use(parseSession);
 
-app.doc('/api/reference', {
+app.doc('/api/docs', {
   openapi: '3.1.0',
   info: {
     version: '1.0.0',
@@ -56,24 +58,23 @@ app.doc('/api/reference', {
   ],
 });
 
-app.get('/api/docs', swaggerUI({ url: '/api/reference' }));
+app.get('/api/reference', swaggerUI({ url: '/api/docs' }));
 
 app
   .get('/api/auth/*', c => auth.handler(c.req.raw))
   .post('/api/auth/*', c => auth.handler(c.req.raw));
 
-app.use(parseSession).use(enforceSession);
-
 app
-  .route('/api/v1/addresses', addressHandler)
   .route('/api/v1/categories', categoryHandler)
-  .route('/api/v1/orders', orderHandler)
+  .route('/api/v1/dashboard', dashboardHandler)
   .route('/api/v1/products', productHandler)
   .route('/api/v1/stocks', stockHandler)
-  .route('/api/v1/dashboard', dashboardHandler)
-  .route('/api/v1/reviews', reviewHandler)
+  .use(enforceSession) // All routes below this line require a valid session
   .route('/api/v1/cart', cartHandler)
-  .route('/api/v1/wishlist', wishlistHandler);
+  .route('/api/v1/orders', orderHandler)
+  .route('/api/v1/reviews', reviewHandler)
+  .route('/api/v1/wishlist', wishlistHandler)
+  .route('/api/v1/addresses', addressHandler);
 
 app.onError((_, c) => errorHandler(c));
 

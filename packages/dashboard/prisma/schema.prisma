@@ -67,7 +67,7 @@ model Session {
   expiresAt      DateTime @map("expires_at")
   ipAddress      String?  @map("ip_address")
   userAgent      String?  @map("user_agent")
-  impersonatedBy Int?     @map("impersonated_by")
+  impersonatedBy String?  @map("impersonated_by")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
