@@ -4,12 +4,11 @@
  * It is used by the API service to validate the request and response data.
  * It also considered as the contract between the client and the server.
  */
+import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
-import type { DTO } from '../dto/dto.js';
 import type {
   Address,
-  AuthUser,
   Cart,
   Category,
   Color,
@@ -20,7 +19,6 @@ import type {
   Pagination,
   Product,
   Review,
-  Shipping,
   Size,
   Stock,
   User,
@@ -46,7 +44,7 @@ export type LoginRequest = {
   callbackURL?: string;
 };
 export type LoginResponse = {
-  user: AuthUser;
+  user: User;
   redirect: boolean;
 };
 
@@ -68,9 +66,10 @@ export type ProviderLoginResponse = LoginResponse & {
   redirect: boolean;
 };
 
-export type RegisterRequest = Partial<DTO<AuthUser>> & {
-  email: string;
-  password: string;
+export type RegisterRequest = Pick<
+  User,
+  'email' | 'phoneNumber' | 'birthDate' | 'firstName' | 'lastName' | 'name' | 'locale'
+> & {
   callbackURL?: string;
 };
 export type RegisterResponse = DefaultResponseBody;
@@ -112,12 +111,12 @@ export type VerifyPhoneNumberOTPRequest = {
   updatePhoneNumber?: boolean;
 };
 export type VerifyPhoneNumberOTPResponse = {
-  user: AuthUser;
+  user: User;
 };
 
 export type GetSessionRequest = never;
 export type GetSessionResponse = {
-  user: AuthUser;
+  user: User;
 } | null;
 
 export type LogoutRequest = never;
@@ -131,10 +130,7 @@ export type GetUserResponse = DefaultResponseBody & {
 
 export type ListUsersRequest = z.infer<typeof Schemas.ListUsersSchema>;
 export type ListUsersResponse = DefaultResponseBody & {
-  data: {
-    pagination: Pagination;
-    users: User[];
-  };
+  data: User[];
 };
 
 export type UpdateUserRequest = z.infer<typeof Schemas.UpdateUserSchema>;
@@ -151,9 +147,9 @@ export type GetAddressResponse = DefaultResponseBody & {
   data: Address;
 };
 
-export type ListAddressRequest = z.infer<typeof Schemas.ListAddressSchema>;
+export type ListAddressRequest = never;
 export type ListAddressResponse = DefaultResponseBody & {
-  data: GetAddressResponse['data'][];
+  data: Address[];
 };
 
 export type CreateAddressRequest = z.infer<typeof Schemas.CreateAddressSchema>;
@@ -260,7 +256,7 @@ export type GetStockResponse = DefaultResponseBody & {
   data: {
     product: Product;
     color: Color;
-    sizes: (Omit<Stock, 'id' | 'colorId' | 'productId'> & { stockId: number; size: string })[];
+    sizes: (Omit<Stock, 'id' | 'colorId' | 'productId'> & { stockId: string; size: string })[];
     images: Omit<Image, 'colorId' | 'productId'>[];
   };
 };
@@ -359,7 +355,10 @@ export type GetOrderResponse = DefaultResponseBody & {
       color: string;
       size: string;
     })[];
-    shippingDetails: (Omit<Shipping, 'addressId' | 'orderId'> & { address: Address }) | null;
+    shippingDetails: {
+      cost?: number | Decimal;
+      address: Address;
+    } | null;
   };
 };
 
@@ -385,7 +384,7 @@ export type DeleteOrderResponse = DefaultResponseBody & {
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
   data: {
-    id: number;
+    id: string;
     pending: boolean;
     amount: number;
     success: boolean;

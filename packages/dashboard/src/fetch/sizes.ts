@@ -18,9 +18,9 @@ export const listAllSizes = async (): Promise<ListSizesResponse['data']> => {
   return await sizeService.list();
 };
 
-export const findSizeById = async (id: string | number): Promise<GetSizeResponse['data']> => {
+export const findSizeById = async (id: string): Promise<GetSizeResponse['data']> => {
   try {
-    return await sizeService.find(+id);
+    return await sizeService.find(id);
   } catch {
     return notFound();
   }
@@ -40,11 +40,11 @@ export const createSize = async (
 };
 
 export const updateSize = async (
-  id: string | number,
+  id: string,
   payload: UpdateSizeRequest['body']
 ): Promise<UpdateSizeResponse> => {
   try {
-    const data = await sizeService.update(+id, payload);
+    const data = await sizeService.update(id, payload);
     revalidatePath(ROUTES.SIZES);
     return { data };
   } catch (e) {
@@ -52,9 +52,9 @@ export const updateSize = async (
   }
 };
 
-export const deleteSize = async (id: string | number): Promise<DeleteSizeResponse> => {
+export const deleteSize = async (id: string): Promise<DeleteSizeResponse> => {
   try {
-    const data = await sizeService.delete(+id);
+    const data = await sizeService.delete(id);
     revalidatePath(ROUTES.SIZES);
 
     return { data };

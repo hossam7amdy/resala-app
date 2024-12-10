@@ -14,33 +14,29 @@ import {
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
-export const getUserById = async (id: number | string): Promise<GetUserResponse['data']> => {
+export const getUserById = async (id: string): Promise<GetUserResponse['data']> => {
   try {
-    return await userService.find(+id);
+    return await userService.find(id);
   } catch {
     return notFound();
   }
 };
 
 export const listUsers = async (
-  query: ListUsersRequest['query']
+  query?: ListUsersRequest['query']
 ): Promise<ListUsersResponse['data']> => {
-  const parsed = ListUsersSchema.parse({ query });
-
-  const page = parsed.query.page ?? 1;
-  const limit = parsed.query.limit ?? 10;
-  const search = parsed.query.search;
+  const { page, limit, search } = ListUsersSchema.parse({ query }).query;
 
   const users = await userService.list({ page, limit, search });
-  return { users, pagination: { page, limit, total: users.length } };
+  return users;
 };
 
 export const updateUser = async (
-  id: string | number,
+  id: string,
   payload: UpdateUserRequest['body']
 ): Promise<UpdateUserResponse> => {
   try {
-    const data = await userService.update(+id, payload);
+    const data = await userService.update(id, payload);
     revalidatePath(ROUTES.CUSTOMERS);
     revalidatePath(ROUTES.EDIT_CUSTOMER(id));
     return { data };
@@ -49,9 +45,9 @@ export const updateUser = async (
   }
 };
 
-export const deleteUser = async (id: string | number): Promise<DeleteUserResponse> => {
+export const deleteUser = async (id: string): Promise<DeleteUserResponse> => {
   try {
-    const data = await userService.delete(+id);
+    const data = await userService.delete(id);
     revalidatePath(ROUTES.CUSTOMERS);
     return { data } as DeleteUserResponse;
   } catch (e) {

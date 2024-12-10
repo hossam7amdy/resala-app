@@ -1,5 +1,5 @@
 import type { DataStore } from '@/lib/db';
-import type { Prisma } from '@prisma/client';
+import type { Prisma, Product } from '@prisma/client';
 import type {
   Color,
   CreateStockRequest,
@@ -7,7 +7,6 @@ import type {
   Image,
   ListStocksRequest,
   ListStocksResponse,
-  Product,
   Size,
   Stock,
   UpdateStockRequest,
@@ -24,7 +23,7 @@ type StockReturnType = Stock & {
 export class StockService {
   constructor(private readonly db: DataStore) {}
 
-  async find(id: number): Promise<GetStockResponse['data']> {
+  async find(id: string): Promise<GetStockResponse['data']> {
     const stock = await this.db.stock.findUniqueOrThrow({
       include: {
         product: true,
@@ -99,7 +98,7 @@ export class StockService {
     });
   }
 
-  async update(id: number, stock: UpdateStockRequest['body']) {
+  async update(id: string, stock: UpdateStockRequest['body']) {
     return await this.db.stock.update({
       where: { id },
       data: {
@@ -111,7 +110,7 @@ export class StockService {
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return await this.db.stock.delete({ where: { id } });
   }
 
@@ -120,7 +119,10 @@ export class StockService {
     const { images, ...colorData } = color;
 
     return {
-      product,
+      product: {
+        ...product,
+        price: product.price.toNumber(),
+      },
       color: colorData,
       images: images.map(({ colorId: _colorId, productId: _productId, ...rest }) => ({ ...rest })),
       sizes: [
@@ -158,7 +160,7 @@ export class StockService {
     );
   }
 
-  async decreaseQuantity(items: { stockId: number; quantity: number }[]) {
+  async decreaseQuantity(items: { stockId: string; quantity: number }[]) {
     await this.db.$transaction(
       items.map(item =>
         this.db.stock.update({
@@ -173,7 +175,7 @@ export class StockService {
     );
   }
 
-  async increaseQuantity(items: { stockId: number; quantity: number }[]) {
+  async increaseQuantity(items: { stockId: string; quantity: number }[]) {
     await this.db.$transaction(
       items.map(item =>
         this.db.stock.update({

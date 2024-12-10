@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  AuthUser,
   ENDPOINT_CONFIGS,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
@@ -16,6 +15,7 @@ import {
   RegisterResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  User,
 } from '@resala/shared';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -41,12 +41,12 @@ export class AuthService {
   private authenticated = new BehaviorSubject<boolean>(false);
   public authenticated$ = this.authenticated.asObservable();
 
-  private userInfoSubject = new BehaviorSubject<AuthUser | null>(null);
+  private userInfoSubject = new BehaviorSubject<User | null>(null);
   public userInfo$ = this.userInfoSubject.asObservable();
 
   constructor(private _httpClient: HttpClient) {}
 
-  private _setUserInfo(userInfo: AuthUser): void {
+  private _setUserInfo(userInfo: User): void {
     this.userInfoSubject.next(userInfo);
     this.authenticated.next(true);
   }
@@ -59,6 +59,7 @@ export class AuthService {
   register(userData: RegisterData): Observable<RegisterResponse> {
     const body: RegisterRequest = {
       ...userData,
+      name: `${userData.firstName} ${userData.lastName}`,
       callbackURL: `${location.origin}/login`,
     };
 

@@ -39,7 +39,7 @@ export class OrderService {
   constructor(private readonly db: DataStore) {}
 
   async create(
-    { userId, paymentMethod, note }: { userId: number; paymentMethod: string; note?: string },
+    { userId, paymentMethod, note }: { userId: string; paymentMethod: string; note?: string },
     cart: GetCartResponse['data'],
     address: Address
   ) {
@@ -98,7 +98,7 @@ export class OrderService {
     const filters: Prisma.OrderWhereInput = {
       OR: [
         { user: { email: { startsWith: search } } },
-        { user: { phone: { startsWith: search } } },
+        { user: { phoneNumber: { startsWith: search } } },
         {
           orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
         },
@@ -130,7 +130,7 @@ export class OrderService {
     };
   }
 
-  async find(id: number): Promise<GetOrderResponse['data']> {
+  async find(id: string): Promise<GetOrderResponse['data']> {
     const order = await this.db.order.findUniqueOrThrow({
       where: { id },
       include: ORDER_ATTRIBUTES,
@@ -146,7 +146,7 @@ export class OrderService {
     };
   }
 
-  async update(id: number, order: Partial<Order>): Promise<GetOrderResponse['data']> {
+  async update(id: string, order: Partial<Order>): Promise<GetOrderResponse['data']> {
     await this.db.order.update({ where: { id }, data: order });
 
     return await this.find(id);

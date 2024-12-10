@@ -3,7 +3,7 @@ import { findDiscountById } from '@/fetch/discount';
 import type { Params } from '@/types';
 
 const EditDiscountPage = async ({ params }: { params: Params }) => {
-  const { products, ...discount } = await findDiscountById(params.id, { limit: 100 });
+  const { products, ...discount } = await findDiscountById(params.id, { page: 1, limit: 100 });
 
   return (
     <DiscountEditor

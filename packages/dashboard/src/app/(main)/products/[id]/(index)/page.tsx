@@ -10,7 +10,7 @@ const ProductStocksPage = async ({ params }: { params: Params }) => {
 
   if (!product) notFound();
 
-  const { stocks } = await listStocks({ productId: +params.id });
+  const { stocks } = await listStocks({ productId: params.id, page: 1, limit: 100 });
 
   return <StocksTable stocks={stocks} pagination={{ page: 1, limit: 10, total: stocks.length }} />;
 };

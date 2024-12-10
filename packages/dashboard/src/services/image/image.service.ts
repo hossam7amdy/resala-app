@@ -16,7 +16,7 @@ export class ImageService {
     private readonly fileService: FileStorage
   ) {}
 
-  async find(id: number) {
+  async find(id: string) {
     return await this.db.image.findUniqueOrThrow({ where: { id } });
   }
 
@@ -43,11 +43,11 @@ export class ImageService {
     await this.db.image.createMany({ data: images });
   }
 
-  async update(id: number, data: Partial<Image>): Promise<Image> {
+  async update(id: string, data: Partial<Image>): Promise<Image> {
     return await this.db.image.update({ where: { id }, data });
   }
 
-  async updatePrimary(id: number, isPrimary: boolean = true): Promise<UpdateImageResponse['data']> {
+  async updatePrimary(id: string, isPrimary: boolean = true): Promise<UpdateImageResponse['data']> {
     const image = await this.find(id);
 
     if (image.isPrimary) {
@@ -65,7 +65,7 @@ export class ImageService {
     return { ...image, isPrimary };
   }
 
-  async delete(id: number): Promise<DeleteImageResponse['data']> {
+  async delete(id: string): Promise<DeleteImageResponse['data']> {
     const image = await this.find(id);
 
     // Delete image from cloud storage
@@ -92,8 +92,8 @@ export class ImageService {
   }
 
   private async checkColorLimits(
-    productId: number,
-    colorId: number,
+    productId: string,
+    colorId: string,
     filesCount: number,
     limit: number = 5
   ) {

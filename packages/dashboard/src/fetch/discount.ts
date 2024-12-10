@@ -76,7 +76,7 @@ export const addProductsToDiscount = async (
   { productIds }: AddProductsToDiscountRequest['body']
 ): Promise<AddProductsToDiscountResponse> => {
   try {
-    await discountService.addProducts(+id, productIds);
+    await discountService.addProducts(id, productIds!);
     revalidatePath(ROUTES.DISCOUNT_PRODUCTS(id));
     return {};
   } catch (e) {
@@ -86,10 +86,10 @@ export const addProductsToDiscount = async (
 
 export const removeProductsFromDiscount = async (
   id: string,
-  productIds: number[]
+  productIds: string[]
 ): Promise<RemoveProductsFromDiscountResponse> => {
   try {
-    await discountService.removeProducts(+id, productIds);
+    await discountService.removeProducts(id, productIds);
     revalidatePath(ROUTES.DISCOUNT_PRODUCTS(id));
     return {};
   } catch (e) {
