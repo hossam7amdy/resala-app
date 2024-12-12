@@ -6,7 +6,7 @@ export const useCurrentUser = () => {
 
   return {
     isLoading: isPending,
-    user: data?.user as User,
+    user: data?.user as User | null,
     error,
   };
 };

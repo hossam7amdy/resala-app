@@ -49,7 +49,8 @@ export const DiscountTable: React.FC<{
   const searchParams = useSearchParams();
   const { createSearchParams } = useCreateSearchParams();
 
-  const handleFilterChange: TableProps['onChange'] = ({ current, pageSize }, filters) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFilterChange: TableProps<any>['onChange'] = ({ current, pageSize }, filters) => {
     const filterParams = Object.entries(filters).reduce(
       (acc, [key, value]) => {
         acc[key] = value?.at(0) ?? '';

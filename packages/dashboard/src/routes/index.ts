@@ -30,7 +30,7 @@ export const ROUTES = {
   ORDERS: '/orders',
 
   CUSTOMERS: '/customers',
-  EDIT_CUSTOMER: (id: string | number) => `/customers/${id}/edit`,
+  CUSTOMER_DETAILS: (id: string | number) => `/customers/${id}`,
 
   DISCOUNTS: '/discounts',
   CREATE_DISCOUNT: '/discounts/create',

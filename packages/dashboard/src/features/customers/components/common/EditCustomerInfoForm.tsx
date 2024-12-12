@@ -6,30 +6,42 @@ import { useCurrentUser } from '@/hooks/use-current-user';
 import type { User } from '@resala/shared';
 import { Role, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';
-import { useRouter } from 'next/navigation';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import React from 'react';
 
-interface EditFormProps {
-  disable?: boolean;
-  customer: Partial<User>;
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  role: Role;
 }
 
-export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer }) => {
-  const router = useRouter();
-  const { user, isLoading: isLoadingCurrentUser } = useCurrentUser();
+interface EditCustomerFormProps {
+  disable?: boolean;
+  customer: User;
+  onDone?: () => void;
+  onCancel?: () => void;
+}
 
+export const EditCustomerForm: React.FC<EditCustomerFormProps> = ({
+  disable = false,
+  customer,
+  onDone,
+  onCancel,
+}) => {
   const [form] = Form.useForm();
-
   const notification = useNotification();
-
+  const { user, isLoading: isLoadingCurrentUser } = useCurrentUser();
   const { isLoading, mutate } = useMutation({
-    mutationFn: updateUser.bind(null, customer.id!),
+    mutationFn: (values: FormValues) => {
+      const name = `${values.firstName} ${values.lastName}`;
+      return updateUser(customer.id, { ...values, name });
+    },
     onSuccess: () => {
       notification.success('Customer updated successfully');
-
       form.resetFields();
-
-      router.back();
+      onDone?.();
     },
     onError: error => {
       notification.error(error.message);
@@ -43,7 +55,6 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
       disabled={disable}
       form={form}
       name="edit-customer"
-      size="large"
       layout="vertical"
       initialValues={{ ...customer }}
       onFinish={mutate}
@@ -80,13 +91,23 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
       <Form.Item
         labelCol={{ span: 12 }}
         wrapperCol={{ span: 12 }}
-        name="phone"
-        label="Phone"
+        name="phoneNumber"
+        label="Phone Number"
         required
         hasFeedback
-        rules={[{ required: true }, { ...validationPatterns.validatePhoneLength }]}
+        rules={[
+          { required: true },
+          { ...validationPatterns.validatePhoneLength },
+          {
+            validator: (_, value) => {
+              return isValidPhoneNumber(value, 'EG')
+                ? Promise.resolve()
+                : Promise.reject('Invalid phone number');
+            },
+          },
+        ]}
       >
-        <Input placeholder="01XXXXXXXXX" />
+        <Input placeholder="+201XXXXXXXXX" />
       </Form.Item>
 
       <Form.Item
@@ -121,13 +142,13 @@ export const EditForm: React.FC<EditFormProps> = ({ disable = false, customer })
         />
       </Form.Item>
 
-      <Form.Item>
+      <Form.Item noStyle>
         <Flex gap={10}>
+          <Button type="default" onClick={onCancel} block disabled={isLoading}>
+            Cancel
+          </Button>
           <Button type="primary" htmlType="submit" block loading={isLoading}>
             Update
-          </Button>
-          <Button type="default" onClick={router.back} block disabled={isLoading}>
-            Cancel
           </Button>
         </Flex>
       </Form.Item>
