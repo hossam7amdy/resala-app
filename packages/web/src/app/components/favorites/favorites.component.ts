@@ -63,9 +63,10 @@ export class FavoritesComponent implements OnInit {
   deletePoductInWishList(): void {
     this.customSpinIsLoading = true;
     this._WishListService.deleteMyFavoriteProduct(this.productId).subscribe({
-      next: () => {
+      next: (response) => {
+        this.myProducts = response.data;
         this._Toaster.success('Removed Successfully');
-        window.location.reload();
+        // window.location.reload();
 
         this.customSpinIsLoading = false;
       },
