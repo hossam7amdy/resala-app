@@ -17,35 +17,23 @@ export class AddressService {
   constructor(private readonly db: DataStore) {}
 
   async list(userId: string): Promise<ListAddressResponseDto> {
-    const [defaultAddress, addresses] = await this.db.$transaction([
-      this.db.userAddress.findFirst({
-        select: {
-          isDefault: true,
-          address: true,
+    const addresses = await this.db.userAddress.findMany({
+      select: {
+        isDefault: true,
+        address: true,
+      },
+      where: {
+        userId,
+      },
+      orderBy: {
+        address: {
+          createdAt: 'desc',
         },
-        where: {
-          userId,
-          isDefault: true,
-        },
-      }),
-      this.db.userAddress.findMany({
-        select: {
-          isDefault: true,
-          address: true,
-        },
-        where: {
-          userId,
-        },
-        orderBy: {
-          address: {
-            createdAt: 'desc',
-          },
-        },
-        take: this._maxAddressCount,
-      }),
-    ]);
+      },
+      take: this._maxAddressCount,
+    });
 
-    if (defaultAddress) addresses.unshift(defaultAddress);
+    addresses.sort(a => (a.isDefault ? -1 : 1)); // Move default address to the top
     return addresses.map(({ isDefault, address }) => ({ ...address, isDefault }));
   }
 

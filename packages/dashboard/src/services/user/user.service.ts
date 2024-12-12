@@ -13,7 +13,9 @@ export class UserService {
         include: {
           address: true,
         },
-        take: 5,
+        where: {
+          isDefault: true,
+        },
       },
       orders: {
         take: 5,
