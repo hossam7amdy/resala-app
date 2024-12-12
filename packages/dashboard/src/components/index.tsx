@@ -20,3 +20,5 @@ export { UserDropdown } from './user-dropdown';
 export { IconLink } from './icon-link';
 export { NotificationError } from './notification-error';
 export { TableSkeleton } from './table-skeleton';
+export { OrderStatusTag } from './OrderStatusTag';
+export { PaymentStatusTag } from './PaymentStatusTag';

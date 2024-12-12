@@ -7,7 +7,7 @@
     "dev": "ng serve --open",
     "start": "ng serve",
     "build": "ng build",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf .angular",
     "typecheck": "tsc --noEmit",
     "watch": "ng build --watch --configuration development",
     "test": "echo \"No tests specified for web\" && exit 0"

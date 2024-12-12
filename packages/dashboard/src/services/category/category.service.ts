@@ -1,15 +1,18 @@
 import type { DataStore } from '@/lib/db';
 import type {
   CreateCategoryRequest,
+  CreateCategoryResponse,
+  DeleteCategoryResponse,
   GetCategoryResponse,
   ListCategoriesResponse,
   UpdateCategoryRequest,
+  UpdateCategoryResponse,
 } from '@resala/shared';
 
 export class CategoryService {
   constructor(private readonly db: DataStore) {}
 
-  async create(category: CreateCategoryRequest['body']) {
+  async create(category: CreateCategoryRequest['body']): Promise<CreateCategoryResponse['data']> {
     return await this.db.category.create({
       data: {
         enName: category.enName,
@@ -18,7 +21,10 @@ export class CategoryService {
     });
   }
 
-  async update(id: number, category: UpdateCategoryRequest['body']) {
+  async update(
+    id: string,
+    category: UpdateCategoryRequest['body']
+  ): Promise<UpdateCategoryResponse['data']> {
     return await this.db.category.update({
       data: {
         enName: category.enName,
@@ -28,11 +34,11 @@ export class CategoryService {
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string): Promise<DeleteCategoryResponse['data']> {
     return await this.db.category.delete({ where: { id } });
   }
 
-  async find(id: number): Promise<GetCategoryResponse['data']> {
+  async find(id: string): Promise<GetCategoryResponse['data']> {
     return await this.db.category.findUniqueOrThrow({ where: { id } });
   }
 

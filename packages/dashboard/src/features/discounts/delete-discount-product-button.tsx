@@ -6,7 +6,7 @@ import type { Params } from '@/types';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-export const DeleteDiscountProductButton: React.FC<{ productId: number }> = ({ productId }) => {
+export const DeleteDiscountProductButton: React.FC<{ productId: string }> = ({ productId }) => {
   const params = useParams<Params>();
 
   return (

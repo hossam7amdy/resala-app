@@ -1,63 +1,166 @@
 import { reviewService } from '@/services';
-import type {
-  CreateReviewRequest,
-  CreateReviewResponse,
-  DeleteReviewResponse,
-  GetReviewResponse,
-  ListReviewsResponse,
-  UpdateReviewRequest,
-  UpdateReviewResponse,
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import {
+  CreateReviewSchema,
+  DeleteReviewSchema,
+  GetReviewSchema,
+  ListReviewsSchema,
+  ReviewSchema,
+  UpdateReviewSchema,
 } from '@resala/shared';
-import type { HandlerResponse } from 'hono/types';
 
-import type { HonoCtx } from '../types';
+import type { Env } from '../types';
 
-export const createReview = async (c: HonoCtx): Promise<HandlerResponse<CreateReviewResponse>> => {
-  const userId = Number(c.var.user?.id);
-  const body = (await c.req.json()) as CreateReviewRequest['body'];
+const createReviewRoute = createRoute({
+  tags: ['Review'],
+  method: 'post',
+  path: '/',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: CreateReviewSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: ReviewSchema,
+          }),
+        },
+      },
+      description: 'Review created successfully',
+    },
+  },
+});
+const updateReviewRoute = createRoute({
+  tags: ['Review'],
+  method: 'put',
+  path: '/{id}',
+  request: {
+    params: UpdateReviewSchema.shape.params,
+    body: {
+      content: {
+        'application/json': {
+          schema: UpdateReviewSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: ReviewSchema,
+          }),
+        },
+      },
+      description: 'Review updated successfully',
+    },
+  },
+});
+const deleteReviewRoute = createRoute({
+  tags: ['Review'],
+  method: 'delete',
+  path: '/{id}',
+  request: {
+    params: DeleteReviewSchema.shape.params,
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: ReviewSchema,
+          }),
+        },
+      },
+      description: 'Review deleted successfully',
+    },
+  },
+});
+const getReviewRoute = createRoute({
+  tags: ['Review'],
+  method: 'get',
+  path: '/{id}',
+  request: {
+    params: GetReviewSchema.shape.params,
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: ReviewSchema,
+          }),
+        },
+      },
+      description: 'Review retrieved successfully',
+    },
+  },
+});
+const listReviewsRoute = createRoute({
+  tags: ['Review'],
+  method: 'get',
+  path: '/',
+  request: {
+    query: ListReviewsSchema.shape.query.extend({
+      productId: z.string().optional(),
+    }),
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: z.object({
+              reviews: z.array(ReviewSchema),
+              pagination: z.object({
+                page: z.number(),
+                limit: z.number(),
+                total: z.number(),
+              }),
+            }),
+          }),
+        },
+      },
+      description: 'Reviews retrieved successfully',
+    },
+  },
+});
 
-  const review = await reviewService.create({ ...body, userId });
-
-  return c.json(c.json({ success: true, data: review }));
-};
-
-export const updateReview = async (c: HonoCtx): Promise<HandlerResponse<UpdateReviewResponse>> => {
-  const reviewId = c.req.param('reviewId') as string;
-  const body = (await c.req.json()) as UpdateReviewRequest['body'];
-  const review = await reviewService.update(+reviewId, body);
-
-  return c.json({ success: true, data: review });
-};
-
-export const deleteReview = async (c: HonoCtx): Promise<HandlerResponse<DeleteReviewResponse>> => {
-  const userId = Number(c.var.user?.id);
-  const reviewId = +c.req.param('reviewId');
-
-  const address = await reviewService.delete(reviewId, userId);
-
-  return c.json({ success: true, data: address });
-};
-
-export const getReview = async (c: HonoCtx): Promise<HandlerResponse<GetReviewResponse>> => {
-  const reviewId = c.req.param('reviewId');
-  const review = await reviewService.find(+reviewId);
-
-  return c.json({ success: true, data: review });
-};
-
-export const listReviews = async (c: HonoCtx): Promise<HandlerResponse<ListReviewsResponse>> => {
-  const page = +(c.req.query('page') || '1');
-  const limit = +(c.req.query('limit') || '10');
-  const productId = c.req.query('productId') as string;
-
-  const { reviews, pagination } = await reviewService.list({
-    page,
-    limit,
-    productId: +productId,
+export const reviewHandler = new OpenAPIHono<Env>()
+  .openapi(createReviewRoute, async c => {
+    const userId = c.var.user.id;
+    const body = c.req.valid('json');
+    const review = await reviewService.create({ ...body, userId });
+    return c.json({ success: true, data: review });
+  })
+  .openapi(updateReviewRoute, async c => {
+    const userId = c.var.user.id;
+    const reviewId = c.req.param('id');
+    const body = c.req.valid('json');
+    const review = await reviewService.update(reviewId, { userId, ...body });
+    return c.json({ success: true, data: review });
+  })
+  .openapi(deleteReviewRoute, async c => {
+    const userId = c.var.user.id;
+    const reviewId = c.req.param('id');
+    const address = await reviewService.delete(reviewId, userId);
+    return c.json({ success: true, data: address });
+  })
+  .openapi(getReviewRoute, async c => {
+    const reviewId = c.req.param('id');
+    const review = await reviewService.find(reviewId);
+    return c.json({ success: true, data: review });
+  })
+  .openapi(listReviewsRoute, async c => {
+    const { page, limit, productId } = c.req.valid('query');
+    const { reviews, pagination } = await reviewService.list({ page, limit, productId });
+    return c.json({ success: true, data: { reviews, pagination } });
   });
-
-  return c.json({
-    success: true,
-    data: { reviews, pagination },
-  });
-};

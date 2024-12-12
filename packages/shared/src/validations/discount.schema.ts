@@ -1,96 +1,61 @@
+import { Decimal } from 'decimal.js';
 import { z } from 'zod';
 
 import { OffsetPageParamsSchema } from './common.schema.js';
 
 const discountTypes = ['PERCENTAGE', 'FIXED', 'BOGO', 'BULK'] as const;
 
-const productIds = z.array(z.coerce.number().positive()).min(1).max(100);
+const productIds = z.array(z.string().cuid()).min(1).max(100).optional();
 
 const DiscountSchema = z.object({
-  type: z.enum(discountTypes),
-  amount: z.coerce.number().positive().min(0.1),
-  description: z.string().max(250).optional(),
-  minQty: z.coerce.number().positive().optional(),
-  isActive: z.coerce.boolean().optional(),
-  isStoreWide: z.coerce.boolean().optional(),
-  productIds: productIds.optional(),
-  startDate: z.coerce
-    .date()
-    .optional()
-    .transform(val => val?.toISOString()),
-  endDate: z.coerce
-    .date()
-    .optional()
-    .transform(val => val?.toISOString()),
+  id: z.string().cuid(),
+  type: z.enum(['PERCENTAGE', 'FIXED', 'BOGO', 'BULK']),
+  amount: z.instanceof(Decimal).or(z.coerce.number()),
+  description: z.string().max(250).optional().nullable(),
+  minQty: z.number().int().min(1).default(1),
+  isActive: z.boolean().default(true),
+  isStoreWide: z.boolean().default(false),
+  startDate: z.date().or(z.string().datetime()).optional().nullable(),
+  endDate: z.date().or(z.string().datetime()).optional().nullable(),
+  createdAt: z.date().or(z.string().datetime()),
+  updatedAt: z.date().or(z.string().datetime()),
 });
 
-type Discount = z.infer<typeof DiscountSchema>;
-
-const refineStoreWide = ({ productIds, isStoreWide }: Discount) => {
-  if (isStoreWide) return !productIds;
-  return true;
-};
-const refineStartAndEndDates = ({ startDate, endDate }: Discount) => {
-  // if both startDate and endDate are provided, endDate must be greater than startDate
-  if (startDate && endDate) {
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-
-    return end >= start;
-  }
-
-  // if endDate is provided, startDate must be provided
-  return endDate ? !!startDate : true;
-};
-const refineDiscountType = ({ type, amount, minQty }: Discount) => {
-  if (type === 'BOGO') {
-    return minQty && amount === Math.trunc(amount);
-  }
-  return true;
-};
-
-export const CreateDiscountSchema = z.object({
-  body: DiscountSchema.refine(refineStoreWide)
-    .refine(refineStartAndEndDates)
-    .refine(refineDiscountType),
-});
-
-export const UpdateDiscountSchema = z.object({
-  params: z.object({
-    discountId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
+const CreateDiscountSchema = z.object({
+  body: DiscountSchema.pick({
+    type: true,
+    amount: true,
+    description: true,
+    minQty: true,
+    isActive: true,
+    isStoreWide: true,
+    startDate: true,
+    endDate: true,
+  }).extend({
+    productIds,
   }),
-  body: DiscountSchema.omit({ productIds: true })
-    .refine(refineDiscountType)
-    .refine(refineStartAndEndDates),
 });
 
-export const DeleteDiscountSchema = z.object({
-  params: UpdateDiscountSchema.shape.params,
+const UpdateDiscountSchema = z.object({
+  params: DiscountSchema.pick({ id: true }),
+  body: DiscountSchema.partial(),
 });
 
-export const AddProductsToDiscountSchema = z.object({
-  params: z.object({
-    discountId: z.coerce
-      .number()
-      .positive()
-      .transform(discountId => discountId.toString()),
-  }),
+const DeleteDiscountSchema = z.object({
+  params: DiscountSchema.pick({ id: true }),
+});
+
+const AddProductsToDiscountSchema = z.object({
+  params: DiscountSchema.pick({ id: true }),
   body: z.object({ productIds }),
 });
 
-export const RemoveProductsFromDiscountSchema = z.object({
+const RemoveProductsFromDiscountSchema = z.object({
   params: AddProductsToDiscountSchema.shape.params,
-  query: z.object({
-    productIds: z
-      .union([z.coerce.number(), productIds])
-      .transform(productIds => (typeof productIds === 'number' ? [productIds] : productIds)),
-  }),
+  query: z.object({ productIds }),
 });
 
-export const ListDiscountsSchema = z.object({
+const ListDiscountsSchema = z.object({
   query: OffsetPageParamsSchema.extend({
     type: z
       .enum([...discountTypes, ''])
@@ -129,12 +94,18 @@ export const ListDiscountsSchema = z.object({
   ),
 });
 
-export const GetDiscountSchema = z.object({
-  params: z.object({
-    discountId: z.coerce
-      .number()
-      .positive()
-      .transform(val => val.toString()),
-  }),
+const GetDiscountSchema = z.object({
+  params: DiscountSchema.pick({ id: true }),
   query: OffsetPageParamsSchema,
 });
+
+export {
+  DiscountSchema,
+  CreateDiscountSchema,
+  UpdateDiscountSchema,
+  DeleteDiscountSchema,
+  AddProductsToDiscountSchema,
+  RemoveProductsFromDiscountSchema,
+  ListDiscountsSchema,
+  GetDiscountSchema,
+};

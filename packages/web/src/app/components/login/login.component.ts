@@ -27,7 +27,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    public translate: TranslateService
+    public _Translate: TranslateService
   ) {}
 
   customSpinIsLoading = false;
@@ -38,6 +38,7 @@ export class LoginComponent {
   }
 
   errMsg: string = '';
+  errMsgAr: string = '';
   successMsg: string = '';
   successMsgAr: string = '';
   isLoading: boolean = false;
@@ -53,14 +54,14 @@ export class LoginComponent {
     if (this.loginForm.valid === true) {
       this.customSpinIsLoading = true;
       this.authService.login(userData).subscribe({
-        next: () => {
+        next: res => {
           this.customSpinIsLoading = false;
           this.successMsg = 'Logged already';
           this.successMsgAr = 'تم تسجيل الدخول بنجاح';
-
+          console.log(res);
           const productId = localStorage.getItem('productId');
           if (productId == null) {
-            this.router.navigate(['/home'], { replaceUrl: true });
+            this.router.navigate([`/${this.authService.directionURL.value}`], { replaceUrl: true });
           } else {
             this.router.navigate(['product-details/', productId], { replaceUrl: true });
             localStorage.removeItem('productId');
@@ -69,6 +70,7 @@ export class LoginComponent {
         error: err => {
           this.customSpinIsLoading = false;
           this.errMsg = err?.error?.message || 'Something went wrong';
+          this.errMsgAr = 'الايميل او كلمة المرور غير صحيحة !';
         },
       });
     }

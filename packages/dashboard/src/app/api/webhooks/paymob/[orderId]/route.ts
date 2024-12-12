@@ -15,7 +15,7 @@ export const POST = async (request: NextRequest, { params }: { params: { orderId
     const { verified, status } = await paymobService.handleWebhookCallback({ hmac, transaction });
 
     // 1. update order status
-    const { orderItems } = await orderService.update(+orderId, {
+    const { orderItems } = await orderService.update(orderId, {
       transactionId: transaction.id.toString(),
       paymentStatus: status!,
     });

@@ -1,9 +1,13 @@
 export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
-  CUSTOMER = 'CUSTOMER',
-  MODERATOR = 'MODERATOR',
+  USER = 'user',
+  ADMIN = 'admin',
+  STAFF = 'staff',
+}
+
+export enum MarketingState {
+  SUBSCRIBED = 'subscribed',
+  NOT_SUBSCRIBED = 'not_subscribed',
+  UNSUBSCRIBED = 'unsubscribed',
 }
 
 export enum OrderStatus {
@@ -32,10 +36,4 @@ export enum DiscountEnum {
   FIXED = 'FIXED',
   BOGO = 'BOGO',
   BULK = 'BULK',
-}
-
-export enum MarketingState {
-  SUBSCRIBED = 'SUBSCRIBED',
-  NOT_SUBSCRIBED = 'NOT_SUBSCRIBED',
-  UNSUBSCRIBED = 'UNSUBSCRIBED',
 }

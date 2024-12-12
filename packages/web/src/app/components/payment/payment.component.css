@@ -108,9 +108,17 @@ fieldset .form-check-input {
   margin: 0 !important;
   margin-left: auto !important;
 }
+
 .modal-header .btn-close:lang(ar) {
   margin: 0 !important;
   margin-right: auto !important;
+}
+.offcanvas-header .btn-close:lang(ar) {
+  margin-right: 180px;
+}
+.form-label {
+  color: #016373;
+  font-weight: 500;
 }
 .dropdown-item.active,
 .dropdown-item:active {
@@ -250,6 +258,18 @@ fieldset .form-check-input {
 .rotate-180 {
   transform: rotate(180deg);
 }
+.summary .text-start {
+  text-align: left !important;
+}
+.summary .text-start:lang(ar) {
+  text-align: right !important;
+}
+.summary .text-end {
+  text-align: right !important;
+}
+.summary .text-end:lang(ar) {
+  text-align: left !important;
+}
 .summary .collapse .card {
   border: 0 !important;
   border-top: 1px solid #777 !important;
@@ -257,8 +277,11 @@ fieldset .form-check-input {
   color: #016373 !important;
   font-weight: 500;
 }
-.summary .card-body .text-details {
+.summary .card-body .title-details {
   text-align: left !important;
+}
+.summary .card-body .title-details:lang(ar) {
+  text-align: right !important;
 }
 .summary .card-body .price-details {
   text-align: right !important;
