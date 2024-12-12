@@ -4,7 +4,7 @@ import { Table } from '@/components';
 import { ROUTES } from '@/routes';
 import { formatDate } from '@/utils/date-time-formatter';
 import type { ListUsersResponse } from '@resala/shared';
-import type { TableProps } from 'antd';
+import { type TableProps } from 'antd';
 import { useRouter } from 'next/navigation';
 
 import { BanUserCell } from './BanUserCell';
