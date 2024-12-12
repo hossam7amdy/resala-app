@@ -163,7 +163,8 @@
   <div class="emptyCart emptyCartParent">
     <i class="fa-solid fa-receipt"></i>
     <h1 class="h2 text-uppercase">{{ 'orders.ordersEmptyTitle' | translate }}</h1>
-    <button routerLink="/home" class="custome-btn">
+    <button routerLink="/home" (click)="reDirectFun()" class="custome-btn">
+      <a href=""></a>
       {{ 'orders.ordersEmptyBtn' | translate }}
     </button>
   </div>
