@@ -22,7 +22,7 @@ model User {
   role                Role           @default(user)
   banned              Boolean?
   banReason           String?        @map("ban_reason")
-  banExpires          Int?           @map("ban_expires")
+  banExpires          DateTime?      @map("ban_expires")
   isAnonymous         Boolean?       @map("is_anonymous")
   image               String?
   note                String?

@@ -2,15 +2,14 @@
 
 import { ROUTES } from '@/routes';
 import { userService } from '@/services';
-import {
-  type DeleteUserResponse,
-  type GetUserResponse,
-  type ListUsersRequest,
-  type ListUsersResponse,
-  ListUsersSchema,
-  type UpdateUserRequest,
-  type UpdateUserResponse,
+import { formatError } from '@/utils/formatError';
+import type {
+  GetUserResponse,
+  ListUsersRequest,
+  ListUsersResponse,
+  UpdateUserRequest,
 } from '@resala/shared';
+import { ListUsersSchema } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
@@ -31,26 +30,27 @@ export const listUsers = async (
   return users;
 };
 
-export const updateUser = async (
-  id: string,
-  payload: UpdateUserRequest['body']
-): Promise<UpdateUserResponse> => {
+export const updateUser = async (id: string, payload: UpdateUserRequest['body']) => {
   try {
     const data = await userService.update(id, payload);
     revalidatePath(ROUTES.CUSTOMERS);
-    revalidatePath(ROUTES.EDIT_CUSTOMER(id));
+    revalidatePath(ROUTES.CUSTOMER_DETAILS(id));
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateUserResponse;
+    return formatError(e);
   }
 };
 
-export const deleteUser = async (id: string): Promise<DeleteUserResponse> => {
+export const deleteUser = async (id: string) => {
   try {
     const data = await userService.delete(id);
     revalidatePath(ROUTES.CUSTOMERS);
-    return { data } as DeleteUserResponse;
+    return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteUserResponse;
+    return formatError(e);
   }
+};
+
+export const countUsers = async () => {
+  return await userService.count();
 };
