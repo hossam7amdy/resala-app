@@ -6,6 +6,8 @@ import type {
   CreateAddressDto,
   DeleteAddressParamsDto,
   FindAddressParamsDto,
+  GetAddressResponseDto,
+  ListAddressResponseDto,
   UpdateAddressDto,
 } from './address.dto';
 
@@ -14,10 +16,11 @@ export class AddressService {
 
   constructor(private readonly db: DataStore) {}
 
-  async list(userId: string): Promise<Address[]> {
+  async list(userId: string): Promise<ListAddressResponseDto> {
     const [defaultAddress, addresses] = await this.db.$transaction([
       this.db.userAddress.findFirst({
         select: {
+          isDefault: true,
           address: true,
         },
         where: {
@@ -27,6 +30,7 @@ export class AddressService {
       }),
       this.db.userAddress.findMany({
         select: {
+          isDefault: true,
           address: true,
         },
         where: {
@@ -42,7 +46,7 @@ export class AddressService {
     ]);
 
     if (defaultAddress) addresses.unshift(defaultAddress);
-    return addresses.map(address => address.address);
+    return addresses.map(({ isDefault, address }) => ({ ...address, isDefault }));
   }
 
   async create({ userId, isDefault, ...payload }: CreateAddressDto): Promise<Address> {
@@ -78,13 +82,19 @@ export class AddressService {
     });
   }
 
-  async find(addressId: string, { userId }: FindAddressParamsDto): Promise<Address> {
-    const userAddr = await this.db.userAddress.findFirstOrThrow({
-      select: { address: true },
-      where: { userId, addressId },
+  async find(addressId: string, { userId }: FindAddressParamsDto): Promise<GetAddressResponseDto> {
+    const { address, isDefault } = await this.db.userAddress.findFirstOrThrow({
+      select: {
+        isDefault: true,
+        address: true,
+      },
+      where: {
+        userId,
+        addressId,
+      },
     });
 
-    return userAddr?.address ?? null;
+    return { ...address, isDefault };
   }
 
   async delete(addressId: string, { userId }: DeleteAddressParamsDto): Promise<Address> {

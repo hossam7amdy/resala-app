@@ -144,12 +144,12 @@ export type DeleteUserResponse = DefaultResponseBody;
 // Address types
 export type GetAddressRequest = undefined;
 export type GetAddressResponse = DefaultResponseBody & {
-  data: Address;
+  data: z.infer<typeof Schemas.GetAddressResponseSchema>;
 };
 
 export type ListAddressRequest = never;
 export type ListAddressResponse = DefaultResponseBody & {
-  data: Address[];
+  data: z.infer<typeof Schemas.ListAddressResponseSchema>;
 };
 
 export type CreateAddressRequest = z.infer<typeof Schemas.CreateAddressSchema>;

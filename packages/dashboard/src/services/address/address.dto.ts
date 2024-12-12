@@ -1,6 +1,15 @@
-import type { CreateAddressRequest, UpdateAddressRequest } from '@resala/shared';
+import type {
+  CreateAddressRequest,
+  GetAddressResponse,
+  ListAddressResponse,
+  UpdateAddressRequest,
+} from '@resala/shared';
 
 export type { Address } from '@prisma/client';
+
+type GetAddressResponseDto = GetAddressResponse['data'];
+
+type ListAddressResponseDto = ListAddressResponse['data'];
 
 type CreateAddressDto = CreateAddressRequest['body'] & {
   userId: string;
@@ -16,4 +25,11 @@ type FindAddressParamsDto = {
 
 type DeleteAddressParamsDto = FindAddressParamsDto;
 
-export type { CreateAddressDto, UpdateAddressDto, FindAddressParamsDto, DeleteAddressParamsDto };
+export type {
+  CreateAddressDto,
+  UpdateAddressDto,
+  FindAddressParamsDto,
+  DeleteAddressParamsDto,
+  GetAddressResponseDto,
+  ListAddressResponseDto,
+};
