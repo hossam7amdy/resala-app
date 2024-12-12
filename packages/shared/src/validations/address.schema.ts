@@ -28,20 +28,18 @@ const CreateAddressSchema = z.object({
     id: true,
     createdAt: true,
     updatedAt: true,
+  }).extend({
+    isDefault: z.boolean().default(false).optional(),
   }),
 });
 
 const UpdateAddressSchema = z.object({
-  params: z.object({
-    id: z.string().cuid(),
-  }),
-  body: CreateAddressSchema.partial(),
+  params: AddressSchema.pick({ id: true }),
+  body: CreateAddressSchema.shape.body.partial(),
 });
 
 const DeleteAddressSchema = z.object({
-  params: z.object({
-    id: z.string().cuid(),
-  }),
+  params: AddressSchema.pick({ id: true }),
 });
 
 export { AddressSchema, CreateAddressSchema, UpdateAddressSchema, DeleteAddressSchema };
