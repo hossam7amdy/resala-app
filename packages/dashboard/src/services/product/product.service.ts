@@ -19,7 +19,7 @@ export class ProductService {
     private readonly fileService: FileStorage
   ) {}
 
-  async get(id: number): Promise<GetProductResponse['data']> {
+  async get(id: string): Promise<GetProductResponse['data']> {
     const avgRating = await this.db.review.aggregate({
       where: { productId: id },
       _avg: { rating: true },
@@ -45,8 +45,12 @@ export class ProductService {
 
     return {
       ...product,
+      price: product.price.toNumber() ?? 0,
       avgRating: avgRating._avg.rating ?? 0,
-      discounts,
+      discounts: discounts.map(discount => ({
+        ...discount,
+        amount: discount.amount.toNumber() ?? 0,
+      })),
     };
   }
 
@@ -98,7 +102,11 @@ export class ProductService {
       pagination: { page, limit, total },
       products: products.map(({ discounts, ...product }) => ({
         ...product,
-        discounts,
+        price: product.price.toNumber() ?? 0,
+        discounts: discounts.map(discount => ({
+          ...discount,
+          amount: discount.amount.toNumber() ?? 0,
+        })),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
     };
@@ -127,13 +135,18 @@ export class ProductService {
 
     const { key, url } = await this.fileService.uploadFile(file);
 
-    return await this.db.product.create({
+    const newProduct = await this.db.product.create({
       data: { ...payload, categoryId, enName, arName, imageKey: key, imageUrl: url },
     });
+
+    return {
+      ...newProduct,
+      price: newProduct.price.toNumber() ?? 0,
+    };
   }
 
   async update(
-    id: number,
+    id: string,
     { file, ...product }: UpdateProductRequest['body'] & { file?: File }
   ): Promise<UpdateProductResponse['data']> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
@@ -147,7 +160,7 @@ export class ProductService {
       fileData = await this.fileService.uploadFile(file);
     }
 
-    return await this.db.product.update({
+    const updatedProduct = await this.db.product.update({
       where: { id },
       data: {
         ...product,
@@ -155,15 +168,23 @@ export class ProductService {
         imageUrl: fileData.url,
       },
     });
+
+    return {
+      ...updatedProduct,
+      price: updatedProduct.price.toNumber() ?? 0,
+    };
   }
 
-  async delete(id: number): Promise<DeleteProductResponse['data']> {
+  async delete(id: string): Promise<DeleteProductResponse['data']> {
     const { imageKey } = await this.get(id);
 
     const product = await this.db.product.delete({ where: { id } });
 
     await this.fileService.deleteFile(imageKey);
 
-    return product;
+    return {
+      ...product,
+      price: product.price.toNumber() ?? 0,
+    };
   }
 }

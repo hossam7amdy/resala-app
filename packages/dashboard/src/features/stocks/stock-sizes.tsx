@@ -36,7 +36,7 @@ export const StockSizes: React.FC<{ sizes: GetStockResponse['data']['sizes'] }> 
         dataIndex: 'stockId',
         width: 150,
         align: 'center',
-        render: (stockId: number) => (
+        render: (stockId: string) => (
           <Space size="small">
             <ResalaTooltip title="Edit">
               <Link href={ROUTES.EDIT_STOCK(stockId)}>

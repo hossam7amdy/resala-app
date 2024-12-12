@@ -4,12 +4,10 @@ import SkeletonInput from 'antd/es/skeleton/Input';
 import { Suspense } from 'react';
 
 const CreateStockPage: React.FC<{ searchParams?: { productId?: string } }> = ({ searchParams }) => {
-  const productId = searchParams?.productId ? parseInt(searchParams.productId) : undefined;
-
   return (
     <Card>
       <StockForm
-        stock={{ productId }}
+        stock={{ productId: searchParams?.productId }}
         selectSize={
           <Suspense fallback={<SkeletonInput active block size="large" />}>
             <SelectSize />

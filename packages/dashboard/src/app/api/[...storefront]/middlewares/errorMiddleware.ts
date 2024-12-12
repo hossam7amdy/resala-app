@@ -2,41 +2,54 @@ import { APIError } from '@/exceptions';
 import { formatPrismaError } from '@/utils/prismaErrors';
 import { formatZodError } from '@/utils/zodErrors';
 import { Prisma } from '@prisma/client';
-import type { NextFunction, Request, RequestHandler, Response } from 'express';
+import type { Context } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { ZodError } from 'zod';
 
-/**
- * @description catch errors from async functions
- * @param {RequestHandler} fn - async function
- * @returns {RequestHandler} - function that catches errors
- */
-export const asyncHandler = (fn: RequestHandler): RequestHandler => {
-  return (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
-};
+export const errorHandler = async (c: Context) => {
+  const error = c.error;
 
-/** @description error middleware */
-export const errorHandler = (error: Error, _req: Request, res: Response, _next: NextFunction) => {
-  if (error instanceof APIError) {
-    return res.status(error.statusCode).json({
-      success: false,
-      message: error.message,
-    });
+  if (error instanceof HTTPException) {
+    return c.json(
+      {
+        success: false,
+        message: error.message,
+        cause: error.cause,
+      },
+      error.status
+    );
+  } else if (error instanceof APIError) {
+    return c.json(
+      {
+        success: false,
+        message: error.message,
+      },
+      error.statusCode
+    );
   } else if (error instanceof ZodError) {
-    return res.status(400).json({
-      success: false,
-      message: formatZodError(error),
-    });
+    return c.json(
+      {
+        success: false,
+        message: formatZodError(error),
+      },
+      422
+    );
   } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
     const { code, message } = formatPrismaError(error);
-
-    return res.status(code).json({
-      success: false,
-      message,
-    });
+    return c.json(
+      {
+        success: false,
+        message,
+      },
+      code as ResponseInit
+    );
   }
 
-  return res.status(500).json({
-    success: false,
-    message: 'Unexpected error occurred, please try again.',
-  });
+  return c.json(
+    {
+      success: false,
+      message: 'Unexpected error occurred, please try again.',
+    },
+    500
+  );
 };

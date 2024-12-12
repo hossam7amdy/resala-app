@@ -11,7 +11,7 @@ import type {
 export class ReviewService {
   constructor(private readonly db: DataStore) {}
 
-  async create(review: CreateReviewRequest['body']) {
+  async create(review: CreateReviewRequest['body'] & { userId: string }) {
     const reviewsLength = await this.db.review.count({
       where: { userId: review.userId, productId: review.productId },
     });
@@ -30,20 +30,23 @@ export class ReviewService {
     });
   }
 
-  async update(reviewId: number, { userId, ...review }: UpdateReviewRequest['body']) {
+  async update(
+    reviewId: string,
+    { userId, ...review }: UpdateReviewRequest['body'] & { userId: string }
+  ) {
     return await this.db.review.update({
       where: { id: reviewId, userId },
       data: review,
     });
   }
 
-  async delete(reviewId: number, userId: number) {
+  async delete(reviewId: string, userId: string) {
     return await this.db.review.delete({
       where: { id: reviewId, userId },
     });
   }
 
-  async find(reviewId: number): Promise<GetReviewResponse['data']> {
+  async find(reviewId: string): Promise<GetReviewResponse['data']> {
     return await this.db.review.findUniqueOrThrow({
       where: { id: reviewId },
       include: { user: true },

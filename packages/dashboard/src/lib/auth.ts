@@ -1,26 +1,29 @@
 import { configuration } from '@/configuration';
+import { db } from '@/lib/db';
 import { emailService, shoppingService } from '@/services';
-import { betterAuth } from 'better-auth';
+import { type User, betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { admin, anonymous, openAPI, phoneNumber } from 'better-auth/plugins';
 import { isValidPhoneNumber } from 'libphonenumber-js';
-import { Pool } from 'pg';
 
 const config = configuration();
 
 const auth = betterAuth({
-  database: new Pool({
-    connectionString: config.db.url,
+  database: prismaAdapter(db, {
+    provider: 'postgresql',
   }),
   trustedOrigins: config.trustedOrigins,
   databaseHooks: {
     user: {
       create: {
-        before: async user => {
+        before: async (user: User & { firstName?: string; lastName?: string }) => {
+          const [first, last] = user.name.split(' ');
+
           return {
             data: {
               ...user,
-              firstName: user.name.split(' ')[0],
-              lastName: user.name.split(' ')[1] || '',
+              firstName: user.firstName || first,
+              lastName: user.lastName || last || '',
             },
           };
         },
@@ -56,8 +59,8 @@ const auth = betterAuth({
     anonymous({
       emailDomainName: 'resala.dev',
       onLinkAccount: async ({ anonymousUser, newUser }) => {
-        const userId = Number(newUser.user.id);
-        const guestId = Number(anonymousUser.user.id);
+        const userId = newUser.user.id;
+        const guestId = anonymousUser.user.id;
 
         await Promise.allSettled([
           shoppingService.cart.merge(userId, guestId),
@@ -86,103 +89,56 @@ const auth = betterAuth({
     },
   },
   user: {
-    fields: {
-      emailVerified: 'is_email_verified',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
-    },
     additionalFields: {
       isAnonymous: {
         type: 'boolean',
-        fieldName: 'is_anonymous',
       },
       role: {
         type: 'string',
         input: false,
       },
       phoneNumber: {
-        fieldName: 'phone',
         type: 'string',
       },
       phoneNumberVerified: {
-        fieldName: 'is_phone_verified',
         type: 'boolean',
       },
       emailMarketingState: {
         type: 'string',
-        fieldName: 'email_marketing_state',
-      },
-      isPhoneVerified: {
-        type: 'string',
-        fieldName: 'is_phone_verified',
       },
       smsMarketingState: {
         type: 'string',
-        fieldName: 'sms_marketing_state',
       },
       firstName: {
         type: 'string',
-        fieldName: 'first_name',
       },
       lastName: {
         type: 'string',
-        fieldName: 'last_name',
       },
-      lang: {
+      locale: {
         type: 'string',
       },
       banReason: {
         type: 'string',
-        fieldName: 'ban_reason',
       },
       banExpires: {
         type: 'string',
-        fieldName: 'ban_expires',
       },
       birthDate: {
         type: 'string',
-        fieldName: 'birth_date',
       },
     },
   },
   session: {
-    fields: {
-      userId: 'user_id',
-      expiresAt: 'expires_at',
-      ipAddress: 'ip_address',
-      userAgent: 'user_agent',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
-    },
     additionalFields: {
       impersonatedBy: {
         type: 'string',
-        fieldName: 'impersonated_by',
       },
     },
   },
   account: {
     accountLinking: {
       enabled: true,
-    },
-    fields: {
-      userId: 'user_id',
-      idToken: 'id_token',
-      accountId: 'account_id',
-      providerId: 'provider_id',
-      accessToken: 'access_token',
-      refreshToken: 'refresh_token',
-      accessTokenExpiresAt: 'access_token_expires_at',
-      refreshTokenExpiresAt: 'refresh_token_expires_at',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
-    },
-  },
-  verification: {
-    fields: {
-      expiresAt: 'expires_at',
-      createdAt: 'created_at',
-      updatedAt: 'updated_at',
     },
   },
 });

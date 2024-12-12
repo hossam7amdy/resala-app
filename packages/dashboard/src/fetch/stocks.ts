@@ -21,9 +21,9 @@ export const listStocks = async (
   return await stockService.list(query);
 };
 
-export const findStockById = async (id: string | number): Promise<GetStockResponse['data']> => {
+export const findStockById = async (id: string): Promise<GetStockResponse['data']> => {
   try {
-    return await stockService.find(+id);
+    return await stockService.find(id);
   } catch {
     notFound();
   }
@@ -44,11 +44,11 @@ export const createStock = async (
 };
 
 export const updateStock = async (
-  stockId: string | number,
+  stockId: string,
   stock: UpdateStockRequest['body']
 ): Promise<UpdateStockResponse> => {
   try {
-    const data = await stockService.update(+stockId, stock);
+    const data = await stockService.update(stockId, stock);
     revalidatePath(ROUTES.STOCKS);
     revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
     return { data };
@@ -57,9 +57,9 @@ export const updateStock = async (
   }
 };
 
-export const deleteStock = async (stockId: string | number): Promise<DeleteStockResponse> => {
+export const deleteStock = async (stockId: string): Promise<DeleteStockResponse> => {
   try {
-    const data = await stockService.delete(+stockId);
+    const data = await stockService.delete(stockId);
     revalidatePath(ROUTES.STOCKS);
 
     return { data };

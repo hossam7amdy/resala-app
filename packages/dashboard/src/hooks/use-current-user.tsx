@@ -1,4 +1,4 @@
-import { useSession } from '@/lib/auth.client';
+import { useSession } from '@/fetch/auth.client';
 import type { User } from '@resala/shared';
 
 export const useCurrentUser = () => {
@@ -6,14 +6,7 @@ export const useCurrentUser = () => {
 
   return {
     isLoading: isPending,
-    user: {
-      ...data?.user,
-      firstName: data?.user?.name?.split(' ')[0],
-      lastName: data?.user?.name?.split(' ')[1] || '',
-      phone: data?.user?.phoneNumber,
-      isPhoneVerified: data?.user?.phoneNumberVerified ?? false,
-      isEmailVerified: data?.user?.emailVerified ?? false,
-    } as Partial<User>,
+    user: data?.user as User | null,
     error,
   };
 };

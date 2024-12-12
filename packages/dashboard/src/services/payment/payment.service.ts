@@ -72,7 +72,7 @@ export class PaymentService {
       const transaction = await this._paymobService.retrieve(+transactionId);
 
       return {
-        id: transaction.id,
+        id: transaction.id.toString(),
         amount: transaction.amount_cents / 100,
         currency: transaction.currency,
         pending: transaction.pending,

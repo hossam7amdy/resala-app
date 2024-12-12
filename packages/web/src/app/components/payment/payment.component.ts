@@ -121,7 +121,7 @@ export class PaymentComponent implements OnInit {
   successMsg: string = '';
   isLoading: boolean = false;
   getUserAddress: any = [];
-  addressId: number = 0;
+  addressId: string | undefined;
   addressIdEdit: number = 0;
 
   //the index selected for delete
@@ -192,7 +192,7 @@ export class PaymentComponent implements OnInit {
         }
         this.customSpinIsLoading = false;
 
-        if (this.addressId === 0) this.addressId = this.getUserAddress[0].id;
+        if (!this.addressId) this.addressId = this.getUserAddress[0].id;
       },
       error: () => {
         this.customSpinIsLoading = false;
@@ -221,7 +221,7 @@ export class PaymentComponent implements OnInit {
     });
   }
 
-  selectedAddressMethod(value: number): void {
+  selectedAddressMethod(value: string): void {
     this.customSpinIsLoading = true;
     this.addressId = value;
     this.isSelectedAddress = true;
@@ -358,7 +358,10 @@ export class PaymentComponent implements OnInit {
     if (this.isCheckedTerms) {
       this.customSpinIsLoading = true;
 
-      // if (this.payForm.valid) {
+      if (!this.addressId) {
+        this._Toaster.error('Choose Address Please!!');
+        return;
+      }
 
       this._PaymentServices.userOrder(this.addressId, this.paymentSelected, this.note).subscribe({
         next: response => {

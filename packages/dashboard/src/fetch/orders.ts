@@ -14,9 +14,9 @@ import type {
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
-export const findOrderById = async (id: string | number): Promise<GetOrderResponse['data']> => {
+export const findOrderById = async (id: string): Promise<GetOrderResponse['data']> => {
   try {
-    return await orderService.find(+id);
+    return await orderService.find(id);
   } catch {
     notFound();
   }
@@ -32,12 +32,9 @@ export const listOrders = async (
   return await orderService.list({ page, limit, search });
 };
 
-export const updateOrderStatus = async (
-  id: string | number,
-  payload: UpdateOrderRequest['body']
-) => {
+export const updateOrderStatus = async (id: string, payload: UpdateOrderRequest['body']) => {
   try {
-    const data = await orderService.update(+id, payload);
+    const data = await orderService.update(id, payload);
     revalidatePath(ROUTES.ORDERS);
     return { data };
   } catch (e) {
@@ -45,7 +42,7 @@ export const updateOrderStatus = async (
   }
 };
 
-export const deleteOrder = async (_orderId: string | number, _userId: string | number) => {
+export const deleteOrder = async (_orderId: string, _userId: string) => {
   try {
     // TODO: handle order deletion
     revalidatePath(ROUTES.ORDERS);

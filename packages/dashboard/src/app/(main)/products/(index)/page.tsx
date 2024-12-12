@@ -5,7 +5,7 @@ import type { ListRequestQuery } from '@resala/shared';
 import { Flex } from 'antd';
 
 const ProductPage = async ({ searchParams }: { searchParams?: ListRequestQuery['query'] }) => {
-  const { products, pagination } = await listProducts(searchParams ?? {});
+  const { products, pagination } = await listProducts({ page: 1, limit: 100, ...searchParams });
 
   return (
     <Flex vertical align="center" gap={10}>

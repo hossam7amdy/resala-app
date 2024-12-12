@@ -52,7 +52,7 @@ export class PaymentService {
     return this._httpClient.put<UpdateAddressResponse>(environment.baseUrl + url, userAddress);
   }
 
-  userOrder(userAddressId: number, payInfo: string, note: string): Observable<CreateOrderResponse> {
+  userOrder(userAddressId: string, payInfo: string, note: string): Observable<CreateOrderResponse> {
     const { url } = ENDPOINT_CONFIGS.checkout;
     return this._httpClient.post<CreateOrderResponse>(environment.baseUrl + url, {
       addressId: userAddressId,

@@ -61,7 +61,7 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params: any) => {
       this.categoryId = params.get('category-id');
       this.allCategoryProducts(this.categoryId);
     });
@@ -69,7 +69,7 @@ export class CategoriesComponent implements OnInit {
 
   allCategoryProducts(id: any): void {
     this._Categories.getCategoryProducts(id).subscribe({
-      next: response => {
+      next: (response: any) => {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
         this.arTitleCategory = response.data.products[0].category.arName;
@@ -95,7 +95,7 @@ export class CategoriesComponent implements OnInit {
 
         this.customSpinIsLoading = false;
       },
-      error: err => {
+      error: (err: any) => {
         if (err.statusText == 'Unauthorized') {
           this._Toaster.info('Should be Login !!');
           this._Router.navigate(['/login']);
@@ -112,7 +112,7 @@ export class CategoriesComponent implements OnInit {
     //  products
     this.customSpinIsLoading = true;
     this._Categories.getCategoryProducts(this.categoryId, event).subscribe({
-      next: response => {
+      next: (response: any) => {
         this.allProductsCategory = response.data.products;
         this.titleCategory = response.data.products[0].category.enName;
 

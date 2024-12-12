@@ -8,8 +8,8 @@ import React, { useState } from 'react';
 import { ImageCropUpload } from './image-crop-dragger';
 
 interface UploadFormProps {
-  colorId: number;
-  productId: number;
+  colorId: string;
+  productId: string;
   images: Omit<Image, 'productId' | 'colorId'>[];
   onCancel: () => void;
 }

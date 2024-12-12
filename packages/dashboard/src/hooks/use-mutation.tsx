@@ -1,7 +1,5 @@
 'use client';
 
-import { logout } from '@/fetch/auth';
-import { sleep } from '@/utils/sleep';
 import { useCallback, useState } from 'react';
 
 type Error = {
@@ -61,10 +59,6 @@ export const useMutation = <Data, Variables>({
 
         setError(error);
         onError(error);
-
-        if (error.status && [401, 403].includes(error.status)) {
-          await sleep(2000).then(logout);
-        }
       } finally {
         setIsLoading(false);
       }
