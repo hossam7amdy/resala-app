@@ -18,9 +18,9 @@ export const listAllColors = async (): Promise<ListColorsResponse['data']> => {
   return await colorService.list();
 };
 
-export const findColorById = async (id: string | number): Promise<GetColorResponse['data']> => {
+export const findColorById = async (id: string): Promise<GetColorResponse['data']> => {
   try {
-    return await colorService.find(+id);
+    return await colorService.find(id);
   } catch {
     notFound();
   }
@@ -39,11 +39,11 @@ export const createColor = async (
 };
 
 export const updateColor = async (
-  id: string | number,
+  id: string,
   payload: UpdateColorRequest['body']
 ): Promise<UpdateColorResponse> => {
   try {
-    const data = await colorService.update(+id, payload);
+    const data = await colorService.update(id, payload);
 
     revalidateTag(ROUTES.COLORS);
     return { data };
@@ -52,9 +52,9 @@ export const updateColor = async (
   }
 };
 
-export const deleteColor = async (id: string | number) => {
+export const deleteColor = async (id: string) => {
   try {
-    const data = await colorService.delete(+id);
+    const data = await colorService.delete(id);
 
     revalidateTag(ROUTES.COLORS);
     return { data };

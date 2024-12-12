@@ -352,22 +352,22 @@ h2 {
   color: #016373 !important;
   font-weight: 500;
 }
-.card-body .text-start{
+.card-body .text-start {
   text-align: left !important;
 }
-.card-body .text-start:lang(ar){
+.card-body .text-start:lang(ar) {
   text-align: right !important;
 }
-.card-body .text-end{
+.card-body .text-end {
   text-align: right !important;
 }
-.card-body .text-end:lang(ar){
+.card-body .text-end:lang(ar) {
   text-align: left !important;
 }
-.card-body .title-details{
+.card-body .title-details {
   text-align: left !important;
 }
-.card-body .title-details:lang(ar){
+.card-body .title-details:lang(ar) {
   text-align: right !important;
 }
 .card-body .text-details {

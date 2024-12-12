@@ -18,8 +18,8 @@ export const getSalesTrend = `
 
 export type ListTopProducts = {
   units_sold: bigint | null;
-  id: number;
-  category_id: number;
+  id: string;
+  category_id: string;
   ar_name: string;
   en_name: string;
   ar_description: string;
@@ -51,16 +51,15 @@ export const listTopProducts = `
 export type ListTopCustomers = {
   total_paid: number;
   total_orders: bigint | null;
-  id: number;
+  id: string;
   email: string;
-  is_email_verified: boolean;
-  phone: string;
-  is_phone_verified: boolean;
+  email_verified: boolean;
+  phone_number: string;
+  phone_number_verified: boolean;
   name: string;
   first_name: string;
   last_name: string;
   role: Role;
-  last_login: Date | null;
   created_at: Date;
   updated_at: Date;
 }[];

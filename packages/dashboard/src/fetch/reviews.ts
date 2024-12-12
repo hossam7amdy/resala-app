@@ -20,15 +20,15 @@ export const listReviews = async (
   return await reviewService.list(parsed.query);
 };
 
-export const findReviewById = async (id: string | number): Promise<GetReviewResponse['data']> => {
+export const findReviewById = async (id: string): Promise<GetReviewResponse['data']> => {
   try {
-    return await reviewService.find(+id);
+    return await reviewService.find(id);
   } catch {
     return notFound();
   }
 };
 
-export const deleteReview = async (id: number, userId: number): Promise<DeleteReviewResponse> => {
+export const deleteReview = async (id: string, userId: string): Promise<DeleteReviewResponse> => {
   try {
     const data = await reviewService.delete(id, userId);
 

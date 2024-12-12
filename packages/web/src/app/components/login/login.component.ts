@@ -54,7 +54,7 @@ export class LoginComponent {
     if (this.loginForm.valid === true) {
       this.customSpinIsLoading = true;
       this.authService.login(userData).subscribe({
-        next: (res) => {
+        next: res => {
           this.customSpinIsLoading = false;
           this.successMsg = 'Logged already';
           this.successMsgAr = 'تم تسجيل الدخول بنجاح';
@@ -66,13 +66,11 @@ export class LoginComponent {
             this.router.navigate(['product-details/', productId], { replaceUrl: true });
             localStorage.removeItem('productId');
           }
-
         },
         error: err => {
           this.customSpinIsLoading = false;
           this.errMsg = err?.error?.message || 'Something went wrong';
           this.errMsgAr = 'الايميل او كلمة المرور غير صحيحة !';
-         
         },
       });
     }

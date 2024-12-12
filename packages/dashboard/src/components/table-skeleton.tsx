@@ -19,9 +19,7 @@ export const TableSkeleton: React.FC = () => {
         3: <SkeletonInput active />,
         4: <SkeletonInput active />,
       }))}
-      pagination={{
-        position: ['bottomCenter'],
-      }}
+      pagination={false}
     />
   );
 };

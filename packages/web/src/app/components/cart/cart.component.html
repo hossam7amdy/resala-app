@@ -310,7 +310,9 @@
         <div class="card text-center">
           <div class="card-body">
             <div class="row card-text">
-              <p [lang]="_Translate.currentLang" class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
+              <p [lang]="_Translate.currentLang" class="text-start col-6 p fs-5 p-0">
+                {{ 'cart.totalProPrice' | translate }}
+              </p>
 
               <span [lang]="_Translate.currentLang" class="text-end col-6 price fs-5">
                 {{ cartDetails.totalPrice }}

@@ -26,7 +26,7 @@ export class OrdersComponent implements OnInit {
     private _userService: UserService,
     private _authService: AuthService,
     public _translate: TranslateService,
-    private _Router:Router
+    private _Router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,7 +46,7 @@ export class OrdersComponent implements OnInit {
       }
     });
   }
-  reDirectFun(){
+  reDirectFun() {
     this._Router.navigate(['/home']);
   }
 

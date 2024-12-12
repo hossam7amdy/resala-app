@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AuthUser } from '@resala/shared';
+import { User } from '@resala/shared';
 import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
@@ -34,7 +34,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   styleUrls: ['./nav-blank.component.css'],
 })
 export class NavBlankComponent implements OnInit {
-  user: AuthUser | null = null;
+  user: User | null = null;
   customSpinIsLoading = false;
   authenticated: boolean = false;
   categoryList: any = [];
@@ -130,8 +130,6 @@ export class NavBlankComponent implements OnInit {
       this.authenticated = !!user && !user?.isAnonymous;
     });
 
-   
-
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
       this.translate.defaultLang;
@@ -209,7 +207,6 @@ export class NavBlankComponent implements OnInit {
     this.customSpinIsLoading = true;
     this._authService.logout().subscribe({
       next: () => {
-
         this.customSpinIsLoading = false;
         this._router.navigate(['/']);
       },

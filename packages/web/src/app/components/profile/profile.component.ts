@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { AuthUser } from '@resala/shared';
+import { User } from '@resala/shared';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     private _spinner: NgxSpinnerService
   ) {}
 
-  userInfo: AuthUser | null = null;
+  userInfo: User | null = null;
   customSpinIsLoading: boolean = false;
 
   ngOnInit(): void {

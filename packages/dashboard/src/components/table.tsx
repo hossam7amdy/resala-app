@@ -1,6 +1,7 @@
 import { Table as AntTable, type TableProps } from 'antd';
 import React from 'react';
 
-export const Table: React.FC<TableProps> = props => {
-  return <AntTable scroll={{ x: 768, y: 500 }} {...props} />;
-};
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function Table<T>(props: TableProps<T>) {
+  return <AntTable scroll={{ x: true }} {...props} />;
+}

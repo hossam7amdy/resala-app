@@ -53,7 +53,7 @@ export class CartComponent implements OnInit {
   // quantity attr
   counterQuantity: number = 1;
 
-  authenticated : boolean = false;
+  authenticated: boolean = false;
   constructor(
     private _CartService: CartService,
     private _Renderer: Renderer2,
@@ -62,7 +62,7 @@ export class CartComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public _Translate: TranslateService,
     private _HomeProductsService: HomeProductsService,
-    private _AuthService:AuthService
+    private _AuthService: AuthService
   ) {}
   // ngAfterContentChecked(): void {
   //   if(this.cartDetailsItems == undefined){
@@ -293,17 +293,20 @@ export class CartComponent implements OnInit {
     this.isRotated = !this.isRotated;
   }
 
-  checkedLogged():void{
-    this._AuthService.authenticated$.subscribe(response=>{
+  checkedLogged(): void {
+    this._AuthService.authenticated$.subscribe(response => {
       this.authenticated = response;
-    })
-    if(this.authenticated === true){
+    });
+    if (this.authenticated === true) {
       this._Router.navigate(['/payment']);
-    }else{
-      this._toaster.info(this._Translate.currentLang == 'ar'?"برجاء تسجيل الدخول لاتمام عملية الشراء":"Should be Sign in to Complete Your Order")
+    } else {
+      this._toaster.info(
+        this._Translate.currentLang == 'ar'
+          ? 'برجاء تسجيل الدخول لاتمام عملية الشراء'
+          : 'Should be Sign in to Complete Your Order'
+      );
       this._AuthService.directionURL.next('cart');
       this._Router.navigate(['/login']);
     }
-    
   }
 }

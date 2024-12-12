@@ -11,7 +11,7 @@ type SearchParams = {
   limit?: number;
 };
 type Params = {
-  id: number;
+  id: string;
 };
 
 interface ProductReviewsProps {
@@ -21,7 +21,7 @@ interface ProductReviewsProps {
 
 const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
   params,
-  searchParams: { page = 1, limit = 10 },
+  searchParams: { page = 1, limit = 100 },
 }) => {
   const { reviews, pagination } = await listReviews({ page, limit, productId: params.id });
 

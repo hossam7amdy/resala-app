@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  AuthUser,
   ENDPOINT_CONFIGS,
-  Endpoints,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
   GetSessionResponse,
@@ -17,10 +15,11 @@ import {
   RegisterResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
-  withParams,
+  User,
 } from '@resala/shared';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
 import { CartService } from './cart.service';
 
 type SignData = {
@@ -41,21 +40,20 @@ type RegisterData = {
   providedIn: 'root',
 })
 export class AuthService {
-
   directionURL = new BehaviorSubject<string>('home');
 
   public authenticated = new BehaviorSubject<boolean>(false);
   public authenticated$ = this.authenticated.asObservable();
 
-  private userInfoSubject = new BehaviorSubject<AuthUser | null>(null);
+  private userInfoSubject = new BehaviorSubject<User | null>(null);
   public userInfo$ = this.userInfoSubject.asObservable();
 
   constructor(
     private _httpClient: HttpClient,
-    private _CartService:CartService
+    private _CartService: CartService
   ) {}
 
-  private _setUserInfo(userInfo: AuthUser): void {
+  private _setUserInfo(userInfo: User): void {
     this.userInfoSubject.next(userInfo);
     this.authenticated.next(true);
   }
@@ -68,6 +66,7 @@ export class AuthService {
   register(userData: RegisterData): Observable<RegisterResponse> {
     const body: RegisterRequest = {
       ...userData,
+      name: `${userData.firstName} ${userData.lastName}`,
       callbackURL: `${location.origin}/login`,
     };
 
@@ -75,15 +74,15 @@ export class AuthService {
     return this._httpClient.post<RegisterResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-  signIn(userData:any):Observable<any>{
-    const { url }= withParams(ENDPOINT_CONFIGS[Endpoints.login])
+  signIn(userData: any): Observable<any> {
+    const { url } = ENDPOINT_CONFIGS.login;
     return this._httpClient.post<any>(`${environment.baseUrl}${url}`, userData);
   }
 
   loginWithEmail({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginRequest = {
       email: sign,
-      password:password,
+      password: password,
       rememberMe,
       callbackURL: `${location.origin}/home`,
     };
@@ -95,7 +94,7 @@ export class AuthService {
   loginWithPhone({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginWithPhoneRequest = {
       phoneNumber: sign,
-      password:password,
+      password: password,
       rememberMe,
       callbackURL: `${location.origin}/home`,
     };
@@ -109,12 +108,11 @@ export class AuthService {
       ? this.loginWithEmail(signData)
       : this.loginWithPhone(signData);
 
-    return loginObservable.pipe(tap(res => {
-      this._setUserInfo(res.user)
-     
-    }
-     
-    ));
+    return loginObservable.pipe(
+      tap(res => {
+        this._setUserInfo(res.user);
+      })
+    );
   }
 
   loginAnonymous(): Observable<LoginAnonymousResponse> {
@@ -159,11 +157,9 @@ export class AuthService {
       tap(session => {
         if (!session) {
           this.loginAnonymous().subscribe();
-          
         } else if (!session.user.isAnonymous) {
           this._setUserInfo(session.user);
         }
-        
       })
     );
   }

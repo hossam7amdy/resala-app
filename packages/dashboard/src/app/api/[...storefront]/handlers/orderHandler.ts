@@ -5,46 +5,105 @@ import {
   paymentService,
   shoppingService,
 } from '@/services';
-import type { CreateOrderRequest, CreateOrderResponse, ListOrdersResponse } from '@resala/shared';
-import type { HandlerResponse } from 'hono/types';
+import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
+import { CreateOrderSchema, OffsetPageParamsSchema, OrderSchema } from '@resala/shared';
 
-import type { HonoCtx } from '../types';
+import type { Env } from '../types';
 
-export const checkout = async (c: HonoCtx): Promise<HandlerResponse<CreateOrderResponse>> => {
-  const userId = Number(c.var.user?.id);
-  const email = String(c.var.user?.email);
-  const { paymentMethod, addressId, note } = (await c.req.json()) as CreateOrderRequest['body'];
+const checkoutRoute = createRoute({
+  tags: ['Order'],
+  method: 'post',
+  path: '/',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: CreateOrderSchema.shape.body,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            success: z.boolean().default(true),
+            data: z
+              .object({
+                paymentUrl: z.string().url(),
+              })
+              .optional(),
+          }),
+        },
+      },
+      description: 'Order created successfully',
+    },
+  },
+});
+const listUserOrdersRoute = createRoute({
+  tags: ['Order'],
+  method: 'get',
+  path: '/',
+  request: {
+    query: OffsetPageParamsSchema,
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            data: z.object({
+              orders: z.array(OrderSchema),
+              pagination: z.object({
+                total: z.number(),
+                page: z.number(),
+                limit: z.number(),
+              }),
+            }),
+          }),
+        },
+      },
+      description: 'List of orders',
+    },
+  },
+});
 
-  const userCart = await shoppingService.cart.get(userId);
-  const discountedUserCart = await discountService.applyDiscount(userCart);
+const orderHandler = new OpenAPIHono<Env>()
+  .openapi(checkoutRoute, async c => {
+    const userId = c.var.user.id;
+    const email = c.var.user.email;
+    const { paymentMethod, addressId, note } = c.req.valid('json');
 
-  const address = await addressService.find(userId, addressId);
+    const userCart = await shoppingService.cart.get(userId);
+    const discountedUserCart = await discountService.applyDiscount(userCart);
 
-  const { id, orderItems } = await orderService.create(
-    { userId, paymentMethod, note },
-    discountedUserCart,
-    address
-  );
+    const address = await addressService.find(addressId, { userId });
 
-  let payment;
-  if (paymentMethod === 'CARD') {
-    payment = await paymentService.checkout({
-      orderId: id,
-      orderItems,
-      billingData: { ...address, email },
-    });
-  }
+    const { id, orderItems } = await orderService.create(
+      { userId, paymentMethod, note },
+      discountedUserCart,
+      address
+    );
 
-  return c.json({ success: true, data: payment });
-};
+    let payment;
+    if (paymentMethod === 'CARD') {
+      payment = await paymentService.checkout({
+        orderId: id,
+        orderItems,
+        billingData: { ...address, email },
+      });
+    }
 
-export const listUserOrders = async (c: HonoCtx): Promise<HandlerResponse<ListOrdersResponse>> => {
-  const userId = Number(c.var.user?.id);
-  const page = +(c.req.query('page') || '1');
-  const limit = +(c.req.query('limit') || '10');
-  const search = c.req.query('search') || '';
+    return c.json({ success: true, data: payment }, 201);
+  })
+  .openapi(listUserOrdersRoute, async c => {
+    const userId = c.var.user.id;
+    const { page, limit } = c.req.valid('query');
 
-  const { orders, pagination } = await orderService.list({ page, limit, search, userId });
+    const { orders, pagination } = await orderService.list({ page, limit, userId });
 
-  return c.json({ success: true, data: { orders, pagination } });
-};
+    return c.json({ success: true, data: { orders, pagination } }, 200);
+  });
+
+export { orderHandler };

@@ -8,7 +8,6 @@ import type {
   ListTopCustomersResponse,
   ListTopProductsResponse,
 } from '@resala/shared';
-import { Decimal } from 'decimal.js';
 
 import { type GetSalesTrend, type ListTopCustomers, type ListTopProducts } from './dashboard.sql';
 
@@ -179,7 +178,7 @@ export class DashboardService {
         categoryId: p.category_id,
         arName: p.ar_name,
         enName: p.en_name,
-        price: new Decimal(p.price),
+        price: p.price,
         arDescription: p.ar_description,
         enDescription: p.en_description,
         imageUrl: p.image_url,
@@ -211,22 +210,24 @@ export class DashboardService {
       ORDER BY 1 DESC;
     `;
 
-    // @ts-expect-error TODO: will fix later
     return topCustomers.map(({ total_paid, total_orders, ...user }) => ({
       totalPaid: +(total_paid ?? 0),
       totalOrders: +(total_orders?.toString() ?? 0),
       user: {
         id: user.id,
-        email: user.email,
-        isEmailVerified: user.is_email_verified,
-        phone: user.phone,
-        isPhoneVerified: user.is_phone_verified,
         firstName: user.first_name,
         lastName: user.last_name,
-        role: user.role,
-        lastLogin: user.last_login,
         createdAt: user.created_at,
         updatedAt: user.updated_at,
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        emailVerified: user.email_verified,
+        emailMarketingState: 'not_subscribed', // default value, adjust as needed
+        phoneNumber: user.phone_number,
+        phoneNumberVerified: user.phone_number_verified,
+        smsMarketingState: 'not_subscribed', // default value, adjust as needed
+        role: user.role,
+        birthDate: null, // optional field
       },
     }));
   }
