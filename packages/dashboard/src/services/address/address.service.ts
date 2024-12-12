@@ -10,34 +10,45 @@ import type {
 } from './address.dto';
 
 export class AddressService {
-  private readonly maxAddressCount = 5;
+  private readonly _maxAddressCount = 5;
 
   constructor(private readonly db: DataStore) {}
 
-  async list(userId: string) {
-    const addresses = await this.db.userAddress.findMany({
-      select: {
-        address: true,
-      },
-      where: {
-        userId,
-        isDefault: true,
-      },
-      orderBy: {
-        address: {
-          createdAt: 'desc',
+  async list(userId: string): Promise<Address[]> {
+    const [defaultAddress, addresses] = await this.db.$transaction([
+      this.db.userAddress.findFirst({
+        select: {
+          address: true,
         },
-      },
-      take: this.maxAddressCount,
-    });
+        where: {
+          userId,
+          isDefault: true,
+        },
+      }),
+      this.db.userAddress.findMany({
+        select: {
+          address: true,
+        },
+        where: {
+          userId,
+        },
+        orderBy: {
+          address: {
+            createdAt: 'desc',
+          },
+        },
+        take: this._maxAddressCount,
+      }),
+    ]);
 
+    if (defaultAddress) addresses.unshift(defaultAddress);
     return addresses.map(address => address.address);
   }
 
   async create({ userId, isDefault, ...payload }: CreateAddressDto): Promise<Address> {
     const userAddrCount = await this.db.userAddress.count({ where: { userId } });
 
-    if (userAddrCount >= this.maxAddressCount) {
+    if (userAddrCount >= this._maxAddressCount) {
       throw new ConflictError('You have reached the maximum number of addresses allowed');
     }
 
