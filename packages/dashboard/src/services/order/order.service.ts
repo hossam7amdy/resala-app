@@ -3,13 +3,13 @@ import type { DataStore } from '@/lib/db';
 import type { Order, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import type {
-  Address,
-  GetCartResponse,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
   PaymentMethod,
 } from '@resala/shared';
+
+import type { CreateOrderRequestDto } from './order.dto';
 
 const ORDER_ATTRIBUTES = {
   orderItems: {
@@ -38,11 +38,7 @@ const ORDER_ATTRIBUTES = {
 export class OrderService {
   constructor(private readonly db: DataStore) {}
 
-  async create(
-    { userId, paymentMethod, note }: { userId: string; paymentMethod: string; note?: string },
-    cart: GetCartResponse['data'],
-    address: Address
-  ) {
+  async create({ userId, paymentMethod, note, cart, shippingAddress }: CreateOrderRequestDto) {
     if (cart.items.length === 0) {
       throw new BadRequestError('Cart is empty');
     }
@@ -58,7 +54,6 @@ export class OrderService {
       description: `${item.stock.size.name}, ${item.stock.color.enName}`,
     }));
 
-    const { id: _, ...addressWithoutId } = address;
     const order = await this.db.order.create({
       data: {
         userId,
@@ -69,7 +64,7 @@ export class OrderService {
         shippingDetails: {
           create: {
             address: {
-              create: addressWithoutId,
+              create: shippingAddress,
             },
           },
         },
