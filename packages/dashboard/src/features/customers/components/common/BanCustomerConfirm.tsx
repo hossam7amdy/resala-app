@@ -1,18 +1,17 @@
-import { formatDateTime } from '@/utils/date-time-formatter';
 import { type User } from '@resala/shared';
 import { Form, Input, InputNumber, Modal } from 'antd';
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React from 'react';
 
-import { useBanCustomer, useUnbanCustomer } from '../../hooks';
+import { useBanCustomer } from '../../hooks';
 
-interface BanUserCellProps {
+interface BanCustomerConfirmProps {
   user: User;
+  renderTrigger: (trigger: () => void) => React.ReactNode;
 }
 
-const BanCustomerConfirm = forwardRef(({ user }: BanUserCellProps, ref) => {
+const BanCustomerConfirm: React.FC<BanCustomerConfirmProps> = ({ user, renderTrigger }) => {
   const [form] = Form.useForm();
   const { banCustomer } = useBanCustomer();
-  const { unbanCustomer } = useUnbanCustomer();
   const [modal, contextHolder] = Modal.useModal();
 
   const confirmBan = () => {
@@ -21,10 +20,14 @@ const BanCustomerConfirm = forwardRef(({ user }: BanUserCellProps, ref) => {
       content: (
         <Form form={form} name={`ban-user-${user.id}`}>
           <Form.Item name="reason" label="Reason">
-            <Input.TextArea autoSize={{ minRows: 3, maxRows: 5 }} maxLength={500} />
+            <Input.TextArea
+              autoSize={{ minRows: 3, maxRows: 5 }}
+              maxLength={500}
+              placeholder="No reason"
+            />
           </Form.Item>
-          <Form.Item name="duration" label="Duration" initialValue={1}>
-            <InputNumber min={1} suffix="Days" className="w-full" />
+          <Form.Item name="duration" label="Duration">
+            <InputNumber min={0} suffix="Days" className="w-full" placeholder="0" />
           </Form.Item>
         </Form>
       ),
@@ -35,31 +38,12 @@ const BanCustomerConfirm = forwardRef(({ user }: BanUserCellProps, ref) => {
     });
   };
 
-  const confirmUnban = () => {
-    modal.confirm({
-      title: `Are you sure you want to unban ${user.firstName} ${user.lastName}?`,
-      content: (
-        <div>
-          <p>Ban reason: {user.banReason}</p>
-          <p>
-            Ban until: {user?.banExpires ? formatDateTime(new Date(user.banExpires)) : 'Forever'}
-          </p>
-        </div>
-      ),
-      onOk: () => unbanCustomer({ userId: user.id }),
-      okText: 'Confirm',
-      cancelText: 'Cancel',
-    });
-  };
-
-  useImperativeHandle(ref, () => ({
-    confirmBan,
-    confirmUnban,
-  }));
-
-  return <>{contextHolder}</>;
-});
-
-BanCustomerConfirm.displayName = 'BanCustomerConfirm';
+  return (
+    <>
+      {contextHolder}
+      {renderTrigger(confirmBan)}
+    </>
+  );
+};
 
 export { BanCustomerConfirm };
