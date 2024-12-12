@@ -20,6 +20,8 @@ import {
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+import { CartService } from './cart.service';
+
 type SignData = {
   sign: string;
   password: string;
@@ -38,13 +40,18 @@ type RegisterData = {
   providedIn: 'root',
 })
 export class AuthService {
-  private authenticated = new BehaviorSubject<boolean>(false);
+  directionURL = new BehaviorSubject<string>('home');
+
+  public authenticated = new BehaviorSubject<boolean>(false);
   public authenticated$ = this.authenticated.asObservable();
 
   private userInfoSubject = new BehaviorSubject<User | null>(null);
   public userInfo$ = this.userInfoSubject.asObservable();
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(
+    private _httpClient: HttpClient,
+    private _CartService: CartService
+  ) {}
 
   private _setUserInfo(userInfo: User): void {
     this.userInfoSubject.next(userInfo);
@@ -67,10 +74,15 @@ export class AuthService {
     return this._httpClient.post<RegisterResponse>(`${environment.baseUrl}${url}`, body);
   }
 
+  signIn(userData: any): Observable<any> {
+    const { url } = ENDPOINT_CONFIGS.login;
+    return this._httpClient.post<any>(`${environment.baseUrl}${url}`, userData);
+  }
+
   loginWithEmail({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginRequest = {
       email: sign,
-      password,
+      password: password,
       rememberMe,
       callbackURL: `${location.origin}/home`,
     };
@@ -82,7 +94,7 @@ export class AuthService {
   loginWithPhone({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginWithPhoneRequest = {
       phoneNumber: sign,
-      password,
+      password: password,
       rememberMe,
       callbackURL: `${location.origin}/home`,
     };
@@ -96,7 +108,11 @@ export class AuthService {
       ? this.loginWithEmail(signData)
       : this.loginWithPhone(signData);
 
-    return loginObservable.pipe(tap(res => this._setUserInfo(res.user)));
+    return loginObservable.pipe(
+      tap(res => {
+        this._setUserInfo(res.user);
+      })
+    );
   }
 
   loginAnonymous(): Observable<LoginAnonymousResponse> {
@@ -126,6 +142,7 @@ export class AuthService {
       tap(() => {
         this._clearUserInfo();
         this.loginAnonymous().subscribe();
+        this._CartService.cartNumber.next(0);
       })
     );
   }

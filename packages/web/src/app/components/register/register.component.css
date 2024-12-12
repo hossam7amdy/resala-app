@@ -32,9 +32,9 @@ section p {
 .date-input input:focus {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
-  border-color: #86b7fe;
+  border-color: #016373;
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  box-shadow: none !important;
 }
 
 .calendar-icon {
@@ -88,24 +88,11 @@ section p {
   cursor: pointer;
   color: inherit !important;
 }
-.submit:disabled {
-  cursor: text;
-  background-color: #ccc;
-}
 
-.submit {
-  background-color: #016373;
-  color: #fff;
-  border-radius: 5px;
-  font-weight: bold;
-  padding: 10px 50px;
-  cursor: pointer;
-}
-
-.submit:active {
+/* .submit:active {
   background-color: #fbb935;
   transition-duration: 2ms;
-}
+} */
 
 /* Media Query*/
 
