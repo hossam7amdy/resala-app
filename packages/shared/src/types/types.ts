@@ -32,17 +32,17 @@ export type Pagination = {
   total: number;
 };
 
-export type RoleType = keyof typeof Role;
+export type RoleType = `${Role}`;
 
-export type OrderStatusType = keyof typeof OrderStatus;
+export type OrderStatusType = `${OrderStatus}`;
 
-export type PaymentStatusType = keyof typeof PaymentStatus;
+export type PaymentStatusType = `${PaymentStatus}`;
 
-export type PaymentMethodType = keyof typeof PaymentMethod;
+export type PaymentMethodType = `${PaymentMethod}`;
 
-export type DiscountType = keyof typeof DiscountEnum;
+export type DiscountType = `${DiscountEnum}`;
 
-export type MarketingStateType = keyof typeof MarketingState;
+export type MarketingStateType = `${MarketingState}`;
 
 export type OffsetPageParams = z.infer<typeof OffsetPageParamsSchema>;
 
