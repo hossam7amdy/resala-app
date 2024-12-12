@@ -299,3 +299,14 @@ body {
 label {
   margin: 5px 0;
 }
+
+.form-control:focus {
+
+  border-color: #016373 !important; 
+
+   box-shadow:none !important;
+}
+.form-select:focus{
+  border-color: #016373;
+  box-shadow: none !important;
+}

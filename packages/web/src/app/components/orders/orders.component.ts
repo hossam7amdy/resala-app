@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 // import { ListOrdersResponse } from '@resala/shared';
 import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
@@ -24,7 +25,8 @@ export class OrdersComponent implements OnInit {
   constructor(
     private _userService: UserService,
     private _authService: AuthService,
-    public _translate: TranslateService
+    public _translate: TranslateService,
+    private _Router:Router
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,9 @@ export class OrdersComponent implements OnInit {
         });
       }
     });
+  }
+  reDirectFun(){
+    this._Router.navigate(['/home']);
   }
 
   setActiveClass() {
