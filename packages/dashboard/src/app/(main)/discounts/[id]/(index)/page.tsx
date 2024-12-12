@@ -15,7 +15,7 @@ const DiscountProductsPage: React.FC<DiscountProductsPageProps> = async ({
   params,
   searchParams,
 }) => {
-  const discount = await findDiscountById(params.id, searchParams ?? {});
+  const discount = await findDiscountById(params.id, { page: 1, limit: 100, ...searchParams });
 
   if (discount?.isStoreWide) {
     notFound();

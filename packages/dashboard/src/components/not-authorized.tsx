@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/fetch/auth';
+import { signOut } from '@/fetch/auth.client';
 import { ROUTES } from '@/routes';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,7 @@ export const NotAuthorized: React.FC<{ message?: string }> = ({
   const logoutCallback = useCallback(async () => {
     setIsLoading(true);
     try {
-      await logout();
+      await signOut();
       replace(ROUTES.LOGIN);
     } finally {
       setIsLoading(false);

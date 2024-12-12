@@ -20,9 +20,9 @@ export const listProducts = async (
   return await productService.list(query);
 };
 
-export const findProduct = async (id: string | number): Promise<GetProductResponse['data']> => {
+export const findProduct = async (id: string): Promise<GetProductResponse['data']> => {
   try {
-    return await productService.get(+id);
+    return await productService.get(id);
   } catch {
     return notFound();
   }
@@ -73,9 +73,9 @@ export const updateProduct = async (
   }
 };
 
-export const deleteProduct = async (id: number | string): Promise<DeleteProductResponse> => {
+export const deleteProduct = async (id: string): Promise<DeleteProductResponse> => {
   try {
-    const data = await productService.delete(+id);
+    const data = await productService.delete(id);
 
     revalidatePath(ROUTES.PRODUCTS);
     return { data };

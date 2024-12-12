@@ -1,8 +1,11 @@
 import { betterFetch } from '@better-fetch/fetch';
 import type { User } from '@prisma/client';
+import { Role } from '@resala/shared';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { PROTECTED_ROUTES, ROUTES } from './routes';
+
+const managementRoles = [Role.ADMIN, Role.STAFF];
 
 const middleware = async (request: NextRequest) => {
   const { data: session } = await betterFetch<{ user?: User }>('/api/auth/get-session', {
@@ -13,7 +16,7 @@ const middleware = async (request: NextRequest) => {
   });
 
   const pathname = request.nextUrl.pathname;
-  const isAdmin = session?.user?.role.toLowerCase() === 'admin';
+  const isAdmin = managementRoles.includes(session?.user?.role.toLowerCase() as Role);
   const isOnNotAuthorized = pathname === ROUTES.NOT_AUTHORIZED;
   const isOnDashboard = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
 

@@ -3,8 +3,8 @@ import type { Context } from 'hono';
 
 export type Env = {
   Variables: {
-    user?: User;
-    session?: Session;
+    user: User;
+    session: Session;
   };
 };
 

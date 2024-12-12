@@ -11,7 +11,7 @@ import type {
 export class SizeService {
   constructor(private readonly db: DataStore) {}
 
-  async find(id: number): Promise<GetSizeResponse['data']> {
+  async find(id: string): Promise<GetSizeResponse['data']> {
     return await this.db.size.findFirstOrThrow({ where: { id } });
   }
 
@@ -27,7 +27,7 @@ export class SizeService {
     });
   }
 
-  async update(id: number, size: UpdateSizeRequest['body']): Promise<UpdateSizeResponse['data']> {
+  async update(id: string, size: UpdateSizeRequest['body']): Promise<UpdateSizeResponse['data']> {
     return await this.db.size.update({
       where: { id },
       data: {
@@ -36,7 +36,7 @@ export class SizeService {
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return await this.db.size.delete({ where: { id } });
   }
 }

@@ -4,7 +4,7 @@ import type { CreateColorRequest, GetColorResponse, UpdateColorRequest } from '@
 export class ColorService {
   constructor(private readonly db: DataStore) {}
 
-  async find(id: number): Promise<GetColorResponse['data']> {
+  async find(id: string): Promise<GetColorResponse['data']> {
     return await this.db.color.findUniqueOrThrow({ where: { id } });
   }
 
@@ -16,11 +16,11 @@ export class ColorService {
     return await this.db.color.create({ data: color });
   }
 
-  async update(colorId: number, color: UpdateColorRequest['body']) {
+  async update(colorId: string, color: UpdateColorRequest['body']) {
     return await this.db.color.update({ where: { id: colorId }, data: color });
   }
 
-  async delete(colorId: number) {
+  async delete(colorId: string) {
     return await this.db.color.delete({ where: { id: colorId } });
   }
 }

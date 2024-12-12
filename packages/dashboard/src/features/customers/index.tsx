@@ -1,2 +1,1 @@
-export * from './edit-form';
-export * from './customers-table';
+export * from './components';

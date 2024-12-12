@@ -95,6 +95,8 @@
     <p *ngIf="successMsg" class="alert text-green mx-auto">
       {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
     </p>
-    <p *ngIf="errMsg" class="alert text-danger mx-auto">{{_Translate.currentLang =='ar'?errMsgAr:errMsg }}</p>
+    <p *ngIf="errMsg" class="alert text-danger mx-auto">
+      {{ _Translate.currentLang == 'ar' ? errMsgAr : errMsg }}
+    </p>
   </form>
 </section>

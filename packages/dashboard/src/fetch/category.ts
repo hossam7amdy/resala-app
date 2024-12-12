@@ -17,7 +17,7 @@ export const listAllCategories = async (): Promise<ListCategoriesResponse['data'
 
 export const findCategoryById = async (id: string): Promise<GetCategoryResponse['data']> => {
   try {
-    return await categoryService.find(+id);
+    return await categoryService.find(id);
   } catch {
     notFound();
   }
@@ -35,7 +35,7 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
 
 export const updateCategory = async (id: string, payload: UpdateCategoryRequest['body']) => {
   try {
-    const data = await categoryService.update(+id, payload);
+    const data = await categoryService.update(id, payload);
     revalidatePath(ROUTES.CATEGORIES);
     return { data };
   } catch (e) {
@@ -45,7 +45,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
 
 export const deleteCategory = async (id: string) => {
   try {
-    const data = await categoryService.delete(+id);
+    const data = await categoryService.delete(id);
     revalidatePath(ROUTES.CATEGORIES);
     return { data };
   } catch (e) {

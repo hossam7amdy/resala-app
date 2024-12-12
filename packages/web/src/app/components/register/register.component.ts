@@ -63,10 +63,7 @@ export class RegisterComponent {
       Validators.required,
       Validators.pattern(/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/),
     ]),
-    phone: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^01[0125][0-9]{8}$/),
-    ]),
+    phone: new FormControl('', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
     password: new FormControl(
       '',
       Validators.compose([
@@ -83,8 +80,8 @@ export class RegisterComponent {
 
   handleForm(_registerForm: FormGroup): void {
     const userName = this.registerForm.value;
-    this.registerForm.patchValue({name:`${userName.firstName}`+`${userName.lastName}`});
-   
+    this.registerForm.patchValue({ name: `${userName.firstName}` + `${userName.lastName}` });
+
     if (this.isCheckedTerms) {
       const userData = this.registerForm.value;
       if (this.registerForm.valid === true) {
@@ -99,7 +96,6 @@ export class RegisterComponent {
           error: err => {
             this.errMsg = err?.error?.message;
             this.isLoading = false;
-            
           },
         });
       } else {

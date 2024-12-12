@@ -8,7 +8,7 @@ export const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ ord
   const notification = useNotification();
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ orderId, userId }: { orderId: number; userId: number }) =>
+    mutationFn: ({ orderId, userId }: { orderId: string; userId: string }) =>
       deleteOrder(orderId, userId),
     onSuccess: () => {
       notification.success('Ordered cancelled successfully');
@@ -23,7 +23,7 @@ export const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ ord
       open={isLoading || undefined}
       title="Are you want to cancel this order?"
       description="This action cannot be undone."
-      onConfirm={() => mutate({ orderId: order.id, userId: order.user?.id as number })}
+      onConfirm={() => mutate({ orderId: order.id, userId: order.user?.id as string })}
       okType="default"
       okText="Yes"
       cancelText="No"
