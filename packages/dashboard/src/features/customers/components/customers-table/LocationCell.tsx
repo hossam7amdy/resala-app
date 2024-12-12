@@ -6,7 +6,7 @@ type LocationCellProps = {
 };
 
 const LocationCell: React.FC<LocationCellProps> = ({ addresses }) => {
-  const defaultAddress = addresses.find(a => a.isDefault) || addresses.at(0);
+  const defaultAddress = addresses.find(a => a.isDefault);
 
   if (!defaultAddress) {
     return <></>;
