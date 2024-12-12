@@ -17,7 +17,7 @@ const main = async () => {
         role: 'user',
         name: 'Resala Customer',
         locale: 'en-US',
-        birthDate: '1990-01-01',
+        birthDate: new Date('1990-01-01').toISOString(),
       },
       {
         email: `admin@resala.com`,
