@@ -236,7 +236,7 @@
                           </section>
                         </div>
                         <button
-                          (click)="[removeStockId(removeStock, stockIdSize)]"
+                          (click)="[toggleForm(item.stockId),removeStockId(removeStock, stockIdSize)]"
                           #removeStock
                           class="custome-btn"
                         >
@@ -406,7 +406,7 @@
 </section>
 
 <div
-  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems?.length == 0"
+  *ngIf="(!customSpinIsLoading && !cartDetailsItems) || cartDetailsItems?.length === 0"
   class="m-auto"
 >
   <div class="emptyCart emptyCartParent">

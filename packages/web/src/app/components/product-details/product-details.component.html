@@ -1,6 +1,6 @@
 <app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 
-<h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
+<!-- <h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1> -->
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
     <!-- blank-layout.component.html -->
@@ -223,38 +223,7 @@
             </div>
           </ng-container>
         </div>
-        <!-- <div class="row">
-          <div *ngFor="let productSize of productStock " class="size col-md-4 btn-group" role="group"
-            aria-label="Basic radio toggle button group"> -->
-
-        <!-- aria-label="Basic radio toggle button group">
-          btn-group , -->
-
-        <!-- <input [(ngModel)]="selectedSize" type="radio" class="btn-check" name="size-option" id="btnsize1"
-              autocomplete="off" [value]="selectedSize" />
-            <label (click)="onSizeChange(productSize.size.name)" class="btn color-btn"
-              for="btnsize1">{{productSize.size.name}}</label> -->
-
-        <!-- <button [(ngModel)]="selectedSize" [value]="selectedSize" [ngClass]="statusClassSizeBtn"
-            (click)="setActiveClass()" [ngStyle]="">{{productSize.size.name}}</button> -->
-        <!-- 
-            <p>{{selectedSize}}</p>
-          </div>
-        </div> -->
-
-        <!-- <section class="quantity">
-          <div class="counter">
-            <button class="min-counter-btn" (click)="minCounterQuantity()">
-              <i class="fa-solid fa-minus"></i>
-            </button>
-            <input class="counter-text" type="number" [value]="counterQuantity" disabled min="1" data-min="1" />
-            <button class="plus-counter-btn" (click)="plusCounterQuantity()">
-              <i class="fa-solid fa-plus"></i>
-            </button>
-
-          </div>
-        </section>
-         -->
+       
         <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
         <section class="quantity">
           <div class="counter">
@@ -277,9 +246,9 @@
             </button>
           </div>
         </section>
-
-        <div class="add-cart-btn">
-          <button (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="w-100">
+        <!-- add-cart-btn  -->
+        <div class="">
+          <button [disabled]="customSpinIsLoading" (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="custome-btn w-100">
             {{ 'productDetails.addToCart' | translate }}
           </button>
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->

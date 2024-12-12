@@ -110,7 +110,7 @@ export class ProductDetailsComponent implements OnInit {
   productStockColor: any = [];
   productStockSize: any = [];
   reboColor: any = [];
-
+  btnDisable:boolean=false;
   cartDetails: any = {};
   //property navigate from login to product details id
   endPointProductId: string = '';
@@ -182,11 +182,11 @@ export class ProductDetailsComponent implements OnInit {
     this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
-        // FIXME: getProductDetails: do not have images!!
-        // this.productImages = res?.data?.images;
+        this.productImages = res?.data?.imageUrl;
+        
         this.categoryId = res?.data.categoryId;
-
-        this.customSpinIsLoading = false;
+        console.log(res);
+        
       },
 
       error: () => {
@@ -194,7 +194,7 @@ export class ProductDetailsComponent implements OnInit {
       },
       complete: () => {
         this.getProductStock(id);
-        this.customSpinIsLoading = false;
+        
       },
     });
   }
@@ -204,7 +204,7 @@ export class ProductDetailsComponent implements OnInit {
     this._HomeProductsService.getProductStock(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
-
+        console.log(res);
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
           if (!a.find(data => data.color.id == b.colorId)) {
@@ -213,21 +213,21 @@ export class ProductDetailsComponent implements OnInit {
           return a;
         }, []);
 
-        this.customSpinIsLoading = false;
+        // this.customSpinIsLoading = false;
       },
       error: () => {
         this.customSpinIsLoading = false;
       },
       complete: () => {
         this.getProductsCategory(this.categoryId);
-        this.customSpinIsLoading = false;
+        
       },
     });
   }
 
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
-    // trarget.scrollTo({behavior:'smooth'})
+   
   }
   mainImage: OwlOptions = {
     loop: false,
@@ -295,6 +295,7 @@ export class ProductDetailsComponent implements OnInit {
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
     this.counterQuantity = 1;
+    this.btnDisable=false;
   }
 
   setActiveClass() {
@@ -314,6 +315,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addProduct(productId: string, element: HTMLButtonElement) {
+    this.btnDisable=true;
     this.customSpinIsLoading = true;
     if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer2.setAttribute(element, 'disabled', 'true');
@@ -343,6 +345,7 @@ export class ProductDetailsComponent implements OnInit {
 
     this._Renderer2.removeAttribute(element, 'disabled');
     this.customSpinIsLoading = false;
+    
   }
 
   // similar products
