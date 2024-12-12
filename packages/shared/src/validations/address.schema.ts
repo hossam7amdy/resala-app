@@ -42,4 +42,17 @@ const DeleteAddressSchema = z.object({
   params: AddressSchema.pick({ id: true }),
 });
 
-export { AddressSchema, CreateAddressSchema, UpdateAddressSchema, DeleteAddressSchema };
+const GetAddressResponseSchema = AddressSchema.extend({
+  isDefault: z.boolean(),
+});
+
+const ListAddressResponseSchema = z.array(GetAddressResponseSchema);
+
+export {
+  AddressSchema,
+  CreateAddressSchema,
+  UpdateAddressSchema,
+  DeleteAddressSchema,
+  GetAddressResponseSchema,
+  ListAddressResponseSchema,
+};
