@@ -28,7 +28,7 @@ export class CartComponent implements OnInit {
   cartDetailsItems: any;
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-  totalCount: number = 0;
+  totalCount: number=0 ;
 
   // Edit Form
   isFormVisible = false;
@@ -207,22 +207,16 @@ export class CartComponent implements OnInit {
       this.customSpinIsLoading = true;
       this.isFormVisible = false;
       this._CartService.removeCartItem(this.stockId).subscribe({
-        next: res => {
-          this.cartDetails = res.data;
-          this.cartDetailsItems = res.data.items;
-          this._Renderer.removeAttribute(element, 'disabled');
-          this._CartService.cartNumber.next(res.data.totalQuantity);
-
+        next: () => {
           this.updateCartProduct(productId, this.counterQuantity);
-          this.customSpinIsLoading = false;
         },
         error: () => {
-          this._toaster.info('Your Item Not Removed');
+          this._toaster.info('Your Item Not Updated');
           this.customSpinIsLoading = false;
         },
       });
     } else {
-      this._toaster.info('should be choose color and size');
+      this._toaster.info('Should be Choose Color and Size');
     }
   }
   //Update
@@ -231,13 +225,17 @@ export class CartComponent implements OnInit {
     const requiredCount: string = quantity.toString();
     this._CartService.addToCart(itemId, requiredCount).subscribe({
       next: res => {
-        this._CartService.cartNumber.next(res.data.totalQuantity);
+        this.cartDetails = res.data;
+        this.cartDetailsItems = res.data.items;
+        this.totalCount = res.data.totalQuantity;
+        this._CartService.cartNumber.next(this.totalCount);
 
-        window.location.reload();
-        this._toaster.success('Update product successfuly');
+        this.customSpinIsLoading = false;
+        this._toaster.success('Updated successfuly');
       },
-      error: err => {
-        this._toaster.error(err);
+      error: () => {
+        this._toaster.info('Your Item Not Updated');
+
       },
     });
   }
