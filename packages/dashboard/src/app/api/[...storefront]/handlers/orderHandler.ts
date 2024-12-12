@@ -6,7 +6,12 @@ import {
   shoppingService,
 } from '@/services';
 import { OpenAPIHono, createRoute, z } from '@hono/zod-openapi';
-import { CreateOrderSchema, OffsetPageParamsSchema, OrderSchema } from '@resala/shared';
+import {
+  CreateAddressSchema,
+  CreateOrderSchema,
+  OffsetPageParamsSchema,
+  OrderSchema,
+} from '@resala/shared';
 
 import type { Env } from '../types';
 
@@ -80,18 +85,22 @@ const orderHandler = new OpenAPIHono<Env>()
 
     const address = await addressService.find(addressId, { userId });
 
-    const { id, orderItems } = await orderService.create(
-      { userId, paymentMethod, note },
-      discountedUserCart,
-      address
-    );
+    const addressData = CreateAddressSchema.shape.body.omit({ isDefault: true }).parse(address);
+
+    const { id, orderItems } = await orderService.create({
+      shippingAddress: addressData,
+      cart: discountedUserCart,
+      userId,
+      paymentMethod,
+      note,
+    });
 
     let payment;
     if (paymentMethod === 'CARD') {
       payment = await paymentService.checkout({
         orderId: id,
         orderItems,
-        billingData: { ...address, email },
+        billingData: { ...addressData, email },
       });
     }
 
