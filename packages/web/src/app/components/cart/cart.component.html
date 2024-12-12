@@ -9,7 +9,7 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-lg-9">
+      <div class="col-lg-8 mx-4">
         <div class="form-check">
           <button
             [disabled]="totalCount == 0"
@@ -310,9 +310,9 @@
         <div class="card text-center">
           <div class="card-body">
             <div class="row card-text">
-              <p class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
+              <p [lang]="_Translate.currentLang" class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
 
-              <span class="text-end col-6 price fs-5">
+              <span [lang]="_Translate.currentLang" class="text-end col-6 price fs-5">
                 {{ cartDetails.totalPrice }}
                 <label class="currency fs-5 m-0">
                   {{ 'home.allProducts.currency' | translate }}</label
@@ -394,8 +394,9 @@
             <button
               [disabled]="cartDetails.totalQuantity == 0"
               class="btn custome-btn p-0 border-0"
+              (click)="checkedLogged()"
             >
-              <a routerLink="/payment" class="btn custome-btn">{{ 'cart.orderBtn' | translate }}</a>
+              <a class="btn custome-btn">{{ 'cart.orderBtn' | translate }}</a>
             </button>
           </div>
         </div>

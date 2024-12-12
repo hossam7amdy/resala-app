@@ -54,13 +54,18 @@ export class RegisterComponent {
       Validators.maxLength(50),
       Validators.pattern('.*\\S.*[a-zA-Z0-9 ]'),
     ]),
+    name: new FormControl('', [
+      Validators?.minLength(2),
+      Validators?.maxLength(100),
+      Validators?.pattern('.*\\S.*[a-zA-Z0-9 ]'),
+    ]),
     birthDate: new FormControl('', [
       Validators.required,
       Validators.pattern(/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/),
     ]),
-    phone: new FormControl('+20', [
+    phone: new FormControl('', [
       Validators.required,
-      Validators.pattern(/^\+201[0125][0-9]{8,15}$/),
+      Validators.pattern(/^01[0125][0-9]{8}$/),
     ]),
     password: new FormControl(
       '',
@@ -77,6 +82,9 @@ export class RegisterComponent {
   });
 
   handleForm(_registerForm: FormGroup): void {
+    const userName = this.registerForm.value;
+    this.registerForm.patchValue({name:`${userName.firstName}`+`${userName.lastName}`});
+   
     if (this.isCheckedTerms) {
       const userData = this.registerForm.value;
       if (this.registerForm.valid === true) {
@@ -91,6 +99,7 @@ export class RegisterComponent {
           error: err => {
             this.errMsg = err?.error?.message;
             this.isLoading = false;
+            
           },
         });
       } else {

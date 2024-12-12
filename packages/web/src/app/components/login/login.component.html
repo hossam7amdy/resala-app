@@ -47,13 +47,13 @@
           id="password"
         />
         <i
-          [lang]="translate.currentLang"
+          [lang]="_Translate.currentLang"
           class="fa-regular fa-eye"
           *ngIf="!showPW"
           (click)="togglePW()"
         ></i>
         <i
-          [lang]="translate.currentLang"
+          [lang]="_Translate.currentLang"
           class="far fa-eye-slash"
           *ngIf="showPW"
           (click)="togglePW()"
@@ -86,15 +86,15 @@
       routerLink="/register"
       class="dropdown-item p not-member"
       role="button"
-      ><span style="color: #fbb935" class="not-member">{{
+      ><span style="color: #016373" class="not-member">{{
         'nav-blank.NotaMember?' | translate
       }}</span>
-      <span>{{ 'nav-blank.Register' | translate }}</span></a
+      <b>{{ 'nav-blank.Register' | translate }}</b></a
     >
 
     <p *ngIf="successMsg" class="alert text-green mx-auto">
-      {{ translate.currentLang == 'ar' ? successMsgAr : successMsg }}
+      {{ _Translate.currentLang == 'ar' ? successMsgAr : successMsg }}
     </p>
-    <p *ngIf="errMsg" class="alert text-danger mx-auto">{{ errMsg }}</p>
+    <p *ngIf="errMsg" class="alert text-danger mx-auto">{{_Translate.currentLang =='ar'?errMsgAr:errMsg }}</p>
   </form>
 </section>
