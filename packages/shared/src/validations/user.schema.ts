@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
+import { AddressSchema } from './address.schema.js';
 import { OffsetPageParamsSchema } from './common.schema.js';
+import { OrderSchema } from './order.schema.js';
 
 const UserSchema = z.object({
   id: z.string().cuid(),
@@ -20,7 +22,7 @@ const UserSchema = z.object({
   role: z.enum(['admin', 'staff', 'user']).default('user'),
   banned: z.boolean().optional().nullable(),
   banReason: z.string().optional().nullable(),
-  banExpires: z.number().optional().nullable(),
+  banExpires: z.date().or(z.string().datetime()).optional().nullable(),
   isAnonymous: z.boolean().optional().nullable(),
   image: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
@@ -44,15 +46,29 @@ const UpdateUserSchema = z.object({
 const GetUserSchema = z.object({
   params: UserSchema.pick({ id: true }),
 });
+const GetUserResponseSchema = UserSchema.extend({
+  ordersCount: z.number().default(0),
+  latestOrders: z.array(OrderSchema),
+  addresses: z.array(AddressSchema.extend({ isDefault: z.boolean() })),
+});
 
 const ListUsersSchema = z.object({
   query: OffsetPageParamsSchema.extend({
     search: z.string().optional(),
   }),
 });
+const ListUsersResponseSchema = z.array(GetUserResponseSchema);
 
 const DeleteUserSchema = z.object({
   params: UserSchema.pick({ id: true }),
 });
 
-export { UserSchema, UpdateUserSchema, GetUserSchema, ListUsersSchema, DeleteUserSchema };
+export {
+  UserSchema,
+  GetUserSchema,
+  ListUsersSchema,
+  UpdateUserSchema,
+  DeleteUserSchema,
+  GetUserResponseSchema,
+  ListUsersResponseSchema,
+};

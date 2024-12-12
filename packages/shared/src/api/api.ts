@@ -125,12 +125,12 @@ export type LogoutResponse = DefaultResponseBody;
 // User types
 export type GetUserRequest = z.infer<typeof Schemas.GetUserSchema>;
 export type GetUserResponse = DefaultResponseBody & {
-  data: User;
+  data: z.infer<typeof Schemas.GetUserResponseSchema>;
 };
 
 export type ListUsersRequest = z.infer<typeof Schemas.ListUsersSchema>;
 export type ListUsersResponse = DefaultResponseBody & {
-  data: User[];
+  data: z.infer<typeof Schemas.ListUsersResponseSchema>;
 };
 
 export type UpdateUserRequest = z.infer<typeof Schemas.UpdateUserSchema>;

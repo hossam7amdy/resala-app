@@ -5,6 +5,7 @@ import { OffsetPageParamsSchema } from './common.schema.js';
 
 const OrderSchema = z.object({
   id: z.string().cuid(),
+  number: z.number().int(),
   userId: z.string().cuid(),
   subtotal: z.instanceof(Decimal).or(z.coerce.number()),
   discount: z.instanceof(Decimal).or(z.coerce.number()),
