@@ -223,7 +223,7 @@
             </div>
           </ng-container>
         </div>
-       
+
         <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
         <section class="quantity">
           <div class="counter">
@@ -248,7 +248,12 @@
         </section>
         <!-- add-cart-btn  -->
         <div class="">
-          <button [disabled]="customSpinIsLoading" (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="custome-btn w-100">
+          <button
+            [disabled]="customSpinIsLoading"
+            (click)="addProduct(stockIdSize, addToCartBtn)"
+            #addToCartBtn
+            class="custome-btn w-100"
+          >
             {{ 'productDetails.addToCart' | translate }}
           </button>
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->

@@ -28,7 +28,7 @@ export class CartComponent implements OnInit {
   cartDetailsItems: any;
   checkedDeleteAll: boolean = false;
   confirmDeleteAll: boolean = false;
-  totalCount: number=0 ;
+  totalCount: number = 0;
 
   // Edit Form
   isFormVisible = false;
@@ -91,7 +91,7 @@ export class CartComponent implements OnInit {
   // update Color and Size
   getStockDataPro(id: any): void {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductStock(id).subscribe({
+    this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
 
@@ -235,7 +235,6 @@ export class CartComponent implements OnInit {
       },
       error: () => {
         this._toaster.info('Your Item Not Updated');
-
       },
     });
   }

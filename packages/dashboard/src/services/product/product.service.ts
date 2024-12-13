@@ -2,16 +2,18 @@ import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { FileStorage } from '@/services/storage';
 import type { Prisma } from '@prisma/client';
+
 import type {
-  CreateProductRequest,
-  CreateProductResponse,
-  DeleteProductResponse,
-  GetProductResponse,
-  ListProductsRequest,
-  ListProductsResponse,
-  UpdateProductRequest,
-  UpdateProductResponse,
-} from '@resala/shared';
+  CreateProductRequestDto,
+  CreateProductResponseDto,
+  DeleteProductResponseDto,
+  GetProductResponseDto,
+  ListProductsRequestDto,
+  ListProductsResponseDto,
+  ProductStocksDto,
+  UpdateProductRequestDto,
+  UpdateProductResponseDto,
+} from './product.dto';
 
 export class ProductService {
   constructor(
@@ -19,47 +21,89 @@ export class ProductService {
     private readonly fileService: FileStorage
   ) {}
 
-  async get(id: string): Promise<GetProductResponse['data']> {
+  private _productFields() {
+    return {
+      images: true,
+      category: true,
+      discounts: {
+        where: {
+          isActive: true,
+          OR: [
+            { startDate: null },
+            { endDate: null },
+            { startDate: { lte: new Date() } },
+            { endDate: { gte: new Date(new Date().toDateString()) } },
+          ],
+        },
+      },
+      stocks: {
+        include: {
+          color: true,
+          size: true,
+        },
+      },
+    } satisfies Prisma.ProductInclude;
+  }
+
+  private _groupProductStocksByColor(stocks: ProductStocksDto) {
+    const groupedStocks = stocks.reduce(
+      (acc, stock) => {
+        const colorId = stock.color.id;
+        if (!acc[colorId]) {
+          acc[colorId] = [];
+        }
+        acc[colorId].push(stock);
+        return acc;
+      },
+      {} as Record<string, typeof stocks>
+    );
+
+    return Object.values(groupedStocks);
+  }
+
+  private _formatGroupedStocksByColor(groupedStocks: ProductStocksDto[]) {
+    return groupedStocks.map(stocks => ({
+      color: stocks[0].color,
+      sizes: stocks.map(stock => ({
+        id: stock.id,
+        size: stock.size.name,
+        quantity: stock.quantity,
+        createdAt: stock.createdAt,
+        updatedAt: stock.updatedAt,
+        stockId: stock.id,
+        sizeId: stock.size.id,
+      })),
+    }));
+  }
+
+  async get(id: string): Promise<GetProductResponseDto> {
     const avgRating = await this.db.review.aggregate({
       where: { productId: id },
       _avg: { rating: true },
     });
 
-    const { discounts, ...product } = await this.db.product.findUniqueOrThrow({
-      include: {
-        category: true,
-        discounts: {
-          where: {
-            isActive: true,
-            OR: [
-              { startDate: null },
-              { endDate: null },
-              { startDate: { lte: new Date() } },
-              { endDate: { gte: new Date(new Date().toDateString()) } },
-            ],
-          },
-        },
-      },
+    const { stocks, ...product } = await this.db.product.findUniqueOrThrow({
+      include: this._productFields(),
       where: { id },
     });
 
+    // group by color
+    const groupedStocks = this._groupProductStocksByColor(stocks);
+    const formatStocks = this._formatGroupedStocksByColor(groupedStocks);
+
     return {
       ...product,
-      price: product.price.toNumber() ?? 0,
       avgRating: avgRating._avg.rating ?? 0,
-      discounts: discounts.map(discount => ({
-        ...discount,
-        amount: discount.amount.toNumber() ?? 0,
-      })),
+      stocks: formatStocks,
     };
   }
 
   async list({
     search = '',
-    page = 1,
-    limit = 10,
+    page,
+    limit,
     categoryId,
-  }: ListProductsRequest['query']): Promise<ListProductsResponse['data']> {
+  }: ListProductsRequestDto): Promise<ListProductsResponseDto> {
     const filters: Prisma.ProductWhereInput = {
       OR: [
         { enName: { contains: search, mode: 'insensitive' } },
@@ -71,20 +115,7 @@ export class ProductService {
     const [total, products] = await this.db.$transaction([
       this.db.product.count({ where: filters }),
       this.db.product.findMany({
-        include: {
-          category: true,
-          discounts: {
-            where: {
-              isActive: true,
-              OR: [
-                { startDate: null },
-                { endDate: null },
-                { startDate: { lte: new Date() } },
-                { endDate: { gte: new Date(new Date().toDateString()) } },
-              ],
-            },
-          },
-        },
+        include: this._productFields(),
         where: filters,
         skip: (page - 1) * limit,
         take: limit,
@@ -100,13 +131,9 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ discounts, ...product }) => ({
+      products: products.map(({ stocks, ...product }) => ({
         ...product,
-        price: product.price.toNumber() ?? 0,
-        discounts: discounts.map(discount => ({
-          ...discount,
-          amount: discount.amount.toNumber() ?? 0,
-        })),
+        stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks)),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
     };
@@ -118,7 +145,7 @@ export class ProductService {
     arName,
     file,
     ...payload
-  }: CreateProductRequest['body'] & { file: File }): Promise<CreateProductResponse['data']> {
+  }: CreateProductRequestDto & { file: File }): Promise<CreateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
     const product = await this.db.product.findFirst({
@@ -135,20 +162,15 @@ export class ProductService {
 
     const { key, url } = await this.fileService.uploadFile(file);
 
-    const newProduct = await this.db.product.create({
+    return await this.db.product.create({
       data: { ...payload, categoryId, enName, arName, imageKey: key, imageUrl: url },
     });
-
-    return {
-      ...newProduct,
-      price: newProduct.price.toNumber() ?? 0,
-    };
   }
 
   async update(
     id: string,
-    { file, ...product }: UpdateProductRequest['body'] & { file?: File }
-  ): Promise<UpdateProductResponse['data']> {
+    { file, ...product }: UpdateProductRequestDto & { file?: File }
+  ): Promise<UpdateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 
     const { imageKey, imageUrl } = await this.get(id);
@@ -160,7 +182,7 @@ export class ProductService {
       fileData = await this.fileService.uploadFile(file);
     }
 
-    const updatedProduct = await this.db.product.update({
+    return await this.db.product.update({
       where: { id },
       data: {
         ...product,
@@ -168,23 +190,9 @@ export class ProductService {
         imageUrl: fileData.url,
       },
     });
-
-    return {
-      ...updatedProduct,
-      price: updatedProduct.price.toNumber() ?? 0,
-    };
   }
 
-  async delete(id: string): Promise<DeleteProductResponse['data']> {
-    const { imageKey } = await this.get(id);
-
-    const product = await this.db.product.delete({ where: { id } });
-
-    await this.fileService.deleteFile(imageKey);
-
-    return {
-      ...product,
-      price: product.price.toNumber() ?? 0,
-    };
+  async delete(id: string): Promise<DeleteProductResponseDto> {
+    return await this.db.product.delete({ where: { id } });
   }
 }

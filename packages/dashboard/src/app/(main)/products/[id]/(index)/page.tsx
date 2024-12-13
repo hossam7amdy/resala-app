@@ -1,3 +1,4 @@
+import { Pagination } from '@/components';
 import { StocksTable } from '@/features/stocks';
 import { findProduct } from '@/fetch/products';
 import { listStocks } from '@/fetch/stocks';
@@ -10,9 +11,14 @@ const ProductStocksPage = async ({ params }: { params: Params }) => {
 
   if (!product) notFound();
 
-  const { stocks } = await listStocks({ productId: params.id, page: 1, limit: 100 });
+  const stocks = await listStocks({ productId: params.id, page: 1, limit: 100 });
 
-  return <StocksTable stocks={stocks} pagination={{ page: 1, limit: 10, total: stocks.length }} />;
+  return (
+    <>
+      <StocksTable stocks={stocks} />
+      <Pagination total={stocks.length} className="mt-2" />
+    </>
+  );
 };
 
 export default ProductStocksPage;

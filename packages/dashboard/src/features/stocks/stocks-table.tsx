@@ -1,108 +1,77 @@
 'use client';
 
-import { Pagination, PopconfirmDeleteButton } from '@/components';
+import { PopconfirmDeleteButton, Table } from '@/components';
 import { deleteStock } from '@/fetch/stocks';
 import type { GetStockResponse, ListStocksResponse } from '@resala/shared';
-import { Flex, Space, Table } from 'antd';
+import { Flex, Image } from 'antd';
 import React from 'react';
 
-import { StockColor, StockColorImages, StockQuantity, StockSizes } from '.';
-import { UploadModal } from './upload-modal';
+import { StockColor } from '.';
 
-export const StocksTable: React.FC<ListStocksResponse['data']> = ({ pagination, stocks }) => {
+interface StocksTableProps {
+  stocks: ListStocksResponse['data'];
+}
+export const StocksTable: React.FC<StocksTableProps> = ({ stocks }) => {
   return (
-    <Flex vertical gap={10}>
-      <Table<GetStockResponse['data']>
-        scroll={{ x: 768, y: 500 }}
-        rowClassName={() => 'table-row-pointer'}
-        bordered
-        rowKey={s => `${s.product.id}-${s.color.id}`}
-        pagination={false}
-        dataSource={stocks}
-        expandable={{
-          expandRowByClick: true,
-          expandedRowRender: stock => <StockSizes sizes={stock.sizes} />,
-        }}
-        columns={[
-          {
-            title: 'Product',
-            dataIndex: 'product',
-            key: 'product',
-            width: 240,
-            align: 'center',
-            render: product => `${product.enName} | ${product.arName}`,
-          },
-          {
-            title: 'Color',
-            dataIndex: 'color',
-            key: 'color',
-            width: 100,
-            align: 'center',
-            render: color => <StockColor color={color.code} />,
-          },
-          {
-            title: 'Color Name',
-            key: 'colorName',
-            dataIndex: 'color',
-            width: 240,
-            align: 'center',
-            render: color => `${color.enName} | ${color.arName}`,
-          },
-          {
-            title: 'Images',
-            dataIndex: 'images',
-            key: 'images',
-            width: 120,
-            align: 'center',
-            render: (_, stock) => <StockColorImages stock={stock} />,
-            onCell: () => ({
-              onClick: e => {
-                e.stopPropagation();
-              },
-            }),
-          },
-          {
-            title: 'Sizes',
-            dataIndex: 'sizes',
-            key: 'sizes',
-            align: 'center',
-            width: 240,
-            render: (sizes: { size: string }[]) =>
-              sizes.length ? `${sizes.map(s => s.size).join(', ')}` : 'No Sizes',
-          },
-          {
-            title: 'Total Qty',
-            dataIndex: 'sizes',
-            key: 'sizes',
-            width: 120,
-            align: 'center',
-            render: (sizes: { quantity: number }[]) => (
-              <StockQuantity quantity={sizes.reduce((acc, size) => acc + size.quantity, 0)} />
-            ),
-          },
-          {
-            title: 'Actions',
-            width: 100,
-            align: 'center',
-            render: (_, stock) => (
-              <Space>
-                <UploadModal stock={stock} />
-                <PopconfirmDeleteButton
-                  onConfirmDelete={() => deleteStock(stock.sizes[0].stockId)}
-                />
-              </Space>
-            ),
-            onCell: () => ({
-              onClick: e => {
-                e.stopPropagation();
-              },
-            }),
-          },
-        ]}
-      />
-      <Flex justify="center">
-        <Pagination total={pagination.total} />
-      </Flex>
-    </Flex>
+    <Table<GetStockResponse['data']>
+      rowHoverable
+      rowKey={stock => stock.id}
+      pagination={false}
+      dataSource={stocks}
+      columns={[
+        {
+          title: '',
+          dataIndex: 'image',
+          width: 100,
+          align: 'center',
+          render: image => <Image src={image?.imageUrl} alt="Product" width={'100%'} />,
+        },
+        {
+          title: 'Product',
+          dataIndex: 'product',
+          key: 'product',
+          width: 240,
+          align: 'center',
+          render: product => `${product.enName} | ${product.arName}`,
+        },
+        {
+          title: 'Color',
+          dataIndex: 'color',
+          key: 'color',
+          render: color => (
+            <Flex align="center">
+              <StockColor color={color.code} /> {color.enName} | {color.arName}
+            </Flex>
+          ),
+        },
+        {
+          title: 'Size',
+          dataIndex: 'size',
+          key: 'size',
+          align: 'center',
+          render: size => size.name,
+        },
+        {
+          title: 'Available',
+          dataIndex: 'quantity',
+          key: 'quantity',
+          width: 120,
+          align: 'center',
+        },
+        {
+          title: 'Actions',
+          width: 100,
+          align: 'center',
+          render: (_, stock) => (
+            <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stock.id)} />
+          ),
+          onCell: () => ({
+            onClick: e => {
+              e.stopPropagation();
+            },
+          }),
+        },
+      ]}
+    />
   );
 };

@@ -236,7 +236,9 @@
                           </section>
                         </div>
                         <button
-                          (click)="[toggleForm(item.stockId),removeStockId(removeStock, stockIdSize)]"
+                          (click)="
+                            [toggleForm(item.stockId), removeStockId(removeStock, stockIdSize)]
+                          "
                           #removeStock
                           class="custome-btn"
                         >

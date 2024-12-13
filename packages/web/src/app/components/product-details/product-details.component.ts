@@ -110,7 +110,7 @@ export class ProductDetailsComponent implements OnInit {
   productStockColor: any = [];
   productStockSize: any = [];
   reboColor: any = [];
-  btnDisable:boolean=false;
+  btnDisable: boolean = false;
   cartDetails: any = {};
   //property navigate from login to product details id
   endPointProductId: string = '';
@@ -183,10 +183,9 @@ export class ProductDetailsComponent implements OnInit {
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.imageUrl;
-        
+
         this.categoryId = res?.data.categoryId;
         console.log(res);
-        
       },
 
       error: () => {
@@ -194,14 +193,13 @@ export class ProductDetailsComponent implements OnInit {
       },
       complete: () => {
         this.getProductStock(id);
-        
       },
     });
   }
 
   getProductStock(id: any) {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductStock(id).subscribe({
+    this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
         console.log(res);
@@ -220,14 +218,12 @@ export class ProductDetailsComponent implements OnInit {
       },
       complete: () => {
         this.getProductsCategory(this.categoryId);
-        
       },
     });
   }
 
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
-   
   }
   mainImage: OwlOptions = {
     loop: false,
@@ -295,7 +291,7 @@ export class ProductDetailsComponent implements OnInit {
     this.stockIdSize = event?.stockId;
     this.quantity = event?.quantity;
     this.counterQuantity = 1;
-    this.btnDisable=false;
+    this.btnDisable = false;
   }
 
   setActiveClass() {
@@ -315,7 +311,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addProduct(productId: string, element: HTMLButtonElement) {
-    this.btnDisable=true;
+    this.btnDisable = true;
     this.customSpinIsLoading = true;
     if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
       this._Renderer2.setAttribute(element, 'disabled', 'true');
@@ -345,7 +341,6 @@ export class ProductDetailsComponent implements OnInit {
 
     this._Renderer2.removeAttribute(element, 'disabled');
     this.customSpinIsLoading = false;
-    
   }
 
   // similar products

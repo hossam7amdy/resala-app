@@ -1,44 +1,55 @@
 import type { DataStore } from '@/lib/db';
-import type { Prisma, Product } from '@prisma/client';
-import type {
-  Color,
-  CreateStockRequest,
-  GetStockResponse,
-  Image,
-  ListStocksRequest,
-  ListStocksResponse,
-  Size,
-  Stock,
-  UpdateStockRequest,
-} from '@resala/shared';
+import type { Prisma } from '@prisma/client';
 
-type StockReturnType = Stock & {
-  product: Product;
-  size: Size;
-  color: Color & {
-    images: Image[];
-  };
-};
+import type {
+  CreateStockRequestDto,
+  GetStockResponseDto,
+  ListStocksRequestDto,
+  ListStocksResponseDto,
+  UpdateStockRequestDto,
+} from './stock.dto';
 
 export class StockService {
   constructor(private readonly db: DataStore) {}
 
-  async find(id: string): Promise<GetStockResponse['data']> {
-    const stock = await this.db.stock.findUniqueOrThrow({
-      include: {
-        product: true,
-        size: true,
-        color: {
-          include: {
-            images: true,
+  private _stockFields() {
+    return {
+      color: {
+        include: {
+          images: {
+            where: { isPrimary: true },
           },
         },
       },
+      size: true,
+      product: true,
+    } satisfies Prisma.StockInclude;
+  }
+
+  private _transformStock({
+    size,
+    product,
+    color: { images, ...color },
+    ...stock
+  }: Prisma.StockGetPayload<{
+    include: ReturnType<StockService['_stockFields']>;
+  }>) {
+    return {
+      ...stock,
+      image: images.at(0),
+      size,
+      product,
+      color,
+    };
+  }
+
+  async find(id: string): Promise<GetStockResponseDto> {
+    const stock = await this.db.stock.findUniqueOrThrow({
+      include: this._stockFields(),
       where: { id },
     });
 
-    stock.color.images = stock.color.images.filter(image => image.productId === stock.productId);
-    return this.formatStock(stock);
+    return this._transformStock(stock);
   }
 
   async list({
@@ -46,7 +57,7 @@ export class StockService {
     limit = 10,
     productId,
     search = '',
-  }: ListStocksRequest['query']): Promise<ListStocksResponse['data']> {
+  }: ListStocksRequestDto): Promise<ListStocksResponseDto> {
     const filters: Prisma.StockWhereInput = {
       OR: [
         { product: { arName: { contains: search, mode: 'insensitive' } } },
@@ -58,36 +69,18 @@ export class StockService {
       productId,
     };
 
-    const [total, stocks] = await this.db.$transaction([
-      this.db.stock.count({ where: filters }),
-      this.db.stock.findMany({
-        include: {
-          product: true,
-          size: true,
-          color: {
-            include: {
-              images: true,
-            },
-          },
-        },
-        where: filters,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: { updatedAt: 'desc' },
-      }),
-    ]);
-
-    stocks.forEach(stock => {
-      stock.color.images = stock.color.images.filter(image => image.productId === stock.productId);
+    const stocks = await this.db.stock.findMany({
+      include: this._stockFields(),
+      where: filters,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
     });
 
-    return {
-      pagination: { page, limit, total },
-      stocks: this.groupByColor(stocks),
-    };
+    return stocks.map(this._transformStock);
   }
 
-  async create(stock: CreateStockRequest['body']) {
+  async create(stock: CreateStockRequestDto) {
     return await this.db.stock.create({
       data: {
         productId: stock.productId,
@@ -98,7 +91,7 @@ export class StockService {
     });
   }
 
-  async update(id: string, stock: UpdateStockRequest['body']) {
+  async update(id: string, stock: UpdateStockRequestDto) {
     return await this.db.stock.update({
       where: { id },
       data: {
@@ -114,50 +107,8 @@ export class StockService {
     return await this.db.stock.delete({ where: { id } });
   }
 
-  private formatStock(stock: StockReturnType): GetStockResponse['data'] {
-    const { color, product, size, ...stockData } = stock;
-    const { images, ...colorData } = color;
-
-    return {
-      product: {
-        ...product,
-        price: product.price.toNumber(),
-      },
-      color: colorData,
-      images: images.map(({ colorId: _colorId, productId: _productId, ...rest }) => ({ ...rest })),
-      sizes: [
-        {
-          stockId: stockData.id,
-          quantity: stockData.quantity,
-          createdAt: stockData.createdAt,
-          updatedAt: stockData.updatedAt,
-          sizeId: size.id,
-          size: size.name,
-        },
-      ],
-    };
-  }
-
-  private groupByColor(stocksList: StockReturnType[]): GetStockResponse['data'][] {
-    const stocks = stocksList.reduce(
-      (acc, stock) => {
-        const stockDataFormatted = this.formatStock(stock);
-
-        const key = `${stockDataFormatted.product.id}-${stockDataFormatted.color.id}`;
-        if (acc[key]) {
-          acc[key].sizes.push(stockDataFormatted.sizes[0]);
-        } else {
-          acc[key] = stockDataFormatted;
-        }
-
-        return acc;
-      },
-      {} as Record<string, GetStockResponse['data']>
-    );
-
-    return Object.values(stocks).sort(
-      (a, b) => new Date(b.sizes[0].updatedAt).getTime() - new Date(a.sizes[0].updatedAt).getTime()
-    );
+  async count() {
+    return await this.db.stock.count();
   }
 
   async decreaseQuantity(items: { stockId: string; quantity: number }[]) {
