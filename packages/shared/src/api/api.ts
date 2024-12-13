@@ -184,17 +184,13 @@ export type DeleteCategoryResponse = GetCategoryResponse;
 // Product types
 export type GetProductRequest = z.infer<typeof Schemas.GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
-  data: Product & {
-    avgRating: number;
-    category: Category;
-    discounts: Discount[];
-  };
+  data: z.infer<typeof Schemas.GetProductResponseSchema>;
 };
 
 export type ListProductsRequest = z.infer<typeof Schemas.ListProductsSchema>;
 export type ListProductsResponse = DefaultResponseBody & {
   data: {
-    products: GetProductResponse['data'][];
+    products: z.infer<typeof Schemas.ListProductsResponseSchema>;
     pagination: Pagination;
   };
 };
@@ -253,20 +249,12 @@ export type DeleteSizeResponse = GetSizeResponse;
 // Stock types
 export type GetStockRequest = DeleteStockRequest;
 export type GetStockResponse = DefaultResponseBody & {
-  data: {
-    product: Product;
-    color: Color;
-    sizes: (Omit<Stock, 'id' | 'colorId' | 'productId'> & { stockId: string; size: string })[];
-    images: Omit<Image, 'colorId' | 'productId'>[];
-  };
+  data: z.infer<typeof Schemas.GetStockResponseSchema>;
 };
 
 export type ListStocksRequest = z.infer<typeof Schemas.ListStocksSchema>;
 export type ListStocksResponse = DefaultResponseBody & {
-  data: {
-    pagination: Pagination;
-    stocks: GetStockResponse['data'][];
-  };
+  data: z.infer<typeof Schemas.ListStocksResponseSchema>;
 };
 
 export type CreateStockRequest = z.infer<typeof Schemas.CreateStockSchema>;

@@ -13,7 +13,6 @@ import {
   orderHandler,
   productHandler,
   reviewHandler,
-  stockHandler,
   wishlistHandler,
 } from './handlers';
 import { enforceSession, errorHandler, parseSession } from './middlewares';
@@ -68,7 +67,6 @@ app
   .route('/api/v1/categories', categoryHandler)
   .route('/api/v1/dashboard', dashboardHandler)
   .route('/api/v1/products', productHandler)
-  .route('/api/v1/stocks', stockHandler)
   .use(enforceSession) // All routes below this line require a valid session
   .route('/api/v1/cart', cartHandler)
   .route('/api/v1/orders', orderHandler)

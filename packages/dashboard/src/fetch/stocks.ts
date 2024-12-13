@@ -67,3 +67,7 @@ export const deleteStock = async (stockId: string): Promise<DeleteStockResponse>
     return { error: (e as Error).message } as DeleteStockResponse;
   }
 };
+
+export const countStocks = async () => {
+  return await stockService.count();
+};
