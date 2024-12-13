@@ -28,9 +28,9 @@ const Form = async ({ id }: { id: string }) => {
       stock={{
         colorId: stock.color.id,
         productId: stock.product.id,
-        id: stock.sizes[0].stockId,
-        sizeId: stock.sizes[0].sizeId,
-        quantity: stock.sizes[0].quantity,
+        id: stock.id,
+        sizeId: stock.sizeId,
+        quantity: stock.quantity,
       }}
       selectSize={
         <Suspense fallback={<SkeletonInput active block size="large" />}>

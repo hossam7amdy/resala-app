@@ -11,32 +11,34 @@ import type {
 
 import type { CreateOrderRequestDto } from './order.dto';
 
-const ORDER_ATTRIBUTES = {
-  orderItems: {
-    include: {
-      product: true,
-      stock: {
-        select: {
-          size: { select: { name: true } },
-          color: { select: { enName: true } },
-        },
-      },
-    },
-  },
-  user: true,
-  shippingDetails: {
-    select: {
-      id: true,
-      cost: true,
-      createdAt: true,
-      updatedAt: true,
-      address: true,
-    },
-  },
-};
-
 export class OrderService {
   constructor(private readonly db: DataStore) {}
+
+  private _orderFields() {
+    return {
+      orderItems: {
+        include: {
+          product: true,
+          stock: {
+            select: {
+              size: { select: { name: true } },
+              color: { select: { enName: true } },
+            },
+          },
+        },
+      },
+      user: true,
+      shippingDetails: {
+        select: {
+          id: true,
+          cost: true,
+          createdAt: true,
+          updatedAt: true,
+          address: true,
+        },
+      },
+    } satisfies Prisma.OrderInclude;
+  }
 
   async create({ userId, paymentMethod, note, cart, shippingAddress }: CreateOrderRequestDto) {
     if (cart.items.length === 0) {
@@ -104,7 +106,7 @@ export class OrderService {
     const [count, orders] = await this.db.$transaction([
       this.db.order.count({ where: filters }),
       this.db.order.findMany({
-        include: ORDER_ATTRIBUTES,
+        include: this._orderFields(),
         where: filters,
         take: limit,
         skip: (page - 1) * limit,
@@ -128,7 +130,7 @@ export class OrderService {
   async find(id: string): Promise<GetOrderResponse['data']> {
     const order = await this.db.order.findUniqueOrThrow({
       where: { id },
-      include: ORDER_ATTRIBUTES,
+      include: this._orderFields(),
     });
 
     return {
