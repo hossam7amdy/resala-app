@@ -1,7 +1,12 @@
 import { Decimal } from 'decimal.js';
 import { z } from 'zod';
 
+import { CategorySchema } from './category.schema.js';
+import { ColorSchema } from './color.schema.js';
 import { OffsetPageParamsSchema } from './common.schema.js';
+import { DiscountSchema } from './discount.schema.js';
+import { ImageSchema } from './image.schema.js';
+import { StockSchema } from './stock.schema.js';
 
 const ProductSchema = z.object({
   id: z.string().cuid(),
@@ -48,6 +53,26 @@ const DeleteProductSchema = z.object({
   params: UpdateProductSchema.shape.params,
 });
 
+const GetProductResponseSchema = ProductSchema.extend({
+  avgRating: z.number(),
+  category: CategorySchema,
+  discounts: z.array(DiscountSchema),
+  images: z.array(ImageSchema.omit({ colorId: true, productId: true })),
+  stocks: z.array(
+    z.object({
+      color: ColorSchema,
+      sizes: z.array(
+        StockSchema.omit({ id: true, colorId: true, productId: true }).extend({
+          stockId: z.string().cuid(),
+          size: z.string(),
+        })
+      ),
+    })
+  ),
+});
+
+const ListProductsResponseSchema = z.array(GetProductResponseSchema);
+
 export {
   ProductSchema,
   CreateProductSchema,
@@ -55,4 +80,6 @@ export {
   GetProductSchema,
   ListProductsSchema,
   UpdateProductSchema,
+  GetProductResponseSchema,
+  ListProductsResponseSchema,
 };

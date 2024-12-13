@@ -1,6 +1,6 @@
 'use client';
 
-import { IconLink, Image, PopconfirmDeleteButton, ResalaTooltip } from '@/components';
+import { Image, PopconfirmDeleteButton, ResalaTooltip } from '@/components';
 import { deleteProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
@@ -49,16 +49,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
       }}
       columns={[
         {
-          title: 'ID',
-          dataIndex: 'id',
-          width: 75,
-          onCell: () => ({
-            onClick: e => e.stopPropagation(),
-          }),
-          render: (id: number) => <IconLink href={ROUTES.PRODUCT_STOCKS(id)}>{id}</IconLink>,
-        },
-        {
-          title: 'Image',
+          title: '',
           dataIndex: 'imageUrl',
           onCell: () => ({
             onClick: e => e.stopPropagation(),
@@ -67,12 +58,27 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
             <Image src={imageUrl} width={50} alt={product.enDescription} />
           ),
         },
-        { title: 'English', dataIndex: 'enName' },
-        { title: 'Arabic', dataIndex: 'arName' },
+        {
+          title: 'Product',
+          onCell: () => ({
+            onClick: e => e.stopPropagation(),
+          }),
+          render: (_, product) => (
+            <Link href={ROUTES.PRODUCT_STOCKS(product.id)}>
+              <p>{product.enName}</p>
+              <p>{product.arName}</p>
+            </Link>
+          ),
+        },
         {
           title: 'Category',
           dataIndex: 'category',
-          render: (category: Category) => category.arName,
+          render: (category: Category) => (
+            <>
+              <p>{category.enName}</p>
+              <p>{category.arName}</p>
+            </>
+          ),
         },
         {
           title: 'Price',

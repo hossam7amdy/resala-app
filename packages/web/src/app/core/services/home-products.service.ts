@@ -4,7 +4,6 @@ import {
   ENDPOINT_CONFIGS,
   GetProductResponse,
   ListProductsResponse,
-  ListStocksResponse,
   withParams,
   withQueryParams,
 } from '@resala/shared';
@@ -39,10 +38,5 @@ export class HomeProductsService {
   getProductDetails(productId: string): Observable<GetProductResponse> {
     const { url } = withParams(ENDPOINT_CONFIGS.getProduct, productId);
     return this._httpClient.get<GetProductResponse>(`${environment.baseUrl}${url}`);
-  }
-
-  getProductStock(productId: string): Observable<ListStocksResponse> {
-    const { url } = withQueryParams(ENDPOINT_CONFIGS.listStocks, { productId });
-    return this._httpClient.get<ListStocksResponse>(environment.baseUrl + url);
   }
 }

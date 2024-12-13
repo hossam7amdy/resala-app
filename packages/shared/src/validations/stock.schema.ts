@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
+import { ColorSchema } from './color.schema.js';
 import { OffsetPageParamsSchema } from './common.schema.js';
+import { ImageSchema } from './image.schema.js';
+import { ProductSchema } from './product.schema.js';
+import { SizeSchema } from './size.schema.js';
 
 const StockSchema = z.object({
   id: z.string().cuid(),
@@ -34,6 +38,13 @@ const DeleteStockSchema = z.object({
   }),
 });
 
+const GetStockResponseSchema = StockSchema.extend({
+  color: ColorSchema,
+  size: SizeSchema,
+  product: ProductSchema,
+  image: ImageSchema.optional(),
+});
+
 const ListStocksSchema = z.object({
   query: OffsetPageParamsSchema.extend({
     search: z.string().max(100).optional(),
@@ -41,4 +52,14 @@ const ListStocksSchema = z.object({
   }),
 });
 
-export { StockSchema, CreateStockSchema, DeleteStockSchema, UpdateStockSchema, ListStocksSchema };
+const ListStocksResponseSchema = z.array(GetStockResponseSchema);
+
+export {
+  StockSchema,
+  CreateStockSchema,
+  DeleteStockSchema,
+  UpdateStockSchema,
+  ListStocksSchema,
+  GetStockResponseSchema,
+  ListStocksResponseSchema,
+};
