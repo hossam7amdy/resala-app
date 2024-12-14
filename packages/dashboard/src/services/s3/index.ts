@@ -17,7 +17,7 @@ export class S3Service {
   private readonly client: S3Client;
 
   constructor(config: Configuration) {
-    this.baseUrl = config.cdnBaseUrl;
+    this.baseUrl = config.cdnDomain;
     this.bucketName = config.aws.s3.bucketName;
     this.client = new S3Client({
       region: config.aws.region,
