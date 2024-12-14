@@ -15,8 +15,9 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/nextjs-registry": "^1.0.1",
-    "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/client-s3": "^3.712.0",
     "@aws-sdk/client-ses": "^3.699.0",
+    "@aws-sdk/s3-request-presigner": "^3.712.0",
     "@hono/swagger-ui": "^0.5.0",
     "@hono/zod-openapi": "^0.18.3",
     "@prisma/client": "^6.0.0",

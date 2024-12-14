@@ -3,6 +3,7 @@
     "Localstack",
     "PAYMOB",
     "Popconfirm",
+    "presigner",
     "resala",
     "testcontainers",
     "Toastr",
