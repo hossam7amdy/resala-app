@@ -15,6 +15,7 @@ import type {
   ColorSchema,
   DiscountSchema,
   ImageSchema,
+  MediaSchema,
   OffsetPageParamsSchema,
   OrderItemSchema,
   OrderSchema,
@@ -77,3 +78,5 @@ export type Image = z.infer<typeof ImageSchema>;
 export type Stock = z.infer<typeof StockSchema>;
 
 export type Order = z.infer<typeof OrderSchema>;
+
+export type Media = z.infer<typeof MediaSchema>;

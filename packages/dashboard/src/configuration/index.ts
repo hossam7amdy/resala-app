@@ -7,7 +7,7 @@ const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boole
 const configuration = () => ({
   env: process.env.NODE_ENV,
   appDomain: z.string().parse(process.env.APP_DOMAIN),
-  cdnBaseUrl: z.string().url().parse(process.env.CDN_BASE_URL),
+  cdnDomain: z.string().url().parse(process.env.CDN_DOMAIN),
   trustedOrigins: z.array(z.string().url()).parse(JSON.parse(process.env.TRUSTED_ORIGINS || '[]')),
   aws: {
     region: z.string().parse(process.env.AWS_REGION),
@@ -20,6 +20,10 @@ const configuration = () => ({
     s3: {
       bucketName: z.string().parse(process.env.S3_BUCKET),
       endpoint: z.string().url().optional().parse(process.env.S3_ENDPOINT),
+      defaultExpirationInSec: z.coerce
+        .number()
+        .default(3600)
+        .parse(process.env.S3_DEFAULT_EXPIRATION_IN_SEC),
       forcePathStyle: z
         .boolean()
         .optional()
