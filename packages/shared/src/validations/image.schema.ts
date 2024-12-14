@@ -26,7 +26,7 @@ const CreateImageSchema = z.object({
 
 const UpdateImageSchema = z.object({
   params: z.object({
-    imageId: z.string().cuid(),
+    id: z.string().cuid(),
   }),
   body: z.object({
     isPrimary: z.coerce.boolean().optional(),
@@ -35,7 +35,7 @@ const UpdateImageSchema = z.object({
 
 const DeleteImageSchema = z.object({
   params: z.object({
-    imageId: z.string().cuid(),
+    id: z.string().cuid(),
   }),
 });
 
