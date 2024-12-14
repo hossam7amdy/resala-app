@@ -25,7 +25,7 @@ export class DashboardService {
     ] = await Promise.all([
       this.db.product.count(),
       this.db.order.count(),
-      this.db.user.count(),
+      this.db.user.count({ where: { isAnonymous: null } }),
       this.db.order.aggregate({ _sum: { total: true } }),
       this.db.order.aggregate({
         _sum: { total: true },

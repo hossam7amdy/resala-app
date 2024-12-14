@@ -29,6 +29,7 @@ export const OrdersTable: React.FC<TableProps> = ({ orders, total }) => {
           expandedRowRender: order => <OrderDetails order={order} />,
         }}
       >
+        <TableColumn ellipsis title="Order No." dataIndex="number" />
         <TableColumn
           ellipsis
           title="Client"

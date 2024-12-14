@@ -78,13 +78,6 @@ export const DiscountTable: React.FC<{
       }}
       columns={[
         {
-          width: 75,
-          align: 'center',
-          title: 'ID',
-          dataIndex: 'id',
-          filteredValue: null,
-        },
-        {
           width: 125,
           title: 'Type',
           dataIndex: 'type',
