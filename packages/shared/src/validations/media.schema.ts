@@ -7,32 +7,23 @@ const MediaSchema = z.object({
   url: z.string().url(),
   filename: z.string(),
   size: z.coerce.number(),
-  contentType: z.enum(['image', 'video']).default('image'),
-  duration: z.coerce.number().optional(),
-  alt: z.string().optional(),
-  mimetype: z.string().optional(),
+  contentType: z.enum(['image', 'video']).default('image').optional(),
+  duration: z.coerce.number().optional().nullable(),
+  alt: z.string().optional().nullable(),
+  mimetype: z.string().optional().nullable(),
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
 });
 
-const CreateMediaSchema = z.object({
+const SetMediaMetadataSchema = z.object({
+  params: z.object({
+    id: z.string().cuid(),
+  }),
   body: MediaSchema.omit({
     id: true,
+    url: true,
     createdAt: true,
     updatedAt: true,
-  }),
-});
-
-const UpdateMediaSchema = z.object({
-  params: z.object({
-    mediaId: z.string().cuid(),
-  }),
-  body: CreateMediaSchema.shape.body.partial(),
-});
-
-const DeleteMediaSchema = z.object({
-  params: z.object({
-    mediaId: z.string().cuid(),
   }),
 });
 
@@ -46,4 +37,4 @@ const ListMediaSchema = z.object({
   }),
 });
 
-export { MediaSchema, CreateMediaSchema, UpdateMediaSchema, DeleteMediaSchema, ListMediaSchema };
+export { MediaSchema, SetMediaMetadataSchema, ListMediaSchema };
