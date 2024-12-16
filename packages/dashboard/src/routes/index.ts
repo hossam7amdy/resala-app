@@ -36,6 +36,8 @@ export const ROUTES = {
   CREATE_DISCOUNT: '/discounts/create',
   DISCOUNT_PRODUCTS: (id: string | number) => `/discounts/${id}`,
   EDIT_DISCOUNT: (id: string | number) => `/discounts/${id}/edit`,
+
+  MEDIA: '/media',
 } as const;
 
 export const PROTECTED_ROUTES = [
@@ -49,4 +51,5 @@ export const PROTECTED_ROUTES = [
   ROUTES.ORDERS,
   ROUTES.CUSTOMERS,
   ROUTES.DISCOUNTS,
+  ROUTES.MEDIA,
 ];

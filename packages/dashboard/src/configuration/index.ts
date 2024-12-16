@@ -7,7 +7,7 @@ const _parseBoolean = (envVar: string | undefined, defaultValue: boolean): boole
 const configuration = () => ({
   env: process.env.NODE_ENV,
   appDomain: z.string().parse(process.env.APP_DOMAIN),
-  cdnDomain: z.string().url().parse(process.env.CDN_DOMAIN),
+  cdnBaseUrl: z.string().url().parse(process.env.CDN_BASE_URL),
   trustedOrigins: z.array(z.string().url()).parse(JSON.parse(process.env.TRUSTED_ORIGINS || '[]')),
   aws: {
     region: z.string().parse(process.env.AWS_REGION),
