@@ -1,4 +1,5 @@
 import { configuration } from '@/configuration';
+import { S3StorageService } from '@/infrastructure/cloud-storage';
 import { db } from '@/lib/db';
 
 import { AddressService } from './address/address.service';
@@ -8,6 +9,7 @@ import { DashboardService } from './dashboard/dashboard.service';
 import { DiscountService } from './discount/discount.service';
 import { EmailService } from './email';
 import { ImageService } from './image/image.service';
+import { MediaService } from './media/media.service';
 import { OrderService } from './order/order.service';
 import { PaymentService } from './payment/payment.service';
 import { PaymobService } from './paymob';
@@ -36,6 +38,16 @@ const sizeService = new SizeService(db);
 const stockService = new StockService(db);
 const userService = new UserService(db);
 const emailService = EmailService.getInstance(configuration());
+const mediaService = new MediaService(
+  db,
+  new S3StorageService({
+    region: configuration().aws.region,
+    accessKey: configuration().aws.accessKey,
+    accessSecret: configuration().aws.accessSecret,
+    bucketName: configuration().aws.s3.bucketName,
+    cdnBaseUrl: configuration().cdnBaseUrl,
+  })
+);
 
 export {
   addressService,
@@ -55,6 +67,7 @@ export {
   emailService,
   paymobService,
   fileStorage,
+  mediaService,
 };
 
 export {
@@ -73,4 +86,5 @@ export {
   StockService,
   UserService,
   EmailService,
+  MediaService,
 };

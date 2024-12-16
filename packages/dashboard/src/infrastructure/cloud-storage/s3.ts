@@ -1,10 +1,17 @@
+import type { BlobMetadata, CloudStorage } from '@/interfaces';
 import type { S3ClientConfig } from '@aws-sdk/client-s3';
-import { DeleteObjectsCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 type S3ServiceConfig = {
   bucketName: string;
-  cdnDomain: string;
+  cdnBaseUrl: string;
   region: string;
   accessKey: string;
   accessSecret: string;
@@ -13,15 +20,15 @@ type S3ServiceConfig = {
   forcePathStyle?: boolean;
 };
 
-class S3Service {
+class S3StorageService implements CloudStorage {
   private _s3Client: S3Client;
-  private _cdnDomain: string;
+  private _cdnBaseUrl: string;
   private _bucketName: string;
   private _defaultExpirationInSec?: number;
 
   constructor(readonly config: S3ServiceConfig) {
     this._bucketName = config.bucketName;
-    this._cdnDomain = config.cdnDomain;
+    this._cdnBaseUrl = config.cdnBaseUrl;
     this._defaultExpirationInSec = config.defaultExpirationInSec;
 
     const clientOptions: S3ClientConfig = {
@@ -37,35 +44,75 @@ class S3Service {
     this._s3Client = new S3Client(clientOptions);
   }
 
-  getKeyFromPublicUrl(url: string): string {
-    return url.replace(`${this._cdnDomain}/`, '');
+  uploadBlob(
+    _path: string,
+    _data: Buffer | NodeJS.ReadableStream,
+    _metadata?: Record<string, string>
+  ): Promise<string> {
+    throw new Error('Method not implemented.');
   }
 
-  getPublicUrl(key: string): string {
-    const publicUrl = `${this._cdnDomain}/${key}`;
-    return publicUrl;
+  getBlob(_path: string): Promise<NodeJS.ReadableStream> {
+    throw new Error('Method not implemented.');
   }
 
-  async getUploadURL(blobName: string, expirationInSec?: number): Promise<string> {
-    const command = new PutObjectCommand({ Bucket: this._bucketName, Key: blobName });
+  getPublicUrl(path: string): string {
+    return `${this._cdnBaseUrl}/${path}`;
+  }
+
+  async generatePresignedUrl(path: string, expirySeconds?: number): Promise<string> {
+    const command = new PutObjectCommand({
+      Bucket: this._bucketName,
+      Key: path,
+    });
 
     return getSignedUrl(this._s3Client, command, {
-      expiresIn: expirationInSec ?? this._defaultExpirationInSec,
+      expiresIn: expirySeconds ?? this._defaultExpirationInSec,
     });
   }
 
-  async deleteObjects(urls: string[]): Promise<void> {
-    const command = new DeleteObjectsCommand({
+  async deleteBlob(path: string): Promise<boolean> {
+    const command = new DeleteObjectCommand({
       Bucket: this._bucketName,
-      Delete: {
-        Objects: urls.map(url => ({
-          Key: this.getKeyFromPublicUrl(url),
-        })),
-      },
+      Key: path,
     });
 
-    await this._s3Client.send(command);
+    const { $metadata } = await this._s3Client.send(command);
+    return $metadata.httpStatusCode === 204;
+  }
+
+  async blobExists(path: string): Promise<boolean> {
+    const command = new HeadObjectCommand({
+      Bucket: this._bucketName,
+      Key: path,
+    });
+
+    const data = await this._s3Client.send(command);
+    return data.$metadata.httpStatusCode === 200;
+  }
+
+  async listBlobs(
+    prefix?: string,
+    _metadataFilter?: Record<string, string>
+  ): Promise<BlobMetadata[]> {
+    const command = new ListObjectsV2Command({
+      Bucket: this._bucketName,
+      Prefix: prefix,
+    });
+
+    const data = await this._s3Client.send(command);
+
+    return (
+      data.Contents?.map(item => {
+        return {
+          key: item.Key!,
+          size: item.Size!,
+          url: this.getPublicUrl(item.Key!),
+          lastModified: item.LastModified!,
+        };
+      }) ?? []
+    );
   }
 }
 
-export { S3Service };
+export { S3StorageService };
