@@ -30,6 +30,8 @@ const CreateProductSchema = z.object({
     arDescription: true,
     enDescription: true,
     price: true,
+    imageKey: true,
+    imageUrl: true,
   }),
 });
 
