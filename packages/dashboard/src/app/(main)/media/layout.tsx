@@ -1,5 +1,5 @@
 import { Search } from '@/components';
-import { UploadMedia } from '@/features/media';
+import { MediaUpload } from '@/features/media';
 import { Breadcrumb, Col, Row } from 'antd';
 import type { Metadata } from 'next';
 
@@ -15,7 +15,7 @@ const MediaLayout = ({ children }: { children: React.ReactNode }) => {
       </Col>
 
       <Col span={24} className="flex justify-end">
-        <UploadMedia />
+        <MediaUpload />
       </Col>
 
       <Col span={24}>

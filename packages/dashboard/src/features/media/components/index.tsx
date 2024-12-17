@@ -1,2 +1,3 @@
-export * from './MediaTable';
-export * from './UploadMedia';
+export * from './media-table/MediaTable';
+export * from './media-upload/MediaUpload';
+export * from './MediaSelect';

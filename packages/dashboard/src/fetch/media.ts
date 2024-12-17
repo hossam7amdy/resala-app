@@ -11,16 +11,12 @@ const getUploadUrl = async (id: string) => {
 };
 
 const setMediaMetadata = async (id: string, data: SetMediaMetadataRequest['body']) => {
-  try {
-    data = await SetMediaMetadataSchema.shape.body.parseAsync(data);
+  data = SetMediaMetadataSchema.shape.body.parse(data);
 
-    const media = await mediaService.setMetadata(id, data);
+  const media = await mediaService.setMetadata(id, data);
 
-    revalidatePath(ROUTES.MEDIA);
-    return media;
-  } catch (error) {
-    return formatError(error);
-  }
+  revalidatePath(ROUTES.MEDIA);
+  return media;
 };
 
 const listMedias = async () => {
