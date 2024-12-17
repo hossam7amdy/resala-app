@@ -1,5 +1,5 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { Form } from '@/features/products/create-form';
+import { ProductEditor } from '@/features/products';
 import { listAllCategories } from '@/fetch/category';
 import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
@@ -39,7 +39,7 @@ const EditProductForm = async ({ id }: { id: string }) => {
     return notFound();
   }
 
-  return <Form categories={categories} product={product!} />;
+  return <ProductEditor categories={categories} product={product!} />;
 };
 
 export default EditProductPage;
