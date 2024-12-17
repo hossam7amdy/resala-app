@@ -5,8 +5,10 @@ import { deleteMedia } from '@/fetch/media';
 import { formatDate } from '@/utils/date-time-formatter';
 import { formatBytes } from '@/utils/formatBytes';
 import type { Media } from '@resala/shared';
-import { Image, Typography } from 'antd';
+import { Image } from 'antd';
 import React from 'react';
+
+import { FilenameCell } from './FilenameCell';
 
 interface MediaTableProps {
   medias: Media[];
@@ -14,6 +16,8 @@ interface MediaTableProps {
 const MediaTable: React.FC<MediaTableProps> = ({ medias }) => {
   return (
     <Table
+      rowHoverable
+      rowClassName={() => 'cursor-pointer'}
       rowKey={media => media.id}
       dataSource={medias}
       columns={[
@@ -26,7 +30,7 @@ const MediaTable: React.FC<MediaTableProps> = ({ medias }) => {
             <Image
               src={media.url}
               alt={media.filename}
-              style={{ width: 50, height: 50, objectFit: 'cover' }}
+              style={{ width: 50, height: 75, objectFit: 'cover' }}
             />
           ),
         },
@@ -35,14 +39,8 @@ const MediaTable: React.FC<MediaTableProps> = ({ medias }) => {
           title: 'File name',
           dataIndex: 'filename',
           key: 'filename',
-          render: (_, media) => (
-            <>
-              <p>{media.filename}</p>
-              <Typography.Text type="secondary">
-                {media.mimetype?.split('/')[1]?.toUpperCase()}
-              </Typography.Text>
-            </>
-          ),
+          minWidth: 200,
+          render: (_, media) => <FilenameCell media={media} />,
         },
         {
           title: 'Size',

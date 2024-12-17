@@ -16,11 +16,12 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
 }) => {
   return (
     <Table<Product>
+      rowHoverable
       scroll={{ x: 768, y: 500 }}
       className="w-full"
       dataSource={products}
       rowKey={record => record.id}
-      rowClassName={() => 'table-row-pointer'}
+      rowClassName={() => 'cursor-pointer'}
       pagination={false}
       expandable={{
         expandRowByClick: true,

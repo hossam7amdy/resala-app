@@ -7,7 +7,7 @@ export function Table<T>(props: TableProps<T>) {
     <AntTable
       size="small"
       scroll={{ x: true }}
-      pagination={{ hideOnSinglePage: true }}
+      pagination={{ hideOnSinglePage: true, position: ['bottomCenter'] }}
       {...props}
     />
   );
