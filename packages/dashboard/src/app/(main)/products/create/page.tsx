@@ -1,5 +1,5 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { Form } from '@/features/products/create-form';
+import { ProductEditor } from '@/features/products';
 import { listAllCategories } from '@/fetch/category';
 import { ROUTES } from '@/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
@@ -32,7 +32,7 @@ const CreateProductPage = () => {
 const CreateProductForm = async () => {
   const categories = await listAllCategories();
 
-  return <Form categories={categories} />;
+  return <ProductEditor categories={categories} />;
 };
 
 export default CreateProductPage;
