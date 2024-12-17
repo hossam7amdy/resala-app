@@ -37,7 +37,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
   };
 
   return (
-    <ImgCrop aspect={2 / 3} beforeCrop={beforeCrop} modalOk="Confirm" {...cropProps}>
+    <ImgCrop aspect={4 / 5} beforeCrop={beforeCrop} modalOk="Confirm" {...cropProps}>
       <Upload
         name="media-uploader"
         accept="image/*"

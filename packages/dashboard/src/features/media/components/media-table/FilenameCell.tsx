@@ -20,7 +20,7 @@ const CopyToClipboard: React.FC<{ text: string } & ButtonProps> = ({ text, ...pr
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-    } catch (e) {
+    } catch {
       message.error('Failed to copy link');
     }
   };
