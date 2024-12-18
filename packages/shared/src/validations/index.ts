@@ -14,3 +14,4 @@ export * from './size.schema.js';
 export * from './stock.schema.js';
 export * from './user.schema.js';
 export * from './wishlist.schema.js';
+export * from './media.schema.js';

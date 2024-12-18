@@ -1,4 +1,3 @@
-import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type {
   CreateImageRequest,
@@ -8,39 +7,23 @@ import type {
   UpdateImageResponse,
 } from '@resala/shared';
 
-import type { FileStorage } from '../storage';
-
 export class ImageService {
-  constructor(
-    private readonly db: DataStore,
-    private readonly fileService: FileStorage
-  ) {}
+  constructor(private readonly db: DataStore) {}
 
   async find(id: string) {
     return await this.db.image.findUniqueOrThrow({ where: { id } });
   }
 
-  async createMany(image: CreateImageRequest['body'] & { files: File[] }): Promise<void> {
-    await this.checkColorLimits(image.productId, image.colorId, image.files.length);
+  async createMany({ productId, colorId, ...image }: CreateImageRequest['body']): Promise<void> {
+    const productImages = await this.list({ productId, colorId });
 
-    const productImages = await this.list({ productId: image.productId });
     const colorHasPrimaryImage = productImages.some(
-      img => img.colorId === image.colorId && img.isPrimary
+      img => img.colorId === colorId && img.isPrimary
     );
 
-    // Upload image to cloud storage
-    const uploadedImages = await this.fileService.uploadFiles(image.files);
-
-    // Create image in database
-    const images = uploadedImages.map(({ url, key }, index) => ({
-      productId: image.productId,
-      colorId: image.colorId,
-      imageUrl: url,
-      imageKey: key,
-      isPrimary: !colorHasPrimaryImage && index === 0,
-    }));
-
-    await this.db.image.createMany({ data: images });
+    await this.db.image.create({
+      data: { ...image, colorId, productId, isPrimary: !colorHasPrimaryImage },
+    });
   }
 
   async update(id: string, data: Partial<Image>): Promise<Image> {
@@ -68,9 +51,6 @@ export class ImageService {
   async delete(id: string): Promise<DeleteImageResponse['data']> {
     const image = await this.find(id);
 
-    // Delete image from cloud storage
-    await this.fileService.deleteFile(image.imageKey);
-
     await this.db.image.delete({ where: { id } });
 
     if (image.isPrimary) {
@@ -89,18 +69,5 @@ export class ImageService {
 
   async list({ colorId, productId }: ListImagesRequest['query']): Promise<Image[]> {
     return await this.db.image.findMany({ where: { colorId, productId } });
-  }
-
-  private async checkColorLimits(
-    productId: string,
-    colorId: string,
-    filesCount: number,
-    limit: number = 5
-  ) {
-    const existingImages = await this.list({ productId, colorId });
-
-    if (existingImages.length + filesCount > limit) {
-      throw new BadRequestError(`Exceeded images limit of ${limit} per color`);
-    }
   }
 }
