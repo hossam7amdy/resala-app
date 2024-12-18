@@ -6,10 +6,10 @@ import { useQuery } from '@/hooks';
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Media } from '@resala/shared';
 import { Card, Divider, Image, Modal, Space } from 'antd';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 interface SelectProductImageProps {
-  initialSelection?: Media;
+  initialSelection?: Pick<Media, 'id' | 'url'>;
   onConfirmSelect: (image: Media) => void;
 }
 const SelectProductImage: React.FC<SelectProductImageProps> = ({
@@ -17,10 +17,11 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
   onConfirmSelect,
 }) => {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<Media | undefined>(initialSelection);
+  const [selectedImage, setSelectedImage] = useState<Media | undefined>(initialSelection as Media);
 
+  const listMediasCb = useCallback(() => listMedias({} as never), []);
   const { data: options, refetch } = useQuery({
-    queryFn: () => listMedias({} as never),
+    queryFn: listMediasCb,
   });
 
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
