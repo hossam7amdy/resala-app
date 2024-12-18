@@ -3,7 +3,7 @@ import { listMedias } from '@/fetch/media';
 import type { ListMediaRequest } from '@resala/shared';
 
 interface MediaPageProps {
-  searchParams?: ListMediaRequest['query'];
+  searchParams: ListMediaRequest['query'];
 }
 const MediaPage: React.FC<MediaPageProps> = async ({ searchParams }) => {
   const medias = await listMedias(searchParams);
