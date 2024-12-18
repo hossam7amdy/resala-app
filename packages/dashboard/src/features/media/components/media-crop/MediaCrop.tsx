@@ -289,7 +289,7 @@ const MediaCrop = forwardRef<CropperRef, ImgCropProps>((props, cropperRef) => {
           wrapClassName={wrapClassName}
           maskClosable={false}
           destroyOnClose
-          className="w-screen"
+          className="w-[850px]"
           {...modalProps}
           {...modalBaseProps}
         >
