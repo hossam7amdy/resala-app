@@ -18,8 +18,8 @@ const CreateCartSchema = z.object({
 const UpdateCartSchema = CreateCartSchema.pick({ body: true });
 
 const DeleteCartSchema = z.object({
-  params: z.object({
-    id: z.string().cuid(),
+  params: CartSchema.pick({
+    stockId: true,
   }),
 });
 
