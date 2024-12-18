@@ -22,25 +22,41 @@ export const StocksTable: React.FC<StocksTableProps> = ({ stocks }) => {
         {
           title: '',
           dataIndex: 'image',
-          width: 100,
+          width: 75,
           align: 'center',
-          render: image => <Image src={image?.imageUrl} alt="Product" width={'100%'} />,
+          render: (image, stock) => (
+            <Image
+              src={image ? image.imageUrl : stock.product.imageUrl}
+              alt="Product"
+              width={'100%'}
+            />
+          ),
         },
         {
           title: 'Product',
           dataIndex: 'product',
           key: 'product',
-          width: 240,
-          align: 'center',
-          render: product => `${product.enName} | ${product.arName}`,
+          minWidth: 240,
+          align: 'left',
+          render: product => (
+            <>
+              <p>{product.arName}</p>
+              <p>{product.enName}</p>
+            </>
+          ),
         },
         {
           title: 'Color',
           dataIndex: 'color',
           key: 'color',
+          width: 200,
           render: color => (
-            <Flex align="center">
-              <StockColor color={color.code} /> {color.enName} | {color.arName}
+            <Flex align="center" gap={5}>
+              <StockColor color={color.code} />
+              <div>
+                <p>{color.arName}</p>
+                <p>{color.enName}</p>
+              </div>
             </Flex>
           ),
         },
@@ -49,6 +65,7 @@ export const StocksTable: React.FC<StocksTableProps> = ({ stocks }) => {
           dataIndex: 'size',
           key: 'size',
           align: 'center',
+          width: 100,
           render: size => size.name,
         },
         {
@@ -63,7 +80,9 @@ export const StocksTable: React.FC<StocksTableProps> = ({ stocks }) => {
           width: 100,
           align: 'center',
           render: (_, stock) => (
-            <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stock.id)} />
+            <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(stock.id)}>
+              Delete
+            </PopconfirmDeleteButton>
           ),
           onCell: () => ({
             onClick: e => {
