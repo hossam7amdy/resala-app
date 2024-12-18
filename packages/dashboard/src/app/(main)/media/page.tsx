@@ -1,8 +1,12 @@
 import { MediaTable } from '@/features/media';
 import { listMedias } from '@/fetch/media';
+import type { ListMediaRequest } from '@resala/shared';
 
-const MediaPage = async () => {
-  const medias = await listMedias();
+interface MediaPageProps {
+  searchParams: ListMediaRequest['query'];
+}
+const MediaPage: React.FC<MediaPageProps> = async ({ searchParams }) => {
+  const medias = await listMedias(searchParams);
 
   return <MediaTable medias={medias} />;
 };
