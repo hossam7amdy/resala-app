@@ -177,7 +177,7 @@ const MediaCrop = forwardRef<CropperRef, ImgCropProps>((props, cropperRef) => {
               if (result !== true) {
                 processedFile = (result as unknown as RcFile) || file; // will open modal
               }
-            } catch (err) {
+            } catch {
               return runBeforeUpload({ beforeUpload, file, resolve, reject }); // not open modal
             }
           }
