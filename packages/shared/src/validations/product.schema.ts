@@ -59,10 +59,10 @@ const GetProductResponseSchema = ProductSchema.extend({
   avgRating: z.number(),
   category: CategorySchema,
   discounts: z.array(DiscountSchema),
-  images: z.array(ImageSchema.omit({ colorId: true, productId: true })),
   stocks: z.array(
     z.object({
       color: ColorSchema,
+      images: z.array(ImageSchema.omit({ colorId: true, productId: true })),
       sizes: z.array(
         StockSchema.omit({ id: true, colorId: true, productId: true }).extend({
           stockId: z.string().cuid(),
