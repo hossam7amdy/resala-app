@@ -1,11 +1,21 @@
 'use client';
 
-import { type Category, type Product, validationPatterns } from '@resala/shared';
+import type { Category, Media, Product } from '@resala/shared';
 import { Button, Col, Flex, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 
 import { useCreateOrUpdateProduct } from '../hooks';
 import { SelectProductImage } from './SelectProductImage';
+
+interface ProductFormValues {
+  image: Pick<Media, 'id' | 'url'>;
+  categoryId: string;
+  enName: string;
+  arName: string;
+  enDescription: string;
+  arDescription: string;
+  price: number;
+}
 
 const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = ({
   product,
@@ -20,31 +30,25 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
   });
 
   return (
-    <Form
+    <Form<ProductFormValues>
       form={form}
       name="product-form"
       layout="vertical"
-      onFinish={handleSubmit}
+      onFinish={({ image, ...values }) => {
+        handleSubmit({ ...values, imageKey: image.id, imageUrl: image.url });
+      }}
       initialValues={product}
     >
-      <Form.Item hidden name="imageKey" />
-      <Form.Item required name="imageUrl" rules={[{ required: true }]} label="Product Image">
+      <Form.Item
+        name="image"
+        label="Product Image"
+        initialValue={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
+      >
         <SelectProductImage
-          initialSelection={
-            product
-              ? {
-                  id: product.id,
-                  url: product?.imageUrl,
-                  filename: product.enName,
-                  size: 0,
-                  createdAt: '',
-                  updatedAt: '',
-                }
-              : undefined
+          initialSelection={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
+          onConfirmSelect={image =>
+            form.setFieldsValue({ image: { id: image.id, url: image.url } })
           }
-          onConfirmSelect={image => {
-            form.setFieldsValue({ imageUrl: image.url, imageKey: image.id });
-          }}
         />
       </Form.Item>
 
@@ -68,7 +72,7 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         <Col span={24} md={{ span: 12 }}>
           <Form.Item
             required
-            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            rules={[{ required: true, message: 'Please enter English name' }]}
             name="enName"
             label="English Name"
             style={{ flex: 1 }}
@@ -80,7 +84,7 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         <Col span={24} md={{ span: 12 }}>
           <Form.Item
             required
-            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            rules={[{ required: true, message: 'Please enter Arabic name' }]}
             name="arName"
             label="الأسم بالعربية"
             style={{ direction: 'rtl', flex: 1 }}
@@ -94,7 +98,7 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         <Col span={24} md={{ span: 12 }}>
           <Form.Item
             required
-            rules={[{ required: true, ...validationPatterns.validateEnglishCharacters }]}
+            rules={[{ required: true, message: 'Please enter English description' }]}
             name="enDescription"
             label="English Description"
             style={{ flex: 1 }}
@@ -110,7 +114,7 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         <Col span={24} md={{ span: 12 }}>
           <Form.Item
             required
-            rules={[{ required: true, ...validationPatterns.validateArabicCharacters }]}
+            rules={[{ required: true, message: 'Please enter Arabic description' }]}
             name="arDescription"
             label="الوصف بالعربية"
             style={{ direction: 'rtl', flex: 1 }}
