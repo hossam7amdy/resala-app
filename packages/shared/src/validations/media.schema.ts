@@ -30,10 +30,8 @@ const SetMediaMetadataSchema = z.object({
 const ListMediaSchema = z.object({
   query: OffsetPageParamsSchema.extend({
     search: z.string().optional(),
-    sort: z.object({
-      field: z.enum(['filename', 'createdAt', 'updatedAt']).default('createdAt'),
-      order: z.enum(['asc', 'desc']).default('desc'),
-    }),
+    sortBy: z.enum(['filename', 'createdAt', 'updatedAt']).default('createdAt').optional(),
+    sortOrder: z.enum(['asc', 'desc']).default('desc').optional(),
   }),
 });
 
