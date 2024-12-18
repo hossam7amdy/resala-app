@@ -187,6 +187,21 @@ model Size {
   @@map("size")
 }
 
+model Media {
+  id          String           @id @default(cuid())
+  url         String
+  filename    String
+  size        Int
+  contentType MediaContentType @default(image) @map("content_type")
+  duration    Int?
+  alt         String?
+  mimetype    String?          @map("mimetype")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@map("media")
+}
+
 model Cart {
   stockId   String   @map("stock_id")
   userId    String   @map("user_id")
@@ -328,6 +343,13 @@ enum DiscountType {
   BULK
 
   @@map("discount_type")
+}
+
+enum MediaContentType {
+  image
+  video
+
+  @@map("media_content_type")
 }
 
 enum OrderStatus {
