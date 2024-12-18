@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "start": "next start",
     "lint": "next lint --no-cache",
-    "test": "echo \"No tests specified for dashboard\" && exit 0"
+    "test": "vitest --config vitest.config.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
