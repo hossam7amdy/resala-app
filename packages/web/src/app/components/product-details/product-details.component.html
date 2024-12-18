@@ -177,21 +177,7 @@
           </ng-container>
         </div>
 
-        <!-- <div class="row">
-          <div *ngFor="let colors of productStock" class="btn-group color col-md-4" role="group"
-            aria-label="Basic radio toggle button group">
-
-            <input type="radio" class="btn-check" name="color-option" [id]="colors.color.colorId" autocomplete="off"
-              [value]="colors.color.code" />
-            <label class="btn color-btn" [for]="colors.color.colorId">{{colors.color.enName }}</label>
-            <p>{{selectedColor}}</p>
-           
-
-          </div>
-        </div>
-         -->
-        <!-- [ngStyle]="{'background-color':colors.color.code}" -->
-
+       
         <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
@@ -247,17 +233,24 @@
           </div>
         </section>
         <!-- add-cart-btn  -->
-        <div class="">
-          <button
-            [disabled]="customSpinIsLoading"
-            (click)="addProduct(stockIdSize, addToCartBtn)"
+        <section>
+            <button
+            (click)="addProduct(stockIdSize)"
+            [disabled]="btnDisable ===true"
             #addToCartBtn
-            class="custome-btn w-100"
+            class="custome-btn"
           >
             {{ 'productDetails.addToCart' | translate }}
+           
+              <span *ngIf="loadingBtn"  class="spinner-border spinner-border-sm fw-bold" style="color: #016373;" role="status" aria-hidden="true"></span>
+              <span *ngIf="loadingBtn" class="visually-hidden">Loading...</span>
+        
+            
           </button>
+        </section>
+         
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
-        </div>
+        
       </div>
     </div>
 
