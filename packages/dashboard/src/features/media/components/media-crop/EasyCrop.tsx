@@ -1,35 +1,12 @@
-import {
-  CheckOutlined,
-  MinusOutlined,
-  MobileOutlined,
-  PlusOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-} from '@ant-design/icons';
-import { Button, Col, Flex, Radio, type RadioChangeEvent, Row, Slider, Space } from 'antd';
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import { Button, Divider, Flex, Space } from 'antd';
+import { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import type { Area, Point } from 'react-easy-crop';
 
-import {
-  LANDSCAPE_ASPECT_LIST,
-  PORTRAIT_ASPECT_LIST,
-  PREFIX,
-  ROTATION_INITIAL,
-  ROTATION_MAX,
-  ROTATION_MIN,
-  ROTATION_STEP,
-  ZOOM_INITIAL,
-  ZOOM_STEP,
-} from './constants';
+import { AspectPicker } from './AspectPicker';
+import { RotateSlider } from './RotateSlider';
+import { ZoomSlider } from './ZoomSlider';
+import { PREFIX, ROTATION_INITIAL, ZOOM_INITIAL } from './constants';
 import type { EasyCropProps, EasyCropRef } from './types';
 
 const EasyCrop = forwardRef<EasyCropRef, EasyCropProps>((props, ref) => {
@@ -54,7 +31,6 @@ const EasyCrop = forwardRef<EasyCropRef, EasyCropProps>((props, ref) => {
   const [zoom, setZoom] = useState(ZOOM_INITIAL);
   const [rotation, setRotation] = useState(ROTATION_INITIAL);
   const [aspect, setAspect] = useState(ASPECT_INITIAL);
-  const [aspectList, setAspectList] = useState(PORTRAIT_ASPECT_LIST);
 
   const isResetActive =
     zoom !== ZOOM_INITIAL || rotation !== ROTATION_INITIAL || aspect !== ASPECT_INITIAL;
@@ -72,39 +48,15 @@ const EasyCrop = forwardRef<EasyCropRef, EasyCropProps>((props, ref) => {
     cropPixelsRef.current = croppedAreaPixels;
   }, []);
 
-  const getImageAspectRatio = useCallback((url: string): Promise<number> => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => resolve(img.naturalWidth / img.naturalHeight);
-      img.onerror = error => reject(error);
-    });
-  }, []);
-
-  useEffect(() => {
-    getImageAspectRatio(modalImage).then(aspectRatio => {
-      PORTRAIT_ASPECT_LIST[0].value = aspectRatio;
-      LANDSCAPE_ASPECT_LIST[0].value = aspectRatio;
-    });
-  }, [getImageAspectRatio, modalImage]);
-
   useImperativeHandle(ref, () => ({
     rotation,
     cropPixelsRef,
     onReset,
   }));
 
-  const onAspectTypeChange = (e: RadioChangeEvent) => {
-    if (e.target.value === 'landscape') {
-      setAspectList(LANDSCAPE_ASPECT_LIST);
-    } else {
-      setAspectList(PORTRAIT_ASPECT_LIST);
-    }
-  };
-
   return (
-    <Row gutter={[10, 10]}>
-      <Col span={18}>
+    <Flex gap={10}>
+      <div className="flex-1 shrink-0 w-full">
         <Cropper
           {...cropperProps}
           ref={cropperRef}
@@ -129,110 +81,31 @@ const EasyCrop = forwardRef<EasyCropRef, EasyCropProps>((props, ref) => {
             mediaClassName: `${PREFIX}-media`,
           }}
         />
-      </Col>
+      </div>
 
-      <Col span={6}>
-        <p className="text-center mb-2 font-semibold">Crop and transform</p>
+      <Space
+        size="small"
+        direction="vertical"
+        className="w-52"
+        split={<Divider className="p-0 m-0" />}
+      >
+        <p className="text-center font-semibold">Crop and transform</p>
 
-        {aspectSlider && (
-          <>
-            <Radio.Group
-              block
-              options={[
-                {
-                  label: (
-                    <Flex align="center" gap={5}>
-                      <MobileOutlined /> Portrait
-                    </Flex>
-                  ),
-                  value: 'portrait',
-                },
-                {
-                  label: (
-                    <Flex align="center" gap={5}>
-                      <MobileOutlined className="rotate-90" /> Landscape
-                    </Flex>
-                  ),
-                  value: 'landscape',
-                },
-              ]}
-              defaultValue="portrait"
-              optionType="button"
-              onChange={onAspectTypeChange}
-            />
-            <Flex vertical gap={5} className="mt-1">
-              {aspectList.map(({ label, value }) => (
-                <Flex
-                  key={label}
-                  align="center"
-                  justify="space-between"
-                  className="cursor-pointer px-3 py-1 bg-gray-100 rounded-md"
-                  onClick={() => setAspect(value)}
-                >
-                  {label} {value === aspect ? <CheckOutlined /> : undefined}
-                </Flex>
-              ))}
-            </Flex>
-          </>
-        )}
+        {aspectSlider && <AspectPicker image={modalImage} aspect={aspect} onChange={setAspect} />}
 
-        <br />
-
-        {rotationSlider && (
-          <Space.Compact block>
-            <Button
-              className="flex-1"
-              icon={<RotateLeftOutlined />}
-              onClick={() => setRotation(rotation - ROTATION_STEP)}
-              disabled={rotation === ROTATION_MIN}
-            />
-            <Button
-              className="flex-1"
-              icon={<RotateRightOutlined />}
-              onClick={() => setRotation(rotation + ROTATION_STEP)}
-              disabled={rotation === ROTATION_MAX}
-            />
-          </Space.Compact>
-        )}
-
-        <br />
+        {rotationSlider && <RotateSlider rotation={rotation} onRotate={setRotation} />}
 
         {zoomSlider && (
-          <Flex align="center" gap={5}>
-            <Button
-              size="small"
-              type="text"
-              onClick={() => setZoom(+(zoom - ZOOM_STEP).toFixed(1))}
-              disabled={zoom - ZOOM_STEP < minZoom}
-              icon={<MinusOutlined />}
-            />
-            <Slider
-              min={minZoom}
-              max={maxZoom}
-              step={ZOOM_STEP}
-              value={zoom}
-              onChange={setZoom}
-              className="flex-1"
-            />
-            <Button
-              size="small"
-              type="text"
-              icon={<PlusOutlined />}
-              onClick={() => setZoom(+(zoom + ZOOM_STEP).toFixed(1))}
-              disabled={zoom + ZOOM_STEP > maxZoom}
-            />
-          </Flex>
+          <ZoomSlider zoom={zoom} onZoom={setZoom} minZoom={minZoom} maxZoom={maxZoom} />
         )}
-
-        <br />
 
         {showReset && (zoomSlider || rotationSlider || aspectSlider) && (
           <Button block disabled={!isResetActive} onClick={onReset}>
             {resetBtnText}
           </Button>
         )}
-      </Col>
-    </Row>
+      </Space>
+    </Flex>
   );
 });
 
