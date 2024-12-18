@@ -1,6 +1,5 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
-import type { FileStorage } from '@/services/storage';
 import type { Prisma } from '@prisma/client';
 import type { Image } from '@resala/shared';
 
@@ -17,10 +16,7 @@ import type {
 } from './product.dto';
 
 export class ProductService {
-  constructor(
-    private readonly db: DataStore,
-    private readonly fileService: FileStorage
-  ) {}
+  constructor(private readonly db: DataStore) {}
 
   private _productFields() {
     return {
@@ -145,9 +141,8 @@ export class ProductService {
     categoryId,
     enName,
     arName,
-    file,
     ...payload
-  }: CreateProductRequestDto & { file: File }): Promise<CreateProductResponseDto> {
+  }: CreateProductRequestDto): Promise<CreateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
     const product = await this.db.product.findFirst({
@@ -162,35 +157,17 @@ export class ProductService {
 
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
-    const { key, url } = await this.fileService.uploadFile(file);
-
     return await this.db.product.create({
-      data: { ...payload, categoryId, enName, arName, imageKey: key, imageUrl: url },
+      data: { ...payload, categoryId, enName, arName },
     });
   }
 
-  async update(
-    id: string,
-    { file, ...product }: UpdateProductRequestDto & { file?: File }
-  ): Promise<UpdateProductResponseDto> {
+  async update(id: string, product: UpdateProductRequestDto): Promise<UpdateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
-
-    const { imageKey, imageUrl } = await this.get(id);
-
-    let fileData = { key: imageKey, url: imageUrl };
-    if (file) {
-      await this.fileService.deleteFile(imageKey);
-
-      fileData = await this.fileService.uploadFile(file);
-    }
 
     return await this.db.product.update({
       where: { id },
-      data: {
-        ...product,
-        imageKey: fileData.key,
-        imageUrl: fileData.url,
-      },
+      data: product,
     });
   }
 
