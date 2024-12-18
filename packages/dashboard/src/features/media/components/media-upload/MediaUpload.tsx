@@ -4,21 +4,19 @@ import { UploadOutlined } from '@ant-design/icons';
 import { createId } from '@paralleldrive/cuid2';
 import { Button, Upload } from 'antd';
 import type { UploadProps } from 'antd';
-import ImgCrop, { type ImgCropProps } from 'antd-img-crop';
 import type { UploadFile } from 'antd/es/upload';
 import React, { useState } from 'react';
 
+import { MediaCrop } from '../media-crop/MediaCrop';
 import { beforeCrop, beforeUpload } from './helpers';
 import { handleUpload } from './xhr';
 
 export interface MediaUploadProps extends UploadProps {
-  cropProps?: ImgCropProps;
   onUploadError?: (file: UploadFile) => void;
   onUploadSuccess?: (file: UploadFile) => void;
 }
 const MediaUpload: React.FC<MediaUploadProps> = ({
   children,
-  cropProps,
   onUploadError,
   onUploadSuccess,
   ...props
@@ -37,7 +35,15 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
   };
 
   return (
-    <ImgCrop aspect={4 / 5} beforeCrop={beforeCrop} modalOk="Confirm" {...cropProps}>
+    <MediaCrop
+      showReset
+      showGrid
+      rotationSlider
+      aspectSlider
+      aspect={4 / 5}
+      beforeCrop={beforeCrop}
+      modalOk="Confirm"
+    >
       <Upload
         name="media-uploader"
         accept="image/*"
@@ -60,7 +66,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           </Button>
         )}
       </Upload>
-    </ImgCrop>
+    </MediaCrop>
   );
 };
 

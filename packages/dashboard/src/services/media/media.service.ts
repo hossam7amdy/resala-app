@@ -56,11 +56,22 @@ class MediaService {
     return media;
   }
 
-  async listMedia(_?: ListMediaRequestDto): Promise<ListMediaResponseDto> {
+  async listMedia({
+    sortBy,
+    sortOrder,
+    search,
+    page,
+    limit,
+  }: ListMediaRequestDto): Promise<ListMediaResponseDto> {
     const medias = await this.db.media.findMany({
       orderBy: {
-        createdAt: 'desc',
+        [`${sortBy}`]: sortOrder,
       },
+      where: {
+        filename: { contains: search },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
     });
 
     return medias;

@@ -3,7 +3,8 @@
 import { ROUTES } from '@/routes';
 import { mediaService } from '@/services';
 import { formatError } from '@/utils/formatError';
-import { type SetMediaMetadataRequest, SetMediaMetadataSchema } from '@resala/shared';
+import { ListMediaSchema, SetMediaMetadataSchema } from '@resala/shared';
+import type { ListMediaRequest, SetMediaMetadataRequest } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
 const getUploadUrl = async (id: string) => {
@@ -19,8 +20,9 @@ const setMediaMetadata = async (id: string, data: SetMediaMetadataRequest['body'
   return media;
 };
 
-const listMedias = async () => {
-  return await mediaService.listMedia();
+const listMedias = async (query: ListMediaRequest['query']) => {
+  query = ListMediaSchema.shape.query.parse(query);
+  return await mediaService.listMedia(query);
 };
 
 const countMedia = async () => {
