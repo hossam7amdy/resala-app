@@ -214,7 +214,7 @@
   color: #016373;
 }
 
-.add-cart-btn button {
+/* .add-cart-btn button {
   padding: 10px 0;
   color: #fff;
   font-weight: 500;
@@ -234,7 +234,7 @@
 .add-cart-btn button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-}
+} */
 
 .btn-check:checked + .btn {
   border: 0;
