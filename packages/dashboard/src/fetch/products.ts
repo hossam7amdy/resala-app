@@ -2,16 +2,14 @@
 
 import { ROUTES } from '@/routes';
 import { productService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import { CreateProductSchema, UpdateProductSchema } from '@resala/shared';
 import {
   type CreateProductRequest,
-  type CreateProductResponse,
-  type DeleteProductResponse,
   type GetProductResponse,
   type ListProductsRequest,
   type ListProductsResponse,
   type UpdateProductRequest,
-  type UpdateProductResponse,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -30,44 +28,39 @@ export const findProduct = async (id: string): Promise<GetProductResponse['data'
   }
 };
 
-export const addProduct = async (
-  product: CreateProductRequest['body']
-): Promise<CreateProductResponse> => {
+export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
-    product = await CreateProductSchema.shape.body.parseAsync(product);
+    product = CreateProductSchema.shape.body.parse(product);
 
     const data = await productService.create(product);
 
     revalidatePath(ROUTES.PRODUCTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as CreateProductResponse;
+    return formatError(e);
   }
 };
 
-export const updateProduct = async (
-  id: string,
-  product: UpdateProductRequest['body']
-): Promise<UpdateProductResponse> => {
+export const updateProduct = async (id: string, product: UpdateProductRequest['body']) => {
   try {
-    product = await UpdateProductSchema.shape.body.parseAsync(product);
+    product = UpdateProductSchema.shape.body.parse(product);
 
     const data = await productService.update(id, product);
 
     revalidatePath(ROUTES.PRODUCTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateProductResponse;
+    return formatError(e);
   }
 };
 
-export const deleteProduct = async (id: string): Promise<DeleteProductResponse> => {
+export const deleteProduct = async (id: string) => {
   try {
     const data = await productService.delete(id);
 
     revalidatePath(ROUTES.PRODUCTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteProductResponse;
+    return formatError(e);
   }
 };
