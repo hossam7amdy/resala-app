@@ -20,7 +20,7 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
   const [selectedImage, setSelectedImage] = useState<Media | undefined>(initialSelection);
 
   const { data: options, refetch } = useQuery({
-    queryFn: listMedias,
+    queryFn: () => listMedias({} as never),
   });
 
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
