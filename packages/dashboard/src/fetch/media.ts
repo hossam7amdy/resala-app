@@ -20,7 +20,7 @@ const setMediaMetadata = async (id: string, data: SetMediaMetadataRequest['body'
   return media;
 };
 
-const listMedias = async (query?: ListMediaRequest['query']) => {
+const listMedias = async (query: ListMediaRequest['query']) => {
   query = ListMediaSchema.shape.query.parse(query);
   return await mediaService.listMedia(query);
 };
