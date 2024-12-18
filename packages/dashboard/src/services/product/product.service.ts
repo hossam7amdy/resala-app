@@ -1,6 +1,7 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
+import type { Image } from '@resala/shared';
 
 import type {
   CreateProductRequestDto,
@@ -57,9 +58,10 @@ export class ProductService {
     return Object.values(groupedStocks);
   }
 
-  private _formatGroupedStocksByColor(groupedStocks: ProductStocksDto[]) {
+  private _formatGroupedStocksByColor(groupedStocks: ProductStocksDto[], productImages: Image[]) {
     return groupedStocks.map(stocks => ({
       color: stocks[0].color,
+      images: productImages.filter(image => image.colorId === stocks[0].color.id),
       sizes: stocks.map(stock => ({
         id: stock.id,
         size: stock.size.name,
@@ -78,14 +80,14 @@ export class ProductService {
       _avg: { rating: true },
     });
 
-    const { stocks, ...product } = await this.db.product.findUniqueOrThrow({
+    const { stocks, images, ...product } = await this.db.product.findUniqueOrThrow({
       include: this._productFields(),
       where: { id },
     });
 
     // group by color
     const groupedStocks = this._groupProductStocksByColor(stocks);
-    const formatStocks = this._formatGroupedStocksByColor(groupedStocks);
+    const formatStocks = this._formatGroupedStocksByColor(groupedStocks, images);
 
     return {
       ...product,
@@ -127,9 +129,9 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ stocks, ...product }) => ({
+      products: products.map(({ stocks, images, ...product }) => ({
         ...product,
-        stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks)),
+        stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks), images),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
     };
