@@ -1,4 +1,4 @@
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { type GetUserResponse, Role } from '@resala/shared';
 import { Button, Dropdown, type MenuProps } from 'antd';

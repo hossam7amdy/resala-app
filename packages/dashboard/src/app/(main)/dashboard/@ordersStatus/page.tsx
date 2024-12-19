@@ -1,4 +1,4 @@
-import { OrderStatusChart } from '@/features/dashboard/order-status-chart';
+import { OrderStatusChart } from '@/features/dashboard';
 import { getOrdersStatus } from '@/fetch/dashboard';
 import { Card } from 'antd';
 import React from 'react';

@@ -1,5 +1,5 @@
 import { Search, TableSkeleton } from '@/components';
-import { CategoryTable } from '@/features/categories/categories-table';
+import { CategoryTable } from '@/features/categories';
 import { listAllCategories } from '@/fetch/category';
 import { ROUTES } from '@/routes';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
