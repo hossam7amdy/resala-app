@@ -1,1 +1,2 @@
-export { ProductsTable } from './products-table';
+export * from './hooks';
+export * from './components';

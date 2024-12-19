@@ -1,7 +1,7 @@
 'use client';
 
 import { useLogout } from '@/hooks';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Skeleton, Space } from 'antd';

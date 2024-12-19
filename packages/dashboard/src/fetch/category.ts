@@ -8,10 +8,11 @@ import type {
   ListCategoriesResponse,
   UpdateCategoryRequest,
 } from '@resala/shared';
-import { revalidatePath } from 'next/cache';
+import { unstable_noStore as noStore, revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 export const listAllCategories = async (): Promise<ListCategoriesResponse['data']> => {
+  noStore();
   return await categoryService.list();
 };
 

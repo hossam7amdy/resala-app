@@ -22,7 +22,6 @@ export const useQuery = <Data,>({
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
-    setData(undefined);
     setError(undefined);
 
     try {
