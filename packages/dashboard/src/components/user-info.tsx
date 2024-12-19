@@ -1,4 +1,4 @@
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import { Avatar, Skeleton, Space, Typography } from 'antd';
 import React from 'react';
 

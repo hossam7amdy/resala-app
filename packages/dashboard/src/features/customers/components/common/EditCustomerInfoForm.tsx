@@ -2,7 +2,7 @@
 
 import { updateUser } from '@/fetch/users';
 import { useMutation, useNotification } from '@/hooks';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import type { User } from '@resala/shared';
 import { Role, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input, Select } from 'antd';

@@ -81,4 +81,4 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
   );
 };
 
-export default EditForm;
+export { EditForm };
