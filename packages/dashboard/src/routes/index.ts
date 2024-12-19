@@ -21,8 +21,7 @@ export const ROUTES = {
   PRODUCT_REVIEWS: (id: string | number) => `/products/${id}/reviews`,
 
   STOCKS: '/stocks',
-  CREATE_STOCK: (id?: string | number) => `/stocks/create?productId=${id}`,
-  EDIT_STOCK: (stockId: string | number) => `/stocks/${stockId}/edit`,
+  STOCKS_EDITOR: (id?: string | number) => `/stocks/editor?productId=${id}`,
 
   COLORS: '/stocks/colors',
   SIZES: '/stocks/sizes',

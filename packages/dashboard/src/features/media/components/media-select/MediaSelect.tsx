@@ -1,18 +1,21 @@
 'use client';
 
-import { MediaSelect, MediaUpload, type RequiredMedia } from '@/features/media';
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import { Card, Divider, Image, Modal, Space } from 'antd';
 import React, { useState } from 'react';
 
-interface SelectProductImageProps {
+import { MediaUpload } from '../media-upload/MediaUpload';
+import { MediaSelectList } from './MediaSelectList';
+import type { RequiredMedia } from './types';
+
+interface MediaSelectProps {
   medias: RequiredMedia[];
   multiple?: boolean;
   maxCount?: number;
-  initialSelection?: RequiredMedia;
+  initialSelection?: RequiredMedia[];
   onConfirmSelect: (image: RequiredMedia[]) => void;
 }
-const SelectProductImage: React.FC<SelectProductImageProps> = ({
+const MediaSelect: React.FC<MediaSelectProps> = ({
   initialSelection,
   onConfirmSelect,
   multiple,
@@ -21,7 +24,7 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
 }) => {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<RequiredMedia[]>(
-    initialSelection ? ([initialSelection] as RequiredMedia[]) : []
+    initialSelection ? initialSelection : []
   );
 
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
@@ -70,16 +73,16 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
 
         <Divider />
 
-        <MediaSelect
-          medias={medias}
+        <MediaSelectList
+          options={medias}
           multiple={multiple}
           maxCount={maxCount}
-          initialSelection={selectedImage ? selectedImage : undefined}
-          onConfirmSelect={medias => setSelectedImage(medias)}
+          selected={selectedImage ? selectedImage : undefined}
+          onSelect={medias => setSelectedImage(medias)}
         />
       </Modal>
     </>
   );
 };
 
-export { SelectProductImage };
+export { MediaSelect };
