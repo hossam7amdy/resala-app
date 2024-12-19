@@ -1,37 +1,40 @@
 'use client';
 
 import { MediaSelect, MediaUpload } from '@/features/media';
-import { listMedias } from '@/fetch/media';
-import { useQuery } from '@/hooks';
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import type { Media } from '@resala/shared';
 import { Card, Divider, Image, Modal, Space } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 
 interface SelectProductImageProps {
+  medias: Media[];
+  multiple?: boolean;
+  maxCount?: number;
   initialSelection?: Pick<Media, 'id' | 'url'>;
-  onConfirmSelect: (image: Media) => void;
+  onConfirmSelect: (image: Media[]) => void;
 }
 const SelectProductImage: React.FC<SelectProductImageProps> = ({
   initialSelection,
   onConfirmSelect,
+  multiple,
+  maxCount,
+  medias,
 }) => {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<Media | undefined>(initialSelection as Media);
-
-  const listMediasCb = useCallback(() => listMedias({} as never), []);
-  const { data: options, refetch } = useQuery({
-    queryFn: listMediasCb,
-  });
+  const [selectedImage, setSelectedImage] = useState<Media[]>(
+    initialSelection ? ([initialSelection] as Media[]) : []
+  );
 
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
 
   return (
     <>
       <Space>
-        {selectedImage && (
-          <Image src={selectedImage.url} width={75} height={100} alt={selectedImage.filename} />
-        )}
+        <Image.PreviewGroup>
+          {selectedImage.map(img => (
+            <Image key={img.id} src={img.url} width={75} height={100} alt={img.filename} />
+          ))}
+        </Image.PreviewGroup>
         <Card
           className="w-[75px] h-[100px] cursor-pointer bg-gray-100 border-2 border-dotted border-gray-200 hover:border-gray-300"
           classNames={{ body: 'h-full flex justify-center items-center' }}
@@ -44,15 +47,15 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
         width={800}
         title="Select Image"
         open={selectModalOpen}
-        okButtonProps={{ disabled: !selectedImage, className: 'px-6' }}
+        okButtonProps={{ disabled: selectedImage.length === 0, className: 'px-6' }}
         onCancel={toggleSelectModal}
         onOk={() => {
-          if (selectedImage) onConfirmSelect(selectedImage);
+          onConfirmSelect(selectedImage);
           toggleSelectModal();
         }}
       >
-        <div className="flex justify-center cursor-pointer border-dashed border-2 border-gray-300 rounded-lg py-2 my-4 hover:border-primary-300">
-          <MediaUpload onUploadSuccess={refetch}>
+        <div className="flex justify-center cursor-pointer border-dashed border-primary-100 rounded-lg py-2 my-4 hover:border-primary-500">
+          <MediaUpload>
             <div className="text-center">
               <p>
                 <InboxOutlined className="text-5xl text-primary-400" />
@@ -68,15 +71,13 @@ const SelectProductImage: React.FC<SelectProductImageProps> = ({
 
         <Divider />
 
-        {options ? (
-          <MediaSelect
-            options={options}
-            selected={selectedImage ? [selectedImage] : []}
-            onSelect={medias => setSelectedImage(medias[0])}
-          />
-        ) : (
-          <div>Loading...</div>
-        )}
+        <MediaSelect
+          options={medias}
+          multiple={multiple}
+          maxCount={maxCount}
+          selected={selectedImage ? selectedImage : undefined}
+          onSelect={medias => setSelectedImage(medias)}
+        />
       </Modal>
     </>
   );

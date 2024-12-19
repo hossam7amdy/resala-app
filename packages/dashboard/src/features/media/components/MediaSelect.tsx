@@ -7,11 +7,18 @@ import React, { useCallback, useState } from 'react';
 
 export interface MediaSelectProps {
   multiple?: boolean;
+  maxCount?: number;
   selected?: Media[];
   onSelect?: (media: Media[]) => void;
   options: Media[];
 }
-const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, multiple }) => {
+const MediaSelect: React.FC<MediaSelectProps> = ({
+  options,
+  selected,
+  onSelect,
+  multiple,
+  maxCount,
+}) => {
   const [selectedMedia, setSelectedMedia] = useState<Media[]>(selected || []);
 
   const isSelected = useCallback(
@@ -36,11 +43,14 @@ const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, 
         return;
       }
 
-      const updated = multiple ? [...selectedMedia, media] : [media];
+      let updated = multiple ? [media, ...selectedMedia] : [media];
+      if (maxCount && updated.length > maxCount) {
+        updated = updated.slice(0, maxCount);
+      }
       onSelect?.(updated);
       setSelectedMedia(updated);
     },
-    [isSelected, multiple, onSelect, selectedMedia]
+    [isSelected, maxCount, multiple, onSelect, selectedMedia]
   );
 
   return (

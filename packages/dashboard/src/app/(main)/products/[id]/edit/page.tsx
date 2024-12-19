@@ -1,45 +1,27 @@
-import { BackButton, FormSkeleton } from '@/components';
 import { ProductEditor } from '@/features/products';
 import { listAllCategories } from '@/fetch/category';
+import { listMedias } from '@/fetch/media';
 import { findProduct } from '@/fetch/products';
-import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
-import { Breadcrumb, Card, Col, Row } from 'antd';
-import Link from 'next/link';
+import type { ListMediaRequest } from '@resala/shared';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
-const EditProductPage = ({ params }: { params: Params }) => {
-  return (
-    <Row gutter={[10, 20]}>
-      <Col span={24}>
-        <Breadcrumb
-          items={[
-            { title: <BackButton /> },
-            { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
-            { title: 'Edit' },
-          ]}
-        />
-      </Col>
-      <Col span={24}>
-        <Card>
-          <Suspense fallback={<FormSkeleton />}>
-            <EditProductForm id={params.id} />
-          </Suspense>
-        </Card>
-      </Col>
-    </Row>
-  );
-};
-
-const EditProductForm = async ({ id }: { id: string }) => {
-  const [categories, product] = await Promise.all([listAllCategories(), findProduct(id)]);
+interface EditProductPageProps {
+  params: Params;
+  searchParams: ListMediaRequest['query'];
+}
+const EditProductPage: React.FC<EditProductPageProps> = async ({ params, searchParams }) => {
+  const [categories, product, medias] = await Promise.all([
+    listAllCategories(),
+    findProduct(params.id),
+    listMedias(searchParams),
+  ]);
 
   if (!product) {
     return notFound();
   }
 
-  return <ProductEditor categories={categories} product={product!} />;
+  return <ProductEditor categories={categories} product={product!} medias={medias} />;
 };
 
 export default EditProductPage;
