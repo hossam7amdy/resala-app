@@ -1,5 +1,5 @@
 import { ResalaTooltip } from '@/components';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import { Role, type User } from '@resala/shared';
 import React from 'react';
 
