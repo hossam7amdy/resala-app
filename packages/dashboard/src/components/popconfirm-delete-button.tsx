@@ -14,6 +14,7 @@ interface PopconfirmDeleteButtonProps extends Omit<PopconfirmProps, 'title'> {
 
 export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
   onConfirmDelete,
+  children,
   title = 'Are you sure?',
   description = 'This action cannot be undone.',
   disabled,
@@ -46,7 +47,15 @@ export const PopconfirmDeleteButton: React.FC<PopconfirmDeleteButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      <Button size="small" danger type="link" icon={<DeleteFilled />} disabled={disabled} />
+      <Button
+        size="small"
+        danger
+        type="link"
+        icon={children ? undefined : <DeleteFilled />}
+        disabled={disabled}
+      >
+        {children}
+      </Button>
     </Popconfirm>
   );
 };

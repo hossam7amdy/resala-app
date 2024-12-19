@@ -1,15 +1,15 @@
 'use server';
 
-import { optimizeImages } from '@/lib/optimizer';
 import { ROUTES } from '@/routes';
 import { productService } from '@/services';
-import type {
-  CreateProductResponse,
-  DeleteProductResponse,
-  GetProductResponse,
-  ListProductsRequest,
-  ListProductsResponse,
-  UpdateProductResponse,
+import { formatError } from '@/utils/formatError';
+import { CreateProductSchema, UpdateProductSchema } from '@resala/shared';
+import {
+  type CreateProductRequest,
+  type GetProductResponse,
+  type ListProductsRequest,
+  type ListProductsResponse,
+  type UpdateProductRequest,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -28,58 +28,39 @@ export const findProduct = async (id: string): Promise<GetProductResponse['data'
   }
 };
 
-export const addProduct = async (formData: FormData): Promise<CreateProductResponse> => {
+export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
-    const image = formData.get('image');
+    product = CreateProductSchema.shape.body.parse(product);
 
-    if (image) {
-      const optimizedImage = await optimizeImages([image] as File[]);
-
-      formData.delete('image');
-      formData.append('image', optimizedImage[0]);
-    }
-
-    throw new Error('Not implemented');
-    // const data = await productService.create(formData);
+    const data = await productService.create(product);
 
     revalidatePath(ROUTES.PRODUCTS);
-    // return { data };
+    return { data };
   } catch (e) {
-    return { error: (e as Error).message } as CreateProductResponse;
+    return formatError(e);
   }
 };
 
-export const updateProduct = async (
-  id: number | string,
-  formData: FormData
-): Promise<UpdateProductResponse> => {
+export const updateProduct = async (id: string, product: UpdateProductRequest['body']) => {
   try {
-    const image = formData.get('image');
+    product = UpdateProductSchema.shape.body.parse(product);
 
-    if (image) {
-      const optimizedImage = await optimizeImages([image] as File[]);
-
-      formData.delete('image');
-      formData.append('image', optimizedImage[0]);
-    }
-
-    throw new Error('Not implemented');
-    // const data = await productService.update(+id, formData);
+    const data = await productService.update(id, product);
 
     revalidatePath(ROUTES.PRODUCTS);
-    // return { data };
+    return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateProductResponse;
+    return formatError(e);
   }
 };
 
-export const deleteProduct = async (id: string): Promise<DeleteProductResponse> => {
+export const deleteProduct = async (id: string) => {
   try {
     const data = await productService.delete(id);
 
     revalidatePath(ROUTES.PRODUCTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteProductResponse;
+    return formatError(e);
   }
 };

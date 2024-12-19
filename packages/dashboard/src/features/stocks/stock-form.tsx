@@ -2,10 +2,9 @@
 
 import { SelectProductAsync } from '@/components/select-product-async';
 import { listImages } from '@/fetch/images';
-import { uploadImages } from '@/fetch/images';
-import { createStock, updateStock } from '@/fetch/stocks';
+// import { createStock, updateStock } from '@/fetch/stocks';
 import { useMutation, useNotification } from '@/hooks';
-import type { DefaultResponseBody, Image, Stock } from '@resala/shared';
+import type { Image, Stock } from '@resala/shared';
 import { Button, Flex, Form, InputNumber, Typography } from 'antd';
 import type { UploadFile } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -54,29 +53,8 @@ export const StockForm: React.FC<StockFormProps> = ({ stock, selectColor, select
 
   const isCreate = !stock?.id;
 
-  const handleSubmit = async (values: FormValues) => {
-    const submit = isCreate ? createStock : updateStock.bind(null, stock.id!);
-
-    const promiseAll: Promise<DefaultResponseBody>[] = [submit(values)];
-
-    const newFiles = fileList.filter(file => file.status === 'done' && !file.url);
-
-    if (newFiles.length) {
-      const formData = new FormData();
-
-      formData.append('colorId', colorId.toString());
-      formData.append('productId', productId.toString());
-      newFiles.forEach(file => {
-        formData.append('images', file.originFileObj!);
-      });
-
-      promiseAll.push(uploadImages(formData));
-    }
-
-    const [stockResponse] = await Promise.all(promiseAll);
-
-    return stockResponse;
-  };
+  // TODO Implement the handleSubmit function
+  const handleSubmit = async (_values: FormValues) => {};
 
   const { isLoading, mutate } = useMutation({
     mutationFn: handleSubmit,
