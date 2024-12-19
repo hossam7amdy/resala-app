@@ -2,7 +2,7 @@
 
 import { FormSkeleton } from '@/components';
 import { EditCustomerForm } from '@/features/customers';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useCurrentUser } from '@/hooks';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Card, Flex } from 'antd';
 import { useRouter } from 'next/navigation';

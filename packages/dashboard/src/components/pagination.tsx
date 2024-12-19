@@ -1,6 +1,6 @@
 'use client';
 
-import { useCreateSearchParams } from '@/hooks/use-create-search-params';
+import { useCreateSearchParams } from '@/hooks';
 import { OffsetPageParamsSchema } from '@resala/shared';
 import { Pagination as AntPagination } from 'antd';
 import type { PaginationProps } from 'antd';
