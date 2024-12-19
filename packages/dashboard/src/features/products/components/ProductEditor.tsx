@@ -17,10 +17,12 @@ interface ProductFormValues {
   price: number;
 }
 
-const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = ({
-  product,
-  categories,
-}) => {
+interface ProductEditorProps {
+  product?: Product;
+  medias: Media[];
+  categories: Category[];
+}
+const ProductEditor: React.FC<ProductEditorProps> = ({ product, categories, medias }) => {
   const { back } = useRouter();
   const [form] = Form.useForm();
   const { handleSubmit, isLoading } = useCreateOrUpdateProduct({
@@ -45,9 +47,10 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         initialValue={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
       >
         <SelectProductImage
+          medias={medias}
           initialSelection={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
-          onConfirmSelect={image =>
-            form.setFieldsValue({ image: { id: image.id, url: image.url } })
+          onConfirmSelect={images =>
+            form.setFieldsValue({ image: { id: images[0].id, url: images[0].url } })
           }
         />
       </Form.Item>
