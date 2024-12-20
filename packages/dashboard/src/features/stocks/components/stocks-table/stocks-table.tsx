@@ -6,7 +6,7 @@ import type { GetStockResponse, ListStocksResponse } from '@resala/shared';
 import { Flex, Image } from 'antd';
 import React from 'react';
 
-import { StockColor } from '.';
+import { StockColor } from '../..';
 
 interface StocksTableProps {
   stocks: ListStocksResponse['data'];
