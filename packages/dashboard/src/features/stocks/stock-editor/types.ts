@@ -1,8 +1,9 @@
-import type { Color, GetProductResponse, Media, Size } from '@resala/shared';
+import type { RequiredMedia } from '@/features/media';
+import type { Color, GetProductResponse, Size } from '@resala/shared';
 
 export interface StockItem {
   color: string;
-  medias: Pick<Media, 'id' | 'url'>[];
+  medias: RequiredMedia[];
   sizes: {
     size: string;
     quantity: number;
@@ -16,7 +17,7 @@ export interface StockFormValues {
 export interface StockEditorProps {
   sizes: Size[];
   colors: Color[];
-  medias: Pick<Media, 'id' | 'url'>[];
+  medias: RequiredMedia[];
   productDetails: GetProductResponse['data'];
 }
 
