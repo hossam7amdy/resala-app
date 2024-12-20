@@ -84,7 +84,7 @@ export class AuthService {
       email: sign,
       password: password,
       rememberMe,
-      callbackURL: `${location.origin}/home`,
+      // callbackURL: `${location.origin}/home`,
     };
 
     const { url } = ENDPOINT_CONFIGS.login;
