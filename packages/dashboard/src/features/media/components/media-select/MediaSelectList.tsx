@@ -44,7 +44,7 @@ const MediaSelectList: React.FC<MediaSelectProps> = ({
         return;
       }
 
-      let updated = multiple ? [media, ...selectedMedia] : [media];
+      let updated = multiple ? [...selectedMedia, media] : [media];
       if (maxCount && updated.length > maxCount) {
         updated = updated.slice(0, maxCount);
       }
