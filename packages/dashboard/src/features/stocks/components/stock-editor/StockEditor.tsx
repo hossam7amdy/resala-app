@@ -4,7 +4,7 @@ import { Button, Flex, Form } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import { StockFormItems } from './StockFormItems';
+import { StocksFormList } from './StocksFormList';
 import type { StockEditorProps, StockFormValues } from './types';
 
 const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors, medias }) => {
@@ -16,8 +16,14 @@ const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors
   };
 
   return (
-    <Form form={form} name={`stock-editor`} layout="vertical" onFinish={handleSubmit}>
-      <StockFormItems
+    <Form
+      form={form}
+      name={`stock-editor`}
+      layout="vertical"
+      onFinish={handleSubmit}
+      scrollToFirstError
+    >
+      <StocksFormList
         sizes={sizes}
         colors={colors}
         medias={medias}
