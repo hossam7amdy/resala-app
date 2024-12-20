@@ -4,6 +4,7 @@ import { listAllColors } from '@/fetch/colors';
 import { listMedias } from '@/fetch/media';
 import { listAllSizes } from '@/fetch/sizes';
 import type { ListMediaRequest } from '@resala/shared';
+import { Card } from 'antd';
 
 interface CreateProductPageProps {
   searchParams: ListMediaRequest['query'];
@@ -16,7 +17,11 @@ const CreateProductPage: React.FC<CreateProductPageProps> = async ({ searchParam
     listAllSizes(),
   ]);
 
-  return <ProductEditor categories={categories} medias={medias} colors={colors} sizes={sizes} />;
+  return (
+    <Card title="Create Product">
+      <ProductEditor categories={categories} medias={medias} colors={colors} sizes={sizes} />
+    </Card>
+  );
 };
 
 export default CreateProductPage;

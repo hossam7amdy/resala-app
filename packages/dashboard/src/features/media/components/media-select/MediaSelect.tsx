@@ -1,7 +1,7 @@
 'use client';
 
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Divider, Image, Modal, Space } from 'antd';
+import { Button, Divider, Image, Modal, Space } from 'antd';
 import React, { useState } from 'react';
 
 import { MediaUpload } from '../media-upload/MediaUpload';
@@ -34,16 +34,19 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
       <Space>
         <Image.PreviewGroup>
           {selectedImage.map(img => (
-            <Image key={img.id} src={img.url} width={75} height={100} alt={img.filename} />
+            <Image
+              key={img.id}
+              src={img.url}
+              width={82}
+              height={100}
+              alt={img.filename}
+              className="object-cover rounded-lg"
+            />
           ))}
         </Image.PreviewGroup>
-        <Card
-          className="w-[75px] h-[100px] cursor-pointer bg-gray-100 border-2 border-dotted border-gray-200 hover:border-gray-300"
-          classNames={{ body: 'h-full flex justify-center items-center' }}
-          onClick={toggleSelectModal}
-        >
+        <Button type="dashed" className="px-10 py-12 rounded-lg" onClick={toggleSelectModal}>
           <PlusOutlined />
-        </Card>
+        </Button>
       </Space>
       <Modal
         width={800}
@@ -56,8 +59,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
           toggleSelectModal();
         }}
       >
-        <div className="flex justify-center cursor-pointer border-dashed border-primary-100 rounded-lg py-2 my-4 hover:border-primary-500">
-          <MediaUpload>
+        <MediaUpload>
+          <Button block type="dashed" className="rounded-lg my-2 h-32">
             <div className="text-center">
               <p>
                 <InboxOutlined className="text-5xl text-primary-400" />
@@ -68,8 +71,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
                 data or other banned files.
               </span>
             </div>
-          </MediaUpload>
-        </div>
+          </Button>
+        </MediaUpload>
 
         <Divider />
 
