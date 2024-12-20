@@ -1,5 +1,5 @@
 import { Pagination, Table } from '@/components';
-import { DeleteButton } from '@/features/reviews/delete-button';
+import { DeleteButton } from '@/features/reviews';
 import { listReviews } from '@/fetch/reviews';
 import type { Params } from '@/types';
 import { formatDate } from '@/utils/date-time-formatter';

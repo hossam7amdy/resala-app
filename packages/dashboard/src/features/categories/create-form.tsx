@@ -7,7 +7,7 @@ import type { Category } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
 import { useRouter } from 'next/navigation';
 
-export const CreateForm = ({ category }: { category?: Category }) => {
+const CreateForm = ({ category }: { category?: Category }) => {
   const router = useRouter();
 
   const [form] = Form.useForm();
@@ -72,4 +72,4 @@ export const CreateForm = ({ category }: { category?: Category }) => {
   );
 };
 
-export default CreateForm;
+export { CreateForm };

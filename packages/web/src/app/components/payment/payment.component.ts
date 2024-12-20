@@ -140,6 +140,8 @@ export class PaymentComponent implements OnInit {
 
   // summary checkout
   cartDetails: any = {};
+  totalDiscount:number | undefined=0 
+  totalPrice:number=0
 
   // payment form
 
@@ -167,6 +169,17 @@ export class PaymentComponent implements OnInit {
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
+    this._CartService.getCartUser().subscribe({
+      next: response => {
+        this.cartDetails = response.data;
+        this.totalPrice = response.data.totalPrice;
+        this.totalDiscount = response.data.totalDiscount;
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
+    });
 
     this._CityService.getCities().subscribe({
       next: data => {
@@ -209,16 +222,7 @@ export class PaymentComponent implements OnInit {
       },
     });
 
-    this._CartService.getCartUser().subscribe({
-      next: response => {
-        this.cartDetails = response.data;
-
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
-      },
-    });
+  
   }
 
   selectedAddressMethod(value: string): void {
