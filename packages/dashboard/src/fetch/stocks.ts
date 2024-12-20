@@ -2,16 +2,8 @@
 
 import { ROUTES } from '@/routes';
 import { stockService } from '@/services';
-import type {
-  CreateStockRequest,
-  CreateStockResponse,
-  DeleteStockResponse,
-  GetStockResponse,
-  ListStocksRequest,
-  ListStocksResponse,
-  UpdateStockRequest,
-  UpdateStockResponse,
-} from '@resala/shared';
+import { formatError } from '@/utils/formatError';
+import type { GetStockResponse, ListStocksRequest, ListStocksResponse } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
@@ -29,42 +21,23 @@ export const findStockById = async (id: string): Promise<GetStockResponse['data'
   }
 };
 
-export const createStock = async (
-  stock: CreateStockRequest['body']
-): Promise<CreateStockResponse> => {
+export const updateStock = async (stocks: { stockId: string; quantity: number }[]) => {
   try {
-    const data = await stockService.create(stock);
-
+    await stockService.increaseQuantity(stocks);
     revalidatePath(ROUTES.STOCKS);
-    revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
-    return { data };
+    return { data: {} };
   } catch (e) {
-    return { error: (e as Error).message } as CreateStockResponse;
+    return formatError(e);
   }
 };
 
-export const updateStock = async (
-  stockId: string,
-  stock: UpdateStockRequest['body']
-): Promise<UpdateStockResponse> => {
-  try {
-    const data = await stockService.update(stockId, stock);
-    revalidatePath(ROUTES.STOCKS);
-    revalidatePath(ROUTES.PRODUCT_STOCKS(stock.productId));
-    return { data };
-  } catch (e) {
-    return { error: (e as Error).message } as UpdateStockResponse;
-  }
-};
-
-export const deleteStock = async (stockId: string): Promise<DeleteStockResponse> => {
+export const deleteStock = async (stockId: string) => {
   try {
     const data = await stockService.delete(stockId);
     revalidatePath(ROUTES.STOCKS);
-
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteStockResponse;
+    return formatError(e);
   }
 };
 

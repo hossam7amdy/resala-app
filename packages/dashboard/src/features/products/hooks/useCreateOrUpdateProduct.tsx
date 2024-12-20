@@ -7,6 +7,8 @@ import type { FormInstance } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
+import type { ProductFormValues } from '../types';
+
 const useCreateOrUpdateProduct = ({
   form,
   productId,
@@ -26,7 +28,27 @@ const useCreateOrUpdateProduct = ({
   );
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: handleFinish,
+    mutationFn: async ({ variants, ...product }: ProductFormValues) => {
+      const images = variants.flatMap(({ color, medias }) =>
+        medias.map(media => ({
+          imageKey: media.id,
+          imageUrl: media.url,
+          colorId: color,
+          isPrimary: false,
+        }))
+      );
+      const stocks = variants.flatMap(({ color, sizes }) =>
+        sizes.map(({ size, quantity }) => ({ colorId: color, sizeId: size, quantity }))
+      );
+
+      return handleFinish({
+        ...product,
+        imageKey: product.image.id,
+        imageUrl: product.image.url,
+        images,
+        stocks,
+      });
+    },
     onSuccess: () => {
       if (!isEdit) form.resetFields();
       notification.success(`Product ${isEdit ? 'updated' : 'added'} successfully`);

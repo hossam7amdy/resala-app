@@ -31,7 +31,6 @@ export const findProduct = async (id: string): Promise<GetProductResponse['data'
 export const addProduct = async (product: CreateProductRequest['body']) => {
   try {
     product = CreateProductSchema.shape.body.parse(product);
-
     const data = await productService.create(product);
 
     revalidatePath(ROUTES.PRODUCTS);
@@ -44,7 +43,6 @@ export const addProduct = async (product: CreateProductRequest['body']) => {
 export const updateProduct = async (id: string, product: UpdateProductRequest['body']) => {
   try {
     product = UpdateProductSchema.shape.body.parse(product);
-
     const data = await productService.update(id, product);
 
     revalidatePath(ROUTES.PRODUCTS);

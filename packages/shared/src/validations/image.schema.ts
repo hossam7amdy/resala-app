@@ -24,13 +24,8 @@ const CreateImageSchema = z.object({
   }),
 });
 
-const UpdateImageSchema = z.object({
-  params: ImageSchema.pick({ id: true }),
-  body: CreateImageSchema.shape.body.partial(),
-});
-
 const DeleteImageSchema = z.object({
   params: ImageSchema.pick({ id: true }),
 });
 
-export { ImageSchema, ListImagesSchema, CreateImageSchema, DeleteImageSchema, UpdateImageSchema };
+export { ImageSchema, ListImagesSchema, CreateImageSchema, DeleteImageSchema };

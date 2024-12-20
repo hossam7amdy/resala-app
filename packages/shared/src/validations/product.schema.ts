@@ -5,8 +5,8 @@ import { CategorySchema } from './category.schema.js';
 import { ColorSchema } from './color.schema.js';
 import { OffsetPageParamsSchema } from './common.schema.js';
 import { DiscountSchema } from './discount.schema.js';
-import { ImageSchema } from './image.schema.js';
-import { StockSchema } from './stock.schema.js';
+import { CreateImageSchema, ImageSchema } from './image.schema.js';
+import { CreateStockSchema, StockSchema } from './stock.schema.js';
 
 const ProductSchema = z.object({
   id: z.string().cuid(),
@@ -32,12 +32,15 @@ const CreateProductSchema = z.object({
     price: true,
     imageKey: true,
     imageUrl: true,
+  }).extend({
+    images: z.array(CreateImageSchema.shape.body.omit({ productId: true })).min(1),
+    stocks: z.array(CreateStockSchema.shape.body.omit({ productId: true })).min(1),
   }),
 });
 
 const UpdateProductSchema = z.object({
   params: ProductSchema.pick({ id: true }),
-  body: CreateProductSchema.shape.body,
+  body: CreateProductSchema.shape.body.partial(),
 });
 
 const GetProductSchema = z.object({
