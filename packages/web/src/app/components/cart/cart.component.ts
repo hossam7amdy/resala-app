@@ -20,19 +20,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit, OnDestroy  {
-  constructor(
-    private _CartService: CartService,
-    private _Renderer: Renderer2,
-    private _toaster: ToastrService,
-    private _Router: Router,
-    private spinner: NgxSpinnerService,
-    public _Translate: TranslateService,
-    private _HomeProductsService: HomeProductsService,
-    private _AuthService: AuthService
-  ) {}
- 
-
+export class CartComponent implements OnInit {
   // custome spinner
   customSpinIsLoading = false;
   //end custome spinner
@@ -67,13 +55,22 @@ export class CartComponent implements OnInit, OnDestroy  {
   counterQuantity: number = 1;
 
   authenticated: boolean = false;
-  
-// Subscription Id
-getCartUserId!:Subscription
-getProductDetailsId!:Subscription;
-addToCartId!:Subscription;
-removeCartItemId!:Subscription;
-clearCartId!:Subscription;
+  constructor(
+    private _CartService: CartService,
+    private _Renderer: Renderer2,
+    private _toaster: ToastrService,
+    private _Router: Router,
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService,
+    private _HomeProductsService: HomeProductsService,
+    private _AuthService: AuthService
+  ) {}
+  // ngAfterContentChecked(): void {
+  //   if(this.cartDetailsItems == undefined){
+  //     this.cartDetailsItems = ''
+  //   }
+
+  // }
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -90,15 +87,6 @@ clearCartId!:Subscription;
         this.customSpinIsLoading = false;
       },
     });
-  }
-  // Destroy Subscription methods
-  ngOnDestroy(): void {
-    if (this.getCartUserId)this.getCartUserId.unsubscribe();
-    if (this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
-    if (this.addToCartId)this.addToCartId.unsubscribe();
-    if (this.removeCartItemId)this.removeCartItemId.unsubscribe();
-    if (this.clearCartId)this.clearCartId.unsubscribe();
-    console.log('done unsubscribe');
   }
 
   // update Color and Size

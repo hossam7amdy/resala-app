@@ -37,7 +37,14 @@ export const ResetPasswordForm: React.FC<{ token?: string }> = ({ token }) => {
   }, [notificationError, route, token]);
 
   return (
-    <Form size="large" name="reset-password" layout="vertical" onFinish={mutate} autoComplete="off">
+    <Form
+      form={form}
+      size="large"
+      name="reset-password"
+      layout="vertical"
+      onFinish={mutate}
+      autoComplete="off"
+    >
       <Form.Item
         hasFeedback
         name="newPassword"

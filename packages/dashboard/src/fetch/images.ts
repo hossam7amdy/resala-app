@@ -1,29 +1,21 @@
 'use server';
 
-import { optimizeImages } from '@/lib/optimizer';
 import { ROUTES } from '@/routes';
 import { imageService } from '@/services';
+import { type CreateImageRequest, CreateImageSchema } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
 
 export const listImages = async (productId: string, colorId: string) => {
   return await imageService.list({ productId, colorId });
 };
 
-export const uploadImages = async (formData: FormData) => {
-  const images = formData.getAll('images') || [];
-  formData.delete('images');
+export const addImage = async (image: CreateImageRequest['body']) => {
+  image = await CreateImageSchema.shape.body.parseAsync(image);
 
-  const optimizedImages = await optimizeImages(images as File[]);
-
-  optimizedImages.forEach(optimizedImage => {
-    formData.append('images', optimizedImage);
-  });
-
-  // TODO: upload to s3, or use signed url
-  throw new Error('Not implemented');
+  await imageService.createMany(image);
 
   revalidateTag(ROUTES.STOCKS);
-  revalidateTag(ROUTES.PRODUCT_STOCKS(formData.get('productId') as string));
+  revalidateTag(ROUTES.PRODUCT_STOCKS(image.productId));
 };
 
 export const setDefaultImage = async (imageId: string, productId: string) => {
