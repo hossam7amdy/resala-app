@@ -1,10 +1,11 @@
 'use client';
 
 import { InboxOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Image, Modal, Space } from 'antd';
+import { Button, Divider, Modal, Space } from 'antd';
 import React, { useState } from 'react';
 
 import { MediaUpload } from '../media-upload/MediaUpload';
+import { MediaPreviewGroup } from './MediaPreviewGroup';
 import { MediaSelectList } from './MediaSelectList';
 import type { RequiredMedia } from './types';
 
@@ -16,34 +17,30 @@ interface MediaSelectProps {
   onConfirmSelect: (image: RequiredMedia[]) => void;
 }
 const MediaSelect: React.FC<MediaSelectProps> = ({
-  initialSelection,
+  initialSelection = [],
   onConfirmSelect,
   multiple,
   maxCount,
   medias,
 }) => {
   const [selectModalOpen, setSelectModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<RequiredMedia[]>(
-    initialSelection ? initialSelection : []
-  );
+  const [selectedMedia, setSelectedMedia] = useState<RequiredMedia[]>(initialSelection);
 
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
 
   return (
     <>
       <Space>
-        <Image.PreviewGroup>
-          {selectedImage.map(img => (
-            <Image
-              key={img.id}
-              src={img.url}
-              width={82}
-              height={100}
-              alt={img.filename}
-              className="object-cover rounded-lg"
-            />
-          ))}
-        </Image.PreviewGroup>
+        <MediaPreviewGroup
+          medias={selectedMedia}
+          multiple={multiple}
+          onPrimaryChange={media => {
+            const updatedMedia = [media, ...selectedMedia.filter(m => m.id !== media.id)];
+
+            onConfirmSelect(updatedMedia);
+            setSelectedMedia(updatedMedia);
+          }}
+        />
         <Button type="dashed" className="px-10 py-12 rounded-lg" onClick={toggleSelectModal}>
           <PlusOutlined />
         </Button>
@@ -52,10 +49,10 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
         width={800}
         title="Select Image"
         open={selectModalOpen}
-        okButtonProps={{ disabled: selectedImage.length === 0, className: 'px-6' }}
+        okButtonProps={{ disabled: selectedMedia.length === 0, className: 'px-6' }}
         onCancel={toggleSelectModal}
         onOk={() => {
-          onConfirmSelect(selectedImage);
+          onConfirmSelect(selectedMedia);
           toggleSelectModal();
         }}
       >
@@ -80,8 +77,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
           options={medias}
           multiple={multiple}
           maxCount={maxCount}
-          selected={selectedImage ? selectedImage : undefined}
-          onSelect={medias => setSelectedImage(medias)}
+          selected={selectedMedia ? selectedMedia : undefined}
+          onSelect={medias => setSelectedMedia(medias)}
         />
       </Modal>
     </>
