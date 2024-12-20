@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
@@ -20,6 +21,19 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   styleUrls: ['./cart.component.css'],
 })
 export class CartComponent implements OnInit {
+
+  constructor(
+    private _CartService: CartService,
+    private _Renderer: Renderer2,
+    private _toaster: ToastrService,
+    private _Router: Router,
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService,
+    private _HomeProductsService: HomeProductsService,
+    private _AuthService: AuthService
+  ) {}
+
+
   // custome spinner
   customSpinIsLoading = false;
   //end custome spinner
@@ -54,22 +68,14 @@ export class CartComponent implements OnInit {
   counterQuantity: number = 1;
 
   authenticated: boolean = false;
-  constructor(
-    private _CartService: CartService,
-    private _Renderer: Renderer2,
-    private _toaster: ToastrService,
-    private _Router: Router,
-    private spinner: NgxSpinnerService,
-    public _Translate: TranslateService,
-    private _HomeProductsService: HomeProductsService,
-    private _AuthService: AuthService
-  ) {}
-  // ngAfterContentChecked(): void {
-  //   if(this.cartDetailsItems == undefined){
-  //     this.cartDetailsItems = ''
-  //   }
 
-  // }
+    // Subscription Id
+  getCartUserId!:Subscription
+  getProductDetailsId!:Subscription;
+  addToCartId!:Subscription;
+  removeCartItemId!:Subscription;
+  clearCartId!:Subscription;
+  
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -86,6 +92,14 @@ export class CartComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
     });
+  }
+   // Destroy Subscription methods
+   ngOnDestroy(): void {
+    if (this.getCartUserId)this.getCartUserId.unsubscribe();
+    if (this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
+    if (this.addToCartId)this.addToCartId.unsubscribe();
+    if (this.removeCartItemId)this.removeCartItemId.unsubscribe();
+    if (this.clearCartId)this.clearCartId.unsubscribe();
   }
 
   // update Color and Size
