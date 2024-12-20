@@ -35,6 +35,7 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={product}
+      scrollToFirstError
     >
       <Form.Item
         required
