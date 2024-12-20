@@ -30,11 +30,11 @@ const useCreateOrUpdateProduct = ({
   const { isLoading, mutate } = useMutation({
     mutationFn: async ({ variants, ...product }: ProductFormValues) => {
       const images = variants.flatMap(({ color, medias }) =>
-        medias.map(media => ({
+        medias.map((media, index) => ({
           imageKey: media.id,
           imageUrl: media.url,
           colorId: color,
-          isPrimary: false,
+          isPrimary: index === 0,
         }))
       );
       const stocks = variants.flatMap(({ color, sizes }) =>

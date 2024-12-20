@@ -1,7 +1,7 @@
 'use client';
 
 import { MediaSelect } from '@/features/media';
-import { StockFormItems, type StockFormItemsProps } from '@/features/stocks';
+import { StocksFormList, type StocksFormListProps } from '@/features/stocks';
 import type { Category, GetProductResponse } from '@resala/shared';
 import { Button, Col, Flex, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useRouter } from 'next/navigation';
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useCreateOrUpdateProduct } from '../hooks';
 import type { ProductFormValues } from '../types';
 
-interface ProductEditorProps extends StockFormItemsProps {
+interface ProductEditorProps extends StocksFormListProps {
   product?: GetProductResponse['data'];
   categories: Category[];
 }
@@ -144,7 +144,7 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
         </Col>
       </Row>
 
-      <StockFormItems
+      <StocksFormList
         medias={medias}
         colors={colors}
         sizes={sizes}

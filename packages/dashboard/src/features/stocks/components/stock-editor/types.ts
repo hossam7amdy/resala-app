@@ -21,6 +21,6 @@ export interface StockEditorProps {
   productDetails: GetProductResponse['data'];
 }
 
-export interface StockFormItemsProps extends Pick<StockEditorProps, 'sizes' | 'colors' | 'medias'> {
+export interface StocksFormListProps extends Pick<StockEditorProps, 'sizes' | 'colors' | 'medias'> {
   variants?: StockItem[];
 }
