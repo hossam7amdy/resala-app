@@ -41,6 +41,21 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 })
 export class ProductDetailsComponent implements OnInit {
   
+  constructor(
+    // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+   private route: ActivatedRoute,
+   private _HomeProductsService: HomeProductsService,
+   private _CartService: CartService,
+   private _toaster: ToastrService,
+   private _Renderer2: Renderer2,
+   private _Router: Router,
+   private _Reviews: ReviewsService,
+   private _ProductsCategory: CategoriesService,
+   private _WishListService: WishListService,
+   private _Toaster: ToastrService,
+   private _RTLStatus: Translate_Service,
+   public _Translate: TranslateService
+ ) {}
   
   // start Custome Spinner
   customSpinIsLoading = false;
@@ -100,23 +115,50 @@ export class ProductDetailsComponent implements OnInit {
   isZoomed = false;
   zoomStyle = {};
 
-  
+  ngOnInit(): void {
+    
+    this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
+    this.getProductDetails(this.productId);
+    this._Reviews.getProductReview(this.productId, '10').subscribe({
+      next: res => {
+        this.productReview = res.data.reviews;
+        
+      },
+      error: () => {
+        
+      },
+    });
 
-  constructor(
-     // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
-    private route: ActivatedRoute,
-    private _HomeProductsService: HomeProductsService,
-    private _CartService: CartService,
-    private _toaster: ToastrService,
-    private _Renderer2: Renderer2,
-    private _Router: Router,
-    private _Reviews: ReviewsService,
-    private _ProductsCategory: CategoriesService,
-    private _WishListService: WishListService,
-    private _Toaster: ToastrService,
-    private _RTLStatus: Translate_Service,
-    public _Translate: TranslateService
-  ) {}
+    
+  }
+
+  getProductDetails(id: any) {
+    this.customSpinIsLoading = true;
+    this._HomeProductsService.getProductDetails(id).subscribe({
+      next: res => {
+        this.productDetails = res?.data;
+        this.productImages = res?.data?.imageUrl;
+        this.categoryId = res?.data.categoryId;
+        this.productStock = res?.data.stocks;
+        this.productStockColor = this.productStock;
+        this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
+          if (!a.find(data => data.color.id == b.colorId)) {
+            a.push(b);
+          }
+          return a;
+        }, []);
+      },
+
+      error: () => {
+        this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
+        this.customSpinIsLoading = false;
+      },
+      complete: () => {
+        this.getProductsCategory(this.categoryId);
+        this.customSpinIsLoading = false
+      },
+    });
+  }
 
   toggleZoom(state: boolean) {
     this.isZoomed = state;
@@ -154,83 +196,6 @@ export class ProductDetailsComponent implements OnInit {
     return rtlStat;
   }
 
-  
-  ngOnInit(): void {
-    
-    this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
-    this.getProductDetails(this.productId);
-    
-
-   
-    this._Reviews.getProductReview(this.productId, '10').subscribe({
-      next: res => {
-        this.productReview = res.data.reviews;
-        
-      },
-      error: () => {
-        
-      },
-    });
-
-    
-  }
-
-  getProductDetails(id: any) {
-    this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductDetails(id).subscribe({
-      next: res => {
-        this.productDetails = res?.data;
-        this.productImages = res?.data?.imageUrl;
-        this.categoryId = res?.data.categoryId;
-        this.productStock = res?.data.stocks;
-        console.log(this.productStock);
-        console.log(this.productDetails);
-        this.productStockColor = this.productStock;
-        this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
-          if (!a.find(data => data.color.id == b.colorId)) {
-            a.push(b);
-          }
-          return a;
-        }, []);
-
-     
-      },
-
-      error: () => {
-        this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
-        this.customSpinIsLoading = false;
-      },
-      complete: () => {
-        this.getProductsCategory(this.categoryId);
-        this.customSpinIsLoading = false
-      },
-    });
-  }
-
-  // getProductStock(id: any) {
-  //   this.customSpinIsLoading = true;
-  //   this._HomeProductsService.getProductDetails(id).subscribe({
-  //     next: res => {
-  //       this.productStock = res?.data.stocks;
-     
-  //       this.productStockColor = this.productStock;
-  //       this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
-  //         if (!a.find(data => data.color.id == b.colorId)) {
-  //           a.push(b);
-  //         }
-  //         return a;
-  //       }, []);
-
-  //       // this.customSpinIsLoading = false;
-  //     },
-  //     error: () => {
-  //       this.customSpinIsLoading = false;
-  //     },
-  //     complete: () => {
-  //       this.getProductsCategory(this.categoryId);
-  //     },
-  //   });
-  // }
 
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
