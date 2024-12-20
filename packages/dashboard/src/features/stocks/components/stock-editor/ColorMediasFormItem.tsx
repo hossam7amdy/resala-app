@@ -2,6 +2,7 @@ import { MediaSelect, type RequiredMedia } from '@/features/media';
 import { Form } from 'antd';
 import React from 'react';
 
+import { MAX_MEDIA_COUNT } from './constant';
 import type { StockFormValues } from './types';
 
 interface ColorMediasFormItemProps {
@@ -30,7 +31,7 @@ const ColorMediasFormItem: React.FC<ColorMediasFormItemProps> = ({
     >
       <MediaSelect
         multiple
-        maxCount={5}
+        maxCount={MAX_MEDIA_COUNT}
         medias={medias}
         initialSelection={initialSelection}
         onConfirmSelect={medias => {
