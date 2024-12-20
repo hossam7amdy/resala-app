@@ -703,7 +703,7 @@
               </p>
 
               <span class="text-end col-6 price fs-5">
-                {{ cartDetails.totalPrice }}
+                {{ totalPrice }}
                 <label class="currency fs-5 m-0">
                   {{ 'home.allProducts.currency' | translate }}</label
                 >
@@ -722,7 +722,7 @@
                           'cart.subTotalPrice' | translate
                         }}</span>
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalDiscount + cartDetails.totalPrice }}
+                          >{{ (!totalDiscount? 0 :totalDiscount) + totalPrice }}
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span
@@ -756,7 +756,7 @@
                           <i>{{ 'cart.tax' | translate }}</i></span
                         >
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalPrice }}
+                          >{{ totalPrice }}
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span
