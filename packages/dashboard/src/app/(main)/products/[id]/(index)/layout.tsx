@@ -42,8 +42,8 @@ const Layout: React.FC<LayoutProps> = ({ children, params }) => {
       <Col span={24}>
         <Tabs
           tabBarExtraContent={
-            <Link href={ROUTES.CREATE_STOCK(params.id)}>
-              <Button type="primary">Add Stock</Button>
+            <Link href={ROUTES.STOCKS_EDITOR(params.id)}>
+              <Button type="primary">Edit stocks</Button>
             </Link>
           }
           defaultActiveKey={activeKey}

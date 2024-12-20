@@ -1,15 +1,34 @@
-import { BackButton, FormSkeleton } from '@/components';
+import { BackButton } from '@/components';
 import { ProductEditor } from '@/features/products';
 import { listAllCategories } from '@/fetch/category';
+import { listAllColors } from '@/fetch/colors';
+import { listMedias } from '@/fetch/media';
 import { findProduct } from '@/fetch/products';
+import { listAllSizes } from '@/fetch/sizes';
 import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
+import type { ListMediaRequest } from '@resala/shared';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
-const EditProductPage = ({ params }: { params: Params }) => {
+interface EditProductPageProps {
+  params: Params;
+  searchParams: ListMediaRequest['query'];
+}
+const EditProductPage: React.FC<EditProductPageProps> = async ({ params, searchParams }) => {
+  const [categories, product, medias, colors, sizes] = await Promise.all([
+    listAllCategories(),
+    findProduct(params.id),
+    listMedias(searchParams),
+    listAllColors(),
+    listAllSizes(),
+  ]);
+
+  if (!product) {
+    return notFound();
+  }
+
   return (
     <Row gutter={[10, 20]}>
       <Col span={24}>
@@ -17,29 +36,24 @@ const EditProductPage = ({ params }: { params: Params }) => {
           items={[
             { title: <BackButton /> },
             { title: <Link href={ROUTES.PRODUCTS}>Products</Link> },
+            { title: product.enName },
             { title: 'Edit' },
           ]}
         />
       </Col>
       <Col span={24}>
-        <Card>
-          <Suspense fallback={<FormSkeleton />}>
-            <EditProductForm id={params.id} />
-          </Suspense>
+        <Card title={`${product.enName} | ${product.arName}`}>
+          <ProductEditor
+            categories={categories}
+            product={product!}
+            medias={medias}
+            colors={colors}
+            sizes={sizes}
+          />
         </Card>
       </Col>
     </Row>
   );
-};
-
-const EditProductForm = async ({ id }: { id: string }) => {
-  const [categories, product] = await Promise.all([listAllCategories(), findProduct(id)]);
-
-  if (!product) {
-    return notFound();
-  }
-
-  return <ProductEditor categories={categories} product={product!} />;
 };
 
 export default EditProductPage;

@@ -25,13 +25,6 @@ const CreateStockSchema = z.object({
   }),
 });
 
-const UpdateStockSchema = z.object({
-  params: z.object({
-    stockId: z.string().cuid(),
-  }),
-  body: CreateStockSchema.shape.body,
-});
-
 const DeleteStockSchema = z.object({
   params: z.object({
     stockId: z.string().cuid(),
@@ -58,7 +51,6 @@ export {
   StockSchema,
   CreateStockSchema,
   DeleteStockSchema,
-  UpdateStockSchema,
   ListStocksSchema,
   GetStockResponseSchema,
   ListStocksResponseSchema,

@@ -258,16 +258,10 @@ export type ListStocksResponse = DefaultResponseBody & {
   data: z.infer<typeof Schemas.ListStocksResponseSchema>;
 };
 
-export type CreateStockRequest = z.infer<typeof Schemas.CreateStockSchema>;
-export type CreateStockResponse = DefaultResponseBody & {
+export type DeleteStockRequest = z.infer<typeof Schemas.DeleteStockSchema>;
+export type DeleteStockResponse = DefaultResponseBody & {
   data: Stock;
 };
-
-export type UpdateStockRequest = z.infer<typeof Schemas.UpdateStockSchema>;
-export type UpdateStockResponse = CreateStockResponse;
-
-export type DeleteStockRequest = z.infer<typeof Schemas.DeleteStockSchema>;
-export type DeleteStockResponse = CreateStockResponse;
 
 // Image types
 export type CreateImageRequest = z.infer<typeof Schemas.CreateImageSchema>;
@@ -276,11 +270,6 @@ export type CreateImageResponse = DefaultResponseBody;
 export type ListImagesRequest = z.infer<typeof Schemas.ListImagesSchema>;
 export type ListImagesResponse = DefaultResponseBody & {
   data: Image[];
-};
-
-export type UpdateImageRequest = z.infer<typeof Schemas.UpdateImageSchema>;
-export type UpdateImageResponse = DefaultResponseBody & {
-  data: Image;
 };
 
 export type DeleteImageRequest = z.infer<typeof Schemas.DeleteImageSchema>;
