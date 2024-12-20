@@ -9,11 +9,11 @@ import { SelectColor } from './SelectColor';
 import { SelectSize } from './SelectSize';
 import type { StockFormItemsProps, StockFormValues } from './types';
 
-const StockFormItems: React.FC<StockFormItemsProps> = ({ sizes, colors, images, variants }) => {
+const StockFormItems: React.FC<StockFormItemsProps> = ({ sizes, colors, medias, variants }) => {
   const form = Form.useFormInstance<StockFormValues>();
 
   return (
-    <Form.List name="variants" initialValue={variants.length ? variants : [{}]}>
+    <Form.List name="variants" initialValue={variants?.length ? variants : [{}]}>
       {(fields, { add, remove }) => (
         <Flex vertical gap={10}>
           {fields.map((field, index) => (
@@ -46,16 +46,16 @@ const StockFormItems: React.FC<StockFormItemsProps> = ({ sizes, colors, images, 
                             message: 'At least one image is required',
                           },
                         ]}
-                        label="Stock Item images"
-                        name={[field.name, 'images']}
+                        label="Stock Item medias"
+                        name={[field.name, 'medias']}
                       >
                         <MediaSelect
-                          medias={images}
+                          medias={medias}
                           multiple
                           maxCount={5}
                           onConfirmSelect={medias => {
                             form.setFieldValue(
-                              ['variants', field.name, 'images'],
+                              ['variants', field.name, 'medias'],
                               medias.map(m => ({ id: m.id, url: m.url }))
                             );
                           }}

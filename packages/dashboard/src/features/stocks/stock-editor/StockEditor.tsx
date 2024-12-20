@@ -7,7 +7,7 @@ import React from 'react';
 import { StockFormItems } from './StockFormItems';
 import type { StockEditorProps, StockFormValues } from './types';
 
-const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors, images }) => {
+const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors, medias }) => {
   const { back } = useRouter();
   const [form] = Form.useForm<StockFormValues>();
 
@@ -20,10 +20,10 @@ const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors
       <StockFormItems
         sizes={sizes}
         colors={colors}
-        images={images}
+        medias={medias}
         variants={productDetails.stocks.map(stock => ({
           color: stock.color.id,
-          images: stock.images.map(img => ({ id: img.imageKey, url: img.imageUrl })),
+          medias: stock.images.map(img => ({ id: img.imageKey, url: img.imageUrl })),
           sizes: stock.sizes.map(size => ({
             size: size.sizeId,
             quantity: size.quantity,
