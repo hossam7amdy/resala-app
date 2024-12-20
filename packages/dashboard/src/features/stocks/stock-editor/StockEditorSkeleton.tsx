@@ -4,7 +4,7 @@ import SkeletonButton from 'antd/es/skeleton/Button';
 import SkeletonInput from 'antd/es/skeleton/Input';
 import React from 'react';
 
-export const FormSkeleton: React.FC = () => {
+const StockEditorSkeleton: React.FC = () => {
   return (
     <>
       <FormItem>
@@ -32,3 +32,5 @@ export const FormSkeleton: React.FC = () => {
     </>
   );
 };
+
+export { StockEditorSkeleton };

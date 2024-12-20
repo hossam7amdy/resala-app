@@ -1,13 +1,7 @@
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 
-import type {
-  CreateStockRequestDto,
-  GetStockResponseDto,
-  ListStocksRequestDto,
-  ListStocksResponseDto,
-  UpdateStockRequestDto,
-} from './stock.dto';
+import type { GetStockResponseDto, ListStocksRequestDto, ListStocksResponseDto } from './stock.dto';
 
 export class StockService {
   constructor(private readonly db: DataStore) {}
@@ -78,29 +72,6 @@ export class StockService {
     });
 
     return stocks.map(this._transformStock);
-  }
-
-  async create(stock: CreateStockRequestDto) {
-    return await this.db.stock.create({
-      data: {
-        productId: stock.productId,
-        colorId: stock.colorId,
-        sizeId: stock.sizeId,
-        quantity: stock.quantity,
-      },
-    });
-  }
-
-  async update(id: string, stock: UpdateStockRequestDto) {
-    return await this.db.stock.update({
-      where: { id },
-      data: {
-        productId: stock.productId,
-        colorId: stock.colorId,
-        sizeId: stock.sizeId,
-        quantity: stock.quantity,
-      },
-    });
   }
 
   async delete(id: string) {

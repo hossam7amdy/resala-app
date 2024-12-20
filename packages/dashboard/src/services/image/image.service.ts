@@ -4,7 +4,6 @@ import type {
   DeleteImageResponse,
   Image,
   ListImagesRequest,
-  UpdateImageResponse,
 } from '@resala/shared';
 
 export class ImageService {
@@ -30,7 +29,7 @@ export class ImageService {
     return await this.db.image.update({ where: { id }, data });
   }
 
-  async updatePrimary(id: string, isPrimary: boolean = true): Promise<UpdateImageResponse['data']> {
+  async updatePrimary(id: string, isPrimary: boolean = true): Promise<Image> {
     const image = await this.find(id);
 
     if (image.isPrimary) {

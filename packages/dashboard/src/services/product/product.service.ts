@@ -1,4 +1,3 @@
-import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 import type { Image } from '@resala/shared';
@@ -139,35 +138,41 @@ export class ProductService {
 
   async create({
     categoryId,
-    enName,
-    arName,
+    images,
+    stocks,
     ...payload
   }: CreateProductRequestDto): Promise<CreateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
-    const product = await this.db.product.findFirst({
-      where: {
-        OR: [{ enName }, { arName }],
-      },
-    });
-
-    if (product) {
-      throw new ConflictError('Product already exists');
-    }
-
-    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
-
     return await this.db.product.create({
-      data: { ...payload, categoryId, enName, arName },
+      data: {
+        ...payload,
+        categoryId,
+        images: { create: images },
+        stocks: { create: stocks },
+      },
     });
   }
 
-  async update(id: string, product: UpdateProductRequestDto): Promise<UpdateProductResponseDto> {
+  async update(
+    id: string,
+    { images, stocks, ...product }: UpdateProductRequestDto
+  ): Promise<UpdateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 
     return await this.db.product.update({
       where: { id },
-      data: product,
+      data: {
+        ...product,
+        images: {
+          deleteMany: { productId: id },
+          create: images,
+        },
+        stocks: {
+          deleteMany: { productId: id },
+          create: stocks,
+        },
+      },
     });
   }
 
