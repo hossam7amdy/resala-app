@@ -9,9 +9,8 @@ interface CreateStockPageProps {
   searchParams: { productId: string };
 }
 const CreateStockPage: React.FC<CreateStockPageProps> = async ({ searchParams }) => {
-  const product = await findProduct(searchParams.productId);
-
-  const [images, sizes, colors] = await Promise.all([
+  const [product, medias, sizes, colors] = await Promise.all([
+    findProduct(searchParams.productId),
     listMedias({} as never),
     listAllSizes(),
     listAllColors(),
@@ -19,7 +18,7 @@ const CreateStockPage: React.FC<CreateStockPageProps> = async ({ searchParams })
 
   return (
     <Card title={`${product.enName} | ${product.arName}`}>
-      <StockEditor productDetails={product} images={images} sizes={sizes} colors={colors} />
+      <StockEditor productDetails={product} medias={medias} sizes={sizes} colors={colors} />
     </Card>
   );
 };
