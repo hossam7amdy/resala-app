@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import {OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,8 +20,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit {
-
+export class CartComponent implements OnInit,OnDestroy {
   constructor(
     private _CartService: CartService,
     private _Renderer: Renderer2,
@@ -32,8 +31,6 @@ export class CartComponent implements OnInit {
     private _HomeProductsService: HomeProductsService,
     private _AuthService: AuthService
   ) {}
-
-
   // custome spinner
   customSpinIsLoading = false;
   //end custome spinner
@@ -68,19 +65,18 @@ export class CartComponent implements OnInit {
   counterQuantity: number = 1;
 
   authenticated: boolean = false;
-
-    // Subscription Id
+  
+  // Subscription Id
   getCartUserId!:Subscription
   getProductDetailsId!:Subscription;
   addToCartId!:Subscription;
   removeCartItemId!:Subscription;
   clearCartId!:Subscription;
   
-
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
-    this._CartService.getCartUser().subscribe({
+    this.getCartUserId = this._CartService.getCartUser().subscribe({
       next: response => {
         this.cartDetails = response.data;
         this.cartDetailsItems = response.data.items;
@@ -93,19 +89,18 @@ export class CartComponent implements OnInit {
       },
     });
   }
-   // Destroy Subscription methods
-   ngOnDestroy(): void {
+  // Destroy Subscription methods
+  ngOnDestroy(): void {
     if (this.getCartUserId)this.getCartUserId.unsubscribe();
     if (this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
     if (this.addToCartId)this.addToCartId.unsubscribe();
     if (this.removeCartItemId)this.removeCartItemId.unsubscribe();
     if (this.clearCartId)this.clearCartId.unsubscribe();
   }
-
   // update Color and Size
   getStockDataPro(id: any): void {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductDetails(id).subscribe({
+    this.getProductDetailsId = this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productStock = res?.data.stocks;
 
@@ -171,7 +166,7 @@ export class CartComponent implements OnInit {
     if (count > 0) {
       this._Renderer.setAttribute(element1, 'disabled', 'true');
       this._Renderer.setAttribute(element2, 'disabled', 'true');
-      this._CartService.addToCart(stockId, count).subscribe({
+      this.addToCartId = this._CartService.addToCart(stockId, count).subscribe({
         next: response => {
           this.cartDetails = response.data;
           this._CartService.cartNumber.next(response.data.totalQuantity);

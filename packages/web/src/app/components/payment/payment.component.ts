@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import { OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   FormBuilder,
@@ -11,6 +11,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CityService } from 'src/app/core/services/cities.service';
@@ -25,7 +26,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit,OnDestroy {
   // Form groups for each step
   addressForm: FormGroup;
   userAddresses: FormGroup;
@@ -103,6 +104,7 @@ export class PaymentComponent implements OnInit {
       address: [''], //optional
     });
   }
+  
 
   // Current step index
   currentStep: number = 0;
@@ -157,19 +159,15 @@ export class PaymentComponent implements OnInit {
   ];
   paymentSelected: string = '';
 
-  //terms&condetions
-  isCheckedTerms: boolean = false;
-  checkedTerms(): void {
-    if (this.isCheckedTerms == false) {
-      this.isCheckedTerms = true;
-    } else {
-      this.isCheckedTerms = false;
-    }
-  }
+  //Subscription ID
+  getCartUserId!:Subscription;
+  getCitiesId!:Subscription;
+  getListAddressUserId!:Subscription;
+  getAllCountriesId!:Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
-    this._CartService.getCartUser().subscribe({
+    this.getCartUserId = this._CartService.getCartUser().subscribe({
       next: response => {
         this.cartDetails = response.data;
         this.totalPrice = response.data.totalPrice;
@@ -181,7 +179,7 @@ export class PaymentComponent implements OnInit {
       },
     });
 
-    this._CityService.getCities().subscribe({
+    this.getCitiesId= this._CityService.getCities().subscribe({
       next: data => {
         this.governorates = data.governorates;
         this.customSpinIsLoading = false;
@@ -197,7 +195,7 @@ export class PaymentComponent implements OnInit {
     }
 
     this.addressForm.patchValue({ userId: this.userLoginId });
-    this._PaymentServices.getListAddressUser(this.userLoginId.toString()).subscribe({
+    this.getListAddressUserId = this._PaymentServices.getListAddressUser(this.userLoginId.toString()).subscribe({
       next: response => {
         this.getUserAddress = response.data;
         if (this.getUserAddress.length == 3) {
@@ -212,7 +210,7 @@ export class PaymentComponent implements OnInit {
       },
     });
 
-    this._PaymentServices.getAllCountries().subscribe({
+    this.getAllCountriesId = this._PaymentServices.getAllCountries().subscribe({
       next: response => {
         this.allCountries = response.data;
         this.customSpinIsLoading = false;
@@ -224,6 +222,23 @@ export class PaymentComponent implements OnInit {
 
   
   }
+//Destroy 
+  ngOnDestroy(): void {
+    if(this.getCartUserId)this.getCartUserId.unsubscribe();
+    if(this.getCitiesId)this.getCitiesId.unsubscribe();
+    if(this.getListAddressUserId)this.getListAddressUserId.unsubscribe();
+    if(this.getAllCountriesId)this.getAllCountriesId.unsubscribe();
+  }
+
+   //terms&condetions
+   isCheckedTerms: boolean = false;
+   checkedTerms(): void {
+     if (this.isCheckedTerms == false) {
+       this.isCheckedTerms = true;
+     } else {
+       this.isCheckedTerms = false;
+     }
+   }
 
   selectedAddressMethod(value: string): void {
     this.customSpinIsLoading = true;

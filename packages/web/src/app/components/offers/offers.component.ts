@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Product } from 'src/app/core/interfaces/product';
 import { CustomefillterPipe } from 'src/app/core/pipe/customefillter.pipe';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
@@ -30,7 +31,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './offers.component.html',
   styleUrls: ['./offers.component.css'],
 })
-export class OffersComponent implements OnInit {
+export class OffersComponent implements OnInit,OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _WishListService: WishListService,
@@ -40,10 +41,7 @@ export class OffersComponent implements OnInit {
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
-
-  customSpinIsLoading = false;
-  products: Product[] = [];
-
+  
   public rateNumber: number = 3;
   public ratingOptions: IRatingOptions = {
     starsCount: 5,
@@ -51,10 +49,16 @@ export class OffersComponent implements OnInit {
     clickable: false,
   };
 
+  customSpinIsLoading = false;
+  products: Product[] = [];
+
+  //Subscription ID
+  getProductsId!:Subscription;
+  
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
-    this._HomeProductsService.getProducts().subscribe({
+    this.getProductsId = this._HomeProductsService.getProducts().subscribe({
       next: response => {
         this.products = response.data.products;
         this.customSpinIsLoading = false;
@@ -63,6 +67,10 @@ export class OffersComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    if(this.getProductsId)this.getProductsId.unsubscribe();
   }
 
   addProductInWishList(id: any, element: HTMLElement): void {
