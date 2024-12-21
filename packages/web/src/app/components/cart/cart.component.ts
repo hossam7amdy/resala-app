@@ -20,7 +20,17 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit,OnDestroy {
+  constructor(
+    private _CartService: CartService,
+    private _Renderer: Renderer2,
+    private _toaster: ToastrService,
+    private _Router: Router,
+    private spinner: NgxSpinnerService,
+    public _Translate: TranslateService,
+    private _HomeProductsService: HomeProductsService,
+    private _AuthService: AuthService
+  ) {}
   // custome spinner
   customSpinIsLoading = false;
   //end custome spinner
@@ -55,23 +65,14 @@ export class CartComponent implements OnInit {
   counterQuantity: number = 1;
 
   authenticated: boolean = false;
-  constructor(
-    private _CartService: CartService,
-    private _Renderer: Renderer2,
-    private _toaster: ToastrService,
-    private _Router: Router,
-    private spinner: NgxSpinnerService,
-    public _Translate: TranslateService,
-    private _HomeProductsService: HomeProductsService,
-    private _AuthService: AuthService
-  ) {}
-  // ngAfterContentChecked(): void {
-  //   if(this.cartDetailsItems == undefined){
-  //     this.cartDetailsItems = ''
-  //   }
-
-  // }
-
+  
+  // Subscription Id
+  getCartUserId!:Subscription
+  getProductDetailsId!:Subscription;
+  addToCartId!:Subscription;
+  removeCartItemId!:Subscription;
+  clearCartId!:Subscription;
+  
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
@@ -88,7 +89,14 @@ export class CartComponent implements OnInit {
       },
     });
   }
-
+  // Destroy Subscription methods
+  ngOnDestroy(): void {
+    if (this.getCartUserId)this.getCartUserId.unsubscribe();
+    if (this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
+    if (this.addToCartId)this.addToCartId.unsubscribe();
+    if (this.removeCartItemId)this.removeCartItemId.unsubscribe();
+    if (this.clearCartId)this.clearCartId.unsubscribe();
+  }
   // update Color and Size
   getStockDataPro(id: any): void {
     this.customSpinIsLoading = true;

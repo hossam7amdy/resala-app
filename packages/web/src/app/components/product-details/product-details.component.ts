@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import { OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,6 +19,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -39,7 +40,7 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
-export class ProductDetailsComponent implements OnInit {
+export class ProductDetailsComponent implements OnInit,OnDestroy {
   
   constructor(
     // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
@@ -56,6 +57,7 @@ export class ProductDetailsComponent implements OnInit {
    private _RTLStatus: Translate_Service,
    public _Translate: TranslateService
  ) {}
+ 
   
   // start Custome Spinner
   customSpinIsLoading = false;
@@ -115,11 +117,15 @@ export class ProductDetailsComponent implements OnInit {
   isZoomed = false;
   zoomStyle = {};
 
+  //Subscription ID
+  getProductDetailsId!:Subscription;
+  getProductReviewId!:Subscription;
+  getCategoryProductsId!:Subscription;
   ngOnInit(): void {
     
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
-    this._Reviews.getProductReview(this.productId, '10').subscribe({
+    this.getProductReviewId = this._Reviews.getProductReview(this.productId, '10').subscribe({
       next: res => {
         this.productReview = res.data.reviews;
         
@@ -131,10 +137,15 @@ export class ProductDetailsComponent implements OnInit {
 
     
   }
+  ngOnDestroy(): void {
+    if(this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
+    if(this.getCategoryProductsId)this.getCategoryProductsId.unsubscribe();
+    if(this.getProductReviewId)this.getProductReviewId.unsubscribe();
+  }
 
   getProductDetails(id: any) {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductDetails(id).subscribe({
+    this.getProductDetailsId = this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.imageUrl;
@@ -319,7 +330,7 @@ export class ProductDetailsComponent implements OnInit {
   // similar products
   getProductsCategory(id: any): void {
    
-    this._ProductsCategory.getCategoryProducts(id).subscribe({
+    this.getCategoryProductsId = this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
         this.productsCategory = res.data.products;
        
