@@ -58,6 +58,79 @@ export class NavBlankComponent implements OnInit {
   isClickedSearch: boolean = false;
   products: Product[] = [];
   searchText: string = '';
+  // language Switching
+  currentLang: string = 'ar';
+  langStorage: string = localStorage.getItem('language') ?? this.currentLang;
+
+  
+  @ViewChild('navbar') navbarElement!: ElementRef;
+  @HostListener('window:scroll')
+  onScrollSecond(): void {
+    if (scrollY > 600) {
+      this._renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
+    } else {
+      this._renderer.removeStyle(this.navbarElement.nativeElement, 'top');
+    }
+  }
+ 
+  
+
+  ngOnInit(): void {
+    this._authService.userInfo$.subscribe(user => {
+      this.user = user;
+      this.authenticated = !!user && !user?.isAnonymous;
+    });
+
+    this.customSpinIsLoading = true;
+    if (this.langStorage === null) {
+      this.translate.defaultLang;
+      this.currentLang = 'ar';
+    } else {
+      this.translate.use(this.langStorage);
+      if (this.langStorage === 'en') {
+        this.currentLang = 'ar';
+      } else {
+        this.currentLang = 'en';
+      }
+    }
+    this.changePageDirection(this.langStorage);
+
+    this._cartService.cartNumber.subscribe({
+      next: response => {
+        this.cartNum = response;
+        this.customSpinIsLoading = false;
+      },
+      error: err => {
+        const errMsg = err.error.message || this.translate.currentLang =='ar'?'حدث خطأ فى تحميل بعض البيانات':'Something went wrong';
+
+        this.cartNum = 0;
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
+      },
+    });
+
+    this._cartService.getCartUser().subscribe({
+      next: response => {
+        this.cartNum = response.data.totalQuantity;
+        this.customSpinIsLoading = false;
+      },
+      error: () => {
+        this.customSpinIsLoading = false;
+      },
+    });
+
+    this._categories.getCategories().subscribe({
+      next: response => {
+        this.categoryList = response.data;
+        this.customSpinIsLoading = false;
+      },
+      error: err => {
+        const errMsg = err.error.message || 'Something went wrong';
+        this._toaster.error(errMsg);
+        this.customSpinIsLoading = false;
+      },
+    });
+  }
 
   toggleSearch(): void {
     this.isClickedSearch = true;
@@ -94,19 +167,6 @@ export class NavBlankComponent implements OnInit {
     }
   }
 
-  @ViewChild('navbar') navbarElement!: ElementRef;
-
-  @HostListener('window:scroll')
-  onScrollSecond(): void {
-    if (scrollY > 600) {
-      this._renderer.setStyle(this.navbarElement.nativeElement, 'top', 0);
-    } else {
-      this._renderer.removeStyle(this.navbarElement.nativeElement, 'top');
-    }
-  }
-  currentLang: string = 'ar';
-  langStorage: string = localStorage.getItem('language') ?? this.currentLang;
-
   switchLanguage(lang: string): void {
     this.customSpinIsLoading = true;
     localStorage.setItem('language', lang);
@@ -124,62 +184,6 @@ export class NavBlankComponent implements OnInit {
     this.customSpinIsLoading = false;
   }
 
-  ngOnInit(): void {
-    this._authService.userInfo$.subscribe(user => {
-      this.user = user;
-      this.authenticated = !!user && !user?.isAnonymous;
-    });
-
-    this.customSpinIsLoading = true;
-    if (this.langStorage === null) {
-      this.translate.defaultLang;
-      this.currentLang = 'ar';
-    } else {
-      this.translate.use(this.langStorage);
-      if (this.langStorage === 'en') {
-        this.currentLang = 'ar';
-      } else {
-        this.currentLang = 'en';
-      }
-    }
-    this.changePageDirection(this.langStorage);
-
-    this._cartService.cartNumber.subscribe({
-      next: response => {
-        this.cartNum = response;
-        this.customSpinIsLoading = false;
-      },
-      error: err => {
-        const errMsg = err.error.message || 'Something went wrong';
-
-        this.cartNum = 0;
-        this._toaster.error(errMsg);
-        this.customSpinIsLoading = false;
-      },
-    });
-
-    this._cartService.getCartUser().subscribe({
-      next: response => {
-        this.cartNum = response.data.totalQuantity;
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
-      },
-    });
-
-    this._categories.getCategories().subscribe({
-      next: response => {
-        this.categoryList = response.data;
-        this.customSpinIsLoading = false;
-      },
-      error: err => {
-        const errMsg = err.error.message || 'Something went wrong';
-        this._toaster.error(errMsg);
-        this.customSpinIsLoading = false;
-      },
-    });
-  }
 
   // Change page Direction as per Selected Lang
   changePageDirection(lang: string) {
