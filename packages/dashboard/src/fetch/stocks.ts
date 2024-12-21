@@ -3,7 +3,12 @@
 import { ROUTES } from '@/routes';
 import { stockService } from '@/services';
 import { formatError } from '@/utils/formatError';
-import type { GetStockResponse, ListStocksRequest, ListStocksResponse } from '@resala/shared';
+import type {
+  GetStockResponse,
+  ListStocksRequest,
+  ListStocksResponse,
+  UpdateStocksQuantityRequest,
+} from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
 
@@ -21,9 +26,9 @@ export const findStockById = async (id: string): Promise<GetStockResponse['data'
   }
 };
 
-export const updateStock = async (stocks: { stockId: string; quantity: number }[]) => {
+export const updateStocksQuantity = async (stocks: UpdateStocksQuantityRequest['body']) => {
   try {
-    await stockService.increaseQuantity(stocks);
+    await stockService.updateStocksQuantity(stocks);
     revalidatePath(ROUTES.STOCKS);
     return { data: {} };
   } catch (e) {
