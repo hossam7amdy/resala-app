@@ -26,6 +26,21 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
   const [selectModalOpen, setSelectModalOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<RequiredMedia[]>(initialSelection);
 
+  const handleChange = (medias: RequiredMedia[]) => {
+    setSelectedMedia(medias);
+    onConfirmSelect(medias);
+  };
+
+  const handleRemove = (media: RequiredMedia) => {
+    const updatedMedia = selectedMedia.filter(m => m.id !== media.id);
+    handleChange(updatedMedia);
+  };
+
+  const handlePrimaryChange = (media: RequiredMedia) => {
+    const updatedMedia = [media, ...selectedMedia.filter(m => m.id !== media.id)];
+    handleChange(updatedMedia);
+  };
+
   const toggleSelectModal = () => setSelectModalOpen(prev => !prev);
 
   return (
@@ -34,12 +49,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
         <MediaPreviewGroup
           medias={selectedMedia}
           multiple={multiple}
-          onPrimaryChange={media => {
-            const updatedMedia = [media, ...selectedMedia.filter(m => m.id !== media.id)];
-
-            onConfirmSelect(updatedMedia);
-            setSelectedMedia(updatedMedia);
-          }}
+          onRemove={handleRemove}
+          onPrimaryChange={handlePrimaryChange}
         />
         <Button type="dashed" className="px-10 py-12 rounded-lg" onClick={toggleSelectModal}>
           <PlusOutlined />
@@ -51,10 +62,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
         open={selectModalOpen}
         okButtonProps={{ disabled: selectedMedia.length === 0, className: 'px-6' }}
         onCancel={toggleSelectModal}
-        onOk={() => {
-          onConfirmSelect(selectedMedia);
-          toggleSelectModal();
-        }}
+        onOk={toggleSelectModal}
+        destroyOnClose
       >
         <MediaUpload>
           <Button block type="dashed" className="rounded-lg my-2 h-32">
@@ -77,8 +86,8 @@ const MediaSelect: React.FC<MediaSelectProps> = ({
           options={medias}
           multiple={multiple}
           maxCount={maxCount}
-          selected={selectedMedia ? selectedMedia : undefined}
-          onSelect={medias => setSelectedMedia(medias)}
+          selected={selectedMedia}
+          onSelect={handleChange}
         />
       </Modal>
     </>

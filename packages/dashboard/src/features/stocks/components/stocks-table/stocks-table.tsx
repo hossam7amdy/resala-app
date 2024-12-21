@@ -1,9 +1,9 @@
 'use client';
 
-import { PopconfirmDeleteButton, Table } from '@/components';
+import { Image, PopconfirmDeleteButton, Table } from '@/components';
 import { deleteStock } from '@/fetch/stocks';
 import type { GetStockResponse, ListStocksResponse } from '@resala/shared';
-import { Flex, Image } from 'antd';
+import { Flex } from 'antd';
 import React from 'react';
 
 import { StockColor } from '../..';
@@ -24,13 +24,7 @@ export const StocksTable: React.FC<StocksTableProps> = ({ stocks }) => {
           dataIndex: 'image',
           width: 75,
           align: 'center',
-          render: (image, stock) => (
-            <Image
-              src={image ? image.imageUrl : stock.product.imageUrl}
-              alt="Product"
-              width={'100%'}
-            />
-          ),
+          render: image => <Image src={image.imageUrl} alt="Product" width={'100%'} />,
         },
         {
           title: 'Product',

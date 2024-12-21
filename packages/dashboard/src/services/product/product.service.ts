@@ -1,3 +1,4 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 import type { Image } from '@resala/shared';
@@ -169,14 +170,30 @@ export class ProductService {
           create: images,
         },
         stocks: {
-          deleteMany: { productId: id },
-          create: stocks,
+          upsert: stocks?.map(stock => ({
+            where: {
+              stock_unique_constraint: {
+                productId: id,
+                colorId: stock.colorId,
+                sizeId: stock.sizeId,
+              },
+            },
+            create: stock,
+            update: stock,
+          })),
         },
       },
     });
   }
 
   async delete(id: string): Promise<DeleteProductResponseDto> {
+    const order = await this.db.orderItem.findFirst({
+      where: { productId: id },
+    });
+    if (order) {
+      throw new ConflictError('Cannot delete product that is associated with an order');
+    }
+
     return await this.db.product.delete({ where: { id } });
   }
 }
