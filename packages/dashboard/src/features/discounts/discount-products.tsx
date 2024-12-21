@@ -1,8 +1,7 @@
-import { Table } from '@/components';
+import { Image, Table } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import type { Product } from '@resala/shared';
-import { Image } from 'antd';
 import React from 'react';
 
 import { DeleteDiscountProductButton } from './delete-discount-product-button';

@@ -1,3 +1,4 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 
@@ -75,6 +76,13 @@ export class StockService {
   }
 
   async delete(id: string) {
+    const order = await this.db.orderItem.findFirst({
+      where: { stockId: id },
+    });
+    if (order) {
+      throw new ConflictError('Cannot delete stock that is associated with an order');
+    }
+
     return await this.db.stock.delete({ where: { id } });
   }
 
