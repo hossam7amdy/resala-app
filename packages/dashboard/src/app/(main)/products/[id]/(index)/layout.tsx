@@ -1,5 +1,5 @@
+import { findProduct } from '@/actions/products';
 import { BackButton } from '@/components';
-import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';

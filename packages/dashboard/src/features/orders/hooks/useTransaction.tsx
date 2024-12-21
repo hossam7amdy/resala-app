@@ -1,6 +1,6 @@
 'use client';
 
-import { findPaymentById } from '@/fetch/payments';
+import { findPaymentById } from '@/actions/payments';
 import { useQuery } from '@/hooks';
 import { useCallback } from 'react';
 

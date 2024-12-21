@@ -1,6 +1,6 @@
 'use client';
 
-import { updateOrderStatus } from '@/fetch/orders';
+import { updateOrderStatus } from '@/actions/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse, OrderStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';

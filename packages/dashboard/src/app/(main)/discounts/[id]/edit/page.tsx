@@ -1,5 +1,5 @@
+import { findDiscountById } from '@/actions/discount';
 import { DiscountEditor } from '@/features/discounts';
-import { findDiscountById } from '@/fetch/discount';
 import type { Params } from '@/types';
 
 const EditDiscountPage = async ({ params }: { params: Params }) => {

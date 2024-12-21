@@ -1,4 +1,4 @@
-import { admin } from '@/fetch/auth.client';
+import { admin } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 

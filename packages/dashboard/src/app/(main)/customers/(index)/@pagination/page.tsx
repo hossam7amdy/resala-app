@@ -1,5 +1,5 @@
+import { countUsers } from '@/actions/users';
 import { Pagination } from '@/components';
-import { countUsers } from '@/fetch/users';
 import React from 'react';
 
 const PaginationSlot = async () => {

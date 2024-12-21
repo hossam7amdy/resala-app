@@ -1,5 +1,5 @@
+import { listUsers } from '@/actions/users';
 import { CustomersTable } from '@/features/customers';
-import { listUsers } from '@/fetch/users';
 import type { ListUsersRequest } from '@resala/shared';
 
 const CustomerPage = async ({ searchParams }: { searchParams?: ListUsersRequest['query'] }) => {
