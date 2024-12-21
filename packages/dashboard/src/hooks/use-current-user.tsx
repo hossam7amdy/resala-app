@@ -1,4 +1,4 @@
-import { useSession } from '@/fetch/auth.client';
+import { useSession } from '@/actions/auth.client';
 import type { User } from '@resala/shared';
 
 export const useCurrentUser = () => {

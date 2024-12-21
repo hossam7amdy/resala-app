@@ -1,7 +1,7 @@
 'use client';
 
+import { removeProductsFromDiscount } from '@/actions/discount';
 import { PopconfirmDeleteButton } from '@/components';
-import { removeProductsFromDiscount } from '@/fetch/discount';
 import type { Params } from '@/types';
 import { useParams } from 'next/navigation';
 import React from 'react';

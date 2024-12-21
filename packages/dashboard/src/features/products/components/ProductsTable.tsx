@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteProduct } from '@/actions/products';
 import { Image, PopconfirmDeleteButton, Table } from '@/components';
-import { deleteProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';

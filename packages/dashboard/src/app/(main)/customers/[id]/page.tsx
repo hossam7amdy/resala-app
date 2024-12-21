@@ -1,6 +1,6 @@
+import { getUserById } from '@/actions/users';
 import { BackButton } from '@/components';
 import { CustomerDetailsCard, RecentOrdersList, SummaryOverview } from '@/features/customers';
-import { getUserById } from '@/fetch/users';
 import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
 import { Breadcrumb, Col, Row } from 'antd';

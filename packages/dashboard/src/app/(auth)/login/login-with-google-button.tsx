@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from '@/fetch/auth.client';
+import { signIn } from '@/actions/auth.client';
 import { ROUTES } from '@/routes';
 import { GoogleOutlined } from '@ant-design/icons';
 import { Button } from 'antd';

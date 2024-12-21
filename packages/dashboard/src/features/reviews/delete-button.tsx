@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteReview } from '@/actions/reviews';
 import { PopconfirmDeleteButton } from '@/components';
-import { deleteReview } from '@/fetch/reviews';
 
 interface DeleteButtonProps {
   id: string;

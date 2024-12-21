@@ -1,10 +1,10 @@
+import { listAllCategories } from '@/actions/category';
+import { listAllColors } from '@/actions/colors';
+import { listMedias } from '@/actions/media';
+import { findProduct } from '@/actions/products';
+import { listAllSizes } from '@/actions/sizes';
 import { BackButton } from '@/components';
 import { ProductEditor } from '@/features/products';
-import { listAllCategories } from '@/fetch/category';
-import { listAllColors } from '@/fetch/colors';
-import { listMedias } from '@/fetch/media';
-import { findProduct } from '@/fetch/products';
-import { listAllSizes } from '@/fetch/sizes';
 import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
 import type { ListMediaRequest } from '@resala/shared';

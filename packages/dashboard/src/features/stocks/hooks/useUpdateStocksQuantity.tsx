@@ -1,6 +1,6 @@
 'use client';
 
-import { updateStocksQuantity } from '@/fetch/stocks';
+import { updateStocksQuantity } from '@/actions/stocks';
 import { useMutation, useNotification } from '@/hooks';
 
 interface UpdateStocksQuantityParams<T = unknown> {

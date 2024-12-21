@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteStock } from '@/actions/stocks';
 import { Image, PopconfirmDeleteButton, Table } from '@/components';
-import { deleteStock } from '@/fetch/stocks';
 import type { GetStockResponse } from '@resala/shared';
 import { Button, Flex, InputNumber } from 'antd';
 import React, { useState } from 'react';

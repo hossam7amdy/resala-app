@@ -1,6 +1,6 @@
 'use client';
 
-import { updateProduct } from '@/fetch/products';
+import { updateProduct } from '@/actions/products';
 import { useMutation, useNotification } from '@/hooks';
 import type { Product } from '@resala/shared';
 import { useRouter } from 'next/navigation';
