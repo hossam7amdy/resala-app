@@ -1,6 +1,6 @@
 'use client';
 
-import { refundPayment } from '@/fetch/payments';
+import { refundPayment } from '@/actions/payments';
 import { useMutation, useNotification } from '@/hooks';
 import { Button, Flex, Form, Input, InputNumber, Modal } from 'antd';
 import React, { useState } from 'react';

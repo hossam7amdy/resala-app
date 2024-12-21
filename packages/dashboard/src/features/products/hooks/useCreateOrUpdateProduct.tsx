@@ -1,6 +1,6 @@
 'use client';
 
-import { addProduct, updateProduct } from '@/fetch/products';
+import { addProduct, updateProduct } from '@/actions/products';
 import { useMutation, useNotification } from '@/hooks';
 import type { CreateProductRequest } from '@resala/shared';
 import type { FormInstance } from 'antd';

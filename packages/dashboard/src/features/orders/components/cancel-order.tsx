@@ -1,4 +1,4 @@
-import { deleteOrder } from '@/fetch/orders';
+import { deleteOrder } from '@/actions/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse } from '@resala/shared';
 import { Button, Popconfirm } from 'antd';

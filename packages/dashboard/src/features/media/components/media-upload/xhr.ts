@@ -1,4 +1,4 @@
-import { getUploadUrl, setMediaMetadata } from '@/fetch/media';
+import { getUploadUrl, setMediaMetadata } from '@/actions/media';
 import type { UploadProps } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 

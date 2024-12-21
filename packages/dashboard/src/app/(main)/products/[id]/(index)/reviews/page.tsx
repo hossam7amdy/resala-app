@@ -1,6 +1,6 @@
+import { listReviews } from '@/actions/reviews';
 import { Pagination, Table } from '@/components';
 import { DeleteButton } from '@/features/reviews';
-import { listReviews } from '@/fetch/reviews';
 import type { Params } from '@/types';
 import { formatDate } from '@/utils/date-time-formatter';
 import type { ListReviewsRequest } from '@resala/shared';

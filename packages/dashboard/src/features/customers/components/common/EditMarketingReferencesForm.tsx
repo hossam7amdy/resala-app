@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUser } from '@/fetch/users';
+import { updateUser } from '@/actions/users';
 import { useMutation, useNotification } from '@/hooks';
 import type { User } from '@resala/shared';
 import { MarketingState } from '@resala/shared';

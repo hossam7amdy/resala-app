@@ -1,8 +1,8 @@
+import { listAllCategories } from '@/actions/category';
+import { listAllColors } from '@/actions/colors';
+import { listMedias } from '@/actions/media';
+import { listAllSizes } from '@/actions/sizes';
 import { ProductEditor } from '@/features/products';
-import { listAllCategories } from '@/fetch/category';
-import { listAllColors } from '@/fetch/colors';
-import { listMedias } from '@/fetch/media';
-import { listAllSizes } from '@/fetch/sizes';
 import type { ListMediaRequest } from '@resala/shared';
 import { Card } from 'antd';
 

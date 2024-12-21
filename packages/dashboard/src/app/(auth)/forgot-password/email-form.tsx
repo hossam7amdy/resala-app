@@ -1,6 +1,6 @@
 'use client';
 
-import { forgetPassword } from '@/fetch/auth.client';
+import { forgetPassword } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { Button, Form, Input } from 'antd';

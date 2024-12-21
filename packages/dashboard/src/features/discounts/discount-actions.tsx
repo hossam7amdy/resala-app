@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteDiscount } from '@/actions/discount';
 import { PopconfirmDeleteButton } from '@/components';
-import { deleteDiscount } from '@/fetch/discount';
 import { ROUTES } from '@/routes';
 import { EditOutlined } from '@ant-design/icons';
 import type { Discount } from '@resala/shared';

@@ -1,4 +1,4 @@
-import { deleteUser } from '@/fetch/users';
+import { deleteUser } from '@/actions/users';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 

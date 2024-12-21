@@ -1,7 +1,7 @@
 'use client';
 
+import { createDiscount, updateDiscount } from '@/actions/discount';
 import { SelectProductAsync } from '@/components/select-product-async';
-import { createDiscount, updateDiscount } from '@/fetch/discount';
 import { useMutation, useNotification } from '@/hooks';
 import type { CreateDiscountRequest } from '@resala/shared';
 import {

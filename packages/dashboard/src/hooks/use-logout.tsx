@@ -1,6 +1,6 @@
 'use client';
 
-import { signOut } from '@/fetch/auth.client';
+import { signOut } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { useRouter } from 'next/navigation';

@@ -1,8 +1,8 @@
+import { listAllColors } from '@/actions/colors';
+import { listMedias } from '@/actions/media';
+import { findProduct } from '@/actions/products';
+import { listAllSizes } from '@/actions/sizes';
 import { StockEditor } from '@/features/stocks';
-import { listAllColors } from '@/fetch/colors';
-import { listMedias } from '@/fetch/media';
-import { findProduct } from '@/fetch/products';
-import { listAllSizes } from '@/fetch/sizes';
 import { Card } from 'antd';
 
 interface CreateStockPageProps {

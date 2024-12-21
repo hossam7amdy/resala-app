@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteMedia } from '@/actions/media';
 import { Image, PopconfirmDeleteButton, Table } from '@/components';
-import { deleteMedia } from '@/fetch/media';
 import { formatDate } from '@/utils/date-time-formatter';
 import { formatBytes } from '@/utils/formatBytes';
 import type { Media } from '@resala/shared';

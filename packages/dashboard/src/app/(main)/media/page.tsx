@@ -1,5 +1,5 @@
+import { listMedias } from '@/actions/media';
 import { MediaTable } from '@/features/media';
-import { listMedias } from '@/fetch/media';
 import type { ListMediaRequest } from '@resala/shared';
 
 interface MediaPageProps {

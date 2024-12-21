@@ -1,6 +1,6 @@
+import { listProducts } from '@/actions/products';
 import { Pagination } from '@/components';
 import { ProductsTable } from '@/features/products';
-import { listProducts } from '@/fetch/products';
 import type { ListRequestQuery } from '@resala/shared';
 import { Flex } from 'antd';
 
