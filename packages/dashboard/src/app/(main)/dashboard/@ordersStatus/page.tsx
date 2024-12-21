@@ -1,5 +1,5 @@
+import { getOrdersStatus } from '@/actions/dashboard';
 import { OrderStatusChart } from '@/features/dashboard';
-import { getOrdersStatus } from '@/fetch/dashboard';
 import { Card } from 'antd';
 import React from 'react';
 

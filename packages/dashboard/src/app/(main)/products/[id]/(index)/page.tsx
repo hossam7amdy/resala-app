@@ -1,7 +1,7 @@
+import { findProduct } from '@/actions/products';
+import { listStocks } from '@/actions/stocks';
 import { Pagination } from '@/components';
 import { StocksTable } from '@/features/stocks';
-import { findProduct } from '@/fetch/products';
-import { listStocks } from '@/fetch/stocks';
 import type { Params } from '@/types';
 import { notFound } from 'next/navigation';
 import React from 'react';

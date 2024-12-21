@@ -1,6 +1,6 @@
 'use client';
 
-import { signIn } from '@/fetch/auth.client';
+import { signIn } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { Button, Form, Input } from 'antd';

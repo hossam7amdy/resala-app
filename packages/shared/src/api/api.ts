@@ -253,6 +253,9 @@ export type GetStockResponse = DefaultResponseBody & {
   data: z.infer<typeof Schemas.GetStockResponseSchema>;
 };
 
+export type UpdateStocksQuantityRequest = z.infer<typeof Schemas.UpdateStocksQuantitySchema>;
+export type UpdateStocksQuantityResponse = DefaultResponseBody;
+
 export type ListStocksRequest = z.infer<typeof Schemas.ListStocksSchema>;
 export type ListStocksResponse = DefaultResponseBody & {
   data: z.infer<typeof Schemas.ListStocksResponseSchema>;

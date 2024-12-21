@@ -1,6 +1,6 @@
+import { countStocks, listStocks } from '@/actions/stocks';
 import { Pagination } from '@/components';
 import { StocksTable } from '@/features/stocks';
-import { countStocks, listStocks } from '@/fetch/stocks';
 import type { ListStocksRequest } from '@resala/shared';
 import React, { Suspense } from 'react';
 

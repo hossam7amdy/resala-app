@@ -1,7 +1,7 @@
+import { findDiscountById } from '@/actions/discount';
 import { Pagination } from '@/components';
 import { DiscountAlertMessage, DiscountProducts } from '@/features/discounts';
 import { AddDiscountProductsModal } from '@/features/discounts';
-import { findDiscountById } from '@/fetch/discount';
 import type { Params } from '@/types';
 import type { GetDiscountRequest } from '@resala/shared';
 import { Flex } from 'antd';

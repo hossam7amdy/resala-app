@@ -1,5 +1,5 @@
+import { addProductsToDiscount } from '@/actions/discount';
 import { SelectProductAsync } from '@/components/select-product-async';
-import { addProductsToDiscount } from '@/fetch/discount';
 import { useMutation, useNotification } from '@/hooks';
 import { Button, Flex, Form } from 'antd';
 import React from 'react';

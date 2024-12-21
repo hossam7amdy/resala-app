@@ -1,12 +1,12 @@
 'use client';
 
-import { Image, PopconfirmDeleteButton } from '@/components';
-import { deleteProduct } from '@/fetch/products';
+import { deleteProduct } from '@/actions/products';
+import { Image, PopconfirmDeleteButton, Table } from '@/components';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
 import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Space, Table } from 'antd';
+import { Space } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 

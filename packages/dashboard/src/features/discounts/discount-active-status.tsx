@@ -1,6 +1,6 @@
 'use client';
 
-import { updateDiscount } from '@/fetch/discount';
+import { updateDiscount } from '@/actions/discount';
 import { useMutation, useNotification } from '@/hooks';
 import type { Discount } from '@resala/shared';
 import { Button } from 'antd';

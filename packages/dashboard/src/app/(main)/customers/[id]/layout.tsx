@@ -1,4 +1,4 @@
-import { getUserById } from '@/fetch/users';
+import { getUserById } from '@/actions/users';
 import type { Params } from '@/types';
 import type { Metadata } from 'next';
 import React from 'react';
