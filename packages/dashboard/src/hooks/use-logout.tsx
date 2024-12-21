@@ -1,3 +1,5 @@
+'use client';
+
 import { signOut } from '@/fetch/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';

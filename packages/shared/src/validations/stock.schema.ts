@@ -25,6 +25,10 @@ const CreateStockSchema = z.object({
   }),
 });
 
+const UpdateStocksQuantitySchema = z.object({
+  body: z.array(StockSchema.pick({ id: true, quantity: true })),
+});
+
 const DeleteStockSchema = z.object({
   params: z.object({
     stockId: z.string().cuid(),
@@ -49,9 +53,10 @@ const ListStocksResponseSchema = z.array(GetStockResponseSchema);
 
 export {
   StockSchema,
+  ListStocksSchema,
   CreateStockSchema,
   DeleteStockSchema,
-  ListStocksSchema,
+  UpdateStocksQuantitySchema,
   GetStockResponseSchema,
   ListStocksResponseSchema,
 };

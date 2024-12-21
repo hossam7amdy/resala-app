@@ -1,10 +1,10 @@
 'use client';
 
-import { useCreateOrUpdateProduct } from '@/features/products';
 import { Button, Flex, Form } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { useUpdateProductStocks } from '../..';
 import { StocksFormList } from './StocksFormList';
 import type { StockEditorProps, StockFormValues } from './types';
 
@@ -13,28 +13,14 @@ const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors
 
   const { back } = useRouter();
   const [form] = Form.useForm();
-  const { handleSubmit, isLoading } = useCreateOrUpdateProduct({
-    form,
-    productId: product.id,
-    isEdit: true,
-  });
+  const { updateProductStock, isLoading } = useUpdateProductStocks();
 
   return (
     <Form
       form={form}
       name={`stock-editor`}
       layout="vertical"
-      onFinish={({ variants }: StockFormValues) =>
-        handleSubmit({
-          variants,
-          image: {
-            id: product.imageKey,
-            url: product.imageUrl,
-          },
-          ...product,
-          price: +product.price,
-        })
-      }
+      onFinish={(values: StockFormValues) => updateProductStock(product, values)}
       scrollToFirstError
     >
       <StocksFormList

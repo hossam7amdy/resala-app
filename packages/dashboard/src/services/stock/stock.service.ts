@@ -2,7 +2,12 @@ import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 
-import type { GetStockResponseDto, ListStocksRequestDto, ListStocksResponseDto } from './stock.dto';
+import type {
+  GetStockResponseDto,
+  ListStocksRequestDto,
+  ListStocksResponseDto,
+  UpdateStocksQuantityRequestDto,
+} from './stock.dto';
 
 export class StockService {
   constructor(private readonly db: DataStore) {}
@@ -115,6 +120,17 @@ export class StockService {
           where: {
             id: item.stockId,
           },
+        })
+      )
+    );
+  }
+
+  async updateStocksQuantity(stocks: UpdateStocksQuantityRequestDto) {
+    await this.db.$transaction(
+      stocks.map(({ id, quantity }) =>
+        this.db.stock.update({
+          data: { quantity },
+          where: { id },
         })
       )
     );

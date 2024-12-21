@@ -1,4 +1,4 @@
-import { Logo } from '@/components';
+import { ResalaLogo } from '@/components';
 import { ROUTES } from '@/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ const ForgotPasswordPage = () => {
     <div className={styles.container}>
       <Flex vertical gap={10}>
         <div style={{ alignSelf: 'center' }}>
-          <Logo />
+          <ResalaLogo />
         </div>
         <EmailForm />
         <Link href={ROUTES.LOGIN}>Back to Login</Link>
