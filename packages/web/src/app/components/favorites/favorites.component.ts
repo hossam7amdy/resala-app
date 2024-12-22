@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { OnInit } from '@angular/core';
+import { OnDestroy, OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
@@ -15,12 +16,13 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css'],
 })
-export class FavoritesComponent implements OnInit {
+export class FavoritesComponent implements OnInit,OnDestroy {
   constructor(
     private _WishListService: WishListService,
     private _Toaster: ToastrService,
     public _Translate: TranslateService
   ) {}
+  
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner
@@ -39,11 +41,14 @@ export class FavoritesComponent implements OnInit {
   };
 
   //end Rating
+  
+  //Subscription ID
+  getAllMyProductsId!:Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
-    this._WishListService.getAllMyProducts().subscribe({
+    this.getAllMyProductsId = this._WishListService.getAllMyProducts().subscribe({
       next: response => {
         this.myProducts = response.data;
 
@@ -53,6 +58,10 @@ export class FavoritesComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
     });
+  }
+  //Destroy Subscription
+  ngOnDestroy(): void {
+    if (this.getAllMyProductsId)this.getAllMyProductsId.unsubscribe()
   }
   // remove favorite icone
   removeFavoriteIcon(productId: string): void {

@@ -68,6 +68,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   allCategoryProducts(id: any): void {
+    this.customSpinIsLoading = true;
     this._Categories.getCategoryProducts(id).subscribe({
       next: (response: any) => {
         this.allProductsCategory = response.data.products;

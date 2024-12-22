@@ -71,6 +71,7 @@ export class LoginComponent {
           this.customSpinIsLoading = false;
           this.errMsg = err?.error?.message || 'Something went wrong';
           this.errMsgAr = 'الايميل او كلمة المرور غير صحيحة !';
+          console.log(err);
         },
       });
     }

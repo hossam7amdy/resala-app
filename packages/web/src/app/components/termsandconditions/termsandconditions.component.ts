@@ -22,5 +22,6 @@ export class TermsandconditionsComponent implements OnInit {
     setInterval(() => {
       this.customSpinIsLoading = false;
     }, 1000);
+    clearInterval(1000);
   }
 }
