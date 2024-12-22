@@ -1,5 +1,5 @@
+import { updateOrderStatus } from '@/actions/orders';
 import { ResalaTooltip } from '@/components';
-import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse, PaymentStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';

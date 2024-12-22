@@ -1,26 +1,34 @@
 'use client';
 
-import type { Media } from '@resala/shared';
 import { Checkbox } from 'antd';
 import Image from 'next/image';
 import React, { useCallback, useState } from 'react';
 
+import type { RequiredMedia } from './types';
+
 export interface MediaSelectProps {
   multiple?: boolean;
-  selected?: Media[];
-  onSelect?: (media: Media[]) => void;
-  options: Media[];
+  maxCount?: number;
+  selected?: RequiredMedia[];
+  onSelect?: (media: RequiredMedia[]) => void;
+  options: RequiredMedia[];
 }
-const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, multiple }) => {
-  const [selectedMedia, setSelectedMedia] = useState<Media[]>(selected || []);
+const MediaSelectList: React.FC<MediaSelectProps> = ({
+  options,
+  selected,
+  onSelect,
+  multiple,
+  maxCount,
+}) => {
+  const [selectedMedia, setSelectedMedia] = useState<RequiredMedia[]>(selected || []);
 
   const isSelected = useCallback(
-    (media: Media) => selectedMedia.some(m => m.id === media.id),
+    (media: RequiredMedia) => selectedMedia.some(m => m.id === media.id),
     [selectedMedia]
   );
 
   const handleSelectMedia = useCallback(
-    (media: Media) => {
+    (media: RequiredMedia) => {
       const selected = isSelected(media);
 
       if (!multiple && selected) {
@@ -37,10 +45,13 @@ const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, 
       }
 
       const updated = multiple ? [...selectedMedia, media] : [media];
+      if (maxCount && updated.length > maxCount) {
+        return;
+      }
       onSelect?.(updated);
       setSelectedMedia(updated);
     },
-    [isSelected, multiple, onSelect, selectedMedia]
+    [isSelected, maxCount, multiple, onSelect, selectedMedia]
   );
 
   return (
@@ -54,7 +65,7 @@ const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, 
           <Checkbox className="absolute top-1 left-1" type="checkbox" checked={isSelected(item)} />
           <Image
             src={item.url}
-            alt={item.alt || item.filename}
+            alt={item.alt || item.filename || ''}
             width={100}
             height={150}
             className="object-cover rounded-md shadow-md p-1"
@@ -65,4 +76,4 @@ const MediaSelect: React.FC<MediaSelectProps> = ({ options, selected, onSelect, 
   );
 };
 
-export { MediaSelect };
+export { MediaSelectList };

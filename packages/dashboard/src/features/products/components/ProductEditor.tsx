@@ -1,25 +1,24 @@
 'use client';
 
-import type { Category, Media, Product } from '@resala/shared';
+import { MediaSelect } from '@/features/media';
+import { StocksFormList, type StocksFormListProps } from '@/features/stocks';
+import type { Category, GetProductResponse } from '@resala/shared';
 import { Button, Col, Flex, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useRouter } from 'next/navigation';
 
 import { useCreateOrUpdateProduct } from '../hooks';
-import { SelectProductImage } from './SelectProductImage';
+import type { ProductFormValues } from '../types';
 
-interface ProductFormValues {
-  image: Pick<Media, 'id' | 'url'>;
-  categoryId: string;
-  enName: string;
-  arName: string;
-  enDescription: string;
-  arDescription: string;
-  price: number;
+interface ProductEditorProps extends StocksFormListProps {
+  product?: GetProductResponse['data'];
+  categories: Category[];
 }
-
-const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = ({
+const ProductEditor: React.FC<ProductEditorProps> = ({
   product,
   categories,
+  medias,
+  colors,
+  sizes,
 }) => {
   const { back } = useRouter();
   const [form] = Form.useForm();
@@ -34,20 +33,22 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
       form={form}
       name="product-form"
       layout="vertical"
-      onFinish={({ image, ...values }) => {
-        handleSubmit({ ...values, imageKey: image.id, imageUrl: image.url });
-      }}
+      onFinish={handleSubmit}
       initialValues={product}
+      scrollToFirstError
     >
       <Form.Item
+        required
         name="image"
         label="Product Image"
-        initialValue={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
+        rules={[{ required: true, message: 'Please select product image' }]}
+        initialValue={product ? { id: product.imageKey, url: product.imageUrl } : undefined}
       >
-        <SelectProductImage
-          initialSelection={product ? { url: product.imageUrl, id: product.imageKey } : undefined}
-          onConfirmSelect={image =>
-            form.setFieldsValue({ image: { id: image.id, url: image.url } })
+        <MediaSelect
+          medias={medias}
+          initialSelection={product ? [{ url: product.imageUrl, id: product.imageKey }] : undefined}
+          onConfirmSelect={images =>
+            form.setFieldsValue({ image: { id: images[0].id, url: images[0].url } })
           }
         />
       </Form.Item>
@@ -143,7 +144,21 @@ const ProductEditor: React.FC<{ product?: Product; categories: Category[] }> = (
         </Col>
       </Row>
 
-      <Form.Item>
+      <StocksFormList
+        medias={medias}
+        colors={colors}
+        sizes={sizes}
+        variants={product?.stocks.map(stock => ({
+          color: stock.color.id,
+          medias: stock.images.map(img => ({ id: img.imageKey, url: img.imageUrl })),
+          sizes: stock.sizes.map(size => ({
+            size: size.sizeId,
+            quantity: size.quantity,
+          })),
+        }))}
+      />
+
+      <Form.Item className="mt-4">
         <Flex gap={10}>
           <Button block onClick={back} disabled={isLoading}>
             Cancel

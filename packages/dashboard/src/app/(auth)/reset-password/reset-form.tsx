@@ -1,6 +1,6 @@
 'use client';
 
-import { resetPassword } from '@/fetch/auth.client';
+import { resetPassword } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { validationPatterns } from '@resala/shared';

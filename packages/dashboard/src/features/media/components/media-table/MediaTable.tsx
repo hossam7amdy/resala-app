@@ -1,11 +1,10 @@
 'use client';
 
-import { PopconfirmDeleteButton, Table } from '@/components';
-import { deleteMedia } from '@/fetch/media';
+import { deleteMedia } from '@/actions/media';
+import { Image, PopconfirmDeleteButton, Table } from '@/components';
 import { formatDate } from '@/utils/date-time-formatter';
 import { formatBytes } from '@/utils/formatBytes';
 import type { Media } from '@resala/shared';
-import { Image } from 'antd';
 import React from 'react';
 
 import { FilenameCell } from './FilenameCell';

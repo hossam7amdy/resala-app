@@ -1,12 +1,12 @@
+import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 
 import type {
-  CreateStockRequestDto,
   GetStockResponseDto,
   ListStocksRequestDto,
   ListStocksResponseDto,
-  UpdateStockRequestDto,
+  UpdateStocksQuantityRequestDto,
 } from './stock.dto';
 
 export class StockService {
@@ -14,29 +14,28 @@ export class StockService {
 
   private _stockFields() {
     return {
-      color: {
+      color: true,
+      size: true,
+      product: {
         include: {
-          images: {
-            where: { isPrimary: true },
-          },
+          images: true,
         },
       },
-      size: true,
-      product: true,
     } satisfies Prisma.StockInclude;
   }
 
   private _transformStock({
     size,
-    product,
-    color: { images, ...color },
+    color,
+    product: { images, ...product },
     ...stock
   }: Prisma.StockGetPayload<{
     include: ReturnType<StockService['_stockFields']>;
   }>) {
     return {
       ...stock,
-      image: images.at(0),
+      image: images.find(image => image.colorId === color.id && image.isPrimary),
+      images: images.filter(image => image.colorId === color.id),
       size,
       product,
       color,
@@ -80,30 +79,14 @@ export class StockService {
     return stocks.map(this._transformStock);
   }
 
-  async create(stock: CreateStockRequestDto) {
-    return await this.db.stock.create({
-      data: {
-        productId: stock.productId,
-        colorId: stock.colorId,
-        sizeId: stock.sizeId,
-        quantity: stock.quantity,
-      },
-    });
-  }
-
-  async update(id: string, stock: UpdateStockRequestDto) {
-    return await this.db.stock.update({
-      where: { id },
-      data: {
-        productId: stock.productId,
-        colorId: stock.colorId,
-        sizeId: stock.sizeId,
-        quantity: stock.quantity,
-      },
-    });
-  }
-
   async delete(id: string) {
+    const order = await this.db.orderItem.findFirst({
+      where: { stockId: id },
+    });
+    if (order) {
+      throw new ConflictError('Cannot delete stock that is associated with an order');
+    }
+
     return await this.db.stock.delete({ where: { id } });
   }
 
@@ -136,6 +119,17 @@ export class StockService {
           where: {
             id: item.stockId,
           },
+        })
+      )
+    );
+  }
+
+  async updateStocksQuantity(stocks: UpdateStocksQuantityRequestDto) {
+    await this.db.$transaction(
+      stocks.map(({ id, quantity }) =>
+        this.db.stock.update({
+          data: { quantity },
+          where: { id },
         })
       )
     );

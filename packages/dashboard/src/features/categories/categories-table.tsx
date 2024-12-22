@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteCategory } from '@/actions/category';
 import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
-import { deleteCategory } from '@/fetch/category';
 import { ROUTES } from '@/routes';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';

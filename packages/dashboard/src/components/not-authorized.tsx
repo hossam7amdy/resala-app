@@ -1,6 +1,6 @@
 'use client';
 
-import { signOut } from '@/fetch/auth.client';
+import { signOut } from '@/actions/auth.client';
 import { ROUTES } from '@/routes';
 import { Button, Result } from 'antd';
 import { useRouter } from 'next/navigation';

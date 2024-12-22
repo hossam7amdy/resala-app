@@ -1,4 +1,4 @@
-import { Logo, NavLinks, UserDropdown } from '@/components';
+import { NavLinks, ResalaLogo, UserDropdown } from '@/components';
 import { ROUTES } from '@/routes';
 import { Flex } from 'antd';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ export const SideNav: React.FC = () => {
     <Flex vertical style={{ height: '100%' }}>
       <Link href={ROUTES.DASHBOARD}>
         <div style={{ textAlign: 'center', margin: '50px auto' }}>
-          <Logo className="h-[30px] w-[55px] lg:h-full lg:w-[116px]" />
+          <ResalaLogo className="h-[30px] w-[55px] lg:h-full lg:w-[116px]" />
         </div>
       </Link>
       <div style={{ flex: 1 }}>
