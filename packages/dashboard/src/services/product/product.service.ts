@@ -18,9 +18,13 @@ import type {
 export class ProductService {
   constructor(private readonly db: DataStore) {}
 
-  private _productFields() {
+  private _productFields(id?: string) {
     return {
-      images: true,
+      images: {
+        where: {
+          productId: id,
+        },
+      },
       category: true,
       discounts: {
         where: {
@@ -81,7 +85,7 @@ export class ProductService {
     });
 
     const { stocks, images, ...product } = await this.db.product.findUniqueOrThrow({
-      include: this._productFields(),
+      include: this._productFields(id),
       where: { id },
     });
 
@@ -139,39 +143,61 @@ export class ProductService {
 
   async create({
     categoryId,
-    enName,
-    arName,
+    images,
+    stocks,
     ...payload
   }: CreateProductRequestDto): Promise<CreateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
 
-    const product = await this.db.product.findFirst({
-      where: {
-        OR: [{ enName }, { arName }],
-      },
-    });
-
-    if (product) {
-      throw new ConflictError('Product already exists');
-    }
-
-    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
-
     return await this.db.product.create({
-      data: { ...payload, categoryId, enName, arName },
+      data: {
+        ...payload,
+        categoryId,
+        images: { create: images },
+        stocks: { create: stocks },
+      },
     });
   }
 
-  async update(id: string, product: UpdateProductRequestDto): Promise<UpdateProductResponseDto> {
+  async update(
+    id: string,
+    { images, stocks, ...product }: UpdateProductRequestDto
+  ): Promise<UpdateProductResponseDto> {
     await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
 
     return await this.db.product.update({
       where: { id },
-      data: product,
+      data: {
+        ...product,
+        images: {
+          deleteMany: { productId: id },
+          create: images,
+        },
+        stocks: {
+          upsert: stocks?.map(stock => ({
+            where: {
+              stock_unique_constraint: {
+                productId: id,
+                colorId: stock.colorId,
+                sizeId: stock.sizeId,
+              },
+            },
+            create: stock,
+            update: stock,
+          })),
+        },
+      },
     });
   }
 
   async delete(id: string): Promise<DeleteProductResponseDto> {
+    const order = await this.db.orderItem.findFirst({
+      where: { productId: id },
+    });
+    if (order) {
+      throw new ConflictError('Cannot delete product that is associated with an order');
+    }
+
     return await this.db.product.delete({ where: { id } });
   }
 }

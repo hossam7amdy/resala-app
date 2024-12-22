@@ -99,8 +99,8 @@ model UserAddress {
 
 model Category {
   id        String    @id @default(cuid())
-  arName    String    @unique @map("ar_name") @db.VarChar(100)
-  enName    String    @unique @map("en_name") @db.VarChar(100)
+  arName    String    @map("ar_name")
+  enName    String    @map("en_name")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   products  Product[]
@@ -111,19 +111,19 @@ model Category {
 model Product {
   id            String      @id @default(cuid())
   categoryId    String      @map("category_id")
-  arName        String      @unique @map("ar_name") @db.VarChar(50)
-  enName        String      @unique @map("en_name") @db.VarChar(50)
-  arDescription String      @map("ar_description") @db.VarChar(1000)
-  enDescription String      @map("en_description") @db.VarChar(1000)
+  arName        String      @map("ar_name")
+  enName        String      @map("en_name")
+  arDescription String      @map("ar_description")
+  enDescription String      @map("en_description")
   price         Decimal     @db.Decimal(10, 2)
-  imageKey      String      @map("image_key") @db.VarChar(50)
-  imageUrl      String      @map("image_url") @db.VarChar(300)
+  imageKey      String      @map("image_key")
+  imageUrl      String      @map("image_url")
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
+  category      Category    @relation(fields: [categoryId], references: [id])
   discounts     Discount[]
   images        Image[]
   orderItems    OrderItem[]
-  category      Category    @relation(fields: [categoryId], references: [id])
   reviews       Review[]
   stocks        Stock[]
   wishlist      Wishlist[]
@@ -136,11 +136,11 @@ model Image {
   colorId   String   @map("color_id")
   productId String   @map("product_id")
   isPrimary Boolean  @default(false) @map("is_primary")
-  imageKey  String   @map("image_key") @db.VarChar(50)
-  imageUrl  String   @map("image_url") @db.VarChar(300)
+  imageKey  String   @map("image_key")
+  imageUrl  String   @map("image_url")
   createdAt DateTime @default(now()) @map("created_at")
   color     Color    @relation(fields: [colorId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId, colorId])
   @@map("image")
@@ -157,8 +157,8 @@ model Stock {
   cart       Cart[]
   orderItems OrderItem[]
   color      Color       @relation(fields: [colorId], references: [id])
-  product    Product     @relation(fields: [productId], references: [id])
   size       Size        @relation(fields: [sizeId], references: [id])
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([productId, colorId, sizeId], name: "stock_unique_constraint")
   @@map("stock")

@@ -1,5 +1,5 @@
+import { listAllSizes } from '@/actions/sizes';
 import { SizeEditorModal, SizesTable } from '@/features/sizes';
-import { listAllSizes } from '@/fetch/sizes';
 import { Col, Flex, Row } from 'antd';
 import React from 'react';
 

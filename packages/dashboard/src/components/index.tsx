@@ -1,4 +1,4 @@
-export { Logo } from './logo';
+export { ResalaLogo } from './ResalaLogo';
 export { Menu } from './menu';
 export { ResalaTooltip } from './tooltip';
 export { NavLinks } from './nav-links/nav-links';

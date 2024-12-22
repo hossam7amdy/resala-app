@@ -13,12 +13,12 @@ export class CartService {
         stock: {
           include: {
             size: true,
-            product: true,
-            color: {
+            product: {
               include: {
                 images: true,
               },
             },
+            color: true,
           },
         },
       },
@@ -30,17 +30,18 @@ export class CartService {
       ({
         userId,
         stock: {
-          color: { images, ...color },
+          color,
           size,
-          product,
+          product: { images, ...product },
           ...stock
         },
         ...item
       }) => ({
         ...item,
+        quantity: item.quantity > stock.quantity ? stock.quantity : item.quantity,
         userId,
         product,
-        images,
+        images: images.filter(image => image.colorId === color.id),
         stock: {
           ...stock,
           color,
@@ -49,6 +50,10 @@ export class CartService {
       })
     );
 
+    // Validate cart items
+    const validCartItems = cartItems.filter(item => item.quantity > 0);
+
+    // Calculate total quantity and price
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
     const totalPrice = cartItems.reduce(
       (acc, item) => acc + item.product.price.mul(item.quantity).toDecimalPlaces(2).toNumber(),
@@ -58,7 +63,7 @@ export class CartService {
     return {
       totalQuantity,
       totalPrice,
-      items: cartItems,
+      items: validCartItems,
     };
   }
 

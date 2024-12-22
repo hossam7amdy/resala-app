@@ -1,7 +1,7 @@
 'use client';
 
+import { listProducts } from '@/actions/products';
 import { DebounceSelect } from '@/components';
-import { listProducts } from '@/fetch/products';
 import type { SelectProps } from 'antd';
 import { useCallback } from 'react';
 
