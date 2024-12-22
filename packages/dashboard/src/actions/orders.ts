@@ -3,13 +3,10 @@
 import { ROUTES } from '@/routes';
 import { orderService } from '@/services';
 import type {
-  // DeleteOrderRequest,
-  // DeleteOrderResponse,
-  // GetOrderRequest,
   GetOrderResponse,
   ListOrdersRequest,
   ListOrdersResponse,
-  UpdateOrderRequest, // UpdateOrderResponse,
+  UpdateOrderRequest,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -42,11 +39,6 @@ export const updateOrderStatus = async (id: string, payload: UpdateOrderRequest[
   }
 };
 
-export const deleteOrder = async (_orderId: string, _userId: string) => {
-  try {
-    // TODO: handle order deletion
-    revalidatePath(ROUTES.ORDERS);
-  } catch (e) {
-    return { error: (e as Error).message };
-  }
+export const cancelOrder = async (orderId: string) => {
+  return updateOrderStatus(orderId, { orderStatus: 'CANCELLED' } as UpdateOrderRequest['body']);
 };

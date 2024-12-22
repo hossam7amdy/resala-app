@@ -18,7 +18,7 @@ export class PaymentService {
     billingData,
   }: CheckoutCreateParams): Promise<{ paymentUrl: string }> {
     const total = orderItems.reduce(
-      (acc, item) => item.price.mul(item.quantity).add(acc),
+      (acc, item) => new Decimal(item.price).mul(item.quantity).add(acc),
       new Decimal(0)
     );
 
