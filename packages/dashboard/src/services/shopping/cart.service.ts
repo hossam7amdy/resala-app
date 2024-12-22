@@ -51,7 +51,7 @@ export class CartService {
     );
 
     // Validate cart items
-    const validCartItems = cartItems.filter(item => (item.quantity = 0));
+    const validCartItems = cartItems.filter(item => item.quantity > 0);
 
     // Calculate total quantity and price
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
