@@ -11,17 +11,18 @@
     </div>
 
     <div class="row img-product">
-      <div class="col-sm-12 col-md-6 main-img">
+      <div class="col-sm-6 col-md-5 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div
                   class="image-container p-1 m-1"
-                  (mousemove)="onMouseMove($event)"
-                  (mouseleave)="hideCustomCursor()"
-                  (mouseenter)="showCustomCursor()"
+                  (click)="openImage(image.imageUrl)"
                 >
+                <!-- (mousemove)="onMouseMove($event)"
+                  (mouseleave)="hideCustomCursor()"
+                  (mouseenter)="showCustomCursor()" -->
                   <!-- Original Image -->
                   <img
                     [src]="image.imageUrl"
@@ -34,7 +35,7 @@
                     class="original-image"
                   />
 
-                  <!-- Full Image Overlay -->
+                  <!-- Full Image Overlay
                   <div class="image-overlay" [class.hidden]="isMouseMoving">
                     <div
                       class="custom-cursor"
@@ -42,10 +43,10 @@
                       [ngStyle]="cursorStyles"
                       #cursor
                     ></div>
-                  </div>
+                  </div> -->
 
                   <!-- Zoomed Image Displayed in Separate Area Beneath -->
-                  <div class="zoom-container" *ngIf="isZoomActive">
+                  <!-- <div class="zoom-container" *ngIf="isZoomActive">
                     <img
                       [src]="image.imageUrl"
                       [alt]="
@@ -61,7 +62,7 @@
                       class="zoomed-image"
                       [ngStyle]="zoomStyles"
                     />
-                  </div>
+                  </div> -->
                 </div>
               </ng-template>
             </ng-container>
@@ -94,7 +95,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-6 col-md-7">
         <h2 class="h2">
           {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
         </h2>

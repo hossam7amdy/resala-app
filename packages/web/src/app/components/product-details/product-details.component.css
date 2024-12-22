@@ -462,7 +462,7 @@
 
 .image-container {
   position: relative;
-  width: 80%; /* Original image container width */
+  width: 90%; /* Original image container width */
   height: auto;
   transition: opacity 0.5s ease-in-out;
 }
@@ -470,6 +470,7 @@
 .original-image {
   width: 100%;
   height: auto;
+  cursor: zoom-in;
 }
 
 /* Full Overlay (appears on hover) */
@@ -481,7 +482,7 @@
   height: 100%;
   opacity: 1;
   transition: opacity 0.3s ease;
-  cursor: crosshair;
+  cursor: zoom-in;
 }
 
 /* Custom Cursor Styling */
@@ -490,7 +491,7 @@
   width: 150px;
   height: 150px;
   /* background-color: #ffffff73; */
-  cursor: crosshair;
+  cursor:zoom-in;
   border-radius: 0%;
   opacity: 1;
   pointer-events: none; /* Prevent interaction */
