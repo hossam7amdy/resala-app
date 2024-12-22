@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import { OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,6 +19,7 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -39,65 +40,28 @@ import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
-export class ProductDetailsComponent implements OnInit {
-  // static productId: any;
-  isZoomed = false;
-  zoomStyle = {};
-
-  toggleZoom(state: boolean) {
-    this.isZoomed = state;
-    this.zoomStyle = state ? this.zoomStyle : {};
-  }
-
-  setZoomPosition(event: MouseEvent) {
-    if (this.isZoomed) {
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-      const x = event.clientX - rect.left; // X position within the image
-      const y = event.clientY - rect.top; // Y position within the image
-
-      this.zoomStyle = {
-        transformOrigin: `${x}px ${y}px`, // Set the origin for zoom
-      };
-    }
-  }
-
+export class ProductDetailsComponent implements OnInit,OnDestroy {
+  
   constructor(
-    private route: ActivatedRoute,
-    private _HomeProductsService: HomeProductsService,
-    private _CartService: CartService,
-    private _toaster: ToastrService,
-    private _Renderer2: Renderer2,
-    private _Router: Router,
-    private _Reviews: ReviewsService,
-    private _ProductsCategory: CategoriesService,
-    private _WishListService: WishListService,
-    private _Toaster: ToastrService,
-    private _RTLStatus: Translate_Service,
-    public _Translate: TranslateService
-  ) {} // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
-
+    // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
+   private route: ActivatedRoute,
+   private _HomeProductsService: HomeProductsService,
+   private _CartService: CartService,
+   private _toaster: ToastrService,
+   private _Renderer2: Renderer2,
+   private _Router: Router,
+   private _Reviews: ReviewsService,
+   private _ProductsCategory: CategoriesService,
+   private _WishListService: WishListService,
+   private _Toaster: ToastrService,
+   private _RTLStatus: Translate_Service,
+   public _Translate: TranslateService
+ ) {}
+ 
+  
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner
-
-  // Change page Direction as per Selected Lang
-  changePageDirection(): boolean {
-    this.customSpinIsLoading = true;
-    const html = document.getElementsByTagName('html')[0];
-    let rtlStat: boolean;
-    if (this._RTLStatus.rTLStatus.value === 'ar') {
-      html.dir = 'rtl';
-      html.lang = 'ar';
-      rtlStat = true;
-    } else {
-      html.dir = 'ltr';
-      html.lang = 'en';
-      rtlStat = false;
-    }
-    this.customSpinIsLoading = false;
-    return rtlStat;
-  }
-
   counterQuantity: number = 1;
   priceAfterSale: number = 0;
 
@@ -110,8 +74,9 @@ export class ProductDetailsComponent implements OnInit {
   productStockColor: any = [];
   productStockSize: any = [];
   reboColor: any = [];
-  btnDisable: boolean = false;
-  cartDetails: any = {};
+  btnDisable: boolean = true;
+  loadingBtn:boolean= false;
+ 
   //property navigate from login to product details id
   endPointProductId: string = '';
 
@@ -148,61 +113,44 @@ export class ProductDetailsComponent implements OnInit {
   productsCategory: any = [];
   categoryId: any;
 
-  ngOnInit(): void {
-    // start code test
+  // static productId: any;
+  isZoomed = false;
+  zoomStyle = {};
 
-    //end code test
-    this.customSpinIsLoading = true;
+  //Subscription ID
+  getProductDetailsId!:Subscription;
+  getProductReviewId!:Subscription;
+  getCategoryProductsId!:Subscription;
+  ngOnInit(): void {
+    
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
-
-    this._CartService.getCartUser().subscribe({
-      next: response => {
-        this.cartDetails = response.data;
-        this.customSpinIsLoading = false;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
-      },
-    });
-
-    this._Reviews.getProductReview(this.productId, '10').subscribe({
+    this.getProductReviewId = this._Reviews.getProductReview(this.productId, '10').subscribe({
       next: res => {
         this.productReview = res.data.reviews;
-        this.customSpinIsLoading = false;
+        
       },
       error: () => {
-        this.customSpinIsLoading = false;
+        
       },
     });
+
+    
+  }
+  ngOnDestroy(): void {
+    if(this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
+    if(this.getCategoryProductsId)this.getCategoryProductsId.unsubscribe();
+    if(this.getProductReviewId)this.getProductReviewId.unsubscribe();
   }
 
   getProductDetails(id: any) {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductDetails(id).subscribe({
+    this.getProductDetailsId = this._HomeProductsService.getProductDetails(id).subscribe({
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.imageUrl;
-
         this.categoryId = res?.data.categoryId;
-        console.log(res);
-      },
-
-      error: () => {
-        this.customSpinIsLoading = false;
-      },
-      complete: () => {
-        this.getProductStock(id);
-      },
-    });
-  }
-
-  getProductStock(id: any) {
-    this.customSpinIsLoading = true;
-    this._HomeProductsService.getProductDetails(id).subscribe({
-      next: res => {
         this.productStock = res?.data.stocks;
-        console.log(res);
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
           if (!a.find(data => data.color.id == b.colorId)) {
@@ -210,17 +158,55 @@ export class ProductDetailsComponent implements OnInit {
           }
           return a;
         }, []);
-
-        // this.customSpinIsLoading = false;
       },
+
       error: () => {
+        this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
         this.customSpinIsLoading = false;
       },
       complete: () => {
         this.getProductsCategory(this.categoryId);
+        this.customSpinIsLoading = false
       },
     });
   }
+
+  toggleZoom(state: boolean) {
+    this.isZoomed = state;
+    this.zoomStyle = state ? this.zoomStyle : {};
+  }
+
+  setZoomPosition(event: MouseEvent) {
+    if (this.isZoomed) {
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      const x = event.clientX - rect.left; // X position within the image
+      const y = event.clientY - rect.top; // Y position within the image
+
+      this.zoomStyle = {
+        transformOrigin: `${x}px ${y}px`, // Set the origin for zoom
+      };
+    }
+  }
+
+
+  // Change page Direction as per Selected Lang
+  changePageDirection(): boolean {
+    this.customSpinIsLoading = true;
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+    this.customSpinIsLoading = false;
+    return rtlStat;
+  }
+
 
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
@@ -310,49 +296,47 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addProduct(productId: string, element: HTMLButtonElement) {
+  addProduct(productId: string) {
+    this.loadingBtn = true;
     this.btnDisable = true;
-    this.customSpinIsLoading = true;
+
     if (this.isChooseColor && this.isChooseSize === true && this.stockIdSize != '') {
-      this._Renderer2.setAttribute(element, 'disabled', 'true');
+      // this._Renderer2.setAttribute(element, 'disabled', 'true');
       const requiredCount: string = this.counterQuantity.toString();
       this._CartService.addToCart(productId, requiredCount).subscribe({
         next: res => {
           this._CartService.cartNumber.next(res.data.totalQuantity);
 
-          this._toaster.success('added one product successfuly');
-          this.customSpinIsLoading = false;
+          this._toaster.success(this._Translate.currentLang=='ar'?'تمت الاضافة الى السلة بنجاح':'added one product successfuly');
+          this.loadingBtn = false;
         },
-        error: err => {
-          if (err.status == 401) {
-            localStorage.setItem('productId', this.productId);
-            this._toaster.info('please login !!'); //'Should be Login'
-            this._Router.navigate(['/login']);
-          } else {
-            this._Toaster.error(err);
-          }
-
-          this.customSpinIsLoading = false;
+        error: () => {
+          this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
+          this.loadingBtn = false;
         },
       });
     } else {
-      this._toaster.info('should be choose color and size');
+      this._toaster.info(this._Translate.currentLang=='ar'?'برجاء اختيار اللون والمقاس':'should be choose color and size');
+      this.loadingBtn = false;
     }
 
-    this._Renderer2.removeAttribute(element, 'disabled');
-    this.customSpinIsLoading = false;
+   
+
+    // this._Renderer2.removeAttribute(element, 'disabled');
+    
+    
   }
 
   // similar products
   getProductsCategory(id: any): void {
-    this.customSpinIsLoading = true;
-    this._ProductsCategory.getCategoryProducts(id).subscribe({
+   
+    this.getCategoryProductsId = this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
         this.productsCategory = res.data.products;
-        this.customSpinIsLoading = false;
+       
       },
       error: () => {
-        this.customSpinIsLoading = false;
+        
       },
     });
   }
@@ -428,63 +412,58 @@ export class ProductDetailsComponent implements OnInit {
     this.customSpinIsLoading = false;
   }
 
-  //zoomin
-  //  @ViewChild('cursor') refCursor:any;
-  //  @HostListener('document:mousemove',['$event'])
-  //  atMouseMove(event:any){
 
-  //     this.refCursor.nativeElement.style.left =event.pageX;
-  //     this.refCursor.nativeElement.style.top =event.pageY;
+  // zoomStyles = {};
+  // isZoomActive = false;
+  // isCursorVisible = false;
+  // cursorStyles = {};
+  // overlayStyles = {}; // Style object for overlay position
+  // isMouseMoving = false; // Track if the mouse is moving
+  // private mouseMoveTimeout: any;
 
-  //  }
+  // onMouseMove(event: MouseEvent): void {
+  //   const { offsetX, offsetY, target } = event;
+  //   const { offsetWidth, offsetHeight } = target as HTMLElement;
 
-  zoomStyles = {};
-  isZoomActive = false;
-  isCursorVisible = false;
-  cursorStyles = {};
-  overlayStyles = {}; // Style object for overlay position
-  isMouseMoving = false; // Track if the mouse is moving
-  private mouseMoveTimeout: any;
+  //   // Activate zoom display
+  //   this.isZoomActive = true;
 
-  onMouseMove(event: MouseEvent): void {
-    const { offsetX, offsetY, target } = event;
-    const { offsetWidth, offsetHeight } = target as HTMLElement;
+  //   // Calculate position of zoomed image based on mouse position
+  //   const xPercent = (offsetX / offsetWidth) * 100;
+  //   const yPercent = (offsetY / offsetHeight) * 100;
 
-    // Activate zoom display
-    this.isZoomActive = true;
+  //   this.zoomStyles = {
+  //     transformOrigin: `${xPercent}% ${yPercent}%`,
+  //     transform: 'scale(5)', // Adjust zoom scale here
+  //   };
 
-    // Calculate position of zoomed image based on mouse position
-    const xPercent = (offsetX / offsetWidth) * 100;
-    const yPercent = (offsetY / offsetHeight) * 100;
+  //   // Update custom cursor position
+  //   this.cursorStyles = {
+  //     top: `${event.offsetY}px`,
+  //     left: `${event.offsetX}px`,
+  //   };
 
-    this.zoomStyles = {
-      transformOrigin: `${xPercent}% ${yPercent}%`,
-      transform: 'scale(5)', // Adjust zoom scale here
-    };
+  //   // Show overlay only if the mouse is still
+  //   this.isMouseMoving = true;
+  //   clearTimeout(this.mouseMoveTimeout);
+  //   this.mouseMoveTimeout = setTimeout(() => {
+  //     this.isMouseMoving = false; // Mouse is considered still after 200ms
+  //   }, 200);
+  // }
 
-    // Update custom cursor position
-    this.cursorStyles = {
-      top: `${event.offsetY}px`,
-      left: `${event.offsetX}px`,
-    };
+  // showCustomCursor(): void {
+  //   this.isCursorVisible = true;
+  // }
 
-    // Show overlay only if the mouse is still
-    this.isMouseMoving = true;
-    clearTimeout(this.mouseMoveTimeout);
-    this.mouseMoveTimeout = setTimeout(() => {
-      this.isMouseMoving = false; // Mouse is considered still after 200ms
-    }, 200);
-  }
+  // hideCustomCursor(): void {
+  //   this.isCursorVisible = false;
+  //   this.isZoomActive = false;
+  //   this.zoomStyles = {};
+  //   this.isMouseMoving = false;
+  //   this.overlayStyles = {};
+  // }
 
-  showCustomCursor(): void {
-    this.isCursorVisible = true;
-  }
-
-  hideCustomCursor(): void {
-    this.isCursorVisible = false;
-    this.isZoomActive = false;
-    this.zoomStyles = {};
-    this.isMouseMoving = false;
-    this.overlayStyles = {};
+  openImage(imageUrl:string){
+    window.open(imageUrl,'_blank')
   }
 }

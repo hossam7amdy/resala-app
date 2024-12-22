@@ -11,17 +11,18 @@
     </div>
 
     <div class="row img-product">
-      <div class="col-sm-12 col-md-6 main-img">
+      <div class="col-sm-6 col-md-5 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
                 <div
                   class="image-container p-1 m-1"
-                  (mousemove)="onMouseMove($event)"
-                  (mouseleave)="hideCustomCursor()"
-                  (mouseenter)="showCustomCursor()"
+                  (click)="openImage(image.imageUrl)"
                 >
+                <!-- (mousemove)="onMouseMove($event)"
+                  (mouseleave)="hideCustomCursor()"
+                  (mouseenter)="showCustomCursor()" -->
                   <!-- Original Image -->
                   <img
                     [src]="image.imageUrl"
@@ -34,7 +35,7 @@
                     class="original-image"
                   />
 
-                  <!-- Full Image Overlay -->
+                  <!-- Full Image Overlay
                   <div class="image-overlay" [class.hidden]="isMouseMoving">
                     <div
                       class="custom-cursor"
@@ -42,10 +43,10 @@
                       [ngStyle]="cursorStyles"
                       #cursor
                     ></div>
-                  </div>
+                  </div> -->
 
                   <!-- Zoomed Image Displayed in Separate Area Beneath -->
-                  <div class="zoom-container" *ngIf="isZoomActive">
+                  <!-- <div class="zoom-container" *ngIf="isZoomActive">
                     <img
                       [src]="image.imageUrl"
                       [alt]="
@@ -61,7 +62,7 @@
                       class="zoomed-image"
                       [ngStyle]="zoomStyles"
                     />
-                  </div>
+                  </div> -->
                 </div>
               </ng-template>
             </ng-container>
@@ -94,7 +95,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-6 col-md-7">
         <h2 class="h2">
           {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
         </h2>
@@ -177,21 +178,7 @@
           </ng-container>
         </div>
 
-        <!-- <div class="row">
-          <div *ngFor="let colors of productStock" class="btn-group color col-md-4" role="group"
-            aria-label="Basic radio toggle button group">
-
-            <input type="radio" class="btn-check" name="color-option" [id]="colors.color.colorId" autocomplete="off"
-              [value]="colors.color.code" />
-            <label class="btn color-btn" [for]="colors.color.colorId">{{colors.color.enName }}</label>
-            <p>{{selectedColor}}</p>
-           
-
-          </div>
-        </div>
-         -->
-        <!-- [ngStyle]="{'background-color':colors.color.code}" -->
-
+       
         <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
@@ -247,17 +234,24 @@
           </div>
         </section>
         <!-- add-cart-btn  -->
-        <div class="">
-          <button
-            [disabled]="customSpinIsLoading"
-            (click)="addProduct(stockIdSize, addToCartBtn)"
+        <section>
+            <button
+            (click)="addProduct(stockIdSize)"
+            [disabled]="btnDisable ===true"
             #addToCartBtn
-            class="custome-btn w-100"
+            class="custome-btn"
           >
             {{ 'productDetails.addToCart' | translate }}
+           
+              <span *ngIf="loadingBtn"  class="spinner-border spinner-border-sm fw-bold" style="color: #016373;" role="status" aria-hidden="true"></span>
+              <span *ngIf="loadingBtn" class="visually-hidden">Loading...</span>
+        
+            
           </button>
+        </section>
+         
           <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
-        </div>
+        
       </div>
     </div>
 

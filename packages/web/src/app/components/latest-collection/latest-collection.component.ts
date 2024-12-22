@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { OnInit, Renderer2 } from '@angular/core';
+import { OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -8,6 +8,7 @@ import { ListProductsResponse } from '@resala/shared';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { HomeProductsService } from 'src/app/core/services/home-products.service';
 import { ReviewsService } from 'src/app/core/services/reviews.service';
 import { WishListService } from 'src/app/core/services/wish-list.service';
@@ -21,7 +22,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './latest-collection.component.html',
   styleUrls: ['./latest-collection.component.css'],
 })
-export class LatestCollectionComponent implements OnInit {
+export class LatestCollectionComponent implements OnInit,OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _WishListService: WishListService,
@@ -31,6 +32,7 @@ export class LatestCollectionComponent implements OnInit {
     private _Reviews: ReviewsService,
     public _Translate: TranslateService
   ) {}
+ 
   UserProfile: any;
   userNameLogged: any;
   productId: string = '';
@@ -50,9 +52,13 @@ export class LatestCollectionComponent implements OnInit {
 
   currentProduct: any;
 
+  // Supscription ID
+  getProductsId!:Subscription;
+  getProductReviewId!:Subscription;
+
   ngOnInit(): void {
     this.customSpinIsLoading = true;
-    this._HomeProductsService.getProducts('1', '20').subscribe({
+    this.getProductsId = this._HomeProductsService.getProducts('1', '20').subscribe({
       next: response => {
         this.products = response.data.products;
         this.customSpinIsLoading = false;
@@ -61,9 +67,10 @@ export class LatestCollectionComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
     });
+    
 
     //Reviews
-    this._Reviews.getProductReview('1', '100').subscribe({
+    this.getProductReviewId = this._Reviews.getProductReview('1', '100').subscribe({
       next: res => {
         this.rateNumber = res.data.reviews.at(0)?.rating || 5;
         this.customSpinIsLoading = false;
@@ -72,6 +79,10 @@ export class LatestCollectionComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
     });
+  }
+  ngOnDestroy(): void {
+    if(this.getProductsId)this.getProductsId.unsubscribe();
+    if(this.getProductReviewId)this.getProductReviewId.unsubscribe();
   }
 
   //Add product in Wish list method

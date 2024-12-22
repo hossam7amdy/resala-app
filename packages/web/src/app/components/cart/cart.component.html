@@ -252,10 +252,11 @@
                 </div>
 
                 <p class="currency mb-0">
-                  <s>{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
+                  <s *ngIf="item.discountedPrice">{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</s>
+                  <b *ngIf="!item.discountedPrice">{{ item.product.price }} {{ 'home.allProducts.currency' | translate }}</b>
                 </p>
 
-                <p *ngIf="item.discountedPrice != 0" class="price fs-4">
+                <p *ngIf="item.discountedPrice" class="price fs-4">
                   <span class="p p-0"
                     >{{ 'cart.discountTitle' | translate }}
                     {{ item?.appliedDiscount?.amount }}%</span
