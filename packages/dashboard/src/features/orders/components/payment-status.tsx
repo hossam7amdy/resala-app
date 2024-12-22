@@ -35,9 +35,7 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({
   order: { id, orderStatus, paymentStatus, paymentMethod },
 }) => {
   const notifications = useNotification();
-
   const [popOpen, setPopOpen] = useState(false);
-
   const [newPaymentStatus, setNewPaymentStatus] = useState(paymentStatus);
 
   useEffect(() => {
