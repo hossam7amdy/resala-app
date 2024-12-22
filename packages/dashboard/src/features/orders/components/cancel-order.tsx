@@ -1,4 +1,4 @@
-import { deleteOrder } from '@/actions/orders';
+import { cancelOrder } from '@/actions/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse } from '@resala/shared';
 import { Button, Popconfirm } from 'antd';
@@ -8,8 +8,7 @@ export const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ ord
   const notification = useNotification();
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: ({ orderId, userId }: { orderId: string; userId: string }) =>
-      deleteOrder(orderId, userId),
+    mutationFn: ({ orderId }: { orderId: string }) => cancelOrder(orderId),
     onSuccess: () => {
       notification.success('Ordered cancelled successfully');
     },
@@ -23,7 +22,7 @@ export const CancelOrder: React.FC<{ order: GetOrderResponse['data'] }> = ({ ord
       open={isLoading || undefined}
       title="Are you want to cancel this order?"
       description="This action cannot be undone."
-      onConfirm={() => mutate({ orderId: order.id, userId: order.user?.id as string })}
+      onConfirm={() => mutate({ orderId: order.id })}
       okType="default"
       okText="Yes"
       cancelText="No"
