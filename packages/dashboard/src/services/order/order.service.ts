@@ -18,11 +18,13 @@ export class OrderService {
     return {
       orderItems: {
         include: {
-          product: true,
+          product: {
+            include: { images: true },
+          },
           stock: {
             select: {
-              size: { select: { name: true } },
-              color: { select: { enName: true } },
+              size: true,
+              color: true,
             },
           },
         },
@@ -38,6 +40,25 @@ export class OrderService {
         },
       },
     } satisfies Prisma.OrderInclude;
+  }
+
+  private _transformOrder({
+    orderItems,
+    ...order
+  }: Prisma.OrderGetPayload<{
+    include: ReturnType<OrderService['_orderFields']>;
+  }>) {
+    return {
+      ...order,
+      orderItems: orderItems.map(({ stock, product: { images, ...product }, ...item }) => ({
+        ...item,
+        product,
+        images: images.filter(img => img.colorId === stock.color.id),
+        image: images.find(img => img.colorId === stock.color.id && img.isPrimary)!,
+        color: stock.color.enName,
+        size: stock.size.name,
+      })),
+    };
   }
 
   async create({ userId, paymentMethod, note, cart, shippingAddress }: CreateOrderRequestDto) {
@@ -116,14 +137,7 @@ export class OrderService {
 
     return {
       pagination: { total: count, page, limit },
-      orders: orders.map(order => ({
-        ...order,
-        orderItems: order.orderItems.map(({ stock, ...item }) => ({
-          ...item,
-          color: stock.color.enName,
-          size: stock.size.name,
-        })),
-      })),
+      orders: orders.map(this._transformOrder),
     };
   }
 
@@ -133,14 +147,7 @@ export class OrderService {
       include: this._orderFields(),
     });
 
-    return {
-      ...order,
-      orderItems: order.orderItems.map(({ stock, ...item }) => ({
-        ...item,
-        color: stock.color.enName,
-        size: stock.size.name,
-      })),
-    };
+    return this._transformOrder(order);
   }
 
   async update(id: string, order: Partial<Order>): Promise<GetOrderResponse['data']> {
