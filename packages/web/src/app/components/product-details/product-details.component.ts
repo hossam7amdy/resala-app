@@ -413,53 +413,57 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
   }
 
 
-  zoomStyles = {};
-  isZoomActive = false;
-  isCursorVisible = false;
-  cursorStyles = {};
-  overlayStyles = {}; // Style object for overlay position
-  isMouseMoving = false; // Track if the mouse is moving
-  private mouseMoveTimeout: any;
+  // zoomStyles = {};
+  // isZoomActive = false;
+  // isCursorVisible = false;
+  // cursorStyles = {};
+  // overlayStyles = {}; // Style object for overlay position
+  // isMouseMoving = false; // Track if the mouse is moving
+  // private mouseMoveTimeout: any;
 
-  onMouseMove(event: MouseEvent): void {
-    const { offsetX, offsetY, target } = event;
-    const { offsetWidth, offsetHeight } = target as HTMLElement;
+  // onMouseMove(event: MouseEvent): void {
+  //   const { offsetX, offsetY, target } = event;
+  //   const { offsetWidth, offsetHeight } = target as HTMLElement;
 
-    // Activate zoom display
-    this.isZoomActive = true;
+  //   // Activate zoom display
+  //   this.isZoomActive = true;
 
-    // Calculate position of zoomed image based on mouse position
-    const xPercent = (offsetX / offsetWidth) * 100;
-    const yPercent = (offsetY / offsetHeight) * 100;
+  //   // Calculate position of zoomed image based on mouse position
+  //   const xPercent = (offsetX / offsetWidth) * 100;
+  //   const yPercent = (offsetY / offsetHeight) * 100;
 
-    this.zoomStyles = {
-      transformOrigin: `${xPercent}% ${yPercent}%`,
-      transform: 'scale(5)', // Adjust zoom scale here
-    };
+  //   this.zoomStyles = {
+  //     transformOrigin: `${xPercent}% ${yPercent}%`,
+  //     transform: 'scale(5)', // Adjust zoom scale here
+  //   };
 
-    // Update custom cursor position
-    this.cursorStyles = {
-      top: `${event.offsetY}px`,
-      left: `${event.offsetX}px`,
-    };
+  //   // Update custom cursor position
+  //   this.cursorStyles = {
+  //     top: `${event.offsetY}px`,
+  //     left: `${event.offsetX}px`,
+  //   };
 
-    // Show overlay only if the mouse is still
-    this.isMouseMoving = true;
-    clearTimeout(this.mouseMoveTimeout);
-    this.mouseMoveTimeout = setTimeout(() => {
-      this.isMouseMoving = false; // Mouse is considered still after 200ms
-    }, 200);
-  }
+  //   // Show overlay only if the mouse is still
+  //   this.isMouseMoving = true;
+  //   clearTimeout(this.mouseMoveTimeout);
+  //   this.mouseMoveTimeout = setTimeout(() => {
+  //     this.isMouseMoving = false; // Mouse is considered still after 200ms
+  //   }, 200);
+  // }
 
-  showCustomCursor(): void {
-    this.isCursorVisible = true;
-  }
+  // showCustomCursor(): void {
+  //   this.isCursorVisible = true;
+  // }
 
-  hideCustomCursor(): void {
-    this.isCursorVisible = false;
-    this.isZoomActive = false;
-    this.zoomStyles = {};
-    this.isMouseMoving = false;
-    this.overlayStyles = {};
+  // hideCustomCursor(): void {
+  //   this.isCursorVisible = false;
+  //   this.isZoomActive = false;
+  //   this.zoomStyles = {};
+  //   this.isMouseMoving = false;
+  //   this.overlayStyles = {};
+  // }
+
+  openImage(imageUrl:string){
+    window.open(imageUrl,'_blank')
   }
 }
