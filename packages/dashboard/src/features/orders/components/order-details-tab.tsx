@@ -20,9 +20,9 @@ export const OrderDetailsTab: React.FC<{ order: GetOrderResponse['data'] }> = ({
             }
           >
             <List.Item.Meta
-              avatar={<Image src={item.product.imageUrl} alt="primary stock image" width={50} />}
+              avatar={<Image src={item.image.imageUrl} alt="primary stock image" width={50} />}
               title={`${item.product.enName} | ${item.product.arName}`}
-              description={`Color: ${item.color} | Size: ${item.size}`}
+              description={`${item.color.toUpperCase()} | ${item.size.toUpperCase()}`}
             />
           </List.Item>
         )}

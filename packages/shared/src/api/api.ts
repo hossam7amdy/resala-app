@@ -333,6 +333,8 @@ export type GetOrderResponse = DefaultResponseBody & {
     user: User;
     orderItems: (OrderItem & {
       product: Product;
+      images: Image[];
+      image: Image;
       color: string;
       size: string;
     })[];
