@@ -17,21 +17,20 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
 })
-export class OrdersComponent implements OnInit,OnDestroy {
+export class OrdersComponent implements OnInit, OnDestroy {
   constructor(
     private _userService: UserService,
     private _authService: AuthService,
     public _translate: TranslateService,
     private _Router: Router
   ) {}
-  
-  
+
   // FIXME: User order response type as `ListOrdersResponse['data']['orders']` instead of any
-  orders: any=[];
+  orders: any = [];
   customSpinIsLoading = false;
   activeClass = 'defaultcolor';
   //Suscription ID
-  getUserOrdersId!:Subscription;
+  getUserOrdersId!: Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -51,7 +50,7 @@ export class OrdersComponent implements OnInit,OnDestroy {
   }
   // Destroy
   ngOnDestroy(): void {
-    if(this.getUserOrdersId)this.getUserOrdersId.unsubscribe();
+    if (this.getUserOrdersId) this.getUserOrdersId.unsubscribe();
   }
 
   reDirectFun() {

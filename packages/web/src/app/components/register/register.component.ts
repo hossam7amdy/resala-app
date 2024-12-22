@@ -12,13 +12,13 @@ import { AuthService } from 'src/app/core/services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent  {
+export class RegisterComponent {
   constructor(
     private _AuthService: AuthService,
     private _Router: Router,
     public _Translate: TranslateService
   ) {}
-  
+
   isCheckedTerms: boolean = false;
   checkedTerms(): void {
     if (this.isCheckedTerms == false) {
@@ -112,10 +112,6 @@ export class RegisterComponent  {
     setTimeout(() => {
       txt;
     }, 3000);
-    clearTimeout(3000)
+    clearTimeout(3000);
   }
-  
-
 }
-
-
