@@ -62,7 +62,6 @@ export class NavBlankComponent implements OnInit {
   currentLang: string = 'ar';
   langStorage: string = localStorage.getItem('language') ?? this.currentLang;
 
-  
   @ViewChild('navbar') navbarElement!: ElementRef;
   @HostListener('window:scroll')
   onScrollSecond(): void {
@@ -72,8 +71,6 @@ export class NavBlankComponent implements OnInit {
       this._renderer.removeStyle(this.navbarElement.nativeElement, 'top');
     }
   }
- 
-  
 
   ngOnInit(): void {
     this._authService.userInfo$.subscribe(user => {
@@ -101,7 +98,10 @@ export class NavBlankComponent implements OnInit {
         this.customSpinIsLoading = false;
       },
       error: err => {
-        const errMsg = err.error.message || this.translate.currentLang =='ar'?'حدث خطأ فى تحميل بعض البيانات':'Something went wrong';
+        const errMsg =
+          err.error.message || this.translate.currentLang == 'ar'
+            ? 'حدث خطأ فى تحميل بعض البيانات'
+            : 'Something went wrong';
 
         this.cartNum = 0;
         this._toaster.error(errMsg);
@@ -183,7 +183,6 @@ export class NavBlankComponent implements OnInit {
     }
     this.customSpinIsLoading = false;
   }
-
 
   // Change page Direction as per Selected Lang
   changePageDirection(lang: string) {

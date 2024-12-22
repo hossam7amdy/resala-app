@@ -26,7 +26,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.css'],
 })
-export class PaymentComponent implements OnInit,OnDestroy {
+export class PaymentComponent implements OnInit, OnDestroy {
   // Form groups for each step
   addressForm: FormGroup;
   userAddresses: FormGroup;
@@ -104,7 +104,6 @@ export class PaymentComponent implements OnInit,OnDestroy {
       address: [''], //optional
     });
   }
-  
 
   // Current step index
   currentStep: number = 0;
@@ -142,8 +141,8 @@ export class PaymentComponent implements OnInit,OnDestroy {
 
   // summary checkout
   cartDetails: any = {};
-  totalDiscount:number | undefined=0 
-  totalPrice:number=0
+  totalDiscount: number | undefined = 0;
+  totalPrice: number = 0;
 
   // payment form
 
@@ -160,10 +159,10 @@ export class PaymentComponent implements OnInit,OnDestroy {
   paymentSelected: string = '';
 
   //Subscription ID
-  getCartUserId!:Subscription;
-  getCitiesId!:Subscription;
-  getListAddressUserId!:Subscription;
-  getAllCountriesId!:Subscription;
+  getCartUserId!: Subscription;
+  getCitiesId!: Subscription;
+  getListAddressUserId!: Subscription;
+  getAllCountriesId!: Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -179,7 +178,7 @@ export class PaymentComponent implements OnInit,OnDestroy {
       },
     });
 
-    this.getCitiesId= this._CityService.getCities().subscribe({
+    this.getCitiesId = this._CityService.getCities().subscribe({
       next: data => {
         this.governorates = data.governorates;
         this.customSpinIsLoading = false;
@@ -195,20 +194,22 @@ export class PaymentComponent implements OnInit,OnDestroy {
     }
 
     this.addressForm.patchValue({ userId: this.userLoginId });
-    this.getListAddressUserId = this._PaymentServices.getListAddressUser(this.userLoginId.toString()).subscribe({
-      next: response => {
-        this.getUserAddress = response.data;
-        if (this.getUserAddress.length == 3) {
-          this.firstRegister = true;
-        }
-        this.customSpinIsLoading = false;
+    this.getListAddressUserId = this._PaymentServices
+      .getListAddressUser(this.userLoginId.toString())
+      .subscribe({
+        next: response => {
+          this.getUserAddress = response.data;
+          if (this.getUserAddress.length == 3) {
+            this.firstRegister = true;
+          }
+          this.customSpinIsLoading = false;
 
-        if (!this.addressId) this.addressId = this.getUserAddress[0].id;
-      },
-      error: () => {
-        this.customSpinIsLoading = false;
-      },
-    });
+          if (!this.addressId) this.addressId = this.getUserAddress[0].id;
+        },
+        error: () => {
+          this.customSpinIsLoading = false;
+        },
+      });
 
     this.getAllCountriesId = this._PaymentServices.getAllCountries().subscribe({
       next: response => {
@@ -219,26 +220,24 @@ export class PaymentComponent implements OnInit,OnDestroy {
         this.customSpinIsLoading = false;
       },
     });
-
-  
   }
-//Destroy 
+  //Destroy
   ngOnDestroy(): void {
-    if(this.getCartUserId)this.getCartUserId.unsubscribe();
-    if(this.getCitiesId)this.getCitiesId.unsubscribe();
-    if(this.getListAddressUserId)this.getListAddressUserId.unsubscribe();
-    if(this.getAllCountriesId)this.getAllCountriesId.unsubscribe();
+    if (this.getCartUserId) this.getCartUserId.unsubscribe();
+    if (this.getCitiesId) this.getCitiesId.unsubscribe();
+    if (this.getListAddressUserId) this.getListAddressUserId.unsubscribe();
+    if (this.getAllCountriesId) this.getAllCountriesId.unsubscribe();
   }
 
-   //terms&condetions
-   isCheckedTerms: boolean = false;
-   checkedTerms(): void {
-     if (this.isCheckedTerms == false) {
-       this.isCheckedTerms = true;
-     } else {
-       this.isCheckedTerms = false;
-     }
-   }
+  //terms&condetions
+  isCheckedTerms: boolean = false;
+  checkedTerms(): void {
+    if (this.isCheckedTerms == false) {
+      this.isCheckedTerms = true;
+    } else {
+      this.isCheckedTerms = false;
+    }
+  }
 
   selectedAddressMethod(value: string): void {
     this.customSpinIsLoading = true;

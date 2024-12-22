@@ -36,7 +36,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit,OnDestroy {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -48,8 +48,7 @@ export class HomeComponent implements OnInit, AfterViewInit,OnDestroy {
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
-  
-  
+
   userNameLogged: any;
   productId: string = '';
 
@@ -57,9 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit,OnDestroy {
   customSpinIsLoading = false;
   //end Custome Spinner
 
-  
   langStorage: any = localStorage.getItem('language');
-  
 
   // Trends
   trendProducts: any = [];
@@ -92,9 +89,9 @@ export class HomeComponent implements OnInit, AfterViewInit,OnDestroy {
   currentProduct: any;
 
   // Subscription ID
-  getTrendProductsId!:Subscription;
-  getProducts!:Subscription;
-  destroySetTimeOut:any;
+  getTrendProductsId!: Subscription;
+  getProducts!: Subscription;
+  destroySetTimeOut: any;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -134,9 +131,9 @@ export class HomeComponent implements OnInit, AfterViewInit,OnDestroy {
   }
   // Destroy Subscription
   ngOnDestroy(): void {
-    if(this.getTrendProductsId)this.getProducts.unsubscribe()
-    if(this.getProducts)this.getProducts.unsubscribe()
-    if(this.destroySetTimeOut)this.destroySetTimeOut.clearTimeout;
+    if (this.getTrendProductsId) this.getProducts.unsubscribe();
+    if (this.getProducts) this.getProducts.unsubscribe();
+    if (this.destroySetTimeOut) this.destroySetTimeOut.clearTimeout;
   }
 
   // Change page Direction as per Selected Lang
