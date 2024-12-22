@@ -70,15 +70,19 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
           {
             title: '',
             dataIndex: 'image',
-            width: 75,
             align: 'center',
-            render: image => <Image src={image.imageUrl} alt="Product" width={'100%'} />,
+            width: 55,
+            render: (image, stock) => (
+              <Image.PreviewGroup items={stock.images.map(image => image.imageUrl)}>
+                <Image src={image.imageUrl} alt="Product" width={50} />
+              </Image.PreviewGroup>
+            ),
           },
           {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
-            minWidth: 240,
+            minWidth: 150,
             align: 'left',
             render: product => (
               <>
@@ -88,27 +92,16 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
             ),
           },
           {
-            title: 'Color',
-            dataIndex: 'color',
-            key: 'color',
+            title: 'Variant',
             width: 200,
-            render: color => (
+            dataIndex: 'color',
+            render: (color, stocks) => (
               <Flex align="center" gap={5}>
                 <StockColor color={color.code} />
-                <div>
-                  <p>{color.arName}</p>
-                  <p>{color.enName}</p>
-                </div>
+                <span>{color.enName.toUpperCase()}</span> |{' '}
+                <span>{stocks.size.name.toUpperCase()}</span>
               </Flex>
             ),
-          },
-          {
-            title: 'Size',
-            dataIndex: 'size',
-            key: 'size',
-            align: 'center',
-            width: 100,
-            render: size => size.name,
           },
           {
             title: 'Available',
