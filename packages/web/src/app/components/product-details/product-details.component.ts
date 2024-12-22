@@ -9,6 +9,7 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { IRatingOptions, NgxStarsRatingModule } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { CuttdatePipe } from 'src/app/core/pipe/cuttdate.pipe';
 import { CartService } from 'src/app/core/services/cart.service';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
@@ -19,7 +20,6 @@ import { WishListService } from 'src/app/core/services/wish-list.service';
 import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-details',
@@ -40,25 +40,23 @@ import { Subscription } from 'rxjs';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
 })
-export class ProductDetailsComponent implements OnInit,OnDestroy {
-  
+export class ProductDetailsComponent implements OnInit, OnDestroy {
   constructor(
     // ActivatedRoute this class to access the param in URL & use paramMap property & use subscribe method
-   private route: ActivatedRoute,
-   private _HomeProductsService: HomeProductsService,
-   private _CartService: CartService,
-   private _toaster: ToastrService,
-   private _Renderer2: Renderer2,
-   private _Router: Router,
-   private _Reviews: ReviewsService,
-   private _ProductsCategory: CategoriesService,
-   private _WishListService: WishListService,
-   private _Toaster: ToastrService,
-   private _RTLStatus: Translate_Service,
-   public _Translate: TranslateService
- ) {}
- 
-  
+    private route: ActivatedRoute,
+    private _HomeProductsService: HomeProductsService,
+    private _CartService: CartService,
+    private _toaster: ToastrService,
+    private _Renderer2: Renderer2,
+    private _Router: Router,
+    private _Reviews: ReviewsService,
+    private _ProductsCategory: CategoriesService,
+    private _WishListService: WishListService,
+    private _Toaster: ToastrService,
+    private _RTLStatus: Translate_Service,
+    public _Translate: TranslateService
+  ) {}
+
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner
@@ -75,8 +73,8 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
   productStockSize: any = [];
   reboColor: any = [];
   btnDisable: boolean = true;
-  loadingBtn:boolean= false;
- 
+  loadingBtn: boolean = false;
+
   //property navigate from login to product details id
   endPointProductId: string = '';
 
@@ -118,29 +116,23 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
   zoomStyle = {};
 
   //Subscription ID
-  getProductDetailsId!:Subscription;
-  getProductReviewId!:Subscription;
-  getCategoryProductsId!:Subscription;
+  getProductDetailsId!: Subscription;
+  getProductReviewId!: Subscription;
+  getCategoryProductsId!: Subscription;
   ngOnInit(): void {
-    
     this.route.paramMap.subscribe(params => (this.productId = params.get('product-id')));
     this.getProductDetails(this.productId);
     this.getProductReviewId = this._Reviews.getProductReview(this.productId, '10').subscribe({
       next: res => {
         this.productReview = res.data.reviews;
-        
       },
-      error: () => {
-        
-      },
+      error: () => {},
     });
-
-    
   }
   ngOnDestroy(): void {
-    if(this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
-    if(this.getCategoryProductsId)this.getCategoryProductsId.unsubscribe();
-    if(this.getProductReviewId)this.getProductReviewId.unsubscribe();
+    if (this.getProductDetailsId) this.getProductDetailsId.unsubscribe();
+    if (this.getCategoryProductsId) this.getCategoryProductsId.unsubscribe();
+    if (this.getProductReviewId) this.getProductReviewId.unsubscribe();
   }
 
   getProductDetails(id: any) {
@@ -161,12 +153,14 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
       },
 
       error: () => {
-        this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
+        this._Toaster.error(
+          this._Translate.currentLang == 'ar' ? 'خطأ فى تحميل بعض البيانات' : 'Some data went wrong'
+        );
         this.customSpinIsLoading = false;
       },
       complete: () => {
         this.getProductsCategory(this.categoryId);
-        this.customSpinIsLoading = false
+        this.customSpinIsLoading = false;
       },
     });
   }
@@ -188,7 +182,6 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
     }
   }
 
-
   // Change page Direction as per Selected Lang
   changePageDirection(): boolean {
     this.customSpinIsLoading = true;
@@ -206,7 +199,6 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
     this.customSpinIsLoading = false;
     return rtlStat;
   }
-
 
   goToReview(trarget: HTMLElement): void {
     trarget.scrollIntoView({ behavior: 'smooth' });
@@ -307,37 +299,41 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
         next: res => {
           this._CartService.cartNumber.next(res.data.totalQuantity);
 
-          this._toaster.success(this._Translate.currentLang=='ar'?'تمت الاضافة الى السلة بنجاح':'added one product successfuly');
+          this._toaster.success(
+            this._Translate.currentLang == 'ar'
+              ? 'تمت الاضافة الى السلة بنجاح'
+              : 'added one product successfuly'
+          );
           this.loadingBtn = false;
         },
         error: () => {
-          this._Toaster.error(this._Translate.currentLang=='ar'?'خطأ فى تحميل بعض البيانات':'Some data went wrong')
+          this._Toaster.error(
+            this._Translate.currentLang == 'ar'
+              ? 'خطأ فى تحميل بعض البيانات'
+              : 'Some data went wrong'
+          );
           this.loadingBtn = false;
         },
       });
     } else {
-      this._toaster.info(this._Translate.currentLang=='ar'?'برجاء اختيار اللون والمقاس':'should be choose color and size');
+      this._toaster.info(
+        this._Translate.currentLang == 'ar'
+          ? 'برجاء اختيار اللون والمقاس'
+          : 'should be choose color and size'
+      );
       this.loadingBtn = false;
     }
 
-   
-
     // this._Renderer2.removeAttribute(element, 'disabled');
-    
-    
   }
 
   // similar products
   getProductsCategory(id: any): void {
-   
     this.getCategoryProductsId = this._ProductsCategory.getCategoryProducts(id).subscribe({
       next: res => {
         this.productsCategory = res.data.products;
-       
       },
-      error: () => {
-        
-      },
+      error: () => {},
     });
   }
 
@@ -412,7 +408,6 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
     this.customSpinIsLoading = false;
   }
 
-
   // zoomStyles = {};
   // isZoomActive = false;
   // isCursorVisible = false;
@@ -463,7 +458,7 @@ export class ProductDetailsComponent implements OnInit,OnDestroy {
   //   this.overlayStyles = {};
   // }
 
-  openImage(imageUrl:string){
-    window.open(imageUrl,'_blank')
+  openImage(imageUrl: string) {
+    window.open(imageUrl, '_blank');
   }
 }

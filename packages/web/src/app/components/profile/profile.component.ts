@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { User } from '@resala/shared';
@@ -16,19 +22,18 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
-export class ProfileComponent implements OnInit, AfterViewInit,OnDestroy {
+export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public translate: TranslateService,
     private _authService: AuthService,
     private _spinner: NgxSpinnerService
   ) {}
- 
 
   userInfo: User | null = null;
   customSpinIsLoading: boolean = false;
 
   //Subscription ID
-  userInfoId!:Subscription;
+  userInfoId!: Subscription;
   ngOnInit(): void {
     this.customSpinIsLoading = true;
     this.userInfoId = this._authService.userInfo$.subscribe(data => {
@@ -42,6 +47,6 @@ export class ProfileComponent implements OnInit, AfterViewInit,OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.userInfoId)this.userInfoId.unsubscribe();
+    if (this.userInfoId) this.userInfoId.unsubscribe();
   }
 }

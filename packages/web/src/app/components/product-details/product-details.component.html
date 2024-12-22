@@ -16,11 +16,8 @@
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
-                <div
-                  class="image-container p-1 m-1"
-                  (click)="openImage(image.imageUrl)"
-                >
-                <!-- (mousemove)="onMouseMove($event)"
+                <div class="image-container p-1 m-1" (click)="openImage(image.imageUrl)">
+                  <!-- (mousemove)="onMouseMove($event)"
                   (mouseleave)="hideCustomCursor()"
                   (mouseenter)="showCustomCursor()" -->
                   <!-- Original Image -->
@@ -178,7 +175,6 @@
           </ng-container>
         </div>
 
-       
         <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
@@ -235,23 +231,26 @@
         </section>
         <!-- add-cart-btn  -->
         <section>
-            <button
+          <button
             (click)="addProduct(stockIdSize)"
-            [disabled]="btnDisable ===true"
+            [disabled]="btnDisable === true"
             #addToCartBtn
             class="custome-btn"
           >
             {{ 'productDetails.addToCart' | translate }}
-           
-              <span *ngIf="loadingBtn"  class="spinner-border spinner-border-sm fw-bold" style="color: #016373;" role="status" aria-hidden="true"></span>
-              <span *ngIf="loadingBtn" class="visually-hidden">Loading...</span>
-        
-            
+
+            <span
+              *ngIf="loadingBtn"
+              class="spinner-border spinner-border-sm fw-bold"
+              style="color: #016373"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="loadingBtn" class="visually-hidden">Loading...</span>
           </button>
         </section>
-         
-          <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
-        
+
+        <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
       </div>
     </div>
 

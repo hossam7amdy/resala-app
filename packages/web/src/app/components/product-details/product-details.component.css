@@ -491,7 +491,7 @@
   width: 150px;
   height: 150px;
   /* background-color: #ffffff73; */
-  cursor:zoom-in;
+  cursor: zoom-in;
   border-radius: 0%;
   opacity: 1;
   pointer-events: none; /* Prevent interaction */

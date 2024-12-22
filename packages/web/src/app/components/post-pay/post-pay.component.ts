@@ -13,12 +13,12 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './post-pay.component.html',
   styleUrls: ['./post-pay.component.css'],
 })
-export class PostPayComponent implements OnInit,OnDestroy {
+export class PostPayComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private _CartService: CartService
   ) {}
-  
+
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner
@@ -26,8 +26,8 @@ export class PostPayComponent implements OnInit,OnDestroy {
   orderId: any;
   cartDetails: any = {};
   // Subscription ID
-  clearCartId!:Subscription;
-  queryParamsId!:Subscription;
+  clearCartId!: Subscription;
+  queryParamsId!: Subscription;
   ngOnInit(): void {
     this.customSpinIsLoading = true;
     this.route.paramMap.subscribe(params => {
@@ -54,7 +54,7 @@ export class PostPayComponent implements OnInit,OnDestroy {
     }
   }
   ngOnDestroy(): void {
-    if(this.queryParamsId)this.queryParamsId.unsubscribe();
-    if(this.clearCartId)this.clearCartId.unsubscribe();
+    if (this.queryParamsId) this.queryParamsId.unsubscribe();
+    if (this.clearCartId) this.clearCartId.unsubscribe();
   }
 }
