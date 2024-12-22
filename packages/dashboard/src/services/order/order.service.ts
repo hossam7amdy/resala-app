@@ -1,15 +1,16 @@
 import { BadRequestError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
-import type { Order, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import type {
-  GetOrderResponse,
-  ListOrdersRequest,
-  ListOrdersResponse,
-  PaymentMethod,
-} from '@resala/shared';
 
-import type { CreateOrderRequestDto } from './order.dto';
+import type {
+  CreateOrderRequestDto,
+  CreateOrderResponseDto,
+  GetOrderResponseDto,
+  ListOrdersRequestDto,
+  ListOrdersResponseDto,
+  OrderDto,
+} from './order.dto';
 
 export class OrderService {
   constructor(private readonly db: DataStore) {}
@@ -61,7 +62,13 @@ export class OrderService {
     };
   }
 
-  async create({ userId, paymentMethod, note, cart, shippingAddress }: CreateOrderRequestDto) {
+  async create({
+    userId,
+    paymentMethod,
+    note,
+    cart,
+    shippingAddress,
+  }: CreateOrderRequestDto): Promise<CreateOrderResponseDto> {
     if (cart.items.length === 0) {
       throw new BadRequestError('Cart is empty');
     }
@@ -83,7 +90,7 @@ export class OrderService {
         subtotal: subtotal,
         total: subtotal,
         note,
-        paymentMethod: paymentMethod as PaymentMethod,
+        paymentMethod,
         shippingDetails: {
           create: {
             address: {
@@ -112,14 +119,12 @@ export class OrderService {
     limit = 10,
     search = '',
     userId,
-  }: ListOrdersRequest['query']): Promise<ListOrdersResponse['data']> {
+  }: ListOrdersRequestDto): Promise<ListOrdersResponseDto> {
     const filters: Prisma.OrderWhereInput = {
       OR: [
+        { number: parseInt(search) || undefined },
         { user: { email: { startsWith: search } } },
         { user: { phoneNumber: { startsWith: search } } },
-        {
-          orderItems: { some: { product: { enName: { contains: search, mode: 'insensitive' } } } },
-        },
       ],
       userId: userId,
     };
@@ -141,7 +146,7 @@ export class OrderService {
     };
   }
 
-  async find(id: string): Promise<GetOrderResponse['data']> {
+  async find(id: string): Promise<GetOrderResponseDto> {
     const order = await this.db.order.findUniqueOrThrow({
       where: { id },
       include: this._orderFields(),
@@ -150,9 +155,12 @@ export class OrderService {
     return this._transformOrder(order);
   }
 
-  async update(id: string, order: Partial<Order>): Promise<GetOrderResponse['data']> {
-    await this.db.order.update({ where: { id }, data: order });
+  async update(id: string, order: Partial<OrderDto>): Promise<GetOrderResponseDto> {
+    await this.db.order.update({
+      where: { id },
+      data: order,
+    });
 
-    return await this.find(id);
+    return this.find(id);
   }
 }

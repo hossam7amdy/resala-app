@@ -1,5 +1,4 @@
-import type { Decimal } from '@prisma/client/runtime/library';
-import type { CreateAddressRequest } from '@resala/shared';
+import type { CreateAddressRequest, OrderItem } from '@resala/shared';
 
 export interface CheckoutCreateParams {
   orderId: string;
@@ -7,7 +6,7 @@ export interface CheckoutCreateParams {
     productId: string;
     stockId: string;
     quantity: number;
-    price: Decimal;
+    price: OrderItem['price'];
     productName: string;
     description: string;
   }[];

@@ -1,6 +1,7 @@
 'use client';
 
 import { OrderStatusTag, PaymentStatusTag } from '@/components';
+import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDateTime } from '@/utils/date-time-formatter';
 import type { Order } from '@resala/shared';
@@ -22,7 +23,7 @@ const RecentOrdersList: React.FC<RecentOrdersListProps> = ({ orders }) => {
             <List.Item.Meta
               title={
                 <Space>
-                  <Link href={'#'}>#{order.number}</Link>
+                  <Link href={`${ROUTES.ORDERS}/?search=${order.number}`}>#{order.number}</Link>
                   <PaymentStatusTag status={order.paymentStatus} />
                   <OrderStatusTag status={order.orderStatus} />
                 </Space>
