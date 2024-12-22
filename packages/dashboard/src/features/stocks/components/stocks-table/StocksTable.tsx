@@ -9,25 +9,15 @@ import React, { useState } from 'react';
 import { StockColor, useUpdateStocksQuantity } from '../..';
 
 interface StocksTableProps {
-  stocks: (GetStockResponse['data'] & { newQuantity?: number })[];
+  stocks: GetStockResponse['data'][];
 }
 export const StocksTable: React.FC<StocksTableProps> = props => {
   const [stocks, setStocks] = useState(props.stocks);
-  const { updateStocks, isLoading } = useUpdateStocksQuantity({
-    onSuccess: () => {
-      setStocks(prevStocks =>
-        prevStocks.map(stock => ({
-          ...stock,
-          quantity: stock.newQuantity || stock.quantity,
-          newQuantity: undefined,
-        }))
-      );
-    },
-  });
+  const { updateStocks, isLoading } = useUpdateStocksQuantity({});
 
   const handleStockQuantityChange = (stockId: string, quantity: number) => {
     setStocks(prevStocks =>
-      prevStocks.map(stock => (stock.id === stockId ? { ...stock, newQuantity: quantity } : stock))
+      prevStocks.map(stock => (stock.id === stockId ? { ...stock, quantity } : stock))
     );
   };
 
@@ -40,7 +30,7 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
   };
 
   const isQuantityChanged = stocks.some(
-    stock => stock.newQuantity !== undefined && stock.newQuantity !== stock.quantity
+    stock => props.stocks.find(s => s.id === stock.id)?.quantity !== stock.quantity
   );
 
   return (
@@ -114,7 +104,7 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
                 size="small"
                 min={0}
                 max={1000000}
-                value={stock.newQuantity || qty}
+                value={qty}
                 onChange={value => {
                   handleStockQuantityChange(stock.id, value);
                 }}
