@@ -13,12 +13,12 @@ export class CartService {
         stock: {
           include: {
             size: true,
-            product: true,
-            color: {
+            product: {
               include: {
                 images: true,
               },
             },
+            color: true,
           },
         },
       },
@@ -30,9 +30,9 @@ export class CartService {
       ({
         userId,
         stock: {
-          color: { images, ...color },
+          color,
           size,
-          product,
+          product: { images, ...product },
           ...stock
         },
         ...item
@@ -40,7 +40,7 @@ export class CartService {
         ...item,
         userId,
         product,
-        images,
+        images: images.filter(image => image.colorId === color.id),
         stock: {
           ...stock,
           color,
