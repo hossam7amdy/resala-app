@@ -14,29 +14,28 @@ export class StockService {
 
   private _stockFields() {
     return {
-      color: {
+      color: true,
+      size: true,
+      product: {
         include: {
-          images: {
-            where: { isPrimary: true },
-          },
+          images: true,
         },
       },
-      size: true,
-      product: true,
     } satisfies Prisma.StockInclude;
   }
 
   private _transformStock({
     size,
-    product,
-    color: { images, ...color },
+    color,
+    product: { images, ...product },
     ...stock
   }: Prisma.StockGetPayload<{
     include: ReturnType<StockService['_stockFields']>;
   }>) {
     return {
       ...stock,
-      image: images.at(0),
+      image: images.find(image => image.colorId === color.id && image.isPrimary),
+      images: images.filter(image => image.colorId === color.id),
       size,
       product,
       color,
