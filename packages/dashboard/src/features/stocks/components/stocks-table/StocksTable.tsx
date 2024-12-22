@@ -1,12 +1,12 @@
 'use client';
 
-import { deleteStock } from '@/actions/stocks';
-import { Image, PopconfirmDeleteButton, Table } from '@/components';
+import { Image, Table } from '@/components';
 import type { GetStockResponse } from '@resala/shared';
 import { Button, Flex, InputNumber, type TableProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { StockColor, useUpdateStocksQuantity } from '../..';
+import { DeleteStockButton } from './DeleteStockButton';
 
 type StockType = GetStockResponse['data'];
 
@@ -126,11 +126,7 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
           width: 100,
           align: 'center',
           dataIndex: 'id',
-          render: id => (
-            <PopconfirmDeleteButton onConfirmDelete={() => deleteStock(id)}>
-              Delete
-            </PopconfirmDeleteButton>
-          ),
+          render: id => <DeleteStockButton id={id} isLastItem={stocks.length === 1} />,
           onCell: () => ({
             onClick: e => {
               e.stopPropagation();
