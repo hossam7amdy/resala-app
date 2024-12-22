@@ -18,9 +18,13 @@ import type {
 export class ProductService {
   constructor(private readonly db: DataStore) {}
 
-  private _productFields() {
+  private _productFields(id?: string) {
     return {
-      images: true,
+      images: {
+        where: {
+          productId: id,
+        },
+      },
       category: true,
       discounts: {
         where: {
@@ -81,7 +85,7 @@ export class ProductService {
     });
 
     const { stocks, images, ...product } = await this.db.product.findUniqueOrThrow({
-      include: this._productFields(),
+      include: this._productFields(id),
       where: { id },
     });
 
