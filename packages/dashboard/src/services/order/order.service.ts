@@ -20,7 +20,13 @@ export class OrderService {
       orderItems: {
         include: {
           product: {
-            include: { images: true },
+            include: {
+              images: {
+                include: {
+                  media: true,
+                },
+              },
+            },
           },
           stock: {
             select: {
@@ -49,13 +55,16 @@ export class OrderService {
   }: Prisma.OrderGetPayload<{
     include: ReturnType<OrderService['_orderFields']>;
   }>) {
+    const primaryImage = orderItems[0].product.images.find(img => img.isPrimary)!;
     return {
       ...order,
       orderItems: orderItems.map(({ stock, product: { images, ...product }, ...item }) => ({
         ...item,
         product,
-        images: images.filter(img => img.colorId === stock.color.id),
-        image: images.find(img => img.colorId === stock.color.id && img.isPrimary)!,
+        images: images
+          .filter(img => img.colorId === stock.color.id)
+          .map(({ media, ...img }) => ({ ...img, imageUrl: media.url })),
+        image: { ...primaryImage, imageUrl: primaryImage.media.url },
         color: stock.color.enName,
         size: stock.size.name,
       })),

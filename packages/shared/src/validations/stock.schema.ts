@@ -40,7 +40,7 @@ const GetStockResponseSchema = StockSchema.extend({
   size: SizeSchema,
   product: ProductSchema,
   image: ImageSchema.optional(),
-  images: z.array(ImageSchema),
+  images: z.array(ImageSchema.extend({ imageUrl: z.string().url() })),
 });
 
 const ListStocksSchema = z.object({
