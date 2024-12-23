@@ -98,31 +98,36 @@ model UserAddress {
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  arName    String    @map("ar_name")
-  enName    String    @map("en_name")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  products  Product[]
+  id            String    @id @default(cuid())
+  arName        String    @map("ar_name")
+  enName        String    @map("en_name")
+  mediaId       String?   @map("media_id")
+  arDescription String?   @map("ar_description")
+  enDescription String?   @map("en_description")
+  activateAt    DateTime? @default(now()) @map("activated_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  media         Media?    @relation(fields: [mediaId], references: [id])
+  products      Product[]
 
   @@map("category")
 }
 
 model Product {
-  id            String      @id @default(cuid())
-  categoryId    String      @map("category_id")
-  arName        String      @map("ar_name")
-  enName        String      @map("en_name")
-  arDescription String      @map("ar_description")
-  enDescription String      @map("en_description")
-  price         Decimal     @db.Decimal(10, 2)
-  imageKey      String      @map("image_key")
-  imageUrl      String      @map("image_url")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
-  category      Category    @relation(fields: [categoryId], references: [id])
+  id            String         @id @default(cuid())
+  arName        String         @map("ar_name")
+  enName        String         @map("en_name")
+  arDescription String         @map("ar_description")
+  enDescription String         @map("en_description")
+  mediaId       String         @map("media_id")
+  price         Decimal        @db.Decimal(10, 2)
+  activateAt    DateTime?      @default(now()) @map("activate_at")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  media         Media          @relation(fields: [mediaId], references: [id])
+  categories    Category[]
   discounts     Discount[]
-  images        Image[]
+  images        ProductImage[]
   orderItems    OrderItem[]
   reviews       Review[]
   stocks        Stock[]
@@ -131,19 +136,19 @@ model Product {
   @@map("product")
 }
 
-model Image {
-  id        String   @id @default(cuid())
+model ProductImage {
   colorId   String   @map("color_id")
+  mediaId   String   @map("media_id")
   productId String   @map("product_id")
   isPrimary Boolean  @default(false) @map("is_primary")
-  imageKey  String   @map("image_key")
-  imageUrl  String   @map("image_url")
   createdAt DateTime @default(now()) @map("created_at")
-  color     Color    @relation(fields: [colorId], references: [id])
+  updatedAt DateTime @updatedAt @map("updated_at")
+  color     Color    @relation(fields: [colorId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
-  @@index([productId, colorId])
-  @@map("image")
+  @@id([productId, colorId, mediaId])
+  @@map("product_image")
 }
 
 model Stock {
@@ -165,14 +170,14 @@ model Stock {
 }
 
 model Color {
-  id        String   @id @default(cuid())
-  code      String   @unique @db.Char(7)
-  arName    String   @unique @map("ar_name") @db.VarChar(15)
-  enName    String   @unique @map("en_name") @db.VarChar(15)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  images    Image[]
+  id        String         @id @default(cuid())
+  code      String         @unique @db.Char(7)
+  arName    String         @unique @map("ar_name") @db.VarChar(15)
+  enName    String         @unique @map("en_name") @db.VarChar(15)
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
   stocks    Stock[]
+  images    ProductImage[]
 
   @@map("color")
 }
@@ -188,16 +193,20 @@ model Size {
 }
 
 model Media {
-  id          String           @id @default(cuid())
-  url         String
-  filename    String
-  size        Int
-  contentType MediaContentType @default(image) @map("content_type")
-  duration    Int?
-  alt         String?
-  mimetype    String?          @map("mimetype")
-  createdAt   DateTime         @default(now()) @map("created_at")
-  updatedAt   DateTime         @updatedAt @map("updated_at")
+  id            String           @id @default(cuid())
+  url           String
+  filename      String
+  size          Int
+  contentType   MediaContentType @default(image) @map("content_type")
+  duration      Int?
+  alt           String?
+  mimetype      String?          @map("mimetype")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+  reviews       Review[]
+  products      Product[]
+  categories    Category[]
+  productImages ProductImage[]
 
   @@map("media")
 }
@@ -223,7 +232,7 @@ model Wishlist {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, productId])
+  @@id([userId, productId])
   @@map("wishlist")
 }
 
@@ -280,12 +289,13 @@ model Shipping {
 model Review {
   id        String   @id @default(cuid())
   userId    String   @map("user_id")
+  mediaId   String?  @map("media_id")
   productId String   @map("product_id")
   rating    Int      @default(5)
   comment   String?
-  media     String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  media     Media?   @relation(fields: [mediaId], references: [id])
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

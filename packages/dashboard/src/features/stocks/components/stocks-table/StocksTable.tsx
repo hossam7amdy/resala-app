@@ -6,7 +6,6 @@ import { Button, Flex, InputNumber, type TableProps } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import { StockColor, useUpdateStocksQuantity } from '../..';
-import { DeleteStockButton } from './DeleteStockButton';
 
 type StockType = GetStockResponse['data'];
 
@@ -121,18 +120,18 @@ export const StocksTable: React.FC<StocksTableProps> = props => {
             />
           ),
         },
-        {
-          title: 'Actions',
-          width: 100,
-          align: 'center',
-          dataIndex: 'id',
-          render: id => <DeleteStockButton id={id} isLastItem={stocks.length === 1} />,
-          onCell: () => ({
-            onClick: e => {
-              e.stopPropagation();
-            },
-          }),
-        },
+        // {
+        //   title: 'Actions',
+        //   width: 100,
+        //   align: 'center',
+        //   dataIndex: 'id',
+        //   render: id => <DeleteStockButton id={id} isLastItem={stocks.length === 1} />,
+        //   onCell: () => ({
+        //     onClick: e => {
+        //       e.stopPropagation();
+        //     },
+        //   }),
+        // },
       ]}
     />
   );

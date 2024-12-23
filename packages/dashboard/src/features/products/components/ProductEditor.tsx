@@ -34,7 +34,7 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
       name="product-form"
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={product}
+      initialValues={{ ...product, categoryIds: [product?.category.id] }}
       scrollToFirstError
     >
       <Form.Item
@@ -42,21 +42,22 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
         name="image"
         label="Product Image"
         rules={[{ required: true, message: 'Please select product image' }]}
-        initialValue={product ? { id: product.imageKey, url: product.imageUrl } : undefined}
+        initialValue={product ? { id: product.mediaId, url: product.imageUrl } : undefined}
       >
         <MediaSelect
           medias={medias}
-          initialSelection={product ? [{ url: product.imageUrl, id: product.imageKey }] : undefined}
+          initialSelection={product ? [{ url: product.imageUrl, id: product.mediaId }] : undefined}
           onConfirmSelect={images =>
             form.setFieldsValue({ image: { id: images[0].id, url: images[0].url } })
           }
         />
       </Form.Item>
 
-      <Form.Item name="categoryId" label="Category" rules={[{ required: true }]}>
+      <Form.Item name="categoryIds" label="Category" rules={[{ required: true }]}>
         <Select
           autoFocus
           allowClear
+          mode="multiple"
           placeholder="Select category"
           options={categories.map(category => ({
             label: `${category.enName} - ${category.arName}`,
@@ -150,7 +151,7 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
         sizes={sizes}
         variants={product?.stocks.map(stock => ({
           color: stock.color.id,
-          medias: stock.images.map(img => ({ id: img.imageKey, url: img.imageUrl })),
+          medias: stock.images.map(img => ({ id: img.mediaId, url: img.imageUrl })),
           sizes: stock.sizes.map(size => ({
             size: size.sizeId,
             quantity: size.quantity,
