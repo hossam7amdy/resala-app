@@ -31,7 +31,7 @@ const useCreateOrUpdateProduct = ({
     mutationFn: async ({ variants, ...product }: ProductFormValues) => {
       const images = variants.flatMap(({ color, medias }) =>
         medias.map((media, index) => ({
-          imageKey: media.id,
+          mediaId: media.id,
           imageUrl: media.url,
           colorId: color,
           isPrimary: index === 0,
@@ -43,8 +43,7 @@ const useCreateOrUpdateProduct = ({
 
       return handleFinish({
         ...product,
-        imageKey: product.image.id,
-        imageUrl: product.image.url,
+        mediaId: product.image.id,
         images,
         stocks,
       });

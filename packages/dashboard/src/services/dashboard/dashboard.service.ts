@@ -98,7 +98,11 @@ export class DashboardService {
     const lowStock = await this.db.stock.findMany({
       select: {
         quantity: true,
-        product: true,
+        product: {
+          include: {
+            media: true,
+          },
+        },
         color: true,
         size: true,
       },
@@ -111,7 +115,11 @@ export class DashboardService {
 
     const outOfStock = await this.db.stock.findMany({
       select: {
-        product: true,
+        product: {
+          include: {
+            media: true,
+          },
+        },
         color: true,
         size: true,
       },
@@ -122,8 +130,16 @@ export class DashboardService {
     });
 
     return {
-      lowStock: lowStock.map(({ quantity, ...stock }) => ({ ...stock, stockRemaining: quantity })),
-      outOfStock,
+      lowStock: lowStock.map(({ product: { media, ...product }, quantity, ...stock }) => ({
+        ...stock,
+        stockRemaining: quantity,
+        product: { ...product, imageUrl: media.url },
+      })),
+      outOfStock: outOfStock.map(({ product: { media, ...product }, ...stock }) => ({
+        ...stock,
+        stockRemaining: 0,
+        product: { ...product, imageUrl: media.url },
+      })),
     };
   }
 
@@ -182,7 +198,7 @@ export class DashboardService {
         arDescription: p.ar_description,
         enDescription: p.en_description,
         imageUrl: p.image_url,
-        imageKey: p.image_key,
+        mediaId: p.image_key,
         createdAt: p.created_at,
         updatedAt: p.updated_at,
       },

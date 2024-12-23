@@ -18,7 +18,11 @@ export class StockService {
       size: true,
       product: {
         include: {
-          images: true,
+          images: {
+            include: {
+              media: true,
+            },
+          },
         },
       },
     } satisfies Prisma.StockInclude;
@@ -32,10 +36,13 @@ export class StockService {
   }: Prisma.StockGetPayload<{
     include: ReturnType<StockService['_stockFields']>;
   }>) {
+    const primaryImage = images.find(image => image.colorId === color.id && image.isPrimary)!;
     return {
       ...stock,
-      image: images.find(image => image.colorId === color.id && image.isPrimary),
-      images: images.filter(image => image.colorId === color.id),
+      image: { ...primaryImage, imageUrl: primaryImage.media.url },
+      images: images
+        .filter(image => image.colorId === color.id)
+        .map(image => ({ ...image, imageUrl: image.media.url })),
       size,
       product,
       color,

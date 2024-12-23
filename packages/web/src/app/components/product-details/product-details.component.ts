@@ -141,7 +141,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       next: res => {
         this.productDetails = res?.data;
         this.productImages = res?.data?.imageUrl;
-        this.categoryId = res?.data.categoryId;
+        this.categoryId = res?.data.category.id;
         this.productStock = res?.data.stocks;
         this.productStockColor = this.productStock;
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {

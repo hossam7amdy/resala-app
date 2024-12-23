@@ -1,7 +1,7 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
-import type { Image } from '@resala/shared';
+import type { Image, Media } from '@resala/shared';
 
 import type {
   CreateProductRequestDto,
@@ -19,21 +19,28 @@ export class ProductService {
   constructor(private readonly db: DataStore) {}
 
   private _productFields(id?: string) {
+    const now = new Date();
     return {
+      media: true,
       images: {
+        include: {
+          media: true,
+        },
         where: {
           productId: id,
         },
       },
-      category: true,
+      categories: {
+        take: 1,
+      },
       discounts: {
         where: {
           isActive: true,
           OR: [
             { startDate: null },
             { endDate: null },
-            { startDate: { lte: new Date() } },
-            { endDate: { gte: new Date(new Date().toDateString()) } },
+            { startDate: { lte: now } },
+            { endDate: { gte: now } },
           ],
         },
       },
@@ -62,10 +69,18 @@ export class ProductService {
     return Object.values(groupedStocks);
   }
 
-  private _formatGroupedStocksByColor(groupedStocks: ProductStocksDto[], productImages: Image[]) {
+  private _formatGroupedStocksByColor(
+    groupedStocks: ProductStocksDto[],
+    productImages: (Image & { media: Media })[]
+  ) {
     return groupedStocks.map(stocks => ({
       color: stocks[0].color,
-      images: productImages.filter(image => image.colorId === stocks[0].color.id),
+      images: productImages
+        .filter(image => image.colorId === stocks[0].color.id)
+        .map(({ media, ...img }) => ({
+          ...img,
+          imageUrl: media.url,
+        })),
       sizes: stocks.map(stock => ({
         id: stock.id,
         size: stock.size.name,
@@ -84,10 +99,11 @@ export class ProductService {
       _avg: { rating: true },
     });
 
-    const { stocks, images, ...product } = await this.db.product.findUniqueOrThrow({
-      include: this._productFields(id),
-      where: { id },
-    });
+    const { stocks, categories, media, images, ...product } =
+      await this.db.product.findUniqueOrThrow({
+        include: this._productFields(id),
+        where: { id },
+      });
 
     // group by color
     const groupedStocks = this._groupProductStocksByColor(stocks);
@@ -95,6 +111,8 @@ export class ProductService {
 
     return {
       ...product,
+      imageUrl: media.url,
+      category: categories[0],
       avgRating: avgRating._avg.rating ?? 0,
       stocks: formatStocks,
     };
@@ -111,7 +129,9 @@ export class ProductService {
         { enName: { contains: search, mode: 'insensitive' } },
         { arName: { contains: search, mode: 'insensitive' } },
       ],
-      categoryId,
+      categories: {
+        some: { id: categoryId },
+      },
     };
 
     const [total, products] = await this.db.$transaction([
@@ -133,8 +153,10 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ stocks, images, ...product }) => ({
+      products: products.map(({ stocks, images, categories, media, ...product }) => ({
         ...product,
+        imageUrl: media.url,
+        category: categories[0],
         stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks), images),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
@@ -142,36 +164,42 @@ export class ProductService {
   }
 
   async create({
-    categoryId,
+    categoryIds,
     images,
     stocks,
     ...payload
   }: CreateProductRequestDto): Promise<CreateProductResponseDto> {
-    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
-
     return await this.db.product.create({
       data: {
         ...payload,
-        categoryId,
         images: { create: images },
         stocks: { create: stocks },
+        categories: { connect: categoryIds.map(id => ({ id })) },
       },
     });
   }
 
   async update(
     id: string,
-    { images, stocks, ...product }: UpdateProductRequestDto
+    { images, stocks, categoryIds, ...product }: UpdateProductRequestDto
   ): Promise<UpdateProductResponseDto> {
-    await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
-
     return await this.db.product.update({
       where: { id },
       data: {
         ...product,
+        categories: { set: categoryIds?.map(id => ({ id })) },
         images: {
-          deleteMany: { productId: id },
-          create: images,
+          upsert: images?.map(image => ({
+            where: {
+              productId_colorId_mediaId: {
+                productId: id,
+                colorId: image.colorId,
+                mediaId: image.mediaId,
+              },
+            },
+            create: image,
+            update: image,
+          })),
         },
         stocks: {
           upsert: stocks?.map(stock => ({

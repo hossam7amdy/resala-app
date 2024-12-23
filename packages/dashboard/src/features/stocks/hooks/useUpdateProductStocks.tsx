@@ -16,7 +16,7 @@ const useUpdateProductStocks = () => {
     mutationFn: async ({ product, variants }: StockFormValues & { product: Product }) => {
       const images = variants.flatMap(({ color, medias }) =>
         medias.map((media, index) => ({
-          imageKey: media.id,
+          mediaId: media.id,
           imageUrl: media.url,
           colorId: color,
           isPrimary: index === 0,

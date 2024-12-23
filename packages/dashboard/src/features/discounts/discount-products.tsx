@@ -1,13 +1,13 @@
 import { Image, Table } from '@/components';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
-import type { Product } from '@resala/shared';
+import type { GetDiscountResponse } from '@resala/shared';
 import React from 'react';
 
 import { DeleteDiscountProductButton } from './delete-discount-product-button';
 
 interface DiscountProductsProps {
-  products: Product[];
+  products: GetDiscountResponse['data']['products'];
   className?: HTMLElement['className'];
 }
 export const DiscountProducts: React.FC<DiscountProductsProps> = ({ products, ...props }) => {

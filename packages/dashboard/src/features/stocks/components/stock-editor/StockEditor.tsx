@@ -29,7 +29,7 @@ const StockEditor: React.FC<StockEditorProps> = ({ productDetails, sizes, colors
         medias={medias}
         variants={stocks.map(stock => ({
           color: stock.color.id,
-          medias: stock.images.map(img => ({ id: img.imageKey, url: img.imageUrl })),
+          medias: stock.images.map(img => ({ id: img.mediaId, url: img.imageUrl })),
           sizes: stock.sizes.map(size => ({
             size: size.sizeId,
             quantity: size.quantity,
