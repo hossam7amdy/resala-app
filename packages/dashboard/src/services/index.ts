@@ -8,7 +8,6 @@ import { ColorService } from './color/color.service';
 import { DashboardService } from './dashboard/dashboard.service';
 import { DiscountService } from './discount/discount.service';
 import { EmailService } from './email';
-import { ImageService } from './image/image.service';
 import { MediaService } from './media/media.service';
 import { OrderService } from './order/order.service';
 import { PaymentService } from './payment/payment.service';
@@ -26,7 +25,6 @@ const categoryService = new CategoryService(db);
 const colorService = new ColorService(db);
 const dashboardService = new DashboardService(db);
 const discountService = new DiscountService(db);
-const imageService = new ImageService(db);
 const orderService = new OrderService(db);
 const paymentService = new PaymentService(configuration(), paymobService);
 const productService = new ProductService(db);
@@ -53,7 +51,6 @@ export {
   colorService,
   dashboardService,
   discountService,
-  imageService,
   orderService,
   paymentService,
   productService,
@@ -73,7 +70,6 @@ export {
   ColorService,
   DashboardService,
   DiscountService,
-  ImageService,
   OrderService,
   PaymentService,
   ProductService,

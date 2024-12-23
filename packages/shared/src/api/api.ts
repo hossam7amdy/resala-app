@@ -266,20 +266,6 @@ export type DeleteStockResponse = DefaultResponseBody & {
   data: Stock;
 };
 
-// Image types
-export type CreateImageRequest = z.infer<typeof Schemas.CreateImageSchema>;
-export type CreateImageResponse = DefaultResponseBody;
-
-export type ListImagesRequest = z.infer<typeof Schemas.ListImagesSchema>;
-export type ListImagesResponse = DefaultResponseBody & {
-  data: Image[];
-};
-
-export type DeleteImageRequest = z.infer<typeof Schemas.DeleteImageSchema>;
-export type DeleteImageResponse = DefaultResponseBody & {
-  data: Image;
-};
-
 // Shipping types
 export type GetCartRequest = Record<string, undefined>;
 export type GetCartResponse = DefaultResponseBody & {
@@ -291,7 +277,7 @@ export type GetCartResponse = DefaultResponseBody & {
       discountedPrice?: number;
       appliedDiscount?: Discount;
       product: Product;
-      images: Image[];
+      images: (Image & { imageUrl: string })[];
       stock: Stock & {
         color: Color;
         size: Size;
@@ -333,8 +319,8 @@ export type GetOrderResponse = DefaultResponseBody & {
     user: User;
     orderItems: (OrderItem & {
       product: Product;
-      images: Image[];
-      image: Image;
+      images: (Image & { imageUrl: string })[];
+      image: Image & { imageUrl: string };
       color: string;
       size: string;
     })[];
@@ -454,12 +440,12 @@ export type GetInventoryStatusResponse = DefaultResponseBody & {
   data: {
     lowStock: {
       stockRemaining: number;
-      product: Product;
+      product: Product & { imageUrl: string };
       color: Color;
       size: Size;
     }[];
     outOfStock: {
-      product: Product;
+      product: Product & { imageUrl: string };
       color: Color;
       size: Size;
     }[];
@@ -496,7 +482,7 @@ export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
 export type GetDiscountResponse = DefaultResponseBody & {
   data: Discount & {
     pagination: Pagination;
-    products: Product[];
+    products: (Product & { imageUrl: string })[];
   };
 };
 

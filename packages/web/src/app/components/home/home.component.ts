@@ -32,7 +32,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
     NgxStarsRatingModule,
     TranslateModule,
     SpinnerComponent,
-  ], //
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
@@ -73,7 +73,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // interfaces
   products: Product[] = [];
-  categories: Product[] = [];
 
   imgPlaceHolder: string = '';
 
@@ -110,7 +109,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getProducts = this._HomeProductsService.getProducts().subscribe({
       next: response => {
         this.products = response.data.products;
-        this.categories = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;

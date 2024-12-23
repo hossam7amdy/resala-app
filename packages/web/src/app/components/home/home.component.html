@@ -221,7 +221,7 @@
         [options]="pobularProducts"
         class="justify-content-center text-center product"
       >
-        <ng-container *ngFor="let category of categories">
+        <ng-container *ngFor="let product of products">
           <ng-template carouselSlide>
             <!-- *ngIf="product.images.length !== 0" -->
             <div class="parent-img-content px-2">
@@ -235,16 +235,16 @@
 
               <div
                 class="img-content"
-                [routerLink]="['/category/', category.categoryId]"
+                [routerLink]="['/category/', product.category.id]"
                 role="button"
               >
                 <!-- <p class="offer">Sale<span> 20%</span></p> -->
 
                 <img
                   class="w-100 image-products"
-                  [src]="category.imageUrl"
-                  [alt]="_Translate.currentLang === 'ar' ? category.arName : category.enName"
-                  [title]="_Translate.currentLang === 'ar' ? category.arName : category.enName"
+                  [src]="product.imageUrl"
+                  [alt]="_Translate.currentLang === 'ar' ? product.arName : product.enName"
+                  [title]="_Translate.currentLang === 'ar' ? product.arName : product.enName"
                 />
               </div>
 
@@ -254,11 +254,11 @@
             </div>
 
             <div class="descrp px-2">
-              <h6 [routerLink]="['/category/', category.categoryId]" class="mb-0" role="button">
+              <h6 [routerLink]="['/category/', product.category.id]" class="mb-0" role="button">
                 {{
                   _Translate.currentLang === 'ar'
-                    ? category.category.arName
-                    : category.category.enName
+                    ? product.category.arName
+                    : product.category.enName
                 }}
               </h6>
             </div>

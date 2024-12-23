@@ -10,29 +10,28 @@ import { CreateStockSchema, StockSchema } from './stock.schema.js';
 
 const ProductSchema = z.object({
   id: z.string().cuid(),
-  categoryId: z.string().cuid(),
+  mediaId: z.string(),
   arName: z.string().min(2).max(100),
   enName: z.string().min(2).max(100),
   arDescription: z.string().max(500),
   enDescription: z.string().max(500),
   price: z.instanceof(Decimal).or(z.coerce.number()),
-  imageKey: z.string(),
-  imageUrl: z.string(),
+  activateAt: z.date().or(z.string().datetime()).nullable().optional(),
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
 });
 
 const CreateProductSchema = z.object({
   body: ProductSchema.pick({
-    categoryId: true,
     arName: true,
     enName: true,
+    mediaId: true,
     arDescription: true,
     enDescription: true,
     price: true,
-    imageKey: true,
-    imageUrl: true,
+    activateAt: true,
   }).extend({
+    categoryIds: z.array(z.string().cuid()).min(1),
     images: z.array(CreateImageSchema.shape.body.omit({ productId: true })).min(1),
     stocks: z.array(CreateStockSchema.shape.body.omit({ productId: true })).min(1),
   }),
@@ -44,7 +43,7 @@ const UpdateProductSchema = z.object({
 });
 
 const GetProductSchema = z.object({
-  params: UpdateProductSchema.shape.params,
+  params: ProductSchema.pick({ id: true }),
 });
 
 const ListProductsSchema = z.object({
@@ -55,17 +54,20 @@ const ListProductsSchema = z.object({
 });
 
 const DeleteProductSchema = z.object({
-  params: UpdateProductSchema.shape.params,
+  params: ProductSchema.pick({ id: true }),
 });
 
 const GetProductResponseSchema = ProductSchema.extend({
+  imageUrl: z.string().url(),
   avgRating: z.number(),
   category: CategorySchema,
   discounts: z.array(DiscountSchema),
   stocks: z.array(
     z.object({
       color: ColorSchema,
-      images: z.array(ImageSchema.omit({ colorId: true, productId: true })),
+      images: z.array(
+        ImageSchema.extend({ imageUrl: z.string().url() }).omit({ colorId: true, productId: true })
+      ),
       sizes: z.array(
         StockSchema.omit({ id: true, colorId: true, productId: true }).extend({
           stockId: z.string().cuid(),

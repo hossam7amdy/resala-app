@@ -4,7 +4,7 @@ import type { StockFormValues } from '../stocks';
 
 interface ProductFormValues extends StockFormValues {
   image: Pick<Media, 'id' | 'url'>;
-  categoryId: string;
+  categoryIds: string[];
   enName: string;
   arName: string;
   enDescription: string;
