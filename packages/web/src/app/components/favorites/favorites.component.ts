@@ -16,13 +16,13 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css'],
 })
-export class FavoritesComponent implements OnInit,OnDestroy {
+export class FavoritesComponent implements OnInit, OnDestroy {
   constructor(
     private _WishListService: WishListService,
     private _Toaster: ToastrService,
     public _Translate: TranslateService
   ) {}
-  
+
   // start Custome Spinner
   customSpinIsLoading = false;
   //end Custome Spinner
@@ -41,9 +41,9 @@ export class FavoritesComponent implements OnInit,OnDestroy {
   };
 
   //end Rating
-  
+
   //Subscription ID
-  getAllMyProductsId!:Subscription;
+  getAllMyProductsId!: Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -61,7 +61,7 @@ export class FavoritesComponent implements OnInit,OnDestroy {
   }
   //Destroy Subscription
   ngOnDestroy(): void {
-    if (this.getAllMyProductsId)this.getAllMyProductsId.unsubscribe()
+    if (this.getAllMyProductsId) this.getAllMyProductsId.unsubscribe();
   }
   // remove favorite icone
   removeFavoriteIcon(productId: string): void {

@@ -1,7 +1,7 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
-import type { Image } from '@resala/shared';
+import type { Image, Media } from '@resala/shared';
 
 import type {
   CreateProductRequestDto,
@@ -18,18 +18,29 @@ import type {
 export class ProductService {
   constructor(private readonly db: DataStore) {}
 
-  private _productFields() {
+  private _productFields(id?: string) {
+    const now = new Date();
     return {
-      images: true,
-      category: true,
+      media: true,
+      images: {
+        include: {
+          media: true,
+        },
+        where: {
+          productId: id,
+        },
+      },
+      categories: {
+        take: 1,
+      },
       discounts: {
         where: {
           isActive: true,
           OR: [
             { startDate: null },
             { endDate: null },
-            { startDate: { lte: new Date() } },
-            { endDate: { gte: new Date(new Date().toDateString()) } },
+            { startDate: { lte: now } },
+            { endDate: { gte: now } },
           ],
         },
       },
@@ -58,10 +69,18 @@ export class ProductService {
     return Object.values(groupedStocks);
   }
 
-  private _formatGroupedStocksByColor(groupedStocks: ProductStocksDto[], productImages: Image[]) {
+  private _formatGroupedStocksByColor(
+    groupedStocks: ProductStocksDto[],
+    productImages: (Image & { media: Media })[]
+  ) {
     return groupedStocks.map(stocks => ({
       color: stocks[0].color,
-      images: productImages.filter(image => image.colorId === stocks[0].color.id),
+      images: productImages
+        .filter(image => image.colorId === stocks[0].color.id)
+        .map(({ media, ...img }) => ({
+          ...img,
+          imageUrl: media.url,
+        })),
       sizes: stocks.map(stock => ({
         id: stock.id,
         size: stock.size.name,
@@ -80,10 +99,11 @@ export class ProductService {
       _avg: { rating: true },
     });
 
-    const { stocks, images, ...product } = await this.db.product.findUniqueOrThrow({
-      include: this._productFields(),
-      where: { id },
-    });
+    const { stocks, categories, media, images, ...product } =
+      await this.db.product.findUniqueOrThrow({
+        include: this._productFields(id),
+        where: { id },
+      });
 
     // group by color
     const groupedStocks = this._groupProductStocksByColor(stocks);
@@ -91,6 +111,8 @@ export class ProductService {
 
     return {
       ...product,
+      imageUrl: media.url,
+      category: categories[0],
       avgRating: avgRating._avg.rating ?? 0,
       stocks: formatStocks,
     };
@@ -107,7 +129,9 @@ export class ProductService {
         { enName: { contains: search, mode: 'insensitive' } },
         { arName: { contains: search, mode: 'insensitive' } },
       ],
-      categoryId,
+      categories: {
+        some: { id: categoryId },
+      },
     };
 
     const [total, products] = await this.db.$transaction([
@@ -129,8 +153,10 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ stocks, images, ...product }) => ({
+      products: products.map(({ stocks, images, categories, media, ...product }) => ({
         ...product,
+        imageUrl: media.url,
+        category: categories[0],
         stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks), images),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
       })),
@@ -138,40 +164,68 @@ export class ProductService {
   }
 
   async create({
-    categoryId,
-    enName,
-    arName,
+    categoryIds,
+    images,
+    stocks,
     ...payload
   }: CreateProductRequestDto): Promise<CreateProductResponseDto> {
-    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
-
-    const product = await this.db.product.findFirst({
-      where: {
-        OR: [{ enName }, { arName }],
-      },
-    });
-
-    if (product) {
-      throw new ConflictError('Product already exists');
-    }
-
-    await this.db.category.findUniqueOrThrow({ where: { id: categoryId } });
-
     return await this.db.product.create({
-      data: { ...payload, categoryId, enName, arName },
+      data: {
+        ...payload,
+        images: { create: images },
+        stocks: { create: stocks },
+        categories: { connect: categoryIds.map(id => ({ id })) },
+      },
     });
   }
 
-  async update(id: string, product: UpdateProductRequestDto): Promise<UpdateProductResponseDto> {
-    await this.db.category.findUniqueOrThrow({ where: { id: product.categoryId } });
-
+  async update(
+    id: string,
+    { images, stocks, categoryIds, ...product }: UpdateProductRequestDto
+  ): Promise<UpdateProductResponseDto> {
     return await this.db.product.update({
       where: { id },
-      data: product,
+      data: {
+        ...product,
+        categories: { set: categoryIds?.map(id => ({ id })) },
+        images: {
+          upsert: images?.map(image => ({
+            where: {
+              productId_colorId_mediaId: {
+                productId: id,
+                colorId: image.colorId,
+                mediaId: image.mediaId,
+              },
+            },
+            create: image,
+            update: image,
+          })),
+        },
+        stocks: {
+          upsert: stocks?.map(stock => ({
+            where: {
+              stock_unique_constraint: {
+                productId: id,
+                colorId: stock.colorId,
+                sizeId: stock.sizeId,
+              },
+            },
+            create: stock,
+            update: stock,
+          })),
+        },
+      },
     });
   }
 
   async delete(id: string): Promise<DeleteProductResponseDto> {
+    const order = await this.db.orderItem.findFirst({
+      where: { productId: id },
+    });
+    if (order) {
+      throw new ConflictError('Cannot delete product that is associated with an order');
+    }
+
     return await this.db.product.delete({ where: { id } });
   }
 }

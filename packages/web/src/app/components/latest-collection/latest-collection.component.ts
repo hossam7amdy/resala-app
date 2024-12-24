@@ -22,7 +22,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './latest-collection.component.html',
   styleUrls: ['./latest-collection.component.css'],
 })
-export class LatestCollectionComponent implements OnInit,OnDestroy {
+export class LatestCollectionComponent implements OnInit, OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _WishListService: WishListService,
@@ -32,7 +32,7 @@ export class LatestCollectionComponent implements OnInit,OnDestroy {
     private _Reviews: ReviewsService,
     public _Translate: TranslateService
   ) {}
- 
+
   UserProfile: any;
   userNameLogged: any;
   productId: string = '';
@@ -53,8 +53,8 @@ export class LatestCollectionComponent implements OnInit,OnDestroy {
   currentProduct: any;
 
   // Supscription ID
-  getProductsId!:Subscription;
-  getProductReviewId!:Subscription;
+  getProductsId!: Subscription;
+  getProductReviewId!: Subscription;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -67,7 +67,6 @@ export class LatestCollectionComponent implements OnInit,OnDestroy {
         this.customSpinIsLoading = false;
       },
     });
-    
 
     //Reviews
     this.getProductReviewId = this._Reviews.getProductReview('1', '100').subscribe({
@@ -81,8 +80,8 @@ export class LatestCollectionComponent implements OnInit,OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    if(this.getProductsId)this.getProductsId.unsubscribe();
-    if(this.getProductReviewId)this.getProductReviewId.unsubscribe();
+    if (this.getProductsId) this.getProductsId.unsubscribe();
+    if (this.getProductReviewId) this.getProductReviewId.unsubscribe();
   }
 
   //Add product in Wish list method

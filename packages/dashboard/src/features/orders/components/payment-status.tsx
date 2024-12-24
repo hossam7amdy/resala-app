@@ -1,5 +1,5 @@
+import { updateOrderStatus } from '@/actions/orders';
 import { ResalaTooltip } from '@/components';
-import { updateOrderStatus } from '@/fetch/orders';
 import { useMutation, useNotification } from '@/hooks';
 import type { GetOrderResponse, PaymentStatusType } from '@resala/shared';
 import { Popconfirm, Select, Tag } from 'antd';
@@ -35,9 +35,7 @@ export const PaymentStatus: React.FC<PaymentStatusProps> = ({
   order: { id, orderStatus, paymentStatus, paymentMethod },
 }) => {
   const notifications = useNotification();
-
   const [popOpen, setPopOpen] = useState(false);
-
   const [newPaymentStatus, setNewPaymentStatus] = useState(paymentStatus);
 
   useEffect(() => {

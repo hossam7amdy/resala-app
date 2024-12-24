@@ -1,11 +1,13 @@
 'use client';
 
-import { addProduct, updateProduct } from '@/fetch/products';
+import { addProduct, updateProduct } from '@/actions/products';
 import { useMutation, useNotification } from '@/hooks';
 import type { CreateProductRequest } from '@resala/shared';
 import type { FormInstance } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+
+import type { ProductFormValues } from '../types';
 
 const useCreateOrUpdateProduct = ({
   form,
@@ -26,7 +28,26 @@ const useCreateOrUpdateProduct = ({
   );
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: handleFinish,
+    mutationFn: async ({ variants, ...product }: ProductFormValues) => {
+      const images = variants.flatMap(({ color, medias }) =>
+        medias.map((media, index) => ({
+          mediaId: media.id,
+          imageUrl: media.url,
+          colorId: color,
+          isPrimary: index === 0,
+        }))
+      );
+      const stocks = variants.flatMap(({ color, sizes }) =>
+        sizes.map(({ size, quantity }) => ({ colorId: color, sizeId: size, quantity }))
+      );
+
+      return handleFinish({
+        ...product,
+        mediaId: product.image.id,
+        images,
+        stocks,
+      });
+    },
     onSuccess: () => {
       if (!isEdit) form.resetFields();
       notification.success(`Product ${isEdit ? 'updated' : 'added'} successfully`);

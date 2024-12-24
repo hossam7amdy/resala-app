@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit,OnDestroy {
+export class CartComponent implements OnInit, OnDestroy {
   constructor(
     private _CartService: CartService,
     private _Renderer: Renderer2,
@@ -65,14 +65,14 @@ export class CartComponent implements OnInit,OnDestroy {
   counterQuantity: number = 1;
 
   authenticated: boolean = false;
-  
+
   // Subscription Id
-  getCartUserId!:Subscription
-  getProductDetailsId!:Subscription;
-  addToCartId!:Subscription;
-  removeCartItemId!:Subscription;
-  clearCartId!:Subscription;
-  
+  getCartUserId!: Subscription;
+  getProductDetailsId!: Subscription;
+  addToCartId!: Subscription;
+  removeCartItemId!: Subscription;
+  clearCartId!: Subscription;
+
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
@@ -91,11 +91,11 @@ export class CartComponent implements OnInit,OnDestroy {
   }
   // Destroy Subscription methods
   ngOnDestroy(): void {
-    if (this.getCartUserId)this.getCartUserId.unsubscribe();
-    if (this.getProductDetailsId)this.getProductDetailsId.unsubscribe();
-    if (this.addToCartId)this.addToCartId.unsubscribe();
-    if (this.removeCartItemId)this.removeCartItemId.unsubscribe();
-    if (this.clearCartId)this.clearCartId.unsubscribe();
+    if (this.getCartUserId) this.getCartUserId.unsubscribe();
+    if (this.getProductDetailsId) this.getProductDetailsId.unsubscribe();
+    if (this.addToCartId) this.addToCartId.unsubscribe();
+    if (this.removeCartItemId) this.removeCartItemId.unsubscribe();
+    if (this.clearCartId) this.clearCartId.unsubscribe();
   }
   // update Color and Size
   getStockDataPro(id: any): void {

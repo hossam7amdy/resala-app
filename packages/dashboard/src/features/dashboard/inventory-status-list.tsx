@@ -1,8 +1,9 @@
 'use client';
 
+import { Image } from '@/components';
 import { ROUTES } from '@/routes';
 import type { GetInventoryStatusResponse } from '@resala/shared';
-import { Image, List, Space, Typography } from 'antd';
+import { List, Space, Typography } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 

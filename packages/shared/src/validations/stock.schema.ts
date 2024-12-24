@@ -25,11 +25,8 @@ const CreateStockSchema = z.object({
   }),
 });
 
-const UpdateStockSchema = z.object({
-  params: z.object({
-    stockId: z.string().cuid(),
-  }),
-  body: CreateStockSchema.shape.body,
+const UpdateStocksQuantitySchema = z.object({
+  body: z.array(StockSchema.pick({ id: true, quantity: true })),
 });
 
 const DeleteStockSchema = z.object({
@@ -43,6 +40,7 @@ const GetStockResponseSchema = StockSchema.extend({
   size: SizeSchema,
   product: ProductSchema,
   image: ImageSchema.optional(),
+  images: z.array(ImageSchema.extend({ imageUrl: z.string().url() })),
 });
 
 const ListStocksSchema = z.object({
@@ -56,10 +54,10 @@ const ListStocksResponseSchema = z.array(GetStockResponseSchema);
 
 export {
   StockSchema,
+  ListStocksSchema,
   CreateStockSchema,
   DeleteStockSchema,
-  UpdateStockSchema,
-  ListStocksSchema,
+  UpdateStocksQuantitySchema,
   GetStockResponseSchema,
   ListStocksResponseSchema,
 };

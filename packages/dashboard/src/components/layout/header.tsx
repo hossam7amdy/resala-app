@@ -2,7 +2,7 @@ import { ROUTES } from '@/routes';
 import { Header as AntHeader } from 'antd/es/layout/layout';
 import Link from 'next/link';
 
-import { Logo } from '../logo';
+import { ResalaLogo } from '../ResalaLogo';
 import { MobileDrawer } from '../mobile-drawer';
 
 export const Header: React.FC = () => {
@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
       <MobileDrawer />
 
       <Link href={ROUTES.DASHBOARD} className="h-full">
-        <Logo className="w-[90px] h-auto" />
+        <ResalaLogo className="w-[90px] h-auto" />
       </Link>
     </AntHeader>
   );

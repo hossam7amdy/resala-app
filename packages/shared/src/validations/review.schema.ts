@@ -8,7 +8,7 @@ const ReviewSchema = z.object({
   productId: z.string(),
   rating: z.number().int().min(1).max(5).default(5),
   comment: z.string().optional().nullable(),
-  media: z.string().optional().nullable(),
+  mediaId: z.string().optional().nullable(),
   createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
 });
@@ -18,7 +18,7 @@ const CreateReviewSchema = z.object({
     productId: true,
     rating: true,
     comment: true,
-    media: true,
+    mediaId: true,
   }),
 });
 
@@ -27,7 +27,7 @@ const UpdateReviewSchema = z.object({
   body: ReviewSchema.pick({
     rating: true,
     comment: true,
-    media: true,
+    mediaId: true,
   }),
 });
 

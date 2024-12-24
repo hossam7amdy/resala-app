@@ -1,12 +1,12 @@
 'use client';
 
-import { Image, PopconfirmDeleteButton } from '@/components';
-import { deleteProduct } from '@/fetch/products';
+import { deleteProduct } from '@/actions/products';
+import { Image, PopconfirmDeleteButton, Table } from '@/components';
 import { ROUTES } from '@/routes';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { formatDate } from '@/utils/date-time-formatter';
-import type { Category, ListProductsResponse, Product } from '@resala/shared';
-import { Space, Table } from 'antd';
+import type { Category, ListProductsResponse } from '@resala/shared';
+import { Space } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
@@ -14,7 +14,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
   products,
 }) => {
   return (
-    <Table<Product>
+    <Table
       rowHoverable
       className="w-full"
       dataSource={products}
@@ -53,7 +53,7 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
           onCell: () => ({
             onClick: e => e.stopPropagation(),
           }),
-          render: (imageUrl: string, product: Product) => (
+          render: (imageUrl: string, product) => (
             <Image src={imageUrl} width={50} alt={product.enDescription} />
           ),
         },
@@ -67,6 +67,19 @@ export const ProductsTable: React.FC<{ products: ListProductsResponse['data']['p
               <p>{product.enName}</p>
               <p>{product.arName}</p>
             </Link>
+          ),
+        },
+        {
+          title: 'Inventory',
+          dataIndex: 'stocks',
+          render: (_, product) => (
+            <span>
+              {product.stocks.reduce((acc, { sizes }) => {
+                return acc + sizes.reduce((acc, { quantity }) => acc + quantity, 0);
+              }, 0)}{' '}
+              in stock for {product.stocks.length}{' '}
+              {product.stocks.length > 1 ? 'variants' : 'variant'}
+            </span>
           ),
         },
         {

@@ -31,7 +31,7 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
   templateUrl: './offers.component.html',
   styleUrls: ['./offers.component.css'],
 })
-export class OffersComponent implements OnInit,OnDestroy {
+export class OffersComponent implements OnInit, OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _WishListService: WishListService,
@@ -41,7 +41,7 @@ export class OffersComponent implements OnInit,OnDestroy {
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
-  
+
   public rateNumber: number = 3;
   public ratingOptions: IRatingOptions = {
     starsCount: 5,
@@ -53,8 +53,8 @@ export class OffersComponent implements OnInit,OnDestroy {
   products: Product[] = [];
 
   //Subscription ID
-  getProductsId!:Subscription;
-  
+  getProductsId!: Subscription;
+
   ngOnInit(): void {
     this.customSpinIsLoading = true;
 
@@ -70,7 +70,7 @@ export class OffersComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.getProductsId)this.getProductsId.unsubscribe();
+    if (this.getProductsId) this.getProductsId.unsubscribe();
   }
 
   addProductInWishList(id: any, element: HTMLElement): void {

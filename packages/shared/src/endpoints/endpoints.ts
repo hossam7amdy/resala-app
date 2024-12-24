@@ -60,12 +60,6 @@ export enum Endpoints {
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
 
-  // images endpoints
-  findImages = 'findImages',
-  addImages = 'addImages',
-  deleteImage = 'deleteImage',
-  updateImage = 'updateImage',
-
   // stock endpoints
   addStock = 'addStock',
   getStock = 'getStock',
@@ -360,28 +354,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
   [Endpoints.deleteProduct]: {
     url: '/api/v1/products/:productId',
-    method: 'delete',
-    auth: true,
-  },
-
-  // product images endpoints
-  [Endpoints.findImages]: {
-    url: '/api/v1/images',
-    method: 'get',
-  },
-
-  [Endpoints.addImages]: {
-    url: '/api/v1/images',
-    method: 'post',
-    auth: true,
-  },
-  [Endpoints.updateImage]: {
-    url: '/api/v1/images/:imageId',
-    method: 'patch',
-    auth: true,
-  },
-  [Endpoints.deleteImage]: {
-    url: '/api/v1/images/:imageId',
     method: 'delete',
     auth: true,
   },

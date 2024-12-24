@@ -1,5 +1,5 @@
+import { listAllDiscounts } from '@/actions/discount';
 import { DiscountTable } from '@/features/discounts';
-import { listAllDiscounts } from '@/fetch/discount';
 import type { ListDiscountsRequest } from '@resala/shared';
 
 const DiscountsPage: React.FC<{

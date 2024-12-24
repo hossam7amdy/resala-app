@@ -13,7 +13,6 @@ import { Translate_Service } from 'src/app/core/services/translate.service';
   styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent {
-
   constructor(
     private _Renderer: Renderer2,
     public _Translate: TranslateService,
@@ -39,7 +38,6 @@ export class TopBarComponent {
     return rtlStat;
   }
 
-  
   @ViewChild('topBar') navbarElement!: ElementRef;
   @HostListener('window:scroll')
   onScroll(): void {
