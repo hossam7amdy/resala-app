@@ -1,0 +1,1 @@
+export { PaymobAdapter } from './paymob';

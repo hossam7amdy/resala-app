@@ -1,50 +1,44 @@
 import type { Configuration } from '@/configuration';
 import { BadRequestError, NotFoundError } from '@/exceptions';
+import type { PaymentPort } from '@/interfaces';
 import { Decimal } from '@prisma/client/runtime/library';
 import type { GetPaymentResponse } from '@resala/shared';
 
-import type { PaymobService } from '../paymob';
-import type { CheckoutCreateParams } from './payment.service.dto';
+import type { CheckoutParams } from './payment.service.dto';
 
 export class PaymentService {
   constructor(
     private config: Configuration,
-    private _paymobService: PaymobService
+    private _payment: PaymentPort
   ) {}
 
   async checkout({
     orderId,
     orderItems,
     billingData,
-  }: CheckoutCreateParams): Promise<{ paymentUrl: string }> {
+  }: CheckoutParams): Promise<{ paymentUrl: string }> {
     const total = orderItems.reduce(
       (acc, item) => new Decimal(item.price).mul(item.quantity).add(acc),
       new Decimal(0)
     );
 
-    const { paymentLink } = await this._paymobService.checkout({
-      redirection_url: `${this.config.payment.redirectionUrl}/${orderId}/`,
-      notification_url: `${this.config.payment.notificationUrl}/${orderId}/`,
+    const paymentLink = await this._payment.checkout({
+      redirectionUrl: `${this.config.payment.redirectionUrl}/${orderId}/`,
+      notificationUrl: `${this.config.payment.notificationUrl}/${orderId}/`,
       currency: 'EGP',
-      items: orderItems.map(item => ({
-        name: item.productName,
-        amount: +item.price,
-        quantity: item.quantity,
-        description: item.description,
-      })),
       amount: total.toDecimalPlaces(2).toNumber(),
-      billing_data: {
+      billingData: {
         email: billingData.email,
-        apartment: billingData.address || 'NA',
-        first_name: billingData.firstName,
-        last_name: billingData.lastName,
+        firstName: billingData.firstName,
+        lastName: billingData.lastName,
         street: billingData.street,
-        building: billingData.building || 'NA',
-        phone_number: billingData.phone,
+        phoneNumber: billingData.phone,
         city: billingData.city,
-        country: billingData.country,
-        floor: billingData.floor?.toString() || 'NA',
         state: billingData.state,
+        country: billingData.country,
+        apartment: billingData.address || 'NA',
+        building: billingData.building || 'NA',
+        floor: billingData.floor?.toString() || 'NA',
       },
     });
 
@@ -53,7 +47,7 @@ export class PaymentService {
 
   async void(transactionId: string): Promise<void> {
     try {
-      await this._paymobService.void(+transactionId);
+      await this._payment.void(+transactionId);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
@@ -61,7 +55,7 @@ export class PaymentService {
 
   async refund(transactionId: string, amount: number): Promise<void> {
     try {
-      await this._paymobService.refund(+transactionId, amount);
+      await this._payment.refund(transactionId, amount);
     } catch (e) {
       throw new BadRequestError((e as Error).message);
     }
@@ -69,21 +63,12 @@ export class PaymentService {
 
   async retrieve(transactionId: string): Promise<GetPaymentResponse['data']> {
     try {
-      const transaction = await this._paymobService.retrieve(+transactionId);
+      const { amountCents, ...transaction } = await this._payment.retrieve(transactionId);
 
       return {
-        id: transaction.id.toString(),
-        amount: transaction.amount_cents / 100,
-        currency: transaction.currency,
-        pending: transaction.pending,
-        success: transaction.success,
-        isCapture: transaction.is_capture,
-        isStandalonePayment: transaction.is_standalone_payment,
-        isVoided: transaction.is_voided,
-        isRefunded: transaction.is_refunded,
-        is3dSecure: transaction.is_3d_secure,
-        createdAt: transaction.created_at,
-        paymentMethod: transaction.source_data.type,
+        ...transaction,
+        id: transactionId,
+        amount: new Decimal(amountCents).div(100).toNumber(),
       };
     } catch (e) {
       throw new NotFoundError((e as Error).message);

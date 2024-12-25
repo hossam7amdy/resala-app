@@ -1,1 +1,3 @@
-export * from './CloudStorage';
+export * from './CloudStoragePort';
+export * from './EmailPort';
+export * from './PaymentPort';

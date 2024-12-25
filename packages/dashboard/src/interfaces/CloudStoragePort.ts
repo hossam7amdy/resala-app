@@ -1,4 +1,4 @@
-export interface CloudStorage {
+export interface CloudStoragePort {
   /**
    * Upload a blob to the cloud storage.
    * @param path - The path (key) where the blob should be stored.
