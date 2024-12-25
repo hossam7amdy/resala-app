@@ -53,6 +53,16 @@ const ListProductsSchema = z.object({
   }),
 });
 
+const ListTopProductsSchema = z.array(
+  z.object({
+    unitsSold: z.number(),
+    product: ProductSchema.extend({
+      imageUrl: z.string().url(),
+      images: z.array(ImageSchema.extend({ imageUrl: z.string().url() })),
+    }),
+  })
+);
+
 const DeleteProductSchema = z.object({
   params: ProductSchema.pick({ id: true }),
 });
@@ -89,4 +99,5 @@ export {
   UpdateProductSchema,
   GetProductResponseSchema,
   ListProductsResponseSchema,
+  ListTopProductsSchema,
 };

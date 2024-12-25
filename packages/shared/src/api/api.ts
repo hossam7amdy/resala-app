@@ -458,7 +458,7 @@ export type ListCustomersFeedbackResponse = DefaultResponseBody & {
 
 export type ListTopProductsRequest = undefined;
 export type ListTopProductsResponse = DefaultResponseBody & {
-  data: { unitsSold: number; product: Product }[];
+  data: z.infer<typeof Schemas.ListTopProductsSchema>;
 };
 
 export type ListTopCustomersRequest = undefined;

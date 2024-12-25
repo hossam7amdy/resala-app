@@ -16,38 +16,6 @@ export const getSalesTrend = `
       LIMIT 12;
     `;
 
-export type ListTopProducts = {
-  units_sold: bigint | null;
-  id: string;
-  category_id: string;
-  ar_name: string;
-  en_name: string;
-  ar_description: string;
-  en_description: string;
-  price: number;
-  image_key: string;
-  image_url: string;
-  created_at: Date;
-  updated_at: Date;
-}[];
-export const listTopProducts = `
-      SELECT
-          t.units_sold,
-          p.*
-      FROM "product" p
-      JOIN (
-          SELECT 
-              product_id,
-              SUM(quantity) AS units_sold
-          FROM "order_item"
-          GROUP BY 1
-          ORDER BY 2 DESC
-          LIMIT 10
-          ) AS t
-          ON (t.product_id = p.id)
-      ORDER BY 1 DESC;
-    `;
-
 export type ListTopCustomers = {
   total_paid: number;
   total_orders: bigint | null;
