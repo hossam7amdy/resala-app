@@ -1,6 +1,6 @@
 import type { CreateAddressRequest, OrderItem } from '@resala/shared';
 
-export interface CheckoutCreateParams {
+export interface CheckoutParams {
   orderId: string;
   orderItems: {
     productId: string;

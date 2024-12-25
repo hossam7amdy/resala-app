@@ -1,7 +1,9 @@
 import { configuration } from '@/configuration';
 import { db } from '@/lib/db';
 import { emailService, shoppingService } from '@/services';
-import { type User, betterAuth } from 'better-auth';
+import type { User } from '@resala/shared';
+import { betterAuth } from 'better-auth';
+import type { User as AuthUser } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { admin, anonymous, openAPI, phoneNumber } from 'better-auth/plugins';
 import { isValidPhoneNumber } from 'libphonenumber-js';
@@ -16,12 +18,14 @@ const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        before: async (user: User & { firstName?: string; lastName?: string }) => {
+        before: async (user: AuthUser & Partial<User>) => {
           const [first, last] = user.name.split(' ');
+          const birthDate = user.birthDate ? new Date(user.birthDate) : null;
 
           return {
             data: {
               ...user,
+              birthDate,
               firstName: user.firstName || first,
               lastName: user.lastName || last || '',
             },

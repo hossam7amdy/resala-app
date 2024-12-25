@@ -1,6 +1,6 @@
 import { NotFoundError } from '@/exceptions';
 import type { Datastore } from '@/infrastructure/data-store';
-import type { CloudStorage } from '@/interfaces';
+import type { CloudStoragePort } from '@/interfaces';
 
 import type {
   GetMediaResponseDto,
@@ -13,7 +13,7 @@ import type {
 class MediaService {
   constructor(
     private db: Datastore,
-    private storage: CloudStorage
+    private storage: CloudStoragePort
   ) {}
 
   async getUploadUrl(id: string): Promise<string> {

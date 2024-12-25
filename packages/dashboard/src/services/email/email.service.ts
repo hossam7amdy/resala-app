@@ -1,25 +1,15 @@
 import type { Configuration } from '@/configuration';
-
-import { SimpleEmailService } from '../ses';
+import { SESAdapter } from '@/infrastructure/email-provider';
 
 export class EmailService {
-  private static _instance: EmailService | null = null;
-  private _ses: SimpleEmailService;
+  private _ses: SESAdapter;
 
-  protected constructor(private config: Configuration) {
-    this._ses = SimpleEmailService.getInstance(this.config);
-  }
-
-  static getInstance(config: Configuration) {
-    if (!this._instance) {
-      this._instance = new EmailService(config);
-    }
-
-    return this._instance;
+  constructor(private config: Configuration) {
+    this._ses = new SESAdapter(this.config);
   }
 
   async sendVerificationEmail(email: string, link: string) {
-    return await this._ses.sendEmail(
+    await this._ses.sendEmail(
       [email],
       'Email Verification',
       `<p>Click <a href="${link}" target="_blank">here</a> to verify your email</p>`
