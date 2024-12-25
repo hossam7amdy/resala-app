@@ -1,6 +1,6 @@
 import { NotFoundError } from '@/exceptions';
 import type { Datastore } from '@/infrastructure/data-store';
-import type { CloudStorage } from '@/interfaces';
+import type { CloudStoragePort } from '@/interfaces';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MediaService } from '../media.service';
@@ -8,7 +8,7 @@ import { MediaService } from '../media.service';
 describe('MediaService', () => {
   let mediaService: MediaService;
   let db: Datastore;
-  let storage: CloudStorage;
+  let storage: CloudStoragePort;
 
   beforeEach(() => {
     db = {
@@ -26,7 +26,7 @@ describe('MediaService', () => {
       blobExists: vi.fn(),
       getPublicUrl: vi.fn(),
       deleteBlob: vi.fn(),
-    } as unknown as CloudStorage;
+    } as unknown as CloudStoragePort;
 
     mediaService = new MediaService(db, storage);
   });

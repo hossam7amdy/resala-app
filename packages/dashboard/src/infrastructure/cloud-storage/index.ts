@@ -1,1 +1,1 @@
-export * from './s3';
+export { S3Adapter } from './s3';
