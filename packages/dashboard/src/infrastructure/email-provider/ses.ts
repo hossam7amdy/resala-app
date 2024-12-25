@@ -1,13 +1,13 @@
 import type { Configuration } from '@/configuration';
+import type { EmailPort } from '@/interfaces';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import type { SESClientConfig } from '@aws-sdk/client-ses';
 
-export class SimpleEmailService {
-  private static _instance: SimpleEmailService | null = null;
+export class SESAdapter implements EmailPort {
   private _sesClient: SESClient;
   private verifiedIdentity: string;
 
-  private constructor(readonly config: Configuration) {
+  constructor(readonly config: Configuration) {
     this.verifiedIdentity = config.aws.ses.verifiedIdentity;
 
     const clientOptions: SESClientConfig = {
@@ -20,12 +20,6 @@ export class SimpleEmailService {
     };
 
     this._sesClient = new SESClient(clientOptions);
-  }
-
-  public static getInstance(config: Configuration): SimpleEmailService {
-    if (!this._instance) this._instance = new SimpleEmailService(config);
-
-    return this._instance;
   }
 
   async sendEmail(emailList: string[], subject: string, templateData: string): Promise<void> {
@@ -44,4 +38,4 @@ export class SimpleEmailService {
   }
 }
 
-export default SimpleEmailService;
+export default SESAdapter;

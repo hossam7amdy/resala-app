@@ -1,0 +1,1 @@
+export { SESAdapter } from './ses';

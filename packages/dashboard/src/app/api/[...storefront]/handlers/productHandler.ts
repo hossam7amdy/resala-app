@@ -5,7 +5,7 @@ import {
   GetProductSchema,
   ListProductsResponseSchema,
   ListProductsSchema,
-  ProductSchema,
+  ListTopProductsSchema,
 } from '@resala/shared';
 
 const getProductRoute = createRoute({
@@ -68,12 +68,7 @@ const listTopProductsRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            data: z.array(
-              z.object({
-                product: ProductSchema,
-                unitsSold: z.number(),
-              })
-            ),
+            data: ListTopProductsSchema,
           }),
         },
       },

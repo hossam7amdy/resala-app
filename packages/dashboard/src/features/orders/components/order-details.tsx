@@ -6,8 +6,6 @@ import { OrderDetailsTab } from './order-details-tab';
 import { PaymentActionsButtons } from './payment-action-buttons';
 import { ShippingDetailsTab } from './shipping-details-tab';
 
-// import { TransactionDetails } from './transaction-details';
-
 export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ order }) => {
   return (
     <Tabs
@@ -24,13 +22,6 @@ export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ or
           label: 'Order Details',
           children: <OrderDetailsTab order={order} />,
         },
-        // {
-        //   key: order.transactionId || 'transaction',
-        //   tabKey: 'transaction',
-        //   label: 'Transaction Details',
-        //   children: <TransactionDetails transactionId={order.transactionId!} />,
-        //   disabled: !order.transactionId,
-        // },
       ]}
       tabBarExtraContent={
         order.transactionId && (
