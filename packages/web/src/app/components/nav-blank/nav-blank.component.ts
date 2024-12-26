@@ -80,7 +80,6 @@ export class NavBlankComponent implements OnInit {
 
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
-      this.translate.defaultLang;
       this.currentLang = 'ar';
     } else {
       this.translate.use(this.langStorage);

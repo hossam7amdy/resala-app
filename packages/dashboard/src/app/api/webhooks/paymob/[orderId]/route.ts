@@ -6,7 +6,11 @@ import { createHmac } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import type { NextRequest } from 'next/server';
 
-export const POST = async (request: NextRequest, { params }: { params: { orderId: string } }) => {
+export const POST = async (
+  request: NextRequest,
+  props: { params: Promise<{ orderId: string }> }
+) => {
+  const params = await props.params;
   try {
     const orderId = params.orderId;
 

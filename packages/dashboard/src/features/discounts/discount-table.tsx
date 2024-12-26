@@ -19,11 +19,7 @@ const extractFilterValueFromSearchParams = (searchParams: URLSearchParams, key: 
   return value ? [value] : null;
 };
 
-const TableDateFilter: React.FC<FilterDropdownProps> = ({
-  selectedKeys,
-  setSelectedKeys,
-  confirm,
-}) => {
+const TableDateFilter = ({ selectedKeys, setSelectedKeys, confirm }: FilterDropdownProps) => {
   const defaultValue = selectedKeys.at(0)
     ? dayjs(selectedKeys.at(0) as string, { format: 'date' })
     : undefined;

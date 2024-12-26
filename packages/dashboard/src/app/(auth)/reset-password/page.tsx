@@ -7,7 +7,8 @@ import React from 'react';
 import styles from './page.module.css';
 import { ResetPasswordForm } from './reset-form';
 
-const ResetPasswordPage = ({ searchParams }: { searchParams: { token?: string } }) => {
+const ResetPasswordPage = async (props: { searchParams: Promise<{ token?: string }> }) => {
+  const searchParams = await props.searchParams;
   return (
     <div className={styles.container}>
       <Flex vertical gap={10}>

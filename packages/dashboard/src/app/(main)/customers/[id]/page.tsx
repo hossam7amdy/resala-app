@@ -7,7 +7,8 @@ import { Breadcrumb, Col, Row } from 'antd';
 import Link from 'next/link';
 import React from 'react';
 
-const EditCustomerPage = async ({ params }: { params: Params }) => {
+const EditCustomerPage = async (props: { params: Params }) => {
+  const params = await props.params;
   const user = await getUserById(params.id);
 
   return (

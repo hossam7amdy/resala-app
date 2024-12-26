@@ -7,9 +7,10 @@ import type { ListMediaRequest } from '@resala/shared';
 import { Card } from 'antd';
 
 interface CreateProductPageProps {
-  searchParams: ListMediaRequest['query'];
+  searchParams: Promise<ListMediaRequest['query']>;
 }
-const CreateProductPage: React.FC<CreateProductPageProps> = async ({ searchParams }) => {
+const CreateProductPage: React.FC<CreateProductPageProps> = async props => {
+  const searchParams = await props.searchParams;
   const [categories, medias, colors, sizes] = await Promise.all([
     listAllCategories(),
     listMedias(searchParams),

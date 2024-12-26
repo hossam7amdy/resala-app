@@ -6,7 +6,8 @@ import type { Params } from '@/types';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
-const ProductStocksPage = async ({ params }: { params: Params }) => {
+const ProductStocksPage = async (props: { params: Params }) => {
+  const params = await props.params;
   const product = await findProduct(params.id);
 
   if (!product) notFound();

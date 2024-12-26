@@ -1,6 +1,5 @@
 'use client';
 
-import type { Params } from '@/types';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 import { useParams } from 'next/navigation';
@@ -14,7 +13,7 @@ interface AddDiscountProductsModalProps {
 export const AddDiscountProductsModal: React.FC<AddDiscountProductsModalProps> = ({
   discountId,
 }) => {
-  const params = useParams<Params>();
+  const params = useParams<{ id: string }>();
   const [open, setOpen] = useState(false);
 
   const onFinished = () => setOpen(false);

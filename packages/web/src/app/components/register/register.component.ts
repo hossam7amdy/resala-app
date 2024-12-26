@@ -107,11 +107,4 @@ export class RegisterComponent {
       this.errMsgAr = 'برجاء مراجعة سياسة الخصوصية';
     }
   }
-
-  textTimer(txt: string) {
-    setTimeout(() => {
-      txt;
-    }, 3000);
-    clearTimeout(3000);
-  }
 }
