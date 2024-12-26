@@ -2,8 +2,8 @@
 
 import { ROUTES } from '@/routes';
 import { reviewService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import {
-  type DeleteReviewResponse,
   type GetReviewResponse,
   type ListReviewsRequest,
   type ListReviewsResponse,
@@ -28,13 +28,13 @@ export const findReviewById = async (id: string): Promise<GetReviewResponse['dat
   }
 };
 
-export const deleteReview = async (id: string, userId: string): Promise<DeleteReviewResponse> => {
+export const deleteReview = async (id: string, userId: string) => {
   try {
     const data = await reviewService.delete(id, userId);
 
     revalidatePath(ROUTES.PRODUCT_REVIEWS(id));
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteReviewResponse;
+    return formatError(e);
   }
 };

@@ -2,19 +2,15 @@
 
 import { ROUTES } from '@/routes';
 import { discountService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import type {
   AddProductsToDiscountRequest,
-  AddProductsToDiscountResponse,
   CreateDiscountRequest,
-  CreateDiscountResponse,
-  DeleteDiscountResponse,
   GetDiscountRequest,
   GetDiscountResponse,
   ListDiscountsRequest,
   ListDiscountsResponse,
-  RemoveProductsFromDiscountResponse,
   UpdateDiscountRequest,
-  UpdateDiscountResponse,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -36,63 +32,55 @@ export const findDiscountById = async (
   }
 };
 
-export const createDiscount = async (
-  payload: CreateDiscountRequest['body']
-): Promise<CreateDiscountResponse> => {
+export const createDiscount = async (payload: CreateDiscountRequest['body']) => {
   try {
     const data = await discountService.create(payload);
     revalidatePath(ROUTES.DISCOUNTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as CreateDiscountResponse;
+    return formatError(e);
   }
 };
 
-export const updateDiscount = async (
-  id: string,
-  payload: UpdateDiscountRequest['body']
-): Promise<UpdateDiscountResponse> => {
+export const updateDiscount = async (id: string, payload: UpdateDiscountRequest['body']) => {
   try {
     const data = await discountService.update(id, payload);
     revalidatePath(ROUTES.DISCOUNTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateDiscountResponse;
+    return formatError(e);
   }
 };
 
-export const deleteDiscount = async (id: string): Promise<DeleteDiscountResponse> => {
+export const deleteDiscount = async (id: string) => {
   try {
     const data = await discountService.delete(id);
     revalidatePath(ROUTES.DISCOUNTS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteDiscountResponse;
+    return formatError(e);
   }
 };
 
 export const addProductsToDiscount = async (
   id: string,
   { productIds }: AddProductsToDiscountRequest['body']
-): Promise<AddProductsToDiscountResponse> => {
+) => {
   try {
     await discountService.addProducts(id, productIds!);
     revalidatePath(ROUTES.DISCOUNT_PRODUCTS(id));
     return {};
   } catch (e) {
-    return { error: (e as Error).message } as AddProductsToDiscountResponse;
+    return formatError(e);
   }
 };
 
-export const removeProductsFromDiscount = async (
-  id: string,
-  productIds: string[]
-): Promise<RemoveProductsFromDiscountResponse> => {
+export const removeProductsFromDiscount = async (id: string, productIds: string[]) => {
   try {
     await discountService.removeProducts(id, productIds);
     revalidatePath(ROUTES.DISCOUNT_PRODUCTS(id));
     return {};
   } catch (e) {
-    return { error: (e as Error).message } as RemoveProductsFromDiscountResponse;
+    return formatError(e);
   }
 };

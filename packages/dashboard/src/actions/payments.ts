@@ -2,22 +2,15 @@
 
 import { ROUTES } from '@/routes';
 import { paymentService } from '@/services';
-import type {
-  GetPaymentResponse,
-  RefundPaymentRequest,
-  RefundPaymentResponse,
-  VoidPaymentRequest,
-  VoidPaymentResponse,
-} from '@resala/shared';
+import { formatError } from '@/utils/formatError';
+import type { GetPaymentResponse, RefundPaymentRequest, VoidPaymentRequest } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
 export const findPaymentById = async (id: string): Promise<GetPaymentResponse['data']> => {
   return await paymentService.retrieve(id);
 };
 
-export const voidPayment = async (
-  payload: VoidPaymentRequest['body']
-): Promise<VoidPaymentResponse> => {
+export const voidPayment = async (payload: VoidPaymentRequest['body']) => {
   try {
     await paymentService.void(payload.transactionId);
 
@@ -26,13 +19,11 @@ export const voidPayment = async (
 
     return { success: true };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };
 
-export const refundPayment = async (
-  payload: RefundPaymentRequest['body']
-): Promise<RefundPaymentResponse> => {
+export const refundPayment = async (payload: RefundPaymentRequest['body']) => {
   try {
     await paymentService.refund(payload.transactionId, payload.amount);
 
@@ -41,6 +32,6 @@ export const refundPayment = async (
 
     return { success: true };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };
