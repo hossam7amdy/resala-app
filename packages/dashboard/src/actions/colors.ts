@@ -2,14 +2,12 @@
 
 import { ROUTES } from '@/routes';
 import { colorService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import type {
   CreateColorRequest,
-  CreateColorResponse,
-  DeleteColorResponse,
   GetColorResponse,
   ListColorsResponse,
   UpdateColorRequest,
-  UpdateColorResponse,
 } from '@resala/shared';
 import { revalidateTag } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -26,29 +24,24 @@ export const findColorById = async (id: string): Promise<GetColorResponse['data'
   }
 };
 
-export const createColor = async (
-  payload: CreateColorRequest['body']
-): Promise<CreateColorResponse> => {
+export const createColor = async (payload: CreateColorRequest['body']) => {
   try {
     const data = await colorService.create(payload);
     revalidateTag(ROUTES.COLORS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as CreateColorResponse;
+    return formatError(e);
   }
 };
 
-export const updateColor = async (
-  id: string,
-  payload: UpdateColorRequest['body']
-): Promise<UpdateColorResponse> => {
+export const updateColor = async (id: string, payload: UpdateColorRequest['body']) => {
   try {
     const data = await colorService.update(id, payload);
 
     revalidateTag(ROUTES.COLORS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateColorResponse;
+    return formatError(e);
   }
 };
 
@@ -59,6 +52,6 @@ export const deleteColor = async (id: string) => {
     revalidateTag(ROUTES.COLORS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteColorResponse;
+    return formatError(e);
   }
 };

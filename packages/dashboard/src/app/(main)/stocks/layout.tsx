@@ -1,11 +1,11 @@
 import { ROUTES } from '@/routes';
 import { Tabs } from 'antd';
-import { headers } from 'next/headers';
+import { type UnsafeUnwrappedHeaders, headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const headersList = headers();
+  const headersList = headers() as unknown as UnsafeUnwrappedHeaders;
 
   const activeKey = headersList.get('x-pathname') || ROUTES.STOCKS;
 

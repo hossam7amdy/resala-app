@@ -1,5 +1,6 @@
 import type { ModalProps, UploadProps } from 'antd';
-import type { ForwardedRef, MutableRefObject } from 'react';
+import type { ForwardedRef, RefObject } from 'react';
+import type React from 'react';
 import type { default as Cropper, CropperProps } from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
 
@@ -64,12 +65,12 @@ export type ImgCropProps = {
   >;
 
   beforeCrop?: BeforeUpload;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
 export type EasyCropRef = {
   rotation: number;
-  cropPixelsRef: MutableRefObject<Area>;
+  cropPixelsRef: RefObject<Area>;
   onReset: () => void;
 };
 

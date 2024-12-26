@@ -14,7 +14,11 @@ interface DiscountProductsPageProps {
   params: Params;
   children: React.ReactNode;
 }
-const DiscountProductsLayout: React.FC<DiscountProductsPageProps> = ({ params, children }) => {
+const DiscountProductsLayout: React.FC<DiscountProductsPageProps> = async props => {
+  const params = await props.params;
+
+  const { children } = props;
+
   return (
     <Row gutter={[10, 30]}>
       <Col span={24}>

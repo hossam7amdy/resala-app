@@ -14,9 +14,11 @@ import { notFound } from 'next/navigation';
 
 interface EditProductPageProps {
   params: Params;
-  searchParams: ListMediaRequest['query'];
+  searchParams: Promise<ListMediaRequest['query']>;
 }
-const EditProductPage: React.FC<EditProductPageProps> = async ({ params, searchParams }) => {
+const EditProductPage: React.FC<EditProductPageProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const [categories, product, medias, colors, sizes] = await Promise.all([
     listAllCategories(),
     findProduct(params.id),

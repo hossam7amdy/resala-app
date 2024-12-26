@@ -11,8 +11,9 @@ const StockPagination: React.FC = async () => {
 };
 
 const StocksPage: React.FC<{
-  searchParams?: ListStocksRequest['query'];
-}> = async ({ searchParams }) => {
+  searchParams?: Promise<ListStocksRequest['query']>;
+}> = async props => {
+  const searchParams = await props.searchParams;
   const stocks = await listStocks({ page: 1, limit: 100, ...searchParams });
 
   return (

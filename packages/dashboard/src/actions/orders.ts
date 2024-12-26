@@ -2,6 +2,7 @@
 
 import { ROUTES } from '@/routes';
 import { orderService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import type {
   GetOrderResponse,
   ListOrdersRequest,
@@ -35,7 +36,7 @@ export const updateOrderStatus = async (id: string, payload: UpdateOrderRequest[
     revalidatePath(ROUTES.ORDERS);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };
 
