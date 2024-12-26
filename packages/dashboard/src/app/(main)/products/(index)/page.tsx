@@ -4,7 +4,8 @@ import { ProductsTable } from '@/features/products';
 import type { ListRequestQuery } from '@resala/shared';
 import { Flex } from 'antd';
 
-const ProductPage = async ({ searchParams }: { searchParams?: ListRequestQuery['query'] }) => {
+const ProductPage = async (props: { searchParams?: Promise<ListRequestQuery['query']> }) => {
+  const searchParams = await props.searchParams;
   const { products, pagination } = await listProducts({ page: 1, limit: 100, ...searchParams });
 
   return (

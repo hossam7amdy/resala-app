@@ -6,9 +6,10 @@ import { StockEditor } from '@/features/stocks';
 import { Card } from 'antd';
 
 interface CreateStockPageProps {
-  searchParams: { productId: string };
+  searchParams: Promise<{ productId: string }>;
 }
-const CreateStockPage: React.FC<CreateStockPageProps> = async ({ searchParams }) => {
+const CreateStockPage: React.FC<CreateStockPageProps> = async props => {
+  const searchParams = await props.searchParams;
   const [product, medias, sizes, colors] = await Promise.all([
     findProduct(searchParams.productId),
     listMedias({} as never),

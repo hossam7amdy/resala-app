@@ -10,10 +10,12 @@ import React from 'react';
 
 interface ProductReviewsProps {
   params: Params;
-  searchParams: ListReviewsRequest['query'];
+  searchParams: Promise<ListReviewsRequest['query']>;
 }
 
-const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({ params, searchParams }) => {
+const ProductReviewsPage: React.FC<ProductReviewsProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { reviews, pagination } = await listReviews({ productId: params.id, ...searchParams });
 
   return (

@@ -8,7 +8,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-const EditCategoryPage = async ({ params }: { params: Params }) => {
+const EditCategoryPage = async (props: { params: Params }) => {
+  const params = await props.params;
   return (
     <Row gutter={[10, 50]}>
       <Col span={24}>
@@ -31,7 +32,7 @@ const EditCategoryPage = async ({ params }: { params: Params }) => {
   );
 };
 
-const EditCategoryForm = async ({ id }: Params) => {
+const EditCategoryForm = async ({ id }: { id: string }) => {
   const category = await findCategoryById(id);
 
   if (!category) {

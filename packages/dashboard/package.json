@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "yarn prisma generate",
-    "dev": "yarn prisma generate && next dev",
+    "dev": "yarn prisma generate && next dev --turbopack",
     "build": "yarn prisma generate && next build",
     "clean": "rm -rf .next",
     "typecheck": "tsc --noEmit",
@@ -29,20 +29,20 @@
     "clsx": "^2.1.1",
     "hono": "^4.6.12",
     "libphonenumber-js": "^1.11.15",
-    "next": "14.2.18",
-    "react": "^18.3.1",
+    "next": "15.1.3",
+    "react": "19.0.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "19.0.0",
     "react-easy-crop": "^5.2.0",
     "sharp": "0.32"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
-    "eslint-config-next": "14.2.14",
+    "eslint-config-next": "15.1.3",
     "postcss": "^8.4.47",
     "prisma": "^6.0.0",
     "tailwind-merge": "^2.5.5",
@@ -52,5 +52,9 @@
   },
   "prisma": {
     "seed": "node prisma/seed.mjs"
+  },
+  "resolutions": {
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2"
   }
 }
