@@ -1,4 +1,4 @@
-import type { BlobMetadata, CloudStorage } from '@/interfaces';
+import type { BlobMetadata, CloudStoragePort } from '@/interfaces';
 import type { S3ClientConfig } from '@aws-sdk/client-s3';
 import {
   DeleteObjectCommand,
@@ -20,7 +20,7 @@ type S3ServiceConfig = {
   forcePathStyle?: boolean;
 };
 
-class S3StorageService implements CloudStorage {
+class S3Adapter implements CloudStoragePort {
   private _s3Client: S3Client;
   private _cdnBaseUrl: string;
   private _bucketName: string;
@@ -115,4 +115,4 @@ class S3StorageService implements CloudStorage {
   }
 }
 
-export { S3StorageService };
+export { S3Adapter };

@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   title: 'Categories',
 };
 
-const CategoryPage = async ({ searchParams }: { searchParams: { search?: string } }) => {
+const CategoryPage = async (props: { searchParams: Promise<{ search?: string }> }) => {
+  const searchParams = await props.searchParams;
   const search = searchParams.search || '';
   const categories = await listAllCategories();
 

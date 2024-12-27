@@ -9,12 +9,11 @@ import { notFound } from 'next/navigation';
 
 interface DiscountProductsPageProps {
   params: Params;
-  searchParams?: GetDiscountRequest['query'];
+  searchParams?: Promise<GetDiscountRequest['query']>;
 }
-const DiscountProductsPage: React.FC<DiscountProductsPageProps> = async ({
-  params,
-  searchParams,
-}) => {
+const DiscountProductsPage: React.FC<DiscountProductsPageProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const discount = await findDiscountById(params.id, { page: 1, limit: 100, ...searchParams });
 
   if (discount?.isStoreWide) {

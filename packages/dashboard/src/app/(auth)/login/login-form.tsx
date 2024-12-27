@@ -11,7 +11,7 @@ export const LoginForm = () => {
   const notification = useNotification();
 
   const { isLoading, mutate } = useMutation({
-    mutationFn: ({ sign, password }: { sign: string; password: string }) => {
+    mutationFn: ({ sign, password }: { sign: string; password: string }): Promise<unknown> => {
       if (sign.includes('@')) {
         return signIn.email({ email: sign, password });
       }

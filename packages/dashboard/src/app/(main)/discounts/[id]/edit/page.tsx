@@ -2,7 +2,8 @@ import { findDiscountById } from '@/actions/discount';
 import { DiscountEditor } from '@/features/discounts';
 import type { Params } from '@/types';
 
-const EditDiscountPage = async ({ params }: { params: Params }) => {
+const EditDiscountPage = async (props: { params: Params }) => {
+  const params = await props.params;
   const { products, ...discount } = await findDiscountById(params.id, { page: 1, limit: 100 });
 
   return (

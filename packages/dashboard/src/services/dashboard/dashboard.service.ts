@@ -9,7 +9,7 @@ import type {
   ListTopProductsResponse,
 } from '@resala/shared';
 
-import { type GetSalesTrend, type ListTopCustomers, type ListTopProducts } from './dashboard.sql';
+import { type GetSalesTrend, type ListTopCustomers } from './dashboard.sql';
 
 export class DashboardService {
   constructor(private readonly db: DataStore) {}
@@ -169,38 +169,36 @@ export class DashboardService {
   }
 
   async listTopProducts(): Promise<ListTopProductsResponse['data']> {
-    const topProducts = await this.db.$queryRaw<ListTopProducts>`
-      SELECT
-          t.units_sold,
-          p.*
-      FROM "product" p
-      JOIN (
-          SELECT 
-              product_id,
-              SUM(quantity) AS units_sold
-          FROM "order_item"
-          GROUP BY 1
-          ORDER BY 2 DESC
-          LIMIT 10
-          ) AS t
-          ON (t.product_id = p.id)
-      ORDER BY 1 DESC;
-    `;
+    const topProducts = await this.db.product.findMany({
+      include: {
+        media: true,
+        images: {
+          include: {
+            media: true,
+          },
+        },
+        _count: {
+          select: {
+            orderItems: true,
+          },
+        },
+      },
+      orderBy: {
+        orderItems: {
+          _count: 'desc',
+        },
+      },
+    });
 
-    return topProducts.map(p => ({
-      unitsSold: Number(p.units_sold?.toString() ?? 0),
+    return topProducts.map(({ images, media, _count, ...product }) => ({
+      unitsSold: _count.orderItems,
       product: {
-        id: p.id,
-        categoryId: p.category_id,
-        arName: p.ar_name,
-        enName: p.en_name,
-        price: p.price,
-        arDescription: p.ar_description,
-        enDescription: p.en_description,
-        imageUrl: p.image_url,
-        mediaId: p.image_key,
-        createdAt: p.created_at,
-        updatedAt: p.updated_at,
+        ...product,
+        imageUrl: media.url,
+        images: images.map(({ media, ...image }) => ({
+          ...image,
+          imageUrl: media.url,
+        })),
       },
     }));
   }

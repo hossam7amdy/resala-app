@@ -2,14 +2,12 @@
 
 import { ROUTES } from '@/routes';
 import { sizeService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import type {
   CreateSizeRequest,
-  CreateSizeResponse,
-  DeleteSizeResponse,
   GetSizeResponse,
   ListSizesResponse,
   UpdateSizeRequest,
-  UpdateSizeResponse,
 } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 import { notFound } from 'next/navigation';
@@ -26,39 +24,34 @@ export const findSizeById = async (id: string): Promise<GetSizeResponse['data']>
   }
 };
 
-export const createSize = async (
-  payload: CreateSizeRequest['body']
-): Promise<CreateSizeResponse> => {
+export const createSize = async (payload: CreateSizeRequest['body']) => {
   try {
     const data = await sizeService.create(payload);
 
     revalidatePath(ROUTES.SIZES);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as CreateSizeResponse;
+    return formatError(e);
   }
 };
 
-export const updateSize = async (
-  id: string,
-  payload: UpdateSizeRequest['body']
-): Promise<UpdateSizeResponse> => {
+export const updateSize = async (id: string, payload: UpdateSizeRequest['body']) => {
   try {
     const data = await sizeService.update(id, payload);
     revalidatePath(ROUTES.SIZES);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as UpdateSizeResponse;
+    return formatError(e);
   }
 };
 
-export const deleteSize = async (id: string): Promise<DeleteSizeResponse> => {
+export const deleteSize = async (id: string) => {
   try {
     const data = await sizeService.delete(id);
     revalidatePath(ROUTES.SIZES);
 
     return { data };
   } catch (e) {
-    return { error: (e as Error).message } as DeleteSizeResponse;
+    return formatError(e);
   }
 };

@@ -14,7 +14,11 @@ interface EditDiscountLayoutProps {
   params: Params;
   children: React.ReactNode;
 }
-const EditDiscountLayout: React.FC<EditDiscountLayoutProps> = ({ params, children }) => {
+const EditDiscountLayout: React.FC<EditDiscountLayoutProps> = async props => {
+  const params = await props.params;
+
+  const { children } = props;
+
   return (
     <Row gutter={[10, 30]}>
       <Col span={24}>

@@ -354,17 +354,10 @@ export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
   data: {
     id: string;
-    pending: boolean;
     amount: number;
-    success: boolean;
-    isCapture: boolean;
-    isStandalonePayment: boolean;
-    isVoided: boolean;
-    isRefunded: boolean;
-    is3dSecure: boolean;
+    status: string;
     createdAt: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    updatedAt: string;
   };
 };
 
@@ -465,7 +458,7 @@ export type ListCustomersFeedbackResponse = DefaultResponseBody & {
 
 export type ListTopProductsRequest = undefined;
 export type ListTopProductsResponse = DefaultResponseBody & {
-  data: { unitsSold: number; product: Product }[];
+  data: z.infer<typeof Schemas.ListTopProductsSchema>;
 };
 
 export type ListTopCustomersRequest = undefined;
