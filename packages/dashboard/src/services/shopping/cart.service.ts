@@ -2,7 +2,7 @@ import { BadRequestError, NotFoundError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { CreateCartRequest, GetCartResponse } from '@resala/shared';
 
-const MAX_CART_ITEMS = 25;
+const MAX_ITEMS_PER_STOCK = 12;
 
 export class CartService {
   constructor(private readonly db: DataStore) {}
@@ -85,9 +85,8 @@ export class CartService {
       throw new NotFoundError('Not enough stock');
     }
 
-    const userCart = await this.get(userId);
-    if (userCart.totalQuantity + quantity > MAX_CART_ITEMS) {
-      throw new BadRequestError(`Cart quantity limit reached ${MAX_CART_ITEMS} items`);
+    if (quantity > MAX_ITEMS_PER_STOCK) {
+      throw new BadRequestError(`Quantity should be less than or equal to ${MAX_ITEMS_PER_STOCK}`);
     }
 
     const cartData = { userId, stockId, quantity };
