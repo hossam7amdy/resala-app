@@ -63,12 +63,16 @@ export class PaymentService {
 
   async retrieve(transactionId: string): Promise<GetPaymentResponse['data']> {
     try {
-      const { amountCents, ...transaction } = await this._payment.retrieve(transactionId);
+      const { refundedAmountCents, amountCents, ...transaction } =
+        await this._payment.retrieve(transactionId);
 
       return {
         ...transaction,
         id: transactionId,
         amount: new Decimal(amountCents).div(100).toNumber(),
+        refundedAmount: refundedAmountCents
+          ? new Decimal(refundedAmountCents).div(100).toNumber()
+          : null,
       };
     } catch (e) {
       throw new NotFoundError((e as Error).message);

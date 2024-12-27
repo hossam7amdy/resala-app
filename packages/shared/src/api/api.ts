@@ -355,6 +355,7 @@ export type GetPaymentResponse = DefaultResponseBody & {
   data: {
     id: string;
     amount: number;
+    refundedAmount: number | null;
     status: string;
     createdAt: string;
     updatedAt: string;
