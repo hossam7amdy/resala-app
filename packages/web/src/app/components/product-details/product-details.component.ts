@@ -144,6 +144,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         this.categoryId = res?.data.category.id;
         this.productStock = res?.data.stocks;
         this.productStockColor = this.productStock;
+        console.log(res);
         this.productStockColor = this.productStockColor.reduce((a: any[], b: { colorId: any }) => {
           if (!a.find(data => data.color.id == b.colorId)) {
             a.push(b);
