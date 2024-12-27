@@ -6,6 +6,7 @@
 **/.angular
 **/.next
 **/.turbo
+**/tsconfig.tsbuildinfo*
 
 # Environments files:
 **/.env*
