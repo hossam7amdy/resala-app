@@ -131,7 +131,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.getTrendProductsId) this.getProducts.unsubscribe();
     if (this.getProducts) this.getProducts.unsubscribe();
-    if (this.destroySetTimeOut) this.destroySetTimeOut.clearTimeout;
   }
 
   // Change page Direction as per Selected Lang
