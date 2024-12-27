@@ -40,46 +40,37 @@ export class DiscountService {
     }
   }
 
-  private async _getApplicableDiscounts(productIds: string[]) {
-    const commonFilters = {
-      isActive: true,
-      OR: [
-        { startDate: null },
-        { endDate: null },
-        { startDate: { lte: new Date() } },
-        { endDate: { gte: new Date(new Date().toDateString()) } },
-      ],
-    };
-
-    const productDiscountsPromise = this.db.discount.findMany({
-      include: {
-        products: {
-          where: {
-            id: {
-              in: productIds,
-            },
-          },
-        },
-      },
+  private async _listActiveStoreWideDiscounts() {
+    return await this.db.discount.findMany({
       where: {
-        ...commonFilters,
-        isStoreWide: false,
-      },
-    });
-
-    const storeWideDiscountsPromise = this.db.discount.findMany({
-      where: {
-        ...commonFilters,
+        isActive: true,
         isStoreWide: true,
+        OR: [
+          { startDate: null },
+          { endDate: null },
+          { startDate: { lte: new Date() } },
+          { endDate: { gte: new Date(new Date().toDateString()) } },
+        ],
       },
     });
+  }
 
-    const [productDiscounts, storeWideDiscounts] = await this.db.$transaction([
-      productDiscountsPromise,
-      storeWideDiscountsPromise,
-    ]);
-
-    return [...productDiscounts, ...storeWideDiscounts.map(d => ({ ...d, discountProduct: [] }))];
+  private async _listActiveProductsDiscounts(productIds: string[]) {
+    return await this.db.discount.findMany({
+      include: {
+        products: true,
+      },
+      where: {
+        isActive: true,
+        OR: [
+          { products: { some: { id: { in: productIds } } } },
+          { startDate: null },
+          { endDate: null },
+          { startDate: { lte: new Date() } },
+          { endDate: { gte: new Date(new Date().toDateString()) } },
+        ],
+      },
+    });
   }
 
   private _calculateBestDiscount(items: CartItem[], discounts: Discount[]): CartItem[] {
@@ -304,31 +295,24 @@ export class DiscountService {
 
     // 2. Get applicable discounts for each product
     const productIds = Array.from(productToItemsMap.keys());
-    const applicableDiscounts = await this._getApplicableDiscounts(productIds);
+    const [storewideDiscounts, productDiscounts] = await Promise.all([
+      this._listActiveStoreWideDiscounts(),
+      this._listActiveProductsDiscounts(productIds),
+    ]);
 
-    if (applicableDiscounts.length === 0) {
+    if (!storewideDiscounts.length && !productDiscounts.length) {
       return cart;
     }
-
-    const storeWideDiscounts = applicableDiscounts.filter(d => d.isStoreWide);
-
-    const productDiscountsMap = applicableDiscounts.reduce((map, product) => {
-      if (!map.has(product.id)) {
-        map.set(product.id, []);
-      }
-      map.get(product.id)!.push(product);
-      return map;
-    }, new Map<string, Discount[]>());
 
     // 3. Calculate best discount for each product
     const updatedItems: GetCartResponse['data']['items'] = [];
 
     for (const [productId, items] of Array.from(productToItemsMap.entries())) {
-      const discounts = productDiscountsMap.get(productId) ?? [];
+      const discounts = productDiscounts.filter(d => d.products.some(p => p.id === productId));
 
       const bestDiscounts = this._calculateBestDiscount(items, [
         ...discounts,
-        ...storeWideDiscounts,
+        ...storewideDiscounts,
       ]);
 
       updatedItems.push(...bestDiscounts);
