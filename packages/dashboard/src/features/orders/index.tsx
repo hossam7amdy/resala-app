@@ -1,3 +1,2 @@
-export { OrdersTable } from './components/orders-table';
-
-export { useTransaction } from './hooks/useTransaction';
+export * from './components';
+export * from './hooks';
