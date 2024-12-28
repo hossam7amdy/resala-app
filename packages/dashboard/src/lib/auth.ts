@@ -126,10 +126,10 @@ const auth = betterAuth({
         type: 'string',
       },
       banExpires: {
-        type: 'string',
+        type: 'date',
       },
       birthDate: {
-        type: 'string',
+        type: 'date',
       },
     },
   },
@@ -143,6 +143,7 @@ const auth = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
+      trustedProviders: ['google'],
     },
   },
 });
