@@ -12,7 +12,6 @@ export default defineConfig({
       '@/lib': '/src/lib',
       '@/services': '/src/services',
       '@/exceptions': '/src/exceptions',
-      '@/infrastructure': '/src/infrastructure',
       '@/utils': '/src/utils',
     },
   },
