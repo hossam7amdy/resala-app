@@ -74,7 +74,7 @@
     }
   ],
   "paths": {
-    "/sign-in/social": {
+    "/api/auth/sign-in/social": {
       "post": {
         "tags": ["Account"],
         "description": "Sign in with a social provider",
@@ -188,7 +188,7 @@
         }
       }
     },
-    "/get-session": {
+    "/api/auth/get-session": {
       "get": {
         "tags": ["Account"],
         "description": "Get the current session",
@@ -275,7 +275,7 @@
         }
       }
     },
-    "/sign-out": {
+    "/api/auth/sign-out": {
       "post": {
         "tags": ["Account"],
         "description": "Sign out the current user",
@@ -352,7 +352,7 @@
         }
       }
     },
-    "/sign-up/email": {
+    "/api/auth/sign-up/email": {
       "post": {
         "tags": ["Account"],
         "description": "Sign up a user using email and password",
@@ -462,7 +462,7 @@
         }
       }
     },
-    "/sign-in/email": {
+    "/api/auth/sign-in/email": {
       "post": {
         "tags": ["Account"],
         "description": "Sign in with email and password",
@@ -567,7 +567,7 @@
         }
       }
     },
-    "/forget-password": {
+    "/api/auth/forget-password": {
       "post": {
         "tags": ["Account"],
         "description": "Send a password reset email to the user",
@@ -662,7 +662,7 @@
         }
       }
     },
-    "/reset-password": {
+    "/api/auth/reset-password": {
       "post": {
         "tags": ["Account"],
         "description": "Reset the password for a user",
@@ -751,7 +751,7 @@
         }
       }
     },
-    "/verify-email": {
+    "/api/auth/verify-email": {
       "get": {
         "tags": ["Account"],
         "description": "Verify the email of the user",
@@ -843,7 +843,7 @@
         }
       }
     },
-    "/send-verification-email": {
+    "/api/auth/send-verification-email": {
       "post": {
         "tags": ["Account"],
         "description": "Send a verification email to the user",
@@ -937,7 +937,7 @@
         }
       }
     },
-    "/change-email": {
+    "/api/auth/change-email": {
       "post": {
         "tags": ["Account"],
         "security": [{ "bearerAuth": [] }],
@@ -1031,7 +1031,7 @@
         }
       }
     },
-    "/change-password": {
+    "/api/auth/change-password": {
       "post": {
         "tags": ["Account"],
         "description": "Change the password of the user",
@@ -1132,7 +1132,7 @@
         }
       }
     },
-    "/update-user": {
+    "/api/auth/update-user": {
       "post": {
         "tags": ["Account"],
         "description": "Update the current user",
@@ -1219,7 +1219,7 @@
         }
       }
     },
-    "/delete-user": {
+    "/api/auth/delete-user": {
       "post": {
         "tags": ["Account"],
         "description": "Delete the user",
@@ -1305,7 +1305,7 @@
         }
       }
     },
-    "/reset-password/:token": {
+    "/api/auth/reset-password/:token": {
       "get": {
         "tags": ["Account"],
         "description": "Redirects the user to the callback URL with the token",
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "/list-sessions": {
+    "/api/auth/list-sessions": {
       "get": {
         "tags": ["Account"],
         "description": "List all active sessions for the user",
@@ -1472,7 +1472,7 @@
         }
       }
     },
-    "/revoke-session": {
+    "/api/auth/revoke-session": {
       "post": {
         "tags": ["Account"],
         "description": "Revoke a single session",
@@ -1549,7 +1549,7 @@
         }
       }
     },
-    "/revoke-sessions": {
+    "/api/auth/revoke-sessions": {
       "post": {
         "tags": ["Account"],
         "description": "Revoke all sessions for the user",
@@ -1630,7 +1630,7 @@
         }
       }
     },
-    "/revoke-other-sessions": {
+    "/api/auth/revoke-other-sessions": {
       "post": {
         "tags": ["Account"],
         "description": "Revoke all other sessions for the user except the current one",
@@ -1707,7 +1707,7 @@
         }
       }
     },
-    "/link-social": {
+    "/api/auth/link-social": {
       "post": {
         "tags": ["Account"],
         "description": "Link a social account to the user",
@@ -1803,7 +1803,7 @@
         }
       }
     },
-    "/list-accounts": {
+    "/api/auth/list-accounts": {
       "get": {
         "tags": ["Account"],
         "description": "List all accounts linked to the user",
@@ -1883,7 +1883,7 @@
         }
       }
     },
-    "/delete-user/callback": {
+    "/api/auth/delete-user/callback": {
       "get": {
         "tags": ["Account"],
         "security": [{ "bearerAuth": [] }],
@@ -1951,7 +1951,7 @@
         }
       }
     },
-    "/ok": {
+    "/api/auth/ok": {
       "get": {
         "tags": ["Account"],
         "description": "Check if the API is working",
@@ -2025,7 +2025,7 @@
         }
       }
     },
-    "/error": {
+    "/api/auth/error": {
       "get": {
         "tags": ["Account"],
         "description": "Displays an error page",
@@ -2095,7 +2095,7 @@
         }
       }
     },
-    "/admin/set-role": {
+    "/api/auth/admin/set-role": {
       "post": {
         "tags": ["Admin"],
         "description": "Set the role of a user",
@@ -2191,7 +2191,7 @@
         }
       }
     },
-    "/admin/create-user": {
+    "/api/auth/admin/create-user": {
       "post": {
         "tags": ["Admin"],
         "description": "Create a new user",
@@ -2287,7 +2287,7 @@
         }
       }
     },
-    "/admin/list-users": {
+    "/api/auth/admin/list-users": {
       "get": {
         "tags": ["Admin"],
         "description": "List users",
@@ -2424,7 +2424,7 @@
         }
       }
     },
-    "/admin/list-user-sessions": {
+    "/api/auth/admin/list-user-sessions": {
       "post": {
         "tags": ["Admin"],
         "description": "List user sessions",
@@ -2519,7 +2519,7 @@
         }
       }
     },
-    "/admin/unban-user": {
+    "/api/auth/admin/unban-user": {
       "post": {
         "tags": ["Admin"],
         "description": "Unban a user",
@@ -2609,7 +2609,7 @@
         }
       }
     },
-    "/admin/ban-user": {
+    "/api/auth/admin/ban-user": {
       "post": {
         "tags": ["Admin"],
         "description": "Ban a user",
@@ -2706,7 +2706,7 @@
         }
       }
     },
-    "/admin/impersonate-user": {
+    "/api/auth/admin/impersonate-user": {
       "post": {
         "tags": ["Admin"],
         "description": "Impersonate a user",
@@ -2799,7 +2799,7 @@
         }
       }
     },
-    "/admin/stop-impersonating": {
+    "/api/auth/admin/stop-impersonating": {
       "post": {
         "tags": ["Admin"],
         "security": [{ "bearerAuth": [] }],
@@ -2864,7 +2864,7 @@
         }
       }
     },
-    "/admin/revoke-user-session": {
+    "/api/auth/admin/revoke-user-session": {
       "post": {
         "tags": ["Admin"],
         "description": "Revoke a user session",
@@ -2953,7 +2953,7 @@
         }
       }
     },
-    "/admin/revoke-user-sessions": {
+    "/api/auth/admin/revoke-user-sessions": {
       "post": {
         "tags": ["Admin"],
         "description": "Revoke all user sessions",
@@ -3040,7 +3040,7 @@
         }
       }
     },
-    "/admin/remove-user": {
+    "/api/auth/admin/remove-user": {
       "post": {
         "tags": ["Admin"],
         "description": "Delete a user and all their sessions and accounts. Cannot be undone.",
@@ -3127,7 +3127,7 @@
         }
       }
     },
-    "/sign-in/anonymous": {
+    "/api/auth/sign-in/anonymous": {
       "post": {
         "tags": ["Anonymous"],
         "description": "Sign in anonymously",
@@ -3207,7 +3207,7 @@
         }
       }
     },
-    "/sign-in/phone-number": {
+    "/api/auth/sign-in/phone-number": {
       "post": {
         "tags": ["Phone-number"],
         "description": "Use this endpoint to sign in with phone number",
@@ -3292,7 +3292,7 @@
         }
       }
     },
-    "/phone-number/send-otp": {
+    "/api/auth/phone-number/send-otp": {
       "post": {
         "tags": ["Phone-number"],
         "description": "Use this endpoint to send OTP to phone number",
@@ -3380,7 +3380,7 @@
         }
       }
     },
-    "/phone-number/verify": {
+    "/api/auth/phone-number/verify": {
       "post": {
         "tags": ["Phone-number"],
         "description": "Use this endpoint to verify phone number",

@@ -16,7 +16,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
 
-const app = new OpenAPIHono();
+const app = new OpenAPIHono().basePath('/api');
 
 app
   .use(
@@ -31,7 +31,7 @@ app
   )
   .use(parseSession);
 
-app.get('/api/docs', async c => {
+app.get('/docs', async c => {
   const authSchema = await generateOpenAPISchema();
   const storefrontSchema = app.getOpenAPIDocument({
     openapi: '3.1.0',
@@ -41,6 +41,10 @@ app.get('/api/docs', async c => {
       description: 'APIs for the Resala storefront',
     },
     servers: [
+      {
+        url: new URL(c.req.url).origin,
+        description: 'Current server',
+      },
       {
         url: 'http://localhost:5000',
         description: 'Local server',
@@ -56,19 +60,19 @@ app.get('/api/docs', async c => {
   const mergedSchema = mergeDeep(authSchema, storefrontSchema);
   return c.json(mergedSchema);
 });
-app.get('/api/reference', swaggerUI({ url: '/api/docs' }));
+app.get('/reference', swaggerUI({ url: '/api/docs' }));
 
 app
   .route('/', authRoute)
-  .route('/api/v1/categories', categoryHandler)
-  .route('/api/v1/dashboard', dashboardHandler)
-  .route('/api/v1/products', productHandler)
+  .route('/v1/categories', categoryHandler)
+  .route('/v1/dashboard', dashboardHandler)
+  .route('/v1/products', productHandler)
   .use(enforceSession) // All routes below this line require a valid session
-  .route('/api/v1/cart', cartHandler)
-  .route('/api/v1/orders', orderHandler)
-  .route('/api/v1/reviews', reviewHandler)
-  .route('/api/v1/wishlist', wishlistHandler)
-  .route('/api/v1/addresses', addressHandler);
+  .route('/v1/cart', cartHandler)
+  .route('/v1/orders', orderHandler)
+  .route('/v1/reviews', reviewHandler)
+  .route('/v1/wishlist', wishlistHandler)
+  .route('/v1/addresses', addressHandler);
 
 app.onError((_, c) => errorHandler(c));
 
