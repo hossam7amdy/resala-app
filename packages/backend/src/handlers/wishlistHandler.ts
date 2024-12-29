@@ -11,9 +11,11 @@ import {
 const UserWishlist = z.object({
   success: z.boolean().default(true),
   data: z.array(
-    WishlistSchema.omit({ productId: true }).extend({
-      product: ProductSchema,
-    })
+    WishlistSchema.omit({ productId: true })
+      .extend({
+        product: ProductSchema,
+      })
+      .openapi('WishlistItem')
   ),
 });
 const getWishlistRoute = createRoute({

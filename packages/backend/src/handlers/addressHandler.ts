@@ -26,7 +26,7 @@ const createAddressRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            data: AddressSchema,
+            data: z.object(AddressSchema.shape).openapi('Address'),
           }),
         },
       },

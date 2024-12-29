@@ -35,9 +35,13 @@ const checkoutRoute = createRoute({
             success: z.boolean().default(true),
             data: z
               .object({
-                paymentUrl: z.string().url(),
+                paymentUrl: z
+                  .string()
+                  .url()
+                  .openapi({ example: 'https://example.com', description: 'Payment URL' }),
               })
-              .optional(),
+              .optional()
+              .openapi('CheckoutResponse'),
           }),
         },
       },

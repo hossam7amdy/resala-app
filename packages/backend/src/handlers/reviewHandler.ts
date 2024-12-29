@@ -28,7 +28,7 @@ const createReviewRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            data: ReviewSchema,
+            data: z.object(ReviewSchema.shape).openapi('Review'),
           }),
         },
       },
