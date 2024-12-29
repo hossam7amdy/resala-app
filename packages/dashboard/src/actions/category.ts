@@ -2,6 +2,7 @@
 
 import { ROUTES } from '@/routes';
 import { categoryService } from '@/services';
+import { formatError } from '@/utils/formatError';
 import type {
   CreateCategoryRequest,
   GetCategoryResponse,
@@ -29,7 +30,7 @@ export const createCategory = async (payload: CreateCategoryRequest['body']) => 
     revalidatePath(ROUTES.CATEGORIES);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };
 
@@ -39,7 +40,7 @@ export const updateCategory = async (id: string, payload: UpdateCategoryRequest[
     revalidatePath(ROUTES.CATEGORIES);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };
 
@@ -49,6 +50,6 @@ export const deleteCategory = async (id: string) => {
     revalidatePath(ROUTES.CATEGORIES);
     return { data };
   } catch (e) {
-    return { error: (e as Error).message };
+    return formatError(e);
   }
 };

@@ -3,13 +3,14 @@ import type { User } from '@prisma/client';
 import { Role } from '@resala/shared';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { configuration } from './configuration';
 import { PROTECTED_ROUTES, ROUTES } from './routes';
 
 const managementRoles = [Role.ADMIN, Role.STAFF];
 
 const middleware = async (request: NextRequest) => {
   const { data: session } = await betterFetch<{ user?: User }>('/api/auth/get-session', {
-    baseURL: request.nextUrl.origin,
+    baseURL: configuration().baseUrl,
     headers: {
       cookie: request.headers.get('cookie') || '',
     },

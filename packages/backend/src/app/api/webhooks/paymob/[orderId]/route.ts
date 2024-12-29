@@ -1,6 +1,4 @@
-import { ROUTES } from '@/routes';
-import { postOrderHandler } from '@/services';
-import { revalidatePath } from 'next/cache';
+import { postOrderHandler } from '@/features';
 import type { NextRequest } from 'next/server';
 
 export const POST = async (
@@ -18,10 +16,6 @@ export const POST = async (
     const hmac = searchParams.get('hmac') || body.hmac;
 
     const verified = await postOrderHandler(orderId, hmac, transaction);
-
-    // 3. revalidate cache
-    revalidatePath(ROUTES.ORDERS);
-    revalidatePath(ROUTES.STOCKS);
 
     if (!verified) {
       throw new Error(`Invalid HMAC signature, hmac=${hmac}`);
