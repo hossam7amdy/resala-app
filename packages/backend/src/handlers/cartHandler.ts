@@ -27,12 +27,11 @@ const CartResponseSchema = z.object({
         stock: StockSchema.extend({
           color: ColorSchema,
           size: SizeSchema,
-        }),
+        }).openapi('CartItem'),
       })
     ),
   }),
 });
-
 const getCartRoute = createRoute({
   tags: ['Cart'],
   method: 'get',

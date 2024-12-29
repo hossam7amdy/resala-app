@@ -21,7 +21,7 @@ const getProductRoute = createRoute({
         'application/json': {
           schema: z.object({
             success: z.boolean(),
-            data: GetProductResponseSchema,
+            data: z.object(GetProductResponseSchema.shape).openapi('ProductDetails'),
           }),
         },
       },

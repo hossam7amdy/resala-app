@@ -31,7 +31,7 @@ const getCategoryRoute = createRoute({
       content: {
         'application/json': {
           schema: z.object({
-            data: CategorySchema,
+            data: z.object(CategorySchema.shape).openapi('Category'),
           }),
         },
       },
