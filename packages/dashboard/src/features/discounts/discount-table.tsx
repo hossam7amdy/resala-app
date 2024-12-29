@@ -19,11 +19,7 @@ const extractFilterValueFromSearchParams = (searchParams: URLSearchParams, key: 
   return value ? [value] : null;
 };
 
-const TableDateFilter: React.FC<FilterDropdownProps> = ({
-  selectedKeys,
-  setSelectedKeys,
-  confirm,
-}) => {
+const TableDateFilter = ({ selectedKeys, setSelectedKeys, confirm }: FilterDropdownProps) => {
   const defaultValue = selectedKeys.at(0)
     ? dayjs(selectedKeys.at(0) as string, { format: 'date' })
     : undefined;
@@ -49,7 +45,8 @@ export const DiscountTable: React.FC<{
   const searchParams = useSearchParams();
   const { createSearchParams } = useCreateSearchParams();
 
-  const handleFilterChange: TableProps['onChange'] = ({ current, pageSize }, filters) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFilterChange: TableProps<any>['onChange'] = ({ current, pageSize }, filters) => {
     const filterParams = Object.entries(filters).reduce(
       (acc, [key, value]) => {
         acc[key] = value?.at(0) ?? '';
@@ -76,13 +73,6 @@ export const DiscountTable: React.FC<{
         position: ['bottomCenter'],
       }}
       columns={[
-        {
-          width: 75,
-          align: 'center',
-          title: 'ID',
-          dataIndex: 'id',
-          filteredValue: null,
-        },
         {
           width: 125,
           title: 'Type',

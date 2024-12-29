@@ -13,6 +13,14 @@ import { Translate_Service } from 'src/app/core/services/translate.service';
   styleUrls: ['./top-bar.component.css'],
 })
 export class TopBarComponent {
+  constructor(
+    private _Renderer: Renderer2,
+    public _Translate: TranslateService,
+    private _RTLStatus: Translate_Service
+  ) {
+    this._Translate.setDefaultLang('en');
+  }
+
   // Change page Direction as per Selected Lang
   changePageDirection(): boolean {
     const html = document.getElementsByTagName('html')[0];
@@ -28,14 +36,6 @@ export class TopBarComponent {
     }
 
     return rtlStat;
-  }
-
-  constructor(
-    private _Renderer: Renderer2,
-    public _Translate: TranslateService,
-    private _RTLStatus: Translate_Service
-  ) {
-    this._Translate.setDefaultLang('en');
   }
 
   @ViewChild('topBar') navbarElement!: ElementRef;

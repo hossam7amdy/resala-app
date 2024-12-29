@@ -1,11 +1,11 @@
 'use client';
 
-import { createSize, updateSize } from '@/fetch/sizes';
+import { createSize, updateSize } from '@/actions/sizes';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 
 interface MutateSizeOptions {
-  id?: string | number;
+  id?: string;
   onSuccess?: () => void;
 }
 export const useMutateSize = ({ id, onSuccess }: MutateSizeOptions) => {

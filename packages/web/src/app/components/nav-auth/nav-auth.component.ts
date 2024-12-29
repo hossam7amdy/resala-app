@@ -61,7 +61,6 @@ export class NavAuthComponent implements OnInit {
   ngOnInit(): void {
     this.customSpinIsLoading = true;
     if (this.langStorage === null) {
-      this._Translate.defaultLang;
       this.currentLang = 'ar';
     } else {
       this._Translate.use(this.langStorage);

@@ -1,8 +1,7 @@
 'use client';
 
-import { logout } from '@/fetch/auth';
-import { useMutation } from '@/hooks';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import { useLogout } from '@/hooks';
+import { useCurrentUser } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Skeleton, Space } from 'antd';
@@ -13,9 +12,7 @@ import { Menu } from './menu';
 
 export const UserDropdown: React.FC = () => {
   const { user, isLoading: isLoadingUser } = useCurrentUser();
-  const { mutate, isLoading } = useMutation({
-    mutationFn: logout,
-  });
+  const { logout, isLoading } = useLogout();
 
   if (isLoadingUser) {
     return (
@@ -54,7 +51,7 @@ export const UserDropdown: React.FC = () => {
               danger: true,
               icon: isLoading ? <FullscreenSpinner /> : <LogoutOutlined />,
               label: 'Logout',
-              onClick: () => mutate({}),
+              onClick: logout,
             },
           ],
         },

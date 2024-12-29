@@ -1,5 +1,5 @@
-import { TopProductsChart } from '@/features/dashboard/top-products-chart';
-import { listTopProducts } from '@/fetch/dashboard';
+import { listTopProducts } from '@/actions/dashboard';
+import { TopProductsChart } from '@/features/dashboard';
 import { Card } from 'antd';
 import React from 'react';
 

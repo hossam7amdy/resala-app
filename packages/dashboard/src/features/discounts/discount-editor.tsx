@@ -1,7 +1,7 @@
 'use client';
 
+import { createDiscount, updateDiscount } from '@/actions/discount';
 import { SelectProductAsync } from '@/components/select-product-async';
-import { createDiscount, updateDiscount } from '@/fetch/discount';
 import { useMutation, useNotification } from '@/hooks';
 import type { CreateDiscountRequest } from '@resala/shared';
 import {
@@ -38,10 +38,10 @@ export const DiscountEditor: React.FC<DiscountEditorProps> = ({ id, discount }) 
   const { success, error } = useNotification();
   const { mutate, isLoading } = useMutation({
     mutationFn: !id ? createDiscount : updateDiscount.bind(null, id),
-    onSuccess: data => {
+    onSuccess: () => {
       if (id) back();
       form.resetFields();
-      success(data?.message ?? 'Discount has been submitted successfully');
+      success('Discount has been submitted successfully');
     },
     onError: e => {
       error(e.message);

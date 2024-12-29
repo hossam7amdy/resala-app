@@ -1,5 +1,5 @@
-import { SalesTrendsChart } from '@/features/dashboard/sales-trends-chart';
-import { getSalesTrends } from '@/fetch/dashboard';
+import { getSalesTrends } from '@/actions/dashboard';
+import { SalesTrendsChart } from '@/features/dashboard';
 import { Card } from 'antd';
 import React from 'react';
 

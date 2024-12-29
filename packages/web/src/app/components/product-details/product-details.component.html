@@ -1,6 +1,6 @@
 <app-spinner [customSpinIsLoading]="customSpinIsLoading"></app-spinner>
 
-<h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1>
+<!-- <h1 *ngIf="productStock.length == 0">{{ 'productDetails.empty' | translate }}</h1> -->
 <section *ngIf="productStock.length != 0" class="product-details">
   <div class="container">
     <!-- blank-layout.component.html -->
@@ -11,17 +11,15 @@
     </div>
 
     <div class="row img-product">
-      <div class="col-sm-12 col-md-6 main-img">
+      <div class="col-sm-6 col-md-5 main-img">
         <owl-carousel-o [options]="mainImage" #owlCar>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
-                <div
-                  class="image-container p-1 m-1"
-                  (mousemove)="onMouseMove($event)"
+                <div class="image-container p-1 m-1" (click)="openImage(image.imageUrl)">
+                  <!-- (mousemove)="onMouseMove($event)"
                   (mouseleave)="hideCustomCursor()"
-                  (mouseenter)="showCustomCursor()"
-                >
+                  (mouseenter)="showCustomCursor()" -->
                   <!-- Original Image -->
                   <img
                     [src]="image.imageUrl"
@@ -34,7 +32,7 @@
                     class="original-image"
                   />
 
-                  <!-- Full Image Overlay -->
+                  <!-- Full Image Overlay
                   <div class="image-overlay" [class.hidden]="isMouseMoving">
                     <div
                       class="custom-cursor"
@@ -42,10 +40,10 @@
                       [ngStyle]="cursorStyles"
                       #cursor
                     ></div>
-                  </div>
+                  </div> -->
 
                   <!-- Zoomed Image Displayed in Separate Area Beneath -->
-                  <div class="zoom-container" *ngIf="isZoomActive">
+                  <!-- <div class="zoom-container" *ngIf="isZoomActive">
                     <img
                       [src]="image.imageUrl"
                       [alt]="
@@ -61,7 +59,7 @@
                       class="zoomed-image"
                       [ngStyle]="zoomStyles"
                     />
-                  </div>
+                  </div> -->
                 </div>
               </ng-template>
             </ng-container>
@@ -94,7 +92,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 col-md-6">
+      <div class="col-sm-6 col-md-7">
         <h2 class="h2">
           {{ _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName }}
         </h2>
@@ -105,15 +103,21 @@
               : productDetails.enDescription
           }}
         </p>
-
+        <div>
+          <span
+            *ngIf="
+              productDetails.discounts.length < 1 || productDetails.discounts.type != 'PERCENTAGE'
+            "
+            class="price"
+            >{{ productDetails.price
+            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
+          >
+        </div>
         <div *ngFor="let discount of productDetails.discounts">
           <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
             <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
           </h4>
-          <span *ngIf="discount.length < 0 && discount.type != 'PERCENTAGE'" class="price"
-            >{{ productDetails.price
-            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
-          >
+
           <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
             >{{ productDetails.price
             }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s
@@ -177,21 +181,6 @@
           </ng-container>
         </div>
 
-        <!-- <div class="row">
-          <div *ngFor="let colors of productStock" class="btn-group color col-md-4" role="group"
-            aria-label="Basic radio toggle button group">
-
-            <input type="radio" class="btn-check" name="color-option" [id]="colors.color.colorId" autocomplete="off"
-              [value]="colors.color.code" />
-            <label class="btn color-btn" [for]="colors.color.colorId">{{colors.color.enName }}</label>
-            <p>{{selectedColor}}</p>
-           
-
-          </div>
-        </div>
-         -->
-        <!-- [ngStyle]="{'background-color':colors.color.code}" -->
-
         <h3 class="h4">{{ 'productDetails.size' | translate }}</h3>
         <div class="d-flex flex-wrap size-options-list">
           <ng-container *ngFor="let product of productStock; let i = index">
@@ -223,38 +212,7 @@
             </div>
           </ng-container>
         </div>
-        <!-- <div class="row">
-          <div *ngFor="let productSize of productStock " class="size col-md-4 btn-group" role="group"
-            aria-label="Basic radio toggle button group"> -->
 
-        <!-- aria-label="Basic radio toggle button group">
-          btn-group , -->
-
-        <!-- <input [(ngModel)]="selectedSize" type="radio" class="btn-check" name="size-option" id="btnsize1"
-              autocomplete="off" [value]="selectedSize" />
-            <label (click)="onSizeChange(productSize.size.name)" class="btn color-btn"
-              for="btnsize1">{{productSize.size.name}}</label> -->
-
-        <!-- <button [(ngModel)]="selectedSize" [value]="selectedSize" [ngClass]="statusClassSizeBtn"
-            (click)="setActiveClass()" [ngStyle]="">{{productSize.size.name}}</button> -->
-        <!-- 
-            <p>{{selectedSize}}</p>
-          </div>
-        </div> -->
-
-        <!-- <section class="quantity">
-          <div class="counter">
-            <button class="min-counter-btn" (click)="minCounterQuantity()">
-              <i class="fa-solid fa-minus"></i>
-            </button>
-            <input class="counter-text" type="number" [value]="counterQuantity" disabled min="1" data-min="1" />
-            <button class="plus-counter-btn" (click)="plusCounterQuantity()">
-              <i class="fa-solid fa-plus"></i>
-            </button>
-
-          </div>
-        </section>
-         -->
         <h4 class="h4">{{ 'productDetails.quantity' | translate }}</h4>
         <section class="quantity">
           <div class="counter">
@@ -277,13 +235,28 @@
             </button>
           </div>
         </section>
-
-        <div class="add-cart-btn">
-          <button (click)="addProduct(stockIdSize, addToCartBtn)" #addToCartBtn class="w-100">
+        <!-- add-cart-btn  -->
+        <section>
+          <button
+            (click)="addProduct(stockIdSize)"
+            [disabled]="btnDisable === true"
+            #addToCartBtn
+            class="custome-btn"
+          >
             {{ 'productDetails.addToCart' | translate }}
+
+            <span
+              *ngIf="loadingBtn"
+              class="spinner-border spinner-border-sm fw-bold"
+              style="color: #016373"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span *ngIf="loadingBtn" class="visually-hidden">Loading...</span>
           </button>
-          <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
-        </div>
+        </section>
+
+        <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
       </div>
     </div>
 

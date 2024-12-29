@@ -1,29 +1,22 @@
+import { listReviews } from '@/actions/reviews';
 import { Pagination, Table } from '@/components';
-import { DeleteButton } from '@/features/reviews/delete-button';
-import { listReviews } from '@/fetch/reviews';
+import { DeleteButton } from '@/features/reviews';
+import type { Params } from '@/types';
 import { formatDate } from '@/utils/date-time-formatter';
+import type { ListReviewsRequest } from '@resala/shared';
 import { Flex, Rate } from 'antd';
 import Paragraph from 'antd/es/typography/Paragraph';
 import React from 'react';
 
-type SearchParams = {
-  page?: number;
-  limit?: number;
-};
-type Params = {
-  id: number;
-};
-
 interface ProductReviewsProps {
   params: Params;
-  searchParams: SearchParams;
+  searchParams: Promise<ListReviewsRequest['query']>;
 }
 
-const ProductReviewsPage: React.FC<ProductReviewsProps> = async ({
-  params,
-  searchParams: { page = 1, limit = 10 },
-}) => {
-  const { reviews, pagination } = await listReviews({ page, limit, productId: params.id });
+const ProductReviewsPage: React.FC<ProductReviewsProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const { reviews, pagination } = await listReviews({ productId: params.id, ...searchParams });
 
   return (
     <Flex vertical gap={5} align="center">

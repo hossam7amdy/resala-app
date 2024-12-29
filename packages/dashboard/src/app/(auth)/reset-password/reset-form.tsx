@@ -1,6 +1,6 @@
 'use client';
 
-import { resetPassword } from '@/fetch/auth';
+import { resetPassword } from '@/actions/auth.client';
 import { useMutation, useNotification } from '@/hooks';
 import { ROUTES } from '@/routes';
 import { validationPatterns } from '@resala/shared';
@@ -9,21 +9,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 interface FormValues {
-  token: string;
   newPassword: string;
   confirmNewPassword: string;
 }
 
-interface ResetPasswordFormProps {
-  token?: FormValues['token'];
-}
-
-export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) => {
+export const ResetPasswordForm: React.FC<{ token?: string }> = ({ token }) => {
   const route = useRouter();
   const [form] = Form.useForm();
   const { error: notificationError, success: notificationSuccess } = useNotification();
   const { isLoading, mutate } = useMutation({
-    mutationFn: (values: FormValues) => resetPassword({ ...values, token: token ?? '' }),
+    mutationFn: (values: FormValues) => resetPassword({ ...values, token }),
     onSuccess: () => {
       form.resetFields();
       route.replace(ROUTES.LOGIN);
@@ -42,7 +37,14 @@ export const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({ token }) =
   }, [notificationError, route, token]);
 
   return (
-    <Form size="large" name="reset-password" layout="vertical" onFinish={mutate} autoComplete="off">
+    <Form
+      form={form}
+      size="large"
+      name="reset-password"
+      layout="vertical"
+      onFinish={mutate}
+      autoComplete="off"
+    >
       <Form.Item
         hasFeedback
         name="newPassword"

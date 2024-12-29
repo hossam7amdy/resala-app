@@ -1,0 +1,50 @@
+import type { Configuration } from '@/configuration';
+import { SESAdapter } from '@/infrastructure/email-provider';
+
+export class EmailService {
+  private _ses: SESAdapter;
+
+  constructor(private config: Configuration) {
+    this._ses = new SESAdapter(this.config);
+  }
+
+  async sendVerificationEmail(email: string, link: string) {
+    await this._ses.sendEmail(
+      [email],
+      'Email Verification',
+      `<p>Click <a href="${link}" target="_blank">here</a> to verify your email</p>`
+    );
+  }
+
+  async sendResetPasswordEmail(email: string, link: string) {
+    return await this._ses.sendEmail(
+      [email],
+      'Reset your password',
+      `<p>Click <a href="${link}" target="_blank">here</a> to reset your password</p>`
+    );
+  }
+
+  async sendResetConfirmationEmail(email: string) {
+    return await this._ses.sendEmail(
+      [email],
+      'Password reset successful',
+      'Your password has been reset successfully'
+    );
+  }
+
+  async sendOrderConfirmationEmail(email: string, orderId: number, status: string) {
+    return await this._ses.sendEmail(
+      [email],
+      'Order Confirmation',
+      `Your order with ID: ${orderId} has been updated to ${status}`
+    );
+  }
+
+  async sendOrderCancellationEmail(email: string, orderId: number) {
+    return await this._ses.sendEmail(
+      [email],
+      'Order Cancellation',
+      `Your order with id ${orderId} has been cancelled`
+    );
+  }
+}

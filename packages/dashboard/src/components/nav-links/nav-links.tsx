@@ -6,6 +6,7 @@ import {
   FileProtectOutlined,
   GiftOutlined,
   HomeOutlined,
+  PictureOutlined,
   ProductOutlined,
   SkinOutlined,
   TagOutlined,
@@ -49,6 +50,11 @@ const items = [
     key: ROUTES.DISCOUNTS,
     label: <Link href={ROUTES.DISCOUNTS}>Discounts</Link>,
     icon: <GiftOutlined />,
+  },
+  {
+    key: ROUTES.MEDIA,
+    label: <Link href={ROUTES.MEDIA}>Media</Link>,
+    icon: <PictureOutlined />,
   },
 ];
 

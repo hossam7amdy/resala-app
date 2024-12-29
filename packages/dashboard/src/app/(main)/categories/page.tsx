@@ -1,6 +1,6 @@
+import { listAllCategories } from '@/actions/category';
 import { Search, TableSkeleton } from '@/components';
-import { CategoryTable } from '@/features/categories/categories-table';
-import { listAllCategories } from '@/fetch/category';
+import { CategoryTable } from '@/features/categories';
 import { ROUTES } from '@/routes';
 import { Breadcrumb, Button, Col, Flex, Row } from 'antd';
 import type { Metadata } from 'next';
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
   title: 'Categories',
 };
 
-const CategoryPage = async ({ searchParams }: { searchParams: { search?: string } }) => {
+const CategoryPage = async (props: { searchParams: Promise<{ search?: string }> }) => {
+  const searchParams = await props.searchParams;
   const search = searchParams.search || '';
   const categories = await listAllCategories();
 

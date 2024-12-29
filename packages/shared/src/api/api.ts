@@ -4,23 +4,22 @@
  * It is used by the API service to validate the request and response data.
  * It also considered as the contract between the client and the server.
  */
+import type { Decimal } from 'decimal.js';
 import type { z } from 'zod';
 
-import type { DTO } from '../dto/dto.js';
 import type {
   Address,
-  AuthUser,
   Cart,
   Category,
   Color,
   Discount,
   Image,
+  Media,
   Order,
   OrderItem,
   Pagination,
   Product,
   Review,
-  Shipping,
   Size,
   Stock,
   User,
@@ -46,7 +45,7 @@ export type LoginRequest = {
   callbackURL?: string;
 };
 export type LoginResponse = {
-  user: AuthUser;
+  user: User;
   redirect: boolean;
 };
 
@@ -68,9 +67,10 @@ export type ProviderLoginResponse = LoginResponse & {
   redirect: boolean;
 };
 
-export type RegisterRequest = Partial<DTO<AuthUser>> & {
-  email: string;
-  password: string;
+export type RegisterRequest = Pick<
+  User,
+  'email' | 'phoneNumber' | 'birthDate' | 'firstName' | 'lastName' | 'name' | 'locale'
+> & {
   callbackURL?: string;
 };
 export type RegisterResponse = DefaultResponseBody;
@@ -112,12 +112,12 @@ export type VerifyPhoneNumberOTPRequest = {
   updatePhoneNumber?: boolean;
 };
 export type VerifyPhoneNumberOTPResponse = {
-  user: AuthUser;
+  user: User;
 };
 
 export type GetSessionRequest = never;
 export type GetSessionResponse = {
-  user: AuthUser;
+  user: User;
 } | null;
 
 export type LogoutRequest = never;
@@ -126,15 +126,12 @@ export type LogoutResponse = DefaultResponseBody;
 // User types
 export type GetUserRequest = z.infer<typeof Schemas.GetUserSchema>;
 export type GetUserResponse = DefaultResponseBody & {
-  data: User;
+  data: z.infer<typeof Schemas.GetUserResponseSchema>;
 };
 
 export type ListUsersRequest = z.infer<typeof Schemas.ListUsersSchema>;
 export type ListUsersResponse = DefaultResponseBody & {
-  data: {
-    pagination: Pagination;
-    users: User[];
-  };
+  data: z.infer<typeof Schemas.ListUsersResponseSchema>;
 };
 
 export type UpdateUserRequest = z.infer<typeof Schemas.UpdateUserSchema>;
@@ -148,12 +145,12 @@ export type DeleteUserResponse = DefaultResponseBody;
 // Address types
 export type GetAddressRequest = undefined;
 export type GetAddressResponse = DefaultResponseBody & {
-  data: Address;
+  data: z.infer<typeof Schemas.GetAddressResponseSchema>;
 };
 
-export type ListAddressRequest = z.infer<typeof Schemas.ListAddressSchema>;
+export type ListAddressRequest = never;
 export type ListAddressResponse = DefaultResponseBody & {
-  data: GetAddressResponse['data'][];
+  data: z.infer<typeof Schemas.ListAddressResponseSchema>;
 };
 
 export type CreateAddressRequest = z.infer<typeof Schemas.CreateAddressSchema>;
@@ -188,17 +185,13 @@ export type DeleteCategoryResponse = GetCategoryResponse;
 // Product types
 export type GetProductRequest = z.infer<typeof Schemas.GetProductSchema>;
 export type GetProductResponse = DefaultResponseBody & {
-  data: Product & {
-    avgRating: number;
-    category: Category;
-    discounts: Discount[];
-  };
+  data: z.infer<typeof Schemas.GetProductResponseSchema>;
 };
 
 export type ListProductsRequest = z.infer<typeof Schemas.ListProductsSchema>;
 export type ListProductsResponse = DefaultResponseBody & {
   data: {
-    products: GetProductResponse['data'][];
+    products: z.infer<typeof Schemas.ListProductsResponseSchema>;
     pagination: Pagination;
   };
 };
@@ -257,50 +250,20 @@ export type DeleteSizeResponse = GetSizeResponse;
 // Stock types
 export type GetStockRequest = DeleteStockRequest;
 export type GetStockResponse = DefaultResponseBody & {
-  data: {
-    product: Product;
-    color: Color;
-    sizes: (Omit<Stock, 'id' | 'colorId' | 'productId'> & { stockId: number; size: string })[];
-    images: Omit<Image, 'colorId' | 'productId'>[];
-  };
+  data: z.infer<typeof Schemas.GetStockResponseSchema>;
 };
+
+export type UpdateStocksQuantityRequest = z.infer<typeof Schemas.UpdateStocksQuantitySchema>;
+export type UpdateStocksQuantityResponse = DefaultResponseBody;
 
 export type ListStocksRequest = z.infer<typeof Schemas.ListStocksSchema>;
 export type ListStocksResponse = DefaultResponseBody & {
-  data: {
-    pagination: Pagination;
-    stocks: GetStockResponse['data'][];
-  };
+  data: z.infer<typeof Schemas.ListStocksResponseSchema>;
 };
-
-export type CreateStockRequest = z.infer<typeof Schemas.CreateStockSchema>;
-export type CreateStockResponse = DefaultResponseBody & {
-  data: Stock;
-};
-
-export type UpdateStockRequest = z.infer<typeof Schemas.UpdateStockSchema>;
-export type UpdateStockResponse = CreateStockResponse;
 
 export type DeleteStockRequest = z.infer<typeof Schemas.DeleteStockSchema>;
-export type DeleteStockResponse = CreateStockResponse;
-
-// Image types
-export type CreateImageRequest = z.infer<typeof Schemas.CreateImageSchema>;
-export type CreateImageResponse = DefaultResponseBody;
-
-export type ListImagesRequest = z.infer<typeof Schemas.ListImagesSchema>;
-export type ListImagesResponse = DefaultResponseBody & {
-  data: Image[];
-};
-
-export type UpdateImageRequest = z.infer<typeof Schemas.UpdateImageSchema>;
-export type UpdateImageResponse = DefaultResponseBody & {
-  data: Image;
-};
-
-export type DeleteImageRequest = z.infer<typeof Schemas.DeleteImageSchema>;
-export type DeleteImageResponse = DefaultResponseBody & {
-  data: Image;
+export type DeleteStockResponse = DefaultResponseBody & {
+  data: Stock;
 };
 
 // Shipping types
@@ -314,7 +277,7 @@ export type GetCartResponse = DefaultResponseBody & {
       discountedPrice?: number;
       appliedDiscount?: Discount;
       product: Product;
-      images: Image[];
+      images: (Image & { imageUrl: string })[];
       stock: Stock & {
         color: Color;
         size: Size;
@@ -356,10 +319,15 @@ export type GetOrderResponse = DefaultResponseBody & {
     user: User;
     orderItems: (OrderItem & {
       product: Product;
+      images: (Image & { imageUrl: string })[];
+      image: Image & { imageUrl: string };
       color: string;
       size: string;
     })[];
-    shippingDetails: (Omit<Shipping, 'addressId' | 'orderId'> & { address: Address }) | null;
+    shippingDetails: {
+      cost?: number | Decimal;
+      address: Address;
+    } | null;
   };
 };
 
@@ -385,22 +353,12 @@ export type DeleteOrderResponse = DefaultResponseBody & {
 export type GetPaymentRequest = z.infer<typeof Schemas.GetPaymentSchema>;
 export type GetPaymentResponse = DefaultResponseBody & {
   data: {
-    id: number;
-    pending: boolean;
-    amount_cents: number;
-    success: boolean;
-    is_auth: boolean;
-    is_capture: boolean;
-    is_standalone_payment: boolean;
-    is_voided: boolean;
-    is_refunded: boolean;
-    is_3d_secure: boolean;
-    integration_id: number;
-    profile_id: number;
-    has_parent_transaction: boolean;
-    created_at: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    id: string;
+    amount: number;
+    refundedAmount: number | null;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
   };
 };
 
@@ -476,12 +434,12 @@ export type GetInventoryStatusResponse = DefaultResponseBody & {
   data: {
     lowStock: {
       stockRemaining: number;
-      product: Product;
+      product: Product & { imageUrl: string };
       color: Color;
       size: Size;
     }[];
     outOfStock: {
-      product: Product;
+      product: Product & { imageUrl: string };
       color: Color;
       size: Size;
     }[];
@@ -501,7 +459,7 @@ export type ListCustomersFeedbackResponse = DefaultResponseBody & {
 
 export type ListTopProductsRequest = undefined;
 export type ListTopProductsResponse = DefaultResponseBody & {
-  data: { unitsSold: number; product: Product }[];
+  data: z.infer<typeof Schemas.ListTopProductsSchema>;
 };
 
 export type ListTopCustomersRequest = undefined;
@@ -518,7 +476,7 @@ export type GetDiscountRequest = z.infer<typeof Schemas.GetDiscountSchema>;
 export type GetDiscountResponse = DefaultResponseBody & {
   data: Discount & {
     pagination: Pagination;
-    products: Product[];
+    products: (Product & { imageUrl: string })[];
   };
 };
 
@@ -548,3 +506,13 @@ export type RemoveProductsFromDiscountRequest = z.infer<
   typeof Schemas.RemoveProductsFromDiscountSchema
 >;
 export type RemoveProductsFromDiscountResponse = DefaultResponseBody;
+
+export type SetMediaMetadataRequest = z.infer<typeof Schemas.SetMediaMetadataSchema>;
+export type SetMediaMetadataResponse = DefaultResponseBody & {
+  data: Media;
+};
+
+export type ListMediaRequest = z.infer<typeof Schemas.ListMediaSchema>;
+export type ListMediaResponse = DefaultResponseBody & {
+  data: Array<Media>;
+};

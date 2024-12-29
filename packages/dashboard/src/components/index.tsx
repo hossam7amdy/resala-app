@@ -1,4 +1,4 @@
-export { Logo } from './logo';
+export { ResalaLogo } from './ResalaLogo';
 export { Menu } from './menu';
 export { ResalaTooltip } from './tooltip';
 export { NavLinks } from './nav-links/nav-links';
@@ -20,3 +20,5 @@ export { UserDropdown } from './user-dropdown';
 export { IconLink } from './icon-link';
 export { NotificationError } from './notification-error';
 export { TableSkeleton } from './table-skeleton';
+export { OrderStatusTag } from './OrderStatusTag';
+export { PaymentStatusTag } from './PaymentStatusTag';

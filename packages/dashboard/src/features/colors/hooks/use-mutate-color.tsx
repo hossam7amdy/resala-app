@@ -1,11 +1,11 @@
 'use client';
 
-import { createColor, updateColor } from '@/fetch/colors';
+import { createColor, updateColor } from '@/actions/colors';
 import { useMutation, useNotification } from '@/hooks';
 import { useRouter } from 'next/navigation';
 
 interface MutateColorOptions {
-  id?: number | string;
+  id?: string;
   onSuccess?: () => void;
 }
 export const useMutateColor = ({ id, onSuccess }: MutateColorOptions) => {

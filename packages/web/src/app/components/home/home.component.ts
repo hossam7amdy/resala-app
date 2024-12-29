@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -10,6 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxStarsRatingModule } from 'ngx-stars-rating';
 import { IRatingOptions } from 'ngx-stars-rating';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { Product } from 'src/app/core/interfaces/product';
 import { SearchPipe } from 'src/app/core/pipe/search.pipe';
 import { CategoriesService } from 'src/app/core/services/categories/categories.service';
@@ -31,20 +32,11 @@ import { SpinnerComponent } from 'src/app/core/spinner/spinner.component';
     NgxStarsRatingModule,
     TranslateModule,
     SpinnerComponent,
-  ], //
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, AfterViewInit {
-  // UserProfile: any;
-  // _AuthService: any;
-  userNameLogged: any;
-  productId: string = '';
-
-  // start Custome Spinner
-  customSpinIsLoading = false;
-  //end Custome Spinner
-
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _HomeProductsService: HomeProductsService,
     private _Categories: CategoriesService,
@@ -56,23 +48,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     public _Translate: TranslateService,
     private _RTLStatus: Translate_Service
   ) {}
-  langStorage: any = localStorage.getItem('language');
-  // Change page Direction as per Selected Lang
-  changePageDirection(): boolean {
-    const html = document.getElementsByTagName('html')[0];
-    let rtlStat: boolean;
-    if (this._RTLStatus.rTLStatus.value === 'ar') {
-      html.dir = 'rtl';
-      html.lang = 'ar';
-      rtlStat = true;
-    } else {
-      html.dir = 'ltr';
-      html.lang = 'en';
-      rtlStat = false;
-    }
 
-    return rtlStat;
-  }
+  userNameLogged: any;
+  productId: string = '';
+
+  // start Custome Spinner
+  customSpinIsLoading = false;
+  //end Custome Spinner
+
+  langStorage: any = localStorage.getItem('language');
 
   // Trends
   trendProducts: any = [];
@@ -89,7 +73,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // interfaces
   products: Product[] = [];
-  categories: Product[] = [];
 
   imgPlaceHolder: string = '';
 
@@ -104,10 +87,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   currentProduct: any;
 
+  // Subscription ID
+  getTrendProductsId!: Subscription;
+  getProducts!: Subscription;
+  destroySetTimeOut: any;
+
   ngOnInit(): void {
     this.customSpinIsLoading = true;
     //trend products
-    this._Trend.getTrendProducts().subscribe({
+    this.getTrendProductsId = this._Trend.getTrendProducts().subscribe({
       next: res => {
         this.trendProducts = res.data;
         this.customSpinIsLoading = false;
@@ -118,10 +106,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
     });
 
     //  products
-    this._HomeProductsService.getProducts().subscribe({
+    this.getProducts = this._HomeProductsService.getProducts().subscribe({
       next: response => {
         this.products = response.data.products;
-        this.categories = response.data.products;
         this.pageLimit = response.data.pagination.limit;
         this.currentPage = response.data.pagination.page;
         this.totalItems = response.data.pagination.total;
@@ -136,9 +123,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // overlay
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    this.destroySetTimeOut = setTimeout(() => {
       this.onClick = true;
     }, 10000);
+  }
+  // Destroy Subscription
+  ngOnDestroy(): void {
+    if (this.getTrendProductsId) this.getProducts.unsubscribe();
+    if (this.getProducts) this.getProducts.unsubscribe();
+  }
+
+  // Change page Direction as per Selected Lang
+  changePageDirection(): boolean {
+    const html = document.getElementsByTagName('html')[0];
+    let rtlStat: boolean;
+    if (this._RTLStatus.rTLStatus.value === 'ar') {
+      html.dir = 'rtl';
+      html.lang = 'ar';
+      rtlStat = true;
+    } else {
+      html.dir = 'ltr';
+      html.lang = 'en';
+      rtlStat = false;
+    }
+
+    return rtlStat;
   }
   closeOverlay() {
     this.onClick = false;

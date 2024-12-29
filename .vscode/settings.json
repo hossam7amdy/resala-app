@@ -1,3 +1,20 @@
 {
-  "cSpell.words": ["Localstack", "PAYMOB", "resala", "testcontainers", "Toastr", "tsoa"]
+  "cSpell.words": [
+    "autoincrement",
+    "BOGO",
+    "cuid",
+    "datasource",
+    "Hoverable",
+    "Localstack",
+    "occured",
+    "paralleldrive",
+    "PAYMOB",
+    "Popconfirm",
+    "presigner",
+    "resala",
+    "testcontainers",
+    "Toastr",
+    "tsoa",
+    "Unban"
+  ]
 }

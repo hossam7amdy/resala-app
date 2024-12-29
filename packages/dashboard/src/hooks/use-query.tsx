@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useEffect, useState } from 'react';
 
 type QueryOptions<Data> = {
@@ -22,7 +24,6 @@ export const useQuery = <Data,>({
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
-    setData(undefined);
     setError(undefined);
 
     try {

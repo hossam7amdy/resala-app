@@ -14,7 +14,3 @@ export interface StockSize {
   id: number;
   name: string;
 }
-
-export interface GetProductStocksResponse {
-  data: Stock[];
-}

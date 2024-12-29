@@ -1,6 +1,7 @@
 'use client';
 
-import { useCreateSearchParams } from '@/hooks/use-create-search-params';
+import { useCreateSearchParams } from '@/hooks';
+import { OffsetPageParamsSchema } from '@resala/shared';
 import { Pagination as AntPagination } from 'antd';
 import type { PaginationProps } from 'antd';
 import { useSearchParams } from 'next/navigation';
@@ -9,8 +10,10 @@ export const Pagination: React.FC<PaginationProps> = props => {
   const searchParams = useSearchParams();
   const { createSearchParams } = useCreateSearchParams();
 
-  const page = Number(searchParams.get('page')) || 1;
-  const limit = Number(searchParams.get('limit')) || 10;
+  const { page, limit } = OffsetPageParamsSchema.parse({
+    page: searchParams.get('page') || undefined,
+    limit: searchParams.get('limit') || undefined,
+  });
 
   const createPageURL = (page: number | string, pageSize: number | string) => {
     createSearchParams({ page, limit: pageSize });

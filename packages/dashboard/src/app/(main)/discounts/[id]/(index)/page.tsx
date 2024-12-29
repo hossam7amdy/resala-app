@@ -1,7 +1,7 @@
+import { findDiscountById } from '@/actions/discount';
 import { Pagination } from '@/components';
 import { DiscountAlertMessage, DiscountProducts } from '@/features/discounts';
-import { AddDiscountProductsModal } from '@/features/discounts/add-discount-products-modal';
-import { findDiscountById } from '@/fetch/discount';
+import { AddDiscountProductsModal } from '@/features/discounts';
 import type { Params } from '@/types';
 import type { GetDiscountRequest } from '@resala/shared';
 import { Flex } from 'antd';
@@ -9,13 +9,12 @@ import { notFound } from 'next/navigation';
 
 interface DiscountProductsPageProps {
   params: Params;
-  searchParams?: GetDiscountRequest['query'];
+  searchParams?: Promise<GetDiscountRequest['query']>;
 }
-const DiscountProductsPage: React.FC<DiscountProductsPageProps> = async ({
-  params,
-  searchParams,
-}) => {
-  const discount = await findDiscountById(params.id, searchParams ?? {});
+const DiscountProductsPage: React.FC<DiscountProductsPageProps> = async props => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const discount = await findDiscountById(params.id, { page: 1, limit: 100, ...searchParams });
 
   if (discount?.isStoreWide) {
     notFound();

@@ -1,6 +1,6 @@
 'use client';
 
-import { updateCategory } from '@/fetch/category';
+import { updateCategory } from '@/actions/category';
 import { useMutation, useNotification } from '@/hooks';
 import { type GetCategoryResponse, validationPatterns } from '@resala/shared';
 import { Button, Flex, Form, Input } from 'antd';
@@ -81,4 +81,4 @@ const EditForm: React.FC<{ category: GetCategoryResponse['data'] }> = ({ categor
   );
 };
 
-export default EditForm;
+export { EditForm };

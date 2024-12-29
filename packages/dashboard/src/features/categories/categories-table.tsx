@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteCategory } from '@/actions/category';
 import { PopconfirmDeleteButton, ResalaTooltip, Table } from '@/components';
-import { deleteCategory } from '@/fetch/category';
 import { ROUTES } from '@/routes';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import type { GetCategoryResponse, ListCategoriesResponse } from '@resala/shared
 import { Button, Flex } from 'antd';
 import Link from 'next/link';
 
-export const CategoryTable: React.FC<{
+const CategoryTable: React.FC<{
   search: string | undefined;
   categories: ListCategoriesResponse['data'];
 }> = ({ categories, search = '' }) => {
@@ -51,3 +51,5 @@ export const CategoryTable: React.FC<{
     />
   );
 };
+
+export { CategoryTable };

@@ -60,12 +60,6 @@ export enum Endpoints {
   updateProduct = 'updateProduct',
   deleteProduct = 'deleteProduct',
 
-  // images endpoints
-  findImages = 'findImages',
-  addImages = 'addImages',
-  deleteImage = 'deleteImage',
-  updateImage = 'updateImage',
-
   // stock endpoints
   addStock = 'addStock',
   getStock = 'getStock',
@@ -364,28 +358,6 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     auth: true,
   },
 
-  // product images endpoints
-  [Endpoints.findImages]: {
-    url: '/api/v1/images',
-    method: 'get',
-  },
-
-  [Endpoints.addImages]: {
-    url: '/api/v1/images',
-    method: 'post',
-    auth: true,
-  },
-  [Endpoints.updateImage]: {
-    url: '/api/v1/images/:imageId',
-    method: 'patch',
-    auth: true,
-  },
-  [Endpoints.deleteImage]: {
-    url: '/api/v1/images/:imageId',
-    method: 'delete',
-    auth: true,
-  },
-
   // stock endpoints
   [Endpoints.addStock]: {
     url: '/api/v1/stocks',
@@ -463,12 +435,12 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
 
   // shopping endpoints
   [Endpoints.addItemToCart]: {
-    url: '/api/v1/cart/items',
+    url: '/api/v1/cart',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeItemFromCart]: {
-    url: '/api/v1/cart/items/:stockId',
+    url: '/api/v1/cart/:stockId',
     method: 'delete',
     auth: true,
   },
@@ -484,12 +456,12 @@ export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
   },
 
   [Endpoints.addProductToWishlist]: {
-    url: '/api/v1/wishlist/items',
+    url: '/api/v1/wishlist',
     method: 'post',
     auth: true,
   },
   [Endpoints.removeProductFromWishlist]: {
-    url: '/api/v1/wishlist/items/:productId',
+    url: '/api/v1/wishlist/:productId',
     method: 'delete',
     auth: true,
   },

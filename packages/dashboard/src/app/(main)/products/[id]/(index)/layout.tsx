@@ -1,5 +1,5 @@
+import { findProduct } from '@/actions/products';
 import { BackButton } from '@/components';
-import { findProduct } from '@/fetch/products';
 import { ROUTES } from '@/routes';
 import type { Params } from '@/types';
 import { Breadcrumb, Button, Col, Row, Tabs } from 'antd';
@@ -8,7 +8,8 @@ import { headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 
-export const generateMetadata = async ({ params }: { params: Params }): Promise<Metadata> => {
+export const generateMetadata = async (props: { params: Params }): Promise<Metadata> => {
+  const params = await props.params;
   const id = params.id;
 
   const product = await findProduct(id);
@@ -23,8 +24,12 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, params }) => {
-  const headersList = headers();
+const Layout: React.FC<LayoutProps> = async props => {
+  const params = await props.params;
+
+  const { children } = props;
+
+  const headersList = await headers();
 
   const activeKey = headersList.get('x-pathname') || ROUTES.PRODUCT_STOCKS(params.id);
 
@@ -42,8 +47,8 @@ const Layout: React.FC<LayoutProps> = ({ children, params }) => {
       <Col span={24}>
         <Tabs
           tabBarExtraContent={
-            <Link href={ROUTES.CREATE_STOCK(params.id)}>
-              <Button type="primary">Add Stock</Button>
+            <Link href={ROUTES.STOCKS_EDITOR(params.id)}>
+              <Button type="primary">Edit stocks</Button>
             </Link>
           }
           defaultActiveKey={activeKey}

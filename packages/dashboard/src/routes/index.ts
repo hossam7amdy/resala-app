@@ -21,8 +21,7 @@ export const ROUTES = {
   PRODUCT_REVIEWS: (id: string | number) => `/products/${id}/reviews`,
 
   STOCKS: '/stocks',
-  CREATE_STOCK: (id?: string | number) => `/stocks/create?productId=${id}`,
-  EDIT_STOCK: (stockId: string | number) => `/stocks/${stockId}/edit`,
+  STOCKS_EDITOR: (id?: string | number) => `/stocks/editor?productId=${id}`,
 
   COLORS: '/stocks/colors',
   SIZES: '/stocks/sizes',
@@ -30,12 +29,14 @@ export const ROUTES = {
   ORDERS: '/orders',
 
   CUSTOMERS: '/customers',
-  EDIT_CUSTOMER: (id: string | number) => `/customers/${id}/edit`,
+  CUSTOMER_DETAILS: (id: string | number) => `/customers/${id}`,
 
   DISCOUNTS: '/discounts',
   CREATE_DISCOUNT: '/discounts/create',
   DISCOUNT_PRODUCTS: (id: string | number) => `/discounts/${id}`,
   EDIT_DISCOUNT: (id: string | number) => `/discounts/${id}/edit`,
+
+  MEDIA: '/media',
 } as const;
 
 export const PROTECTED_ROUTES = [
@@ -49,4 +50,5 @@ export const PROTECTED_ROUTES = [
   ROUTES.ORDERS,
   ROUTES.CUSTOMERS,
   ROUTES.DISCOUNTS,
+  ROUTES.MEDIA,
 ];

@@ -1,11 +1,12 @@
+import { listUsers } from '@/actions/users';
 import { CustomersTable } from '@/features/customers';
-import { listUsers } from '@/fetch/users';
 import type { ListUsersRequest } from '@resala/shared';
 
-const CustomerPage = async ({ searchParams }: { searchParams?: ListUsersRequest['query'] }) => {
-  const { users, pagination } = await listUsers(searchParams ?? {});
+const CustomerPage = async (props: { searchParams?: Promise<ListUsersRequest['query']> }) => {
+  const searchParams = await props.searchParams;
+  const data = await listUsers(searchParams);
 
-  return <CustomersTable users={users} pagination={pagination} />;
+  return <CustomersTable data={data} />;
 };
 
 export default CustomerPage;

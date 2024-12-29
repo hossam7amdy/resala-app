@@ -191,6 +191,7 @@
                 {{ 'payment.addressForm.addNewAddress' | translate }}
               </h5>
               <button
+                [lang]="_Translate.currentLang"
                 type="button"
                 class="btn-close text-reset"
                 data-bs-dismiss="offcanvas"
@@ -407,8 +408,11 @@
             aria-labelledby="offcanvasRightLabel"
           >
             <div class="offcanvas-header">
-              <h5 id="offcanvasRightLabel">Edit on Address</h5>
+              <h5 id="offcanvasRightLabel">
+                {{ 'payment.addressForm.mainTitleAddressForm' | translate }}
+              </h5>
               <button
+                [lang]="_Translate.currentLang"
                 type="button"
                 class="btn-close text-reset"
                 data-bs-dismiss="offcanvas"
@@ -694,10 +698,12 @@
         <div class="card text-center">
           <div class="card-body">
             <div class="row card-text">
-              <p class="text-start col-6 p fs-5 p-0">{{ 'cart.totalProPrice' | translate }}</p>
+              <p [lang]="_Translate.currentLang" class="text-start col-6 p fs-5 p-0">
+                {{ 'cart.totalProPrice' | translate }}
+              </p>
 
               <span class="text-end col-6 price fs-5">
-                {{ cartDetails.totalPrice }}
+                {{ totalPrice }}
                 <label class="currency fs-5 m-0">
                   {{ 'home.allProducts.currency' | translate }}</label
                 >
@@ -716,7 +722,7 @@
                           'cart.subTotalPrice' | translate
                         }}</span>
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalDiscount + cartDetails.totalPrice }}
+                          >{{ (!totalDiscount ? 0 : totalDiscount) + totalPrice }}
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span
@@ -750,7 +756,7 @@
                           <i>{{ 'cart.tax' | translate }}</i></span
                         >
                         <span [lang]="_Translate.currentLang" class="col-6 price-details price fs-6"
-                          >{{ cartDetails.totalPrice }}
+                          >{{ totalPrice }}
                           <label class="currency m-0 fs-6">{{
                             'home.allProducts.currency' | translate
                           }}</label></span

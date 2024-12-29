@@ -16,8 +16,6 @@ services:
       - 5432:5432
     networks:
       - resala-network
-    volumes:
-      - ${LOCALSTACK_VOLUME_DIR:-./volume}/db:/var/lib/postgresql/data
 
   aws:
     container_name: '${LOCALSTACK_DOCKER_NAME:-resala-aws}'

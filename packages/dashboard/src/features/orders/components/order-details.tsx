@@ -24,11 +24,11 @@ export const OrderDetails: React.FC<{ order: GetOrderResponse['data'] }> = ({ or
           children: <OrderDetailsTab order={order} />,
         },
         {
-          key: order.transactionId || 'transaction',
-          tabKey: 'transaction',
-          label: 'Transaction Details',
-          children: <TransactionDetails transactionId={order.transactionId!} />,
+          key: 'payment',
+          tabKey: 'payment',
+          label: 'Payment Details',
           disabled: !order.transactionId,
+          children: <TransactionDetails transactionId={order.transactionId!} />,
         },
       ]}
       tabBarExtraContent={

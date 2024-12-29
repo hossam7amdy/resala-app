@@ -1,7 +1,7 @@
 'use client';
 
+import { deleteSize } from '@/actions/sizes';
 import { PopconfirmDeleteButton, ResalaTooltip } from '@/components';
-import { deleteSize } from '@/fetch/sizes';
 import { formatDate } from '@/utils/date-time-formatter';
 import { EditOutlined } from '@ant-design/icons';
 import type { ListSizesResponse } from '@resala/shared';
@@ -32,7 +32,7 @@ export const SizesTable: React.FC<{ sizes: ListSizesResponse['data'] }> = ({ siz
           title: 'Actions',
           dataIndex: 'id',
           align: 'center',
-          render: (id: number, size) => (
+          render: (id: string, size) => (
             <Space>
               <ResalaTooltip title="Edit">
                 <SizeEditorModal size={size} buttonProps={{ type: 'link' }}>
