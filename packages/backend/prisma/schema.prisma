@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["omitApi"]
+  previewFeatures = []
 }
 
 datasource db {
@@ -107,7 +107,6 @@ model Category {
   activateAt    DateTime? @default(now()) @map("activated_at")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
-  media         Media?    @relation(fields: [mediaId], references: [id])
   products      Product[]
 
   @@map("category")
@@ -124,7 +123,6 @@ model Product {
   activateAt    DateTime?      @default(now()) @map("activate_at")
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
-  media         Media          @relation(fields: [mediaId], references: [id])
   categories    Category[]
   discounts     Discount[]
   images        ProductImage[]
@@ -145,7 +143,6 @@ model ProductImage {
   updatedAt DateTime @updatedAt @map("updated_at")
   color     Color    @relation(fields: [colorId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
   @@id([productId, colorId, mediaId])
   @@map("product_image")
@@ -190,25 +187,6 @@ model Size {
   stocks    Stock[]
 
   @@map("size")
-}
-
-model Media {
-  id            String           @id @default(cuid())
-  url           String
-  filename      String
-  size          Int
-  contentType   MediaContentType @default(image) @map("content_type")
-  duration      Int?
-  alt           String?
-  mimetype      String?          @map("mimetype")
-  createdAt     DateTime         @default(now()) @map("created_at")
-  updatedAt     DateTime         @updatedAt @map("updated_at")
-  reviews       Review[]
-  products      Product[]
-  categories    Category[]
-  productImages ProductImage[]
-
-  @@map("media")
 }
 
 model Cart {
@@ -295,7 +273,6 @@ model Review {
   comment   String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  media     Media?   @relation(fields: [mediaId], references: [id])
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

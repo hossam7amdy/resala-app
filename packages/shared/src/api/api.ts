@@ -507,11 +507,6 @@ export type RemoveProductsFromDiscountRequest = z.infer<
 >;
 export type RemoveProductsFromDiscountResponse = DefaultResponseBody;
 
-export type SetMediaMetadataRequest = z.infer<typeof Schemas.SetMediaMetadataSchema>;
-export type SetMediaMetadataResponse = DefaultResponseBody & {
-  data: Media;
-};
-
 export type ListMediaRequest = z.infer<typeof Schemas.ListMediaSchema>;
 export type ListMediaResponse = DefaultResponseBody & {
   data: Array<Media>;

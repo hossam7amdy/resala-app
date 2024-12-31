@@ -1,3 +1,4 @@
+import { ConflictError, NotFoundError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type {
   CreateCategoryRequest,
@@ -35,6 +36,24 @@ export class CategoryService {
   }
 
   async delete(id: string): Promise<DeleteCategoryResponse['data']> {
+    const category = await this.db.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundError('Category not found');
+    }
+
+    const categoryProductsCount = category?._count?.products;
+    if (categoryProductsCount) {
+      throw new ConflictError(`Category has ${categoryProductsCount} products`);
+    }
+
     return await this.db.category.delete({ where: { id } });
   }
 

@@ -1,0 +1,1 @@
+export { CloudFrontAdapter } from './CloudFront';

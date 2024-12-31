@@ -15,11 +15,7 @@ export class CartService {
             size: true,
             product: {
               include: {
-                images: {
-                  include: {
-                    media: true,
-                  },
-                },
+                images: true,
               },
             },
             color: true,
@@ -45,12 +41,7 @@ export class CartService {
         quantity: item.quantity > stock.quantity ? stock.quantity : item.quantity,
         userId,
         product,
-        images: images
-          .filter(image => image.colorId === color.id)
-          .map(({ media, ...img }) => ({
-            ...img,
-            imageUrl: media.url,
-          })),
+        images: images.filter(image => image.colorId === color.id),
         stock: {
           ...stock,
           color,

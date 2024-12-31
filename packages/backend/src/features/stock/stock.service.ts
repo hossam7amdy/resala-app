@@ -18,11 +18,7 @@ export class StockService {
       size: true,
       product: {
         include: {
-          images: {
-            include: {
-              media: true,
-            },
-          },
+          images: true,
         },
       },
     } satisfies Prisma.StockInclude;
@@ -39,10 +35,8 @@ export class StockService {
     const primaryImage = images.find(image => image.colorId === color.id && image.isPrimary)!;
     return {
       ...stock,
-      image: { ...primaryImage, imageUrl: primaryImage.media.url },
-      images: images
-        .filter(image => image.colorId === color.id)
-        .map(image => ({ ...image, imageUrl: image.media.url })),
+      image: primaryImage,
+      images: images.filter(image => image.colorId === color.id),
       size,
       product,
       color,
@@ -55,7 +49,7 @@ export class StockService {
       where: { id },
     });
 
-    return this._transformStock(stock);
+    return this._transformStock(stock) as GetStockResponseDto;
   }
 
   async list({
@@ -83,7 +77,7 @@ export class StockService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return stocks.map(this._transformStock);
+    return stocks.map(this._transformStock) as ListStocksResponseDto;
   }
 
   async delete(id: string) {

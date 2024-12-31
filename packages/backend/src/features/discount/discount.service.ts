@@ -137,18 +137,14 @@ export class DiscountService {
   ): Promise<GetDiscountResponse['data']> {
     const { products, ...discount } = await this.db.discount.findUniqueOrThrow({
       include: {
-        products: {
-          include: {
-            media: true,
-          },
-        },
+        products: true,
       },
       where: { id },
     });
 
     return {
       ...discount,
-      products: products.map(p => ({ ...p, imageUrl: p.media.url })),
+      products,
       pagination: { page, limit, total: products.length },
     };
   }

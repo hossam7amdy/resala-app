@@ -65,7 +65,7 @@ const MediaSelectList: React.FC<MediaSelectProps> = ({
           <Checkbox className="absolute top-1 left-1" type="checkbox" checked={isSelected(item)} />
           <Image
             src={item.url}
-            alt={item.alt || item.filename || ''}
+            alt={item.filename || ''}
             width={100}
             height={150}
             className="object-cover rounded-md shadow-md p-1"

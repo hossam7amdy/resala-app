@@ -1,4 +1,5 @@
 import { configuration } from '@/configuration';
+import { CloudFrontAdapter } from '@/infrastructure/cdn-provider';
 import { S3Adapter } from '@/infrastructure/cloud-storage';
 import { PaymobAdapter } from '@/infrastructure/payment-provider';
 import { db } from '@/lib/db';
@@ -34,14 +35,13 @@ const stockService = new StockService(db);
 const userService = new UserService(db);
 const emailService = new EmailService(configuration());
 const mediaService = new MediaService(
-  db,
   new S3Adapter({
     region: configuration().aws.region,
     accessKey: configuration().aws.accessKey,
     accessSecret: configuration().aws.accessSecret,
     bucketName: configuration().aws.s3.bucketName,
-    cdnBaseUrl: configuration().cdnBaseUrl,
-  })
+  }),
+  new CloudFrontAdapter({ baseUrl: configuration().cdnBaseUrl })
 );
 
 export {
