@@ -98,11 +98,7 @@ export class DashboardService {
     const lowStock = await this.db.stock.findMany({
       select: {
         quantity: true,
-        product: {
-          include: {
-            media: true,
-          },
-        },
+        product: true,
         color: true,
         size: true,
       },
@@ -115,11 +111,7 @@ export class DashboardService {
 
     const outOfStock = await this.db.stock.findMany({
       select: {
-        product: {
-          include: {
-            media: true,
-          },
-        },
+        product: true,
         color: true,
         size: true,
       },
@@ -130,15 +122,15 @@ export class DashboardService {
     });
 
     return {
-      lowStock: lowStock.map(({ product: { media, ...product }, quantity, ...stock }) => ({
+      lowStock: lowStock.map(({ product, quantity, ...stock }) => ({
         ...stock,
         stockRemaining: quantity,
-        product: { ...product, imageUrl: media.url },
+        product,
       })),
-      outOfStock: outOfStock.map(({ product: { media, ...product }, ...stock }) => ({
+      outOfStock: outOfStock.map(({ product, ...stock }) => ({
         ...stock,
         stockRemaining: 0,
-        product: { ...product, imageUrl: media.url },
+        product,
       })),
     };
   }
@@ -171,12 +163,7 @@ export class DashboardService {
   async listTopProducts(): Promise<ListTopProductsResponse['data']> {
     const topProducts = await this.db.product.findMany({
       include: {
-        media: true,
-        images: {
-          include: {
-            media: true,
-          },
-        },
+        images: true,
         _count: {
           select: {
             orderItems: true,
@@ -190,16 +177,9 @@ export class DashboardService {
       },
     });
 
-    return topProducts.map(({ images, media, _count, ...product }) => ({
+    return topProducts.map(({ images, _count, ...product }) => ({
       unitsSold: _count.orderItems,
-      product: {
-        ...product,
-        imageUrl: media.url,
-        images: images.map(({ media, ...image }) => ({
-          ...image,
-          imageUrl: media.url,
-        })),
-      },
+      product: { ...product, images },
     }));
   }
 

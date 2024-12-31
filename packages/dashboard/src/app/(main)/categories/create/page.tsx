@@ -1,5 +1,5 @@
 import { BackButton, FormSkeleton } from '@/components';
-import { CreateForm } from '@/features/categories';
+import { CategoryEditor } from '@/features/categories';
 import { ROUTES } from '@/routes';
 import { Breadcrumb, Card, Col, Row } from 'antd';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ const CreateCategoryPage = () => {
       <Col span={24}>
         <Card>
           <Suspense fallback={<FormSkeleton />}>
-            <CreateForm />
+            <CategoryEditor />
           </Suspense>
         </Card>
       </Col>

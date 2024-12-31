@@ -1,23 +1,10 @@
 export interface CloudStoragePort {
   /**
-   * Upload a blob to the cloud storage.
-   * @param path - The path (key) where the blob should be stored.
-   * @param data - The blob data as a Buffer or ReadableStream.
-   * @param metadata - Optional metadata to associate with the blob.
-   * @returns The URL or identifier of the stored blob.
+   * Get blob metadata from the cloud storage.
+   * @param path - The path (key) of the blob.
+   * @returns {BlobMetadata} The metadata of the blob.
    */
-  uploadBlob(
-    path: string,
-    data: Buffer | NodeJS.ReadableStream,
-    metadata?: Record<string, string>
-  ): Promise<string>;
-
-  /**
-   * Retrieve a blob from the cloud storage.
-   * @param path - The path (key) of the blob to retrieve.
-   * @returns A readable stream of the blob data.
-   */
-  getBlob(path: string): Promise<NodeJS.ReadableStream>;
+  getBlobMetadata(path: string): Promise<BlobMetadata>;
 
   /**
    * Delete a blob from the cloud storage.
@@ -42,25 +29,18 @@ export interface CloudStoragePort {
   blobExists(path: string): Promise<boolean>;
 
   /**
-   * Get the public URL of a blob in the cloud storage.
-   * @param path - The path (key) of the blob.
-   * @returns The public URL of the blob.
-   */
-  getPublicUrl(path: string): string;
-
-  /**
    * List blobs in the storage with optional filters.
    * @param prefix - The prefix to filter blob keys.
    * @param metadataFilter - Optional metadata filters to apply.
-   * @returns A list of blob metadata (e.g., key, size, lastModified).
+   * @returns {BlobMetadata[]} A list of blob metadata (e.g., key, size, lastModified).
    */
   listBlobs(prefix?: string, metadataFilter?: Record<string, string>): Promise<BlobMetadata[]>;
 }
 
 export interface BlobMetadata {
   key: string;
-  url: string;
   size: number;
-  lastModified: Date;
+  lastModified: Date | string;
+  contentType?: string | null;
   metadata?: Record<string, string>;
 }

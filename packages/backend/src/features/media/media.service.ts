@@ -1,84 +1,56 @@
 import { NotFoundError } from '@/exceptions';
-import type { Datastore } from '@/infrastructure/data-store';
-import type { CloudStoragePort } from '@/interfaces';
+import type { CDNPort, CloudStoragePort } from '@/interfaces';
 
-import type {
-  GetMediaResponseDto,
-  ListMediaRequestDto,
-  ListMediaResponseDto,
-  MediaDto,
-  SetMediaMetadataRequestDto,
-} from './media.dto';
+import type { GetMediaResponseDto, ListMediaRequestDto, ListMediaResponseDto } from './media.dto';
 
 class MediaService {
   constructor(
-    private db: Datastore,
-    private storage: CloudStoragePort
+    private storage: CloudStoragePort,
+    private cdn: CDNPort
   ) {}
 
   async getUploadUrl(id: string): Promise<string> {
     return this.storage.generatePresignedUrl(id, 60);
   }
 
-  async setMetadata(id: string, data: SetMediaMetadataRequestDto): Promise<MediaDto> {
-    const mediaExist = await this.storage.blobExists(id);
-
-    if (!mediaExist) {
-      throw new NotFoundError('Media not found');
-    }
-
-    const media = {
-      ...data,
-      url: this.storage.getPublicUrl(id),
-    };
-
-    return this.db.media.upsert({
-      update: media,
-      create: media,
-      where: { id },
-    });
-  }
-
-  async delete(id: string): Promise<MediaDto> {
-    const [data] = await Promise.all([
-      this.db.media.delete({ where: { id } }),
-      this.storage.deleteBlob(id),
-    ]);
-
-    return data;
+  async delete(id: string): Promise<void> {
+    await this.storage.deleteBlob(id);
   }
 
   async getMedia(id: string): Promise<GetMediaResponseDto> {
-    const media = await this.db.media.findUniqueOrThrow({
-      where: { id },
-    });
+    const media = await this.storage.getBlobMetadata(id);
 
-    return media;
+    if (!media) {
+      throw new NotFoundError('Media not found');
+    }
+
+    return {
+      id: media.key,
+      url: this.cdn.generateUrl(media.key),
+      size: media.size,
+      filename: media.key,
+      mimetype: media.contentType,
+      updatedAt: media.lastModified,
+    };
   }
 
-  async listMedia({
-    sortBy,
-    sortOrder,
-    search,
-    page,
-    limit,
-  }: ListMediaRequestDto): Promise<ListMediaResponseDto> {
-    const medias = await this.db.media.findMany({
-      orderBy: {
-        [`${sortBy}`]: sortOrder,
-      },
-      where: {
-        filename: { contains: search },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
+  async listMedia({ search }: ListMediaRequestDto): Promise<ListMediaResponseDto> {
+    const medias = await this.storage.listBlobs(search);
+
+    const sortedDesc = medias.sort((a, b) => {
+      const dateA = new Date(a.lastModified).getTime();
+      const dateB = new Date(b.lastModified).getTime();
+      return dateB - dateA;
     });
 
-    return medias;
-  }
-
-  async count(): Promise<number> {
-    return this.db.media.count();
+    return sortedDesc.map(media => ({
+      id: media.key,
+      url: this.cdn.generateUrl(media.key),
+      size: media.size,
+      filename: media.key,
+      mimetype: media.contentType,
+      updatedAt: media.lastModified,
+    }));
   }
 }
 

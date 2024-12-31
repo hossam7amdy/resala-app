@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 class PrismaDBConfig extends PrismaClient {
   constructor(config: Configuration) {
-    super({ datasourceUrl: config.db.url });
+    super({ datasources: { db: { url: config.db.url } } });
   }
 }
 

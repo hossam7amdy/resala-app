@@ -1,24 +1,8 @@
-import type {
-  ListMediaRequest,
-  ListMediaResponse,
-  Media,
-  SetMediaMetadataSchema,
-} from '@resala/shared';
-import type { z } from 'zod';
+import type { ListMediaRequest, ListMediaResponse, Media } from '@resala/shared';
 
-type MediaDto = Media;
-
-type SetMediaMetadataRequestDto = z.infer<typeof SetMediaMetadataSchema.shape.body>;
-
-type GetMediaResponseDto = ListMediaResponse['data'][0];
+type GetMediaResponseDto = Media;
 
 type ListMediaRequestDto = ListMediaRequest['query'];
 type ListMediaResponseDto = ListMediaResponse['data'];
 
-export type {
-  MediaDto,
-  SetMediaMetadataRequestDto,
-  GetMediaResponseDto,
-  ListMediaResponseDto,
-  ListMediaRequestDto,
-};
+export type { GetMediaResponseDto, ListMediaResponseDto, ListMediaRequestDto };

@@ -21,11 +21,7 @@ export class OrderService {
         include: {
           product: {
             include: {
-              images: {
-                include: {
-                  media: true,
-                },
-              },
+              images: true,
             },
           },
           stock: {
@@ -61,10 +57,8 @@ export class OrderService {
       orderItems: orderItems.map(({ stock, product: { images, ...product }, ...item }) => ({
         ...item,
         product,
-        images: images
-          .filter(img => img.colorId === stock.color.id)
-          .map(({ media, ...img }) => ({ ...img, imageUrl: media.url })),
-        image: { ...primaryImage, imageUrl: primaryImage.media.url },
+        images: images.filter(img => img.colorId === stock.color.id),
+        image: primaryImage,
         color: stock.color.enName,
         size: stock.size.name,
       })),
@@ -151,7 +145,7 @@ export class OrderService {
 
     return {
       pagination: { total: count, page, limit },
-      orders: orders.map(this._transformOrder),
+      orders: orders.map(this._transformOrder) as GetOrderResponseDto[],
     };
   }
 
@@ -161,7 +155,7 @@ export class OrderService {
       include: this._orderFields(),
     });
 
-    return this._transformOrder(order);
+    return this._transformOrder(order) as GetOrderResponseDto;
   }
 
   async update(id: string, order: Partial<OrderDto>): Promise<GetOrderResponseDto> {

@@ -1,6 +1,6 @@
 import type { Configuration } from '@/configuration';
 import type { ShoppingService } from '@/features';
-import type { PrismaDBConfig } from '@/infrastructure/database';
+import type { DataStore } from '@/lib/db';
 import type { User } from '@resala/shared';
 import { betterAuth } from 'better-auth';
 import type { User as AuthUser } from 'better-auth';
@@ -13,7 +13,7 @@ import type { ISMSService } from '../domain/contracts/ISMSService';
 
 const createAuthService = (init: {
   config: Configuration;
-  prismaDb: PrismaDBConfig;
+  prismaDb: DataStore;
   emailService: IEmailService;
   smsService: ISMSService;
   shoppingService: ShoppingService;

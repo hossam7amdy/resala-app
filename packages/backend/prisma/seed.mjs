@@ -54,23 +54,6 @@ const main = async () => {
       ],
     });
 
-    const medias = await trx.media.createManyAndReturn({
-      data: [
-        {
-          id: 'product-1',
-          url: 'https://cdn.resala.live/dummy/product-1.webp',
-          filename: 'product-1.webp',
-          size: 21 * 1024,
-        },
-        {
-          id: 'product-2',
-          url: 'https://cdn.resala.live/dummy/product-2.webp',
-          filename: 'product-2.webp',
-          size: 28 * 1024,
-        },
-      ],
-    });
-
     // create products
     const products = await trx.product.createManyAndReturn({
       data: [
@@ -78,7 +61,7 @@ const main = async () => {
           arName: 'نقاب قطعة واحدة',
           enName: 'One Piece Niqab',
           price: 50,
-          mediaId: medias[0].id,
+          mediaId: 'dummy/product-1.webp',
           arDescription: 'نقاب قطعة واحدة مصنوع من قماش القطن',
           enDescription:
             'One piece niqab made of cotton fabric with a soft texture and comfortable to wear for long hours of the day',
@@ -87,7 +70,7 @@ const main = async () => {
           arName: 'اسدال صلاة',
           enName: 'Prayer Set',
           price: 100,
-          mediaId: medias[1].id,
+          mediaId: 'dummy/product-2.webp',
           arDescription: 'اسدال صلاة مصنوع من قماش القطن',
           enDescription:
             'Prayer set made of cotton fabric with a soft texture and comfortable to wear for long hours of the day',
@@ -96,7 +79,7 @@ const main = async () => {
           arName: 'خمار قطعتين',
           enName: 'Two Piece Khemar',
           price: 70,
-          mediaId: medias[0].id,
+          mediaId: 'dummy/product-1.webp',
           arDescription: 'خمار قطعتين مصنوع من قماش القطن',
           enDescription:
             'Two piece khemar made of cotton fabric with a soft texture and comfortable to wear for long hours of the day',

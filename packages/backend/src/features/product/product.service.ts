@@ -1,7 +1,7 @@
 import { ConflictError } from '@/exceptions';
 import type { DataStore } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
-import type { Image, Media } from '@resala/shared';
+import type { Image } from '@resala/shared';
 
 import type {
   CreateProductRequestDto,
@@ -21,11 +21,7 @@ export class ProductService {
   private _productFields(id?: string) {
     const now = new Date();
     return {
-      media: true,
       images: {
-        include: {
-          media: true,
-        },
         where: {
           productId: id,
         },
@@ -71,16 +67,11 @@ export class ProductService {
 
   private _formatGroupedStocksByColor(
     groupedStocks: ProductStocksDto[],
-    productImages: (Image & { media: Media })[]
+    productImages: (Image & { imageUrl: string })[]
   ) {
     return groupedStocks.map(stocks => ({
       color: stocks[0].color,
-      images: productImages
-        .filter(image => image.colorId === stocks[0].color.id)
-        .map(({ media, ...img }) => ({
-          ...img,
-          imageUrl: media.url,
-        })),
+      images: productImages.filter(image => image.colorId === stocks[0].color.id),
       sizes: stocks.map(stock => ({
         id: stock.id,
         size: stock.size.name,
@@ -99,11 +90,10 @@ export class ProductService {
       _avg: { rating: true },
     });
 
-    const { stocks, categories, media, images, ...product } =
-      await this.db.product.findUniqueOrThrow({
-        include: this._productFields(id),
-        where: { id },
-      });
+    const { stocks, categories, images, ...product } = await this.db.product.findUniqueOrThrow({
+      include: this._productFields(id),
+      where: { id },
+    });
 
     // group by color
     const groupedStocks = this._groupProductStocksByColor(stocks);
@@ -111,7 +101,6 @@ export class ProductService {
 
     return {
       ...product,
-      imageUrl: media.url,
       category: categories[0],
       avgRating: avgRating._avg.rating ?? 0,
       stocks: formatStocks,
@@ -153,9 +142,8 @@ export class ProductService {
 
     return {
       pagination: { page, limit, total },
-      products: products.map(({ stocks, images, categories, media, ...product }) => ({
+      products: products.map(({ stocks, images, categories, ...product }) => ({
         ...product,
-        imageUrl: media.url,
         category: categories[0],
         stocks: this._formatGroupedStocksByColor(this._groupProductStocksByColor(stocks), images),
         avgRating: avgRatings.find(rating => rating.productId === product.id)?._avg.rating ?? 0,
