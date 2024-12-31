@@ -90,7 +90,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Subscription ID
   getTrendProductsId!: Subscription;
   getProducts!: Subscription;
-  destroySetTimeOut: any;
 
   ngOnInit(): void {
     this.customSpinIsLoading = true;
@@ -123,7 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // overlay
   ngAfterViewInit(): void {
-    this.destroySetTimeOut = setTimeout(() => {
+    setTimeout(() => {
       this.onClick = true;
     }, 10000);
   }
@@ -131,7 +130,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.getTrendProductsId) this.getProducts.unsubscribe();
     if (this.getProducts) this.getProducts.unsubscribe();
-    if (this.destroySetTimeOut) this.destroySetTimeOut.clearTimeout;
   }
 
   // Change page Direction as per Selected Lang
@@ -173,9 +171,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // public onClickRate(rate: number): void {
-  //   console.log(rate, 'rate');
-  // }
+ 
 
   // main slider
   mainSliderOptions: OwlOptions = {

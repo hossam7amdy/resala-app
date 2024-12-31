@@ -115,6 +115,11 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   isZoomed = false;
   zoomStyle = {};
 
+  //imgURL
+  imgUrlZoomin:string='';
+
+
+
   //Subscription ID
   getProductDetailsId!: Subscription;
   getProductReviewId!: Subscription;
@@ -460,6 +465,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   // }
 
   openImage(imageUrl: string) {
-    window.open(imageUrl, '_blank');
+    // window.open(imageUrl, '_blank');
+    this.imgUrlZoomin = imageUrl;
   }
+ 
 }

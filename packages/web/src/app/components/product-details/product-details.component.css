@@ -466,11 +466,11 @@
   height: auto;
   transition: opacity 0.5s ease-in-out;
 }
-
-.original-image {
-  width: 100%;
-  height: auto;
+.primary-img{
   cursor: zoom-in;
+}
+.original-image {
+  cursor: zoom-out;
 }
 
 /* Full Overlay (appears on hover) */

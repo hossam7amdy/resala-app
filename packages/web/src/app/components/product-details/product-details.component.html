@@ -16,11 +16,12 @@
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
-                <div class="image-container p-1 m-1" (click)="openImage(image.imageUrl)">
-                  <!-- (mousemove)="onMouseMove($event)"
-                  (mouseleave)="hideCustomCursor()"
-                  (mouseenter)="showCustomCursor()" -->
-                  <!-- Original Image -->
+                
+                <div class="image-container p-1 m-1" 
+                (click)="openImage(image.imageUrl)"
+                data-bs-toggle="offcanvas" 
+                data-bs-target="#offcanvasTop" 
+                aria-controls="offcanvasTop">
                   <img
                     [src]="image.imageUrl"
                     [alt]="
@@ -29,43 +30,14 @@
                     [title]="
                       _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
                     "
-                    class="original-image"
+                    class="primary-img"
                   />
 
-                  <!-- Full Image Overlay
-                  <div class="image-overlay" [class.hidden]="isMouseMoving">
-                    <div
-                      class="custom-cursor"
-                      *ngIf="isCursorVisible"
-                      [ngStyle]="cursorStyles"
-                      #cursor
-                    ></div>
-                  </div> -->
-
-                  <!-- Zoomed Image Displayed in Separate Area Beneath -->
-                  <!-- <div class="zoom-container" *ngIf="isZoomActive">
-                    <img
-                      [src]="image.imageUrl"
-                      [alt]="
-                        _Translate.currentLang == 'ar'
-                          ? productDetails.arName
-                          : productDetails.enName
-                      "
-                      [title]="
-                        _Translate.currentLang == 'ar'
-                          ? productDetails.arName
-                          : productDetails.enName
-                      "
-                      class="zoomed-image"
-                      [ngStyle]="zoomStyles"
-                    />
-                  </div> -->
                 </div>
               </ng-template>
             </ng-container>
           </ng-container>
         </owl-carousel-o>
-
         <div class="d-flex flex-wrap p-3 pt-0 mini-images">
           <div class="d-flex" *ngFor="let product of productStock">
             <div class="d-flex flex-wrap">
@@ -254,6 +226,27 @@
         <!-- <label for="">product id : {{ productDetails.id }} quantity{{ counterQuantity }}</label> -->
       </div>
     </div>
+    <!-- start zoomin image -->
+    <div class="offcanvas offcanvas-top h-100" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+      <div class="offcanvas-header">
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+
+      <div class="offcanvas-body text-center original-image" data-bs-dismiss="offcanvas">
+        <img
+          
+          [src]="imgUrlZoomin"
+          [alt]="
+            _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+          "
+          [title]="
+            _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
+          "
+        />
+      </div>
+    </div>
+    
+    <!-- end zoomin image -->
 
     <!--start Reviews -->
     <div class="card mt-5">
