@@ -3,6 +3,8 @@
 **/.dist
 **/dist
 **/.next
+**/.turbo
+**/tsconfig.tsbuildinfo*
 
 # web package
 packages/web/docs

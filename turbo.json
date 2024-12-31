@@ -10,7 +10,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "clean": {},
+    "clean": {
+      "cache": false
+    },
     "format": {},
     "lint": {},
     "knip": {

@@ -5,6 +5,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { Button, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import type { UploadFile } from 'antd/es/upload';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { MediaCrop } from '../media-crop/MediaCrop';
@@ -21,11 +22,13 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
   onUploadSuccess,
   ...props
 }) => {
+  const { refresh } = useRouter();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handleChange: UploadProps['onChange'] = info => {
     if (info.file.status === 'done') {
       setFileList(fileList.filter(file => file.uid !== info.file.uid));
+      refresh();
       onUploadSuccess?.(info.file);
     } else if (info.file.status === 'error') {
       onUploadError?.(info.file);
