@@ -10,8 +10,9 @@ const handleUpload: UploadProps['customRequest'] = async ({
 }) => {
   try {
     const rcFile = file as RcFile & { xhr?: XMLHttpRequest };
+    // TODO: refactor to use DI for getUploadUrl to make it reusable and testable
     // Get upload URL
-    const uploadUrl = await getUploadUrl(rcFile.uid);
+    const uploadUrl = await getUploadUrl(rcFile.name);
 
     // Use XMLHttpRequest to track progress
     const xhr = new XMLHttpRequest();

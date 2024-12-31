@@ -176,19 +176,7 @@ export class ProductService {
       data: {
         ...product,
         categories: { set: categoryIds?.map(id => ({ id })) },
-        images: {
-          upsert: images?.map(image => ({
-            where: {
-              productId_colorId_mediaId: {
-                productId: id,
-                colorId: image.colorId,
-                mediaId: image.mediaId,
-              },
-            },
-            create: image,
-            update: image,
-          })),
-        },
+        images: images ? { deleteMany: { productId: id }, create: images } : undefined,
         stocks: {
           upsert: stocks?.map(stock => ({
             where: {

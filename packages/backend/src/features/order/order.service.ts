@@ -50,15 +50,17 @@ export class OrderService {
     ...order
   }: Prisma.OrderGetPayload<{
     include: ReturnType<OrderService['_orderFields']>;
-  }>) {
+  }>): GetOrderResponseDto {
     const primaryImage = orderItems[0].product.images.find(img => img.isPrimary)!;
     return {
       ...order,
       orderItems: orderItems.map(({ stock, product: { images, ...product }, ...item }) => ({
         ...item,
         product,
-        images: images.filter(img => img.colorId === stock.color.id),
-        image: primaryImage,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        images: images.filter(img => img.colorId === stock.color.id) as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        image: primaryImage as any,
         color: stock.color.enName,
         size: stock.size.name,
       })),
@@ -145,7 +147,7 @@ export class OrderService {
 
     return {
       pagination: { total: count, page, limit },
-      orders: orders.map(this._transformOrder) as GetOrderResponseDto[],
+      orders: orders.map(this._transformOrder),
     };
   }
 
@@ -155,7 +157,7 @@ export class OrderService {
       include: this._orderFields(),
     });
 
-    return this._transformOrder(order) as GetOrderResponseDto;
+    return this._transformOrder(order);
   }
 
   async update(id: string, order: Partial<OrderDto>): Promise<GetOrderResponseDto> {

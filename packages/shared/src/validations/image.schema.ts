@@ -5,7 +5,6 @@ const ImageSchema = z.object({
   colorId: z.string().cuid(),
   productId: z.string().cuid(),
   isPrimary: z.boolean(),
-  createdAt: z.date().or(z.string().datetime()),
   updatedAt: z.date().or(z.string().datetime()),
 });
 
