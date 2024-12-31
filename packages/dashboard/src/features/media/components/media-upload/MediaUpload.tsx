@@ -1,7 +1,6 @@
 'use client';
 
 import { UploadOutlined } from '@ant-design/icons';
-import { createId } from '@paralleldrive/cuid2';
 import { Button, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import type { UploadFile } from 'antd/es/upload';
@@ -53,10 +52,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
         fileList={fileList}
         onChange={handleChange}
         customRequest={handleUpload}
-        beforeUpload={file => {
-          file.uid = createId();
-          return beforeUpload(file);
-        }}
+        beforeUpload={beforeUpload}
         onRemove={file => {
           file.xhr?.abort();
           return !!file.xhr?.abort;
