@@ -1,0 +1,76 @@
+model Order {
+  id              String        @id @default(cuid())
+  number          Int           @unique @default(autoincrement())
+  userId          String        @map("user_id")
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discount        Decimal       @default(0) @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  orderStatus     OrderStatus   @default(PENDING) @map("order_status")
+  transactionId   String?       @map("transaction_id") @db.VarChar(32)
+  paymentMethod   PaymentMethod @map("payment_method")
+  paymentStatus   PaymentStatus @default(UNPAID) @map("payment_status")
+  note            String?       @db.VarChar(250)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  user            User          @relation(fields: [userId], references: [id])
+  orderItems      OrderItem[]
+  shippingDetails Shipping?
+
+  @@map("order")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String   @map("order_id")
+  productId String   @map("product_id")
+  stockId   String   @map("stock_id")
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  stock     Stock    @relation(fields: [stockId], references: [id])
+
+  @@map("order_item")
+}
+
+model Shipping {
+  id        String   @id @default(cuid())
+  orderId   String   @unique @map("order_id")
+  addressId String   @unique @map("address_id")
+  cost      Decimal  @default(0) @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  address   Address  @relation(fields: [addressId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@map("shipping")
+}
+
+enum OrderStatus {
+  PENDING
+  FULFILLED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+
+  @@map("order_status")
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  VOIDED
+  REFUNDED
+
+  @@map("payment_status")
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+
+  @@map("payment_method")
+}

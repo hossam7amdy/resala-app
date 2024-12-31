@@ -1,0 +1,25 @@
+model Discount {
+  id          String       @id @default(cuid())
+  type        DiscountType @map("type")
+  amount      Decimal      @db.Decimal(10, 2)
+  description String?      @db.VarChar(250)
+  minQty      Int          @default(1) @map("min_qty")
+  isActive    Boolean      @default(true) @map("is_active")
+  isStoreWide Boolean      @default(false) @map("is_store_wide")
+  startDate   DateTime?    @map("start_date")
+  endDate     DateTime?    @map("end_date")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  products    Product[]
+
+  @@map("discount")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+  BOGO
+  BULK
+
+  @@map("discount_type")
+}
