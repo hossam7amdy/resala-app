@@ -24,10 +24,10 @@ const DataStoreSingleton = () => {
 };
 
 declare const globalThis: {
-  dbGlobal: ReturnType<typeof DataStoreSingleton>;
+  dbGlobal: DataStore;
 } & typeof global;
 
 export const db = globalThis.dbGlobal ?? DataStoreSingleton();
-export type DataStore = typeof db;
+export type DataStore = ReturnType<typeof DataStoreSingleton>;
 
 if (process.env.NODE_ENV !== 'production') globalThis.dbGlobal = db;

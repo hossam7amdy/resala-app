@@ -31,12 +31,13 @@ export class StockService {
     ...stock
   }: Prisma.StockGetPayload<{
     include: ReturnType<StockService['_stockFields']>;
-  }>) {
+  }>): GetStockResponseDto {
     const primaryImage = images.find(image => image.colorId === color.id && image.isPrimary)!;
     return {
       ...stock,
       image: primaryImage,
-      images: images.filter(image => image.colorId === color.id),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      images: images.filter(image => image.colorId === color.id) as any,
       size,
       product,
       color,
@@ -49,7 +50,7 @@ export class StockService {
       where: { id },
     });
 
-    return this._transformStock(stock) as GetStockResponseDto;
+    return this._transformStock(stock);
   }
 
   async list({
@@ -77,7 +78,7 @@ export class StockService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return stocks.map(this._transformStock) as ListStocksResponseDto;
+    return stocks.map(this._transformStock);
   }
 
   async delete(id: string) {
