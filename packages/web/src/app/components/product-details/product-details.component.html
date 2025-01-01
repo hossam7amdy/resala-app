@@ -76,15 +76,20 @@
           }}
         </p>
         <div>
-          <span *ngIf="productDetails.discounts.length< 1 || productDetails.discounts.type != 'PERCENTAGE'" class="price"
+          <span
+            *ngIf="
+              productDetails.discounts.length < 1 || productDetails.discounts.type != 'PERCENTAGE'
+            "
+            class="price"
             >{{ productDetails.price
-            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span>
+            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label></span
+          >
         </div>
         <div *ngFor="let discount of productDetails.discounts">
           <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
             <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
           </h4>
-          
+
           <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
             >{{ productDetails.price
             }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s

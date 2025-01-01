@@ -34,7 +34,10 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
       name="product-form"
       layout="vertical"
       onFinish={handleSubmit}
-      initialValues={{ ...product, categoryIds: [product?.category.id] }}
+      initialValues={{
+        ...product,
+        categoryIds: product?.category.id ? [product?.category.id] : undefined,
+      }}
       scrollToFirstError
     >
       <Form.Item

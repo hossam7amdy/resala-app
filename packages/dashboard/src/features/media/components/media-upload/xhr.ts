@@ -1,4 +1,4 @@
-import { getUploadUrl, setMediaMetadata } from '@/actions/media';
+import { getUploadUrl } from '@/actions/media';
 import type { UploadProps } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 
@@ -35,11 +35,6 @@ const handleUpload: UploadProps['customRequest'] = async ({
     // Handle success and error
     xhr.onload = async e => {
       if (xhr.status === 200) {
-        await setMediaMetadata(rcFile.uid, {
-          size: rcFile.size,
-          filename: rcFile.name,
-          mimetype: rcFile.type,
-        });
         onSuccess?.(e, rcFile);
       } else {
         onError?.(e, rcFile);

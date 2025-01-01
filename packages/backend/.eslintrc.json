@@ -1,0 +1,34 @@
+{
+  "extends": ["next", "next/core-web-vitals"],
+  "settings": {
+    "next": {
+      "rootDir": "packages/dashboard/*"
+    }
+  },
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [
+              "@features/*/*",
+              "@/features/*/*",
+              "@providers/**/*",
+              "@/providers/**/*",
+              "@hooks/**/*",
+              "@/hooks/**/*",
+              "@config/**/*",
+              "@/config/**/*"
+            ],
+            "message": "usage of private modules not allowed."
+          },
+          {
+            "group": ["next/dynamic"],
+            "message": "instead of importing dynamic from next/dynamic use the NoSSR component from @/components/NoSSR"
+          }
+        ]
+      }
+    ]
+  }
+}

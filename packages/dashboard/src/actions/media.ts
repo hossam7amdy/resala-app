@@ -3,30 +3,17 @@
 import { ROUTES } from '@/routes';
 import { mediaService } from '@/services';
 import { formatError } from '@/utils/formatError';
-import { ListMediaSchema, SetMediaMetadataSchema } from '@resala/shared';
-import type { ListMediaRequest, SetMediaMetadataRequest } from '@resala/shared';
+import { ListMediaSchema } from '@resala/shared';
+import type { ListMediaRequest } from '@resala/shared';
 import { revalidatePath } from 'next/cache';
 
 const getUploadUrl = async (id: string) => {
   return await mediaService.getUploadUrl(id);
 };
 
-const setMediaMetadata = async (id: string, data: SetMediaMetadataRequest['body']) => {
-  data = SetMediaMetadataSchema.shape.body.parse(data);
-
-  const media = await mediaService.setMetadata(id, data);
-
-  revalidatePath(ROUTES.MEDIA);
-  return media;
-};
-
 const listMedias = async (query: ListMediaRequest['query']) => {
   query = ListMediaSchema.shape.query.parse(query);
-  return await mediaService.listMedia(query);
-};
-
-const countMedia = async () => {
-  return await mediaService.count();
+  return await mediaService.listMedia({ search: query.search });
 };
 
 const deleteMedia = async (id: string) => {
@@ -40,4 +27,4 @@ const deleteMedia = async (id: string) => {
   }
 };
 
-export { getUploadUrl, setMediaMetadata, listMedias, countMedia, deleteMedia };
+export { getUploadUrl, listMedias, deleteMedia };

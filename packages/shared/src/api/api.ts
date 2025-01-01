@@ -355,6 +355,7 @@ export type GetPaymentResponse = DefaultResponseBody & {
   data: {
     id: string;
     amount: number;
+    refundedAmount: number | null;
     status: string;
     createdAt: string;
     updatedAt: string;
@@ -505,11 +506,6 @@ export type RemoveProductsFromDiscountRequest = z.infer<
   typeof Schemas.RemoveProductsFromDiscountSchema
 >;
 export type RemoveProductsFromDiscountResponse = DefaultResponseBody;
-
-export type SetMediaMetadataRequest = z.infer<typeof Schemas.SetMediaMetadataSchema>;
-export type SetMediaMetadataResponse = DefaultResponseBody & {
-  data: Media;
-};
 
 export type ListMediaRequest = z.infer<typeof Schemas.ListMediaSchema>;
 export type ListMediaResponse = DefaultResponseBody & {

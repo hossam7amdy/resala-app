@@ -50,8 +50,8 @@ const MediaTable: React.FC<MediaTableProps> = ({ medias }) => {
         },
         {
           title: 'Date added',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
+          dataIndex: 'updatedAt',
+          key: 'updatedAt',
           width: 150,
           render: (date: string) => formatDate(date),
         },
