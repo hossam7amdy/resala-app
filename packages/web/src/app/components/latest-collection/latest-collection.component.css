@@ -67,7 +67,7 @@ section {
   position: absolute;
   top: 2.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   z-index: 10;
   font-weight: lighter;
@@ -86,7 +86,7 @@ section {
   } */
 
 .header-product.active i {
-  /* background-color: #fbb935; */
+  /* background-color: #00bbd7; */
   font-weight: bold;
 }
 
@@ -94,7 +94,7 @@ section {
   position: absolute;
   bottom: 3.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   cursor: pointer;
 }
@@ -156,7 +156,7 @@ section {
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:hover,
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:focus,
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:active {
-  background: #fbb935;
+  background: #00bbd7;
   color: #fff;
   text-decoration: none;
   font-weight: bold;

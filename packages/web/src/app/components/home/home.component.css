@@ -165,7 +165,7 @@ section .overlay {
 }
 
 .overlay-section .left-overlay .title:nth-of-type(2) {
-  color: #fbb935;
+  color: #000;
 }
 
 @media (max-width: 800px) {
@@ -266,58 +266,6 @@ section .overlay {
   color: hsl(188, 98%, 23%);
   margin-top: 50%;
 }
-/* .slider ::ng-deep .owl-carousel .owl-stage-outer{
-  height: 100vh !important;
-}
-
-@media (max-width: 905px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 600px !important;
-    
-  }
-}
-@media (max-width: 850px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 450px !important;
-    
-  }
-}
-@media (max-width: 705px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 400px !important;
-    
-  }
-}
-@media (max-width: 605px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 300px !important;
-    
-  }
-}
-@media (max-width: 550px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 300px !important;
-    
-  }
-}
-@media (max-width: 450px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 250px !important;
-    
-  }
-}
-@media (max-width: 400px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 220px !important;
-    
-  }
-}
-@media (max-width: 350px) {
-  .slider ::ng-deep .owl-carousel .owl-stage-outer {
-      height: 200px !important;
-    
-  }
-} */
 
 .custom-owl {
   .owl-theme .owl-nav.disabled + .owl-dots {
@@ -357,7 +305,7 @@ section .overlay {
 .custom-owl {
   .owl-theme .owl-dots .owl-dot.active span,
   .owl-theme .owl-dots .owl-dot:hover span {
-    background-color: #fbb935 !important;
+    background-color: #00bbd7 !important;
   }
 }
 
@@ -502,7 +450,7 @@ section .overlay {
   position: absolute;
   bottom: 2%;
   right: 2%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 25px;
   cursor: pointer;
 }
@@ -581,7 +529,7 @@ section .overlay {
 }
 
 .img-content .offer {
-  background-color: #14adc6;
+  background-color: #00bbd7;
   color: #fff;
   position: absolute;
   top: 1%;
@@ -598,7 +546,7 @@ section .overlay {
 .img-content .offer::after {
   content: '';
   position: absolute;
-  background-color: #14adc6;
+  background-color: #00bbd7;
   width: 23px;
   height: 23px;
   top: 5px;
@@ -612,12 +560,12 @@ section .overlay {
   position: absolute;
   top: 2.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   z-index: 10;
   font-weight: lighter;
   cursor: pointer;
-  text-shadow: 0 2px 2px rgba(251, 170, 49, 0.308);
+  text-shadow: 0 2px 2px rgba(#00bad771);
 }
 
 .favourit-icon::before {
@@ -631,7 +579,7 @@ section .overlay {
 } */
 
 .header-product.active i {
-  /* background-color: #fbb935; */
+  /* background-color: #00bbd7; */
   font-weight: bold;
 }
 
@@ -639,7 +587,7 @@ section .overlay {
   position: absolute;
   bottom: 3.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   cursor: pointer;
 }
@@ -657,7 +605,7 @@ section .overlay {
 }
 
 .img-content .fa-plus {
-  color: #14adc6;
+  color: #00bbd7;
   font-size: 20px;
   position: absolute;
   top: 7px;
@@ -707,7 +655,7 @@ section .overlay {
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:hover,
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:focus,
 ::ng-deep .owl-theme .owl-nav [class*='owl-']:active {
-  background: #fbb935;
+  background: #00bbd7;
   color: #fff;
   text-decoration: none;
   font-weight: bold;
