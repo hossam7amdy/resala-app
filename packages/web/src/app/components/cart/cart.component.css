@@ -1,6 +1,6 @@
 .emptyCart {
   color: #016373;
-  /* border: 1px solid #fbb935; */
+  /* border: 1px solid #00bbd7; */
   padding: 10px 70px;
   text-align: center;
   margin: auto;
@@ -17,7 +17,7 @@
 }
 .emptyCart i {
   font-size: 80px;
-  color: #fbb935;
+  color: #00bbd7;
 }
 .emptyCart .p {
   font-size: 16px;
@@ -107,7 +107,7 @@
 }
 
 .card .total-price {
-  color: #fbb935;
+  color: #00bbd7;
   font-weight: bold;
 }
 
@@ -152,9 +152,9 @@
   font-weight: 400;
 }
 .edit-btn:hover {
-  outline: #fbb935;
+  outline: #00bbd7;
   color: #fff;
-  background-color: #fbb935;
+  background-color: #00bbd7;
 }
 .overlay {
   position: fixed;
@@ -254,9 +254,9 @@
 
 .form-container .color-option.active label {
   /* border-color: #000; */
-  background-color: #fbb935;
+  background-color: #00bbd7;
   color: #fff;
-  border: 1px solid #fbb935;
+  border: 1px solid #00bbd7;
 }
 
 .form-container .card-body .p {
@@ -281,8 +281,8 @@
 }
 
 .size .active {
-  background-color: #fbb935;
-  border: 1px solid #fbb935;
+  background-color: #00bbd7;
+  border: 1px solid #00bbd7;
   padding: 5px;
   border-radius: 0;
   outline: none;
@@ -315,9 +315,9 @@
 
 .size-option.active label {
   /* border-color: #000; */
-  background-color: #fbb935;
+  background-color: #00bbd7;
   color: #fff;
-  border: 1px solid #fbb935;
+  border: 1px solid #00bbd7;
 }
 
 h2 {
@@ -386,8 +386,8 @@ h2 {
   padding: 10px 0;
   color: #fff;
   font-weight: 500;
-  background-color: #fbb935;
-  border: 1px solid #fbb935;
+  background-color: #00bbd7;
+  border: 1px solid #00bbd7;
   transition: all 0.3s ease-in-out;
 }
 

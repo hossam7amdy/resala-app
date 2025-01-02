@@ -108,7 +108,7 @@ nav .logo {
 }
 
 .powerd span {
-  color: #fbb935;
+  color: #000;
 }
 
 /* Fixed buttons on scroll*/
@@ -129,7 +129,7 @@ nav .logo {
   position: fixed;
   bottom: 40px;
   right: 5px;
-  background-color: #fbb935;
+  background-color: #000;
   color: #14adc6;
   width: 37px;
   height: 37px;

@@ -10,7 +10,7 @@
 }
 
 .thirdcolor {
-  color: #14adc6 !important;
+  color: #00bbd7 !important;
 }
 .notcolor {
   color: #ccc;
@@ -102,7 +102,7 @@
 
 #progressbar-2 li.thirdcolor:before,
 #progressbar-2 li.thirdcolor:after {
-  background: #14adc6;
+  background: #00bbd7;
 }
 .second-background-color {
   border-radius: 0 0 10px 10px;
