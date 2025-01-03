@@ -138,6 +138,11 @@
                     ><span>{{ discount.amount }}%</span></i
                   >
                 </p>
+                <p *ngIf="discount.type == 'BOGO' && discount.isActive == true" class="offer">
+                  <i class="fa-solid fa-tags"
+                    ><span>{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.amount }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.minQty}}</b></span></i
+                  >
+                </p>
               </div>
               <!-- {{ 'home.allProducts.sale' | translate }}
               <span> {{ discount.amount }}%</span> offer -->

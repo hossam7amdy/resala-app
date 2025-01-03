@@ -46,11 +46,11 @@ white
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #000;
+  background-color: #787878;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #efefef;
+  background-color: #f1f1f1;
 }
 
 * {
@@ -94,7 +94,7 @@ body {
   background-color: #016373;
 }
 .second-background-color {
-  background-color: #00bbd7;
+  background-color: #016373;
 }
 .third-background-color {
   background-color: #000;
@@ -246,7 +246,7 @@ body {
   border: 1px solid #00bbd7;
   transition: all 0.3s ease-in-out;
   width: 100%;
-  border-radius: 0;
+  border-radius: 5px;
 }
 
 .custome-btn:hover,
@@ -275,7 +275,7 @@ body {
   border: 1px solid #ccc;
   transition: all 0.3s ease-in-out;
   width: 100%;
-  border-radius: 0;
+  border-radius: 5px;
 }
 .second-custom-btn:hover,
 .second-custom-btn:active {

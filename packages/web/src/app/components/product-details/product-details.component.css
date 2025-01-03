@@ -100,7 +100,7 @@
   background: #016373;
   display: inline-block;
   cursor: pointer;
-  border-radius: 0px;
+  border-radius: 5px;
   font-weight: bold;
 }
 
@@ -126,39 +126,11 @@
   margin: 3px 5px;
   padding: 10px;
   border: 1px soild #999;
-  border-radius: 0;
+  border-radius: 5px;
   color: #016373;
   font-size: 14px;
 }
 
-/* .white {
-  background-color: #fff;
-  border: 1px solid #fff;
-}
-
-.black {
-  background-color: #000;
-  border: 1px solid #000;
-  color: #fff;
-}
-
-.orange {
-  background-color: orange;
-  border: 1px solid orange;
-  color: #fff;
-} */
-
-/* .btn-check:checked+.btn,
-.btn.active,
-.btn.show,
-.btn:first-child:active,
-:not(.btn-check)+.btn:active,
-.btn-check+.btn:hover {
-  color: #fff;
-  background-color: #00bbd7;
-  border: 1px solid #00bbd7;
-  border-radius: 0;
-} */
 
 .size {
   margin-top: 20px;
@@ -169,7 +141,7 @@
   background-color: #eee;
   border: 1px solid #999;
   padding: 5px;
-  border-radius: 0;
+  border-radius: 5px;
   outline: none;
   color: #999;
 }
@@ -178,7 +150,7 @@
   background-color: #00bbd7;
   border: 1px solid #00bbd7;
   padding: 5px;
-  border-radius: 0;
+  border-radius: 5px;
   outline: none;
   color: #fff;
 }
@@ -198,7 +170,7 @@
 .counter .plus-counter-btn {
   background-color: #fff;
   border: none;
-  border-radius: 0;
+  border-radius: 5px;
 
   color: #016373;
   font-weight: bold;
@@ -214,27 +186,6 @@
   color: #016373;
 }
 
-/* .add-cart-btn button {
-  padding: 10px 0;
-  color: #fff;
-  font-weight: 500;
-  background-color: #00bbd7;
-  border: 1px solid #00bbd7;
-  transition: all 0.3s ease-in-out;
-}
-
-.add-cart-btn button:hover,
-.add-cart-btn button:active {
-  color: #016373;
-  font-weight: 500;
-  background-color: #fff;
-  border: 1px solid #ccc;
-}
-
-.add-cart-btn button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-} */
 
 .btn-check:checked + .btn {
   border: 0;
@@ -455,7 +406,7 @@
   background: #016373;
   display: inline-block;
   cursor: pointer;
-  border-radius: 0px;
+  border-radius: 5px;
   font-weight: bold;
 }
 
