@@ -74,10 +74,6 @@ export class AuthService {
     return this._httpClient.post<RegisterResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-  signIn(userData: any): Observable<any> {
-    const { url } = ENDPOINT_CONFIGS.login;
-    return this._httpClient.post<any>(`${environment.baseUrl}${url}`, userData);
-  }
 
   loginWithEmail({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginRequest = {

@@ -8,7 +8,7 @@ dark blue
 rgb(20,173,198)
 blue
 
-#fbb935
+#00bbd7
 rgb(251,171,49)
 yello 
 
@@ -41,10 +41,10 @@ nav .logo {
 
 .active-link {
   color: #fff;
-  background-color: #fbb935;
+  background-color: #00bbd7;
   /* padding-bottom: 20px;   
     border-bottom: 1px;
-    border-color: #fbb935;
+    border-color: #00bbd7;
     border-style: solid; */
   border-radius: 5px;
 }
@@ -56,7 +56,7 @@ nav .logo {
   width: 18px;
   height: 18px;
   border-radius: 9px;
-  background-color: #fbb935;
+  background-color: #00bbd7;
   top: -2px;
   left: 21px;
   z-index: 9999;

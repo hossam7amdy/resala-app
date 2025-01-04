@@ -66,7 +66,7 @@ p {
   position: absolute;
   top: 2.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   z-index: 10;
   font-weight: lighter;
@@ -85,7 +85,7 @@ p {
   } */
 
 .header-product.active i {
-  /* background-color: #fbb935; */
+  /* background-color: #00bbd7; */
   font-weight: bold;
 }
 
@@ -93,7 +93,7 @@ p {
   position: absolute;
   bottom: 3.5%;
   right: 4.5%;
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 20px;
   cursor: pointer;
 }

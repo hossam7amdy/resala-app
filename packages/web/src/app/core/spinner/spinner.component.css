@@ -14,7 +14,7 @@
 
 .spinner {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #fbb935;
+  border-top: 8px solid #00bbd7;
   /* z-index: 9999; */
   border-radius: 50%;
   width: 60px;
@@ -27,7 +27,7 @@
   left: 0;
   position: absolute;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #fbb935;
+  border-top: 2px solid #00bbd7;
   border-radius: 5px;
   width: 70.88px;
   height: 32.12px;

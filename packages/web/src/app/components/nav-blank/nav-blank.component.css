@@ -94,7 +94,7 @@ nav .logo {
 }
 
 .navbar-expand-xl .navbar-nav .dropdown-menu li:hover {
-  background-color: #fbb935;
+  background-color: #00bbd7;
 }
 
 .dropdown-menu .dropdown-item {
@@ -105,7 +105,7 @@ nav .logo {
 .dropdown-menu .dropdown-item:hover,
 .dropdown-menu .dropdown-item:active,
 .dropdown-menu .dropdown-item:focus {
-  background-color: #fbb935;
+  background-color: #00bbd7;
   color: #fff;
 }
 
@@ -158,19 +158,19 @@ nav .logo {
 
 .active-link {
   color: #fff;
-  background-color: #fbb935;
+  background-color: #00bbd7;
   /* padding-bottom: 20px;   
     border-bottom: 1px;
-    border-color: #fbb935;
+    border-color: #00bbd7;
     border-style: solid; */
   border-radius: 5px;
-  padding: 5px;
+  padding: 8px;
 }
 
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link.show {
   color: #fff;
-  background-color: #fbb935;
+  background-color: #00bbd7;
 }
 
 form {
@@ -219,7 +219,7 @@ form {
   right: -10px;
   z-index: 9999;
   width: 50px;
-  background-color: #fbb935;
+  background-color: #00bbd7;
   padding: 15px;
   border-radius: 25px 0px 0px 25px;
   cursor: pointer;
@@ -271,7 +271,7 @@ form {
 }
 
 .search-form .icon-search {
-  color: #fbb935;
+  color: #00bbd7;
   font-size: 30px;
   margin-top: 10px;
   font-weight: 600 !important;
@@ -328,7 +328,7 @@ form {
 /* .upper-nav .nav-link:active,
 .upper-nav .nav-link:focus{
   color: #fff;
-  background-color: #fbb935;
+  background-color: #00bbd7;
 } */
 
 .nav-link .mini-basket-count {
@@ -336,7 +336,7 @@ form {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #fbb935;
+  background-color: #00bbd7;
   color: #fff;
   top: 0;
   left: 30px;
@@ -377,7 +377,7 @@ edit on bootstrap classes
   }
   @media (max-width: 400px) {
     .fs-5 {
-      font-size: 16px !important;
+      font-size: 18px !important;
     }
     .nav-link {
       padding-left: 5px !important;
