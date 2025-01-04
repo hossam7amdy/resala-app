@@ -26,8 +26,11 @@
 
                 <p *ngIf="discount.type == 'BOGO' && discount.isActive == true" class="offer">
                   <span
-                    >{{ 'home.allProducts.buyBogo' | translate }} {{ discount.minQty
-                    }}{{ 'home.allProducts.getBogo' | translate }}{{ discount.amount }}</span
+                    >{{ 'home.allProducts.buyBogo' | translate }} 
+                    <b>{{ discount.minQty}}</b>
+                    {{ 'home.allProducts.getBogo' | translate }}
+                    <b>{{ discount.amount }}</b>
+                  </span
                   >
                 </p>
               </div>

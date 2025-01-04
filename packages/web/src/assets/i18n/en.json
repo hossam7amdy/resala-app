@@ -58,8 +58,8 @@
       "previousLabel": "Previous",
       "nextLabel": "Next",
       "sale": "Sale",
-      "buyBogo": "Buy ",
-      "getBogo": " Get ",
+      "buyBogo": "Buy",
+      "getBogo": "Get",
       "currency": "EGP"
     },
     "allCategories": {
@@ -184,8 +184,8 @@
   },
   "productDetails": {
     "empty": "Sorry !! this product not found stock ...",
-    "bogoOfferScript1":" BUY ",
-    "bogoOfferScript2":"GET ",
+    "bogoOfferScript1":"BUY",
+    "bogoOfferScript2":"GET",
     "taxScript": "Tax included. Shipping calculated at checkout.",
     "color": "Color",
     "size": "Size",
@@ -344,5 +344,9 @@
       "fourthStep": "The shipping company official will contact you within 3 to 5 business days to set the pickup date, in some cases it may take longer.",
       "fifthStep": "Once the products are received and pass inspection to confirm their condition, the refund process will be initiated."
     }
+  },
+
+  "error":{
+    "btnGoShopping":"Shopping Our Products"
   }
 }
