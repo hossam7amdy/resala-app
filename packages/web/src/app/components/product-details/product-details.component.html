@@ -75,40 +75,47 @@
               : productDetails.enDescription
           }}
         </p>
-        <div *ngFor="let discount of productDetails.discounts">
-          <span
+        <h4 
+        *ngIf="productDetails.discounts.length < 1 "
+        class="price fa-lg fs-2">
+          {{ productDetails.price}}
+            <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
+        </h4>
+
+        <div *ngFor="let discount of productDetails.discounts" >
+          <div
             *ngIf="
-              productDetails.discounts.length < 1 || discount.type == 'BOGO'
-            "
-            class="price"
-            >{{ productDetails.price
-            }}<label class="currency"> {{ 'home.allProducts.currency' | translate }}</label>
-           
-            <h4>
-              <i class="offer fa-solid fa-tags fa-xl"></i><span class="offer">{{'productDetails.bogoOfferScript1'|translate}} <b class="price">{{ discount.amount }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="price">{{discount.minQty}}</b></span>
-            </h4>
+              discount.type == 'BOGO' && discount.isActive == true">
+               <h4 class="mt-1">
+                <i class="offer fa-solid fa-tags fa-xl"></i>
+                <span
+                 class="offer">{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.amount }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.minQty}}</b>
+                </span>
+              </h4>
+
+              <h4 class="price fa-lg fs-2 mt-4">
+                {{ productDetails.price}}
+                <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
+              </h4>
               
-          </span
-          >
+          </div>
         </div>
         <div *ngFor="let discount of productDetails.discounts">
           <h4 *ngIf="discount.type == 'PERCENTAGE' && discount.isActive == true" class="offer">
             <i class="fa-solid fa-tags fa-xl"></i><span> {{ discount.amount }}%</span>
           </h4>
 
-          <s *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'" class="p px-0"
+          <s *ngIf="discount.type == 'PERCENTAGE'" class="p px-0"
             >{{ productDetails.price
             }}<s class="p px-0">{{ 'home.allProducts.currency' | translate }}</s></s
           >
-          <br />
-          <br />
-          <span
+          <h4
             *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'"
-            class="price fa-lg fs-2"
+            class="price fa-lg fs-2 mt-2"
             >{{ productDetails.price - productDetails.price * (discount.amount / 100)
             }}<label class="currency fs-4">
               {{ 'home.allProducts.currency' | translate }}</label
-            ></span
+            ></h4
           >
         </div>
         <ngx-stars-rating
@@ -296,7 +303,7 @@
     <!--end Reviews -->
 
     <!-- Similar Products -->
-    <!-- *ngIf="productsCategory.length > 3" -->
+    
     <div  class="container-fluid">
       <h2 class="h1">{{ 'productDetails.similarProducts.mainTitle' | translate }}</h2>
 
