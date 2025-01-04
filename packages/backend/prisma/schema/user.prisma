@@ -1,0 +1,131 @@
+model User {
+  id                  String         @id @default(cuid())
+  email               String         @unique
+  emailVerified       Boolean        @default(false) @map("email_verified")
+  emailMarketingState MarketingState @default(not_subscribed) @map("email_marketing_state")
+  phoneNumber         String?        @unique @map("phone_number")
+  phoneNumberVerified Boolean        @default(false) @map("phone_number_verified")
+  smsMarketingState   MarketingState @default(not_subscribed) @map("sms_marketing_state")
+  name                String         @default("")
+  firstName           String         @map("first_name")
+  lastName            String         @map("last_name")
+  role                Role           @default(user)
+  banned              Boolean?
+  banReason           String?        @map("ban_reason")
+  banExpires          DateTime?      @map("ban_expires")
+  isAnonymous         Boolean?       @map("is_anonymous")
+  image               String?
+  note                String?
+  locale              String?        @default("en_US")
+  birthDate           DateTime?      @map("birth_date") @db.Date
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+  accounts            Account[]
+  sessions            Session[]
+  cart                Cart[]
+  orders              Order[]
+  reviews             Review[]
+  addresses           UserAddress[]
+  wishlist            Wishlist[]
+
+  @@map("user")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String    @map("user_id")
+  accountId             String    @map("account_id")
+  idToken               String?   @map("id_token")
+  providerId            String    @map("provider_id")
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Session {
+  id             String   @id @default(cuid())
+  userId         String   @map("user_id")
+  token          String   @unique
+  expiresAt      DateTime @map("expires_at")
+  ipAddress      String?  @map("ip_address")
+  userAgent      String?  @map("user_agent")
+  impersonatedBy String?  @map("impersonated_by")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("verification")
+}
+
+model UserAddress {
+  addressId String  @unique @map("address_id")
+  userId    String  @map("user_id")
+  isDefault Boolean @default(false) @map("is_default")
+  address   Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, addressId])
+  @@map("user_address")
+}
+
+model Address {
+  id                     String       @id @default(cuid())
+  country                String       @default("Egypt")
+  state                  String
+  city                   String
+  street                 String
+  building               String?
+  floor                  Int?         @db.SmallInt
+  address                String?
+  phone                  String
+  firstName              String       @map("first_name")
+  lastName               String       @map("last_name")
+  createdAt              DateTime     @default(now()) @map("created_at")
+  company                String?
+  countryCode            String?      @default("EG") @map("country_code")
+  latitude               Float?       @db.DoublePrecision
+  longitude              Float?       @db.DoublePrecision
+  isCoordinatesValidated Boolean      @default(false) @map("is_coordinates_validated")
+  zip                    String?      @map("zip")
+  address2               String?
+  updatedAt              DateTime     @updatedAt @map("updated_at")
+  userAddress            UserAddress?
+  shipping               Shipping?
+
+  @@map("address")
+}
+
+enum MarketingState {
+  subscribed
+  unsubscribed
+  not_subscribed
+
+  @@map("marketing_state")
+}
+
+enum Role {
+  admin
+  staff
+  user
+
+  @@map("role")
+}
