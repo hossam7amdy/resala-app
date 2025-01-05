@@ -12,7 +12,7 @@
 
     <div class="row img-product">
       <div class="col-sm-6 col-md-5 main-img">
-        <owl-carousel-o [options]="mainImage" #owlCar>
+        <owl-carousel-o [options]="mainImage" #owlProduct>
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
@@ -44,7 +44,7 @@
               <div class="d-flex" *ngFor="let image of product.images; let i = index">
                 <div
                   class="img-content mb-1 d-flex mx-1 justify-content-center"
-                  (click)="owlCar.to(image.imageUrl)"
+                  (click)="owlProduct.to(image.imageUrl)"
                   (change)="changeimage(image.imageUrl + i)"
                 >
                   <img
@@ -89,7 +89,7 @@
                <h4 class="mt-1">
                 <i class="offer fa-solid fa-tags fa-xl"></i>
                 <span
-                 class="offer">{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.amount }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.minQty}}</b>
+                 class="offer">{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.minQty }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.amount}}</b>
                 </span>
               </h4>
 
@@ -155,7 +155,7 @@
                   [
                     onColorChange(product, i),
                     isChooseColorFun(),
-                    owlCar.to(productStock[i].images[0]?.imageUrl),
+                    owlProduct.to(productStock[i].images[0]?.imageUrl),
                   ]
                 "
                 for="btncolor"

@@ -13,7 +13,7 @@
         <h1 class="title">{{ 'home.popUpProduct.rdBigTitle' | translate }}</h1>
       </div>
       <div class="col-md-8 img-overlay" [lang]="langStorage">
-        <img src="./assets/products/nekab.jpeg" [lang]="langStorage" alt="" />
+        <img src="https://cdn.resala.live/rc-upload-1734992787708-2" [lang]="langStorage" alt="" />
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <ng-template carouselSlide>
       <div class="row half-slide m-0">
         <div class="col-6 p-0">
-          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+          <img src="https://cdn.resala.live/rc-upload-1734878934397-36" class="w-100" alt="Slide1" />
         </div>
         <div class="col-6 p-0 right-content">
           <div class="title-content">
@@ -40,7 +40,7 @@
     <ng-template carouselSlide>
       <div class="row half-slide">
         <div class="col-6 p-0">
-          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+          <img src="https://cdn.resala.live/rc-upload-1735376646602-4" class="w-100" alt="Slide1" />
         </div>
         <div class="col-6 p-0 right-content">
           <div class="title-content">
@@ -54,7 +54,7 @@
     <ng-template carouselSlide>
       <div class="row half-slide">
         <div class="col-6 p-0">
-          <img src="./assets/main-slider/WhatsApp1.jpg" class="w-100" alt="Slide1" />
+          <img src="https://cdn.resala.live/rc-upload-1735376646602-8" class="w-100" alt="Slide1" />
         </div>
         <div class="col-6 p-0 right-content">
           <div class="title-content">
@@ -139,13 +139,10 @@
                   >
                 </p>
                 <p *ngIf="discount.type == 'BOGO' && discount.isActive == true" class="offer">
-                  <i class="fa-solid fa-tags"
-                    ><span>{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.amount }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.minQty}}</b></span></i
-                  >
+                  <span>{{'productDetails.bogoOfferScript1'|translate}} <b class="">{{ discount.minQty }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="">{{discount.amount}}</b></span>
                 </p>
               </div>
-              <!-- {{ 'home.allProducts.sale' | translate }}
-              <span> {{ discount.amount }}%</span> offer -->
+
               <img
                 class="w-100 image-products"
                 [src]="product.imageUrl"
