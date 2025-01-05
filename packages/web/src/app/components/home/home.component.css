@@ -675,12 +675,13 @@ section .overlay {
 
 /* Discounts*/
 .discounts .container {
-  background-image: url(../../../assets/discounts/433898072.jpg);
+  background: url(https://cdn.resala.live/rc-upload-1734563472432-2) fixed;
   background-size: cover;
+  
   padding: 0;
 }
 .discounts .content-offer {
-  background-color: #00000042;
+  background-color: #ffffff93;
   padding: 20px;
   min-height: 400px;
   text-align: center;
@@ -700,10 +701,10 @@ section .overlay {
 }
 .discounts .content-offer .h2 {
   margin-bottom: 5px !important;
-  color: #fff !important;
+  color: #016373 !important;
 }
 .discounts .content-offer .p {
-  color: #efefef !important;
+  color: #000 !important;
 }
 @media (max-width: 400px) {
   .header-product .favourit-icon {
