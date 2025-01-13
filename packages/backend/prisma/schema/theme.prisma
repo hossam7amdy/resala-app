@@ -1,0 +1,75 @@
+model HomepageSection {
+    id          String        @id @default(cuid())
+    name        String
+    type        String // 'slideshow', 'popup', 'announcement', etc.
+    isActive    Boolean       @default(true) @map("is_active")
+    sectionData SectionData[]
+    createdAt   DateTime      @default(now()) @map("created_at")
+    updatedAt   DateTime      @updatedAt @map("updated_at")
+
+    @@map("homepage_section")
+}
+
+model SectionData {
+    id           Int                  @id @default(autoincrement())
+    sectionId    String               @map("section_id")
+    order        Int
+    image        String?
+    link         String?
+    createdAt    DateTime             @default(now()) @map("created_at")
+    updatedAt    DateTime             @updatedAt @map("updated_at")
+    section      HomepageSection      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+    translations SectionTranslation[]
+
+    @@map("section_data")
+}
+
+model SectionTranslation {
+    sectionId   Int         @map("section_id")
+    langCode    String      @map("lang_code")
+    title       String
+    description String?
+    SectionData SectionData @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+    @@id([sectionId, langCode])
+    @@map("section_translation")
+}
+
+model Menu {
+    id        Int        @id @default(autoincrement())
+    name      String
+    type      String // 'main', 'footer', etc.
+    isActive  Boolean    @default(true) @map("is_active")
+    createdAt DateTime   @default(now()) @map("created_at")
+    updatedAt DateTime   @updatedAt @map("updated_at")
+    items     MenuItem[]
+
+    @@map("menu")
+}
+
+model MenuItem {
+    id           Int                   @id @default(autoincrement())
+    menuId       Int                   @map("menu_id")
+    parentId     Int?                  @map("parent_id")
+    order        Int
+    link         String?
+    isActive     Boolean               @default(true) @map("is_active")
+    createdAt    DateTime              @default(now()) @map("created_at")
+    updatedAt    DateTime              @updatedAt @map("updated_at")
+    menu         Menu                  @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    parent       MenuItem?             @relation("MenuItemToMenuItem", fields: [parentId], references: [id], onDelete: SetNull)
+    children     MenuItem[]            @relation("MenuItemToMenuItem")
+    translations MenuItemTranslation[]
+
+    @@map("menu_item")
+}
+
+model MenuItemTranslation {
+    menuItemId Int      @map("menu_item_id")
+    langCode   String   @map("language_code")
+    label      String
+    menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+    @@id([menuItemId, langCode])
+    @@map("menu_item_translation")
+}
