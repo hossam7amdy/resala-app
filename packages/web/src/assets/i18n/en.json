@@ -184,8 +184,8 @@
   },
   "productDetails": {
     "empty": "Sorry !! this product not found stock ...",
-    "bogoOfferScript1":"BUY",
-    "bogoOfferScript2":"GET",
+    "bogoOfferScript1": "BUY",
+    "bogoOfferScript2": "GET",
     "taxScript": "Tax included. Shipping calculated at checkout.",
     "color": "Color",
     "size": "Size",
@@ -346,7 +346,7 @@
     }
   },
 
-  "error":{
-    "btnGoShopping":"Shopping Our Products"
+  "error": {
+    "btnGoShopping": "Shopping Our Products"
   }
 }

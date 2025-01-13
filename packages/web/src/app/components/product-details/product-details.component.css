@@ -131,7 +131,6 @@
   font-size: 14px;
 }
 
-
 .size {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -185,7 +184,6 @@
   background-color: #fff;
   color: #016373;
 }
-
 
 .btn-check:checked + .btn {
   border: 0;
@@ -418,13 +416,13 @@
   height: auto;
   transition: opacity 0.5s ease-in-out;
 }
-.primary-img{
+.primary-img {
   cursor: zoom-in;
 }
 .original-image {
   cursor: zoom-out;
 }
-.original-image .zoomed-img{
+.original-image .zoomed-img {
   max-width: 100%;
 }
 

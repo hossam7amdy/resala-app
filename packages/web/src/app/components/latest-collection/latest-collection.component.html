@@ -29,7 +29,12 @@
                   <span> {{ discount.amount }}%</span>
                 </p>
                 <p *ngIf="discount.type == 'BOGO' && discount.isActive == true" class="offer">
-                  <span>{{'productDetails.bogoOfferScript1'|translate}} <b class="">{{ discount.minQty }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="">{{discount.amount}}</b></span>
+                  <span
+                    >{{ 'productDetails.bogoOfferScript1' | translate }}
+                    <b class="">{{ discount.minQty }}</b>
+                    {{ 'productDetails.bogoOfferScript2' | translate
+                    }}<b class="">{{ discount.amount }}</b></span
+                  >
                 </p>
               </div>
 

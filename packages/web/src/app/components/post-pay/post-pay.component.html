@@ -4,7 +4,11 @@
   <h1 class="h1">{{ 'postPay.mainTitle' | translate }}</h1>
   <div class="container text-center">
     <div>
-      <img src="https://cdn.resala.live/confirm order.jpg" alt="Order Success" class="w-50 mx-auto" />
+      <img
+        src="https://cdn.resala.live/confirm order.jpg"
+        alt="Order Success"
+        class="w-50 mx-auto"
+      />
     </div>
     <div class="mx-auto">
       <button class="custome-btn" routerLink="/home">{{ 'postPay.Btn' | translate }}</button>
@@ -15,7 +19,11 @@
 <section *ngIf="orderStatus == 'false' || orderStatus == ''" class="">
   <div class="container text-center">
     <div>
-      <img src="https://cdn.resala.live/payment_fail_icon-300x300.png" alt="Order Failed" class="w-50 mx-auto" />
+      <img
+        src="https://cdn.resala.live/payment_fail_icon-300x300.png"
+        alt="Order Failed"
+        class="w-50 mx-auto"
+      />
       <h1 class="h1 mt-0">{{ 'postPay.failedPay' | translate }}</h1>
       <p class="p py-0">
         {{ 'postPay.failedScript' | translate }}

@@ -16,12 +16,13 @@
           <ng-container *ngFor="let product of productStock">
             <ng-container *ngFor="let image of product.images; let j = index">
               <ng-template carouselSlide [id]="image.imageUrl">
-                
-                <div class="image-container p-1 m-1" 
-                (click)="openImage(image.imageUrl)"
-                data-bs-toggle="offcanvas" 
-                data-bs-target="#offcanvasTop" 
-                aria-controls="offcanvasTop">
+                <div
+                  class="image-container p-1 m-1"
+                  (click)="openImage(image.imageUrl)"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasTop"
+                  aria-controls="offcanvasTop"
+                >
                   <img
                     [src]="image.imageUrl"
                     [alt]="
@@ -32,7 +33,6 @@
                     "
                     class="primary-img"
                   />
-
                 </div>
               </ng-template>
             </ng-container>
@@ -75,29 +75,27 @@
               : productDetails.enDescription
           }}
         </p>
-        <h4 
-        *ngIf="productDetails.discounts.length < 1 "
-        class="price fa-lg fs-2">
-          {{ productDetails.price}}
-            <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
+        <h4 *ngIf="productDetails.discounts.length < 1" class="price fa-lg fs-2">
+          {{ productDetails.price }}
+          <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
         </h4>
 
-        <div *ngFor="let discount of productDetails.discounts" >
-          <div
-            *ngIf="
-              discount.type == 'BOGO' && discount.isActive == true">
-               <h4 class="mt-1">
-                <i class="offer fa-solid fa-tags fa-xl"></i>
-                <span
-                 class="offer">{{'productDetails.bogoOfferScript1'|translate}} <b class="p">{{ discount.minQty }}</b> {{'productDetails.bogoOfferScript2'|translate}}<b class="p">{{discount.amount}}</b>
-                </span>
-              </h4>
+        <div *ngFor="let discount of productDetails.discounts">
+          <div *ngIf="discount.type == 'BOGO' && discount.isActive == true">
+            <h4 class="mt-1">
+              <i class="offer fa-solid fa-tags fa-xl"></i>
+              <span class="offer"
+                >{{ 'productDetails.bogoOfferScript1' | translate }}
+                <b class="p">{{ discount.minQty }}</b>
+                {{ 'productDetails.bogoOfferScript2' | translate
+                }}<b class="p">{{ discount.amount }}</b>
+              </span>
+            </h4>
 
-              <h4 class="price fa-lg fs-2 mt-4">
-                {{ productDetails.price}}
-                <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
-              </h4>
-              
+            <h4 class="price fa-lg fs-2 mt-4">
+              {{ productDetails.price }}
+              <label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
+            </h4>
           </div>
         </div>
         <div *ngFor="let discount of productDetails.discounts">
@@ -112,11 +110,10 @@
           <h4
             *ngIf="discount.length > 0 || discount.type == 'PERCENTAGE'"
             class="price fa-lg fs-2 mt-2"
-            >{{ productDetails.price - productDetails.price * (discount.amount / 100)
-            }}<label class="currency fs-4">
-              {{ 'home.allProducts.currency' | translate }}</label
-            ></h4
           >
+            {{ productDetails.price - productDetails.price * (discount.amount / 100)
+            }}<label class="currency fs-4"> {{ 'home.allProducts.currency' | translate }}</label>
+          </h4>
         </div>
         <ngx-stars-rating
           [rate]="productDetails.avgRating"
@@ -245,25 +242,31 @@
       </div>
     </div>
     <!-- start zoomin image -->
-    <div class="offcanvas offcanvas-top h-100" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+    <div
+      class="offcanvas offcanvas-top h-100"
+      tabindex="-1"
+      id="offcanvasTop"
+      aria-labelledby="offcanvasTopLabel"
+    >
       <div class="offcanvas-header">
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
       </div>
 
       <div class="offcanvas-body text-center original-image" data-bs-dismiss="offcanvas">
         <img
           class="zoomed-img"
           [src]="imgUrlZoomin"
-          [alt]="
-            _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-          "
-          [title]="
-            _Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName
-          "
+          [alt]="_Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName"
+          [title]="_Translate.currentLang == 'ar' ? productDetails.arName : productDetails.enName"
         />
       </div>
     </div>
-    
+
     <!-- end zoomin image -->
 
     <!--start Reviews -->
@@ -303,8 +306,8 @@
     <!--end Reviews -->
 
     <!-- Similar Products -->
-    
-    <div  class="container-fluid">
+
+    <div class="container-fluid">
       <h2 class="h1">{{ 'productDetails.similarProducts.mainTitle' | translate }}</h2>
 
       <owl-carousel-o

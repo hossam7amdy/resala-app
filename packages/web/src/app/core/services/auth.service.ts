@@ -74,7 +74,6 @@ export class AuthService {
     return this._httpClient.post<RegisterResponse>(`${environment.baseUrl}${url}`, body);
   }
 
-
   loginWithEmail({ sign, password, rememberMe }: SignData): Observable<LoginResponse> {
     const body: LoginRequest = {
       email: sign,

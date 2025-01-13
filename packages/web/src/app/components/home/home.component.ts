@@ -171,8 +171,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
- 
-
   // main slider
   mainSliderOptions: OwlOptions = {
     loop: true,

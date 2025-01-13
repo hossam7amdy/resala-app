@@ -677,7 +677,7 @@ section .overlay {
 .discounts .container {
   background: url(https://cdn.resala.live/rc-upload-1734563472432-2) fixed;
   background-size: cover;
-  
+
   padding: 0;
 }
 .discounts .content-offer {
