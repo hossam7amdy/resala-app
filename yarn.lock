@@ -5088,10 +5088,10 @@ batch@0.6.1:
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==
 
-better-auth@^1.1.16:
-  version "1.1.16"
-  resolved "https://registry.yarnpkg.com/better-auth/-/better-auth-1.1.16.tgz#51b1b6e63d9acb4034375bf203b3f50e0b52a1c1"
-  integrity sha512-Xc5pxafKZw4QVU8WYfkV2z4Hd8KCXXbphrgOpe2gA/EfanysLBhE1G/F7cEi5e0bW2pGR+vw6gf0ARHA7VFihg==
+better-auth@^1.1.20:
+  version "1.1.20"
+  resolved "https://registry.yarnpkg.com/better-auth/-/better-auth-1.1.20.tgz#39b6811ae0e90dbffc7656f6a2645127fccfb091"
+  integrity sha512-aAcBGVVQJepGe9FY0/QIPBPqWwXIjahPq8zMgFnWOTyee6/vaE8aCRVV8hOp2DEABhKypHSUSK5CUPEUgL9fdQ==
   dependencies:
     "@better-auth/utils" "0.2.3"
     "@better-fetch/fetch" "1.1.12"
