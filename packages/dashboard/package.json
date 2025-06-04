@@ -21,7 +21,7 @@
     "chart.js": "^4.4.4",
     "clsx": "^2.1.1",
     "libphonenumber-js": "^1.11.15",
-    "next": "15.2.3",
+    "next": "15.2.4",
     "react": "19.0.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "19.0.0",
